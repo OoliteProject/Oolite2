@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {doStuff = id; goFullscreen = id; }; 
+            CLASS = GameController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                gameView = MyOpenGLView; 
+                gameWindow = NSWindow; 
+                splashProgressTextField = NSTextField; 
+                splashView = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = Groolite; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {gameController = GameController; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = MyOpenGLView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {gameController = GameController; }; 
+            SUPERCLASS = NSOpenGLView; 
+        }, 
+        {CLASS = ResourceManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -53,6 +53,9 @@ SOFTWARE.
 
 #import "OOGraphicsResetManager.h"
 #import "OOTexture.h"
+#import "OOLogging.h"
+#import "Universe.h"
+#import "OOOpenGL.h"
 
 
 static OODebugController *sSingleton = nil;
@@ -64,6 +67,7 @@ static OODebugController *sSingleton = nil;
 {
 	NSString					*nibPath = nil;
 	NSMenuItem					*item = nil;
+	NSEnumerator				*itemEnum = nil;
 	
 	self = [super init];
 	if (self != nil)
@@ -78,11 +82,22 @@ static OODebugController *sSingleton = nil;
 		{
 			[NSBundle loadNibFile:nibPath externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"] withZone:nil];
 			
+			// Insert debug menu in menu bar
 			[menu setTitle:@"Debug"];
 			item = [[NSMenuItem alloc] initWithTitle:@"Debug" action:nil keyEquivalent:@""];
 			[item setSubmenu:menu];
 			[[NSApp mainMenu] addItem:item];
 			[item release];
+			
+			// Set up Log Message Classes submenu. Items with no action are mapped to toggleThisLogMessageClassAction:.
+			for (itemEnum = [[logMessageClassSubMenu itemArray] objectEnumerator]; (item = [itemEnum nextObject]); )
+			{
+				if ([item action] == NULL)
+				{
+					[item setAction:@selector(toggleThisLogMessageClassAction:)];
+					[item setTarget:self];
+				}
+			}
 		}
 	}
 	
@@ -124,6 +139,84 @@ static OODebugController *sSingleton = nil;
 	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
 }
 
+
+- (IBAction)dumpEntityListAction:sender
+{
+	BOOL						wasEnabled;
+	
+	wasEnabled = OOLogWillDisplayMessagesInClass(@"universe.objectDump");
+	OOLogSetDisplayMessagesInClass(@"universe.objectDump", YES);
+	
+	[UNIVERSE obj_dump];
+	
+	OOLogSetDisplayMessagesInClass(@"universe.objectDump", wasEnabled);
+}
+
+
+- (IBAction)toggleThisLogMessageClassAction:sender
+{
+	NSString					*msgClass = nil;
+	
+	if ([sender respondsToSelector:@selector(title)])
+	{
+		msgClass = [sender title];
+		OOLogSetDisplayMessagesInClass(msgClass, !OOLogWillDisplayMessagesInClass(msgClass));
+	}
+}
+
+
+- (IBAction)otherLogMessageClassAction:sender
+{
+	[NSApp runModalForWindow:logMessageClassPanel];
+	[logMessageClassPanel orderOut:self];
+}
+
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	NSString					*msgClass = nil;
+	SEL							action = NULL;
+	
+	action = [menuItem action];
+	
+	if (action == @selector(toggleThisLogMessageClassAction:))
+	{
+		msgClass = [menuItem title];
+		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
+		return YES;
+	}
+	
+	return [self respondsToSelector:action];
+}
+
+
+- (IBAction)logMsgClassPanelEnableAction:sender
+{
+	NSString					*msgClass = nil;
+	
+	msgClass = [logMsgClassPanelTextField stringValue];
+	if ([msgClass length] != 0)  OOLogSetDisplayMessagesInClass(msgClass, YES);
+	
+	[NSApp stopModal];
+}
+
+
+- (IBAction)logMsgClassPanelDisableAction:sender
+{
+	NSString					*msgClass = nil;
+	
+	msgClass = [logMsgClassPanelTextField stringValue];
+	if ([msgClass length] != 0)  OOLogSetDisplayMessagesInClass(msgClass, NO);
+	
+	[NSApp stopModal];
+}
+
+
+- (IBAction)logMsgClassPanelCancelAction:sender
+{
+	[NSApp stopModal];
+}
+
 @end
 
 
@@ -132,8 +225,6 @@ static OODebugController *sSingleton = nil;
 /*	Canonical singleton boilerplate.
 	See Cocoa Fundamentals Guide: Creating a Singleton Instance.
 	See also +sharedDebugController above.
-	
-	// NOTE: assumes single-threaded first access.
 */
 
 + (id)allocWithZone:(NSZone *)inZone

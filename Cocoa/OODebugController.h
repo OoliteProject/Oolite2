@@ -55,7 +55,12 @@ SOFTWARE.
 
 @interface OODebugController: NSObject
 {
-	IBOutlet NSMenu			*menu;
+	IBOutlet NSMenu				*menu;
+	IBOutlet NSMenu				*logMessageClassSubMenu;
+	
+	IBOutlet NSPanel			*logMessageClassPanel;
+	IBOutlet NSTextField		*logMsgClassPanelTextField;
+	IBOutlet NSTextField		*logMsgClassPanelStatusField;
 }
 
 + (id)sharedDebugController;
@@ -64,6 +69,16 @@ SOFTWARE.
 - (IBAction)graphicsResetAction:sender;
 - (IBAction)clearTextureCacheAction:sender;
 - (IBAction)resetAndClearAction:sender;
+- (IBAction)dumpEntityListAction:sender;
+
+// Log Message Classes submenu
+- (IBAction)toggleThisLogMessageClassAction:sender;
+- (IBAction)otherLogMessageClassAction:sender;
+
+// Log Message Classes -> Other... alert
+- (IBAction)logMsgClassPanelEnableAction:sender;
+- (IBAction)logMsgClassPanelDisableAction:sender;
+- (IBAction)logMsgClassPanelCancelAction:sender;
 
 @end
 

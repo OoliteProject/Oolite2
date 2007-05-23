@@ -1,6 +1,9 @@
 /*
 
-OOSingleTextureMaterial.h
+OODebugController.h
+
+Add debug utility GUI to debug builds of Oolite.
+
 
 Oolite
 Copyright (C) 2004-2007 Giles C Williams and contributors
@@ -45,76 +48,23 @@ SOFTWARE.
 
 */
 
-#import "OOSingleTextureMaterial.h"
-#import "OOTexture.h"
-#import "OOCollectionExtractors.h"
-#import "OOFunctionAttributes.h"
+#ifndef NDEBUG
+
+#import <Cocoa/Cocoa.h>
 
 
-@implementation OOSingleTextureMaterial
-
-- (id)initWithName:(NSString *)name configuration:(NSDictionary *)configuration
+@interface OODebugController: NSObject
 {
-	id					texSpec = nil;
-	
-	self = [super initWithName:name configuration:configuration];
-	if (name != nil && self != nil)
-	{
-		if (texSpec != nil)
-		{
-			texSpec = [configuration textureSpecifierForKey:@"diffuse_map" defaultName:name];
-		}
-		else
-		{
-			texSpec = name;
-		}
-		texture = [[OOTexture textureWithConfiguration:texSpec] retain];
-	}
-	
-	if (texture == nil)
-	{
-		[self release];
-		return nil;
-	}
-	
-	return self;
+	IBOutlet NSMenu			*menu;
 }
 
++ (id)sharedDebugController;
 
-- (void)dealloc
-{
-	[self willDealloc];
-	[texture release];
-	
-	[super dealloc];
-}
-
-
-- (NSString *)description
-{
-	return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, texture];
-}
-
-
-- (BOOL)doApply
-{
-	if (EXPECT_NOT(![super doApply]))  return NO;
-	
-	[texture apply];
-	return YES;
-}
-
-
-- (void)unapplyWithNext:(OOMaterial *)next
-{
-	if (![next isKindOfClass:[OOSingleTextureMaterial class]])  [OOTexture applyNone];
-	[super unapplyWithNext:next];
-}
-
-
-- (void)ensureFinishedLoading
-{
-	[texture ensureFinishedLoading];
-}
+// Debug menu commands
+- (IBAction)graphicsResetAction:sender;
+- (IBAction)clearTextureCacheAction:sender;
+- (IBAction)resetAndClearAction:sender;
 
 @end
+
+#endif	// NDEBUG

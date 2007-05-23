@@ -1,6 +1,7 @@
 /*
 
-OOSingleTextureMaterial.h
+OODebugController.m
+
 
 Oolite
 Copyright (C) 2004-2007 Giles C Williams and contributors
@@ -45,36 +46,44 @@ SOFTWARE.
 
 */
 
-#import "OOSingleTextureMaterial.h"
+#ifndef NDEBUG
+
+#import "OODebugController.h"
+#import "ResourceManager.h"
+
+#import "OOGraphicsResetManager.h"
 #import "OOTexture.h"
-#import "OOCollectionExtractors.h"
-#import "OOFunctionAttributes.h"
 
 
-@implementation OOSingleTextureMaterial
+static OODebugController *sSingleton = nil;
 
-- (id)initWithName:(NSString *)name configuration:(NSDictionary *)configuration
+
+@implementation OODebugController
+
+- (id)init
 {
-	id					texSpec = nil;
+	NSString					*nibPath = nil;
+	NSMenuItem					*item = nil;
 	
-	self = [super initWithName:name configuration:configuration];
-	if (name != nil && self != nil)
+	self = [super init];
+	if (self != nil)
 	{
-		if (texSpec != nil)
+		nibPath = [ResourceManager pathForFileNamed:@"OODebugController.nib" inFolder:nil];
+		if (nibPath == nil)
 		{
-			texSpec = [configuration textureSpecifierForKey:@"diffuse_map" defaultName:name];
+			[self release];
+			self = nil;
 		}
 		else
 		{
-			texSpec = name;
+			[NSBundle loadNibFile:nibPath externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"] withZone:nil];
+			
+			[menu setTitle:@"Debug"];
+			item = [[NSMenuItem alloc] initWithTitle:@"Debug" action:nil keyEquivalent:@""];
+			[item setSubmenu:menu];
+			[[NSApp mainMenu] addItem:item];
+			[item release];
 		}
-		texture = [[OOTexture textureWithConfiguration:texSpec] retain];
-	}
-	
-	if (texture == nil)
-	{
-		[self release];
-		return nil;
 	}
 	
 	return self;
@@ -83,38 +92,88 @@ SOFTWARE.
 
 - (void)dealloc
 {
-	[self willDealloc];
-	[texture release];
+	if (sSingleton == self)  sSingleton = nil;
 	
 	[super dealloc];
 }
 
 
-- (NSString *)description
++ (id)sharedDebugController
 {
-	return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, texture];
+	// NOTE: assumes single-threaded first access. See header.
+	if (sSingleton == nil)  [[self alloc] init];
+	return sSingleton;
 }
 
 
-- (BOOL)doApply
+- (IBAction)graphicsResetAction:sender
 {
-	if (EXPECT_NOT(![super doApply]))  return NO;
-	
-	[texture apply];
-	return YES;
+	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
 }
 
 
-- (void)unapplyWithNext:(OOMaterial *)next
+- (IBAction)clearTextureCacheAction:sender
 {
-	if (![next isKindOfClass:[OOSingleTextureMaterial class]])  [OOTexture applyNone];
-	[super unapplyWithNext:next];
+	[OOTexture clearCache];
 }
 
 
-- (void)ensureFinishedLoading
+- (IBAction)resetAndClearAction:sender
 {
-	[texture ensureFinishedLoading];
+	[OOTexture clearCache];
+	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
 }
 
 @end
+
+
+@implementation OODebugController (Singleton)
+
+/*	Canonical singleton boilerplate.
+	See Cocoa Fundamentals Guide: Creating a Singleton Instance.
+	See also +sharedDebugController above.
+	
+	// NOTE: assumes single-threaded first access.
+*/
+
++ (id)allocWithZone:(NSZone *)inZone
+{
+	if (sSingleton == nil)
+	{
+		sSingleton = [super allocWithZone:inZone];
+		return sSingleton;
+	}
+	return nil;
+}
+
+
+- (id)copyWithZone:(NSZone *)inZone
+{
+	return self;
+}
+
+
+- (id)retain
+{
+	return self;
+}
+
+
+- (unsigned)retainCount
+{
+	return UINT_MAX;
+}
+
+
+- (void)release
+{}
+
+
+- (id)autorelease
+{
+	return self;
+}
+
+@end
+
+#endif	// NDEBUG

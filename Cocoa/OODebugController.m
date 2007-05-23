@@ -153,6 +153,13 @@ static OODebugController *sSingleton = nil;
 }
 
 
+- (IBAction)createShipAction:sender
+{
+	[NSApp runModalForWindow:createShipPanel];
+	[createShipPanel orderOut:self];
+}
+
+
 - (IBAction)toggleThisLogMessageClassAction:sender
 {
 	NSString					*msgClass = nil;
@@ -212,7 +219,18 @@ static OODebugController *sSingleton = nil;
 }
 
 
-- (IBAction)logMsgClassPanelCancelAction:sender
+- (IBAction)createShipPanelOKAction:sender
+{
+	NSString					*shipRole = nil;
+	
+	shipRole = [createShipPanelTextField stringValue];
+	if ([shipRole length] != 0)  [UNIVERSE addShipWithRole:shipRole nearRouteOneAt:1.0];
+	
+	[NSApp stopModal];	
+}
+
+
+- (IBAction)modalPanelCancelAction:sender
 {
 	[NSApp stopModal];
 }

@@ -60,7 +60,9 @@ SOFTWARE.
 	
 	IBOutlet NSPanel			*logMessageClassPanel;
 	IBOutlet NSTextField		*logMsgClassPanelTextField;
-	IBOutlet NSTextField		*logMsgClassPanelStatusField;
+	
+	IBOutlet NSPanel			*createShipPanel;
+	IBOutlet NSTextField		*createShipPanelTextField;
 }
 
 + (id)sharedDebugController;
@@ -70,6 +72,7 @@ SOFTWARE.
 - (IBAction)clearTextureCacheAction:sender;
 - (IBAction)resetAndClearAction:sender;
 - (IBAction)dumpEntityListAction:sender;
+- (IBAction)createShipAction:sender;
 
 // Log Message Classes submenu
 - (IBAction)toggleThisLogMessageClassAction:sender;
@@ -78,7 +81,11 @@ SOFTWARE.
 // Log Message Classes -> Other... alert
 - (IBAction)logMsgClassPanelEnableAction:sender;
 - (IBAction)logMsgClassPanelDisableAction:sender;
-- (IBAction)logMsgClassPanelCancelAction:sender;
+
+// Create Ship... alert
+- (IBAction)createShipPanelOKAction:sender;
+
+- (IBAction)modalPanelCancelAction:sender;
 
 @end
 

@@ -56,6 +56,7 @@ SOFTWARE.
 #import "OOLogging.h"
 #import "Universe.h"
 #import "OOOpenGL.h"
+#import "OOCacheManager.h"
 
 
 static OODebugController *sSingleton = nil;
@@ -157,6 +158,12 @@ static OODebugController *sSingleton = nil;
 {
 	[NSApp runModalForWindow:createShipPanel];
 	[createShipPanel orderOut:self];
+}
+
+
+- (IBAction)clearAllCachesAction:sender
+{
+	[[OOCacheManager sharedCache] clearAllCaches];
 }
 
 

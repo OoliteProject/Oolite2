@@ -73,6 +73,7 @@ SOFTWARE.
 - (IBAction)resetAndClearAction:sender;
 - (IBAction)dumpEntityListAction:sender;
 - (IBAction)createShipAction:sender;
+- (IBAction)clearAllCachesAction:sender;
 
 // Log Message Classes submenu
 - (IBAction)toggleThisLogMessageClassAction:sender;

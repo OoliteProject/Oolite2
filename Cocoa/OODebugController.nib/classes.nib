@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                clearAllCachesAction = id; 
+                clearTextureCacheAction = id; 
+                createShipAction = id; 
+                createShipPanelOKAction = id; 
+                dumpEntityListAction = id; 
+                graphicsResetAction = id; 
+                logMsgClassPanelDisableAction = id; 
+                logMsgClassPanelEnableAction = id; 
+                modalPanelCancelAction = id; 
+                otherLogMessageClassAction = id; 
+                resetAndClearAction = id; 
+            }; 
+            CLASS = OODebugController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                createShipPanel = NSPanel; 
+                createShipPanelTextField = NSTextField; 
+                logMessageClassPanel = NSPanel; 
+                logMessageClassSubMenu = NSMenu; 
+                logMsgClassPanelTextField = NSTextField; 
+                menu = NSMenu; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

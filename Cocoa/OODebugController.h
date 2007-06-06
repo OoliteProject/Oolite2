@@ -48,6 +48,18 @@ SOFTWARE.
 
 */
 
+
+/*
+
+Note on the Log Message Classes submenu: for ease of editing, items in this
+submenu with no action specified are used to toggle (and display) the log
+message class specified in their title. Display titles (optional) are set in
+the Attributed Title property. Thus, to add a menu item to control the foo.bar
+message class, simply add an item titled foo.bar in the nib.
+
+*/
+
+
 #ifndef NDEBUG
 
 #import <Cocoa/Cocoa.h>

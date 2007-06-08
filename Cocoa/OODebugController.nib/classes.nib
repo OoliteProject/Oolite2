@@ -8,6 +8,7 @@
                 createShipAction = id; 
                 createShipPanelOKAction = id; 
                 dumpEntityListAction = id; 
+                dumpPlayerStateAction = id; 
                 graphicsResetAction = id; 
                 logMsgClassPanelDisableAction = id; 
                 logMsgClassPanelEnableAction = id; 

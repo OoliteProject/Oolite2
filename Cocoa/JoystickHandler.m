@@ -1,9 +1,6 @@
 /*
 
-OODebugController.h
-
-Add debug utility GUI to debug builds of Oolite.
-
+JoystickHandler.m
 
 Oolite
 Copyright (C) 2004-2007 Giles C Williams and contributors
@@ -26,7 +23,7 @@ MA 02110-1301, USA.
 
 This file may also be distributed under the MIT/X11 license:
 
-Copyright (C) 2007 Jens Ayton
+Copyright (C) 2006 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -48,62 +45,36 @@ SOFTWARE.
 
 */
 
-
-/*
-
-Note on the Log Message Classes submenu: for ease of editing, items in this
-submenu with no action specified are used to toggle (and display) the log
-message class specified in their title. Display titles (optional) are set in
-the Attributed Title property. Thus, to add a menu item to control the foo.bar
-message class, simply add an item titled foo.bar in the nib.
-
-*/
+#import "JoystickHandler.h"
 
 
-#define OO_INCLUDE_DEBUG_CONTROLLER		1	// !defined (NDEBUG)
+JoystickHandler *sSharedStickHandler = nil;
 
 
-#if OO_INCLUDE_DEBUG_CONTROLLER
+@implementation JoystickHandler
 
-#import <Cocoa/Cocoa.h>
-
-
-@interface OODebugController: NSObject
++ (id)sharedStickHandler
 {
-	IBOutlet NSMenu				*menu;
-	IBOutlet NSMenu				*logMessageClassSubMenu;
-	
-	IBOutlet NSPanel			*logMessageClassPanel;
-	IBOutlet NSTextField		*logMsgClassPanelTextField;
-	
-	IBOutlet NSPanel			*createShipPanel;
-	IBOutlet NSTextField		*createShipPanelTextField;
+	if (sSharedStickHandler == nil)  sSharedStickHandler = [[JoystickHandler alloc] init];
+	return sSharedStickHandler;
 }
 
-+ (id)sharedDebugController;
 
-// Debug menu commands
-- (IBAction)graphicsResetAction:sender;
-- (IBAction)clearTextureCacheAction:sender;
-- (IBAction)resetAndClearAction:sender;
-- (IBAction)dumpEntityListAction:sender;
-- (IBAction)dumpPlayerStateAction:sender;
-- (IBAction)createShipAction:sender;
-- (IBAction)clearAllCachesAction:sender;
+- (int)getNumSticks
+{
+	return 0;
+}
 
-// Log Message Classes submenu
-- (IBAction)toggleThisLogMessageClassAction:sender;
-- (IBAction)otherLogMessageClassAction:sender;
 
-// Log Message Classes -> Other... alert
-- (IBAction)logMsgClassPanelEnableAction:sender;
-- (IBAction)logMsgClassPanelDisableAction:sender;
+- (NSPoint)getRollPitchAxis
+{
+	return NSMakePoint(0.0f, 0.0f);
+}
 
-// Create Ship... alert
-- (IBAction)createShipPanelOKAction:sender;
 
-- (IBAction)modalPanelCancelAction:sender;
+- (const BOOL *)getAllButtonStates
+{
+	return butstate;
+}
 
 @end
-
-#endif	// OO_INCLUDE_DEBUG_CONTROLLER

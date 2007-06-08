@@ -57,6 +57,7 @@ SOFTWARE.
 #import "Universe.h"
 #import "OOOpenGL.h"
 #import "OOCacheManager.h"
+#import "PlayerEntity.h"
 
 
 static OODebugController *sSingleton = nil;
@@ -151,6 +152,12 @@ static OODebugController *sSingleton = nil;
 	[UNIVERSE obj_dump];
 	
 	OOLogSetDisplayMessagesInClass(@"universe.objectDump", wasEnabled);
+}
+
+
+- (IBAction)dumpPlayerStateAction:sender
+{
+	[[PlayerEntity sharedPlayer] dumpState];
 }
 
 

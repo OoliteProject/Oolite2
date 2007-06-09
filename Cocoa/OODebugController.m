@@ -274,6 +274,12 @@ static OODebugController *sSingleton = nil;
 }
 
 
+- (IBAction)insertLogSeparatorAction:sender
+{
+	OOLogInsertMarker();
+}
+
+
 - (IBAction)createShipPanelOKAction:sender
 {
 	NSString					*shipRole = nil;

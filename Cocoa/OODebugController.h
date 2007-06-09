@@ -112,6 +112,8 @@ message class, simply add an item titled foo.bar in the nib.
 - (IBAction)logSetShowFileAndLineAction:sender;
 - (IBAction)logSetShowMessageClassAction:sender;
 
+- (IBAction)insertLogSeparatorAction:sender;
+
 // Create Ship... alert
 - (IBAction)createShipPanelOKAction:sender;
 

@@ -10,6 +10,7 @@
                 dumpEntityListAction = id; 
                 dumpPlayerStateAction = id; 
                 graphicsResetAction = id; 
+                insertLogSeparatorAction = id; 
                 logMsgClassPanelDisableAction = id; 
                 logMsgClassPanelEnableAction = id; 
                 logSetShowAppNameAction = id; 

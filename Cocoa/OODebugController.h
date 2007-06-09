@@ -76,6 +76,12 @@ message class, simply add an item titled foo.bar in the nib.
 	IBOutlet NSPanel			*logMessageClassPanel;
 	IBOutlet NSTextField		*logMsgClassPanelTextField;
 	
+	IBOutlet NSWindow			*logPrefsWindow;
+	IBOutlet NSButton			*logShowAppNameCheckBox;
+	IBOutlet NSButton			*logShowFunctionCheckBox;
+	IBOutlet NSButton			*logShowFileAndLineCheckBox;
+	IBOutlet NSButton			*logShowMessageClassCheckBox;
+	
 	IBOutlet NSPanel			*createShipPanel;
 	IBOutlet NSTextField		*createShipPanelTextField;
 }
@@ -98,6 +104,13 @@ message class, simply add an item titled foo.bar in the nib.
 // Log Message Classes -> Other... alert
 - (IBAction)logMsgClassPanelEnableAction:sender;
 - (IBAction)logMsgClassPanelDisableAction:sender;
+
+// Log Preferences window
+- (IBAction)showLogPreferencesAction:sender;
+- (IBAction)logSetShowAppNameAction:sender;
+- (IBAction)logSetShowFunctionAction:sender;
+- (IBAction)logSetShowFileAndLineAction:sender;
+- (IBAction)logSetShowMessageClassAction:sender;
 
 // Create Ship... alert
 - (IBAction)createShipPanelOKAction:sender;

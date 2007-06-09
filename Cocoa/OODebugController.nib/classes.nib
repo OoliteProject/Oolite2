@@ -12,9 +12,15 @@
                 graphicsResetAction = id; 
                 logMsgClassPanelDisableAction = id; 
                 logMsgClassPanelEnableAction = id; 
+                logSetShowAppNameAction = id; 
+                logSetShowFileAndLineAction = id; 
+                logSetShowFunctionAction = id; 
+                logSetShowMessageClassAction = id; 
                 modalPanelCancelAction = id; 
                 otherLogMessageClassAction = id; 
                 resetAndClearAction = id; 
+                showLogPreferencesAction = id; 
+                toggleThisLogMessageClassAction = id; 
             }; 
             CLASS = OODebugController; 
             LANGUAGE = ObjC; 
@@ -24,6 +30,11 @@
                 logMessageClassPanel = NSPanel; 
                 logMessageClassSubMenu = NSMenu; 
                 logMsgClassPanelTextField = NSTextField; 
+                logPrefsWindow = NSWindow; 
+                logShowAppNameCheckBox = NSButton; 
+                logShowFileAndLineCheckBox = NSButton; 
+                logShowFunctionCheckBox = NSButton; 
+                logShowMessageClassCheckBox = NSButton; 
                 menu = NSMenu; 
             }; 
             SUPERCLASS = NSObject; 

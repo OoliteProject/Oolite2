@@ -123,6 +123,12 @@ static OODebugController *sSingleton = nil;
 }
 
 
+- (void)awakeFromNib
+{
+	[logPrefsWindow center];
+}
+
+
 - (IBAction)graphicsResetAction:sender
 {
 	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
@@ -230,6 +236,41 @@ static OODebugController *sSingleton = nil;
 	if ([msgClass length] != 0)  OOLogSetDisplayMessagesInClass(msgClass, NO);
 	
 	[NSApp stopModal];
+}
+
+
+- (IBAction)showLogPreferencesAction:sender
+{
+	[logShowAppNameCheckBox setState:OOLogShowApplicationName()];
+	[logShowFunctionCheckBox setState:OOLogShowFunction()];
+	[logShowFileAndLineCheckBox setState:OOLogShowFileAndLine()];
+	[logShowMessageClassCheckBox setState:OOLogShowMessageClass()];
+	
+	[logPrefsWindow makeKeyAndOrderFront:self];
+}
+
+
+- (IBAction)logSetShowAppNameAction:sender
+{
+	OOLogSetShowApplicationName([sender state]);
+}
+
+
+- (IBAction)logSetShowFunctionAction:sender
+{
+	OOLogSetShowFunction([sender state]);
+}
+
+
+- (IBAction)logSetShowFileAndLineAction:sender
+{
+	OOLogSetShowFileAndLine([sender state]);
+}
+
+
+- (IBAction)logSetShowMessageClassAction:sender
+{
+	OOLogSetShowMessageClass([sender state]);
 }
 
 

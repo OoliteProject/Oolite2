@@ -8,6 +8,7 @@
             OUTLETS = {
                 gameView = MyOpenGLView; 
                 gameWindow = NSWindow; 
+                helpView = NSTextView; 
                 splashProgressTextField = NSTextField; 
                 splashView = NSView; 
             }; 

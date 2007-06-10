@@ -22,6 +22,7 @@
                 resetAndClearAction = id; 
                 showLogPreferencesAction = id; 
                 toggleThisLogMessageClassAction = id; 
+                toggleWireframeSkyAction = id; 
             }; 
             CLASS = OODebugController; 
             LANGUAGE = ObjC; 

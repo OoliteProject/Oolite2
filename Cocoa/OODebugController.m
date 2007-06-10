@@ -129,6 +129,8 @@ static OODebugController *sSingleton = nil;
 }
 
 
+#pragma mark -
+
 - (IBAction)graphicsResetAction:sender
 {
 	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
@@ -145,6 +147,14 @@ static OODebugController *sSingleton = nil;
 {
 	[OOTexture clearCache];
 	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
+}
+
+
+extern BOOL gSkyWireframe;
+
+- (IBAction)toggleWireframeSkyAction:sender
+{
+	gSkyWireframe = !gSkyWireframe;
 }
 
 
@@ -196,24 +206,6 @@ static OODebugController *sSingleton = nil;
 {
 	[NSApp runModalForWindow:logMessageClassPanel];
 	[logMessageClassPanel orderOut:self];
-}
-
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	NSString					*msgClass = nil;
-	SEL							action = NULL;
-	
-	action = [menuItem action];
-	
-	if (action == @selector(toggleThisLogMessageClassAction:))
-	{
-		msgClass = [menuItem title];
-		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
-		return YES;
-	}
-	
-	return [self respondsToSelector:action];
 }
 
 
@@ -294,6 +286,31 @@ static OODebugController *sSingleton = nil;
 - (IBAction)modalPanelCancelAction:sender
 {
 	[NSApp stopModal];
+}
+
+
+#pragma mark -
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	NSString					*msgClass = nil;
+	SEL							action = NULL;
+	
+	action = [menuItem action];
+	
+	if (action == @selector(toggleThisLogMessageClassAction:))
+	{
+		msgClass = [menuItem title];
+		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
+		return YES;
+	}
+	else if (action == @selector(toggleWireframeSkyAction:))
+	{
+		[menuItem setState:gSkyWireframe];
+		return YES;
+	}
+	
+	return [self respondsToSelector:action];
 }
 
 @end

@@ -92,7 +92,7 @@ message class, simply add an item titled foo.bar in the nib.
 - (IBAction)graphicsResetAction:sender;
 - (IBAction)clearTextureCacheAction:sender;
 - (IBAction)resetAndClearAction:sender;
-- (IBAction)toggleWireframeSkyAction:sender;
+- (IBAction)coronaStateDumpAction:sender;
 - (IBAction)dumpEntityListAction:sender;
 - (IBAction)dumpPlayerStateAction:sender;
 - (IBAction)createShipAction:sender;

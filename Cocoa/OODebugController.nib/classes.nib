@@ -5,6 +5,7 @@
             ACTIONS = {
                 clearAllCachesAction = id; 
                 clearTextureCacheAction = id; 
+                coronaStateDumpAction = id; 
                 createShipAction = id; 
                 createShipPanelOKAction = id; 
                 dumpEntityListAction = id; 

@@ -150,11 +150,11 @@ static OODebugController *sSingleton = nil;
 }
 
 
-extern BOOL gSkyWireframe;
+extern BOOL gCoronaStateDump;
 
-- (IBAction)toggleWireframeSkyAction:sender
+- (IBAction)coronaStateDumpAction:sender
 {
-	gSkyWireframe = !gSkyWireframe;
+	gCoronaStateDump = YES;
 }
 
 
@@ -302,11 +302,6 @@ extern BOOL gSkyWireframe;
 	{
 		msgClass = [menuItem title];
 		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
-		return YES;
-	}
-	else if (action == @selector(toggleWireframeSkyAction:))
-	{
-		[menuItem setState:gSkyWireframe];
 		return YES;
 	}
 	

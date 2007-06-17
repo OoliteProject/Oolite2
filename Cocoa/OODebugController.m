@@ -150,14 +150,6 @@ static OODebugController *sSingleton = nil;
 }
 
 
-extern BOOL gCoronaStateDump;
-
-- (IBAction)coronaStateDumpAction:sender
-{
-	gCoronaStateDump = YES;
-}
-
-
 - (IBAction)dumpEntityListAction:sender
 {
 	BOOL						wasEnabled;

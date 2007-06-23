@@ -105,6 +105,9 @@ message class, simply add an item titled foo.bar in the nib.
 - (IBAction)logMsgClassPanelEnableAction:sender;
 - (IBAction)logMsgClassPanelDisableAction:sender;
 
+// Debug Flags submenu
+- (IBAction)toggleThisDebugFlagAction:sender;
+
 // Log Preferences window
 - (IBAction)showLogPreferencesAction:sender;
 - (IBAction)logSetShowAppNameAction:sender;

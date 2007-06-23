@@ -5,7 +5,6 @@
             ACTIONS = {
                 clearAllCachesAction = id; 
                 clearTextureCacheAction = id; 
-                coronaStateDumpAction = id; 
                 createShipAction = id; 
                 createShipPanelOKAction = id; 
                 dumpEntityListAction = id; 
@@ -22,8 +21,8 @@
                 otherLogMessageClassAction = id; 
                 resetAndClearAction = id; 
                 showLogPreferencesAction = id; 
+                toggleThisDebugFlagAction = id; 
                 toggleThisLogMessageClassAction = id; 
-                toggleWireframeSkyAction = id; 
             }; 
             CLASS = OODebugController; 
             LANGUAGE = ObjC; 

@@ -223,6 +223,12 @@ static OODebugController *sSingleton = nil;
 }
 
 
+- (IBAction)toggleThisDebugFlagAction:sender
+{
+	debug ^= [sender tag];
+}
+
+
 - (IBAction)showLogPreferencesAction:sender
 {
 	[logShowAppNameCheckBox setState:OOLogShowApplicationName()];
@@ -285,8 +291,9 @@ static OODebugController *sSingleton = nil;
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	NSString					*msgClass = nil;
 	SEL							action = NULL;
+	NSString					*msgClass = nil;
+	int							tag;
 	
 	action = [menuItem action];
 	
@@ -294,6 +301,12 @@ static OODebugController *sSingleton = nil;
 	{
 		msgClass = [menuItem title];
 		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
+		return YES;
+	}
+	if (action == @selector(toggleThisDebugFlagAction:))
+	{
+		tag = [menuItem tag];
+		[menuItem setState:(debug & tag) == tag];
 		return YES;
 	}
 	

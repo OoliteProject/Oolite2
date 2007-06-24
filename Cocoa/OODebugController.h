@@ -60,7 +60,7 @@ message class, simply add an item titled foo.bar in the nib.
 */
 
 
-#define OO_INCLUDE_DEBUG_CONTROLLER		1	// !defined (NDEBUG)
+#define OO_INCLUDE_DEBUG_CONTROLLER		(!defined (NDEBUG))
 
 
 #if OO_INCLUDE_DEBUG_CONTROLLER

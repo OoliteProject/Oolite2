@@ -46,9 +46,10 @@ SOFTWARE.
 
 */
 
-#ifndef NDEBUG
-
 #import "OODebugController.h"
+
+#if OO_INCLUDE_DEBUG_CONTROLLER
+
 #import "ResourceManager.h"
 
 #import "OOGraphicsResetManager.h"
@@ -58,9 +59,18 @@ SOFTWARE.
 #import "OOOpenGL.h"
 #import "OOCacheManager.h"
 #import "PlayerEntity.h"
+#import "OOCollectionExtractors.h"
 
 
 static OODebugController *sSingleton = nil;
+
+
+@interface OODebugController (Private)
+
+- (void)insertDebugMenu;
+- (void)setUpLogMessageClassMenu;
+
+@end
 
 
 @implementation OODebugController
@@ -68,8 +78,6 @@ static OODebugController *sSingleton = nil;
 - (id)init
 {
 	NSString					*nibPath = nil;
-	NSMenuItem					*item = nil;
-	NSEnumerator				*itemEnum = nil;
 	
 	self = [super init];
 	if (self != nil)
@@ -84,22 +92,8 @@ static OODebugController *sSingleton = nil;
 		{
 			[NSBundle loadNibFile:nibPath externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"] withZone:nil];
 			
-			// Insert debug menu in menu bar
-			[menu setTitle:@"Debug"];
-			item = [[NSMenuItem alloc] initWithTitle:@"Debug" action:nil keyEquivalent:@""];
-			[item setSubmenu:menu];
-			[[NSApp mainMenu] addItem:item];
-			[item release];
-			
-			// Set up Log Message Classes submenu. Items with no action are mapped to toggleThisLogMessageClassAction:.
-			for (itemEnum = [[logMessageClassSubMenu itemArray] objectEnumerator]; (item = [itemEnum nextObject]); )
-			{
-				if ([item action] == NULL)
-				{
-					[item setAction:@selector(toggleThisLogMessageClassAction:)];
-					[item setTarget:self];
-				}
-			}
+			[self insertDebugMenu];
+			[self setUpLogMessageClassMenu];
 		}
 	}
 	
@@ -186,9 +180,9 @@ static OODebugController *sSingleton = nil;
 {
 	NSString					*msgClass = nil;
 	
-	if ([sender respondsToSelector:@selector(title)])
+	if ([sender respondsToSelector:@selector(representedObject)])
 	{
-		msgClass = [sender title];
+		msgClass = [sender representedObject];
 		OOLogSetDisplayMessagesInClass(msgClass, !OOLogWillDisplayMessagesInClass(msgClass));
 	}
 }
@@ -225,7 +219,7 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction)toggleThisDebugFlagAction:sender
 {
-	debug ^= [sender tag];
+	gDebugFlags ^= [sender tag];
 }
 
 
@@ -299,18 +293,73 @@ static OODebugController *sSingleton = nil;
 	
 	if (action == @selector(toggleThisLogMessageClassAction:))
 	{
-		msgClass = [menuItem title];
+		msgClass = [menuItem representedObject];
 		[menuItem setState:OOLogWillDisplayMessagesInClass(msgClass)];
 		return YES;
 	}
 	if (action == @selector(toggleThisDebugFlagAction:))
 	{
 		tag = [menuItem tag];
-		[menuItem setState:(debug & tag) == tag];
+		[menuItem setState:(gDebugFlags & tag) == tag];
 		return YES;
 	}
 	
 	return [self respondsToSelector:action];
+}
+
+@end
+
+
+@implementation OODebugController (Private)
+
+- (void)insertDebugMenu
+{
+	NSMenuItem					*item = nil;
+	
+	[menu setTitle:@"Debug"];
+	item = [[NSMenuItem alloc] initWithTitle:@"Debug" action:nil keyEquivalent:@""];
+	[item setSubmenu:menu];
+	[[NSApp mainMenu] addItem:item];
+	[item release];
+}
+
+
+- (void)setUpLogMessageClassMenu
+{
+	/*
+	// Set up Log Message Classes submenu. Items with no action are mapped to toggleThisLogMessageClassAction:.
+	for (itemEnum = [[logMessageClassSubMenu itemArray] objectEnumerator]; (item = [itemEnum nextObject]); )
+	{
+		if ([item action] == NULL)
+		{
+			[item setAction:@selector(toggleThisLogMessageClassAction:)];
+			[item setTarget:self];
+		}
+	}*/
+	
+	NSArray						*definitions = nil;
+	unsigned					i, count, inserted = 0;
+	NSString					*title = nil, *key = nil;
+	NSMenuItem					*item = nil;
+	
+	definitions = [ResourceManager arrayFromFilesNamed:@"debugLogMessageClassesMenu.plist" inFolder:@"Config" andMerge:YES];
+	count = [definitions count] / 2;
+	
+	for (i = 0; i != count; ++i)
+	{
+		title = [definitions stringAtIndex:i * 2];
+		key = [definitions stringAtIndex:i * 2 + 1];
+		if (title == nil || key == nil)  continue;
+		
+		item = [[NSMenuItem alloc] initWithTitle:title
+										  action:@selector(toggleThisLogMessageClassAction:)
+								   keyEquivalent:@""];
+		[item setTarget:self];
+		[item setRepresentedObject:key];
+		
+		[logMessageClassSubMenu insertItem:item atIndex:inserted++];
+		[item release];
+	}
 }
 
 @end

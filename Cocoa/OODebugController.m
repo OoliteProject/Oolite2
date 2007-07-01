@@ -269,9 +269,15 @@ static OODebugController *sSingleton = nil;
 	NSString					*shipRole = nil;
 	
 	shipRole = [createShipPanelTextField stringValue];
-	if ([shipRole length] != 0)  [UNIVERSE addShipWithRole:shipRole nearRouteOneAt:1.0];
+	if ([shipRole length] != 0)  [self performSelector:@selector(spawnShip:) withObject:shipRole afterDelay:0.1f];
 	
 	[NSApp stopModal];	
+}
+
+
+- (void)spawnShip:(NSString *)shipRole
+{
+	[UNIVERSE addShipWithRole:shipRole nearRouteOneAt:1.0];
 }
 
 

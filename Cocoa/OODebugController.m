@@ -293,7 +293,7 @@ static OODebugController *sSingleton = nil;
 {
 	SEL							action = NULL;
 	NSString					*msgClass = nil;
-	int							tag;
+	uint32_t					tag;
 	
 	action = [menuItem action];
 	

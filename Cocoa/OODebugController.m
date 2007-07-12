@@ -165,6 +165,14 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction)createShipAction:sender
 {
+	NSString					*role = nil;
+	
+	role = [[NSUserDefaults standardUserDefaults] stringForKey:@"debug-create-ship-panel-last-role"];
+	if (role != nil)
+	{
+		[createShipPanelTextField setStringValue:role];
+	}
+	
 	[NSApp runModalForWindow:createShipPanel];
 	[createShipPanel orderOut:self];
 }
@@ -269,7 +277,11 @@ static OODebugController *sSingleton = nil;
 	NSString					*shipRole = nil;
 	
 	shipRole = [createShipPanelTextField stringValue];
-	if ([shipRole length] != 0)  [self performSelector:@selector(spawnShip:) withObject:shipRole afterDelay:0.1f];
+	if ([shipRole length] != 0)
+	{
+		[self performSelector:@selector(spawnShip:) withObject:shipRole afterDelay:0.1f];
+		[[NSUserDefaults standardUserDefaults] setObject:shipRole forKey:@"debug-create-ship-panel-last-role"];
+	}
 	
 	[NSApp stopModal];	
 }
@@ -332,17 +344,6 @@ static OODebugController *sSingleton = nil;
 
 - (void)setUpLogMessageClassMenu
 {
-	/*
-	// Set up Log Message Classes submenu. Items with no action are mapped to toggleThisLogMessageClassAction:.
-	for (itemEnum = [[logMessageClassSubMenu itemArray] objectEnumerator]; (item = [itemEnum nextObject]); )
-	{
-		if ([item action] == NULL)
-		{
-			[item setAction:@selector(toggleThisLogMessageClassAction:)];
-			[item setTarget:self];
-		}
-	}*/
-	
 	NSArray						*definitions = nil;
 	unsigned					i, count, inserted = 0;
 	NSString					*title = nil, *key = nil;

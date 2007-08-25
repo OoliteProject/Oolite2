@@ -49,13 +49,13 @@ SOFTWARE.
 */
 
 
-#define OO_INCLUDE_DEBUG_CONTROLLER		(!defined (NDEBUG))
+#define OO_USE_DEBUG_BUNDLE		(!defined (NDEBUG))
 
 
-#if OO_INCLUDE_DEBUG_CONTROLLER
+#if OO_USE_DEBUG_BUNDLE
 
 #import "OOCocoa.h"
 
 void OOLoadDebugBundle(void);
 
-#endif	// OO_INCLUDE_DEBUG_CONTROLLER
+#endif	// OO_USE_DEBUG_BUNDLE

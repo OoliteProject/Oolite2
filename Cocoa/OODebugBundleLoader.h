@@ -48,14 +48,18 @@ SOFTWARE.
 
 */
 
+#import "OOCocoa.h"
 
-#define OO_USE_DEBUG_BUNDLE		(!defined (NDEBUG))
+
+#define OO_USE_DEBUG_BUNDLE		(!defined (NDEBUG) && OOLITE_MAC_OS_X)
 
 
 #if OO_USE_DEBUG_BUNDLE
 
-#import "OOCocoa.h"
-
 void OOLoadDebugBundle(void);
+
+#else
+
+#define OOLoadDebugBundle() do {} while (0)
 
 #endif	// OO_USE_DEBUG_BUNDLE

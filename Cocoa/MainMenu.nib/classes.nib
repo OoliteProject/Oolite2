@@ -26,6 +26,12 @@
             OUTLETS = {gameController = GameController; }; 
             SUPERCLASS = NSOpenGLView; 
         }, 
+        {
+            CLASS = OoliteApp; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_gameController" = GameController; "_gameWindow" = NSWindow; }; 
+            SUPERCLASS = NSApplication; 
+        }, 
         {CLASS = ResourceManager; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

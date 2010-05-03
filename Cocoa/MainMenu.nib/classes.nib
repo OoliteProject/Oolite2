@@ -11,6 +11,14 @@
 				<string>id</string>
 				<key>goFullscreen</key>
 				<string>id</string>
+				<key>showAddOnsAction</key>
+				<string>id</string>
+				<key>showLogAction</key>
+				<string>id</string>
+				<key>showScreeniesAction</key>
+				<string>id</string>
+				<key>showSnapshotsAction</key>
+				<string>id</string>
 			</dict>
 			<key>CLASS</key>
 			<string>GameController</string>

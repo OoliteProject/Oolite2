@@ -9,6 +9,11 @@ NSString * const kOOMTangentAttributeKey	= @"aTangent";
 NSString * const kOOMTexCoordsAttributeKey	= @"aTexCoords";
 
 
+static BOOL IsValidAttribute(NSArray *attr);
+static BOOL IsValidAttributeDictionary(NSDictionary *dict);
+static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL verify);
+
+
 @interface OOMVertex (Private)
 
 // Always returns nil.
@@ -24,7 +29,7 @@ NSString * const kOOMTexCoordsAttributeKey	= @"aTexCoords";
 	NSDictionary			*_attributes;
 }
 
-- (id) initWithAttributes:(NSDictionary *)attributes;
+- (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
 
 @end
 
@@ -46,7 +51,7 @@ NSString * const kOOMTexCoordsAttributeKey	= @"aTexCoords";
 	NSMutableDictionary		*_attributes;
 }
 
-- (id) initWithAttributes:(NSDictionary *)attributes;
+- (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
 
 @end
 
@@ -67,14 +72,22 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes
 {
-	if ([attributes count] != 0)
+	if ([attributes count] == 0)  return [[[self alloc] init] autorelease];
+	
+	if ([attributes count] == 1)
 	{
-		return [[[OOMConcreteVertex alloc] initWithAttributes:attributes] autorelease];
+		NSArray *positionAttr = [attributes objectForKey:kOOMPositionAttributeKey];
+		if ([positionAttr count] == 3 && IsValidAttribute(positionAttr))
+		{
+			Vector position =
+			{
+				[positionAttr oo_floatAtIndex:0], [positionAttr oo_floatAtIndex:1], [positionAttr oo_floatAtIndex:2]
+			};
+			return [[[OOMPositionOnlyVertex alloc] initWithPosition:position] autorelease];
+		}
 	}
-	else
-	{
-		return [[[self alloc] init] autorelease];
-	}
+	
+	return [[[OOMConcreteVertex alloc] priv_initWithAttributes:attributes verify:YES] autorelease];
 }
 
 
@@ -104,6 +117,8 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	}
 	else
 	{
+		// Plain OOMVertex is OK for empty, immutable vertex.
+		// TODO: thread-safe singleton.
 		return [self init];
 	}
 }
@@ -117,13 +132,13 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	return [[OOMVertex allocWithZone:zone] initWithAttributes:[self allAttributes]];
+	return [[OOMVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
 - (id) mutableCopyWithZone:(NSZone *)zone
 {
-	return [[OOMMutableVertex allocWithZone:zone] initWithAttributes:[self allAttributes]];
+	return [[OOMMutableVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
@@ -175,41 +190,49 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (double) attributeAsDoubleForKey:(NSString *)key
 {
-	return [[self attributeForKey:key] oo_doubleAtIndex:0];
+	return OOMDoubleFromArray([self attributeForKey:key]);
 }
 
 
 - (NSPoint) attributeAsPointForKey:(NSString *)key
 {
-	NSArray *attrib = [self attributeForKey:key];
-	OOUInteger count = [attrib count];
-	NSPoint result = NSZeroPoint;
-	if (count > 0)  result.x = [attrib oo_doubleAtIndex:0];
-	if (count > 1)  result.y = [attrib oo_doubleAtIndex:1];
-	return result;
+	return OOMPointFromArray([self attributeForKey:key]);
 }
 
 
 - (Vector2D) attributeAsVector2DForKey:(NSString *)key
 {
-	NSArray *attrib = [self attributeForKey:key];
-	OOUInteger count = [attrib count];
-	Vector2D result = kZeroVector2D;
-	if (count > 0)  result.x = [attrib oo_floatAtIndex:0];
-	if (count > 1)  result.y = [attrib oo_floatAtIndex:1];
-	return result;
+	return OOMVector2DFromArray([self attributeForKey:key]);
 }
 
 
 - (Vector) attributeAsVectorForKey:(NSString *)key
 {
-	NSArray *attrib = [self attributeForKey:key];
-	OOUInteger count = [attrib count];
-	Vector result = kZeroVector;
-	if (count > 0)  result.x = [attrib oo_floatAtIndex:0];
-	if (count > 1)  result.y = [attrib oo_floatAtIndex:1];
-	if (count > 2)  result.z = [attrib oo_floatAtIndex:2];
-	return result;
+	return OOMVectorFromArray([self attributeForKey:key]);
+}
+
+
+- (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes
+{
+	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
+	[newAttrs addEntriesFromDictionary:attributes];
+	return [OOMVertex vertexWithAttributes:newAttrs];
+}
+
+
+- (OOMVertex *) vertexByAddingAttribute:(NSArray *)attribute forKey:(NSString *)key
+{
+	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
+	[newAttrs setObject:attribute forKey:key];
+	return [OOMVertex vertexWithAttributes:newAttrs];
+}
+
+
+- (OOMVertex *) vertexByRemovingAttributeForKey:(NSString *)key
+{
+	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
+	[newAttrs removeObjectForKey:key];
+	return [OOMVertex vertexWithAttributes:newAttrs];
 }
 
 @end
@@ -249,83 +272,13 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-static BOOL IsValidAttribute(NSArray *attr)
-{
-	if (attr == nil)  return NO;
-	
-	id value = nil;
-	foreach(value, attr)
-	{
-		if (EXPECT_NOT(![attr isKindOfClass:[NSNumber class]]))  return NO;
-	}
-	
-	return YES;
-}
-
-
-static BOOL IsValidAttributeDictionary(NSDictionary *dict)
-{
-	id key = nil;
-	foreach(key, [dict allKeys])
-	{
-		if (EXPECT_NOT(![key isKindOfClass:[NSString class]]))  return NO;
-		if (EXPECT_NOT(!IsValidAttribute([dict oo_arrayForKey:key])))  return NO;
-	}
-	return YES;
-}
-
-
-static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable)
-{
-	if (!IsValidAttributeDictionary(attributes))
-	{
-		DESTROY(self);
-		[NSException raise:NSInvalidArgumentException format:@"OOMVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
-	}
-	
-	/*	Deep copy attributes. The attribute arrays are always immutable, and
-		the numbers themselves are inherently immutable. The mutable flag
-		determines the mutability of the top-level dictionary.
-	*/
-	OOUInteger i = 0, count = [attributes count];
-	id *keys = malloc(sizeof *keys * count);
-	id *values = malloc(sizeof *values * count);
-	if (keys == NULL || values == NULL)
-	{
-		DESTROY(self);
-		free(keys);
-		free(values);
-		[NSException raise:NSMallocException format:@"Could not allocate memory for OOMVertex."];
-	}
-	
-	NSString *key = nil;
-	foreach(key, [attributes allKeys])
-	{
-		keys[i] = [key copy];
-		values[i] = [[attributes objectForKey:key] copy];
-	}
-	
-	id result = [[(mutable ? [NSMutableDictionary class] : [NSDictionary class]) alloc] initWithObjects:values forKeys:keys count:count];
-	
-	for (i = 0; i < count; i++)
-	{
-		[keys[i] release];
-		[values[i] release];
-	}
-	free(keys);
-	free(values);
-	
-	return result;
-}
-
-
 @implementation OOMConcreteVertex
 
-- (id) initWithAttributes:(NSDictionary *)attributes
+- (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify
 {
 	if ((self = [super init]))
 	{
-		_attributes = CopyAttributes(attributes, self, NO);
+		_attributes = CopyAttributes(attributes, self, NO, verify);
 		if (_attributes == nil)  DESTROY(self);
 	}
 	
@@ -361,7 +314,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable)
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes
 {
-	return [[[OOMConcreteMutableVertex alloc] initWithAttributes:attributes] retain];
+	return [[[OOMConcreteMutableVertex alloc] priv_initWithAttributes:attributes verify:YES] retain];
 }
 
 
@@ -406,25 +359,25 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable)
 
 - (void) setAttributeAsDouble:(double)value forKey:(NSString *)key
 {
-	[self setAttribute:$array($float(value)) forKey:key];
+	[self setAttribute:OOMArrayFromDouble(value) forKey:key];
 }
 
 
 - (void) setAttributeAsPoint:(NSPoint)value forKey:(NSString *)key
 {
-	[self setAttribute:$array($float(value.x), $float(value.y)) forKey:key];
+	[self setAttribute:OOMArrayFromPoint(value) forKey:key];
 }
 
 
 - (void) setAttributeAsVector2D:(Vector2D)value forKey:(NSString *)key
 {
-	[self setAttribute:$array($float(value.x), $float(value.y)) forKey:key];
+	[self setAttribute:OOMArrayFromVector2D(value) forKey:key];
 }
 
 
 - (void) setAttributeAsVector:(Vector)value forKey:(NSString *)key
 {
-	[self setAttribute:$array($float(value.x), $float(value.y), $float(value.z)) forKey:key];
+	[self setAttribute:OOMArrayFromVector(value) forKey:key];
 }
 
 @end
@@ -466,11 +419,11 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable)
 
 @implementation OOMConcreteMutableVertex
 
-- (id) initWithAttributes:(NSDictionary *)attributes
+- (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify
 {
 	if ((self = [super init]))
 	{
-		_attributes = CopyAttributes(attributes, self, YES);
+		_attributes = CopyAttributes(attributes, self, YES, verify);
 		if (_attributes == nil)  DESTROY(self);
 	}
 	
@@ -565,3 +518,146 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable)
 }
 
 @end
+
+
+@interface NSObject (DebugDescription)
+- (NSString *) debugDescription;
+@end
+
+
+static BOOL IsValidAttribute(NSArray *attr)
+{
+	if (attr == nil)  return NO;
+	
+	id value = nil;
+	foreach(value, attr)
+	{
+		if (EXPECT_NOT(![value isKindOfClass:[NSNumber class]]))
+		{
+			NSLog(@"%@ is not a number", [value debugDescription]);
+		}
+	}
+	
+	return YES;
+}
+
+
+static BOOL IsValidAttributeDictionary(NSDictionary *dict)
+{
+	id key = nil;
+	foreach(key, [dict allKeys])
+	{
+		if (EXPECT_NOT(![key isKindOfClass:[NSString class]]))  return NO;
+		if (EXPECT_NOT(!IsValidAttribute([dict oo_arrayForKey:key])))  return NO;
+	}
+	return YES;
+}
+
+
+static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL verify)
+{
+	if (verify && !IsValidAttributeDictionary(attributes))
+	{
+		DESTROY(self);
+		[NSException raise:NSInvalidArgumentException format:@"OOMVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
+	}
+	
+	/*	Deep copy attributes. The attribute arrays are always immutable, and
+		the numbers themselves are inherently immutable. The mutable flag
+		determines the mutability of the top-level dictionary.
+	*/
+	OOUInteger i = 0, count = [attributes count];
+	id *keys = malloc(sizeof *keys * count);
+	id *values = malloc(sizeof *values * count);
+	if (keys == NULL || values == NULL)
+	{
+		DESTROY(self);
+		free(keys);
+		free(values);
+		[NSException raise:NSMallocException format:@"Could not allocate memory for OOMVertex."];
+	}
+	
+	NSString *key = nil;
+	i = 0;
+	foreach(key, [attributes allKeys])
+	{
+		keys[i] = [key copy];
+		values[i] = [NSArray arrayWithArray:[attributes objectForKey:key]];
+		i++;
+	}
+	
+	id result = [[(mutable ? [NSMutableDictionary class] : [NSDictionary class]) alloc] initWithObjects:values forKeys:keys count:count];
+	
+	for (i = 0; i < count; i++)
+	{
+		[keys[i] release];
+	}
+	free(keys);
+	free(values);
+	
+	return result;
+}
+
+
+NSArray *OOMArrayFromDouble(double value)
+{
+	return $array($float(value));
+}
+
+
+NSArray *OOMArrayFromPoint(NSPoint value)
+{
+	return $array($float(value.x), $float(value.y));
+}
+
+
+NSArray *OOMArrayFromVector2D(Vector2D value)
+{
+	return $array($float(value.x), $float(value.y));
+}
+
+
+NSArray *OOMArrayFromVector(Vector value)
+{
+	return $array($float(value.x), $float(value.y), $float(value.z));
+}
+
+
+double OOMDoubleFromArray(NSArray *array)
+{
+	OOUInteger count = [array count];
+	double result = 0;
+	if (count > 0)  result = [array oo_doubleAtIndex:0];
+	return result;
+}
+
+
+NSPoint OOMPointFromArray(NSArray *array)
+{
+	OOUInteger count = [array count];
+	NSPoint result = NSZeroPoint;
+	if (count > 0)  result.x = [array oo_doubleAtIndex:0];
+	if (count > 1)  result.y = [array oo_doubleAtIndex:1];
+	return result;
+}
+
+
+Vector2D OOMVector2DFromArray(NSArray *array)
+{
+	OOUInteger count = [array count];
+	Vector2D result = kZeroVector2D;
+	if (count > 0)  result.x = [array oo_floatAtIndex:0];
+	if (count > 1)  result.y = [array oo_floatAtIndex:1];
+	return result;
+}
+
+
+Vector OOMVectorFromArray(NSArray *array)
+{
+	OOUInteger count = [array count];
+	Vector result = kZeroVector;
+	if (count > 0)  result.x = [array oo_floatAtIndex:0];
+	if (count > 1)  result.y = [array oo_floatAtIndex:1];
+	if (count > 2)  result.z = [array oo_floatAtIndex:2];
+	return result;
+}

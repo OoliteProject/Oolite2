@@ -5,6 +5,10 @@
 	list of numbers.
 	
 	For convenience, a number of common vertex attributes are defined.
+	
+	OOMVertex forms a class cluster with mutable and immutable variants. As
+	with other mutable-copiable class clusters, OOMVertex should be copied
+	rather than retained when taken as a value.
 */
 #import "liboomeshbase.h"
 
@@ -37,6 +41,12 @@
 - (NSPoint) attributeAsPointForKey:(NSString *)key;
 - (Vector2D) attributeAsVector2DForKey:(NSString *)key;
 - (Vector) attributeAsVectorForKey:(NSString *)key;
+
+// Create a new, immutable vertex by adding/removing attributes.
+- (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes;
+- (OOMVertex *) vertexByAddingAttribute:(NSArray *)attribute forKey:(NSString *)key;
+- (OOMVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
+
 
 @end
 
@@ -96,3 +106,15 @@ extern NSString * const kOOMTexCoordsAttributeKey;	// "aTexCoords"
 
 @end
 
+
+// Convert attributes to/from more convenient representations.
+NSArray *OOMArrayFromDouble(double value);
+NSArray *OOMArrayFromPoint(NSPoint value);
+NSArray *OOMArrayFromVector2D(Vector2D value);
+NSArray *OOMArrayFromVector(Vector value);
+
+// These will zero-fill if source is too short.
+double OOMDoubleFromArray(NSArray *array);
+NSPoint OOMPointFromArray(NSArray *array);
+Vector2D OOMVector2DFromArray(NSArray *array);
+Vector OOMVectorFromArray(NSArray *array);

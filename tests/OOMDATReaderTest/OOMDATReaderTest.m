@@ -21,6 +21,8 @@ int main (int argc, const char * argv[])
 	OOMDATReader *reader = [[OOMDATReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return EXIT_FAILURE;
 	
+	[reader setSmoothing:YES];
+//	[reader setBrokenSmoothing:NO];
 	[reader parse];
 	
     [pool drain];

@@ -18,14 +18,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AEA236C11A72E6600B361DC /* oomesh.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OOMesh.framework */;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OOMesh;
 		};
 		1AEA253F11A73B7C00B361DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AEA236C11A72E6600B361DC /* oomesh.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OOMesh */;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OOMesh;
 		};
 /* End PBXContainerItemProxy section */

@@ -31,7 +31,7 @@
 @protocol OOMProblemReportManager;
 
 
-@interface DDDATLexer: NSObject
+@interface OOMDATLexer: NSObject
 {
 @private
 	const char				*_cursor;
@@ -42,21 +42,22 @@
 	NSString				*_tokenString;
 }
 
-- (id)initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues;
-- (id)initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues;
-- (id)initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues;
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues;
+- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues;
 
 - (OOInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
 - (NSString *) currentTokenString;
 
-- (NSString *)nextToken;
+- (NSString *) nextToken;
 
 // Somewhat more efficient than comparing an NSString.
 - (BOOL) expectLiteral:(const char *)literal;
 
-- (BOOL)readInteger:(OOUInteger *)outInt;
-- (BOOL)readReal:(float *)outReal;
-- (BOOL)readString:(NSString **)outString;
+- (BOOL) readInteger:(OOUInteger *)outInt;
+- (BOOL) readReal:(float *)outReal;
+- (BOOL) readString:(NSString **)outString;
+- (BOOL) readUntilNewline:(NSString **)outString;
 
 @end

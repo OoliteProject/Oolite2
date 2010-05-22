@@ -27,16 +27,23 @@
 #import "OOMProblemReportManager.h"
 
 
-@interface DDDATLexer (Private)
+typedef enum OOMDATLexerEndMode
+{
+	kEndNormal,
+	kEndEOL
+} OOMDATLexerEndMode;
 
-- (BOOL)advance;
+
+@interface OOMDATLexer (Private)
+
+- (BOOL)advanceWithEndMode:(OOMDATLexerEndMode)mode;
 
 - (NSString *)describeToken;
 
 @end
 
 
-@implementation DDDATLexer
+@implementation OOMDATLexer
 
 - (id)initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues
 {
@@ -53,7 +60,7 @@
 	}
 	else
 	{
-		[NSException raise:NSInvalidArgumentException format:@"DDDATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
+		[NSException raise:NSInvalidArgumentException format:@"OOMDATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
 	}
 	
 	return nil;
@@ -119,7 +126,7 @@
 
 - (NSString *)nextToken
 {
-	if ([self advance])
+	if ([self advanceWithEndMode:kEndNormal])
 	{
 		return [self currentTokenString];
 	}
@@ -130,7 +137,7 @@
 
 - (BOOL) expectLiteral:(const char *)literal
 {
-	if ([self advance])
+	if ([self advanceWithEndMode:kEndNormal])
 	{
 		return (strncmp(literal, _cursor, _tokenLength) == 0);
 	}
@@ -143,7 +150,7 @@
 {
 	NSParameterAssert(outInt != NULL);
 	
-	if (EXPECT([self advance]))
+	if (EXPECT([self advanceWithEndMode:kEndNormal]))
 	{
 		unsigned result = 0;
 		const char *str = _cursor;
@@ -177,7 +184,7 @@
 {
 	NSParameterAssert(outReal != NULL);
 	
-	if (EXPECT([self advance]))
+	if (EXPECT([self advanceWithEndMode:kEndNormal]))
 	{
 		/*	Make null-terminated copy of token on stack and strtod() it.
 			Float parsing is way to fiddly for a custom version to be worth it.
@@ -207,6 +214,20 @@
 }
 
 
+- (BOOL) readUntilNewline:(NSString **)outString
+{
+	NSParameterAssert(outString != NULL);
+	
+	if (EXPECT([self advanceWithEndMode:kEndEOL]))
+	{
+		*outString = [self currentTokenString];
+		return YES;
+	}
+	
+	return NO;
+}
+
+
 static inline BOOL IsSeparatorChar(char c)
 {
 	return c == ' ' || c == ',' || c == '\t' || c == '\r' || c == '\n';
@@ -219,7 +240,7 @@ static inline BOOL IsLineEndChar(char c)
 }
 
 
-- (BOOL) advance
+- (BOOL)advanceWithEndMode:(OOMDATLexerEndMode)mode
 {
 	_cursor += _tokenLength;
 	NSAssert(_cursor <= _end, @"Lexer passed end of buffer");
@@ -269,10 +290,28 @@ static inline BOOL IsLineEndChar(char c)
 	
 	// Find length of current token.
 	const char *endCursor = _cursor + 1;
-	while (endCursor < _end && !IsSeparatorChar(*endCursor) && !COMMENT_AT(endCursor))
+	if (mode == kEndNormal)
 	{
-		endCursor++;
+		while (endCursor < _end && !IsSeparatorChar(*endCursor) && !COMMENT_AT(endCursor))
+		{
+			endCursor++;
+		}
 	}
+	else if (mode == kEndEOL)
+	{
+		while (endCursor < _end && !IsLineEndChar(*endCursor) && !COMMENT_AT(endCursor))
+		{
+			endCursor++;
+		}
+	}
+	else
+	{
+#ifndef NDEBUG
+		[NSException raise:NSInternalInconsistencyException format:@"Invalid end mode in DAT lexer: %u", mode];
+#endif
+	}
+
+
 	
 	_tokenLength = endCursor - _cursor;
 	

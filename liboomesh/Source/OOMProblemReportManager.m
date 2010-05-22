@@ -107,7 +107,7 @@ void OOMReportError(id <OOMProblemReportManager> probMgr, NSString *key, NSStrin
 			break;
 	}
 	
-	message = [NSString stringWithFormat:@"%@: %@\n"];
+	message = [NSString stringWithFormat:@"%@: %@\n", prefix, message];
 	
 	fputs([message UTF8String], stderr);
 }

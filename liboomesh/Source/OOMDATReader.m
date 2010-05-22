@@ -17,16 +17,19 @@ static void CleanVector(Vector *v)
 }
 
 
+/*	Triangle from source file representation, with associated metadata.
+*/
 typedef struct RawDATTriangle
 {
 	OOUInteger			vertex[3];
 	Vector				position[3];	// Cache of vertex position, the attribute we use most often.
-	OOUInteger			smoothGroupID;
 	Vector				normal;
 	Vector				tangent;
 	Vector2D			texCoords[3];	// Texture coordinates are stored separately because a given file vertex may be used for multiple "real" vertices with different texture coordinates.
-	NSString			*materialKey;	// Not retained or released - it's assumed the OODATReader will keep references to the texture names as long as they're relevant.
 	float				area;			// Actually twice area.
+	
+	uint16_t			smoothGroup;
+	uint8_t				materialIndex;
 } RawDATTriangle;
 
 
@@ -36,7 +39,7 @@ typedef struct RawDATTriangle
 */
 enum
 {
-	kVertexFaceDefInternalCount = 7
+	kVertexFaceDefInternalCount	= 7
 };
 
 typedef struct VertexFaceRef
@@ -53,23 +56,28 @@ static OOUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, OOUInteger index);
 static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct.
 
 
-@interface OOMDATReader (Private)
+enum
+{
+	kMaxDATMaterials			= 8
+};
 
-- (NSString *) priv_uniqueMaterialKey:(NSString *)name;
+
+@interface OOMDATReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
-- (BOOL) priv_checkNormalsAndAdjustWindingWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
-- (BOOL) priv_generateFaceTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
-- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs;
-- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs;
+- (BOOL) priv_checkNormalsAndAdjustWinding;
+- (BOOL) priv_generateFaceTangents;
+- (BOOL) priv_calculateVertexNormalsAndTangents;
+- (BOOL) priv_calculateVertexTangents;
+- (BOOL) priv_buildGroups;
 
 /*	Dump a copy of the file. If smoothing is used, explict normals and
 	tangents are used. Currently, this does not take smooth groups into account.
 */
-- (void) priv_dumpDATWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
+- (void) priv_dumpDAT;
 
 @end
 
@@ -97,7 +105,6 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
-	DESTROY(_materialKeys);
 	
 	[super dealloc];
 }
@@ -106,14 +113,17 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 - (void) parse
 {
 	if (_lexer == nil)  return;
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	
+	NSAutoreleasePool			*pool = nil, *innerPool = nil;
 	BOOL						OK = YES;
 	OOMVertex					**fileVertices = NULL;
 	RawDATTriangle				*rawTriangles = NULL;
 	VertexFaceRef				*vfrs = NULL;
 	OOUInteger					vIter, fIter;
 	NSString					*secName = nil;
+	NSMutableArray				*materialKeys = nil;
+	NSMutableDictionary			*materialKeyToIndex = nil;
+	
+	pool = [NSAutoreleasePool new];
 	
 	// Get vertex count.
 	if (OK)
@@ -181,13 +191,16 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	}
 	if (OK)
 	{
+		innerPool = [NSAutoreleasePool new];
+		NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
+		
 		for (fIter = 0; fIter != _fileFaceCount; fIter++)
 		{
 			// FACES entry format: <int smoothGroupID> <int unused1> <int unused2> <float n.x> <float n.y> <float n.z> <int vertexCount = 3> <int v0> <int v1> <int v2>
 			
 			RawDATTriangle *triangle = &rawTriangles[fIter];
-			OOUInteger unused, faceVertexCount;
-			OK = [_lexer readInteger:&triangle->smoothGroupID] &&
+			OOUInteger smoothGroupID, unused, faceVertexCount;
+			OK = [_lexer readInteger:&smoothGroupID] &&
 				 [_lexer readInteger:&unused] &&
 				 [_lexer readInteger:&unused];
 			if (!OK)
@@ -195,6 +208,19 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 				[self priv_reportBasicParseError:@"integer"];
 				break;
 			}
+			
+			/*	Canonicalize smooth group IDs. Starts with number 1, using 0
+				as "unknown" marker.
+			*/
+			NSNumber *key = [NSNumber numberWithUnsignedInteger:smoothGroupID];
+			uint16_t smoothGroup = [smoothGroups oo_unsignedIntForKey:key];
+			if (smoothGroup == 0)
+			{
+				smoothGroup = [smoothGroups count] + 1;
+				[smoothGroups setObject:[NSNumber numberWithUnsignedInteger:smoothGroup] forKey:key];
+			}
+			
+			triangle->smoothGroup = smoothGroup;
 			
 			OK = [_lexer readReal:&triangle->normal.x] &&
 				 [_lexer readReal:&triangle->normal.y] &&
@@ -238,6 +264,9 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 				triangle->position[vIter] = [fileVertices[triangle->vertex[vIter]] position];
 			}
 		}
+		
+		_usesSmoothGroups = [smoothGroups count] > 1;
+		[innerPool drain];
 	}
 	
 	/*	NOTE: we don't check for errors when reading secName, because this
@@ -249,6 +278,10 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	// Load TEXTURES section if present.
 	if (OK && [secName isEqualToString:@"TEXTURES"])
 	{
+		materialKeys = [NSMutableArray array];
+		innerPool = [NSAutoreleasePool new];
+		materialKeyToIndex = [NSMutableDictionary dictionaryWithCapacity:kMaxDATMaterials];
+		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
 			// TEXTURES entry format: <string materialName> <float scaleS> <float scaleT> (<float s> <float t>)*3
@@ -262,7 +295,14 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 				break;
 			}
 			
-			triangle->materialKey = [self priv_uniqueMaterialKey:materialKey];
+			NSNumber *materialIndex = [materialKeyToIndex objectForKey:materialKey];
+			if (materialIndex == 0)
+			{
+				materialIndex = [NSNumber numberWithUnsignedInteger:_materialCount++];
+				[materialKeyToIndex setObject:materialIndex forKey:materialKey];
+				[materialKeys addObject:materialKey];
+			}
+			triangle->materialIndex = [materialIndex unsignedIntValue];
 			
 			float scaleS, scaleT;
 			OK = [_lexer readReal:&scaleS] && [_lexer readReal:&scaleT];
@@ -282,56 +322,51 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 				break;
 			}
 		}
+		[innerPool drain];
 		
 		if (OK)  secName = [_lexer nextToken];
-	}
-	
-	// Load NAMES section if present.
-	if (OK && [secName isEqualToString:@"NAMES"])
-	{
-		OOUInteger nIter, nameCount;
-		OK = [_lexer readInteger:&nameCount];
-		if (!OK)
+		
+		// NAMES is only valid after TEXTURES.
+		if (OK && [secName isEqualToString:@"NAMES"])
 		{
-			[self priv_reportBasicParseError:@"integer after NAMES"];
-			OK = NO;
-		}
-		if (OK)
-		{
-			NSMutableDictionary *renameDict = [NSMutableDictionary dictionaryWithCapacity:nameCount];
-			NSString *key = nil, *realName = nil;
-			
-			for (nIter = 0; nIter < nameCount; nIter++)
+			OOUInteger nIter, nameCount;
+			OK = [_lexer readInteger:&nameCount];
+			if (!OK)
 			{
-				// NAMES entry format: <newline-terminated-string>
-				
-				OK = [_lexer readUntilNewline:&realName];
-				if (!OK)
+				[self priv_reportBasicParseError:@"integer after NAMES"];
+				OK = NO;
+			}
+			if (OK)
+			{
+				for (nIter = 0; nIter < nameCount; nIter++)
 				{
-					[self priv_reportBasicParseError:@"string"];
-					break;
+					// NAMES entry format: <newline-terminated-string>
+					
+					NSString *realName = nil;
+					OK = [_lexer readUntilNewline:&realName];
+					if (!OK)
+					{
+						[self priv_reportBasicParseError:@"string"];
+						break;
+					}
+					
+					[materialKeys replaceObjectAtIndex:nIter withObject:realName];
 				}
-				
-				// Key doesn't strictly need uniquing, but it will allow faster comparisons in the rename pass.
-				key = [self priv_uniqueMaterialKey:[NSString stringWithFormat:@"%u", nIter]];
-				realName = [self priv_uniqueMaterialKey:realName];
-				[renameDict setObject:realName forKey:key];
 			}
 			
-			// Do the renaming.
-			for (fIter = 0; fIter < _fileFaceCount; fIter++)
-			{
-				realName = [renameDict objectForKey:rawTriangles[fIter].materialKey];
-				if (realName != nil)  rawTriangles[fIter].materialKey = realName;
-			}
+			if (OK)  secName = [_lexer nextToken];
 		}
-		
-		if (OK)  secName = [_lexer nextToken];
 	}
+	else
+	{
+		_materialCount = 1;
+	}
+
 	
 	// Load NORMALS section if present.
 	if (OK && [secName isEqualToString:@"NORMALS"])
 	{
+		innerPool = [NSAutoreleasePool new];
 		_explicitNormals = YES;
 		
 		for (vIter = 0; vIter < _fileVertexCount; vIter++)
@@ -397,21 +432,30 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		}
 	}
 	
+	if (!_smoothing || _explicitNormals)  _usesSmoothGroups = NO;
+	
+	
+	if (OK)
+	{
+		_rawTriangles = rawTriangles;
+		_fileVertices = fileVertices;
+		_faceRefs = vfrs;
+		_materialKeys = materialKeys;
+	}
 	
 	//	Post-processing.
-	//	TODO: cache vertex positions in faces for speed.
 	if (OK && !_explicitNormals)
 	{
-		OK = [self priv_checkNormalsAndAdjustWindingWithTriangles:rawTriangles vertices:fileVertices];
+		OK = [self priv_checkNormalsAndAdjustWinding];
 	}
 	if (OK && !_explicitTangents)
 	{
-		OK = [self priv_generateFaceTangentsWithTriangles:rawTriangles vertices:fileVertices];
+		OK = [self priv_generateFaceTangents];
 	}
 	if (OK && !_explicitNormals && _smoothing)
 	{
 		//	Vertex smoothing.
-		OK = [self priv_calculateVertexNormalsAndTangentsWithTriangles:rawTriangles vertices:fileVertices faceRefs:vfrs];
+		OK = [self priv_calculateVertexNormalsAndTangents];
 	}
 	else
 	{
@@ -419,11 +463,24 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		_brokenSmoothing = NO;
 		if (OK && _explicitNormals && !_explicitTangents)
 		{
-			OK = [self priv_calculateVertexTangentsWithTriangles:rawTriangles vertices:fileVertices faceRefs:vfrs];
+			OK = [self priv_calculateVertexTangents];
 		}
 	}
 	
-	if (OK)  [self priv_dumpDATWithTriangles:rawTriangles vertices:fileVertices];
+	if (OK)  [self priv_dumpDAT];
+	
+	
+	//	Convert to sane format.
+	if (OK)
+	{
+		OK = [self priv_buildGroups];
+	}
+	
+	// Clear state pointers.
+	_rawTriangles = nil;
+	_fileVertices = nil;
+	_faceRefs = nil;
+	_materialKeys = nil;
 	
 	
 	for (vIter = 0; vIter < _fileVertexCount; vIter++)
@@ -432,7 +489,6 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	}
 	
 	DESTROY(_lexer);
-	DESTROY(_materialKeys);
 	free(fileVertices);
 	free(rawTriangles);
 	[pool drain];
@@ -487,19 +543,6 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 
 @implementation OOMDATReader (Private)
 
-- (NSString *) priv_uniqueMaterialKey:(NSString *)name
-{
-	NSString *result = [_materialKeys member:name];
-	if (result == nil)
-	{
-		if (_materialKeys == nil)  _materialKeys = [NSMutableSet new];
-		[_materialKeys addObject:name];
-		result = name;
-	}
-	return result;
-}
-
-
 - (void) priv_reportParseError:(NSString *)format, ...
 {
 	NSString *base = OOMLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
@@ -529,11 +572,11 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 
 //	NOTE: these methods exactly duplicates Oolite 1.x behaviour, including bugs and slowness.
 
-- (BOOL) priv_checkNormalsAndAdjustWindingWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (BOOL) priv_checkNormalsAndAdjustWinding
 {
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
-		RawDATTriangle *triangle = &triangles[fIter];
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		Vector v0 = triangle->position[0];
 		Vector v1 = triangle->position[1];
 		Vector v2 = triangle->position[2];
@@ -572,11 +615,11 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 }
 
 
-- (BOOL) priv_generateFaceTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (BOOL) priv_generateFaceTangents
 {
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
-		RawDATTriangle *triangle = &triangles[fIter];
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
 		/*	Generate tangents, i.e. vectors that run in the direction of the s
 			texture coordinate. Based on code I found in a forum somewhere and
@@ -616,11 +659,11 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 }
 
 
-- (void) priv_calculateBrokenTriangleAreasWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (void) priv_calculateBrokenTriangleAreas
 {
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
-		RawDATTriangle *triangle = &triangles[fIter];
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
 		Vector v0 = triangle->position[0];
 		Vector v1 = triangle->position[1];
@@ -638,11 +681,11 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 }
 
 
-- (void) priv_calculateCorrectTriangleAreasWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (void) priv_calculateCorrectTriangleAreas
 {
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
-		RawDATTriangle *triangle = &triangles[fIter];
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
 		/*	Calculate area of triangle.
 			The magnitude of the cross product of two vectors is the area of
@@ -659,15 +702,15 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 }
 
 
-- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs
+- (BOOL) priv_calculateVertexNormalsAndTangents
 {
 	if (_brokenSmoothing)
 	{
-		[self priv_calculateBrokenTriangleAreasWithTriangles:triangles vertices:vertices];
+		[self priv_calculateBrokenTriangleAreas];
 	}
 	else
 	{
-		[self priv_calculateCorrectTriangleAreasWithTriangles:triangles vertices:vertices];
+		[self priv_calculateCorrectTriangleAreas];
 	}
 
 	
@@ -678,11 +721,11 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		Vector normalSum = kZeroVector;
 		Vector tangentSum = kZeroVector;
 		
-		VertexFaceRef *vfr = &vfrs[vIter];
+		VertexFaceRef *vfr = &_faceRefs[vIter];
 		OOUInteger fIter, fCount = VFRGetCount(vfr);
 		for (fIter = 0; fIter < fCount; fIter++)
 		{
-			RawDATTriangle *triangle = &triangles[VFRGetFaceAtIndex(vfr, fIter)];
+			RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
 			
 			normalSum = vector_add(normalSum, vector_multiply_scalar(triangle->normal, triangle->area));
 			tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
@@ -691,10 +734,10 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		normalSum = vector_normal_or_fallback(normalSum, kBasisZVector);
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
 		NSDictionary *attrs = $dict(kOOMNormalAttributeKey, OOMArrayFromVector(normalSum), kOOMTangentAttributeKey, OOMArrayFromVector(tangentSum));
-		vertices[vIter] = [[vertices[vIter] vertexByAddingAttributes:attrs] retain];
+		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttributes:attrs] retain];
 		
 		[pool drain];
-		[vertices[vIter] autorelease];	// Needs to be autoreleased in outer pool.
+		[_fileVertices[vIter] autorelease];	// Needs to be autoreleased in outer pool.
 	}
 	
 	return YES;
@@ -710,10 +753,10 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	This basically means explicit-normal models without explicit tangents
 	can't usefully be normal mapped.
 */
-- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs
+- (BOOL) priv_calculateVertexTangents
 {
 	//	Oolite gets area calculation right in this case.
-	[self priv_calculateCorrectTriangleAreasWithTriangles:triangles vertices:vertices];
+	[self priv_calculateCorrectTriangleAreas];
 	
 	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
@@ -721,27 +764,93 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		
 		Vector tangentSum = kZeroVector;
 		
-		VertexFaceRef *vfr = &vfrs[vIter];
+		VertexFaceRef *vfr = &_faceRefs[vIter];
 		OOUInteger fIter, fCount = VFRGetCount(vfr);
 		for (fIter = 0; fIter < fCount; fIter++)
 		{
-			RawDATTriangle *triangle = &triangles[VFRGetFaceAtIndex(vfr, fIter)];
+			RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
 			
 			tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
 		}
 		
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
-		vertices[vIter] = [[vertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangentSum) forKey:kOOMTangentAttributeKey] retain];
+		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangentSum)
+																	   forKey:kOOMTangentAttributeKey] retain];
 		
 		[pool drain];
-		[vertices[vIter] autorelease];	// Needs to be autoreleased in outer pool.
+		[_fileVertices[vIter] autorelease];	// Needs to be autoreleased in outer pool.
 	}
 	
 	return YES;
 }
 
 
-- (void) priv_dumpDATWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (BOOL) priv_buildGroups
+{
+	OOUInteger vIter, fIter, mIter;
+	BOOL isEdgeVertex[_fileVertexCount];
+	BOOL seenSmoothGroup[_fileVertexCount];
+	memset(seenSmoothGroup, 0, sizeof seenSmoothGroup);
+	
+	if (_usesSmoothGroups)
+	{
+		/*	Find any vertices that are between faces of different smoothing
+			groups, and mark them as being on an edge and thus not smoothed.
+		*/
+		for (fIter = 0; fIter < _fileFaceCount; fIter++)
+		{
+			uint16_t smoothGroup = _rawTriangles[fIter].smoothGroup;
+			for (vIter = 0; vIter < 3; vIter++)
+			{
+				OOUInteger vi = _rawTriangles[fIter].vertex[vIter];
+				if (seenSmoothGroup[vi] == 0)
+				{
+					// Not seen this smooth group before.
+					seenSmoothGroup[vi] = smoothGroup;
+				}
+				else if (seenSmoothGroup[vi] != smoothGroup)
+				{
+					// Vertex is on boundary between smooth groups.
+					isEdgeVertex[vi] = YES;
+				}
+			}
+		}
+	}
+	
+	/*	This is technically O(n * m) where n is face count and m is material
+		count, but given that m is small on any practical model (Oolite 1.x
+		doesn't allow more than 7) it's not a big deal.
+	*/
+	for (mIter = 0; mIter < _materialCount; mIter++)
+	{
+		for (fIter = 0; fIter < _fileFaceCount; fIter++)
+		{
+			RawDATTriangle *triangle = &_rawTriangles[fIter];
+			if (triangle->materialIndex == mIter)
+			{
+				for (vIter = 0; vIter < 3; vIter++)
+				{
+					/*
+					OOUInteger vi = triangle->vertex[vIter];
+					
+					if (_usesSmoothGroups)
+					{
+						Vector normal, tangent;
+						[self priv_calculateSmoothGroupEdgeNormal:&normal
+													   andTangent:&tangent
+														forVertex:vi
+													inSmoothGroup:triangle->smoothGroup];
+					} */
+				}
+			}
+		}
+	}
+	
+	return YES;
+}
+
+
+- (void) priv_dumpDAT
 {
 	NSString *path = [[_path stringByDeletingPathExtension] stringByAppendingString:@"_debugdump.dat"];
 	FILE *file = fopen([path UTF8String], "w");
@@ -755,7 +864,7 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	
 	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
-		Vector pos = [vertices[vIter] position];
+		Vector pos = [_fileVertices[vIter] position];
 		fprintf(file, "%g %g %g\n", pos.x, pos.y, pos.z);
 	}
 	
@@ -764,23 +873,28 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 	fprintf(file, "\n\nFACES\n");
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
-		RawDATTriangle *triangle = &triangles[fIter];
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		Vector normal = explicitNormals ? kZeroVector : triangle->normal;
-		OOUInteger smoothGroup = explicitNormals ? 0 : triangle->smoothGroupID;
+		OOUInteger smoothGroup = _usesSmoothGroups ? triangle->smoothGroup : 0;
 		fprintf(file, "%lu 0 0 %g %g %g 3 %lu %lu %lu\n", (unsigned long)smoothGroup, normal.x, normal.y, normal.z, (unsigned long)triangle->vertex[0], (unsigned long)triangle->vertex[1], (unsigned long)triangle->vertex[2]);
 	}
 	
-	if (triangles[0].materialKey != nil)
+	if ([_materialKeys count] != 0)
 	{
 		fprintf(file, "\n\nTEXTURES\n");
 		for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
-			RawDATTriangle *triangle = &triangles[fIter];
-			fprintf(file, "%s 1 1 %g %g %g %g %g %g\n", [triangle->materialKey UTF8String],
+			RawDATTriangle *triangle = &_rawTriangles[fIter];
+			fprintf(file, "%u 1 1 %g %g %g %g %g %g\n", triangle->materialIndex,
 					triangle->texCoords[0].x, triangle->texCoords[0].y,
 					triangle->texCoords[1].x, triangle->texCoords[1].y,
 					triangle->texCoords[2].x, triangle->texCoords[2].y);
-			
+		}
+		
+		fprintf(file, "\n\nNAMES %lu\n", (unsigned long)_materialCount);
+		for (OOUInteger mIter = 0; mIter < _materialCount; mIter++)
+		{
+			fprintf(file, "%s\n", [[_materialKeys objectAtIndex:mIter] UTF8String]);
 		}
 	}
 	
@@ -789,14 +903,14 @@ static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct
 		fprintf(file, "\n\nNORMALS\n");
 		for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 		{
-			Vector normal = [vertices[vIter] normal];
+			Vector normal = [_fileVertices[vIter] normal];
 			fprintf(file, "%g %g %g\n", normal.x, normal.y, normal.z);
 		}
 		
 		fprintf(file, "\n\nTANGENTS\n");
 		for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 		{
-			Vector tangent = [vertices[vIter] tangent];
+			Vector tangent = [_fileVertices[vIter] tangent];
 			fprintf(file, "%g %g %g\n", tangent.x, tangent.y, tangent.z);
 		}
 	}

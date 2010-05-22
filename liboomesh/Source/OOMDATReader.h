@@ -23,11 +23,17 @@
 	BOOL							_brokenSmoothing;
 	BOOL							_explicitNormals;
 	BOOL							_explicitTangents;
+	BOOL							_usesSmoothGroups;
 	
+	OOUInteger						_materialCount;
 	OOUInteger						_fileVertexCount;
 	OOUInteger						_fileFaceCount;
 	
-	NSMutableSet					*_materialKeys;
+	// ivars used only during parsing.
+	struct RawDATTriangle			*_rawTriangles;
+	OOMVertex						**_fileVertices;
+	struct VertexFaceRef			*_faceRefs;
+	NSArray							*_materialKeys;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues;

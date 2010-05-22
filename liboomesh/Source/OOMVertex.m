@@ -1,3 +1,29 @@
+/*
+	OOMVertex.m
+	liboomesh
+	
+	
+	Copyright © 2010 Jens Ayton.
+	
+	Permission is hereby granted, free of charge, to any person obtaining a
+	copy of this software and associated documentation files (the “Software”),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+	
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+	DEALINGS IN THE SOFTWARE.
+*/
+
 #import "OOMVertex.h"
 #import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
@@ -27,6 +53,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 {
 @private
 	NSDictionary			*_attributes;
+	OOUInteger				_hash;
 }
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
@@ -49,6 +76,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 {
 @private
 	NSMutableDictionary		*_attributes;
+	OOUInteger				_hash;
 }
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
@@ -56,15 +84,20 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-static inline NSArray *ArrayFromVector(Vector v)
+@interface OOMSingleObjectEnumerator: NSEnumerator
 {
-	return $array($float(v.x), $float(v.y), $float(v.z));
+@private
+	id						_object;
 }
+
+- (id) initWithObject:(id)object;
+
+@end
 
 
 static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 {
-	return $dict(key, ArrayFromVector(v));
+	return $dict(key, OOMArrayFromVector(v));
 }
 
 
@@ -118,7 +151,6 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	else
 	{
 		// Plain OOMVertex is OK for empty, immutable vertex.
-		// TODO: thread-safe singleton.
 		return [self init];
 	}
 }
@@ -142,16 +174,48 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
+OOUInteger gHashCollisions = 0;
+
 - (BOOL) isEqual:(id)other
 {
 	if (EXPECT_NOT(![other isKindOfClass:[OOMVertex class]]))  return NO;
-	return [[self allAttributes] isEqual:[other allAttributes]];
+	if ([self hash] != [other hash])  return NO;
+	BOOL result = [[self allAttributes] isEqual:[other allAttributes]];
+	if (!result)  gHashCollisions++;
+	return result;
 }
 
 
 - (OOUInteger) hash
 {
-	return [[self allAttributes] hash];
+#if 0
+	OOUInteger hash = [[self allAttributes] hash];
+#else
+	OOUInteger hash = 5381;
+	
+#define HASH_BITS (sizeof hash * CHAR_BIT)
+#define STIR_HASH(x)  do { hash = (hash * 33) ^ (OOUInteger)(x); } while (0)
+	
+	NSString *key = nil;
+	foreach(key, [self allAttributeKeys])
+	{
+		OOUInteger keyHash = [key hash];
+		STIR_HASH(keyHash);
+#if 0
+		OOUInteger valHash = [[self attributeForKey:key] hash];
+		STIR_HASH(valHash);
+#else
+		NSNumber *value = nil;
+		foreach (value, [self attributeForKey:key])
+		{
+			OOUInteger valHash = [value hash];
+			STIR_HASH(valHash);
+		}
+#endif
+	}
+#endif
+	if (hash == 0)  hash = 1;
+	return hash;
 }
 
 @end
@@ -185,6 +249,12 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (NSArray *) allAttributeKeys
 {
 	return [[self allAttributes] allKeys];
+}
+
+
+- (NSEnumerator *) attributeKeyEnumerator
+{
+	return [[self allAttributeKeys] objectEnumerator];
 }
 
 
@@ -305,6 +375,13 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (NSDictionary *) allAttributes
 {
 	return _attributes;
+}
+
+
+- (OOUInteger) hash
+{
+	if (_hash == 0)  _hash = [super hash];
+	return _hash;
 }
 
 @end
@@ -448,6 +525,8 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (void) setAttribute:(NSArray *)attribute forKey:(NSString *)key
 {
 	if (EXPECT_NOT(key == nil))  return;
+	_hash = 0;
+	
 	if (attribute != nil)
 	{
 		if (IsValidAttribute(attribute))
@@ -465,6 +544,13 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 		[_attributes removeObjectForKey:key];
 	}
 
+}
+
+
+- (OOUInteger) hash
+{
+	if (_hash == 0)  _hash = [super hash];
+	return _hash;
 }
 
 @end
@@ -485,6 +571,15 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (NSDictionary *) allAttributes
 {
 	return AttributesDictFromVector(kOOMPositionAttributeKey, _position);
+}
+
+
+- (NSArray *) allAttributeKeys
+{
+	static NSArray *attributeKeys = nil;
+	if (attributeKeys == nil)  attributeKeys = [$array(kOOMPositionAttributeKey) retain];
+
+	return attributeKeys;
 }
 
 
@@ -520,8 +615,32 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@interface NSObject (DebugDescription)
-- (NSString *) debugDescription;
+@implementation OOMSingleObjectEnumerator
+
+- (id) initWithObject:(id)object
+{
+	if ((self = [super init]))
+	{
+		_object = [object retain];
+	}
+	return self;
+}
+
+
+- (id) nextObject
+{
+	id result = [_object autorelease];
+	_object = nil;
+	return result;
+}
+
+
+- (NSArray *) allObjects
+{
+	if (_object != nil)  return [NSArray arrayWithObject:_object];
+	return [NSArray array];
+}
+
 @end
 
 
@@ -532,10 +651,7 @@ static BOOL IsValidAttribute(NSArray *attr)
 	id value = nil;
 	foreach(value, attr)
 	{
-		if (EXPECT_NOT(![value isKindOfClass:[NSNumber class]]))
-		{
-			NSLog(@"%@ is not a number", [value debugDescription]);
-		}
+		if (EXPECT_NOT(![value isKindOfClass:[NSNumber class]]))  return NO;
 	}
 	
 	return YES;

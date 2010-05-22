@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */; };
+		1A8F1BDB11A882FC00C94CB0 /* OOMFaceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1BD911A882FC00C94CB0 /* OOMFaceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8F1BDC11A882FC00C94CB0 /* OOMFaceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1BDA11A882FC00C94CB0 /* OOMFaceGroup.m */; };
+		1A8F1C6911A884F400C94CB0 /* OOMFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1C6711A884F400C94CB0 /* OOMFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8F1C6A11A884F400C94CB0 /* OOMFace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1C6811A884F400C94CB0 /* OOMFace.m */; };
+		1A8F1CCC11A88CA600C94CB0 /* OOMMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1CCA11A88CA600C94CB0 /* OOMMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8F1CCD11A88CA600C94CB0 /* OOMMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1CCB11A88CA600C94CB0 /* OOMMesh.m */; };
+		1A8F1CEB11A8904B00C94CB0 /* OOMOOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1CE911A8904B00C94CB0 /* OOMOOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8F1CEC11A8904B00C94CB0 /* OOMOOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1CEA11A8904B00C94CB0 /* OOMOOMeshWriter.m */; };
 		1AEA251711A73AA100B361DC /* liboomeshbase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ABE11A5D94E005F2081 /* liboomeshbase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251811A73AA300B361DC /* OOMDATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OOMDATLexer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1AEA251911A73AA400B361DC /* OOMDATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OOMDATLexer.m */; };
@@ -43,6 +51,14 @@
 		1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionUtils.h; sourceTree = "<group>"; };
 		1A864C9011A5EC26008CDC78 /* CollectionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionUtils.m; sourceTree = "<group>"; };
+		1A8F1BD911A882FC00C94CB0 /* OOMFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMFaceGroup.h; sourceTree = "<group>"; };
+		1A8F1BDA11A882FC00C94CB0 /* OOMFaceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMFaceGroup.m; sourceTree = "<group>"; };
+		1A8F1C6711A884F400C94CB0 /* OOMFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMFace.h; sourceTree = "<group>"; };
+		1A8F1C6811A884F400C94CB0 /* OOMFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMFace.m; sourceTree = "<group>"; };
+		1A8F1CCA11A88CA600C94CB0 /* OOMMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMMesh.h; sourceTree = "<group>"; };
+		1A8F1CCB11A88CA600C94CB0 /* OOMMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMMesh.m; sourceTree = "<group>"; };
+		1A8F1CE911A8904B00C94CB0 /* OOMOOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMOOMeshWriter.h; sourceTree = "<group>"; };
+		1A8F1CEA11A8904B00C94CB0 /* OOMOOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMOOMeshWriter.m; sourceTree = "<group>"; };
 		1AAB4A3211A5D83D005F2081 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1AAB4AB511A5D894005F2081 /* OOMVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMVertex.h; sourceTree = "<group>"; };
 		1AAB4AB611A5D894005F2081 /* OOMVertex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMVertex.m; sourceTree = "<group>"; };
@@ -118,10 +134,18 @@
 			children = (
 				1AAB4AB511A5D894005F2081 /* OOMVertex.h */,
 				1AAB4AB611A5D894005F2081 /* OOMVertex.m */,
+				1A8F1C6711A884F400C94CB0 /* OOMFace.h */,
+				1A8F1C6811A884F400C94CB0 /* OOMFace.m */,
+				1A8F1BD911A882FC00C94CB0 /* OOMFaceGroup.h */,
+				1A8F1BDA11A882FC00C94CB0 /* OOMFaceGroup.m */,
+				1A8F1CCA11A88CA600C94CB0 /* OOMMesh.h */,
+				1A8F1CCB11A88CA600C94CB0 /* OOMMesh.m */,
 				1AEA232E11A728C100B361DC /* OOMDATLexer.h */,
 				1AEA232F11A728C100B361DC /* OOMDATLexer.m */,
 				1AEA235C11A72E0B00B361DC /* OOMDATReader.h */,
 				1AEA235D11A72E0B00B361DC /* OOMDATReader.m */,
+				1A8F1CE911A8904B00C94CB0 /* OOMOOMeshWriter.h */,
+				1A8F1CEA11A8904B00C94CB0 /* OOMOOMeshWriter.m */,
 				1AEA233711A729F000B361DC /* OOMProblemReportManager.h */,
 				1AEA234E11A72C7200B361DC /* OOMProblemReportManager.m */,
 			);
@@ -203,6 +227,10 @@
 				1AEA252911A73AAD00B361DC /* OOVector.h in Headers */,
 				1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */,
 				1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */,
+				1A8F1BDB11A882FC00C94CB0 /* OOMFaceGroup.h in Headers */,
+				1A8F1C6911A884F400C94CB0 /* OOMFace.h in Headers */,
+				1A8F1CCC11A88CA600C94CB0 /* OOMMesh.h in Headers */,
+				1A8F1CEB11A8904B00C94CB0 /* OOMOOMeshWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +298,10 @@
 				1AEA252A11A73AAE00B361DC /* OOVector.m in Sources */,
 				1AEA252B11A73AB000B361DC /* CollectionUtils.m in Sources */,
 				1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */,
+				1A8F1BDC11A882FC00C94CB0 /* OOMFaceGroup.m in Sources */,
+				1A8F1C6A11A884F400C94CB0 /* OOMFace.m in Sources */,
+				1A8F1CCD11A88CA600C94CB0 /* OOMMesh.m in Sources */,
+				1A8F1CEC11A8904B00C94CB0 /* OOMOOMeshWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

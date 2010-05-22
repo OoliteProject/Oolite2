@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <OOMesh/OOCollectionExtractors.h>
 
 
 int main (int argc, const char * argv[])
@@ -23,7 +22,9 @@ int main (int argc, const char * argv[])
 	
 	[reader setSmoothing:YES];
 //	[reader setBrokenSmoothing:NO];
-	[reader parse];
+	
+	OOMMesh *mesh = [reader mesh];
+	NSLog(@"%@", mesh);
 	
     [pool drain];
     return 0;

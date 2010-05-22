@@ -1,9 +1,39 @@
+/*
+	OOMDATReader.m
+	liboomesh
+	
+	
+	Copyright © 2010 Jens Ayton.
+	
+	Permission is hereby granted, free of charge, to any person obtaining a
+	copy of this software and associated documentation files (the “Software”),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+	
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+	DEALINGS IN THE SOFTWARE.
+*/
+
 #import "OOMDATReader.h"
 #import "OOMProblemReportManager.h"
 #import "OOMDATLexer.h"
-#import "OOMVertex.h"
 #import "CollectionUtils.h"
 #import "OOCollectionExtractors.h"
+
+#import "OOMVertex.h"
+#import "OOMFace.h"
+#import "OOMFaceGroup.h"
+#import "OOMMesh.h"
 
 
 static void CleanVector(Vector *v)
@@ -115,6 +145,9 @@ enum
 	
 	[super dealloc];
 }
+
+
+OOUInteger gHashCollisions;
 
 
 - (void) parse
@@ -239,7 +272,7 @@ enum
 		}
 	}
 	
-	if (OK)  [self priv_dumpDAT];
+//	if (OK)  [self priv_dumpDAT];
 	
 	
 	//	Convert to sane format.
@@ -247,6 +280,7 @@ enum
 	{
 		OK = [self priv_buildGroups];
 	}
+	printf("Hash collisions: %lu\n", (unsigned long)gHashCollisions);
 	
 	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
@@ -262,6 +296,13 @@ enum
 	_rawTriangles = NULL;
 	
 	[pool drain];
+}
+
+
+- (OOMMesh *) mesh
+{
+	[self parse];
+	return _mesh;
 }
 
 
@@ -557,14 +598,15 @@ enum
 		
 		Vector normal;
 		OK = [_lexer readReal:&normal.x] &&
-		[_lexer readReal:&normal.y] &&
-		[_lexer readReal:&normal.z];
+			 [_lexer readReal:&normal.y] &&
+			 [_lexer readReal:&normal.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
 			return NO;
 		}
 		
+		CleanVector(&normal);
 		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(normal)
 																	  forKey:kOOMNormalAttributeKey];
 	}
@@ -584,14 +626,15 @@ enum
 		
 		Vector tangent;
 		OK = [_lexer readReal:&tangent.x] &&
-		[_lexer readReal:&tangent.y] &&
-		[_lexer readReal:&tangent.z];
+			 [_lexer readReal:&tangent.y] &&
+			 [_lexer readReal:&tangent.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
 			return NO;
 		}
 		
+		CleanVector(&tangent);
 		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangent)
 																	  forKey:kOOMTangentAttributeKey];
 	}
@@ -691,6 +734,8 @@ enum
 
 - (void) priv_calculateBrokenTriangleAreas
 {
+	_haveTriangleAreas = YES;
+	
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
@@ -713,6 +758,8 @@ enum
 
 - (void) priv_calculateCorrectTriangleAreas
 {
+	_haveTriangleAreas = YES;
+	
 	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
@@ -763,6 +810,8 @@ enum
 		
 		normalSum = vector_normal_or_fallback(normalSum, kBasisZVector);
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
+		CleanVector(&normalSum);
+		CleanVector(&tangentSum);
 		NSDictionary *attrs = $dict(kOOMNormalAttributeKey, OOMArrayFromVector(normalSum), kOOMTangentAttributeKey, OOMArrayFromVector(tangentSum));
 		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttributes:attrs] retain];
 		
@@ -804,6 +853,7 @@ enum
 		}
 		
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
+		CleanVector(&tangentSum);
 		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangentSum)
 																	   forKey:kOOMTangentAttributeKey] retain];
 		
@@ -812,6 +862,36 @@ enum
 	}
 	
 	return YES;
+}
+
+
+- (void) priv_calculateSmoothGroupEdgeNormal:(Vector *)outNormal
+								  andTangent:(Vector *)outTangent
+								   forVertex:(OOUInteger)vi
+							   inSmoothGroup:(uint16_t)smoothGroup
+{
+	NSParameterAssert(outNormal != NULL && outTangent != NULL);
+	NSAssert(_haveTriangleAreas, @"Expected areas to have been calculated by now.");
+	
+	Vector normalSum = kZeroVector;
+	Vector tangentSum = kZeroVector;
+	
+	VertexFaceRef *vfr = &_faceRefs[vi];
+	OOUInteger fIter, fCount = VFRGetCount(vfr);
+	for (fIter = 0; fIter < fCount; fIter++)
+	{
+		RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
+		if (triangle->smoothGroup == smoothGroup)
+		{
+			normalSum = vector_add(normalSum, vector_multiply_scalar(triangle->normal, triangle->area));
+			tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));			
+		}
+	}
+	
+	CleanVector(&normalSum);
+	CleanVector(&tangentSum);
+	*outNormal = vector_normal_or_fallback(normalSum, kBasisZVector);
+	*outTangent = vector_normal_or_fallback(tangentSum, kBasisXVector);
 }
 
 
@@ -847,33 +927,76 @@ enum
 		}
 	}
 	
+	NSMutableSet *uniquedVertices = [NSMutableSet set];
+	_mesh = [OOMMesh new];
+	
 	/*	This is technically O(n * m) where n is face count and m is material
 		count, but given that m is small on any practical model (Oolite 1.x
 		doesn't allow more than 7) it's not a big deal.
 	*/
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
+		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
+		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
 			RawDATTriangle *triangle = &_rawTriangles[fIter];
 			if (triangle->materialIndex == mIter)
 			{
+				OOMVertex *triVertices[3];
+				
 				for (vIter = 0; vIter < 3; vIter++)
 				{
-					/*
 					OOUInteger vi = triangle->vertex[vIter];
+					OOMVertex *vertex = nil;
 					
-					if (_usesSmoothGroups)
+					if (_smoothing)
 					{
-						Vector normal, tangent;
-						[self priv_calculateSmoothGroupEdgeNormal:&normal
-													   andTangent:&tangent
-														forVertex:vi
-													inSmoothGroup:triangle->smoothGroup];
-					} */
+						if (_usesSmoothGroups && isEdgeVertex[vi])
+						{
+							// Handle edge vertices.
+							Vector normal, tangent;
+							[self priv_calculateSmoothGroupEdgeNormal:&normal
+														   andTangent:&tangent
+															forVertex:vi
+														inSmoothGroup:triangle->smoothGroup];
+							vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOOMNormalAttributeKey, OOMArrayFromVector(normal), kOOMTangentAttributeKey, OOMArrayFromVector(tangent))];
+						}
+						else
+						{
+							// Vertex is already smoothed.
+							vertex = _fileVertices[vi];
+							NSAssert([vertex attributeForKey:kOOMNormalAttributeKey] != nil && [vertex attributeForKey:kOOMTangentAttributeKey] != nil, @"Smoothed vertices should have normals and tangents by now.");
+						}
+					}
+					else
+					{
+						// No smoothing.
+						vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOOMNormalAttributeKey, OOMArrayFromVector(triangle->normal), kOOMTangentAttributeKey, OOMArrayFromVector(triangle->tangent))];
+					}
+					
+					// Add in texture coordinate.
+					vertex = [vertex vertexByAddingAttribute:OOMArrayFromVector2D(triangle->texCoords[vIter])
+													  forKey:kOOMTexCoordsAttributeKey];
+					
+					// Save uniqued vertex. Slow!
+					triVertices[vIter] = [uniquedVertices member:vertex];
+					if (triVertices[vIter] == nil)
+					{
+						[uniquedVertices addObject:vertex];
+						triVertices[vIter] = vertex;
+					}
 				}
+				
+				[faceGroup addFace:[OOMFace faceWithVertices:triVertices]];
 			}
+			[pool drain];
 		}
+		
+		[_mesh addFaceGroup:faceGroup];
+		[faceGroup release];
 	}
 	
 	return YES;

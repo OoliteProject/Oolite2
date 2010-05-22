@@ -74,6 +74,13 @@ enum
 - (BOOL) priv_calculateVertexTangents;
 - (BOOL) priv_buildGroups;
 
+- (BOOL) priv_parseVERTEX;
+- (BOOL) priv_parseFACES;
+- (BOOL) priv_parseTEXTURES;
+- (BOOL) priv_parseNAMES;
+- (BOOL) priv_parseNORMALS;
+- (BOOL) priv_parseTANGENTS;
+
 /*	Dump a copy of the file. If smoothing is used, explict normals and
 	tangents are used. Currently, this does not take smooth groups into account.
 */
@@ -112,16 +119,11 @@ enum
 
 - (void) parse
 {
-	if (_lexer == nil)  return;
-	NSAutoreleasePool			*pool = nil, *innerPool = nil;
+	if (_lexer == nil)  return;	// Parsed already or initialization failed.
+	
+	NSAutoreleasePool			*pool = nil;
 	BOOL						OK = YES;
-	OOMVertex					**fileVertices = NULL;
-	RawDATTriangle				*rawTriangles = NULL;
-	VertexFaceRef				*vfrs = NULL;
-	OOUInteger					vIter, fIter;
 	NSString					*secName = nil;
-	NSMutableArray				*materialKeys = nil;
-	NSMutableDictionary			*materialKeyToIndex = nil;
 	
 	pool = [NSAutoreleasePool new];
 	
@@ -143,130 +145,16 @@ enum
 	if (OK)
 	{
 		OK = [_lexer expectLiteral:"VERTEX"];
-		if (!OK)  [self priv_reportBasicParseError:@"\"VERTEX\""];
-	}
-	if (OK)
-	{
-		fileVertices = malloc(sizeof *fileVertices * _fileVertexCount);
-		vfrs = calloc(sizeof *vfrs, _fileVertexCount);
-		if (fileVertices == NULL || vfrs == NULL)
-		{
-			OK = NO;
-			[self priv_reportMallocFailure];
-		}
-	}
-	if (OK)
-	{
-		for (vIter = 0; vIter < _fileVertexCount; vIter++)
-		{
-			// VERTEX entry format: <float v.x> <float v.y> <float v.z>
-			
-			Vector v;
-			OK = [_lexer readReal:&v.x] && [_lexer readReal:&v.y] && [_lexer readReal:&v.z];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"number"];
-				break;
-			}
-			CleanVector(&v);
-			
-			fileVertices[vIter] = [OOMVertex vertexWithPosition:v];
-		}
+		if (OK)  OK = [self priv_parseVERTEX];
+		else  [self priv_reportBasicParseError:@"\"VERTEX\""];
 	}
 	
 	// Load FACES section.
 	if (OK)
 	{
 		OK = [_lexer expectLiteral:"FACES"];
-		if (!OK)  [self priv_reportBasicParseError:@"\"FACES\""];
-	}
-	if (OK)
-	{
-		rawTriangles = malloc(sizeof *rawTriangles * _fileFaceCount);
-		if (rawTriangles == NULL)
-		{
-			OK = NO;
-			[self priv_reportMallocFailure];
-		}
-	}
-	if (OK)
-	{
-		innerPool = [NSAutoreleasePool new];
-		NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
-		
-		for (fIter = 0; fIter != _fileFaceCount; fIter++)
-		{
-			// FACES entry format: <int smoothGroupID> <int unused1> <int unused2> <float n.x> <float n.y> <float n.z> <int vertexCount = 3> <int v0> <int v1> <int v2>
-			
-			RawDATTriangle *triangle = &rawTriangles[fIter];
-			OOUInteger smoothGroupID, unused, faceVertexCount;
-			OK = [_lexer readInteger:&smoothGroupID] &&
-				 [_lexer readInteger:&unused] &&
-				 [_lexer readInteger:&unused];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"integer"];
-				break;
-			}
-			
-			/*	Canonicalize smooth group IDs. Starts with number 1, using 0
-				as "unknown" marker.
-			*/
-			NSNumber *key = [NSNumber numberWithUnsignedInteger:smoothGroupID];
-			uint16_t smoothGroup = [smoothGroups oo_unsignedIntForKey:key];
-			if (smoothGroup == 0)
-			{
-				smoothGroup = [smoothGroups count] + 1;
-				[smoothGroups setObject:[NSNumber numberWithUnsignedInteger:smoothGroup] forKey:key];
-			}
-			
-			triangle->smoothGroup = smoothGroup;
-			
-			OK = [_lexer readReal:&triangle->normal.x] &&
-				 [_lexer readReal:&triangle->normal.y] &&
-				 [_lexer readReal:&triangle->normal.z];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"number"];
-				break;
-			}
-			CleanVector(&triangle->normal);
-			
-			/*	Oolite (and Dry Dock) attempt to "support" more than three
-				vertices for legacy files by only using the first three and
-				then skipping the rest. However, this leaves the texture
-				coordinates in the TEXTURES section ill-defined. Without a
-				real example of such a file, it's not clear how to implement
-				this support in a way that would actually be useful.
-			*/
-			OK = [_lexer readInteger:&faceVertexCount];
-			if (!OK || faceVertexCount != 3)
-			{
-				[self priv_reportBasicParseError:@"3"];
-				break;
-			}
-			
-			OK = [_lexer readInteger:&triangle->vertex[0]] &&
-				 [_lexer readInteger:&triangle->vertex[1]] &&
-				 [_lexer readInteger:&triangle->vertex[2]];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"integer"];
-				break;
-			}
-			
-			for (vIter = 0; vIter < 3; vIter++)
-			{
-				//	Track vertex->face relationships.
-				VFRAddFace(&vfrs[triangle->vertex[vIter]], fIter);
-				
-				//	Cache vertex positions for post-processing.
-				triangle->position[vIter] = [fileVertices[triangle->vertex[vIter]] position];
-			}
-		}
-		
-		_usesSmoothGroups = [smoothGroups count] > 1;
-		[innerPool drain];
+		if (OK)  [self priv_parseFACES];
+		else  [self priv_reportBasicParseError:@"\"FACES\""];
 	}
 	
 	/*	NOTE: we don't check for errors when reading secName, because this
@@ -278,82 +166,13 @@ enum
 	// Load TEXTURES section if present.
 	if (OK && [secName isEqualToString:@"TEXTURES"])
 	{
-		materialKeys = [NSMutableArray array];
-		innerPool = [NSAutoreleasePool new];
-		materialKeyToIndex = [NSMutableDictionary dictionaryWithCapacity:kMaxDATMaterials];
-		
-		for (fIter = 0; fIter < _fileFaceCount; fIter++)
-		{
-			// TEXTURES entry format: <string materialName> <float scaleS> <float scaleT> (<float s> <float t>)*3
-			
-			RawDATTriangle *triangle = &rawTriangles[fIter];
-			NSString *materialKey = nil;
-			OK = [_lexer readString:&materialKey];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"string"];
-				break;
-			}
-			
-			NSNumber *materialIndex = [materialKeyToIndex objectForKey:materialKey];
-			if (materialIndex == 0)
-			{
-				materialIndex = [NSNumber numberWithUnsignedInteger:_materialCount++];
-				[materialKeyToIndex setObject:materialIndex forKey:materialKey];
-				[materialKeys addObject:materialKey];
-			}
-			triangle->materialIndex = [materialIndex unsignedIntValue];
-			
-			float scaleS, scaleT;
-			OK = [_lexer readReal:&scaleS] && [_lexer readReal:&scaleT];
-			
-			for (vIter = 0; vIter < 3; vIter++)
-			{
-				float s, t;
-				OK = OK && [_lexer readReal:&s] && [_lexer readReal:&t];
-				triangle->texCoords[vIter].x = s / scaleS;
-				triangle->texCoords[vIter].y = t / scaleT;
-			}
-			
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"number"];
-				OK = NO;
-				break;
-			}
-		}
-		[innerPool drain];
-		
+		OK = [self priv_parseTEXTURES];
 		if (OK)  secName = [_lexer nextToken];
 		
 		// NAMES is only valid after TEXTURES.
 		if (OK && [secName isEqualToString:@"NAMES"])
 		{
-			OOUInteger nIter, nameCount;
-			OK = [_lexer readInteger:&nameCount];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"integer after NAMES"];
-				OK = NO;
-			}
-			if (OK)
-			{
-				for (nIter = 0; nIter < nameCount; nIter++)
-				{
-					// NAMES entry format: <newline-terminated-string>
-					
-					NSString *realName = nil;
-					OK = [_lexer readUntilNewline:&realName];
-					if (!OK)
-					{
-						[self priv_reportBasicParseError:@"string"];
-						break;
-					}
-					
-					[materialKeys replaceObjectAtIndex:nIter withObject:realName];
-				}
-			}
-			
+			OK = [self priv_parseNAMES];
 			if (OK)  secName = [_lexer nextToken];
 		}
 	}
@@ -366,52 +185,13 @@ enum
 	// Load NORMALS section if present.
 	if (OK && [secName isEqualToString:@"NORMALS"])
 	{
-		innerPool = [NSAutoreleasePool new];
-		_explicitNormals = YES;
-		
-		for (vIter = 0; vIter < _fileVertexCount; vIter++)
-		{
-			// NORMALS entry format: <float n.x> <float n.y> <float n.z>
-			
-			Vector normal;
-			OK = [_lexer readReal:&normal.x] &&
-				 [_lexer readReal:&normal.y] &&
-				 [_lexer readReal:&normal.z];
-			if (!OK)
-			{
-				[self priv_reportBasicParseError:@"number"];
-				break;
-			}
-			
-			fileVertices[vIter] = [fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(normal)
-																		forKey:kOOMNormalAttributeKey];
-		}
-		
+		OK = [self priv_parseNORMALS];
 		if (OK)  secName = [_lexer nextToken];
 		
 		// TANGENTS is only valid after NORMALS.
 		if (OK && [secName isEqualToString:@"TANGENTS"])
 		{
-			_explicitTangents = YES;
-			
-			for (vIter = 0; vIter < _fileVertexCount; vIter++)
-			{
-				// TANGENTS entry format: <float t.x> <float t.y> <float t.z>
-				
-				Vector tangent;
-				OK = [_lexer readReal:&tangent.x] &&
-					 [_lexer readReal:&tangent.y] &&
-					 [_lexer readReal:&tangent.z];
-				if (!OK)
-				{
-					[self priv_reportBasicParseError:@"number"];
-					break;
-				}
-				
-				fileVertices[vIter] = [fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangent)
-																			forKey:kOOMTangentAttributeKey];
-			}
-			
+			OK = [self priv_parseTANGENTS];
 			if (OK)  secName = [_lexer nextToken];
 		}
 	}
@@ -434,14 +214,6 @@ enum
 	
 	if (!_smoothing || _explicitNormals)  _usesSmoothGroups = NO;
 	
-	
-	if (OK)
-	{
-		_rawTriangles = rawTriangles;
-		_fileVertices = fileVertices;
-		_faceRefs = vfrs;
-		_materialKeys = materialKeys;
-	}
 	
 	//	Post-processing.
 	if (OK && !_explicitNormals)
@@ -476,21 +248,19 @@ enum
 		OK = [self priv_buildGroups];
 	}
 	
-	// Clear state pointers.
-	_rawTriangles = nil;
-	_fileVertices = nil;
-	_faceRefs = nil;
-	_materialKeys = nil;
-	
-	
-	for (vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
-		VFRRelease(&vfrs[vIter]);
+		VFRRelease(&_faceRefs[vIter]);
 	}
+	_faceRefs = NULL;
 	
 	DESTROY(_lexer);
-	free(fileVertices);
-	free(rawTriangles);
+	DESTROY(_materialKeys);
+	free(_fileVertices);
+	_fileVertices = NULL;
+	free(_rawTriangles);
+	_rawTriangles = NULL;
+	
 	[pool drain];
 }
 
@@ -567,6 +337,266 @@ enum
 - (void) priv_reportMallocFailure
 {
 	OOMReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [_path lastPathComponent]);
+}
+
+
+- (BOOL) priv_parseVERTEX
+{
+	BOOL OK = YES;
+	
+	_fileVertices = malloc(sizeof *_fileVertices * _fileVertexCount);
+	_faceRefs = calloc(sizeof *_faceRefs, _fileVertexCount);
+	if (_fileVertices == NULL || _faceRefs == NULL)
+	{
+		[self priv_reportMallocFailure];
+		return NO;
+	}
+	
+	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	{
+		// VERTEX entry format: <float v.x> <float v.y> <float v.z>
+		
+		Vector v;
+		OK = [_lexer readReal:&v.x] &&
+		[_lexer readReal:&v.y] &&
+		[_lexer readReal:&v.z];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"number"];
+			return NO;
+		}
+		CleanVector(&v);
+		
+		_fileVertices[vIter] = [OOMVertex vertexWithPosition:v];
+	}
+	
+	return YES;
+}
+
+
+- (BOOL) priv_parseFACES
+{
+	BOOL OK = YES;
+	
+	_rawTriangles = malloc(sizeof *_rawTriangles * _fileFaceCount);
+	if (_rawTriangles == NULL)
+	{
+		[self priv_reportMallocFailure];
+		return NO;
+	}
+	
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
+	
+	for (OOUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
+	{
+		// FACES entry format: <int smoothGroupID> <int unused1> <int unused2> <float n.x> <float n.y> <float n.z> <int vertexCount = 3> <int v0> <int v1> <int v2>
+		
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
+		OOUInteger smoothGroupID, unused, faceVertexCount;
+		OK = [_lexer readInteger:&smoothGroupID] &&
+		[_lexer readInteger:&unused] &&
+		[_lexer readInteger:&unused];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"integer"];
+			return NO;
+		}
+		
+		/*	Canonicalize smooth group IDs. Starts with number 1, using 0
+		 as "unknown" marker.
+		 */
+		NSNumber *key = [NSNumber numberWithUnsignedInteger:smoothGroupID];
+		uint16_t smoothGroup = [smoothGroups oo_unsignedIntForKey:key];
+		if (smoothGroup == 0)
+		{
+			smoothGroup = [smoothGroups count] + 1;
+			[smoothGroups setObject:[NSNumber numberWithUnsignedInteger:smoothGroup] forKey:key];
+		}
+		
+		triangle->smoothGroup = smoothGroup;
+		
+		OK = [_lexer readReal:&triangle->normal.x] &&
+		[_lexer readReal:&triangle->normal.y] &&
+		[_lexer readReal:&triangle->normal.z];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"number"];
+			return NO;
+		}
+		CleanVector(&triangle->normal);
+		
+		/*	Oolite (and Dry Dock) attempt to "support" more than three
+		 vertices for legacy files by only using the first three and
+		 then skipping the rest. However, this leaves the texture
+		 coordinates in the TEXTURES section ill-defined. Without a
+		 real example of such a file, it's not clear how to implement
+		 this support in a way that would actually be useful.
+		 */
+		OK = [_lexer readInteger:&faceVertexCount];
+		if (!OK || faceVertexCount != 3)
+		{
+			[self priv_reportBasicParseError:@"3"];
+			return NO;
+		}
+		
+		OK = [_lexer readInteger:&triangle->vertex[0]] &&
+		[_lexer readInteger:&triangle->vertex[1]] &&
+		[_lexer readInteger:&triangle->vertex[2]];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"integer"];
+			return NO;
+		}
+		
+		for (OOUInteger vIter = 0; vIter < 3; vIter++)
+		{
+			//	Track vertex->face relationships.
+			VFRAddFace(&_faceRefs[triangle->vertex[vIter]], fIter);
+			
+			//	Cache vertex positions for post-processing.
+			triangle->position[vIter] = [_fileVertices[triangle->vertex[vIter]] position];
+		}
+	}
+	
+	_usesSmoothGroups = [smoothGroups count] > 1;
+	[pool drain];
+	
+	return YES;
+}
+
+
+- (BOOL) priv_parseTEXTURES
+{
+	BOOL OK = YES;
+	
+	_materialKeys = [NSMutableArray new];
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	NSMutableDictionary *materialKeyToIndex = [NSMutableDictionary dictionaryWithCapacity:kMaxDATMaterials];
+	
+	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	{
+		// TEXTURES entry format: <string materialName> <float scaleS> <float scaleT> (<float s> <float t>)*3
+		
+		RawDATTriangle *triangle = &_rawTriangles[fIter];
+		NSString *materialKey = nil;
+		OK = [_lexer readString:&materialKey];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"string"];
+			return NO;
+		}
+		
+		NSNumber *materialIndex = [materialKeyToIndex objectForKey:materialKey];
+		if (materialIndex == 0)
+		{
+			materialIndex = [NSNumber numberWithUnsignedInteger:_materialCount++];
+			[materialKeyToIndex setObject:materialIndex forKey:materialKey];
+			[_materialKeys addObject:materialKey];
+		}
+		triangle->materialIndex = [materialIndex unsignedIntValue];
+		
+		float scaleS, scaleT;
+		OK = [_lexer readReal:&scaleS] && [_lexer readReal:&scaleT];
+		
+		for (OOUInteger vIter = 0; vIter < 3; vIter++)
+		{
+			float s, t;
+			OK = OK && [_lexer readReal:&s] && [_lexer readReal:&t];
+			triangle->texCoords[vIter].x = s / scaleS;
+			triangle->texCoords[vIter].y = t / scaleT;
+		}
+		
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"number"];
+			return NO;
+		}
+	}
+	[pool drain];
+	
+	return YES;
+}
+
+
+- (BOOL) priv_parseNAMES
+{
+	OOUInteger nameCount;
+	if (![_lexer readInteger:&nameCount])
+	{
+		[self priv_reportBasicParseError:@"integer after NAMES"];
+		return NO;
+	}
+	
+	for (OOUInteger nIter = 0; nIter < nameCount; nIter++)
+	{
+		// NAMES entry format: <newline-terminated-string>
+		
+		NSString *realName = nil;
+		if (![_lexer readUntilNewline:&realName])
+		{
+			[self priv_reportBasicParseError:@"string"];
+			return NO;
+		}
+		
+		[_materialKeys replaceObjectAtIndex:nIter withObject:realName];
+	}
+	
+	return YES;
+}
+
+
+- (BOOL) priv_parseNORMALS
+{
+	_explicitNormals = YES;
+	BOOL OK = YES;
+	
+	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	{
+		// NORMALS entry format: <float n.x> <float n.y> <float n.z>
+		
+		Vector normal;
+		OK = [_lexer readReal:&normal.x] &&
+		[_lexer readReal:&normal.y] &&
+		[_lexer readReal:&normal.z];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"number"];
+			return NO;
+		}
+		
+		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(normal)
+																	  forKey:kOOMNormalAttributeKey];
+	}
+	
+	return YES;
+}
+
+
+- (BOOL) priv_parseTANGENTS
+{
+	_explicitTangents = YES;
+	BOOL OK = YES;
+	
+	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	{
+		// TANGENTS entry format: <float t.x> <float t.y> <float t.z>
+		
+		Vector tangent;
+		OK = [_lexer readReal:&tangent.x] &&
+		[_lexer readReal:&tangent.y] &&
+		[_lexer readReal:&tangent.z];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"number"];
+			return NO;
+		}
+		
+		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangent)
+																	  forKey:kOOMTangentAttributeKey];
+	}
+	
+	return YES;
 }
 
 

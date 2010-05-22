@@ -33,7 +33,7 @@
 	struct RawDATTriangle			*_rawTriangles;
 	OOMVertex						**_fileVertices;
 	struct VertexFaceRef			*_faceRefs;
-	NSArray							*_materialKeys;
+	NSMutableArray					*_materialKeys;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues;

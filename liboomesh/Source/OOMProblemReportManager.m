@@ -87,6 +87,19 @@ void OOMReportError(id <OOMProblemReportManager> probMgr, NSString *key, NSStrin
 }
 
 
+void OOMReportNSError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error)
+{
+	NSString *desc = [error localizedFailureReason];
+	if (desc == nil)  desc = [error localizedDescription];
+	
+	context = OOMLocalizeProblemString(probMgr, context);
+	if (desc == nil)  desc = context;
+	else  desc = [NSString stringWithFormat:@"%@ %@", context, desc];
+	
+	[probMgr addProblemOfType:kOOMProblemTypeError key:key message:desc];
+}
+
+
 @implementation OOMSimpleProblemReportManager
 
 - (void) addProblemOfType:(OOMIssueType)type key:(NSString *)key message:(NSString *)message

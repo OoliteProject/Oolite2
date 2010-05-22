@@ -364,7 +364,7 @@ OOUInteger gHashCollisions;
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [_path lastPathComponent], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], [[NSFileManager defaultManager] displayNameAtPath:_path], message];
 	[_issues addProblemOfType:kOOMProblemTypeError key:@"parseError" message:message];
 }
 
@@ -377,7 +377,7 @@ OOUInteger gHashCollisions;
 
 - (void) priv_reportMallocFailure
 {
-	OOMReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [_path lastPathComponent]);
+	OOMReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
 }
 
 
@@ -937,6 +937,7 @@ OOUInteger gHashCollisions;
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
 		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
+		[faceGroup setName:[_materialKeys objectAtIndex:mIter]];
 		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{

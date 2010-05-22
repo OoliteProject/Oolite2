@@ -57,6 +57,8 @@ void OOMReportInfo(id <OOMProblemReportManager> probMgr, NSString *key, NSString
 void OOMReportWarning(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
 void OOMReportError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
 
+void OOMReportNSError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error);
+
 NSString *OOMLocalizeProblemString(id <OOMProblemReportManager> probMgr, NSString *key);
 
 

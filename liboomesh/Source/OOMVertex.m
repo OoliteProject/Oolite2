@@ -29,10 +29,10 @@
 #import "CollectionUtils.h"
 
 
-NSString * const kOOMPositionAttributeKey	= @"aPosition";
-NSString * const kOOMNormalAttributeKey		= @"aNormal";
-NSString * const kOOMTangentAttributeKey	= @"aTangent";
-NSString * const kOOMTexCoordsAttributeKey	= @"aTexCoords";
+NSString * const kOOMPositionAttributeKey	= @"position";
+NSString * const kOOMNormalAttributeKey		= @"normal";
+NSString * const kOOMTangentAttributeKey	= @"tangent";
+NSString * const kOOMTexCoordsAttributeKey	= @"texCoords";
 
 
 static BOOL IsValidAttribute(NSArray *attr);
@@ -642,6 +642,36 @@ OOUInteger gHashCollisions = 0;
 }
 
 @end
+
+
+static OOUInteger AttributeRank(NSString *string)
+{
+	if ([string isEqualToString:kOOMPositionAttributeKey])  return 1;
+	if ([string isEqualToString:kOOMNormalAttributeKey])  return 2;
+	if ([string isEqualToString:kOOMTangentAttributeKey])  return 3;
+	if ([string isEqualToString:kOOMTexCoordsAttributeKey])  return 4;
+	
+	return NSNotFound;
+}
+
+
+@implementation NSString (OOMVertex)
+
+- (NSComparisonResult) oom_compareByVertexAttributeOrder:(NSString *)other
+{
+	NSParameterAssert([other isKindOfClass:[NSString class]]);
+	
+	OOUInteger selfRank = AttributeRank(self);
+	OOUInteger otherRank = AttributeRank(other);
+	
+	if (selfRank < otherRank)  return NSOrderedAscending;
+	if (selfRank > otherRank)  return NSOrderedDescending;
+	if (selfRank == NSNotFound)  return  [self caseInsensitiveCompare:other];
+	return NSOrderedSame;
+}
+
+@end
+
 
 
 static BOOL IsValidAttribute(NSArray *attr)

@@ -44,6 +44,6 @@
 - (id) initWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2;
 - (id) initWithVertices:(OOMVertex *[3])vertices;
 
-- (OOMVertex *) vertexAtIndex:(uint_fast8_t)index;
+- (OOMVertex *) vertexAtIndex:(OOUInteger)index;
 
 @end

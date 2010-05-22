@@ -35,10 +35,14 @@
 @interface OOMFaceGroup: NSObject <NSFastEnumeration>
 {
 @private
+	NSString					*_name;
 	NSMutableArray				*_faces;
 }
 
-- (OOUInteger) count;
+- (NSString *) name;
+- (void) setName:(NSString *)name;
+
+- (OOUInteger) faceCount;
 
 - (OOMFace *) faceAtIndex:(OOUInteger)index;
 

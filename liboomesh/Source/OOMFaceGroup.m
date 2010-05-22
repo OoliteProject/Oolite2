@@ -52,7 +52,20 @@
 }
 
 
-- (OOUInteger) count
+- (NSString *) name
+{
+	return _name;
+}
+
+
+- (void) setName:(NSString *)name
+{
+	[_name autorelease];
+	_name = [name copy];
+}
+
+
+- (OOUInteger) faceCount
 {
 	return [_faces count];
 }

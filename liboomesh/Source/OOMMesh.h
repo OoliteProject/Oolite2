@@ -37,7 +37,7 @@
 	NSMutableArray				*_faceGroups;
 }
 
-- (OOUInteger) count;
+- (OOUInteger) faceGroupCount;
 
 - (OOMFaceGroup *) faceGroupAtIndex:(OOUInteger)index;
 

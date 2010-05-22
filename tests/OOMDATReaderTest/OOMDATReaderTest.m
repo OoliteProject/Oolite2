@@ -24,7 +24,10 @@ int main (int argc, const char * argv[])
 //	[reader setBrokenSmoothing:NO];
 	
 	OOMMesh *mesh = [reader mesh];
-	NSLog(@"%@", mesh);
+	if (mesh != nil)
+	{
+		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
+	}
 	
     [pool drain];
     return 0;

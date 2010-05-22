@@ -32,4 +32,5 @@
 @class OOMMesh;
 
 
-void OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> *issues);
+NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManager> issues);
+BOOL OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> issues);

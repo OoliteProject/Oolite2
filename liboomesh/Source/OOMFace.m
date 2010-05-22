@@ -73,7 +73,7 @@
 }
 
 
-- (OOMVertex *) vertexAtIndex:(uint_fast8_t)index
+- (OOMVertex *) vertexAtIndex:(OOUInteger)index
 {
 	if (EXPECT_NOT(index >= 3))  return nil;
 	

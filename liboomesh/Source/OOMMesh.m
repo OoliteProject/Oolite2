@@ -49,7 +49,7 @@
 }
 
 
-- (OOUInteger) count
+- (OOUInteger) faceGroupCount
 {
 	return [_faceGroups count];
 }

@@ -119,10 +119,10 @@
 @end
 
 
-extern NSString * const kOOMPositionAttributeKey;	// "aPosition"
-extern NSString * const kOOMNormalAttributeKey;		// "aNormal"
-extern NSString * const kOOMTangentAttributeKey;	// "aTangent"
-extern NSString * const kOOMTexCoordsAttributeKey;	// "aTexCoords"
+extern NSString * const kOOMPositionAttributeKey;	// "position"
+extern NSString * const kOOMNormalAttributeKey;		// "normal"
+extern NSString * const kOOMTangentAttributeKey;	// "tangent"
+extern NSString * const kOOMTexCoordsAttributeKey;	// "texCoords"
 
 
 @interface NSArray (OOMVertex)
@@ -143,3 +143,13 @@ double OOMDoubleFromArray(NSArray *array);
 NSPoint OOMPointFromArray(NSArray *array);
 Vector2D OOMVector2DFromArray(NSArray *array);
 Vector OOMVectorFromArray(NSArray *array);
+
+
+/*	Sort in canonical order for vertex attributes:
+	position, normal, tangent, texCoords, anything else by caseInsensitiveCompare.
+*/
+@interface NSString (OOMVertex)
+
+- (NSComparisonResult) oom_compareByVertexAttributeOrder:(NSString *)other;
+
+@end

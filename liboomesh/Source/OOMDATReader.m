@@ -1,11 +1,3 @@
-//
-//  OOMDATReader.m
-//  oomesh
-//
-//  Created by Jens Ayton on 2010-05-21.
-//  Copyright 2010 Jens Ayton. All rights reserved.
-//
-
 #import "OOMDATReader.h"
 #import "OOMProblemReportManager.h"
 #import "OOMDATLexer.h"
@@ -55,10 +47,10 @@ typedef struct VertexFaceRef
 } VertexFaceRef;
 
 
-static void VFRAddFace(VertexFaceRef *vfr, OOUInteger index)  __attribute__((used));
+static void VFRAddFace(VertexFaceRef *vfr, OOUInteger index);
 static OOUInteger VFRGetCount(VertexFaceRef *vfr);
-static OOUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, OOUInteger index)  __attribute__((used));
-static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
+static OOUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, OOUInteger index);
+static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct.
 
 
 @interface OOMDATReader (Private)
@@ -71,8 +63,8 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 
 - (BOOL) priv_checkNormalsAndAdjustWindingWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
 - (BOOL) priv_generateFaceTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
-- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
-- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices;
+- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs;
+- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs;
 
 /*	Dump a copy of the file. If smoothing is used, explict normals and
 	tangents are used. Currently, this does not take smooth groups into account.
@@ -119,6 +111,7 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 	BOOL						OK = YES;
 	OOMVertex					**fileVertices = NULL;
 	RawDATTriangle				*rawTriangles = NULL;
+	VertexFaceRef				*vfrs = NULL;
 	OOUInteger					vIter, fIter;
 	NSString					*secName = nil;
 	
@@ -145,7 +138,8 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 	if (OK)
 	{
 		fileVertices = malloc(sizeof *fileVertices * _fileVertexCount);
-		if (fileVertices == NULL)
+		vfrs = calloc(sizeof *vfrs, _fileVertexCount);
+		if (fileVertices == NULL || vfrs == NULL)
 		{
 			OK = NO;
 			[self priv_reportMallocFailure];
@@ -235,9 +229,12 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 				break;
 			}
 			
-			//	Cache vertex positions for post-processing.
 			for (vIter = 0; vIter < 3; vIter++)
 			{
+				//	Track vertex->face relationships.
+				VFRAddFace(&vfrs[triangle->vertex[vIter]], fIter);
+				
+				//	Cache vertex positions for post-processing.
 				triangle->position[vIter] = [fileVertices[triangle->vertex[vIter]] position];
 			}
 		}
@@ -384,7 +381,7 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		}
 	}
 	
-	// Check for END.
+	//	Check for END.
 	if (OK)
 	{
 		if (![secName isEqualToString:@"END"])
@@ -401,8 +398,8 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 	}
 	
 	
-	// Post-processing.
-	// TODO: cache vertex positions in faces for speed.
+	//	Post-processing.
+	//	TODO: cache vertex positions in faces for speed.
 	if (OK && !_explicitNormals)
 	{
 		OK = [self priv_checkNormalsAndAdjustWindingWithTriangles:rawTriangles vertices:fileVertices];
@@ -413,20 +410,26 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 	}
 	if (OK && !_explicitNormals && _smoothing)
 	{
-		// Vertex smoothing.
-		OK = [self priv_calculateVertexNormalsAndTangentsWithTriangles:rawTriangles vertices:fileVertices];
+		//	Vertex smoothing.
+		OK = [self priv_calculateVertexNormalsAndTangentsWithTriangles:rawTriangles vertices:fileVertices faceRefs:vfrs];
 	}
 	else
 	{
-		// Only YES after parsing if actually used, see header.
+		//	Only YES after parsing if actually used, see header.
 		_brokenSmoothing = NO;
 		if (OK && _explicitNormals && !_explicitTangents)
 		{
-			OK = [self priv_calculateVertexTangentsWithTriangles:rawTriangles vertices:fileVertices];
+			OK = [self priv_calculateVertexTangentsWithTriangles:rawTriangles vertices:fileVertices faceRefs:vfrs];
 		}
 	}
 	
 	if (OK)  [self priv_dumpDATWithTriangles:rawTriangles vertices:fileVertices];
+	
+	
+	for (vIter = 0; vIter < _fileVertexCount; vIter++)
+	{
+		VFRRelease(&vfrs[vIter]);
+	}
 	
 	DESTROY(_lexer);
 	DESTROY(_materialKeys);
@@ -552,13 +555,13 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		*/
 		if (normal.x * calculatedNormal.x < 0 || normal.y * calculatedNormal.y < 0 || normal.z * calculatedNormal.z < 0)
 		{
-			// normal lies in the WRONG direction!
-			// reverse the winding.
+			//	normal lies in the WRONG direction!
+			//	reverse the winding.
 			OOUInteger vi0 = triangle->vertex[0];
 			triangle->vertex[0] = triangle->vertex[2];
 			triangle->vertex[2] = vi0;
 			
-			// Don't forget texture coordinates.
+			//	Don't forget texture coordinates.
 			Vector2D t0 = triangle->texCoords[0];
 			triangle->texCoords[0] = triangle->texCoords[2];
 			triangle->texCoords[2] = t0;
@@ -588,11 +591,11 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		Vector vAC = vector_subtract(v2, v0);
 		Vector nA = triangle->normal;
 		
-		// projAB = vAB - (nA · vAB) * nA
+		//	projAB = vAB - (nA · vAB) * nA
 		Vector vProjAB = vector_subtract(vAB, vector_multiply_scalar(nA, dot_product(nA, vAB)));
 		Vector vProjAC = vector_subtract(vAC, vector_multiply_scalar(nA, dot_product(nA, vAC)));
 		
-		// delta s/t
+		//	delta s/t
 		float dsAB = triangle->texCoords[1].x - triangle->texCoords[0].x;
 		float dsAC = triangle->texCoords[2].x - triangle->texCoords[0].x;
 		float dtAB = triangle->texCoords[1].y - triangle->texCoords[0].y;
@@ -605,7 +608,7 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		}
 		
 		Vector tangent = vector_subtract(vector_multiply_scalar(vProjAB, dsAC), vector_multiply_scalar(vProjAC, dsAB));
-		// Rotate 90 degrees. Done this way because I'm too lazy to grok the code above.
+		//	Rotate 90 degrees. Done this way because I'm too lazy to grok the code above.
 		triangle->tangent = cross_product(nA, tangent);
 	}
 	
@@ -656,10 +659,7 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 }
 
 
-/*	Very nasty O(m * n) method. Building a vertex index->face mapping in an
-	earlier pass (e.g. when loading faces) could improve this immensely.
-*/
-- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (BOOL) priv_calculateVertexNormalsAndTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs
 {
 	if (_brokenSmoothing)
 	{
@@ -678,18 +678,14 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		Vector normalSum = kZeroVector;
 		Vector tangentSum = kZeroVector;
 		
-		for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+		VertexFaceRef *vfr = &vfrs[vIter];
+		OOUInteger fIter, fCount = VFRGetCount(vfr);
+		for (fIter = 0; fIter < fCount; fIter++)
 		{
-			// If face fIter uses this vertex...
-			RawDATTriangle *triangle = &triangles[fIter];
-			if (triangle->vertex[0] == vIter ||
-				triangle->vertex[1] == vIter ||
-				triangle->vertex[2] == vIter)
-			{
-				// ...weigh its normal and tangent into the sum.
-				normalSum = vector_add(normalSum, vector_multiply_scalar(triangle->normal, triangle->area));
-				tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
-			}
+			RawDATTriangle *triangle = &triangles[VFRGetFaceAtIndex(vfr, fIter)];
+			
+			normalSum = vector_add(normalSum, vector_multiply_scalar(triangle->normal, triangle->area));
+			tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
 		}
 		
 		normalSum = vector_normal_or_fallback(normalSum, kBasisZVector);
@@ -705,9 +701,7 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 }
 
 
-/*	Also a very nasty O(m * n) method.
-	
-	This is conceptually broken.
+/*	This is conceptually broken.
 	At the moment, it's calculating one tangent per "input" vertex. It should
 	be calculating one tangent per "real" vertex, where a "real" vertex is
 	defined as a combination of position, normal, material and texture
@@ -716,9 +710,9 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 	This basically means explicit-normal models without explicit tangents
 	can't usefully be normal mapped.
 */
-- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices
+- (BOOL) priv_calculateVertexTangentsWithTriangles:(RawDATTriangle *)triangles vertices:(OOMVertex **)vertices faceRefs:(VertexFaceRef *)vfrs
 {
-	// Oolite gets area calculation right in this case.
+	//	Oolite gets area calculation right in this case.
 	[self priv_calculateCorrectTriangleAreasWithTriangles:triangles vertices:vertices];
 	
 	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
@@ -727,17 +721,13 @@ static void VFRRelease(VertexFaceRef *vfr)  __attribute__((used));
 		
 		Vector tangentSum = kZeroVector;
 		
-		for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+		VertexFaceRef *vfr = &vfrs[vIter];
+		OOUInteger fIter, fCount = VFRGetCount(vfr);
+		for (fIter = 0; fIter < fCount; fIter++)
 		{
-			// If face fIter uses this vertex...
-			RawDATTriangle *triangle = &triangles[fIter];
-			if (triangle->vertex[0] == vIter ||
-				triangle->vertex[1] == vIter ||
-				triangle->vertex[2] == vIter)
-			{
-				// ...weigh its tangent into the sum.
-				tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
-			}
+			RawDATTriangle *triangle = &triangles[VFRGetFaceAtIndex(vfr, fIter)];
+			
+			tangentSum = vector_add(tangentSum, vector_multiply_scalar(triangle->tangent, triangle->area));
 		}
 		
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
@@ -854,6 +844,5 @@ static void VFRRelease(VertexFaceRef *vfr)
 {
 	NSCParameterAssert(vfr != NULL);
 	
-	vfr->internCount = 0;
-	DESTROY(vfr->extra);
+	[vfr->extra release];
 }

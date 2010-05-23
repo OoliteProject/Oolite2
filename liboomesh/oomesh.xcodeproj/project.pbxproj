@@ -40,7 +40,7 @@
 		1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA255911A73C4C00B361DC /* OOMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF426EC11A939F8008E883C /* OOMFloatArray.h */; };
+		1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF426EC11A939F8008E883C /* OOMFloatArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF426EF11A939F8008E883C /* OOMFloatArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF426ED11A939F8008E883C /* OOMFloatArray.m */; };
 /* End PBXBuildFile section */
 
@@ -359,6 +359,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/liboomeshbase.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"NS_BLOCK_ASSERTIONS=1",
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "OOMesh-Info.plist";
 				INSTALL_PATH = "@rpath/";

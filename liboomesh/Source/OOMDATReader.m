@@ -272,8 +272,6 @@ OOUInteger gHashCollisions;
 		}
 	}
 	
-//	if (OK)  [self priv_dumpDAT];
-	
 	
 	//	Convert to sane format.
 	if (OK)
@@ -927,13 +925,19 @@ OOUInteger gHashCollisions;
 		}
 	}
 	
+#define UNIQUE_VERTICES 0
+#if UNIQUE_VERTICES
 	NSMutableSet *uniquedVertices = [NSMutableSet set];
+#endif
 	_mesh = [OOMMesh new];
 	
 	/*	This is technically O(n * m) where n is face count and m is material
 		count, but given that m is small on any practical model (Oolite 1.x
 		doesn't allow more than 7) it's not a big deal.
 	*/
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	OOUInteger poolTime = 0;
+	
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
 		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
@@ -943,8 +947,6 @@ OOUInteger gHashCollisions;
 		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
-			NSAutoreleasePool *pool = [NSAutoreleasePool new];
-			
 			RawDATTriangle *triangle = &_rawTriangles[fIter];
 			if (triangle->materialIndex == mIter)
 			{
@@ -987,23 +989,38 @@ OOUInteger gHashCollisions;
 														  forKey:kOOMTexCoordsAttributeKey];
 					}
 					
-					// Save uniqued vertex. Slow!
+#if UNIQUE_VERTICES
+					// Save uniqued vertex. Slow! Also doesn't work properly.
 					triVertices[vIter] = [uniquedVertices member:vertex];
 					if (triVertices[vIter] == nil)
 					{
 						[uniquedVertices addObject:vertex];
 						triVertices[vIter] = vertex;
 					}
+#else
+					triVertices[vIter] = vertex;
+#endif
 				}
 				
 				[faceGroup addFace:[OOMFace faceWithVertices:triVertices]];
 			}
-			[pool drain];
+			
+			/*	Drain pool every 32 faces. For a large test case, this makes
+				total loading time about 5 % faster than doing it ever
+				iteration and 10 % faster than not doing it at all.
+			*/
+			poolTime = (poolTime + 1) & 0x1F;
+			if (poolTime == 0)
+			{
+				[pool drain];
+				pool = [NSAutoreleasePool new];
+			}
 		}
 		
 		[_mesh addFaceGroup:faceGroup];
 		[faceGroup release];
 	}
+	[pool drain];
 	
 	return YES;
 }

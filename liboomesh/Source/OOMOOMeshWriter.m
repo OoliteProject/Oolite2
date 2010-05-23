@@ -29,6 +29,7 @@
 #import "CollectionUtils.h"
 #import "OOCollectionExtractors.h"
 
+#import "OOMFloatArray.h"
 #import "OOMVertex.h"
 #import "OOMFace.h"
 #import "OOMFaceGroup.h"
@@ -132,10 +133,10 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 			{
 				[result appendString:@"\t"];
 				
-				NSArray *attr = [vertex attributeForKey:key];
+				OOMFloatArray *attr = [vertex attributeForKey:key];
 				for (i = 0; i < count; i++)
 				{
-					[result appendFormat:@"% .5f%@", [attr oo_floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];
+					[result appendFormat:@"% .5f%@", [attr floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];
 				}
 			}
 			

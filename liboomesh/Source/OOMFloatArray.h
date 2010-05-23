@@ -42,9 +42,11 @@
 	OOUInteger					_count;
 }
 
++ (id) newWithArray:(NSArray *)array;
 + (id) arrayWithArray:(NSArray *)array;
 - (id) initWithArray:(NSArray *)array;
 
++ (id) newWithFloats:(float *)values count:(OOUInteger)count;
 + (id) arrayWithFloats:(float *)values count:(OOUInteger)count;
 - (id) initWithFloats:(float *)values count:(OOUInteger)count;
 
@@ -59,3 +61,7 @@
 - (OOUInteger) betterHash;
 
 @end
+
+
+#define $floatarray(FLOATS...)	({	float values[] = {FLOATS}; \
+									[OOMFloatArray arrayWithFloats:values count:sizeof(values)/sizeof(float)]; })

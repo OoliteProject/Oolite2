@@ -38,7 +38,6 @@ typedef uint32_t FloatSizedInt;
 + (id) priv_newWithCapacity:(OOUInteger)count zone:(NSZone *)zone;
 
 + (id) priv_newWithFloats:(float *)values count:(OOUInteger)count zone:(NSZone *)zone;
-+ (id) priv_newOrRetainedArrayWithArray:(NSArray *)array;
 
 - (BOOL) priv_isEqualToOOMFloatArray:(OOMFloatArray *)other;
 
@@ -60,10 +59,30 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 	return object_getIndexedIvars(self);
 }
 
++ (id) newWithArray:(NSArray *)array
+{
+	if (array == nil)  return [self priv_newWithFloats:nil count:0 zone:nil];
+	if ([array isKindOfClass:[OOMFloatArray class]])  return [array copy];
+	
+	OOUInteger i, count = [array count];
+	OOMFloatArray *result = [self priv_newWithCapacity:count zone:[array zone]];
+	
+	if (result != nil)
+	{
+		float *next = GetFloatArray(result);
+		for (i = 0; i < count; i++)
+		{
+			*next++ = [array oo_floatAtIndex:i];
+		}
+	}
+	
+	return result;
+}
+
 
 + (id) arrayWithArray:(NSArray *)array
 {
-	OOMFloatArray *result = [self priv_newOrRetainedArrayWithArray:array];
+	OOMFloatArray *result = [self newWithArray:array];
 	[result autorelease];
 	return result;
 }
@@ -72,13 +91,19 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 - (id) initWithArray:(NSArray *)array
 {
 	[self release];
-	return [[self class] priv_newOrRetainedArrayWithArray:array];
+	return [[self class] newWithArray:array];
+}
+
+
++ (id) newWithFloats:(float *)values count:(OOUInteger)count
+{
+	return [self priv_newWithFloats:values count:count zone:NULL];
 }
 
 
 + (id) arrayWithFloats:(float *)values count:(OOUInteger)count
 {
-	return [[self priv_newWithFloats:values count:count zone:nil] autorelease];
+	return [[self priv_newWithFloats:values count:count zone:NULL] autorelease];
 }
 
 
@@ -178,27 +203,6 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 	if (result != nil)
 	{
 		memcpy(GetFloatArray(result), values, size);
-	}
-	
-	return result;
-}
-
-
-+ (id) priv_newOrRetainedArrayWithArray:(NSArray *)array
-{
-	if (array == nil)  return [self priv_newWithFloats:nil count:0 zone:nil];
-	if ([array isKindOfClass:[OOMFloatArray class]])  return [array copy];
-	
-	OOUInteger i, count = [array count];
-	OOMFloatArray *result = [self priv_newWithCapacity:count zone:[array zone]];
-	
-	if (result != nil)
-	{
-		float *next = GetFloatArray(result);
-		for (i = 0; i < count; i++)
-		{
-			*next++ = [array oo_floatAtIndex:i];
-		}
 	}
 	
 	return result;

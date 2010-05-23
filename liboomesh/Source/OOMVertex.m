@@ -36,8 +36,12 @@ NSString * const kOOMTangentAttributeKey	= @"tangent";
 NSString * const kOOMTexCoordsAttributeKey	= @"texCoords";
 
 
-static BOOL IsValidAttribute(NSArray *attr);
+#ifndef NDEBUG
 static BOOL IsValidAttributeDictionary(NSDictionary *dict);
+#else
+#define IsValidAttributeDictionary(dict) 1
+#endif
+
 static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL verify);
 
 
@@ -96,7 +100,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
+static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 {
 	return $dict(key, OOMArrayFromVector(v));
 }
@@ -110,8 +114,8 @@ static NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	
 	if ([attributes count] == 1)
 	{
-		NSArray *positionAttr = [attributes objectForKey:kOOMPositionAttributeKey];
-		if ([positionAttr count] == 3 && IsValidAttribute(positionAttr))
+		NSArray *positionAttr = [attributes oo_arrayForKey:kOOMPositionAttributeKey];
+		if ([positionAttr count] == 3)
 		{
 			Vector position =
 			{
@@ -210,12 +214,16 @@ OOUInteger gHashCollisions = 0;
 		OOUInteger keyHash = [key hash];
 		STIR_HASH(keyHash);
 		
+#if 0
 		NSNumber *value = nil;
 		foreach (value, [self attributeForKey:key])
 		{
 			OOUInteger valHash = [value hash];
 			STIR_HASH(valHash);
 		}
+#else
+		STIR_HASH([(OOMFloatArray *)[self attributeForKey:key] betterHash]);
+#endif
 	}
 #endif
 	if (hash == 0)  hash = 1;
@@ -286,6 +294,12 @@ OOUInteger gHashCollisions = 0;
 }
 
 
+/*	These methods are relatively costly. I considered changing CopyAttributes
+	to merge two dictionaries, which would be faster, but the duplucate
+	resolution behaviour of -[NSDictionary initWithObjects:forKeys:count:] is
+	not guaranteed.
+	-- Ahruman 2010-05-23
+*/
 - (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes
 {
 	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
@@ -294,7 +308,7 @@ OOUInteger gHashCollisions = 0;
 }
 
 
-- (OOMVertex *) vertexByAddingAttribute:(NSArray *)attribute forKey:(NSString *)key
+- (OOMVertex *) vertexByAddingAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
 {
 	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
 	[newAttrs setObject:attribute forKey:key];
@@ -406,7 +420,7 @@ OOUInteger gHashCollisions = 0;
 }
 
 
-- (void) setAttribute:(NSArray *)attribute forKey:(NSString *)key
+- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
 {
 	[self priv_subclassResponsibility:_cmd];
 }
@@ -526,22 +540,14 @@ OOUInteger gHashCollisions = 0;
 }
 
 
-- (void) setAttribute:(NSArray *)attribute forKey:(NSString *)key
+- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
 {
 	if (EXPECT_NOT(key == nil))  return;
 	_hash = 0;
 	
 	if (attribute != nil)
 	{
-		if (IsValidAttribute(attribute))
-		{
-			[_attributes setObject:attribute forKey:key];
-		}
-		else
-		{
-			[NSException raise:NSInvalidArgumentException format:@"OOMVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
-		}
-
+		[_attributes setObject:attribute forKey:key];
 	}
 	else
 	{
@@ -677,62 +683,67 @@ static OOUInteger AttributeRank(NSString *string)
 @end
 
 
-
-static BOOL IsValidAttribute(NSArray *attr)
-{
-	if (attr == nil)  return NO;
-	
-	id value = nil;
-	foreach(value, attr)
-	{
-		if (EXPECT_NOT(![value isKindOfClass:[NSNumber class]]))  return NO;
-	}
-	
-	return YES;
-}
-
-
+#ifndef NDEBUG
 static BOOL IsValidAttributeDictionary(NSDictionary *dict)
 {
 	id key = nil;
 	foreach(key, [dict allKeys])
 	{
 		if (EXPECT_NOT(![key isKindOfClass:[NSString class]]))  return NO;
-		if (EXPECT_NOT(!IsValidAttribute([dict oo_arrayForKey:key])))  return NO;
+		if (EXPECT_NOT(![[dict objectForKey:key] isKindOfClass:[NSArray class]]))  return NO;
 	}
 	return YES;
 }
+#endif
 
 
 static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL verify)
 {
+#ifndef NDEBUG
 	if (verify && !IsValidAttributeDictionary(attributes))
 	{
 		DESTROY(self);
 		[NSException raise:NSInvalidArgumentException format:@"OOMVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
 	}
+#endif
 	
 	/*	Deep copy attributes. The attribute arrays are always immutable, and
 		the numbers themselves are inherently immutable. The mutable flag
 		determines the mutability of the top-level dictionary.
+		
+		For small attribute sets, we work on the stack. For bigger ones, we
+		need to malloc a buffer.
 	*/
 	OOUInteger i = 0, count = [attributes count];
-	id *keys = malloc(sizeof *keys * count);
-	id *values = malloc(sizeof *values * count);
-	if (keys == NULL || values == NULL)
+	enum
 	{
-		DESTROY(self);
-		free(keys);
-		free(values);
-		[NSException raise:NSMallocException format:@"Could not allocate memory for OOMVertex."];
+		kStackBufSize = 8
+	};
+	id stackBuf[kStackBufSize * 2];
+	id *keys = stackBuf, *values = stackBuf + kStackBufSize;
+	
+	if (count <= kStackBufSize) {} else
+	{
+		keys = malloc(sizeof *keys * count * 2);
+		if (EXPECT_NOT(keys == NULL))
+		{
+			DESTROY(self);
+			[NSException raise:NSMallocException format:@"Could not allocate memory for OOMVertex."];
+		}
+		values = keys + count;
 	}
 	
-	NSString *key = nil;
+	/*	Performance notes:
+		This is a relatively expensive function when, e.g., loading large
+		files. Most of the time is spent in making floatArrays and dictionaries,
+		so there's not much fat to trim.
+	*/
+	NSString *key;
 	i = 0;
 	foreach(key, [attributes allKeys])
 	{
-		keys[i] = [key copy];
-		values[i] = [NSArray arrayWithArray:[attributes objectForKey:key]];
+		keys[i] = key;	// NSDictionary calls copy, no need for us to do anything.
+		values[i] = [OOMFloatArray newWithArray:[attributes objectForKey:key]];
 		i++;
 	}
 	
@@ -741,36 +752,36 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 	
 	for (i = 0; i < count; i++)
 	{
-		[keys[i] release];
+		[values[i] release];
 	}
-	free(keys);
-	free(values);
+	
+	if (keys == stackBuf) {} else free(keys);
 	
 	return result;
 }
 
 
-NSArray *OOMArrayFromDouble(double value)
+OOMFloatArray *OOMArrayFromDouble(double value)
 {
-	return $array($float(value));
+	return $floatarray(value);
 }
 
 
-NSArray *OOMArrayFromPoint(NSPoint value)
+OOMFloatArray *OOMArrayFromPoint(NSPoint value)
 {
-	return $array($float(value.x), $float(value.y));
+	return $floatarray(value.x, value.y);
 }
 
 
-NSArray *OOMArrayFromVector2D(Vector2D value)
+OOMFloatArray *OOMArrayFromVector2D(Vector2D value)
 {
-	return $array($float(value.x), $float(value.y));
+	return $floatarray(value.x, value.y);
 }
 
 
-NSArray *OOMArrayFromVector(Vector value)
+OOMFloatArray *OOMArrayFromVector(Vector value)
 {
-	return $array($float(value.x), $float(value.y), $float(value.z));
+	return $floatarray(value.x, value.y, value.z);
 }
 
 

@@ -35,6 +35,8 @@
 
 #import "liboomeshbase.h"
 
+@class OOMFloatArray;
+
 
 @interface OOMVertex: NSObject <NSCopying, NSMutableCopying>
 
@@ -55,7 +57,7 @@
 
 @interface OOMVertex (Conveniences)
 
-- (NSArray *) attributeForKey:(NSString *)key;
+- (OOMFloatArray *) attributeForKey:(NSString *)key;
 - (NSArray *) allAttributeKeys;
 
 - (NSEnumerator *) attributeKeyEnumerator;
@@ -69,7 +71,7 @@
 
 // Create a new, immutable vertex by adding/removing attributes.
 - (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes;
-- (OOMVertex *) vertexByAddingAttribute:(NSArray *)attribute forKey:(NSString *)key;
+- (OOMVertex *) vertexByAddingAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key;
 - (OOMVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
 
 
@@ -89,7 +91,7 @@
 
 @interface OOMMutableVertex: OOMVertex
 
-- (void) setAttribute:(NSArray *)attribute forKey:(NSString *)key;
+- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key;
 
 @end
 
@@ -133,10 +135,10 @@ extern NSString * const kOOMTexCoordsAttributeKey;	// "texCoords"
 
 
 // Convert attributes to/from more convenient representations.
-NSArray *OOMArrayFromDouble(double value);
-NSArray *OOMArrayFromPoint(NSPoint value);
-NSArray *OOMArrayFromVector2D(Vector2D value);
-NSArray *OOMArrayFromVector(Vector value);
+OOMFloatArray *OOMArrayFromDouble(double value);
+OOMFloatArray *OOMArrayFromPoint(NSPoint value);
+OOMFloatArray *OOMArrayFromVector2D(Vector2D value);
+OOMFloatArray *OOMArrayFromVector(Vector value);
 
 // These will zero-fill if source is too short.
 double OOMDoubleFromArray(NSArray *array);

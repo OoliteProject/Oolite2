@@ -82,6 +82,7 @@ BOOL ifSetString( NSString **var, NSString *value );
     
 #if (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 #define foreach(VAR,ARR) for(VAR in ARR)
+#define foreachkey(VAR,DICT) for(VAR in DICT)
 
 #else
 struct foreachstate {NSArray *array; unsigned n, i;};
@@ -95,6 +96,7 @@ static inline struct foreachstate _initforeach( NSArray *arr ) {
 #define foreach(VAR,ARR) for( struct foreachstate _s = _initforeach((ARR)); \
                                    _s.i<_s.n && ((VAR)=[_s.array objectAtIndex: _s.i], YES); \
                                    _s.i++ )
+#define foreachkey(VAR,DICT) foreach(VAR,[DICT allKeys])
 #endif
 
 

@@ -1,10 +1,8 @@
 /*
-	OOMFaceGroup.h
+	OOMTextureSpecification.h
 	liboomesh
 	
-	A face group represents a list of faces to be drawn with the same state.
-	In rendering terms, it corresponds to an element array, while the state
-	is specified by a material.
+	Description of a texture map for oomesh.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -29,34 +27,18 @@
 */
 
 #import "liboomeshbase.h"
+#import "JAPropertyListRepresentation.h"
 
-@class OOMFace, OOMMaterialSpecification;
 
-
-@interface OOMFaceGroup: NSObject <NSFastEnumeration>
+@interface OOMTextureSpecification: NSObject <JAPropertyListRepresentation>
 {
 @private
-	NSString					*_name;
-	NSMutableArray				*_faces;
-	OOMMaterialSpecification	*_material;
+	NSString						*_name;
 }
 
-- (NSString *) name;
-- (void) setName:(NSString *)name;
++ (id) textureSpecWithName:(NSString *)name;
 
-- (OOMMaterialSpecification *) material;
-- (void) setMaterial:(OOMMaterialSpecification *)material;
-
-- (OOUInteger) faceCount;
-
-- (OOMFace *) faceAtIndex:(OOUInteger)index;
-
-- (void) addFace:(OOMFace *)face;
-- (void) insertFace:(OOMFace *)face atIndex:(OOUInteger)index;
-- (void) removeLastFace;
-- (void) removeFaceAtIndex:(OOUInteger)index;
-- (void) replaceFaceAtIndex:(OOUInteger)index withFace:(OOMFace *)face;
-
-- (NSEnumerator *) faceEnumerator;
+- (NSString *) textureMapName;
+- (void) setTextureMapName:(NSString *)value;
 
 @end

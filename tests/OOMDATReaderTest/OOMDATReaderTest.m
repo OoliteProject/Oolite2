@@ -2,6 +2,9 @@
 #import <OOMesh/CollectionUtils.h>
 
 
+static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues);
+
+
 int main (int argc, const char * argv[])
 {
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -17,19 +20,35 @@ int main (int argc, const char * argv[])
 	path = [NSString stringWithUTF8String:buffer];
 	
 	id <OOMProblemReportManager> issues = [[OOMSimpleProblemReportManager new] autorelease];
+	OOMMesh *mesh = nil;
 	
+	NSString *ext = [[path pathExtension] lowercaseString];
+	if ([ext isEqualToString:@"dat"])  mesh = ReadDAT(path, issues);
+	else
+	{
+		OOMReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
+	}
+	
+	if (mesh != nil)
+	{
+		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
+	}
+	
+    [pool drain];
+    return 0;
+}
+
+
+static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues)
+{
 	OOMDATReader *reader = [[OOMDATReader alloc] initWithPath:path issues:issues];
-	if (reader == nil)  return EXIT_FAILURE;
+	if (reader == nil)  return nil;
 	
 	[reader setSmoothing:YES];
 //	[reader setBrokenSmoothing:NO];
 	
-	OOMMesh *mesh = [reader mesh];
-/*	if (mesh != nil)
-	{
-		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
-	}*/
+	OOMMesh *result = [reader mesh];
+	[reader release];
 	
-    [pool drain];
-    return 0;
+	return result;
 }

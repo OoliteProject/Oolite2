@@ -42,6 +42,14 @@
 		1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA255911A73C4C00B361DC /* OOMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF426EC11A939F8008E883C /* OOMFloatArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF426EF11A939F8008E883C /* OOMFloatArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF426ED11A939F8008E883C /* OOMFloatArray.m */; };
+		1AF4293411A9897D008E883C /* OOMMaterialSpecification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF4293211A9897D008E883C /* OOMMaterialSpecification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF4293511A9897D008E883C /* OOMMaterialSpecification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4293311A9897D008E883C /* OOMMaterialSpecification.m */; };
+		1AF429BA11A98B4D008E883C /* OOMTextureSpecification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF429B811A98B4D008E883C /* OOMTextureSpecification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF429BB11A98B4D008E883C /* OOMTextureSpecification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF429B911A98B4D008E883C /* OOMTextureSpecification.m */; };
+		1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */; };
+		1AF42A7811A9AB27008E883C /* NSNumberOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF42A7611A9AB27008E883C /* NSNumberOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF42A7911A9AB27008E883C /* NSNumberOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +93,14 @@
 		1AEA255911A73C4C00B361DC /* OOMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMesh.h; path = Source/OOMesh.h; sourceTree = "<group>"; };
 		1AF426EC11A939F8008E883C /* OOMFloatArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMFloatArray.h; sourceTree = "<group>"; };
 		1AF426ED11A939F8008E883C /* OOMFloatArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMFloatArray.m; sourceTree = "<group>"; };
+		1AF4293211A9897D008E883C /* OOMMaterialSpecification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMMaterialSpecification.h; sourceTree = "<group>"; };
+		1AF4293311A9897D008E883C /* OOMMaterialSpecification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMMaterialSpecification.m; sourceTree = "<group>"; };
+		1AF429B811A98B4D008E883C /* OOMTextureSpecification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMTextureSpecification.h; sourceTree = "<group>"; };
+		1AF429B911A98B4D008E883C /* OOMTextureSpecification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMTextureSpecification.m; sourceTree = "<group>"; };
+		1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
+		1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
+		1AF42A7611A9AB27008E883C /* NSNumberOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNumberOOExtensions.h; sourceTree = "<group>"; };
+		1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNumberOOExtensions.m; sourceTree = "<group>"; };
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -144,6 +160,10 @@
 				1A8F1BDA11A882FC00C94CB0 /* OOMFaceGroup.m */,
 				1A8F1CCA11A88CA600C94CB0 /* OOMMesh.h */,
 				1A8F1CCB11A88CA600C94CB0 /* OOMMesh.m */,
+				1AF4293211A9897D008E883C /* OOMMaterialSpecification.h */,
+				1AF4293311A9897D008E883C /* OOMMaterialSpecification.m */,
+				1AF429B811A98B4D008E883C /* OOMTextureSpecification.h */,
+				1AF429B911A98B4D008E883C /* OOMTextureSpecification.m */,
 				1AEA232E11A728C100B361DC /* OOMDATLexer.h */,
 				1AEA232F11A728C100B361DC /* OOMDATLexer.m */,
 				1AEA235C11A72E0B00B361DC /* OOMDATReader.h */,
@@ -180,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				1A864C8E11A5EC26008CDC78 /* CollectionUtils */,
+				1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */,
 			);
 			path = Deps;
 			sourceTree = "<group>";
@@ -196,6 +217,8 @@
 		1AAB4AC611A5D9D8005F2081 /* Oolite */ = {
 			isa = PBXGroup;
 			children = (
+				1AF42A7611A9AB27008E883C /* NSNumberOOExtensions.h */,
+				1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */,
 				1AAB4AC711A5D9D8005F2081 /* OOFastArithmetic.h */,
 				1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */,
 				1AAB4AC811A5D9D8005F2081 /* OOFunctionAttributes.h */,
@@ -210,6 +233,15 @@
 				1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */,
 			);
 			path = Oolite;
+			sourceTree = "<group>";
+		};
+		1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */ = {
+			isa = PBXGroup;
+			children = (
+				1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */,
+				1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */,
+			);
+			path = JAPropertyListRepresentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,6 +270,10 @@
 				1A8F1CCC11A88CA600C94CB0 /* OOMMesh.h in Headers */,
 				1A8F1CEB11A8904B00C94CB0 /* OOMOOMeshWriter.h in Headers */,
 				1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */,
+				1AF4293411A9897D008E883C /* OOMMaterialSpecification.h in Headers */,
+				1AF429BA11A98B4D008E883C /* OOMTextureSpecification.h in Headers */,
+				1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */,
+				1AF42A7811A9AB27008E883C /* NSNumberOOExtensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +346,10 @@
 				1A8F1CCD11A88CA600C94CB0 /* OOMMesh.m in Sources */,
 				1A8F1CEC11A8904B00C94CB0 /* OOMOOMeshWriter.m in Sources */,
 				1AF426EF11A939F8008E883C /* OOMFloatArray.m in Sources */,
+				1AF4293511A9897D008E883C /* OOMMaterialSpecification.m in Sources */,
+				1AF429BB11A98B4D008E883C /* OOMTextureSpecification.m in Sources */,
+				1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */,
+				1AF42A7911A9AB27008E883C /* NSNumberOOExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

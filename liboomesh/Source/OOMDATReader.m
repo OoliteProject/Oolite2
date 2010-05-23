@@ -34,6 +34,7 @@
 #import "OOMFace.h"
 #import "OOMFaceGroup.h"
 #import "OOMMesh.h"
+#import "OOMMaterialSpecification.h"
 
 
 static void CleanVector(Vector *v)
@@ -145,9 +146,6 @@ enum
 	
 	[super dealloc];
 }
-
-
-OOUInteger gHashCollisions;
 
 
 - (void) parse
@@ -278,7 +276,6 @@ OOUInteger gHashCollisions;
 	{
 		OK = [self priv_buildGroups];
 	}
-	printf("Hash collisions: %lu\n", (unsigned long)gHashCollisions);
 	
 	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
@@ -943,7 +940,22 @@ OOUInteger gHashCollisions;
 		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
 		NSString *materialName = [_materialKeys objectAtIndex:mIter];
 		BOOL haveMaterial = (materialName != nil);
-		if (haveMaterial)  [faceGroup setName:materialName];
+		if (haveMaterial)
+		{
+			NSString *diffuseMapName = nil;
+			
+			if ([[[materialName pathExtension] lowercaseString] isEqualToString:@"png"])
+			{
+				diffuseMapName = materialName;
+				materialName = [materialName stringByDeletingPathExtension];
+			}
+			
+			OOMMaterialSpecification *material = [[OOMMaterialSpecification alloc] initWithMaterialKey:materialName];
+			if (diffuseMapName != nil)  [material setDiffuseMapName:diffuseMapName];
+			
+			[faceGroup setName:materialName];
+			[faceGroup setMaterial:material];
+		}
 		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
@@ -990,7 +1002,7 @@ OOUInteger gHashCollisions;
 					}
 					
 #if UNIQUE_VERTICES
-					// Save uniqued vertex. Slow! Also doesn't work properly.
+					// Save uniqued vertex. Slow! Also doesn't work.
 					triVertices[vIter] = [uniquedVertices member:vertex];
 					if (triVertices[vIter] == nil)
 					{

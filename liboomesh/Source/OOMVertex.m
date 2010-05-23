@@ -179,15 +179,11 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-OOUInteger gHashCollisions = 0;
-
 - (BOOL) isEqual:(id)other
 {
 	if (EXPECT_NOT(![other isKindOfClass:[OOMVertex class]]))  return NO;
 	if ([self hash] != [other hash])  return NO;
-	BOOL result = [[self allAttributes] isEqual:[other allAttributes]];
-	if (!result)  gHashCollisions++;
-	return result;
+	return [[self allAttributes] isEqual:[other allAttributes]];
 }
 
 

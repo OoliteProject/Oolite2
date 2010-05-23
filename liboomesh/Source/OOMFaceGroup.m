@@ -65,6 +65,19 @@
 }
 
 
+- (OOMMaterialSpecification *) material
+{
+	return _material;
+}
+
+
+- (void) setMaterial:(OOMMaterialSpecification *)material
+{
+	[_material autorelease];
+	_material = [material retain];
+}
+
+
 - (OOUInteger) faceCount
 {
 	return [_faces count];

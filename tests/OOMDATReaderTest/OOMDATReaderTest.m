@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <OOMesh/CollectionUtils.h>
 
 
 int main (int argc, const char * argv[])
@@ -24,10 +25,10 @@ int main (int argc, const char * argv[])
 //	[reader setBrokenSmoothing:NO];
 	
 	OOMMesh *mesh = [reader mesh];
-	if (mesh != nil)
+/*	if (mesh != nil)
 	{
 		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
-	}
+	}*/
 	
     [pool drain];
     return 0;

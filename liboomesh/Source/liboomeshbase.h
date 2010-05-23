@@ -16,10 +16,16 @@
 		typedef NSInteger OOInteger;
 		typedef NSUInteger OOUInteger;
 		typedef CGFloat OOCGFloat;
+		#define OOIntegerMax	NSIntegerMax
+		#define OOIntegerMin	NSIntegerMin
+		#define OOUIntegerMax	NSUIntegerMax
 	#else
 		typedef int OOInteger;
 		typedef unsigned int OOUInteger;
 		typedef float OOCGFloat;
+		#define OOIntegerMax	INT_MAX
+		#define OOIntegerMin	INT_MIN
+		#define OOUIntegerMax	UINT_MAX
 	#endif
 	
 	#define OO_NUMBER_TYPES_DEFINED	1

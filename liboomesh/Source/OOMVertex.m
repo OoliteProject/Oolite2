@@ -25,6 +25,7 @@
 */
 
 #import "OOMVertex.h"
+#import "OOMFloatArray.h"
 #import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
 
@@ -189,11 +190,18 @@ OOUInteger gHashCollisions = 0;
 - (OOUInteger) hash
 {
 #if 0
+	/*	Under Mac OS X 10.6, -[NSArray hash] returns the array's count. This
+		means every pair of vertices for the same mesh will have a hash
+		collisions, since they'll have the same properties.
+	*/
 	OOUInteger hash = [[self allAttributes] hash];
 #else
+	/*	To avoid the problem mentioned above, manually hash taking the hashes
+		of individual components into account. This hash is modified djb2 with
+		xor - a string hash that has adequate behaviour in this case.
+	*/
 	OOUInteger hash = 5381;
 	
-#define HASH_BITS (sizeof hash * CHAR_BIT)
 #define STIR_HASH(x)  do { hash = (hash * 33) ^ (OOUInteger)(x); } while (0)
 	
 	NSString *key = nil;
@@ -201,17 +209,13 @@ OOUInteger gHashCollisions = 0;
 	{
 		OOUInteger keyHash = [key hash];
 		STIR_HASH(keyHash);
-#if 0
-		OOUInteger valHash = [[self attributeForKey:key] hash];
-		STIR_HASH(valHash);
-#else
+		
 		NSNumber *value = nil;
 		foreach (value, [self attributeForKey:key])
 		{
 			OOUInteger valHash = [value hash];
 			STIR_HASH(valHash);
 		}
-#endif
 	}
 #endif
 	if (hash == 0)  hash = 1;
@@ -732,7 +736,8 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 		i++;
 	}
 	
-	id result = [[(mutable ? [NSMutableDictionary class] : [NSDictionary class]) alloc] initWithObjects:values forKeys:keys count:count];
+	Class rClass = mutable ? [NSMutableDictionary class] : [NSDictionary class];
+	id result = [[rClass alloc] initWithObjects:values forKeys:keys count:count];
 	
 	for (i = 0; i < count; i++)
 	{

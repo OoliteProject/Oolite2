@@ -40,6 +40,8 @@
 		1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA255911A73C4C00B361DC /* OOMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF426EC11A939F8008E883C /* OOMFloatArray.h */; };
+		1AF426EF11A939F8008E883C /* OOMFloatArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF426ED11A939F8008E883C /* OOMFloatArray.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +83,8 @@
 		1AEA251111A73A9200B361DC /* OOMesh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OOMesh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AEA251311A73A9200B361DC /* OOMesh-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OOMesh-Info.plist"; sourceTree = "<group>"; };
 		1AEA255911A73C4C00B361DC /* OOMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMesh.h; path = Source/OOMesh.h; sourceTree = "<group>"; };
+		1AF426EC11A939F8008E883C /* OOMFloatArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMFloatArray.h; sourceTree = "<group>"; };
+		1AF426ED11A939F8008E883C /* OOMFloatArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMFloatArray.m; sourceTree = "<group>"; };
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -148,6 +152,8 @@
 				1A8F1CEA11A8904B00C94CB0 /* OOMOOMeshWriter.m */,
 				1AEA233711A729F000B361DC /* OOMProblemReportManager.h */,
 				1AEA234E11A72C7200B361DC /* OOMProblemReportManager.m */,
+				1AF426EC11A939F8008E883C /* OOMFloatArray.h */,
+				1AF426ED11A939F8008E883C /* OOMFloatArray.m */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -231,6 +237,7 @@
 				1A8F1C6911A884F400C94CB0 /* OOMFace.h in Headers */,
 				1A8F1CCC11A88CA600C94CB0 /* OOMMesh.h in Headers */,
 				1A8F1CEB11A8904B00C94CB0 /* OOMOOMeshWriter.h in Headers */,
+				1AF426EE11A939F8008E883C /* OOMFloatArray.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +309,7 @@
 				1A8F1C6A11A884F400C94CB0 /* OOMFace.m in Sources */,
 				1A8F1CCD11A88CA600C94CB0 /* OOMMesh.m in Sources */,
 				1A8F1CEC11A8904B00C94CB0 /* OOMOOMeshWriter.m in Sources */,
+				1AF426EF11A939F8008E883C /* OOMFloatArray.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

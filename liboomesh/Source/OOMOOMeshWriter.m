@@ -150,8 +150,13 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		//	FIXME: escape string.
-		[result appendFormat:@"group \"%@\"\n\tfaceCount: %lu\n\tdata:\n", [faceGroup name], [faceGroup faceCount]];
+		[result appendString:@"group"];
+		if ([faceGroup name] != nil)
+		{
+			//	FIXME: escape string.
+			[result appendFormat:@" \"%@\"", [faceGroup name]];
+		}
+		[result appendFormat:@"\n\tfaceCount: %lu\n\tdata:\n", [faceGroup name], [faceGroup faceCount]];
 		
 		foreach(face, faceGroup)
 		{

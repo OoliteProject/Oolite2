@@ -937,7 +937,9 @@ OOUInteger gHashCollisions;
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
 		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
-		[faceGroup setName:[_materialKeys objectAtIndex:mIter]];
+		NSString *materialName = [_materialKeys objectAtIndex:mIter];
+		BOOL haveMaterial = (materialName != nil);
+		if (haveMaterial)  [faceGroup setName:materialName];
 		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
@@ -978,9 +980,12 @@ OOUInteger gHashCollisions;
 						vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOOMNormalAttributeKey, OOMArrayFromVector(triangle->normal), kOOMTangentAttributeKey, OOMArrayFromVector(triangle->tangent))];
 					}
 					
-					// Add in texture coordinate.
-					vertex = [vertex vertexByAddingAttribute:OOMArrayFromVector2D(triangle->texCoords[vIter])
-													  forKey:kOOMTexCoordsAttributeKey];
+					if (haveMaterial)
+					{
+						// Add in texture coordinate.
+						vertex = [vertex vertexByAddingAttribute:OOMArrayFromVector2D(triangle->texCoords[vIter])
+														  forKey:kOOMTexCoordsAttributeKey];
+					}
 					
 					// Save uniqued vertex. Slow!
 					triVertices[vIter] = [uniquedVertices member:vertex];

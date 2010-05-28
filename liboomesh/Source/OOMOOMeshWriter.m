@@ -1,6 +1,5 @@
 /*
 	OOMOOMeshWriter.h
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -52,7 +51,7 @@
 */
 @protocol OOMWriteToOOMesh
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText indentLevel:(OOUInteger)indentLevel afterPunctuation:(BOOL)afterPunct;
+- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText indentLevel:(NSUInteger)indentLevel afterPunctuation:(BOOL)afterPunct;
 
 @end
 
@@ -94,8 +93,8 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 	//	Generate list of unique vertex indices (pointer uniquing only).
 	NSMutableArray *vertices = [NSMutableArray array];
 	NSMutableDictionary *indices = [NSMutableDictionary dictionary];
-	OOUInteger vertexCount = 0;
-	OOUInteger dupeCount = 0;
+	NSUInteger vertexCount = 0;
+	NSUInteger dupeCount = 0;
 	
 	OOMFaceGroup *faceGroup = nil;
 	OOMFace *face = nil;
@@ -110,7 +109,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 		{
 			NSAutoreleasePool *pool = [NSAutoreleasePool new];
 			
-			for (OOUInteger vIter = 0; vIter < 3; vIter++)
+			for (NSUInteger vIter = 0; vIter < 3; vIter++)
 			{
 				vertex = [face vertexAtIndex:vIter];
 				
@@ -194,7 +193,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 		NSString *key = nil;
 		foreach (key, attributeKeys)
 		{
-			OOUInteger i, count = [[protoVertex attributeForKey:key] count];
+			NSUInteger i, count = [[protoVertex attributeForKey:key] count];
 			
 			[result appendFormat:@"\t\n\tattribute \"%@\":\n\t{\n\t\tsize: %lu\n\t\tdata:\n\t\t[\n", EscapeString(key), (unsigned long)count];
 			
@@ -205,7 +204,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 				OOMFloatArray *attr = [vertex attributeForKey:key];
 				for (i = 0; i < count; i++)
 				{
-					[result appendFormat:@"%g%@", [attr floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];
+					[result appendFormat:@"%f%@", [attr floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];
 				}
 			}
 			
@@ -232,12 +231,12 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 		{
 			[result appendString:@"\t\t\t"];
 			
-			for (OOUInteger vIter = 0; vIter < 3; vIter++)
+			for (NSUInteger vIter = 0; vIter < 3; vIter++)
 			{
 				vertex = [face vertexAtIndex:vIter];
 				
 				NSValue *boxed = [NSValue valueWithNonretainedObject:vertex];
-				OOUInteger index = [indices oo_unsignedIntegerForKey:boxed];
+				NSUInteger index = [indices oo_unsignedIntegerForKey:boxed];
 				
 				[result appendFormat:@"%lu%@", (unsigned long)index, (vIter == 2) ? @"\n" : @", "];
 			}
@@ -277,7 +276,7 @@ static NSString *EscapeString(NSString *string)
 		
 		if (![scanner scanCharactersFromSet:charSet intoString:&substr])  break;
 		
-		OOUInteger i, length = [substr length];
+		NSUInteger i, length = [substr length];
 		for (i = 0; i < length; i++)
 		{
 			unichar c = [substr characterAtIndex:i];
@@ -330,7 +329,7 @@ static NSString *EscapeString(NSString *string)
 }
 
 
-static NSString *IndentTabs(OOUInteger count)
+static NSString *IndentTabs(NSUInteger count)
 {
 	NSString * const staticTabs[] =
 	{
@@ -351,7 +350,7 @@ static NSString *IndentTabs(OOUInteger count)
 	else
 	{
 		NSMutableString *result = [NSMutableString stringWithCapacity:count];
-		for (OOUInteger i = 0; i < count; i++)
+		for (NSUInteger i = 0; i < count; i++)
 		{
 			[result appendString:@"\t"];
 		}
@@ -377,7 +376,7 @@ static NSString *IndentTabs(OOUInteger count)
 @implementation NSString (OOMWriteToOOMesh)
 
 - (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(OOUInteger)indentLevel
+			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
 	if (afterPunct)  [oomeshText appendString:@" "];
@@ -399,7 +398,7 @@ static BOOL IsValidDictChar(unichar c)
 
 - (BOOL) oom_isValidDictKey
 {
-	OOUInteger i, length = [self length];
+	NSUInteger i, length = [self length];
 	if (length == 0 || length > 60)  return NO;
 	
 	unichar c = [self characterAtIndex:0];
@@ -419,13 +418,13 @@ static BOOL IsValidDictChar(unichar c)
 @implementation NSNumber (OOMWriteToOOMesh)
 
 - (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(OOUInteger)indentLevel
+			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
 	if (afterPunct)  [oomeshText appendString:@" "];
 	if ([self oo_isFloatingPointNumber])
 	{
-		[oomeshText appendFormat:@"%g", [self doubleValue]];
+		[oomeshText appendFormat:@"%f", [self doubleValue]];
 	}
 	else
 	{
@@ -453,7 +452,7 @@ enum
 	*/
 	if ([self count] > kMaxSimpleCount)  return NO;
 	
-	OOUInteger totalLength = 0;
+	NSUInteger totalLength = 0;
 	
 	id object = nil;
 	foreach (object, self)
@@ -482,7 +481,7 @@ enum
 
 
 - (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(OOUInteger)indentLevel
+			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
 	if ([self count] == 0)
@@ -546,7 +545,7 @@ enum
 	*/
 	if ([self count] > kMaxSimpleCount)  return NO;
 	
-	OOUInteger totalLength = 0;
+	NSUInteger totalLength = 0;
 	
 	id key = nil;
 	foreachkey (key, self)
@@ -578,7 +577,7 @@ enum
 
 
 - (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(OOUInteger)indentLevel
+			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
 	if ([self count] == 0)

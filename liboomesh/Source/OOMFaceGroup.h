@@ -1,6 +1,5 @@
 /*
 	OOMFaceGroup.h
-	liboomesh
 	
 	A face group represents a list of faces to be drawn with the same state.
 	In rendering terms, it corresponds to an element array, while the state
@@ -47,15 +46,15 @@
 - (OOMMaterialSpecification *) material;
 - (void) setMaterial:(OOMMaterialSpecification *)material;
 
-- (OOUInteger) faceCount;
+- (NSUInteger) faceCount;
 
-- (OOMFace *) faceAtIndex:(OOUInteger)index;
+- (OOMFace *) faceAtIndex:(NSUInteger)index;
 
 - (void) addFace:(OOMFace *)face;
-- (void) insertFace:(OOMFace *)face atIndex:(OOUInteger)index;
+- (void) insertFace:(OOMFace *)face atIndex:(NSUInteger)index;
 - (void) removeLastFace;
-- (void) removeFaceAtIndex:(OOUInteger)index;
-- (void) replaceFaceAtIndex:(OOUInteger)index withFace:(OOMFace *)face;
+- (void) removeFaceAtIndex:(NSUInteger)index;
+- (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOMFace *)face;
 
 - (NSEnumerator *) faceEnumerator;
 

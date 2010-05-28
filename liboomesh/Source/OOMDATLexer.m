@@ -45,7 +45,7 @@ typedef enum OOMDATLexerEndMode
 
 @implementation OOMDATLexer
 
-- (id)initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues
 {
 	if ([inURL isFileURL])
 	{
@@ -67,13 +67,13 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (id)initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues
 {
 	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:ioIssues];
 }
 
 
-- (id)initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues
 {
 	if ([inData length] == 0)
 	{
@@ -94,16 +94,22 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
-	[_data release];
-	[_tokenString release];
+	DESTROY(_data);
+	DESTROY(_tokenString);
 	
 	[super dealloc];
 }
 
 
-- (OOInteger) lineNumber
+- (NSString *) description
+{
+	return [NSString stringWithFormat:@"<%@ %p>{next token = \"%@\"}", [self class], self, [self currentTokenString]];
+}
+
+
+- (NSInteger) lineNumber
 {
 	return _lineNumber;
 }
@@ -124,7 +130,7 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (NSString *)nextToken
+- (NSString *) nextToken
 {
 	if ([self advanceWithEndMode:kEndNormal])
 	{
@@ -146,7 +152,7 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (BOOL)readInteger:(OOUInteger *)outInt
+- (BOOL) readInteger:(NSUInteger *)outInt
 {
 	NSParameterAssert(outInt != NULL);
 	
@@ -180,7 +186,7 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (BOOL)readReal:(float *)outReal
+- (BOOL) readReal:(float *)outReal
 {
 	NSParameterAssert(outReal != NULL);
 	
@@ -201,7 +207,7 @@ typedef enum OOMDATLexerEndMode
 }
 
 
-- (BOOL)readString:(NSString **)outString
+- (BOOL) readString:(NSString **)outString
 {
 	NSParameterAssert(outString != NULL);
 	
@@ -240,10 +246,10 @@ static inline BOOL IsLineEndChar(char c)
 }
 
 
-- (BOOL)advanceWithEndMode:(OOMDATLexerEndMode)mode
+- (BOOL) advanceWithEndMode:(OOMDATLexerEndMode)mode
 {
 	_cursor += _tokenLength;
-	NSAssert(_cursor <= _end, @"Lexer passed end of buffer");
+	NSAssert(_cursor <= _end, @"DAT lexer passed end of buffer");
 	
 	[_tokenString release];
 	_tokenString = nil;
@@ -310,8 +316,6 @@ static inline BOOL IsLineEndChar(char c)
 		[NSException raise:NSInternalInconsistencyException format:@"Invalid end mode in DAT lexer: %u", mode];
 #endif
 	}
-
-
 	
 	_tokenLength = endCursor - _cursor;
 	
@@ -320,12 +324,6 @@ static inline BOOL IsLineEndChar(char c)
 #undef COMMENT_AT
 	
 	return YES;
-}
-
-
-- (NSString *)description
-{
-	return [NSString stringWithFormat:@"<%@ %p>{next token = \"%@\"}", [self class], self, [self currentTokenString]];
 }
 
 @end

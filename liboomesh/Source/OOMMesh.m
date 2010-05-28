@@ -1,6 +1,5 @@
 /*
 	OOMMesh.h
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -49,13 +48,13 @@
 }
 
 
-- (OOUInteger) faceGroupCount
+- (NSUInteger) faceGroupCount
 {
 	return [_faceGroups count];
 }
 
 
-- (OOMFaceGroup *) faceGroupAtIndex:(OOUInteger)index
+- (OOMFaceGroup *) faceGroupAtIndex:(NSUInteger)index
 {
 	return [_faceGroups objectAtIndex:index];
 }
@@ -67,7 +66,7 @@
 }
 
 
-- (void) insertFaceGroup:(OOMFaceGroup *)faceGroup atIndex:(OOUInteger)index
+- (void) insertFaceGroup:(OOMFaceGroup *)faceGroup atIndex:(NSUInteger)index
 {
 	[_faceGroups insertObject:faceGroup atIndex:index];
 }
@@ -79,13 +78,13 @@
 }
 
 
-- (void) removeFaceGroupAtIndex:(OOUInteger)index
+- (void) removeFaceGroupAtIndex:(NSUInteger)index
 {
 	[_faceGroups removeObjectAtIndex:index];
 }
 
 
-- (void) replaceFaceGroupAtIndex:(OOUInteger)index withFaceGroup:(OOMFaceGroup *)faceGroup
+- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOMFaceGroup *)faceGroup
 {
 	[_faceGroups replaceObjectAtIndex:index withObject:faceGroup];
 }

@@ -1,6 +1,5 @@
 /*
 	OOMTextureSpecification.m
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.

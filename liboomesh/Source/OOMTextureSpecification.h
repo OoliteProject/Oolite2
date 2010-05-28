@@ -1,6 +1,5 @@
 /*
 	OOMTextureSpecification.h
-	liboomesh
 	
 	Description of a texture map for oomesh.
 	

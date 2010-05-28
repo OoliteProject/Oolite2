@@ -1,6 +1,5 @@
 /*
 	OOMVertex.m
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -58,7 +57,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 {
 @private
 	NSDictionary			*_attributes;
-	OOUInteger				_hash;
+	NSUInteger				_hash;
 }
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
@@ -81,7 +80,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 {
 @private
 	NSMutableDictionary		*_attributes;
-	OOUInteger				_hash;
+	NSUInteger				_hash;
 }
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify;
@@ -187,42 +186,21 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (OOUInteger) hash
+- (NSUInteger) hash
 {
-#if 0
-	/*	Under Mac OS X 10.6, -[NSArray hash] returns the array's count. This
-		means every pair of vertices for the same mesh will have a hash
-		collisions, since they'll have the same properties.
-	*/
-	OOUInteger hash = [[self allAttributes] hash];
-#else
-	/*	To avoid the problem mentioned above, manually hash taking the hashes
-		of individual components into account. This hash is modified djb2 with
-		xor - a string hash that has adequate behaviour in this case.
-	*/
-	OOUInteger hash = 5381;
+	NSUInteger hash = 5381;
 	
-#define STIR_HASH(x)  do { hash = (hash * 33) ^ (OOUInteger)(x); } while (0)
+#define STIR_HASH(x)  do { hash = (hash * 33) ^ (NSUInteger)(x); } while (0)
 	
 	NSString *key = nil;
 	foreach(key, [self allAttributeKeys])
 	{
-		OOUInteger keyHash = [key hash];
+		NSUInteger keyHash = [key hash];
 		STIR_HASH(keyHash);
-		
-#if 0
-		NSNumber *value = nil;
-		foreach (value, [self attributeForKey:key])
-		{
-			OOUInteger valHash = [value hash];
-			STIR_HASH(valHash);
-		}
-#else
-		STIR_HASH([(OOMFloatArray *)[self attributeForKey:key] betterHash]);
-#endif
+		STIR_HASH([[self attributeForKey:key] betterHash]);
 	}
-#endif
-	if (hash == 0)  hash = 1;
+	
+	if (EXPECT_NOT(hash == 0))  hash = 1;
 	return hash;
 }
 
@@ -248,9 +226,9 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 @implementation OOMVertex (Conveniences)
 
-- (NSArray *) attributeForKey:(NSString *)key
+- (OOMFloatArray *) attributeForKey:(NSString *)key
 {
-	return [[self allAttributes] oo_arrayForKey:key];
+	return [[self allAttributes] objectForKey:key];
 }
 
 
@@ -392,7 +370,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (OOUInteger) hash
+- (NSUInteger) hash
 {
 	if (_hash == 0)  _hash = [super hash];
 	return _hash;
@@ -553,7 +531,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (OOUInteger) hash
+- (NSUInteger) hash
 {
 	if (_hash == 0)  _hash = [super hash];
 	return _hash;
@@ -613,7 +591,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 @implementation NSArray (OOMVertex)
 
-- (OOMVertex *) oom_vertexAtIndex:(OOUInteger)i
+- (OOMVertex *) oom_vertexAtIndex:(NSUInteger)i
 {
 	return [self oo_objectOfClass:[OOMVertex class] atIndex:i];
 }
@@ -650,7 +628,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-static OOUInteger AttributeRank(NSString *string)
+static NSUInteger AttributeRank(NSString *string)
 {
 	if ([string isEqualToString:kOOMPositionAttributeKey])  return 1;
 	if ([string isEqualToString:kOOMNormalAttributeKey])  return 2;
@@ -667,8 +645,8 @@ static OOUInteger AttributeRank(NSString *string)
 {
 	NSParameterAssert([other isKindOfClass:[NSString class]]);
 	
-	OOUInteger selfRank = AttributeRank(self);
-	OOUInteger otherRank = AttributeRank(other);
+	NSUInteger selfRank = AttributeRank(self);
+	NSUInteger otherRank = AttributeRank(other);
 	
 	if (selfRank < otherRank)  return NSOrderedAscending;
 	if (selfRank > otherRank)  return NSOrderedDescending;
@@ -710,7 +688,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 		For small attribute sets, we work on the stack. For bigger ones, we
 		need to malloc a buffer.
 	*/
-	OOUInteger i = 0, count = [attributes count];
+	NSUInteger i = 0, count = [attributes count];
 	enum
 	{
 		kStackBufSize = 8
@@ -783,7 +761,7 @@ OOMFloatArray *OOMArrayFromVector(Vector value)
 
 double OOMDoubleFromArray(NSArray *array)
 {
-	OOUInteger count = [array count];
+	NSUInteger count = [array count];
 	double result = 0;
 	if (count > 0)  result = [array oo_doubleAtIndex:0];
 	return result;
@@ -792,7 +770,7 @@ double OOMDoubleFromArray(NSArray *array)
 
 NSPoint OOMPointFromArray(NSArray *array)
 {
-	OOUInteger count = [array count];
+	NSUInteger count = [array count];
 	NSPoint result = NSZeroPoint;
 	if (count > 0)  result.x = [array oo_doubleAtIndex:0];
 	if (count > 1)  result.y = [array oo_doubleAtIndex:1];
@@ -802,7 +780,7 @@ NSPoint OOMPointFromArray(NSArray *array)
 
 Vector2D OOMVector2DFromArray(NSArray *array)
 {
-	OOUInteger count = [array count];
+	NSUInteger count = [array count];
 	Vector2D result = kZeroVector2D;
 	if (count > 0)  result.x = [array oo_floatAtIndex:0];
 	if (count > 1)  result.y = [array oo_floatAtIndex:1];
@@ -812,7 +790,7 @@ Vector2D OOMVector2DFromArray(NSArray *array)
 
 Vector OOMVectorFromArray(NSArray *array)
 {
-	OOUInteger count = [array count];
+	NSUInteger count = [array count];
 	Vector result = kZeroVector;
 	if (count > 0)  result.x = [array oo_floatAtIndex:0];
 	if (count > 1)  result.y = [array oo_floatAtIndex:1];

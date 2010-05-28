@@ -1,6 +1,5 @@
 /*
 	OOMOOMeshWriter.h
-	liboomesh
 	
 	OOMesh (Oolite 2.0) format exporter.
 	

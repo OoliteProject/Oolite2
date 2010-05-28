@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */; };
+		1A6D8C8211AF3CD300D3E7D1 /* OOMOOMeshReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8011AF3CD300D3E7D1 /* OOMOOMeshReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A6D8C8311AF3CD300D3E7D1 /* OOMOOMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8111AF3CD300D3E7D1 /* OOMOOMeshReader.m */; };
+		1A6D8C8711AF3D2000D3E7D1 /* OOMOOMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8511AF3D2000D3E7D1 /* OOMOOMeshLexer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		1A6D8C8811AF3D2000D3E7D1 /* OOMOOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMOOMeshLexer.m */; };
 		1A8F1BDB11A882FC00C94CB0 /* OOMFaceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1BD911A882FC00C94CB0 /* OOMFaceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1BDC11A882FC00C94CB0 /* OOMFaceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1BDA11A882FC00C94CB0 /* OOMFaceGroup.m */; };
 		1A8F1C6911A884F400C94CB0 /* OOMFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1C6711A884F400C94CB0 /* OOMFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -57,6 +61,10 @@
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFastArithmetic.m; sourceTree = "<group>"; };
+		1A6D8C8011AF3CD300D3E7D1 /* OOMOOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMOOMeshReader.h; sourceTree = "<group>"; };
+		1A6D8C8111AF3CD300D3E7D1 /* OOMOOMeshReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMOOMeshReader.m; sourceTree = "<group>"; };
+		1A6D8C8511AF3D2000D3E7D1 /* OOMOOMeshLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMOOMeshLexer.h; sourceTree = "<group>"; };
+		1A6D8C8611AF3D2000D3E7D1 /* OOMOOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMOOMeshLexer.m; sourceTree = "<group>"; };
 		1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCollectionExtractors.h; sourceTree = "<group>"; };
 		1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionUtils.h; sourceTree = "<group>"; };
@@ -168,6 +176,10 @@
 				1AEA232F11A728C100B361DC /* OOMDATLexer.m */,
 				1AEA235C11A72E0B00B361DC /* OOMDATReader.h */,
 				1AEA235D11A72E0B00B361DC /* OOMDATReader.m */,
+				1A6D8C8511AF3D2000D3E7D1 /* OOMOOMeshLexer.h */,
+				1A6D8C8611AF3D2000D3E7D1 /* OOMOOMeshLexer.m */,
+				1A6D8C8011AF3CD300D3E7D1 /* OOMOOMeshReader.h */,
+				1A6D8C8111AF3CD300D3E7D1 /* OOMOOMeshReader.m */,
 				1A8F1CE911A8904B00C94CB0 /* OOMOOMeshWriter.h */,
 				1A8F1CEA11A8904B00C94CB0 /* OOMOOMeshWriter.m */,
 				1AEA233711A729F000B361DC /* OOMProblemReportManager.h */,
@@ -274,6 +286,8 @@
 				1AF429BA11A98B4D008E883C /* OOMTextureSpecification.h in Headers */,
 				1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */,
 				1AF42A7811A9AB27008E883C /* NSNumberOOExtensions.h in Headers */,
+				1A6D8C8211AF3CD300D3E7D1 /* OOMOOMeshReader.h in Headers */,
+				1A6D8C8711AF3D2000D3E7D1 /* OOMOOMeshLexer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +364,8 @@
 				1AF429BB11A98B4D008E883C /* OOMTextureSpecification.m in Sources */,
 				1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */,
 				1AF42A7911A9AB27008E883C /* NSNumberOOExtensions.m in Sources */,
+				1A6D8C8311AF3CD300D3E7D1 /* OOMOOMeshReader.m in Sources */,
+				1A6D8C8811AF3D2000D3E7D1 /* OOMOOMeshLexer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +385,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/liboomeshbase.h;
+				GCC_PREPROCESSOR_DEFINITIONS = "OO_DEBUG=1";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "OOMesh-Info.plist";
 				INSTALL_PATH = "@rpath/";

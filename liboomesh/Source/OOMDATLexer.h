@@ -46,7 +46,7 @@
 - (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues;
 - (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues;
 
-- (OOInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
+- (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
 - (NSString *) currentTokenString;
 
@@ -55,7 +55,7 @@
 // Somewhat more efficient than comparing an NSString.
 - (BOOL) expectLiteral:(const char *)literal;
 
-- (BOOL) readInteger:(OOUInteger *)outInt;
+- (BOOL) readInteger:(NSUInteger *)outInt;
 - (BOOL) readReal:(float *)outReal;
 - (BOOL) readString:(NSString **)outString;
 - (BOOL) readUntilNewline:(NSString **)outString;

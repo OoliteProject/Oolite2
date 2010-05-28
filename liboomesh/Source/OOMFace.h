@@ -1,6 +1,5 @@
 /*	
 	OOMFace.h
-	liboomesh
 	
 	A face is simply a collection of three vertices. All other attributes
 	depend on context.
@@ -44,6 +43,6 @@
 - (id) initWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2;
 - (id) initWithVertices:(OOMVertex *[3])vertices;
 
-- (OOMVertex *) vertexAtIndex:(OOUInteger)index;
+- (OOMVertex *) vertexAtIndex:(NSUInteger)index;
 
 @end

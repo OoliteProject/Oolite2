@@ -52,7 +52,7 @@ static void CleanVector(Vector *v)
 */
 typedef struct RawDATTriangle
 {
-	OOUInteger			vertex[3];
+	NSUInteger			vertex[3];
 	Vector				position[3];	// Cache of vertex position, the attribute we use most often.
 	Vector				normal;
 	Vector				tangent;
@@ -81,9 +81,9 @@ typedef struct VertexFaceRef
 } VertexFaceRef;
 
 
-static void VFRAddFace(VertexFaceRef *vfr, OOUInteger index);
-static OOUInteger VFRGetCount(VertexFaceRef *vfr);
-static OOUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, OOUInteger index);
+static void VFRAddFace(VertexFaceRef *vfr, NSUInteger index);
+static NSUInteger VFRGetCount(VertexFaceRef *vfr);
+static NSUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, NSUInteger index);
 static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct.
 
 
@@ -238,7 +238,7 @@ enum
 			}
 			else
 			{
-				OOMReportWarning(_issues, @"missingEnd", @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
+				OOMReportWarning(_issues, @"unknownData", @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
 			}
 		}
 	}
@@ -277,7 +277,7 @@ enum
 		OK = [self priv_buildGroups];
 	}
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		VFRRelease(&_faceRefs[vIter]);
 	}
@@ -331,14 +331,14 @@ enum
 }
 
 
-- (OOUInteger) fileVertexCount
+- (NSUInteger) fileVertexCount
 {
 	[self parse];
 	return _fileVertexCount;
 }
 
 
-- (OOUInteger) fileFaceCount
+- (NSUInteger) fileFaceCount
 {
 	[self parse];
 	return _fileFaceCount;
@@ -388,7 +388,7 @@ enum
 		return NO;
 	}
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		// VERTEX entry format: <float v.x> <float v.y> <float v.z>
 		
@@ -424,12 +424,12 @@ enum
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
 	
-	for (OOUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
 	{
 		// FACES entry format: <int smoothGroupID> <int unused1> <int unused2> <float n.x> <float n.y> <float n.z> <int vertexCount = 3> <int v0> <int v1> <int v2>
 		
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
-		OOUInteger smoothGroupID, unused, faceVertexCount;
+		NSUInteger smoothGroupID, unused, faceVertexCount;
 		OK = [_lexer readInteger:&smoothGroupID] &&
 		[_lexer readInteger:&unused] &&
 		[_lexer readInteger:&unused];
@@ -485,7 +485,7 @@ enum
 			return NO;
 		}
 		
-		for (OOUInteger vIter = 0; vIter < 3; vIter++)
+		for (NSUInteger vIter = 0; vIter < 3; vIter++)
 		{
 			//	Track vertex->face relationships.
 			VFRAddFace(&_faceRefs[triangle->vertex[vIter]], fIter);
@@ -510,7 +510,7 @@ enum
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	NSMutableDictionary *materialKeyToIndex = [NSMutableDictionary dictionaryWithCapacity:kMaxDATMaterials];
 	
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		// TEXTURES entry format: <string materialName> <float scaleS> <float scaleT> (<float s> <float t>)*3
 		
@@ -535,7 +535,7 @@ enum
 		float scaleS, scaleT;
 		OK = [_lexer readReal:&scaleS] && [_lexer readReal:&scaleT];
 		
-		for (OOUInteger vIter = 0; vIter < 3; vIter++)
+		for (NSUInteger vIter = 0; vIter < 3; vIter++)
 		{
 			float s, t;
 			OK = OK && [_lexer readReal:&s] && [_lexer readReal:&t];
@@ -557,14 +557,14 @@ enum
 
 - (BOOL) priv_parseNAMES
 {
-	OOUInteger nameCount;
+	NSUInteger nameCount;
 	if (![_lexer readInteger:&nameCount])
 	{
 		[self priv_reportBasicParseError:@"integer after NAMES"];
 		return NO;
 	}
 	
-	for (OOUInteger nIter = 0; nIter < nameCount; nIter++)
+	for (NSUInteger nIter = 0; nIter < nameCount; nIter++)
 	{
 		// NAMES entry format: <newline-terminated-string>
 		
@@ -587,7 +587,7 @@ enum
 	_explicitNormals = YES;
 	BOOL OK = YES;
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		// NORMALS entry format: <float n.x> <float n.y> <float n.z>
 		
@@ -615,7 +615,7 @@ enum
 	_explicitTangents = YES;
 	BOOL OK = YES;
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		// TANGENTS entry format: <float t.x> <float t.y> <float t.z>
 		
@@ -642,7 +642,7 @@ enum
 
 - (BOOL) priv_checkNormalsAndAdjustWinding
 {
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		Vector v0 = triangle->position[0];
@@ -668,7 +668,7 @@ enum
 		{
 			//	normal lies in the WRONG direction!
 			//	reverse the winding.
-			OOUInteger vi0 = triangle->vertex[0];
+			NSUInteger vi0 = triangle->vertex[0];
 			triangle->vertex[0] = triangle->vertex[2];
 			triangle->vertex[2] = vi0;
 			
@@ -685,7 +685,7 @@ enum
 
 - (BOOL) priv_generateFaceTangents
 {
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
@@ -731,7 +731,7 @@ enum
 {
 	_haveTriangleAreas = YES;
 	
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
@@ -755,7 +755,7 @@ enum
 {
 	_haveTriangleAreas = YES;
 	
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		
@@ -786,7 +786,7 @@ enum
 	}
 
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
@@ -794,7 +794,7 @@ enum
 		Vector tangentSum = kZeroVector;
 		
 		VertexFaceRef *vfr = &_faceRefs[vIter];
-		OOUInteger fIter, fCount = VFRGetCount(vfr);
+		NSUInteger fIter, fCount = VFRGetCount(vfr);
 		for (fIter = 0; fIter < fCount; fIter++)
 		{
 			RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
@@ -832,14 +832,14 @@ enum
 	//	Oolite gets area calculation right in this case.
 	[self priv_calculateCorrectTriangleAreas];
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
 		Vector tangentSum = kZeroVector;
 		
 		VertexFaceRef *vfr = &_faceRefs[vIter];
-		OOUInteger fIter, fCount = VFRGetCount(vfr);
+		NSUInteger fIter, fCount = VFRGetCount(vfr);
 		for (fIter = 0; fIter < fCount; fIter++)
 		{
 			RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
@@ -862,7 +862,7 @@ enum
 
 - (void) priv_calculateSmoothGroupEdgeNormal:(Vector *)outNormal
 								  andTangent:(Vector *)outTangent
-								   forVertex:(OOUInteger)vi
+								   forVertex:(NSUInteger)vi
 							   inSmoothGroup:(uint16_t)smoothGroup
 {
 	NSParameterAssert(outNormal != NULL && outTangent != NULL);
@@ -872,7 +872,7 @@ enum
 	Vector tangentSum = kZeroVector;
 	
 	VertexFaceRef *vfr = &_faceRefs[vi];
-	OOUInteger fIter, fCount = VFRGetCount(vfr);
+	NSUInteger fIter, fCount = VFRGetCount(vfr);
 	for (fIter = 0; fIter < fCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[VFRGetFaceAtIndex(vfr, fIter)];
@@ -892,7 +892,7 @@ enum
 
 - (BOOL) priv_buildGroups
 {
-	OOUInteger vIter, fIter, mIter;
+	NSUInteger vIter, fIter, mIter;
 	BOOL isEdgeVertex[_fileVertexCount];
 	BOOL seenSmoothGroup[_fileVertexCount];
 	memset(seenSmoothGroup, 0, sizeof seenSmoothGroup);
@@ -907,7 +907,7 @@ enum
 			uint16_t smoothGroup = _rawTriangles[fIter].smoothGroup;
 			for (vIter = 0; vIter < 3; vIter++)
 			{
-				OOUInteger vi = _rawTriangles[fIter].vertex[vIter];
+				NSUInteger vi = _rawTriangles[fIter].vertex[vIter];
 				if (seenSmoothGroup[vi] == 0)
 				{
 					// Not seen this smooth group before.
@@ -933,7 +933,7 @@ enum
 		doesn't allow more than 7) it's not a big deal.
 	*/
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	OOUInteger poolTime = 0;
+	NSUInteger poolTime = 0;
 	
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
@@ -966,7 +966,7 @@ enum
 				
 				for (vIter = 0; vIter < 3; vIter++)
 				{
-					OOUInteger vi = triangle->vertex[vIter];
+					NSUInteger vi = triangle->vertex[vIter];
 					OOMVertex *vertex = nil;
 					
 					if (_smoothing)
@@ -1050,7 +1050,7 @@ enum
 	
 	fprintf(file, "// Debug dump of %s\n\nNVERTS %lu\nNFACES %lu\n\n\nVERTEX\n", [[_path lastPathComponent] UTF8String], (unsigned long)_fileVertexCount, (unsigned long)_fileFaceCount);
 	
-	for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
 		Vector pos = [_fileVertices[vIter] position];
 		fprintf(file, "%g %g %g\n", pos.x, pos.y, pos.z);
@@ -1059,18 +1059,18 @@ enum
 	BOOL explicitNormals = _explicitNormals || _smoothing;
 	
 	fprintf(file, "\n\nFACES\n");
-	for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 	{
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		Vector normal = explicitNormals ? kZeroVector : triangle->normal;
-		OOUInteger smoothGroup = _usesSmoothGroups ? triangle->smoothGroup : 0;
+		NSUInteger smoothGroup = _usesSmoothGroups ? triangle->smoothGroup : 0;
 		fprintf(file, "%lu 0 0 %g %g %g 3 %lu %lu %lu\n", (unsigned long)smoothGroup, normal.x, normal.y, normal.z, (unsigned long)triangle->vertex[0], (unsigned long)triangle->vertex[1], (unsigned long)triangle->vertex[2]);
 	}
 	
 	if ([_materialKeys count] != 0)
 	{
 		fprintf(file, "\n\nTEXTURES\n");
-		for (OOUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
+		for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
 		{
 			RawDATTriangle *triangle = &_rawTriangles[fIter];
 			fprintf(file, "%u 1 1 %g %g %g %g %g %g\n", triangle->materialIndex,
@@ -1080,7 +1080,7 @@ enum
 		}
 		
 		fprintf(file, "\n\nNAMES %lu\n", (unsigned long)_materialCount);
-		for (OOUInteger mIter = 0; mIter < _materialCount; mIter++)
+		for (NSUInteger mIter = 0; mIter < _materialCount; mIter++)
 		{
 			fprintf(file, "%s\n", [[_materialKeys objectAtIndex:mIter] UTF8String]);
 		}
@@ -1089,14 +1089,14 @@ enum
 	if (explicitNormals)
 	{
 		fprintf(file, "\n\nNORMALS\n");
-		for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+		for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 		{
 			Vector normal = [_fileVertices[vIter] normal];
 			fprintf(file, "%g %g %g\n", normal.x, normal.y, normal.z);
 		}
 		
 		fprintf(file, "\n\nTANGENTS\n");
-		for (OOUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
+		for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 		{
 			Vector tangent = [_fileVertices[vIter] tangent];
 			fprintf(file, "%g %g %g\n", tangent.x, tangent.y, tangent.z);
@@ -1109,7 +1109,7 @@ enum
 @end
 
 
-static void VFRAddFace(VertexFaceRef *vfr, OOUInteger index)
+static void VFRAddFace(VertexFaceRef *vfr, NSUInteger index)
 {
 	NSCParameterAssert(vfr != NULL);
 	
@@ -1125,7 +1125,7 @@ static void VFRAddFace(VertexFaceRef *vfr, OOUInteger index)
 }
 
 
-static OOUInteger VFRGetCount(VertexFaceRef *vfr)
+static NSUInteger VFRGetCount(VertexFaceRef *vfr)
 {
 	NSCParameterAssert(vfr != NULL);
 	
@@ -1133,7 +1133,7 @@ static OOUInteger VFRGetCount(VertexFaceRef *vfr)
 }
 
 
-static OOUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, OOUInteger index)
+static NSUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, NSUInteger index)
 {
 	NSCParameterAssert(vfr != NULL && index < VFRGetCount(vfr));
 	

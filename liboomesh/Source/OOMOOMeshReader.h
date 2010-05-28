@@ -1,7 +1,7 @@
 /*
-	OOMMesh.h
+	OOMOOMeshReader.h
 	
-	A mesh is a list of face groups.
+	Parser for Oolite 2.x oomesh files.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -25,27 +25,32 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
 
-@class OOMFaceGroup;
+#import <Foundation/Foundation.h>
+
+@protocol OOMProblemReportManager;
+@class OOMVertex, OOMOOMeshLexer, OOMMesh;
 
 
-@interface OOMMesh: NSObject <NSFastEnumeration>
+@interface OOMOOMeshReader: NSObject
 {
 @private
-	NSMutableArray				*_faceGroups;
+	id <OOMProblemReportManager>	_issues;
+	NSString						*_path;
+	OOMOOMeshLexer					*_lexer;
+	
+	NSString						*_meshName;
+	NSUInteger						_vertexCount;
+	
+	// ivars used only during parsing.
+	NSMutableSet					*_unknownSegmentTypes;
+	NSMutableDictionary				*_materials;
 }
 
-- (NSUInteger) faceGroupCount;
+- (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues;
 
-- (OOMFaceGroup *) faceGroupAtIndex:(NSUInteger)index;
+- (void) parse;
 
-- (void) addFaceGroup:(OOMFaceGroup *)faceGroup;
-- (void) insertFaceGroup:(OOMFaceGroup *)faceGroup atIndex:(NSUInteger)index;
-- (void) removeLastFaceGroup;
-- (void) removeFaceGroupAtIndex:(NSUInteger)index;
-- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOMFaceGroup *)faceGroup;
-
-- (NSEnumerator *) faceGroupEnumerator;
+- (OOMMesh *) mesh;
 
 @end

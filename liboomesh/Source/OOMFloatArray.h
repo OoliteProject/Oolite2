@@ -1,6 +1,5 @@
 /*
 	OOMFloatArray.h
-	liboomesh
 	
 	An immutable array of floats.
 	
@@ -37,28 +36,31 @@
 
 
 @interface OOMFloatArray: NSArray
-{
-@private
-	OOUInteger					_count;
-}
 
 + (id) newWithArray:(NSArray *)array;
 + (id) arrayWithArray:(NSArray *)array;
 - (id) initWithArray:(NSArray *)array;
 
-+ (id) newWithFloats:(float *)values count:(OOUInteger)count;
-+ (id) arrayWithFloats:(float *)values count:(OOUInteger)count;
-- (id) initWithFloats:(float *)values count:(OOUInteger)count;
++ (id) newWithFloats:(float *)values count:(NSUInteger)count;
++ (id) arrayWithFloats:(float *)values count:(NSUInteger)count;
+- (id) initWithFloats:(float *)values count:(NSUInteger)count;
+
+/*	In the spirit of NSData, NoCopy is a hint. The implementation may choose
+	to copy the data (and immediately free it, if freeWhenDone).
+*/
++ (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
+- (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
 
 //	Returns NaN if index is out of range.
-- (float) floatAtIndex:(OOUInteger)index;
+- (float) floatAtIndex:(NSUInteger)index;
 
 /*	The default NSArray hash, at least under Mac OS X, is awful. However, a
 	subclass can't change the hash because it must be equal to the hash of
 	a normal NSArray with the corresponding NSNumbers.
 	-betterHash provides a real hash of the array contents.
 */
-- (OOUInteger) betterHash;
+- (NSUInteger) betterHash;
 
 @end
 

@@ -1,6 +1,5 @@
 /*
 	OOMVertex.h
-	liboomesh
 	
 	A vertex is a collection of named attributes. Each attribute's value is a
 	list of numbers.
@@ -129,7 +128,7 @@ extern NSString * const kOOMTexCoordsAttributeKey;	// "texCoords"
 
 @interface NSArray (OOMVertex)
 
-- (OOMVertex *) oom_vertexAtIndex:(OOUInteger)i;
+- (OOMVertex *) oom_vertexAtIndex:(NSUInteger)i;
 
 @end
 

@@ -3,6 +3,7 @@
 
 
 static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues);
+static OOMMesh *ReadOOMesh(NSString *path, id <OOMProblemReportManager> issues);
 
 
 int main (int argc, const char * argv[])
@@ -24,6 +25,7 @@ int main (int argc, const char * argv[])
 	
 	NSString *ext = [[path pathExtension] lowercaseString];
 	if ([ext isEqualToString:@"dat"])  mesh = ReadDAT(path, issues);
+	else if ([ext isEqualToString:@"oomesh"])  mesh = ReadOOMesh(path, issues);
 	else
 	{
 		OOMReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
@@ -31,8 +33,9 @@ int main (int argc, const char * argv[])
 	
 	if (mesh != nil)
 	{
-		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
+//		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
 	}
+
 	
     [pool drain];
     return 0;
@@ -44,8 +47,20 @@ static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues)
 	OOMDATReader *reader = [[OOMDATReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return nil;
 	
-	[reader setSmoothing:YES];
-//	[reader setBrokenSmoothing:NO];
+//	[reader setSmoothing:YES];
+	[reader setBrokenSmoothing:NO];
+	
+	OOMMesh *result = [reader mesh];
+	[reader release];
+	
+	return result;
+}
+
+
+static OOMMesh *ReadOOMesh(NSString *path, id <OOMProblemReportManager> issues)
+{
+	OOMOOMeshReader *reader = [[OOMOOMeshReader alloc] initWithPath:path issues:issues];
+	if (reader == nil)  return nil;
 	
 	OOMMesh *result = [reader mesh];
 	[reader release];

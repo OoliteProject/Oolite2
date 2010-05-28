@@ -1,6 +1,5 @@
 /*
 	OOMMaterialSpecification.h
-	liboomesh
 	
 	Definition of a material for oomesh.
 	

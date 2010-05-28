@@ -1,6 +1,5 @@
 /*
 	OOMFloatArray.m
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -34,12 +33,60 @@ typedef uint32_t FloatSizedInt;
 
 @interface OOMFloatArray (Private)
 
-// Create a new array with allocated space and count but no values filled in.
-+ (id) priv_newWithCapacity:(OOUInteger)count zone:(NSZone *)zone;
-
-+ (id) priv_newWithFloats:(float *)values count:(OOUInteger)count zone:(NSZone *)zone;
-
 - (BOOL) priv_isEqualToOOMFloatArray:(OOMFloatArray *)other;
+
+//	Subclass responsibility:
+- (float *) priv_floatArray;
+
+@end
+
+
+enum
+{
+	/*
+		Largest count for which we will use OOMInlineFloatArray.
+		This should be quite low when using garbage collection, because the
+		entire object is scanned for pointers.
+		Without GC, there's no particular reason to limit it (except that on
+		64-bit systems, the use of FloatSizedInt as _count is a concern).
+		Since there's no feature macro for garbage collection mode
+		(thanks, Apple!) I'm going the conservative route.
+		-- Ahruman 2010-05-26
+	*/
+	kMaxInlineCount				= 30,
+	
+	// Smallest count for which we will use OOMExternFloatArray.
+	kMinExternCount				= 8
+};
+
+
+/*	
+	OOMInlineFloatArray
+	Concrete OOMFloatArray which uses object_getIndexedIvars() as storage.
+*/
+@interface OOMInlineFloatArray: OOMFloatArray
+{
+@private
+	FloatSizedInt				_count;
+}
+
+// Create a new array with allocated space and count but no values filled in.
++ (id) priv_newWithCapacity:(NSUInteger)count;
++ (id) priv_newWithFloats:(float *)values count:(NSUInteger)count;
+
+@end
+
+
+@interface OOMExternFloatArray: OOMFloatArray
+{
+	NSUInteger					_freeWhenDone: 1,
+								_count: ((sizeof (NSUInteger) * CHAR_BIT) - 1);
+	float						*_floats;
+}
+
+// Create a new array with allocated space and count but no values filled in.
++ (id) priv_newWithCapacity:(NSUInteger)count;
+- (id) priv_initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
 
 @end
 
@@ -54,22 +101,25 @@ typedef uint32_t FloatSizedInt;
 #endif
 
 
-static inline float *GetFloatArray(OOMFloatArray *self)
+// Choose a class for arrays that aren't NoCopy.
+static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
-	return object_getIndexedIvars(self);
+	return (size <= kMaxInlineCount) ? [OOMInlineFloatArray class] : [OOMExternFloatArray class];
 }
+
 
 + (id) newWithArray:(NSArray *)array
 {
-	if (array == nil)  return [self priv_newWithFloats:nil count:0 zone:nil];
+	if (array == nil)  return [OOMInlineFloatArray priv_newWithFloats:nil count:0];
 	if ([array isKindOfClass:[OOMFloatArray class]])  return [array copy];
 	
-	OOUInteger i, count = [array count];
-	OOMFloatArray *result = [self priv_newWithCapacity:count zone:[array zone]];
+	NSUInteger i, count = [array count];
+	Class rClass = ClassForNormalArrayOfSize(count);
+	OOMFloatArray *result = [rClass priv_newWithCapacity:count];
 	
 	if (result != nil)
 	{
-		float *next = GetFloatArray(result);
+		float *next = [result priv_floatArray];
 		for (i = 0; i < count; i++)
 		{
 			*next++ = [array oo_floatAtIndex:i];
@@ -80,9 +130,15 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 }
 
 
++ (id) array
+{
+	return [self newWithFloats:NULL count:0];
+}
+
+
 + (id) arrayWithArray:(NSArray *)array
 {
-	OOMFloatArray *result = [self newWithArray:array];
+	OOMFloatArray *result = [OOMFloatArray newWithArray:array];
 	[result autorelease];
 	return result;
 }
@@ -91,70 +147,92 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 - (id) initWithArray:(NSArray *)array
 {
 	[self release];
-	return [[self class] newWithArray:array];
+	return [OOMFloatArray newWithArray:array];
 }
 
 
-+ (id) newWithFloats:(float *)values count:(OOUInteger)count
++ (id) newWithFloats:(float *)values count:(NSUInteger)count
 {
-	return [self priv_newWithFloats:values count:count zone:NULL];
+	NSParameterAssert(values != NULL || count == 0);
+	
+	Class rClass = ClassForNormalArrayOfSize(count);
+	return [rClass priv_newWithFloats:values count:count];
 }
 
 
-+ (id) arrayWithFloats:(float *)values count:(OOUInteger)count
++ (id) arrayWithFloats:(float *)values count:(NSUInteger)count
 {
-	return [[self priv_newWithFloats:values count:count zone:NULL] autorelease];
+	return [[OOMInlineFloatArray priv_newWithFloats:values count:count] autorelease];
 }
 
 
-- (id) initWithFloats:(float *)values count:(OOUInteger)count
+- (id) initWithFloats:(float *)values count:(NSUInteger)count
 {
-	NSZone *zone = [self zone];
 	[self release];
-	return [[self class] priv_newWithFloats:(float *)values count:count zone:zone];
+	return [[self class] priv_newWithFloats:(float *)values count:count];
+}
+
+
++ (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+{
+	NSParameterAssert(values != NULL || count == 0);
+	
+	OOMFloatArray *result = nil;
+	
+	if (count > kMinExternCount)
+	{
+		result = [[OOMExternFloatArray alloc] priv_initWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone];
+	}
+	else
+	{
+		result = [self newWithFloats:values count:count];
+		if (freeWhenDone)  free(values);
+	}
+	return result;
+}
+
+
++ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+{
+	return [[self newWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone] autorelease];
+}
+
+
+- (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+{
+	[self release];
+	return [[self class] newWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone];
 }
 
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	if (NSShouldRetainWithZone(self, zone))
-	{
-		return [self retain];
-	}
-	else
-	{
-		return [[self class] priv_newWithFloats:GetFloatArray(self) count:_count zone:zone];
-	}
+	return [self retain];
 }
 
 
-- (float) floatAtIndex:(OOUInteger)index
+- (float) floatAtIndex:(NSUInteger)index
 {
-	if (index < _count)  return GetFloatArray(self)[index];
+	if (index < [self count])  return [self priv_floatArray][index];
 	return  NAN;
 }
 
 
-- (OOUInteger) betterHash
+- (NSUInteger) betterHash
 {
-	OOUInteger hash = 5381;
+	NSUInteger hash = 5381;
 	
-	float *array = GetFloatArray(self);
-	for (OOUInteger i = 0; i < _count; i++)
+	float *array = [self priv_floatArray];
+	NSUInteger count = [self count];
+	for (NSUInteger i = 0; i < count; i++)
 	{
-		OOUInteger bits = *(FloatSizedInt *)array;
+		NSUInteger bits = *(FloatSizedInt *)array;
 		array++;
 		
 		hash = (hash * 33) ^ bits;
 	}
 	
 	return hash;
-}
-
-
-- (OOUInteger) count
-{
-	return _count;
 }
 
 
@@ -182,42 +260,16 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 
 @implementation OOMFloatArray (Private)
 
-+ (id) priv_newWithCapacity:(OOUInteger)count zone:(NSZone *)zone
-{
-	/*	To avoid an extra allocation (and extra allocation padding, cache
-	 innefficency and all that jazz) we store the array contiguously with
-	 the object.
-	 */
-	OOMFloatArray *result = NSAllocateObject(self, count * sizeof (float), zone);
-	if (result != nil)  result->_count = count;
-	return result;
-}
-
-
-+ (id) priv_newWithFloats:(float *)values count:(OOUInteger)count zone:(NSZone *)zone
-{
-	if (count != 0 && values == NULL)  return nil;
-	size_t size = sizeof *values * count;
-	
-	OOMFloatArray *result = [self priv_newWithCapacity:count zone:zone];
-	if (result != nil)
-	{
-		memcpy(GetFloatArray(result), values, size);
-	}
-	
-	return result;
-}
-
-
 - (BOOL) priv_isEqualToOOMFloatArray:(OOMFloatArray *)other
 {
 	NSParameterAssert(other != nil);
 	
-	if (_count != other->_count)  return NO;
+	NSUInteger count = [self count];
+	if (count != [other count])  return NO;
 	
-	float *mine = GetFloatArray(self);
-	float *theirs = GetFloatArray(self);
-	for (OOUInteger i = 0; i < _count; i++)
+	float *mine = [self priv_floatArray];
+	float *theirs = [self priv_floatArray];
+	for (NSUInteger i = 0; i < count; i++)
 	{
 		if (*mine++ != *theirs++)  return NO;
 	}
@@ -225,99 +277,236 @@ static inline float *GetFloatArray(OOMFloatArray *self)
 	return YES;
 }
 
+
+- (float *) priv_floatArray
+{
+	[NSException raise:NSInternalInconsistencyException format:@"%s is a subclass responsibility.", __PRETTY_FUNCTION__];
+	return NULL;
+}
+
+@end
+
+
+@implementation OOMInlineFloatArray
+
++ (id) priv_newWithCapacity:(NSUInteger)count
+{
+	OOMInlineFloatArray *result = [NSAllocateObject(self, count * sizeof (float), NULL) init];
+	if (result != nil)  result->_count = count;
+	return result;
+}
+
+
++ (id) priv_newWithFloats:(float *)values count:(NSUInteger)count
+{
+	if (count != 0 && values == NULL)  return nil;
+	size_t size = sizeof *values * count;
+	
+	OOMFloatArray *result = [self priv_newWithCapacity:count];
+	if (result != nil)
+	{
+		memcpy([result priv_floatArray], values, size);
+	}
+	
+	return result;
+}
+
+
+- (float *) priv_floatArray
+{
+	return object_getIndexedIvars(self);
+}
+
+
+- (NSUInteger) count
+{
+	return _count;
+}
+
+
+- (float) floatAtIndex:(NSUInteger)index
+{
+	if (index < _count)  return ((float *)object_getIndexedIvars(self))[index];
+	return  NAN;
+}
+
+
+- (float) oo_floatAtIndex:(NSUInteger)index
+{
+	if (index < _count)  return ((float *)object_getIndexedIvars(self))[index];
+	return  0.0f;
+}
+
+@end
+
+
+@implementation OOMExternFloatArray
+#if 0
+{
+	NSUInteger					_freeWhenDone: 1,
+								_count: ((sizeof (NSUInteger) * CHAR_BIT) - 1);
+	float						*_floats;
+}
+#endif
+
+
++ (id) priv_newWithCapacity:(NSUInteger)count
+{
+	float *buffer = malloc(sizeof(float) * count);
+	if (EXPECT_NOT(buffer == NULL))  return nil;
+	
+	return [[OOMExternFloatArray alloc] priv_initWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
+}
+
+
+- (id) priv_initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+{
+	NSParameterAssert(values != NULL || count == 0);
+	
+	if ((self = [super init]))
+	{
+		_count = count;
+		if (EXPECT_NOT(_count != count))
+		{
+			[self release];
+			return nil;
+		}
+		
+		_freeWhenDone = !!freeWhenDone;
+		_floats = values;
+	}
+	return self;
+}
+
+
+- (void) dealloc
+{
+	if (_freeWhenDone)
+	{
+		free(_floats);
+		_floats = NULL;
+	}
+	
+	[super dealloc];
+}
+
+
+- (void) finalize
+{
+	if (_freeWhenDone)
+	{
+		free(_floats);
+		_floats = NULL;
+	}
+	
+	[super finalize];
+}
+
+
+- (float *) priv_floatArray
+{
+	return _floats;
+}
+
+
+- (NSUInteger) count
+{
+	return _count;
+}
+
 @end
 
 
 @implementation OOMFloatArray (OOCollectionExtractors)
 
-- (float) oo_floatAtIndex:(OOUInteger)index defaultValue:(float)value
+- (float) oo_floatAtIndex:(NSUInteger)index defaultValue:(float)value
 {
-	if (index < _count)  return [self floatAtIndex:index];
+	if (index < [self count])  return [self floatAtIndex:index];
 	return  value;
 }
 
 
-- (double) oo_doubleAtIndex:(OOUInteger)index defaultValue:(double)value
+- (double) oo_doubleAtIndex:(NSUInteger)index defaultValue:(double)value
 {
 	return [self oo_floatAtIndex:index defaultValue:value];
 }
 
 
-- (char) oo_charAtIndex:(OOUInteger)index defaultValue:(char)value
+- (char) oo_charAtIndex:(NSUInteger)index defaultValue:(char)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], CHAR_MIN, CHAR_MAX);
 }
 
 
-- (short) oo_shortAtIndex:(OOUInteger)index defaultValue:(short)value
+- (short) oo_shortAtIndex:(NSUInteger)index defaultValue:(short)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], SHRT_MIN, SHRT_MAX);
 }
 
 
-- (int) oo_intAtIndex:(OOUInteger)index defaultValue:(int)value
+- (int) oo_intAtIndex:(NSUInteger)index defaultValue:(int)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], INT_MIN, INT_MAX);
 }
 
 
-- (long) oo_longAtIndex:(OOUInteger)index defaultValue:(long)value
+- (long) oo_longAtIndex:(NSUInteger)index defaultValue:(long)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], LONG_MIN, LONG_MAX);
 }
 
 
-- (long long) oo_longLongAtIndex:(OOUInteger)index defaultValue:(long long)value
+- (long long) oo_longLongAtIndex:(NSUInteger)index defaultValue:(long long)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], LLONG_MIN, LLONG_MAX);
 }
 
 
-- (OOInteger) oo_integerAtIndex:(OOUInteger)index defaultValue:(OOInteger)value
+- (NSInteger) oo_integerAtIndex:(NSUInteger)index defaultValue:(NSInteger)value
 {
-	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], OOIntegerMin, OOIntegerMax);
+	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], NSIntegerMin, NSIntegerMax);
 }
 
 
 
-- (unsigned char) oo_unsignedCharAtIndex:(OOUInteger)index defaultValue:(unsigned char)value
+- (unsigned char) oo_unsignedCharAtIndex:(NSUInteger)index defaultValue:(unsigned char)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, UCHAR_MAX);
 }
 
 
-- (unsigned short) oo_unsignedShortAtIndex:(OOUInteger)index defaultValue:(unsigned short)value
+- (unsigned short) oo_unsignedShortAtIndex:(NSUInteger)index defaultValue:(unsigned short)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, USHRT_MAX);
 }
 
 
-- (unsigned int) oo_unsignedIntAtIndex:(OOUInteger)index defaultValue:(unsigned int)value
+- (unsigned int) oo_unsignedIntAtIndex:(NSUInteger)index defaultValue:(unsigned int)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, UINT_MAX);
 }
 
 
-- (unsigned long) oo_unsignedLongAtIndex:(OOUInteger)index defaultValue:(unsigned long)value
+- (unsigned long) oo_unsignedLongAtIndex:(NSUInteger)index defaultValue:(unsigned long)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, ULONG_MAX);
 }
 
 
-- (unsigned long long) oo_unsignedLongLongAtIndex:(OOUInteger)index defaultValue:(unsigned long long)value
+- (unsigned long long) oo_unsignedLongLongAtIndex:(NSUInteger)index defaultValue:(unsigned long long)value
 {
 	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, ULLONG_MAX);
 }
 
 
-- (OOUInteger) oo_unsignedIntegerAtIndex:(OOUInteger)index defaultValue:(OOUInteger)value
+- (NSUInteger) oo_unsignedIntegerAtIndex:(NSUInteger)index defaultValue:(NSUInteger)value
 {
-	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, OOIntegerMax);
+	return OOClampInteger([self oo_floatAtIndex:index defaultValue:value], 0, NSIntegerMax);
 }
 
 
 
-- (BOOL) oo_boolAtIndex:(OOUInteger)index defaultValue:(BOOL)value
+- (BOOL) oo_boolAtIndex:(NSUInteger)index defaultValue:(BOOL)value
 {
 	return [self oo_floatAtIndex:index defaultValue:value] != 0;
 }

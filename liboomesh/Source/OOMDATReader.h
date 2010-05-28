@@ -1,6 +1,5 @@
 /*
 	OOMDATReader.h
-	liboomesh
 	
 	Parser for Oolite 1.x DAT files.
 	
@@ -49,9 +48,9 @@
 									_usesSmoothGroups: 1,
 									_haveTriangleAreas: 1;
 	
-	OOUInteger						_materialCount;
-	OOUInteger						_fileVertexCount;
-	OOUInteger						_fileFaceCount;
+	NSUInteger						_materialCount;
+	NSUInteger						_fileVertexCount;
+	NSUInteger						_fileFaceCount;
 	
 	// ivars used only during parsing.
 	struct RawDATTriangle			*_rawTriangles;
@@ -89,7 +88,7 @@
 /*	Vertex count and face count of file, which won't necessarily match the
 	counts of the loaded mesh.
 */
-- (OOUInteger) fileVertexCount;
-- (OOUInteger) fileFaceCount;
+- (NSUInteger) fileVertexCount;
+- (NSUInteger) fileFaceCount;
 
 @end

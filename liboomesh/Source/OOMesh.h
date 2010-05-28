@@ -8,4 +8,5 @@
 
 #import "OOMDATReader.h"
 
+#import "OOMOOMeshReader.h"
 #import "OOMOOMeshWriter.h"

@@ -33,6 +33,10 @@
 
 @interface OOIndexArray: NSArray
 
++ (id) newWithArray:(NSArray *)array;
++ (id) arrayWithArray:(NSArray *)array;
+- (id) initWithArray:(NSArray *)array;
+
 + (id) newWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
 + (id) arrayWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
 - (id) initWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;

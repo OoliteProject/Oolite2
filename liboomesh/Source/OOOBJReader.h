@@ -1,11 +1,11 @@
 /*
-	OODATLexer.h
+	OOOBJReader.h
 	
-	Token scanner for DAT files.
+	Parser for Wavefront OBJ files.
 	
 	
-	Copyright © 2010 Jens Ayton
-
+	Copyright © 2010 Jens Ayton.
+	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
@@ -15,7 +15,7 @@
 	
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-
+	
 	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -25,38 +25,37 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
+#import "OOMeshReading.h"
 
-@protocol OOProblemReportManager;
+@protocol OOOBJMaterialLibraryResolver;
+@class OOOBJLexer, OOAbstractMesh;
 
 
-@interface OODATLexer: NSObject
+@interface OOOBJReader: NSObject <OOMeshReading>
 {
 @private
-	const char				*_cursor;
-	const char				*_end;
-	size_t					_tokenLength;
-	NSData					*_data;
-	unsigned				_lineNumber;
-	NSString				*_tokenString;
+	id <OOProblemReportManager>			_issues;
+	NSString							*_path;
+	OOOBJLexer							*_lexer;
+	id <OOOBJMaterialLibraryResolver>	_resolver;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues;
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues resolver:(id <OOOBJMaterialLibraryResolver>)resolver;
 
-- (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
-
-- (NSString *) currentTokenString;
-
-- (NSString *) nextToken;
-
-// Somewhat more efficient than comparing an NSString.
-- (BOOL) expectLiteral:(const char *)literal;
-
-- (BOOL) readInteger:(NSUInteger *)outInt;
-- (BOOL) readReal:(float *)outReal;
-- (BOOL) readString:(NSString **)outString;
-- (BOOL) readUntilNewline:(NSString **)outString;
+- (void) parse;
+- (OOAbstractMesh *) abstractMesh;
 
 @end
+
+
+/*	OBJ files may refer to one or more “material library” files. The resolver
+	is responsible for finding these.
+	If none is specified, a default resolver will look adjacent to the 
+*/
+@protocol OOOBJMaterialLibraryResolver <NSObject>
+
+- (NSData *) oo_objReader:(OOOBJReader *)reader findMaterialLibrary:(NSString *)fileName;
+
+@end
+

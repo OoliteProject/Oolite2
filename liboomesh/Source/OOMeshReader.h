@@ -26,13 +26,12 @@
 */
 
 
-#import <Foundation/Foundation.h>
+#import "OOMeshReading.h"
 
-@protocol OOProblemReportManager;
-@class OOAbstractVertex, OOMeshLexer, OOAbstractMesh;
+@class OOAbstractVertex, OOMeshLexer;
 
 
-@interface OOMeshReader: NSObject
+@interface OOMeshReader: NSObject <OOMeshReading>
 {
 @private
 	id <OOProblemReportManager>		_issues;
@@ -51,10 +50,9 @@
 	NSMutableDictionary				*_materialsByName;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
 
 - (void) parse;
-
 - (OOAbstractMesh *) abstractMesh;
 
 @end

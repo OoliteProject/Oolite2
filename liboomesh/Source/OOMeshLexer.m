@@ -38,8 +38,7 @@
 
 @implementation OOMeshLexer
 
-
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues
 {
 	if ([inURL isFileURL])
 	{
@@ -47,10 +46,10 @@
 		NSData *fileData = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (fileData == nil)
 		{
-			OOReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(issues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
-		return [self initWithData:fileData issues:ioIssues];
+		return [self initWithData:fileData issues:issues];
 	}
 	else
 	{
@@ -61,13 +60,13 @@
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues
 {
-	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:ioIssues];
+	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:issues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues
 {
 	if ([inData length] == 0)
 	{
@@ -77,7 +76,7 @@
 	
 	if ((self = [super init]))
 	{
-		_issues = [ioIssues retain];
+		_issues = [issues retain];
 		_data = [inData retain];
 		
 		_state.tokenType = kOOMeshTokenInvalid;

@@ -26,20 +26,19 @@
 */
 
 
-#import <Foundation/Foundation.h>
+#import "OOMeshReading.h"
 
-@protocol OOProblemReportManager;
-@class OOAbstractVertex, OODATLexer, OOAbstractMesh;
+@class OODATLexer, OOAbstractVertex;
 
 
-@interface OODATReader: NSObject
+@interface OODATReader: NSObject <OOMeshReading>
 {
 @private
-	id <OOProblemReportManager>	_issues;
+	id <OOProblemReportManager>		_issues;
 	NSString						*_path;
 	OODATLexer						*_lexer;
 	
-	OOAbstractMesh							*_mesh;
+	OOAbstractMesh					*_mesh;
 	
 	unsigned						_smoothing: 1,
 									_brokenSmoothing: 1,
@@ -54,15 +53,14 @@
 	
 	// ivars used only during parsing.
 	struct RawDATTriangle			*_rawTriangles;
-	OOAbstractVertex						**_fileVertices;
+	OOAbstractVertex				**_fileVertices;
 	struct VertexFaceRef			*_faceRefs;
 	NSMutableArray					*_materialKeys;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
 
 - (void) parse;
-
 - (OOAbstractMesh *) abstractMesh;
 
 /*	Smoothing:

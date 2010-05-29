@@ -75,9 +75,9 @@ typedef enum OOMeshTokenType
 	NSString						*_tokenString;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues;
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues;
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 

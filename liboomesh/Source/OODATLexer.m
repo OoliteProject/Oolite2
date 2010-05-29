@@ -45,7 +45,7 @@ typedef enum OODATLexerEndMode
 
 @implementation OODATLexer
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues
 {
 	if ([inURL isFileURL])
 	{
@@ -53,10 +53,10 @@ typedef enum OODATLexerEndMode
 		NSData *data = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (data == nil)
 		{
-			OOReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(issues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
-		return [self initWithData:data issues:ioIssues];
+		return [self initWithData:data issues:issues];
 	}
 	else
 	{
@@ -67,13 +67,13 @@ typedef enum OODATLexerEndMode
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues
 {
-	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:ioIssues];
+	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:issues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues
 {
 	if ([inData length] == 0)
 	{

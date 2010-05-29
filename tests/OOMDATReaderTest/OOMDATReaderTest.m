@@ -2,8 +2,9 @@
 #import <OOMesh/CollectionUtils.h>
 
 
-static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issues);
-static OOAbstractMesh *ReadOOMesh(NSString *path, id <OOProblemReportManager> issues);
+static id <OOMeshReading> NewDATReader(NSString *path, id <OOProblemReportManager> issues);
+static id <OOMeshReading> NewOOMeshReader(NSString *path, id <OOProblemReportManager> issues);
+static id <OOMeshReading> NewOBJReader(NSString *path, id <OOProblemReportManager> issues);
 
 
 int main (int argc, const char * argv[])
@@ -21,28 +22,32 @@ int main (int argc, const char * argv[])
 	path = [NSString stringWithUTF8String:buffer];
 	
 	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
-	OOAbstractMesh *mesh = nil;
+	id <OOMeshReading> reader = nil;
 	
 	NSString *ext = [[path pathExtension] lowercaseString];
-	if ([ext isEqualToString:@"dat"])  mesh = ReadDAT(path, issues);
-	else if ([ext isEqualToString:@"oomesh"])  mesh = ReadOOMesh(path, issues);
+	if ([ext isEqualToString:@"dat"])  reader = NewDATReader(path, issues);
+	else if ([ext isEqualToString:@"oomesh"])  reader = NewOOMeshReader(path, issues);
+	else if ([ext isEqualToString:@"obj"])  reader = NewOBJReader(path, issues);
 	else
 	{
 		OOReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
 	}
 	
-	if (mesh != nil)
+	OOAbstractMesh *mesh = [reader abstractMesh];
+	
+	if (mesh == nil)
 	{
-		OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
+		exit(EXIT_FAILURE);
 	}
-
+	
+	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
 	
     [pool drain];
     return 0;
 }
 
 
-static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issues)
+static id <OOMeshReading> NewDATReader(NSString *path, id <OOProblemReportManager> issues)
 {
 	OODATReader *reader = [[OODATReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return nil;
@@ -50,20 +55,17 @@ static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issue
 //	[reader setSmoothing:YES];
 	[reader setBrokenSmoothing:NO];
 	
-	OOAbstractMesh *result = [reader abstractMesh];
-	[reader release];
-	
-	return result;
+	return reader;
 }
 
 
-static OOAbstractMesh *ReadOOMesh(NSString *path, id <OOProblemReportManager> issues)
+static id <OOMeshReading> NewOOMeshReader(NSString *path, id <OOProblemReportManager> issues)
 {
-	OOMeshReader *reader = [[OOMeshReader alloc] initWithPath:path issues:issues];
-	if (reader == nil)  return nil;
-	
-	OOAbstractMesh *result = [reader abstractMesh];
-	[reader release];
-	
-	return result;
+	return [[OOMeshReader alloc] initWithPath:path issues:issues];
+}
+
+
+static id <OOMeshReading> NewOBJReader(NSString *path, id <OOProblemReportManager> issues)
+{
+	return [[OOOBJReader alloc] initWithPath:path issues:issues];
 }

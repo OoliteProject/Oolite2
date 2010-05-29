@@ -8,5 +8,7 @@
 
 #import "OODATReader.h"
 
+#import "OOOBJReader.h"
+
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"

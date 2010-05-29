@@ -52,11 +52,11 @@
 
 @implementation OOMeshReader
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
 {
 	if ((self = [super init]))
 	{
-		_issues = [ioIssues retain];
+		_issues = [issues retain];
 		_path = [path copy];
 		
 		_vertexCount = NSNotFound;
@@ -257,13 +257,13 @@
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError key:@"parseError" message:message];
+	[_issues addProblemOfType:kOOMProblemTypeError message:message];
 }
 
 
 - (void) priv_reportBasicParseError:(NSString *)expected
 {
-	[self priv_reportParseError:@"expected %@, got %@", expected, [_lexer currentTokenString]];
+	[self priv_reportParseError:@"expected %@, got %@", expected, [_lexer currentTokenDescription]];
 }
 
 

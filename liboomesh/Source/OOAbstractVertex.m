@@ -269,7 +269,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 
 /*	These methods are relatively costly. I considered changing CopyAttributes
-	to merge two dictionaries, which would be faster, but the duplucate
+	to merge two dictionaries, which would be faster, but the duplicate
 	resolution behaviour of -[NSDictionary initWithObjects:forKeys:count:] is
 	not guaranteed.
 	-- Ahruman 2010-05-23

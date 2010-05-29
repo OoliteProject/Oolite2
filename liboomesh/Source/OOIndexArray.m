@@ -24,6 +24,7 @@
 */
 
 #import "OOIndexArray.h"
+#import "OOCollectionExtractors.h"
 
 
 @interface OOUByteIndexArray: OOIndexArray
@@ -73,6 +74,39 @@
 
 
 @implementation OOIndexArray
+
++ (id) newWithArray:(NSArray *)array
+{
+	if (EXPECT_NOT(array == nil))  return [[self alloc] init];
+	if ([array isKindOfClass:[OOIndexArray class]])  return [array copy];
+	
+	OOUInteger i, count = [array count], maximum = 0;
+	GLuint *values = malloc(count * sizeof (GLuint));
+	if (EXPECT_NOT(values == NULL))  return nil;
+	
+	//	Convert to numbers and find maximum.
+	for (i = 0; i < count; i++)
+	{
+		values[i] = [array oo_unsignedIntAtIndex:i];
+		maximum = MAX(maximum, values[i]);
+	}
+	
+	return [self newWithUnsignedIntsNoCopy:values count:count maximum:maximum freeWhenDone:YES];
+}
+
+
++ (id) arrayWithArray:(NSArray *)array
+{
+	return [[self newWithArray:array] autorelease];
+}
+
+
+- (id) initWithArray:(NSArray *)array
+{
+	[self release];
+	return [OOIndexArray newWithArray:array];
+}
+
 
 + (id) newWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
 {
@@ -190,6 +224,12 @@
 	return [NSNumber numberWithUnsignedInt:[self unsignedIntAtIndex:index]];
 }
 
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
+}
+
 @end
 
 
@@ -254,7 +294,7 @@
 
 - (NSUInteger) unsignedIntAtIndex:(GLuint)index
 {
-	return _values[index];
+	return (index < _count) ? _values[index] : 0;
 }
 
 
@@ -334,7 +374,7 @@
 
 - (NSUInteger) unsignedIntAtIndex:(GLuint)index
 {
-	return _values[index];
+	return (index < _count) ? _values[index] : 0;
 }
 
 
@@ -416,7 +456,7 @@
 
 - (NSUInteger) unsignedIntAtIndex:(GLuint)index
 {
-	return _values[index];
+	return (index < _count) ? _values[index] : 0;
 }
 
 
@@ -430,6 +470,104 @@
 	}
 	
 	return hash;
+}
+
+@end
+
+
+@implementation OOIndexArray (OOCollectionExtractors)
+
+- (float) oo_floatAtIndex:(NSUInteger)index defaultValue:(float)value
+{
+	return [self oo_doubleAtIndex:index defaultValue:value];
+}
+
+
+- (double) oo_doubleAtIndex:(NSUInteger)index defaultValue:(double)value
+{
+	if (index < [self count])  return [self unsignedIntAtIndex:index];
+	return value;
+}
+
+
+- (NSUInteger) oo_unsignedIntegerAtIndex:(NSUInteger)index defaultValue:(NSUInteger)value
+{
+	if (index < [self count])  return [self unsignedIntAtIndex:index];
+	return value;
+}
+
+
+- (char) oo_charAtIndex:(NSUInteger)index defaultValue:(char)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], CHAR_MIN, CHAR_MAX);
+}
+
+
+- (short) oo_shortAtIndex:(NSUInteger)index defaultValue:(short)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], SHRT_MIN, SHRT_MAX);
+}
+
+
+- (int) oo_intAtIndex:(NSUInteger)index defaultValue:(int)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], INT_MIN, INT_MAX);
+}
+
+
+- (long) oo_longAtIndex:(NSUInteger)index defaultValue:(long)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], LONG_MIN, LONG_MAX);
+}
+
+
+- (long long) oo_longLongAtIndex:(NSUInteger)index defaultValue:(long long)value
+{
+	return [self oo_unsignedIntegerAtIndex:index defaultValue:value];
+}
+
+
+- (NSInteger) oo_integerAtIndex:(NSUInteger)index defaultValue:(NSInteger)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], NSIntegerMin, NSIntegerMax);
+}
+
+
+
+- (unsigned char) oo_unsignedCharAtIndex:(NSUInteger)index defaultValue:(unsigned char)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], 0, UCHAR_MAX);
+}
+
+
+- (unsigned short) oo_unsignedShortAtIndex:(NSUInteger)index defaultValue:(unsigned short)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], 0, USHRT_MAX);
+}
+
+
+- (unsigned int) oo_unsignedIntAtIndex:(NSUInteger)index defaultValue:(unsigned int)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], 0, UINT_MAX);
+}
+
+
+- (unsigned long) oo_unsignedLongAtIndex:(NSUInteger)index defaultValue:(unsigned long)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], 0, ULONG_MAX);
+}
+
+
+- (unsigned long long) oo_unsignedLongLongAtIndex:(NSUInteger)index defaultValue:(unsigned long long)value
+{
+	return OOClampInteger([self oo_unsignedIntegerAtIndex:index defaultValue:value], 0, ULLONG_MAX);
+}
+
+
+
+- (BOOL) oo_boolAtIndex:(NSUInteger)index defaultValue:(BOOL)value
+{
+	return [self oo_unsignedIntegerAtIndex:index defaultValue:value] != 0;
 }
 
 @end

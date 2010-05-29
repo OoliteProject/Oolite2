@@ -78,7 +78,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 		OK = [data writeToFile:path options:NSDataWritingAtomic error:&error];
 		if (!OK)
 		{
-			OOReportNSError(issues, @"fileNotOpened", $sprintf(@"Could not write to %@", name), error);
+			OOReportNSError(issues, $sprintf(@"Could not write to %@", name), error);
 		}
 	}
 	

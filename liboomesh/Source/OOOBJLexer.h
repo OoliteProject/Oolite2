@@ -1,7 +1,7 @@
 /*
-	OODATLexer.h
+	OOOBJLexer.h
 	
-	Token scanner for DAT files.
+	Token scanner for OBJ/MTL files.
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -30,7 +30,7 @@
 @protocol OOProblemReportManager;
 
 
-@interface OODATLexer: NSObject
+@interface OOOBJLexer: NSObject
 {
 @private
 	const char				*_cursor;
@@ -49,14 +49,11 @@
 
 - (NSString *) currentTokenString;
 
-- (NSString *) nextToken;
-
-// Somewhat more efficient than comparing an NSString.
-- (BOOL) expectLiteral:(const char *)literal;
-
-- (BOOL) readInteger:(NSUInteger *)outInt;
+- (BOOL) readInteger:(NSInteger *)outInt;
 - (BOOL) readReal:(float *)outReal;
 - (BOOL) readString:(NSString **)outString;
-- (BOOL) readUntilNewline:(NSString **)outString;
+
+- (BOOL) readNewline;	// Returns YES if it reaches newline without seeing tokens.
+- (BOOL) skipNewline;	// Reads to newline and ignores tokens.
 
 @end

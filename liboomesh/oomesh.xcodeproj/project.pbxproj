@@ -14,6 +14,11 @@
 		1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
+		1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37C311B16C1500857CEF /* OOOBJLexer.h */; settings = {ATTRIBUTES = (); }; };
+		1A7D37C611B16C1500857CEF /* OOOBJLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D37C411B16C1500857CEF /* OOOBJLexer.m */; };
+		1A7D37C911B16C1E00857CEF /* OOOBJReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37C711B16C1E00857CEF /* OOOBJReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D37C811B16C1E00857CEF /* OOOBJReader.m */; };
+		1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37DB11B16EC000857CEF /* OOMeshReading.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1BDB11A882FC00C94CB0 /* OOAbstractFaceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1BDC11A882FC00C94CB0 /* OOAbstractFaceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */; };
 		1A8F1CCC11A88CA600C94CB0 /* OOAbstractMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -26,7 +31,7 @@
 		1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReportManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReportManager.m */; };
 		1AEA251711A73AA100B361DC /* liboomeshbase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ABE11A5D94E005F2081 /* liboomeshbase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (); }; };
+		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
 		1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA235C11A72E0B00B361DC /* OODATReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251B11A73AA400B361DC /* OODATReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA235D11A72E0B00B361DC /* OODATReader.m */; };
@@ -69,6 +74,11 @@
 		1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshLexer.m; sourceTree = "<group>"; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
 		1A7D35B711B138A100857CEF /* OOIndexArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIndexArray.m; sourceTree = "<group>"; };
+		1A7D37C311B16C1500857CEF /* OOOBJLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJLexer.h; sourceTree = "<group>"; };
+		1A7D37C411B16C1500857CEF /* OOOBJLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJLexer.m; sourceTree = "<group>"; };
+		1A7D37C711B16C1E00857CEF /* OOOBJReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJReader.h; sourceTree = "<group>"; };
+		1A7D37C811B16C1E00857CEF /* OOOBJReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJReader.m; sourceTree = "<group>"; };
+		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
 		1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCollectionExtractors.h; sourceTree = "<group>"; };
 		1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionUtils.h; sourceTree = "<group>"; };
@@ -164,34 +174,10 @@
 		08FB77AEFE84172EC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */,
-				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
-				1AB7395D11B10B0300575507 /* OOAbstractFace.h */,
-				1AB7395E11B10B0300575507 /* OOAbstractFace.m */,
-				1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */,
-				1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */,
-				1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */,
-				1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */,
-				1AF4293211A9897D008E883C /* OOMaterialSpecification.h */,
-				1AF4293311A9897D008E883C /* OOMaterialSpecification.m */,
-				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,
-				1AF429B911A98B4D008E883C /* OOTextureSpecification.m */,
-				1AEA232E11A728C100B361DC /* OODATLexer.h */,
-				1AEA232F11A728C100B361DC /* OODATLexer.m */,
-				1AEA235C11A72E0B00B361DC /* OODATReader.h */,
-				1AEA235D11A72E0B00B361DC /* OODATReader.m */,
-				1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */,
-				1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */,
-				1AB7398D11B10EC800575507 /* OOMeshReader.h */,
-				1AB7398E11B10EC800575507 /* OOMeshReader.m */,
-				1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */,
-				1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */,
-				1AB7399111B10ECE00575507 /* OOProblemReportManager.h */,
-				1AB7399211B10ECE00575507 /* OOProblemReportManager.m */,
-				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
-				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
-				1A7D35B611B138A100857CEF /* OOIndexArray.h */,
-				1A7D35B711B138A100857CEF /* OOIndexArray.m */,
+				1A7D37BF11B16BD700857CEF /* Model */,
+				1A7D37C011B16BE000857CEF /* Readers */,
+				1A7D37C111B16BE900857CEF /* Writers */,
+				1A7D37C211B16BF400857CEF /* Utility */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -212,6 +198,67 @@
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1A7D37BF11B16BD700857CEF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */,
+				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
+				1AB7395D11B10B0300575507 /* OOAbstractFace.h */,
+				1AB7395E11B10B0300575507 /* OOAbstractFace.m */,
+				1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */,
+				1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */,
+				1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */,
+				1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */,
+				1AF4293211A9897D008E883C /* OOMaterialSpecification.h */,
+				1AF4293311A9897D008E883C /* OOMaterialSpecification.m */,
+				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,
+				1AF429B911A98B4D008E883C /* OOTextureSpecification.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		1A7D37C011B16BE000857CEF /* Readers */ = {
+			isa = PBXGroup;
+			children = (
+				1AEA232E11A728C100B361DC /* OODATLexer.h */,
+				1AEA232F11A728C100B361DC /* OODATLexer.m */,
+				1AEA235C11A72E0B00B361DC /* OODATReader.h */,
+				1AEA235D11A72E0B00B361DC /* OODATReader.m */,
+				1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */,
+				1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */,
+				1AB7398D11B10EC800575507 /* OOMeshReader.h */,
+				1AB7398E11B10EC800575507 /* OOMeshReader.m */,
+				1A7D37C311B16C1500857CEF /* OOOBJLexer.h */,
+				1A7D37C411B16C1500857CEF /* OOOBJLexer.m */,
+				1A7D37C711B16C1E00857CEF /* OOOBJReader.h */,
+				1A7D37C811B16C1E00857CEF /* OOOBJReader.m */,
+				1A7D37DB11B16EC000857CEF /* OOMeshReading.h */,
+			);
+			name = Readers;
+			sourceTree = "<group>";
+		};
+		1A7D37C111B16BE900857CEF /* Writers */ = {
+			isa = PBXGroup;
+			children = (
+				1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */,
+				1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */,
+			);
+			name = Writers;
+			sourceTree = "<group>";
+		};
+		1A7D37C211B16BF400857CEF /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				1AB7399111B10ECE00575507 /* OOProblemReportManager.h */,
+				1AB7399211B10ECE00575507 /* OOProblemReportManager.m */,
+				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
+				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
+				1A7D35B611B138A100857CEF /* OOIndexArray.h */,
+				1A7D35B711B138A100857CEF /* OOIndexArray.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		1A864C8D11A5EC26008CDC78 /* Deps */ = {
@@ -295,6 +342,9 @@
 				1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */,
 				1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */,
 				1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */,
+				1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */,
+				1A7D37C911B16C1E00857CEF /* OOOBJReader.h in Headers */,
+				1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +424,8 @@
 				1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */,
 				1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */,
 				1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */,
+				1A7D37C611B16C1500857CEF /* OOOBJLexer.m in Sources */,
+				1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

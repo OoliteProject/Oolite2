@@ -1,5 +1,5 @@
 /*
-	OOMOOMeshLexer.m
+	OOMeshLexer.m
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -23,23 +23,23 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMOOMeshLexer.h"
-#import "OOMProblemReportManager.h"
+#import "OOMeshLexer.h"
+#import "OOProblemReportManager.h"
 #import "CollectionUtils.h"
 
 
 
-@interface OOMOOMeshLexer (Private)
+@interface OOMeshLexer (Private)
 
 - (NSString *) decodeEscapedString;
 
 @end
 
 
-@implementation OOMOOMeshLexer
+@implementation OOMeshLexer
 
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ([inURL isFileURL])
 	{
@@ -47,27 +47,27 @@
 		NSData *fileData = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (fileData == nil)
 		{
-			OOMReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
 		return [self initWithData:fileData issues:ioIssues];
 	}
 	else
 	{
-		[NSException raise:NSInvalidArgumentException format:@"OOMDATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
+		[NSException raise:NSInvalidArgumentException format:@"OOMeshLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
 	}
 	
 	return nil;
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues
 {
 	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:ioIssues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ([inData length] == 0)
 	{
@@ -147,22 +147,22 @@
 	{
 		case kOOMeshTokenKeyword:
 		{
-			NSString *format = OOMLocalizeProblemString(_issues, @"\"%@\"");
+			NSString *format = OOLocalizeProblemString(_issues, @"\"%@\"");
 			return $sprintf(format, [self currentTokenString]);
 		}
 			
 		case kOOMeshTokenString:
 		case kOOMeshTokenStringWithEscapes:
-			return OOMLocalizeProblemString(_issues, @"string");
+			return OOLocalizeProblemString(_issues, @"string");
 			
 		case kOOMeshTokenNatural:
-			return OOMLocalizeProblemString(_issues, @"integer");
+			return OOLocalizeProblemString(_issues, @"integer");
 			
 		case kOOMeshTokenReal:
-			return OOMLocalizeProblemString(_issues, @"number");
+			return OOLocalizeProblemString(_issues, @"number");
 			
 		case kOOMeshTokenNewline:
-			return OOMLocalizeProblemString(_issues, @"end of line");
+			return OOLocalizeProblemString(_issues, @"end of line");
 			
 		case kOOMeshTokenColon:
 		case kOOMeshTokenComma:
@@ -173,12 +173,12 @@
 			return [self currentTokenString];
 			
 		case kOOMeshTokenEOF:
-			return OOMLocalizeProblemString(_issues, @"end of file");
+			return OOLocalizeProblemString(_issues, @"end of file");
 			
 		case kOOMeshTokenInvalid:
 			break;
 	}
-	return OOMLocalizeProblemString(_issues, @"invalid token");
+	return OOLocalizeProblemString(_issues, @"invalid token");
 }
 
 

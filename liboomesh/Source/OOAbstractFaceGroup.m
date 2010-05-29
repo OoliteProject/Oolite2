@@ -1,5 +1,5 @@
 /*
-	OOMFaceGroup.m
+	OOAbstractFaceGroup.m
 	
 	A face group represents a list of faces to be drawn with the same state.
 	In rendering terms, it corresponds to an element array.
@@ -26,11 +26,11 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMFaceGroup.h"
-#import "OOMFace.h"
+#import "OOAbstractFaceGroup.h"
+#import "OOAbstractFace.h"
 
 
-@implementation OOMFaceGroup
+@implementation OOAbstractFaceGroup
 
 - (id) init
 {
@@ -64,13 +64,13 @@
 }
 
 
-- (OOMMaterialSpecification *) material
+- (OOMaterialSpecification *) material
 {
 	return _material;
 }
 
 
-- (void) setMaterial:(OOMMaterialSpecification *)material
+- (void) setMaterial:(OOMaterialSpecification *)material
 {
 	[_material autorelease];
 	_material = [material retain];
@@ -83,19 +83,19 @@
 }
 
 
-- (OOMFace *) faceAtIndex:(NSUInteger)index
+- (OOAbstractFace *) faceAtIndex:(NSUInteger)index
 {
 	return [_faces objectAtIndex:index];
 }
 
 
-- (void) addFace:(OOMFace *)face
+- (void) addFace:(OOAbstractFace *)face
 {
 	[_faces addObject:face];
 }
 
 
-- (void) insertFace:(OOMFace *)face atIndex:(NSUInteger)index
+- (void) insertFace:(OOAbstractFace *)face atIndex:(NSUInteger)index
 {
 	[_faces insertObject:face atIndex:index];
 }
@@ -113,7 +113,7 @@
 }
 
 
-- (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOMFace *)face
+- (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face
 {
 	[_faces replaceObjectAtIndex:index withObject:face];
 }

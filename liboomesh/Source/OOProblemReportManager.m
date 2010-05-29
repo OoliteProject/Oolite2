@@ -1,5 +1,5 @@
 /*
-	OOMProblemReportManager.m
+	OOProblemReportManager.m
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -23,21 +23,21 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMProblemReportManager.h"
+#import "OOProblemReportManager.h"
 
 
-void OOMReportIssueWithArgs(id <OOMProblemReportManager> probMgr, OOMIssueType type, NSString *key, NSString *formatKey, va_list args)
+void OOReportIssueWithArgs(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *key, NSString *formatKey, va_list args)
 {
 	if (probMgr == nil || formatKey == nil)  return;
 	
-	NSString *localizedFormat = OOMLocalizeProblemString(probMgr, formatKey);
+	NSString *localizedFormat = OOLocalizeProblemString(probMgr, formatKey);
 	
 	NSString *message = [[[NSString alloc] initWithFormat:localizedFormat arguments:args] autorelease];
 	[probMgr addProblemOfType:type key:key message:message];
 }
 
 
-NSString *OOMLocalizeProblemString(id <OOMProblemReportManager> probMgr, NSString *key)
+NSString *OOLocalizeProblemString(id <OOProblemReportManager> probMgr, NSString *key)
 {
 	NSString *result = [probMgr localizedProblemStringForKey:key];
 	if (result == nil)
@@ -50,49 +50,49 @@ NSString *OOMLocalizeProblemString(id <OOMProblemReportManager> probMgr, NSStrin
 }
 
 
-void OOMReportIssue(id <OOMProblemReportManager> probMgr, OOMIssueType type, NSString *key, NSString *formatKey, ...)
+void OOReportIssue(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *key, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOMReportIssueWithArgs(probMgr, type, key, formatKey, args);
+	OOReportIssueWithArgs(probMgr, type, key, formatKey, args);
 	va_end(args);
 }
 
 
 
-void OOMReportInfo(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
+void OOReportInfo(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOMReportIssueWithArgs(probMgr, kOOMProblemTypeInformative, key, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOMProblemTypeInformative, key, formatKey, args);
 	va_end(args);
 }
 
 
-void OOMReportWarning(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
+void OOReportWarning(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOMReportIssueWithArgs(probMgr, kOOMProblemTypeWarning, key, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOMProblemTypeWarning, key, formatKey, args);
 	va_end(args);
 }
 
 
-void OOMReportError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
+void OOReportError(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOMReportIssueWithArgs(probMgr, kOOMProblemTypeError, key, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOMProblemTypeError, key, formatKey, args);
 	va_end(args);
 }
 
 
-void OOMReportNSError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error)
+void OOReportNSError(id <OOProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error)
 {
 	NSString *desc = [error localizedFailureReason];
 	if (desc == nil)  desc = [error localizedDescription];
 	
-	context = OOMLocalizeProblemString(probMgr, context);
+	context = OOLocalizeProblemString(probMgr, context);
 	if (desc == nil)  desc = context;
 	else  desc = [NSString stringWithFormat:@"%@ %@", context, desc];
 	
@@ -100,9 +100,9 @@ void OOMReportNSError(id <OOMProblemReportManager> probMgr, NSString *key, NSStr
 }
 
 
-@implementation OOMSimpleProblemReportManager
+@implementation OOSimpleProblemReportManager
 
-- (void) addProblemOfType:(OOMIssueType)type key:(NSString *)key message:(NSString *)message
+- (void) addProblemOfType:(OOProblemReportType)type key:(NSString *)key message:(NSString *)message
 {
 	NSString *prefix = @"";
 	switch (type)

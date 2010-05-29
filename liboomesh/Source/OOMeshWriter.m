@@ -1,5 +1,5 @@
 /*
-	OOMOOMeshWriter.h
+	OOMeshWriter.h
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,18 +23,18 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMOomeshWriter.h"
-#import "OOMProblemReportManager.h"
+#import "OOMeshWriter.h"
+#import "OOProblemReportManager.h"
 #import "CollectionUtils.h"
 #import "OOCollectionExtractors.h"
 
-#import "OOMFloatArray.h"
-#import "OOMVertex.h"
-#import "OOMFace.h"
-#import "OOMFaceGroup.h"
-#import "OOMMesh.h"
-#import "OOMMaterialSpecification.h"
-#import "OOMTextureSpecification.h"
+#import "OOFloatArray.h"
+#import "OOAbstractVertex.h"
+#import "OOAbstractFace.h"
+#import "OOAbstractFaceGroup.h"
+#import "OOAbstractMesh.h"
+#import "OOMaterialSpecification.h"
+#import "OOTextureSpecification.h"
 #import "NSNumberOOExtensions.h"
 
 
@@ -59,7 +59,7 @@
 static NSString *EscapeString(NSString *string);
 
 
-BOOL OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> issues)
+BOOL OOMWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
@@ -74,7 +74,7 @@ BOOL OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> 
 		OK = [data writeToFile:path options:NSDataWritingAtomic error:&error];
 		if (!OK)
 		{
-			OOMReportNSError(issues, @"fileNotOpened", $sprintf(@"Could not write to %@", name), error);
+			OOReportNSError(issues, @"fileNotOpened", $sprintf(@"Could not write to %@", name), error);
 		}
 	}
 	
@@ -83,7 +83,7 @@ BOOL OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> 
 }
 
 
-NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManager> issues)
+NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues)
 {
 	if (mesh == nil)  return nil;
 	
@@ -96,10 +96,10 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 	NSUInteger vertexCount = 0;
 	NSUInteger dupeCount = 0;
 	
-	OOMFaceGroup *faceGroup = nil;
-	OOMFace *face = nil;
-	OOMVertex *vertex = nil;
-	OOMMaterialSpecification *material = nil;
+	OOAbstractFaceGroup *faceGroup = nil;
+	OOAbstractFace *face = nil;
+	OOAbstractVertex *vertex = nil;
+	OOMaterialSpecification *material = nil;
 	
 	//	Unique vertices across groups, and count 'em.
 	//	FIXME: ensure all vertices have same attributes. Should be public utility method.
@@ -135,7 +135,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 	
 	//	Unique materials by name.
 	NSMutableDictionary *materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
-	OOMMaterialSpecification *anonMaterial = nil;
+	OOMaterialSpecification *anonMaterial = nil;
 	
 	foreach (faceGroup, [mesh faceGroupEnumerator])
 	{
@@ -146,7 +146,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 			// Generate a blank material.
 			if (anonMaterial == nil)
 			{
-				anonMaterial = [[[OOMMaterialSpecification alloc] initWithMaterialKey:@"<unnamed>"] autorelease];
+				anonMaterial = [[[OOMaterialSpecification alloc] initWithMaterialKey:@"<unnamed>"] autorelease];
 			}
 			material = anonMaterial;
 		}
@@ -188,8 +188,8 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		OOMVertex *protoVertex = [vertices objectAtIndex:0];
-		NSArray *attributeKeys = [[protoVertex allAttributeKeys] sortedArrayUsingSelector:@selector(oom_compareByVertexAttributeOrder:)];
+		OOAbstractVertex *protoVertex = [vertices objectAtIndex:0];
+		NSArray *attributeKeys = [[protoVertex allAttributeKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 		NSString *key = nil;
 		foreach (key, attributeKeys)
 		{
@@ -201,7 +201,7 @@ NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManag
 			{
 				[result appendString:@"\t\t\t"];
 				
-				OOMFloatArray *attr = [vertex attributeForKey:key];
+				OOFloatArray *attr = [vertex attributeForKey:key];
 				for (i = 0; i < count; i++)
 				{
 					[result appendFormat:@"%f%@", [attr floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];

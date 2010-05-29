@@ -1,5 +1,5 @@
 /*
-	OOMVertex.m
+	OOAbstractVertex.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,16 +23,16 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMVertex.h"
-#import "OOMFloatArray.h"
+#import "OOAbstractVertex.h"
+#import "OOFloatArray.h"
 #import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
 
 
-NSString * const kOOMPositionAttributeKey	= @"position";
-NSString * const kOOMNormalAttributeKey		= @"normal";
-NSString * const kOOMTangentAttributeKey	= @"tangent";
-NSString * const kOOMTexCoordsAttributeKey	= @"texCoords";
+NSString * const kOOPositionAttributeKey	= @"position";
+NSString * const kOONormalAttributeKey		= @"normal";
+NSString * const kOOTangentAttributeKey		= @"tangent";
+NSString * const kOOTexCoordsAttributeKey	= @"texCoords";
 
 
 #ifndef NDEBUG
@@ -44,7 +44,7 @@ static BOOL IsValidAttributeDictionary(NSDictionary *dict);
 static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL verify);
 
 
-@interface OOMVertex (Private)
+@interface OOAbstractVertex (Private)
 
 // Always returns nil.
 - (id) priv_subclassResponsibility:(SEL)selector;
@@ -53,7 +53,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-@interface OOMConcreteVertex: OOMVertex
+@interface OOConcreteVertex: OOAbstractVertex
 {
 @private
 	NSDictionary			*_attributes;
@@ -65,7 +65,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-@interface OOMPositionOnlyVertex: OOMVertex
+@interface OOPositionOnlyVertex: OOAbstractVertex
 {
 @private
 	Vector					_position;
@@ -76,7 +76,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-@interface OOMConcreteMutableVertex: OOMMutableVertex
+@interface OOConcreteMutableVertex: OOMutableAbstractVertex
 {
 @private
 	NSMutableDictionary		*_attributes;
@@ -88,7 +88,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 @end
 
 
-@interface OOMSingleObjectEnumerator: NSEnumerator
+@interface OOSingleObjectEnumerator: NSEnumerator
 {
 @private
 	id						_object;
@@ -101,11 +101,11 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 
 static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 {
-	return $dict(key, OOMArrayFromVector(v));
+	return $dict(key, OOFloatArrayFromVector(v));
 }
 
 
-@implementation OOMVertex
+@implementation OOAbstractVertex
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes
 {
@@ -113,18 +113,18 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	
 	if ([attributes count] == 1)
 	{
-		NSArray *positionAttr = [attributes oo_arrayForKey:kOOMPositionAttributeKey];
+		NSArray *positionAttr = [attributes oo_arrayForKey:kOOPositionAttributeKey];
 		if ([positionAttr count] == 3)
 		{
 			Vector position =
 			{
 				[positionAttr oo_floatAtIndex:0], [positionAttr oo_floatAtIndex:1], [positionAttr oo_floatAtIndex:2]
 			};
-			return [[[OOMPositionOnlyVertex alloc] initWithPosition:position] autorelease];
+			return [[[OOPositionOnlyVertex alloc] initWithPosition:position] autorelease];
 		}
 	}
 	
-	return [[[OOMConcreteVertex alloc] priv_initWithAttributes:attributes verify:YES] autorelease];
+	return [[[OOConcreteVertex alloc] priv_initWithAttributes:attributes verify:YES] autorelease];
 }
 
 
@@ -132,11 +132,11 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 {
 	if (![self priv_isMutableType])
 	{
-		return [[OOMPositionOnlyVertex alloc] initWithPosition:position];
+		return [[OOPositionOnlyVertex alloc] initWithPosition:position];
 	}
 	else
 	{
-		return [self vertexWithAttributes:AttributesDictFromVector(kOOMPositionAttributeKey, position)];
+		return [self vertexWithAttributes:AttributesDictFromVector(kOOPositionAttributeKey, position)];
 	}
 
 }
@@ -154,7 +154,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	}
 	else
 	{
-		// Plain OOMVertex is OK for empty, immutable vertex.
+		// Plain OOAbstractVertex is OK for empty, immutable vertex.
 		return [self init];
 	}
 }
@@ -168,19 +168,19 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	return [[OOMVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
+	return [[OOAbstractVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
 - (id) mutableCopyWithZone:(NSZone *)zone
 {
-	return [[OOMMutableVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
+	return [[OOMutableAbstractVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
 - (BOOL) isEqual:(id)other
 {
-	if (EXPECT_NOT(![other isKindOfClass:[OOMVertex class]]))  return NO;
+	if (EXPECT_NOT(![other isKindOfClass:[OOAbstractVertex class]]))  return NO;
 	if ([self hash] != [other hash])  return NO;
 	return [[self allAttributes] isEqual:[other allAttributes]];
 }
@@ -207,7 +207,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation OOMVertex (Private)
+@implementation OOAbstractVertex (Private)
 
 - (id) priv_subclassResponsibility:(SEL)selector
 {
@@ -224,9 +224,9 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation OOMVertex (Conveniences)
+@implementation OOAbstractVertex (Conveniences)
 
-- (OOMFloatArray *) attributeForKey:(NSString *)key
+- (OOFloatArray *) attributeForKey:(NSString *)key
 {
 	return [[self allAttributes] objectForKey:key];
 }
@@ -246,25 +246,25 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (double) attributeAsDoubleForKey:(NSString *)key
 {
-	return OOMDoubleFromArray([self attributeForKey:key]);
+	return OODoubleFromArray([self attributeForKey:key]);
 }
 
 
 - (NSPoint) attributeAsPointForKey:(NSString *)key
 {
-	return OOMPointFromArray([self attributeForKey:key]);
+	return OOPointFromArray([self attributeForKey:key]);
 }
 
 
 - (Vector2D) attributeAsVector2DForKey:(NSString *)key
 {
-	return OOMVector2DFromArray([self attributeForKey:key]);
+	return OOVector2DFromArray([self attributeForKey:key]);
 }
 
 
 - (Vector) attributeAsVectorForKey:(NSString *)key
 {
-	return OOMVectorFromArray([self attributeForKey:key]);
+	return OOVectorFromArray([self attributeForKey:key]);
 }
 
 
@@ -274,67 +274,67 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	not guaranteed.
 	-- Ahruman 2010-05-23
 */
-- (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes
+- (OOAbstractVertex *) vertexByAddingAttributes:(NSDictionary *)attributes
 {
 	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
 	[newAttrs addEntriesFromDictionary:attributes];
-	return [OOMVertex vertexWithAttributes:newAttrs];
+	return [OOAbstractVertex vertexWithAttributes:newAttrs];
 }
 
 
-- (OOMVertex *) vertexByAddingAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
+- (OOAbstractVertex *) vertexByAddingAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
 {
 	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
 	[newAttrs setObject:attribute forKey:key];
-	return [OOMVertex vertexWithAttributes:newAttrs];
+	return [OOAbstractVertex vertexWithAttributes:newAttrs];
 }
 
 
-- (OOMVertex *) vertexByRemovingAttributeForKey:(NSString *)key
+- (OOAbstractVertex *) vertexByRemovingAttributeForKey:(NSString *)key
 {
 	NSMutableDictionary *newAttrs = [NSMutableDictionary dictionaryWithDictionary:[self allAttributes]];
 	[newAttrs removeObjectForKey:key];
-	return [OOMVertex vertexWithAttributes:newAttrs];
+	return [OOAbstractVertex vertexWithAttributes:newAttrs];
 }
 
 @end
 
 
-@implementation OOMVertex (CommonAttributes)
+@implementation OOAbstractVertex (CommonAttributes)
 
 - (Vector) position
 {
-	return [self attributeAsVectorForKey:kOOMPositionAttributeKey];
+	return [self attributeAsVectorForKey:kOOPositionAttributeKey];
 }
 
 
 - (Vector) normal
 {
-	return [self attributeAsVectorForKey:kOOMNormalAttributeKey];
+	return [self attributeAsVectorForKey:kOONormalAttributeKey];
 }
 
 
 - (Vector) tangent
 {
-	return [self attributeAsVectorForKey:kOOMTangentAttributeKey];
+	return [self attributeAsVectorForKey:kOOTangentAttributeKey];
 }
 
 
 - (Vector2D) texCoords
 {
-	return [self attributeAsVector2DForKey:kOOMTexCoordsAttributeKey];
+	return [self attributeAsVector2DForKey:kOOTexCoordsAttributeKey];
 }
 
 
 - (Vector) texCoords3D
 {
-	return [self attributeAsVectorForKey:kOOMTexCoordsAttributeKey];
+	return [self attributeAsVectorForKey:kOOTexCoordsAttributeKey];
 }
 
 @end
 
 
-@implementation OOMConcreteVertex
+@implementation OOConcreteVertex
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify
 {
@@ -379,11 +379,11 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation OOMMutableVertex
+@implementation OOMutableAbstractVertex
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes
 {
-	return [[[OOMConcreteMutableVertex alloc] priv_initWithAttributes:attributes verify:YES] retain];
+	return [[[OOConcreteMutableVertex alloc] priv_initWithAttributes:attributes verify:YES] retain];
 }
 
 
@@ -394,7 +394,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
+- (void) setAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
 {
 	[self priv_subclassResponsibility:_cmd];
 }
@@ -408,7 +408,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation OOMMutableVertex (Conveniences)
+@implementation OOMutableAbstractVertex (Conveniences)
 
 - (void) removeAttributeForKey:(NSString *)key
 {
@@ -428,65 +428,65 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (void) setAttributeAsDouble:(double)value forKey:(NSString *)key
 {
-	[self setAttribute:OOMArrayFromDouble(value) forKey:key];
+	[self setAttribute:OOFloatArrayFromDouble(value) forKey:key];
 }
 
 
 - (void) setAttributeAsPoint:(NSPoint)value forKey:(NSString *)key
 {
-	[self setAttribute:OOMArrayFromPoint(value) forKey:key];
+	[self setAttribute:OOFloatArrayFromPoint(value) forKey:key];
 }
 
 
 - (void) setAttributeAsVector2D:(Vector2D)value forKey:(NSString *)key
 {
-	[self setAttribute:OOMArrayFromVector2D(value) forKey:key];
+	[self setAttribute:OOFloatArrayFromVector2D(value) forKey:key];
 }
 
 
 - (void) setAttributeAsVector:(Vector)value forKey:(NSString *)key
 {
-	[self setAttribute:OOMArrayFromVector(value) forKey:key];
+	[self setAttribute:OOFloatArrayFromVector(value) forKey:key];
 }
 
 @end
 
 
-@implementation OOMMutableVertex (CommonAttributes)
+@implementation OOMutableAbstractVertex (CommonAttributes)
 
 - (void) setPosition:(Vector)value
 {
-	[self setAttributeAsVector:value forKey:kOOMPositionAttributeKey];
+	[self setAttributeAsVector:value forKey:kOOPositionAttributeKey];
 }
 
 
 - (void) setNormal:(Vector)value
 {
-	[self setAttributeAsVector:value forKey:kOOMNormalAttributeKey];
+	[self setAttributeAsVector:value forKey:kOONormalAttributeKey];
 }
 
 
 - (void) setTangent:(Vector)value
 {
-	[self setAttributeAsVector:value forKey:kOOMTangentAttributeKey];
+	[self setAttributeAsVector:value forKey:kOOTangentAttributeKey];
 }
 
 
 - (void) setTexCoords:(Vector2D)value
 {
-	[self setAttributeAsVector2D:value forKey:kOOMTexCoordsAttributeKey];
+	[self setAttributeAsVector2D:value forKey:kOOTexCoordsAttributeKey];
 }
 
 
 - (void) setTexCoords3D:(Vector)value
 {
-	[self setAttributeAsVector:value forKey:kOOMTexCoordsAttributeKey];
+	[self setAttributeAsVector:value forKey:kOOTexCoordsAttributeKey];
 }
 
 @end
 
 
-@implementation OOMConcreteMutableVertex
+@implementation OOConcreteMutableVertex
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify
 {
@@ -514,7 +514,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key
+- (void) setAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
 {
 	if (EXPECT_NOT(key == nil))  return;
 	_hash = 0;
@@ -540,7 +540,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation OOMPositionOnlyVertex
+@implementation OOPositionOnlyVertex
 
 - (id) initWithPosition:(Vector)position
 {
@@ -554,14 +554,14 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (NSDictionary *) allAttributes
 {
-	return AttributesDictFromVector(kOOMPositionAttributeKey, _position);
+	return AttributesDictFromVector(kOOPositionAttributeKey, _position);
 }
 
 
 - (NSArray *) allAttributeKeys
 {
 	static NSArray *attributeKeys = nil;
-	if (attributeKeys == nil)  attributeKeys = [$array(kOOMPositionAttributeKey) retain];
+	if (attributeKeys == nil)  attributeKeys = [$array(kOOPositionAttributeKey) retain];
 
 	return attributeKeys;
 }
@@ -575,7 +575,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (Vector) attributeAsVectorForKey:(NSString *)key
 {
-	if ([key isEqualToString:kOOMPositionAttributeKey])
+	if ([key isEqualToString:kOOPositionAttributeKey])
 	{
 		return _position;
 	}
@@ -589,17 +589,17 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 @end
 
 
-@implementation NSArray (OOMVertex)
+@implementation NSArray (OOAbstractVertex)
 
-- (OOMVertex *) oom_vertexAtIndex:(NSUInteger)i
+- (OOAbstractVertex *) oo_abstractVertexAtIndex:(NSUInteger)i
 {
-	return [self oo_objectOfClass:[OOMVertex class] atIndex:i];
+	return [self oo_objectOfClass:[OOAbstractVertex class] atIndex:i];
 }
 
 @end
 
 
-@implementation OOMSingleObjectEnumerator
+@implementation OOSingleObjectEnumerator
 
 - (id) initWithObject:(id)object
 {
@@ -630,18 +630,18 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 static NSUInteger AttributeRank(NSString *string)
 {
-	if ([string isEqualToString:kOOMPositionAttributeKey])  return 1;
-	if ([string isEqualToString:kOOMNormalAttributeKey])  return 2;
-	if ([string isEqualToString:kOOMTangentAttributeKey])  return 3;
-	if ([string isEqualToString:kOOMTexCoordsAttributeKey])  return 4;
+	if ([string isEqualToString:kOOPositionAttributeKey])  return 1;
+	if ([string isEqualToString:kOONormalAttributeKey])  return 2;
+	if ([string isEqualToString:kOOTangentAttributeKey])  return 3;
+	if ([string isEqualToString:kOOTexCoordsAttributeKey])  return 4;
 	
 	return NSNotFound;
 }
 
 
-@implementation NSString (OOMVertex)
+@implementation NSString (OOAbstractVertex)
 
-- (NSComparisonResult) oom_compareByVertexAttributeOrder:(NSString *)other
+- (NSComparisonResult) oo_compareByVertexAttributeOrder:(NSString *)other
 {
 	NSParameterAssert([other isKindOfClass:[NSString class]]);
 	
@@ -677,7 +677,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 	if (verify && !IsValidAttributeDictionary(attributes))
 	{
 		DESTROY(self);
-		[NSException raise:NSInvalidArgumentException format:@"OOMVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
+		[NSException raise:NSInvalidArgumentException format:@"OOAbstractVertex attributes must be a dictionary whose keys are strings and whose values are arrays of numbers."];
 	}
 #endif
 	
@@ -702,7 +702,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 		if (EXPECT_NOT(keys == NULL))
 		{
 			DESTROY(self);
-			[NSException raise:NSMallocException format:@"Could not allocate memory for OOMVertex."];
+			[NSException raise:NSMallocException format:@"Could not allocate memory for OOAbstractVertex."];
 		}
 		values = keys + count;
 	}
@@ -717,7 +717,7 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 	foreach(key, [attributes allKeys])
 	{
 		keys[i] = key;	// NSDictionary calls copy, no need for us to do anything.
-		values[i] = [OOMFloatArray newWithArray:[attributes objectForKey:key]];
+		values[i] = [OOFloatArray newWithArray:[attributes objectForKey:key]];
 		i++;
 	}
 	
@@ -735,31 +735,31 @@ static id CopyAttributes(NSDictionary *attributes, id self, BOOL mutable, BOOL v
 }
 
 
-OOMFloatArray *OOMArrayFromDouble(double value)
+OOFloatArray *OOFloatArrayFromDouble(double value)
 {
 	return $floatarray(value);
 }
 
 
-OOMFloatArray *OOMArrayFromPoint(NSPoint value)
+OOFloatArray *OOFloatArrayFromPoint(NSPoint value)
 {
 	return $floatarray(value.x, value.y);
 }
 
 
-OOMFloatArray *OOMArrayFromVector2D(Vector2D value)
+OOFloatArray *OOFloatArrayFromVector2D(Vector2D value)
 {
 	return $floatarray(value.x, value.y);
 }
 
 
-OOMFloatArray *OOMArrayFromVector(Vector value)
+OOFloatArray *OOFloatArrayFromVector(Vector value)
 {
 	return $floatarray(value.x, value.y, value.z);
 }
 
 
-double OOMDoubleFromArray(NSArray *array)
+double OODoubleFromArray(NSArray *array)
 {
 	NSUInteger count = [array count];
 	double result = 0;
@@ -768,7 +768,7 @@ double OOMDoubleFromArray(NSArray *array)
 }
 
 
-NSPoint OOMPointFromArray(NSArray *array)
+NSPoint OOPointFromArray(NSArray *array)
 {
 	NSUInteger count = [array count];
 	NSPoint result = NSZeroPoint;
@@ -778,7 +778,7 @@ NSPoint OOMPointFromArray(NSArray *array)
 }
 
 
-Vector2D OOMVector2DFromArray(NSArray *array)
+Vector2D OOVector2DFromArray(NSArray *array)
 {
 	NSUInteger count = [array count];
 	Vector2D result = kZeroVector2D;
@@ -788,7 +788,7 @@ Vector2D OOMVector2DFromArray(NSArray *array)
 }
 
 
-Vector OOMVectorFromArray(NSArray *array)
+Vector OOVectorFromArray(NSArray *array)
 {
 	NSUInteger count = [array count];
 	Vector result = kZeroVector;

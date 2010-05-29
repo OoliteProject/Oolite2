@@ -1,11 +1,9 @@
 /*
-	OOMDATLexer.h
-	
-	Token scanner for DAT files.
+	OOTextureSpecification.m
 	
 	
-	Copyright © 2010 Jens Ayton
-
+	Copyright © 2010 Jens Ayton.
+	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
@@ -15,7 +13,7 @@
 	
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-
+	
 	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -25,39 +23,43 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
-#import <stdio.h>
-
-@protocol OOMProblemReportManager;
+#import "OOTextureSpecification.h"
 
 
-@interface OOMDATLexer: NSObject
+@implementation OOTextureSpecification
+
++ (id) textureSpecWithName:(NSString *)name
 {
-@private
-	const char				*_cursor;
-	const char				*_end;
-	size_t					_tokenLength;
-	NSData					*_data;
-	unsigned				_lineNumber;
-	NSString				*_tokenString;
+	OOTextureSpecification *result = [[self alloc] init];
+	[result setTextureMapName:name];
+	return [result autorelease];
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues;
-- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues;
 
-- (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
+- (void) dealloc
+{
+	DESTROY(_name);
+	
+	[super dealloc];
+}
 
-- (NSString *) currentTokenString;
 
-- (NSString *) nextToken;
+- (NSString *) textureMapName
+{
+	return _name;
+}
 
-// Somewhat more efficient than comparing an NSString.
-- (BOOL) expectLiteral:(const char *)literal;
 
-- (BOOL) readInteger:(NSUInteger *)outInt;
-- (BOOL) readReal:(float *)outReal;
-- (BOOL) readString:(NSString **)outString;
-- (BOOL) readUntilNewline:(NSString **)outString;
+- (void) setTextureMapName:(NSString *)value
+{
+	[_name autorelease];
+	_name = [value copy];
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	return _name;
+}
 
 @end

@@ -1,5 +1,5 @@
 /*
-	OOMFloatArray.m
+	OOFloatArray.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,7 +23,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMFloatArray.h"
+#import "OOFloatArray.h"
 #import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
 
@@ -31,9 +31,9 @@
 typedef uint32_t FloatSizedInt;
 
 
-@interface OOMFloatArray (Private)
+@interface OOFloatArray (Private)
 
-- (BOOL) priv_isEqualToOOMFloatArray:(OOMFloatArray *)other;
+- (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other;
 
 //	Subclass responsibility:
 - (float *) priv_floatArray;
@@ -62,9 +62,9 @@ enum
 
 /*	
 	OOMInlineFloatArray
-	Concrete OOMFloatArray which uses object_getIndexedIvars() as storage.
+	Concrete OOFloatArray which uses object_getIndexedIvars() as storage.
 */
-@interface OOMInlineFloatArray: OOMFloatArray
+@interface OOMInlineFloatArray: OOFloatArray
 {
 @private
 	FloatSizedInt				_count;
@@ -77,7 +77,7 @@ enum
 @end
 
 
-@interface OOMExternFloatArray: OOMFloatArray
+@interface OOMExternFloatArray: OOFloatArray
 {
 	NSUInteger					_freeWhenDone: 1,
 								_count: ((sizeof (NSUInteger) * CHAR_BIT) - 1);
@@ -91,12 +91,12 @@ enum
 @end
 
 
-@implementation OOMFloatArray
+@implementation OOFloatArray
 
 #ifndef NS_BLOCK_ASSERTIONS
 + (void) initialize
 {
-	NSAssert(sizeof(FloatSizedInt) == sizeof(uint32_t), @"OOMFloatArray: FloatSizedInt is not defined appropriately.");
+	NSAssert(sizeof(FloatSizedInt) == sizeof(uint32_t), @"OOFloatArray: FloatSizedInt is not defined appropriately.");
 }
 #endif
 
@@ -111,11 +111,11 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 + (id) newWithArray:(NSArray *)array
 {
 	if (array == nil)  return [OOMInlineFloatArray priv_newWithFloats:nil count:0];
-	if ([array isKindOfClass:[OOMFloatArray class]])  return [array copy];
+	if ([array isKindOfClass:[OOFloatArray class]])  return [array copy];
 	
 	NSUInteger i, count = [array count];
 	Class rClass = ClassForNormalArrayOfSize(count);
-	OOMFloatArray *result = [rClass priv_newWithCapacity:count];
+	OOFloatArray *result = [rClass priv_newWithCapacity:count];
 	
 	if (result != nil)
 	{
@@ -138,7 +138,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 + (id) arrayWithArray:(NSArray *)array
 {
-	OOMFloatArray *result = [OOMFloatArray newWithArray:array];
+	OOFloatArray *result = [OOFloatArray newWithArray:array];
 	[result autorelease];
 	return result;
 }
@@ -147,7 +147,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 - (id) initWithArray:(NSArray *)array
 {
 	[self release];
-	return [OOMFloatArray newWithArray:array];
+	return [OOFloatArray newWithArray:array];
 }
 
 
@@ -177,7 +177,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
-	OOMFloatArray *result = nil;
+	OOFloatArray *result = nil;
 	
 	if (count > kMinExternCount)
 	{
@@ -244,23 +244,23 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 - (BOOL) isEqualToArray:(NSArray *)other
 {
-	if ([other isKindOfClass:[OOMFloatArray class]])  return [self priv_isEqualToOOMFloatArray:(OOMFloatArray *)other];
+	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOMFloatArray:(OOFloatArray *)other];
 	return [super isEqualToArray:other];
 }
 
 
 - (BOOL) isEqual:(id)other
 {
-	if ([other isKindOfClass:[OOMFloatArray class]])  return [self priv_isEqualToOOMFloatArray:other];
+	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOMFloatArray:other];
 	return [super isEqual:other];
 }
 
 @end
 
 
-@implementation OOMFloatArray (Private)
+@implementation OOFloatArray (Private)
 
-- (BOOL) priv_isEqualToOOMFloatArray:(OOMFloatArray *)other
+- (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other
 {
 	NSParameterAssert(other != nil);
 	
@@ -302,7 +302,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	if (count != 0 && values == NULL)  return nil;
 	size_t size = sizeof *values * count;
 	
-	OOMFloatArray *result = [self priv_newWithCapacity:count];
+	OOFloatArray *result = [self priv_newWithCapacity:count];
 	if (result != nil)
 	{
 		memcpy([result priv_floatArray], values, size);
@@ -417,7 +417,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 @end
 
 
-@implementation OOMFloatArray (OOCollectionExtractors)
+@implementation OOFloatArray (OOCollectionExtractors)
 
 - (float) oo_floatAtIndex:(NSUInteger)index defaultValue:(float)value
 {

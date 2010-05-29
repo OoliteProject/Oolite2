@@ -1,5 +1,5 @@
 /*
-	OOMDATReader.m
+	OODATReader.m
 	liboomesh
 	
 	
@@ -24,17 +24,17 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMDATReader.h"
-#import "OOMProblemReportManager.h"
-#import "OOMDATLexer.h"
+#import "OODATReader.h"
+#import "OOProblemReportManager.h"
+#import "OODATLexer.h"
 #import "CollectionUtils.h"
 #import "OOCollectionExtractors.h"
 
-#import "OOMVertex.h"
-#import "OOMFace.h"
-#import "OOMFaceGroup.h"
-#import "OOMMesh.h"
-#import "OOMMaterialSpecification.h"
+#import "OOAbstractVertex.h"
+#import "OOAbstractFace.h"
+#import "OOAbstractFaceGroup.h"
+#import "OOAbstractMesh.h"
+#import "OOMaterialSpecification.h"
 
 
 static void CleanVector(Vector *v)
@@ -93,7 +93,7 @@ enum
 };
 
 
-@interface OOMDATReader (Private)
+@interface OODATReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
@@ -120,9 +120,9 @@ enum
 @end
 
 
-@implementation OOMDATReader
+@implementation OODATReader
 
-- (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ((self = [super init]))
 	{
@@ -130,7 +130,7 @@ enum
 		_path = [path copy];
 		_brokenSmoothing = YES;
 		
-		_lexer = [[OOMDATLexer alloc] initWithPath:_path issues:_issues];
+		_lexer = [[OODATLexer alloc] initWithPath:_path issues:_issues];
 		if (_lexer == nil)  DESTROY(self);
 	}
 	
@@ -234,11 +234,11 @@ enum
 		{
 			if (secName == nil)
 			{
-				OOMReportWarning(_issues, @"missingEnd", @"The document is missing an END line. This may indicate that the file is damaged.");
+				OOReportWarning(_issues, @"missingEnd", @"The document is missing an END line. This may indicate that the file is damaged.");
 			}
 			else
 			{
-				OOMReportWarning(_issues, @"unknownData", @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
+				OOReportWarning(_issues, @"unknownData", @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
 			}
 		}
 	}
@@ -294,7 +294,7 @@ enum
 }
 
 
-- (OOMMesh *) mesh
+- (OOAbstractMesh *) mesh
 {
 	[self parse];
 	return _mesh;
@@ -347,12 +347,12 @@ enum
 @end
 
 
-@implementation OOMDATReader (Private)
+@implementation OODATReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOMLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
-	format = OOMLocalizeProblemString(_issues, format);
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
 	va_start(args, format);
@@ -372,7 +372,7 @@ enum
 
 - (void) priv_reportMallocFailure
 {
-	OOMReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
+	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
 }
 
 
@@ -403,7 +403,7 @@ enum
 		}
 		CleanVector(&v);
 		
-		_fileVertices[vIter] = [OOMVertex vertexWithPosition:v];
+		_fileVertices[vIter] = [OOAbstractVertex vertexWithPosition:v];
 	}
 	
 	return YES;
@@ -602,8 +602,8 @@ enum
 		}
 		
 		CleanVector(&normal);
-		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(normal)
-																	  forKey:kOOMNormalAttributeKey];
+		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOFloatArrayFromVector(normal)
+																	  forKey:kOONormalAttributeKey];
 	}
 	
 	return YES;
@@ -630,8 +630,8 @@ enum
 		}
 		
 		CleanVector(&tangent);
-		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangent)
-																	  forKey:kOOMTangentAttributeKey];
+		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOFloatArrayFromVector(tangent)
+																	  forKey:kOOTangentAttributeKey];
 	}
 	
 	return YES;
@@ -807,7 +807,7 @@ enum
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
 		CleanVector(&normalSum);
 		CleanVector(&tangentSum);
-		NSDictionary *attrs = $dict(kOOMNormalAttributeKey, OOMArrayFromVector(normalSum), kOOMTangentAttributeKey, OOMArrayFromVector(tangentSum));
+		NSDictionary *attrs = $dict(kOONormalAttributeKey, OOFloatArrayFromVector(normalSum), kOOTangentAttributeKey, OOFloatArrayFromVector(tangentSum));
 		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttributes:attrs] retain];
 		
 		[pool drain];
@@ -849,8 +849,8 @@ enum
 		
 		tangentSum = vector_normal_or_fallback(tangentSum, kBasisXVector);
 		CleanVector(&tangentSum);
-		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttribute:OOMArrayFromVector(tangentSum)
-																	   forKey:kOOMTangentAttributeKey] retain];
+		_fileVertices[vIter] = [[_fileVertices[vIter] vertexByAddingAttribute:OOFloatArrayFromVector(tangentSum)
+																	   forKey:kOOTangentAttributeKey] retain];
 		
 		[pool drain];
 		[_fileVertices[vIter] autorelease];	// Needs to be autoreleased in outer pool.
@@ -926,7 +926,7 @@ enum
 #if UNIQUE_VERTICES
 	NSMutableSet *uniquedVertices = [NSMutableSet set];
 #endif
-	_mesh = [OOMMesh new];
+	_mesh = [OOAbstractMesh new];
 	
 	/*	This is technically O(n * m) where n is face count and m is material
 		count, but given that m is small on any practical model (Oolite 1.x
@@ -937,7 +937,7 @@ enum
 	
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
-		OOMFaceGroup *faceGroup = [OOMFaceGroup new];
+		OOAbstractFaceGroup *faceGroup = [OOAbstractFaceGroup new];
 		NSString *materialName = [_materialKeys objectAtIndex:mIter];
 		BOOL haveMaterial = (materialName != nil);
 		if (haveMaterial)
@@ -950,7 +950,7 @@ enum
 				materialName = [materialName stringByDeletingPathExtension];
 			}
 			
-			OOMMaterialSpecification *material = [[OOMMaterialSpecification alloc] initWithMaterialKey:materialName];
+			OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:materialName];
 			if (diffuseMapName != nil)  [material setDiffuseMapName:diffuseMapName];
 			
 			[faceGroup setName:materialName];
@@ -962,12 +962,12 @@ enum
 			RawDATTriangle *triangle = &_rawTriangles[fIter];
 			if (triangle->materialIndex == mIter)
 			{
-				OOMVertex *triVertices[3];
+				OOAbstractVertex *triVertices[3];
 				
 				for (vIter = 0; vIter < 3; vIter++)
 				{
 					NSUInteger vi = triangle->vertex[vIter];
-					OOMVertex *vertex = nil;
+					OOAbstractVertex *vertex = nil;
 					
 					if (_smoothing)
 					{
@@ -979,26 +979,26 @@ enum
 														   andTangent:&tangent
 															forVertex:vi
 														inSmoothGroup:triangle->smoothGroup];
-							vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOOMNormalAttributeKey, OOMArrayFromVector(normal), kOOMTangentAttributeKey, OOMArrayFromVector(tangent))];
+							vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOONormalAttributeKey, OOFloatArrayFromVector(normal), kOOTangentAttributeKey, OOFloatArrayFromVector(tangent))];
 						}
 						else
 						{
 							// Vertex is already smoothed.
 							vertex = _fileVertices[vi];
-							NSAssert([vertex attributeForKey:kOOMNormalAttributeKey] != nil && [vertex attributeForKey:kOOMTangentAttributeKey] != nil, @"Smoothed vertices should have normals and tangents by now.");
+							NSAssert([vertex attributeForKey:kOONormalAttributeKey] != nil && [vertex attributeForKey:kOOTangentAttributeKey] != nil, @"Smoothed vertices should have normals and tangents by now.");
 						}
 					}
 					else
 					{
 						// No smoothing.
-						vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOOMNormalAttributeKey, OOMArrayFromVector(triangle->normal), kOOMTangentAttributeKey, OOMArrayFromVector(triangle->tangent))];
+						vertex = [_fileVertices[vi] vertexByAddingAttributes:$dict(kOONormalAttributeKey, OOFloatArrayFromVector(triangle->normal), kOOTangentAttributeKey, OOFloatArrayFromVector(triangle->tangent))];
 					}
 					
 					if (haveMaterial)
 					{
 						// Add in texture coordinate.
-						vertex = [vertex vertexByAddingAttribute:OOMArrayFromVector2D(triangle->texCoords[vIter])
-														  forKey:kOOMTexCoordsAttributeKey];
+						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromVector2D(triangle->texCoords[vIter])
+														  forKey:kOOTexCoordsAttributeKey];
 					}
 					
 #if UNIQUE_VERTICES
@@ -1014,7 +1014,7 @@ enum
 #endif
 				}
 				
-				[faceGroup addFace:[OOMFace faceWithVertices:triVertices]];
+				[faceGroup addFace:[OOAbstractFace faceWithVertices:triVertices]];
 			}
 			
 			/*	Drain pool every 32 faces. For a large test case, this makes
@@ -1044,7 +1044,7 @@ enum
 	FILE *file = fopen([path UTF8String], "w");
 	if (file == NULL)
 	{
-		OOMReportInfo(_issues, @"writeFailed", @"Could not open debug dump file %@", path);
+		OOReportInfo(_issues, @"writeFailed", @"Could not open debug dump file %@", path);
 		return;
 	}
 	

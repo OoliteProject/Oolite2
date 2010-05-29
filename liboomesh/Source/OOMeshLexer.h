@@ -1,5 +1,5 @@
 /*
-	OOMOOMeshLexer.h
+	OOMeshLexer.h
 	
 	Token scanner for oomesh files.
 	
@@ -27,7 +27,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol OOMProblemReportManager;
+@protocol OOProblemReportManager;
 
 
 
@@ -59,10 +59,10 @@ typedef enum OOMeshTokenType
 } OOMeshTokenType;
 
 
-@interface OOMOOMeshLexer: NSObject
+@interface OOMeshLexer: NSObject
 {
 @private
-	id <OOMProblemReportManager>	_issues;
+	id <OOProblemReportManager>	_issues;
 	struct OOMeshLexerState
 	{
 		OOMeshTokenType				tokenType;
@@ -75,9 +75,9 @@ typedef enum OOMeshTokenType
 	NSString						*_tokenString;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues;
-- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues;
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 

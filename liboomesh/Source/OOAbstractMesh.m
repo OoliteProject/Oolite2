@@ -1,5 +1,5 @@
 /*
-	OOMMesh.h
+	OOAbstractMesh.h
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,11 +23,11 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMMesh.h"
-#import "OOMFaceGroup.h"
+#import "OOAbstractMesh.h"
+#import "OOAbstractFaceGroup.h"
 
 
-@implementation OOMMesh
+@implementation OOAbstractMesh
 
 - (id) init
 {
@@ -54,19 +54,19 @@
 }
 
 
-- (OOMFaceGroup *) faceGroupAtIndex:(NSUInteger)index
+- (OOAbstractFaceGroup *) faceGroupAtIndex:(NSUInteger)index
 {
 	return [_faceGroups objectAtIndex:index];
 }
 
 
-- (void) addFaceGroup:(OOMFaceGroup *)faceGroup
+- (void) addFaceGroup:(OOAbstractFaceGroup *)faceGroup
 {
 	[_faceGroups addObject:faceGroup];
 }
 
 
-- (void) insertFaceGroup:(OOMFaceGroup *)faceGroup atIndex:(NSUInteger)index
+- (void) insertFaceGroup:(OOAbstractFaceGroup *)faceGroup atIndex:(NSUInteger)index
 {
 	[_faceGroups insertObject:faceGroup atIndex:index];
 }
@@ -84,7 +84,7 @@
 }
 
 
-- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOMFaceGroup *)faceGroup
+- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOAbstractFaceGroup *)faceGroup
 {
 	[_faceGroups replaceObjectAtIndex:index withObject:faceGroup];
 }

@@ -1,7 +1,7 @@
 /*
-	OOMOOMeshWriter.h
+	OOTextureSpecification.h
 	
-	OOMesh (Oolite 2.0) format exporter.
+	Description of a texture map for oomesh.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -26,10 +26,18 @@
 */
 
 #import "liboomeshbase.h"
-
-@protocol OOMProblemReportManager;
-@class OOMMesh;
+#import "JAPropertyListRepresentation.h"
 
 
-NSData *OOMDataFromMesh(OOMMesh *mesh, NSString *name, id <OOMProblemReportManager> issues);
-BOOL OOMWriteOOMesh(OOMMesh *mesh, NSString *path, id <OOMProblemReportManager> issues);
+@interface OOTextureSpecification: NSObject <JAPropertyListRepresentation>
+{
+@private
+	NSString						*_name;
+}
+
++ (id) textureSpecWithName:(NSString *)name;
+
+- (NSString *) textureMapName;
+- (void) setTextureMapName:(NSString *)value;
+
+@end

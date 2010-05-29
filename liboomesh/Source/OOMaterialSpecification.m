@@ -1,5 +1,5 @@
 /*
-	OOMMaterialSpecification.m
+	OOMaterialSpecification.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,12 +23,12 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMMaterialSpecification.h"
-#import "OOMTextureSpecification.h"
+#import "OOMaterialSpecification.h"
+#import "OOTextureSpecification.h"
 #import "CollectionUtils.h"
 
 
-@implementation OOMMaterialSpecification
+@implementation OOMaterialSpecification
 
 - (id) initWithMaterialKey:(NSString *)materialKey
 {
@@ -61,13 +61,13 @@
 }
 
 
-- (OOMTextureSpecification *) diffuseMap
+- (OOTextureSpecification *) diffuseMap
 {
 	return _diffuseMap;
 }
 
 
-- (void) setDiffuseMap:(OOMTextureSpecification *)texture
+- (void) setDiffuseMap:(OOTextureSpecification *)texture
 {
 	[_diffuseMap autorelease];
 	_diffuseMap = [texture retain];
@@ -76,7 +76,7 @@
 
 - (void) setDiffuseMapName:(NSString *)name
 {
-	[self setDiffuseMap:[OOMTextureSpecification textureSpecWithName:(NSString *)name]];
+	[self setDiffuseMap:[OOTextureSpecification textureSpecWithName:(NSString *)name]];
 }
 
 

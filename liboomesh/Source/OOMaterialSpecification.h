@@ -1,5 +1,7 @@
 /*
-	OOMTextureSpecification.m
+	OOMaterialSpecification.h
+	
+	Definition of a material for oomesh.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,43 +25,27 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMTextureSpecification.h"
+#import "liboomeshbase.h"
+#import "JAPropertyListRepresentation.h"
+
+@class OOTextureSpecification;
 
 
-@implementation OOMTextureSpecification
-
-+ (id) textureSpecWithName:(NSString *)name
+@interface OOMaterialSpecification: NSObject <JAPropertyListRepresentation>
 {
-	OOMTextureSpecification *result = [[self alloc] init];
-	[result setTextureMapName:name];
-	return [result autorelease];
-}
-
-
-- (void) dealloc
-{
-	DESTROY(_name);
+@private
+	NSString					*_materialKey;
 	
-	[super dealloc];
+	OOTextureSpecification		*_diffuseMap;
 }
 
+//	Material key: a string identifying the material. Must be unique per file.
+- (id) initWithMaterialKey:(NSString *)materialKey;
 
-- (NSString *) textureMapName
-{
-	return _name;
-}
+- (NSString *) materialKey;
 
-
-- (void) setTextureMapName:(NSString *)value
-{
-	[_name autorelease];
-	_name = [value copy];
-}
-
-
-- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
-{
-	return _name;
-}
+- (OOTextureSpecification *) diffuseMap;
+- (void) setDiffuseMap:(OOTextureSpecification *)texture;
+- (void) setDiffuseMapName:(NSString *)name;
 
 @end

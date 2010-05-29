@@ -1,12 +1,12 @@
 #import "liboomeshbase.h"
-#import "OOMProblemReportManager.h"
+#import "OOProblemReportManager.h"
 
-#import "OOMVertex.h"
-#import "OOMFace.h"
-#import "OOMFaceGroup.h"
-#import "OOMMesh.h"
+#import "OOAbstractVertex.h"
+#import "OOAbstractFace.h"
+#import "OOAbstractFaceGroup.h"
+#import "OOAbstractMesh.h"
 
-#import "OOMDATReader.h"
+#import "OODATReader.h"
 
-#import "OOMOOMeshReader.h"
-#import "OOMOOMeshWriter.h"
+#import "OOMeshReader.h"
+#import "OOMeshWriter.h"

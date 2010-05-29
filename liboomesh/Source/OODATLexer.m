@@ -1,5 +1,5 @@
 /*
-	OOMDATLexer.m
+	OODATLexer.m
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -23,29 +23,29 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMDATLexer.h"
-#import "OOMProblemReportManager.h"
+#import "OODATLexer.h"
+#import "OOProblemReportManager.h"
 
 
-typedef enum OOMDATLexerEndMode
+typedef enum OODATLexerEndMode
 {
 	kEndNormal,
 	kEndEOL
-} OOMDATLexerEndMode;
+} OODATLexerEndMode;
 
 
-@interface OOMDATLexer (Private)
+@interface OODATLexer (Private)
 
-- (BOOL)advanceWithEndMode:(OOMDATLexerEndMode)mode;
+- (BOOL)advanceWithEndMode:(OODATLexerEndMode)mode;
 
 - (NSString *)describeToken;
 
 @end
 
 
-@implementation OOMDATLexer
+@implementation OODATLexer
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ([inURL isFileURL])
 	{
@@ -53,27 +53,27 @@ typedef enum OOMDATLexerEndMode
 		NSData *data = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (data == nil)
 		{
-			OOMReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(ioIssues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
 		return [self initWithData:data issues:ioIssues];
 	}
 	else
 	{
-		[NSException raise:NSInvalidArgumentException format:@"OOMDATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
+		[NSException raise:NSInvalidArgumentException format:@"OODATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
 	}
 	
 	return nil;
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues
 {
 	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:ioIssues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ([inData length] == 0)
 	{
@@ -246,7 +246,7 @@ static inline BOOL IsLineEndChar(char c)
 }
 
 
-- (BOOL) advanceWithEndMode:(OOMDATLexerEndMode)mode
+- (BOOL) advanceWithEndMode:(OODATLexerEndMode)mode
 {
 	_cursor += _tokenLength;
 	NSAssert(_cursor <= _end, @"DAT lexer passed end of buffer");

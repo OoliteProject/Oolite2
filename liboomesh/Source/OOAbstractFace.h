@@ -1,5 +1,5 @@
-/*
-	OOMFace.m
+/*	
+	OOAbstractFace.h
 	
 	A face is simply a collection of three vertices. All other attributes
 	depend on context.
@@ -26,57 +26,27 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMFace.h"
-#import "OOMVertex.h"
+#import "liboomeshbase.h"
+
+@class OOAbstractVertex;
 
 
-@implementation OOMFace
-
-+ (id) faceWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2
+@interface OOAbstractFace: NSObject
 {
-	return [[[self alloc] initWithVertex0:vertex0 vertex1:vertex1 vertex2:vertex2] autorelease];
+@private
+	OOAbstractVertex			*_vertices[3];
 }
 
++ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
+			   vertex1:(OOAbstractVertex *)vertex1
+			   vertex2:(OOAbstractVertex *)vertex2;
++ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
 
-+ (id) faceWithVertices:(OOMVertex *[3])vertices
-{
-	return [[[self alloc] initWithVertices:vertices] autorelease];
-}
+- (id) initWithVertex0:(OOAbstractVertex *)vertex0
+			   vertex1:(OOAbstractVertex *)vertex1
+			   vertex2:(OOAbstractVertex *)vertex2;
+- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
 
-- (id) initWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2
-{
-	if ((self = [super init]))
-	{
-		_vertices[0] = vertex0 ? [vertex0 copy] : [OOMVertex new];
-		_vertices[1] = vertex1 ? [vertex1 copy] : [OOMVertex new];
-		_vertices[2] = vertex2 ? [vertex2 copy] : [OOMVertex new];
-	}
-	return self;
-}
-
-
-- (id) initWithVertices:(OOMVertex *[3])vertices
-{
-	NSParameterAssert(vertices != NULL);
-	return [self initWithVertex0:vertices[0] vertex1:vertices[1] vertex2:vertices[2]];
-}
-
-
-- (void) dealloc
-{
-	DESTROY(_vertices[0]);
-	DESTROY(_vertices[1]);
-	DESTROY(_vertices[2]);
-	
-	[super dealloc];
-}
-
-
-- (OOMVertex *) vertexAtIndex:(NSUInteger)index
-{
-	if (EXPECT_NOT(index >= 3))  return nil;
-	
-	return _vertices[index];
-}
+- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
 
 @end

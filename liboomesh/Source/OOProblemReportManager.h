@@ -1,5 +1,5 @@
 /*
-	OOMProblemReportManager.h
+	OOProblemReportManager.h
 	
 	Protocol for reporting multiple errors and other issues.
 	
@@ -29,17 +29,17 @@
 #import <stdarg.h>
 
 
-typedef enum OOMIssueType
+typedef enum OOProblemReportType
 {
 	kOOMProblemTypeInformative,
 	kOOMProblemTypeWarning,
 	kOOMProblemTypeError
-} OOMIssueType;
+} OOProblemReportType;
 
 
-@protocol OOMProblemReportManager <NSObject>
+@protocol OOProblemReportManager <NSObject>
 
-- (void) addProblemOfType:(OOMIssueType)type key:(NSString *)key message:(NSString *)message;
+- (void) addProblemOfType:(OOProblemReportType)type key:(NSString *)key message:(NSString *)message;
 
 //	If nil is returned, -[NSBundle localizedStringForKey:value:table:] is used.
 - (NSString *) localizedProblemStringForKey:(NSString *)string;
@@ -50,20 +50,20 @@ typedef enum OOMIssueType
 /*	These helper functions will look up keys using -localizedProblemStringForKey:
 	or -[NSBundle localizedStringForKey:value:table:] as appropriate.
  */
-void OOMReportIssueWithArgs(id <OOMProblemReportManager> probMgr, OOMIssueType type, NSString *key, NSString *formatKey, va_list args);
-void OOMReportIssue(id <OOMProblemReportManager> probMgr, OOMIssueType type, NSString *key, NSString *formatKey, ...);
+void OOReportIssueWithArgs(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *key, NSString *formatKey, va_list args);
+void OOReportIssue(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *key, NSString *formatKey, ...);
 
-void OOMReportInfo(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
-void OOMReportWarning(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
-void OOMReportError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
+void OOReportInfo(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
+void OOReportWarning(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
+void OOReportError(id <OOProblemReportManager> probMgr, NSString *key, NSString *formatKey, ...);
 
-void OOMReportNSError(id <OOMProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error);
+void OOReportNSError(id <OOProblemReportManager> probMgr, NSString *key, NSString *context, NSError *error);
 
-NSString *OOMLocalizeProblemString(id <OOMProblemReportManager> probMgr, NSString *key);
+NSString *OOLocalizeProblemString(id <OOProblemReportManager> probMgr, NSString *key);
 
 
-/*	Trivial implementation of OOMProblemReportManager.
+/*	Trivial implementation of OOProblemReportManager.
 	Problems are printed to stderr. Strings are not localized.
 */
-@interface OOMSimpleProblemReportManager: NSObject <OOMProblemReportManager>
+@interface OOSimpleProblemReportManager: NSObject <OOProblemReportManager>
 @end

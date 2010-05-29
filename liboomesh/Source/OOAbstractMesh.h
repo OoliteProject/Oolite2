@@ -1,5 +1,5 @@
 /*
-	OOMMesh.h
+	OOAbstractMesh.h
 	
 	A mesh is a list of face groups.
 	
@@ -27,10 +27,10 @@
 
 #import "liboomeshbase.h"
 
-@class OOMFaceGroup;
+@class OOAbstractFaceGroup;
 
 
-@interface OOMMesh: NSObject <NSFastEnumeration>
+@interface OOAbstractMesh: NSObject <NSFastEnumeration>
 {
 @private
 	NSMutableArray				*_faceGroups;
@@ -38,13 +38,13 @@
 
 - (NSUInteger) faceGroupCount;
 
-- (OOMFaceGroup *) faceGroupAtIndex:(NSUInteger)index;
+- (OOAbstractFaceGroup *) faceGroupAtIndex:(NSUInteger)index;
 
-- (void) addFaceGroup:(OOMFaceGroup *)faceGroup;
-- (void) insertFaceGroup:(OOMFaceGroup *)faceGroup atIndex:(NSUInteger)index;
+- (void) addFaceGroup:(OOAbstractFaceGroup *)faceGroup;
+- (void) insertFaceGroup:(OOAbstractFaceGroup *)faceGroup atIndex:(NSUInteger)index;
 - (void) removeLastFaceGroup;
 - (void) removeFaceGroupAtIndex:(NSUInteger)index;
-- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOMFaceGroup *)faceGroup;
+- (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOAbstractFaceGroup *)faceGroup;
 
 - (NSEnumerator *) faceGroupEnumerator;
 

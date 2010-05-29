@@ -2,8 +2,8 @@
 #import <OOMesh/CollectionUtils.h>
 
 
-static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues);
-static OOMMesh *ReadOOMesh(NSString *path, id <OOMProblemReportManager> issues);
+static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issues);
+static OOAbstractMesh *ReadOOMesh(NSString *path, id <OOProblemReportManager> issues);
 
 
 int main (int argc, const char * argv[])
@@ -20,15 +20,15 @@ int main (int argc, const char * argv[])
 	realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
 	path = [NSString stringWithUTF8String:buffer];
 	
-	id <OOMProblemReportManager> issues = [[OOMSimpleProblemReportManager new] autorelease];
-	OOMMesh *mesh = nil;
+	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
+	OOAbstractMesh *mesh = nil;
 	
 	NSString *ext = [[path pathExtension] lowercaseString];
 	if ([ext isEqualToString:@"dat"])  mesh = ReadDAT(path, issues);
 	else if ([ext isEqualToString:@"oomesh"])  mesh = ReadOOMesh(path, issues);
 	else
 	{
-		OOMReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
+		OOReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
 	}
 	
 	if (mesh != nil)
@@ -42,27 +42,27 @@ int main (int argc, const char * argv[])
 }
 
 
-static OOMMesh *ReadDAT(NSString *path, id <OOMProblemReportManager> issues)
+static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issues)
 {
-	OOMDATReader *reader = [[OOMDATReader alloc] initWithPath:path issues:issues];
+	OODATReader *reader = [[OODATReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return nil;
 	
 //	[reader setSmoothing:YES];
 	[reader setBrokenSmoothing:NO];
 	
-	OOMMesh *result = [reader mesh];
+	OOAbstractMesh *result = [reader mesh];
 	[reader release];
 	
 	return result;
 }
 
 
-static OOMMesh *ReadOOMesh(NSString *path, id <OOMProblemReportManager> issues)
+static OOAbstractMesh *ReadOOMesh(NSString *path, id <OOProblemReportManager> issues)
 {
-	OOMOOMeshReader *reader = [[OOMOOMeshReader alloc] initWithPath:path issues:issues];
+	OOMeshReader *reader = [[OOMeshReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return nil;
 	
-	OOMMesh *result = [reader mesh];
+	OOAbstractMesh *result = [reader mesh];
 	[reader release];
 	
 	return result;

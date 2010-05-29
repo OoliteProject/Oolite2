@@ -1,5 +1,5 @@
 /*
-	OOMOOMeshReader.m
+	OOMeshReader.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -24,15 +24,15 @@
 */
 
 
-#import "OOMOOMeshReader.h"
-#import "OOMOOMeshLexer.h"
-#import "OOMProblemReportManager.h"
+#import "OOMeshReader.h"
+#import "OOMeshLexer.h"
+#import "OOProblemReportManager.h"
 #import "OOCollectionExtractors.h"
-#import "OOMFloatArray.h"
-#import "OOMMaterialSpecification.h"
+#import "OOFloatArray.h"
+#import "OOMaterialSpecification.h"
 
 
-@interface OOMOOMeshReader (Private)
+@interface OOMeshReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
@@ -47,9 +47,9 @@
 @end
 
 
-@implementation OOMOOMeshReader
+@implementation OOMeshReader
 
-- (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues
 {
 	if ((self = [super init]))
 	{
@@ -58,7 +58,7 @@
 		
 		_vertexCount = NSNotFound;
 		
-		_lexer = [[OOMOOMeshLexer alloc] initWithPath:_path issues:_issues];
+		_lexer = [[OOMeshLexer alloc] initWithPath:_path issues:_issues];
 		if (_lexer == nil)  DESTROY(self);
 	}
 	
@@ -190,7 +190,7 @@
 		[_lexer consumeOptionalNewlines];
 		if (![_lexer getToken:kOOMeshTokenEOF])
 		{
-			OOMReportWarning(_issues, @"unknownData", @"\"%@\" contains unknown data after then end of the file.", [self priv_displayPath]);
+			OOReportWarning(_issues, @"unknownData", @"\"%@\" contains unknown data after then end of the file.", [self priv_displayPath]);
 		}
 	}
 	
@@ -202,7 +202,7 @@
 }
 
 
-- (OOMMesh *) mesh
+- (OOAbstractMesh *) mesh
 {
 	[self parse];
 	return nil;
@@ -211,12 +211,12 @@
 @end
 
 
-@implementation OOMOOMeshReader (Private)
+@implementation OOMeshReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOMLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
-	format = OOMLocalizeProblemString(_issues, format);
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
 	va_start(args, format);
@@ -236,7 +236,7 @@
 
 - (void) priv_reportMallocFailure
 {
-	OOMReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
+	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
 }
 
 
@@ -246,7 +246,7 @@
 }
 
 
-- (OOMFloatArray *) priv_readAttributeDataWithProperties:(NSDictionary *)properties name:(NSString *)name
+- (OOFloatArray *) priv_readAttributeDataWithProperties:(NSDictionary *)properties name:(NSString *)name
 {
 	id sizeObj = [properties objectForKey:@"size"];
 	if (EXPECT_NOT(![sizeObj isKindOfClass:[NSNumber class]]))
@@ -291,11 +291,11 @@
 		}
 	}
 	
-	return [OOMFloatArray arrayWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
+	return [OOFloatArray arrayWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
 }
 
 
-- (BOOL) priv_completeAttributeWithProperties:(NSDictionary *)properties data:(OOMFloatArray *)data name:(NSString *)name
+- (BOOL) priv_completeAttributeWithProperties:(NSDictionary *)properties data:(OOFloatArray *)data name:(NSString *)name
 {
 	return YES;
 }
@@ -367,7 +367,7 @@
 
 - (BOOL) priv_completeMaterialWithProperties:(NSDictionary *)properties data:(id)ignored name:(NSString *)name
 {
-	OOMMaterialSpecification *material = [[OOMMaterialSpecification alloc] initWithMaterialKey:name];
+	OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:name];
 	if (EXPECT_NOT(material == nil))  return NO;
 	
 	//	FIXME: set up material.
@@ -418,7 +418,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		if (![_unknownSegmentTypes containsObject:type])
 		{
 			[_unknownSegmentTypes addObject:type];
-			OOMReportWarning(_issues, @"unknownSegmentType", @"Unknown segment of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayPath]);
+			OOReportWarning(_issues, @"unknownSegmentType", @"Unknown segment of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayPath]);
 		}
 		// We still need to parse it to find the end reliably.
 	}

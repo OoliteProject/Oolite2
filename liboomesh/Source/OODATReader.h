@@ -1,5 +1,5 @@
 /*
-	OOMDATReader.h
+	OODATReader.h
 	
 	Parser for Oolite 1.x DAT files.
 	
@@ -28,18 +28,18 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol OOMProblemReportManager;
-@class OOMVertex, OOMDATLexer, OOMMesh;
+@protocol OOProblemReportManager;
+@class OOAbstractVertex, OODATLexer, OOAbstractMesh;
 
 
-@interface OOMDATReader: NSObject
+@interface OODATReader: NSObject
 {
 @private
-	id <OOMProblemReportManager>	_issues;
+	id <OOProblemReportManager>	_issues;
 	NSString						*_path;
-	OOMDATLexer						*_lexer;
+	OODATLexer						*_lexer;
 	
-	OOMMesh							*_mesh;
+	OOAbstractMesh							*_mesh;
 	
 	unsigned						_smoothing: 1,
 									_brokenSmoothing: 1,
@@ -54,16 +54,16 @@
 	
 	// ivars used only during parsing.
 	struct RawDATTriangle			*_rawTriangles;
-	OOMVertex						**_fileVertices;
+	OOAbstractVertex						**_fileVertices;
 	struct VertexFaceRef			*_faceRefs;
 	NSMutableArray					*_materialKeys;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOMProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues;
 
 - (void) parse;
 
-- (OOMMesh *) mesh;
+- (OOAbstractMesh *) mesh;
 
 /*	Smoothing:
 	Before parsing, this determines whether smoothing should be applied to

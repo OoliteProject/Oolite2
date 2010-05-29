@@ -1,9 +1,7 @@
 /*
-	OOMFaceGroup.h
+	OOMeshReader.h
 	
-	A face group represents a list of faces to be drawn with the same state.
-	In rendering terms, it corresponds to an element array, while the state
-	is specified by a material.
+	Parser for Oolite 2.x oomesh files.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -27,35 +25,32 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
 
-@class OOMFace, OOMMaterialSpecification;
+#import <Foundation/Foundation.h>
+
+@protocol OOProblemReportManager;
+@class OOAbstractVertex, OOMeshLexer, OOAbstractMesh;
 
 
-@interface OOMFaceGroup: NSObject <NSFastEnumeration>
+@interface OOMeshReader: NSObject
 {
 @private
-	NSString					*_name;
-	NSMutableArray				*_faces;
-	OOMMaterialSpecification	*_material;
+	id <OOProblemReportManager>		_issues;
+	NSString						*_path;
+	OOMeshLexer						*_lexer;
+	
+	NSString						*_meshName;
+	NSUInteger						_vertexCount;
+	
+	// ivars used only during parsing.
+	NSMutableSet					*_unknownSegmentTypes;
+	NSMutableDictionary				*_materials;
 }
 
-- (NSString *) name;
-- (void) setName:(NSString *)name;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues;
 
-- (OOMMaterialSpecification *) material;
-- (void) setMaterial:(OOMMaterialSpecification *)material;
+- (void) parse;
 
-- (NSUInteger) faceCount;
-
-- (OOMFace *) faceAtIndex:(NSUInteger)index;
-
-- (void) addFace:(OOMFace *)face;
-- (void) insertFace:(OOMFace *)face atIndex:(NSUInteger)index;
-- (void) removeLastFace;
-- (void) removeFaceAtIndex:(NSUInteger)index;
-- (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOMFace *)face;
-
-- (NSEnumerator *) faceEnumerator;
+- (OOAbstractMesh *) mesh;
 
 @end

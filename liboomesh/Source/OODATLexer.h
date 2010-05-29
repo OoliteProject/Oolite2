@@ -1,12 +1,11 @@
-/*	
-	OOMFace.h
+/*
+	OODATLexer.h
 	
-	A face is simply a collection of three vertices. All other attributes
-	depend on context.
+	Token scanner for DAT files.
 	
 	
-	Copyright © 2010 Jens Ayton.
-	
+	Copyright © 2010 Jens Ayton
+
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
@@ -16,7 +15,7 @@
 	
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
-	
+
 	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -26,23 +25,39 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
+#import <Foundation/Foundation.h>
+#import <stdio.h>
 
-@class OOMVertex;
+@protocol OOProblemReportManager;
 
 
-@interface OOMFace: NSObject
+@interface OODATLexer: NSObject
 {
 @private
-	OOMVertex			*_vertices[3];
+	const char				*_cursor;
+	const char				*_end;
+	size_t					_tokenLength;
+	NSData					*_data;
+	unsigned				_lineNumber;
+	NSString				*_tokenString;
 }
 
-+ (id) faceWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2;
-+ (id) faceWithVertices:(OOMVertex *[3])vertices;
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)ioIssues;
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)ioIssues;
 
-- (id) initWithVertex0:(OOMVertex *)vertex0 vertex1:(OOMVertex *)vertex1 vertex2:(OOMVertex *)vertex2;
-- (id) initWithVertices:(OOMVertex *[3])vertices;
+- (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
-- (OOMVertex *) vertexAtIndex:(NSUInteger)index;
+- (NSString *) currentTokenString;
+
+- (NSString *) nextToken;
+
+// Somewhat more efficient than comparing an NSString.
+- (BOOL) expectLiteral:(const char *)literal;
+
+- (BOOL) readInteger:(NSUInteger *)outInt;
+- (BOOL) readReal:(float *)outReal;
+- (BOOL) readString:(NSString **)outString;
+- (BOOL) readUntilNewline:(NSString **)outString;
 
 @end

@@ -1,5 +1,5 @@
 /*
-	OOMFloatArray.h
+	OOFloatArray.h
 	
 	An immutable array of floats.
 	
@@ -7,7 +7,7 @@
 	methods, it will return NSNumber objects created on the fly. Using
 	-floatAtIndex: is obviously more efficient.
 	
-	OOMFloatArray also implements optimized versions of the
+	OOFloatArray also implements optimized versions of the
 	OOCollectionExtractors methods.
 	
 	
@@ -35,7 +35,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface OOMFloatArray: NSArray
+@interface OOFloatArray: NSArray
 
 + (id) newWithArray:(NSArray *)array;
 + (id) arrayWithArray:(NSArray *)array;
@@ -66,4 +66,4 @@
 
 
 #define $floatarray(FLOATS...)	({	float values[] = {FLOATS}; \
-									[OOMFloatArray arrayWithFloats:values count:sizeof(values)/sizeof(float)]; })
+									[OOFloatArray arrayWithFloats:values count:sizeof(values)/sizeof(float)]; })

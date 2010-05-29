@@ -1,14 +1,14 @@
 /*
-	OOMVertex.h
+	OOAbstractVertex.h
 	
 	A vertex is a collection of named attributes. Each attribute's value is a
 	list of numbers.
 	
 	For convenience, a number of common vertex attributes are defined.
 	
-	OOMVertex forms a class cluster with mutable and immutable variants. As
-	with other mutable-copiable class clusters, OOMVertex should be copied
-	rather than retained when taken as a value.
+	OOAbstractVertex forms a class cluster with mutable and immutable variants.
+	As with other mutable-copiable class clusters, OOAbstractVertex should be
+	copied rather than retained when taken as a value.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -34,17 +34,17 @@
 
 #import "liboomeshbase.h"
 
-@class OOMFloatArray;
+@class OOFloatArray;
 
 
-@interface OOMVertex: NSObject <NSCopying, NSMutableCopying>
+@interface OOAbstractVertex: NSObject <NSCopying, NSMutableCopying>
 
 - (NSDictionary *) allAttributes;
 
 @end
 
 
-@interface OOMVertex (Creation)
+@interface OOAbstractVertex (Creation)
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes;
 - (id) initWithAttributes:(NSDictionary *)attributes;
@@ -54,9 +54,9 @@
 @end
 
 
-@interface OOMVertex (Conveniences)
+@interface OOAbstractVertex (Conveniences)
 
-- (OOMFloatArray *) attributeForKey:(NSString *)key;
+- (OOFloatArray *) attributeForKey:(NSString *)key;
 - (NSArray *) allAttributeKeys;
 
 - (NSEnumerator *) attributeKeyEnumerator;
@@ -69,33 +69,33 @@
 - (Vector) attributeAsVectorForKey:(NSString *)key;
 
 // Create a new, immutable vertex by adding/removing attributes.
-- (OOMVertex *) vertexByAddingAttributes:(NSDictionary *)attributes;
-- (OOMVertex *) vertexByAddingAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key;
-- (OOMVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
+- (OOAbstractVertex *) vertexByAddingAttributes:(NSDictionary *)attributes;
+- (OOAbstractVertex *) vertexByAddingAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
+- (OOAbstractVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
 
 
 @end
 
 
-@interface OOMVertex (CommonAttributes)
+@interface OOAbstractVertex (CommonAttributes)
 
-- (Vector) position;		// kOOMPositionAttributeKey
-- (Vector) normal;			// kOOMNormalAttributeKey
-- (Vector) tangent;			// kOOMTangentAttributeKey
-- (Vector2D) texCoords;		// kOOMTexCoordsAttributeKey
-- (Vector) texCoords3D;		// Also kOOMTexCoordsAttributeKey
-
-@end
-
-
-@interface OOMMutableVertex: OOMVertex
-
-- (void) setAttribute:(OOMFloatArray *)attribute forKey:(NSString *)key;
+- (Vector) position;		// kOOPositionAttributeKey
+- (Vector) normal;			// kOONormalAttributeKey
+- (Vector) tangent;			// kOOTangentAttributeKey
+- (Vector2D) texCoords;		// kOOTexCoordsAttributeKey
+- (Vector) texCoords3D;		// Also kOOTexCoordsAttributeKey
 
 @end
 
 
-@interface OOMMutableVertex (Conveniences)
+@interface OOMutableAbstractVertex: OOAbstractVertex
+
+- (void) setAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
+
+@end
+
+
+@interface OOMutableAbstractVertex (Conveniences)
 
 - (void) removeAttributeForKey:(NSString *)key;
 - (void) removeAllAttributes;
@@ -109,48 +109,48 @@
 @end
 
 
-@interface OOMMutableVertex (CommonAttributes)
+@interface OOMutableAbstractVertex (CommonAttributes)
 
-- (void) setPosition:(Vector)value;		// kOOMPositionAttributeKey
-- (void) setNormal:(Vector)value;		// kOOMNormalAttributeKey
-- (void) setTangent:(Vector)value;		// kOOMTangentAttributeKey
-- (void) setTexCoords:(Vector2D)value;	// kOOMTexCoordsAttributeKey
-- (void) setTexCoords3D:(Vector)value;	// Also kOOMTexCoordsAttributeKey
+- (void) setPosition:(Vector)value;		// kOOPositionAttributeKey
+- (void) setNormal:(Vector)value;		// kOONormalAttributeKey
+- (void) setTangent:(Vector)value;		// kOOTangentAttributeKey
+- (void) setTexCoords:(Vector2D)value;	// kOOTexCoordsAttributeKey
+- (void) setTexCoords3D:(Vector)value;	// Also kOOTexCoordsAttributeKey
 
 @end
 
 
-extern NSString * const kOOMPositionAttributeKey;	// "position"
-extern NSString * const kOOMNormalAttributeKey;		// "normal"
-extern NSString * const kOOMTangentAttributeKey;	// "tangent"
-extern NSString * const kOOMTexCoordsAttributeKey;	// "texCoords"
+extern NSString * const kOOPositionAttributeKey;	// "position"
+extern NSString * const kOONormalAttributeKey;		// "normal"
+extern NSString * const kOOTangentAttributeKey;		// "tangent"
+extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
 
 
-@interface NSArray (OOMVertex)
+@interface NSArray (OOAbstractVertex)
 
-- (OOMVertex *) oom_vertexAtIndex:(NSUInteger)i;
+- (OOAbstractVertex *) oo_abstractVertexAtIndex:(NSUInteger)i;
 
 @end
 
 
 // Convert attributes to/from more convenient representations.
-OOMFloatArray *OOMArrayFromDouble(double value);
-OOMFloatArray *OOMArrayFromPoint(NSPoint value);
-OOMFloatArray *OOMArrayFromVector2D(Vector2D value);
-OOMFloatArray *OOMArrayFromVector(Vector value);
+OOFloatArray *OOFloatArrayFromDouble(double value);
+OOFloatArray *OOFloatArrayFromPoint(NSPoint value);
+OOFloatArray *OOFloatArrayFromVector2D(Vector2D value);
+OOFloatArray *OOFloatArrayFromVector(Vector value);
 
 // These will zero-fill if source is too short.
-double OOMDoubleFromArray(NSArray *array);
-NSPoint OOMPointFromArray(NSArray *array);
-Vector2D OOMVector2DFromArray(NSArray *array);
-Vector OOMVectorFromArray(NSArray *array);
+double OODoubleFromArray(NSArray *array);
+NSPoint OOPointFromArray(NSArray *array);
+Vector2D OOVector2DFromArray(NSArray *array);
+Vector OOVectorFromArray(NSArray *array);
 
 
 /*	Sort in canonical order for vertex attributes:
 	position, normal, tangent, texCoords, anything else by caseInsensitiveCompare.
 */
-@interface NSString (OOMVertex)
+@interface NSString (OOAbstractVertex)
 
-- (NSComparisonResult) oom_compareByVertexAttributeOrder:(NSString *)other;
+- (NSComparisonResult) oo_compareByVertexAttributeOrder:(NSString *)other;
 
 @end

@@ -48,4 +48,6 @@
 
 - (NSEnumerator *) faceGroupEnumerator;
 
+- (NSDictionary *) vertexSchemaGettingHomogenity:(BOOL *)outIsHomogeneous;
+
 @end

@@ -33,7 +33,7 @@ int main (int argc, const char * argv[])
 	
 	if (mesh != nil)
 	{
-//		OOMWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
+		OOWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
 	}
 
 	

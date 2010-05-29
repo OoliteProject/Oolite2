@@ -37,7 +37,9 @@
 @private
 	NSString					*_name;
 	NSMutableArray				*_faces;
-	OOMaterialSpecification	*_material;
+	OOMaterialSpecification		*_material;
+	NSDictionary				*_vertexSchema;
+	BOOL						_homogeneous;
 }
 
 - (NSString *) name;
@@ -58,4 +60,17 @@
 
 - (NSEnumerator *) faceEnumerator;
 
+/*
+	The vertex schema is a dictionary whose keys are attribute names and whose
+	values are numbers (sizes). This specifies the maximum size for any
+	attribute across all vertices.
+	A vertex schema is homogeneous if all vertices fulfill the schema
+	completely.
+*/
+- (NSDictionary *) vertexSchema;
+- (BOOL) vertexSchemaIsHomogeneous;
+
 @end
+
+
+NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b);

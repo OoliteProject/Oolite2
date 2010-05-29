@@ -28,6 +28,16 @@
 
 #import "OOAbstractFaceGroup.h"
 #import "OOAbstractFace.h"
+#import "OOAbstractVertex.h"
+#import "CollectionUtils.h"
+#import "OOCollectionExtractors.h"
+
+
+@interface OOAbstractFaceGroup (Private)
+
+- (void) priv_updateSchemaForFace:(OOAbstractFace *)face;
+
+@end
 
 
 @implementation OOAbstractFaceGroup
@@ -45,7 +55,8 @@
 
 - (void) dealloc
 {
-	[_faces release];
+	DESTROY(_faces);
+	DESTROY(_vertexSchema);
 	
 	[super dealloc];
 }
@@ -92,30 +103,36 @@
 - (void) addFace:(OOAbstractFace *)face
 {
 	[_faces addObject:face];
+	[self priv_updateSchemaForFace:face];
 }
 
 
 - (void) insertFace:(OOAbstractFace *)face atIndex:(NSUInteger)index
 {
 	[_faces insertObject:face atIndex:index];
+	[self priv_updateSchemaForFace:face];
 }
 
 
 - (void) removeLastFace
 {
+	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeLastObject];
 }
 
 
 - (void) removeFaceAtIndex:(NSUInteger)index
 {
+	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeObjectAtIndex:index];
 }
 
 
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face
 {
+	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces replaceObjectAtIndex:index withObject:face];
+	[self priv_updateSchemaForFace:face];
 }
 
 
@@ -125,9 +142,86 @@
 }
 
 
-- (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
+- (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state
+								   objects:(id *)stackbuf
+									 count:(NSUInteger)len
 {
 	return [_faces countByEnumeratingWithState:state objects:stackbuf count:len];
 }
 
+
+- (NSDictionary *) vertexSchema
+{
+	if (_vertexSchema == nil)
+	{
+		OOAbstractFace *face = nil;
+		foreach (face, _faces)
+		{
+			[self priv_updateSchemaForFace:face];
+		}
+	}
+	
+	return [NSDictionary dictionaryWithDictionary:_vertexSchema];
+}
+
+
+- (BOOL) vertexSchemaIsHomogeneous
+{
+	return _homogeneous && _vertexSchema != nil;
+}
+
+
+- (void) homogenizeSchema
+{
+	// FIXME
+}
+
+
+- (void) priv_updateSchemaForFace:(OOAbstractFace *)face
+{
+	for (unsigned i = 0; i < 3; i++)
+	{
+		NSDictionary *schema = [[face vertexAtIndex:i] schema];
+		if (_vertexSchema != nil)
+		{
+			if (![schema isEqualToDictionary:_vertexSchema])
+			{
+				_homogeneous = NO;
+				NSDictionary *oldSchema = _vertexSchema;
+				_vertexSchema = [[NSDictionary alloc] initWithDictionary:OOUnionOfSchemata(_vertexSchema, schema)];
+				[oldSchema release];
+			}
+		}
+		else
+		{
+			_homogeneous = YES;
+			_vertexSchema = [[NSDictionary alloc] initWithDictionary:schema];
+		}
+	}
+}
+
 @end
+
+
+NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b)
+{
+	if ([a isEqualToDictionary:b])  return a;
+	
+	NSMutableSet *mKeys = [NSMutableSet setWithArray:[a allKeys]];
+	[mKeys addObjectsFromArray:[b allKeys]];
+	NSSet *keys = [NSSet setWithSet:mKeys];
+	
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[keys count]];
+	NSString *key = nil;
+	foreach (key, keys)
+	{
+		if (EXPECT_NOT(![key isKindOfClass:[NSString class]]))  return nil;
+		
+		NSUInteger aVal = [a oo_unsignedIntegerForKey:key];
+		NSUInteger bVal = [b oo_unsignedIntegerForKey:key];
+		
+		[result setObject:[NSNumber numberWithUnsignedInteger:(aVal >= bVal) ? aVal : bVal] forKey:key];
+	}
+	
+	return result;
+}

@@ -73,6 +73,8 @@
 - (OOAbstractVertex *) vertexByAddingAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
 - (OOAbstractVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
 
+// See comment on vertex schemata in OOAbstractFaceGroup.h.
+- (NSDictionary *) schema;
 
 @end
 

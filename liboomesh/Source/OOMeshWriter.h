@@ -31,5 +31,5 @@
 @class OOAbstractMesh;
 
 
-NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues);
-BOOL OOMWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);
+NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues);
+BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);

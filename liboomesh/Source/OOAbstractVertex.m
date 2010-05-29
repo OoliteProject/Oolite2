@@ -297,6 +297,19 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	return [OOAbstractVertex vertexWithAttributes:newAttrs];
 }
 
+
+- (NSDictionary *) schema
+{
+	NSDictionary *attrs = [self allAttributes];
+	NSMutableDictionary *schema = [NSMutableDictionary dictionaryWithCapacity:[attrs count]];
+	NSString *key = nil;
+	foreachkey (key, attrs)
+	{
+		[schema setObject:[NSNumber numberWithUnsignedInteger:[[attrs objectForKey:key] count]] forKey:key];
+	}
+	return schema;
+}
+
 @end
 
 

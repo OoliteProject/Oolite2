@@ -25,6 +25,7 @@
 
 #import "OOAbstractMesh.h"
 #import "OOAbstractFaceGroup.h"
+#import "CollectionUtils.h"
 
 
 @implementation OOAbstractMesh
@@ -99,6 +100,29 @@
 - (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
 	return [_faceGroups countByEnumeratingWithState:state objects:stackbuf count:len];
+}
+
+
+- (NSDictionary *) vertexSchemaGettingHomogenity:(BOOL *)outIsHomogeneous
+{
+	NSDictionary *mergedSchema = nil, *groupSchema = nil;
+	BOOL homogeneous = YES;
+	
+	OOAbstractFaceGroup *group = nil;
+	foreach (group, _faceGroups)
+	{
+		groupSchema = [group vertexSchema];
+		homogeneous = homogeneous && [group vertexSchemaIsHomogeneous];
+		if (mergedSchema == nil)  mergedSchema = groupSchema;
+		else if (![groupSchema isEqualToDictionary:mergedSchema])
+		{
+			homogeneous = NO;
+			mergedSchema = OOUnionOfSchemata(mergedSchema, groupSchema);
+		}
+	}
+	
+	if (outIsHomogeneous != NULL)  *outIsHomogeneous = homogeneous;
+	return [NSDictionary dictionaryWithDictionary:mergedSchema];
 }
 
 @end

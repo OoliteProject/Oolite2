@@ -214,7 +214,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 - (float) floatAtIndex:(NSUInteger)index
 {
 	if (index < [self count])  return [self priv_floatArray][index];
-	return  NAN;
+	return  0.0f;
 }
 
 
@@ -327,7 +327,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 - (float) floatAtIndex:(NSUInteger)index
 {
 	if (index < _count)  return ((float *)object_getIndexedIvars(self))[index];
-	return  NAN;
+	return  0.0f;
 }
 
 

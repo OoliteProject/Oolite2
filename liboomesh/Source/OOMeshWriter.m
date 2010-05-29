@@ -39,7 +39,7 @@
 
 
 /*
-	OOMWriteToOOMesh
+	OOWriteToOOMesh
 	Property for writing to OOMesh files. This is implemented for the property
 	list types that are supported in meshes: NSString, NSNumber, NSArray and
 	NSDictionary.
@@ -49,9 +49,9 @@
 	(e.g. writing the data entries of attributes and groups in an appropriate
 	number of columns).
 */
-@protocol OOMWriteToOOMesh
+@protocol OOWriteToOOMesh
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText indentLevel:(NSUInteger)indentLevel afterPunctuation:(BOOL)afterPunct;
+- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText indentLevel:(NSUInteger)indentLevel afterPunctuation:(BOOL)afterPunct;
 
 @end
 
@@ -59,14 +59,14 @@
 static NSString *EscapeString(NSString *string);
 
 
-BOOL OOMWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
+BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
 	NSError *error = nil;
 	NSString *name = [path lastPathComponent];
 	
-	NSData *data = OOMDataFromMesh(mesh, name, issues);
+	NSData *data = OODataFromMesh(mesh, name, issues);
 	OK = (data != nil);
 	
 	if (OK)
@@ -83,7 +83,7 @@ BOOL OOMWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMan
 }
 
 
-NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues)
+NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues)
 {
 	if (mesh == nil)  return nil;
 	
@@ -102,7 +102,6 @@ NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemRepor
 	OOMaterialSpecification *material = nil;
 	
 	//	Unique vertices across groups, and count 'em.
-	//	FIXME: ensure all vertices have same attributes. Should be public utility method.
 	foreach (faceGroup, mesh)
 	{
 		foreach (face, faceGroup)
@@ -175,7 +174,7 @@ NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemRepor
 		id materialProperties = [[materials objectForKey:materialKey] ja_propertyListRepresentation];
 		if (materialProperties == nil)  materialProperties = [NSDictionary dictionary];
 		
-		[materialProperties oom_writeToOOMesh:result
+		[materialProperties oo_writeToOOMesh:result
 								  indentLevel:1
 							 afterPunctuation:YES];
 		
@@ -188,12 +187,12 @@ NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemRepor
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		OOAbstractVertex *protoVertex = [vertices objectAtIndex:0];
-		NSArray *attributeKeys = [[protoVertex allAttributeKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
+		NSDictionary *vertexSchema = [mesh vertexSchemaGettingHomogenity:NULL];	
+		NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 		NSString *key = nil;
 		foreach (key, attributeKeys)
 		{
-			NSUInteger i, count = [[protoVertex attributeForKey:key] count];
+			NSUInteger i, count = [vertexSchema oo_unsignedIntegerForKey:key];
 			
 			[result appendFormat:@"\t\n\tattribute \"%@\":\n\t{\n\t\tsize: %lu\n\t\tdata:\n\t\t[\n", EscapeString(key), (unsigned long)count];
 			
@@ -220,11 +219,11 @@ NSData *OOMDataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemRepor
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		[result appendString:@"\t\n\tgroup"];
-		if ([faceGroup name] != nil)
-		{
-			[result appendFormat:@" \"%@\"", EscapeString([faceGroup name])];
-		}
+		NSString *name = [faceGroup name];
+		if (name == nil)  name = [[faceGroup material] materialKey];
+		if (name == nil)  name = @"<unnamed>";
+		
+		[result appendFormat:@"\t\n\tgroup \"%@\"", EscapeString([faceGroup name])];
 		[result appendFormat:@":\n\t{\n\t\tfaceCount: %lu\n\t\tdata:\n\t\t[\n", [faceGroup faceCount]];
 		
 		foreach (face, faceGroup)
@@ -360,22 +359,22 @@ static NSString *IndentTabs(NSUInteger count)
 }
 
 
-@interface NSString (OOMWriteToOOMesh) <OOMWriteToOOMesh>
+@interface NSString (OOWriteToOOMesh) <OOWriteToOOMesh>
 @end
 
-@interface NSNumber (OOMWriteToOOMesh) <OOMWriteToOOMesh>
+@interface NSNumber (OOWriteToOOMesh) <OOWriteToOOMesh>
 @end
 
-@interface NSArray (OOMWriteToOOMesh) <OOMWriteToOOMesh>
+@interface NSArray (OOWriteToOOMesh) <OOWriteToOOMesh>
 @end
 
-@interface NSDictionary (OOMWriteToOOMesh) <OOMWriteToOOMesh>
+@interface NSDictionary (OOWriteToOOMesh) <OOWriteToOOMesh>
 @end
 
 
-@implementation NSString (OOMWriteToOOMesh)
+@implementation NSString (OOWriteToOOMesh)
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
+- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
 			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
@@ -415,9 +414,9 @@ static BOOL IsValidDictChar(unichar c)
 @end
 
 
-@implementation NSNumber (OOMWriteToOOMesh)
+@implementation NSNumber (OOWriteToOOMesh)
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
+- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
 			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
@@ -442,7 +441,7 @@ enum
 };
 
 
-@implementation NSArray (OOMWriteToOOMesh)
+@implementation NSArray (OOWriteToOOMesh)
 
 - (BOOL) oom_isSimpleArray
 {
@@ -480,7 +479,7 @@ enum
 }
 
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
+- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
 			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
@@ -516,7 +515,7 @@ enum
 			}
 			[oomeshText appendString:indent2];
 			
-			[object oom_writeToOOMesh:oomeshText
+			[object oo_writeToOOMesh:oomeshText
 						  indentLevel:indentLevel + 1
 					 afterPunctuation:NO];
 		}
@@ -535,7 +534,7 @@ enum
 @end
 
 
-@implementation NSDictionary (OOMWriteToOOMesh)
+@implementation NSDictionary (OOWriteToOOMesh)
 
 - (BOOL) oom_isSimpleDictionary
 {
@@ -576,7 +575,7 @@ enum
 }
 
 
-- (void) oom_writeToOOMesh:(NSMutableString *)oomeshText
+- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
 			   indentLevel:(NSUInteger)indentLevel
 		  afterPunctuation:(BOOL)afterPunct
 {
@@ -624,7 +623,7 @@ enum
 			}
 			[oomeshText appendString:@":"];
 			
-			[[self objectForKey:key] oom_writeToOOMesh:oomeshText
+			[[self objectForKey:key] oo_writeToOOMesh:oomeshText
 										   indentLevel:indentLevel + 1
 									  afterPunctuation:YES];
 		}

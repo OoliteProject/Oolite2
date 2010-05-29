@@ -150,7 +150,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	if ([attributes count] != 0)
 	{
 		DESTROY(self);
-		return [[[self class] vertexWithAttributes:attributes] retain];
+		return [[OOAbstractVertex vertexWithAttributes:attributes] retain];
 	}
 	else
 	{

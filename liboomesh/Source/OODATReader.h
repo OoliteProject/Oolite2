@@ -63,7 +63,7 @@
 
 - (void) parse;
 
-- (OOAbstractMesh *) mesh;
+- (OOAbstractMesh *) abstractMesh;
 
 /*	Smoothing:
 	Before parsing, this determines whether smoothing should be applied to

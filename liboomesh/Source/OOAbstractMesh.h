@@ -34,7 +34,11 @@
 {
 @private
 	NSMutableArray				*_faceGroups;
+	NSString					*_name;
 }
+
+- (NSString *) name;
+- (void) setName:(NSString *)name;
 
 - (NSUInteger) faceGroupCount;
 
@@ -48,6 +52,7 @@
 
 - (NSEnumerator *) faceGroupEnumerator;
 
-- (NSDictionary *) vertexSchemaGettingHomogenity:(BOOL *)outIsHomogeneous;
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
+- (NSDictionary *) vertexSchema;
 
 @end

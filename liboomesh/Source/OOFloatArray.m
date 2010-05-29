@@ -33,6 +33,9 @@ typedef uint32_t FloatSizedInt;
 
 @interface OOFloatArray (Private)
 
+// Designated initializer.
+- (id) priv_init;
+
 - (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other;
 
 //	Subclass responsibility:
@@ -132,7 +135,13 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 + (id) array
 {
-	return [self newWithFloats:NULL count:0];
+	return [self arrayWithFloats:NULL count:0];
+}
+
+
+- (id) init
+{
+	return [self initWithFloats:NULL count:0];
 }
 
 
@@ -169,7 +178,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 - (id) initWithFloats:(float *)values count:(NSUInteger)count
 {
 	[self release];
-	return [[self class] priv_newWithFloats:(float *)values count:count];
+	return [OOMInlineFloatArray priv_newWithFloats:(float *)values count:count];
 }
 
 
@@ -255,10 +264,25 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	return [super isEqual:other];
 }
 
+
+- (NSArray *) subarrayWithRange:(NSRange)range
+{
+	if (EXPECT_NOT(range.location + range.length > [self count]))  return [super subarrayWithRange:range];
+	
+	float *array = [self priv_floatArray];
+	return [OOFloatArray arrayWithFloats:array + range.location count:range.length];
+}
+
 @end
 
 
 @implementation OOFloatArray (Private)
+
+- (id) priv_init
+{
+	return [super init];
+}
+
 
 - (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other
 {
@@ -291,7 +315,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 + (id) priv_newWithCapacity:(NSUInteger)count
 {
-	OOMInlineFloatArray *result = [NSAllocateObject(self, count * sizeof (float), NULL) init];
+	OOMInlineFloatArray *result = [NSAllocateObject(self, count * sizeof (float), NULL) priv_init];
 	if (result != nil)  result->_count = count;
 	return result;
 }
@@ -363,7 +387,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
-	if ((self = [super init]))
+	if ((self = [super priv_init]))
 	{
 		_count = count;
 		if (EXPECT_NOT(_count != count))

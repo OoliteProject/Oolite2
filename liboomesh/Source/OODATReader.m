@@ -99,6 +99,8 @@ enum
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
+- (NSString *) priv_displayName;
+
 - (BOOL) priv_checkNormalsAndAdjustWinding;
 - (BOOL) priv_generateFaceTangents;
 - (BOOL) priv_calculateVertexNormalsAndTangents;
@@ -111,11 +113,6 @@ enum
 - (BOOL) priv_parseNAMES;
 - (BOOL) priv_parseNORMALS;
 - (BOOL) priv_parseTANGENTS;
-
-/*	Dump a copy of the file. If smoothing is used, explict normals and
-	tangents are used. Currently, this does not take smooth groups into account.
-*/
-- (void) priv_dumpDAT;
 
 @end
 
@@ -294,7 +291,7 @@ enum
 }
 
 
-- (OOAbstractMesh *) mesh
+- (OOAbstractMesh *) abstractMesh
 {
 	[self parse];
 	return _mesh;
@@ -359,7 +356,7 @@ enum
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [[NSFileManager defaultManager] displayNameAtPath:_path], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
 	[_issues addProblemOfType:kOOMProblemTypeError key:@"parseError" message:message];
 }
 
@@ -372,7 +369,13 @@ enum
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
+	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [self priv_displayName]);
+}
+
+
+- (NSString *) priv_displayName
+{
+	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
 
 
@@ -721,6 +724,7 @@ enum
 		Vector tangent = vector_subtract(vector_multiply_scalar(vProjAB, dsAC), vector_multiply_scalar(vProjAC, dsAB));
 		//	Rotate 90 degrees. Done this way because I'm too lazy to grok the code above.
 		triangle->tangent = cross_product(nA, tangent);
+		CleanVector(&triangle->tangent);
 	}
 	
 	return YES;
@@ -928,6 +932,10 @@ enum
 #endif
 	_mesh = [OOAbstractMesh new];
 	
+	NSString *name = [self priv_displayName];
+	if ([[[name pathExtension] lowercaseString] isEqualToString:@"dat"])  name = [name stringByDeletingPathExtension];
+	[_mesh setName:name];
+	
 	/*	This is technically O(n * m) where n is face count and m is material
 		count, but given that m is small on any practical model (Oolite 1.x
 		doesn't allow more than 7) it's not a big deal.
@@ -1001,17 +1009,7 @@ enum
 														  forKey:kOOTexCoordsAttributeKey];
 					}
 					
-#if UNIQUE_VERTICES
-					// Save uniqued vertex. Slow! Also doesn't work.
-					triVertices[vIter] = [uniquedVertices member:vertex];
-					if (triVertices[vIter] == nil)
-					{
-						[uniquedVertices addObject:vertex];
-						triVertices[vIter] = vertex;
-					}
-#else
 					triVertices[vIter] = vertex;
-#endif
 				}
 				
 				[faceGroup addFace:[OOAbstractFace faceWithVertices:triVertices]];
@@ -1035,75 +1033,6 @@ enum
 	[pool drain];
 	
 	return YES;
-}
-
-
-- (void) priv_dumpDAT
-{
-	NSString *path = [[_path stringByDeletingPathExtension] stringByAppendingString:@"_debugdump.dat"];
-	FILE *file = fopen([path UTF8String], "w");
-	if (file == NULL)
-	{
-		OOReportInfo(_issues, @"writeFailed", @"Could not open debug dump file %@", path);
-		return;
-	}
-	
-	fprintf(file, "// Debug dump of %s\n\nNVERTS %lu\nNFACES %lu\n\n\nVERTEX\n", [[_path lastPathComponent] UTF8String], (unsigned long)_fileVertexCount, (unsigned long)_fileFaceCount);
-	
-	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
-	{
-		Vector pos = [_fileVertices[vIter] position];
-		fprintf(file, "%g %g %g\n", pos.x, pos.y, pos.z);
-	}
-	
-	BOOL explicitNormals = _explicitNormals || _smoothing;
-	
-	fprintf(file, "\n\nFACES\n");
-	for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
-	{
-		RawDATTriangle *triangle = &_rawTriangles[fIter];
-		Vector normal = explicitNormals ? kZeroVector : triangle->normal;
-		NSUInteger smoothGroup = _usesSmoothGroups ? triangle->smoothGroup : 0;
-		fprintf(file, "%lu 0 0 %g %g %g 3 %lu %lu %lu\n", (unsigned long)smoothGroup, normal.x, normal.y, normal.z, (unsigned long)triangle->vertex[0], (unsigned long)triangle->vertex[1], (unsigned long)triangle->vertex[2]);
-	}
-	
-	if ([_materialKeys count] != 0)
-	{
-		fprintf(file, "\n\nTEXTURES\n");
-		for (NSUInteger fIter = 0; fIter < _fileFaceCount; fIter++)
-		{
-			RawDATTriangle *triangle = &_rawTriangles[fIter];
-			fprintf(file, "%u 1 1 %g %g %g %g %g %g\n", triangle->materialIndex,
-					triangle->texCoords[0].x, triangle->texCoords[0].y,
-					triangle->texCoords[1].x, triangle->texCoords[1].y,
-					triangle->texCoords[2].x, triangle->texCoords[2].y);
-		}
-		
-		fprintf(file, "\n\nNAMES %lu\n", (unsigned long)_materialCount);
-		for (NSUInteger mIter = 0; mIter < _materialCount; mIter++)
-		{
-			fprintf(file, "%s\n", [[_materialKeys objectAtIndex:mIter] UTF8String]);
-		}
-	}
-	
-	if (explicitNormals)
-	{
-		fprintf(file, "\n\nNORMALS\n");
-		for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
-		{
-			Vector normal = [_fileVertices[vIter] normal];
-			fprintf(file, "%g %g %g\n", normal.x, normal.y, normal.z);
-		}
-		
-		fprintf(file, "\n\nTANGENTS\n");
-		for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
-		{
-			Vector tangent = [_fileVertices[vIter] tangent];
-			fprintf(file, "%g %g %g\n", tangent.x, tangent.y, tangent.z);
-		}
-	}
-	
-	fprintf(file, "\nEND\n");
 }
 
 @end

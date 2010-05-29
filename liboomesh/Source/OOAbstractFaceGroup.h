@@ -29,7 +29,7 @@
 
 #import "liboomeshbase.h"
 
-@class OOAbstractFace, OOMaterialSpecification;
+@class OOAbstractFace, OOMaterialSpecification, OOIndexArray;
 
 
 @interface OOAbstractFaceGroup: NSObject <NSFastEnumeration>
@@ -41,6 +41,19 @@
 	NSDictionary				*_vertexSchema;
 	BOOL						_homogeneous;
 }
+
+- (id) init;
+
+/*
+	Fast initializer for data in rendering-optimized format.
+	attributeArray: dictionary of NSString->OOFloatArray. Array counts must be
+		multiples of vertexCount; the ratio defines the attribute size.
+	indexArray: indices into attribute arrays. Values must be less than
+		vertexCount. Count must be multiple of three.
+*/
+- (id) initWithAttributeArrays:(NSDictionary *)attributeArrays
+				   vertexCount:(NSUInteger)vertexCount
+					indexArray:(OOIndexArray *)indexArray;
 
 - (NSString *) name;
 - (void) setName:(NSString *)name;

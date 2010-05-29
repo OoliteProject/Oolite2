@@ -33,7 +33,7 @@ int main (int argc, const char * argv[])
 	
 	if (mesh != nil)
 	{
-		OOWriteOOMesh(mesh, [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"oomesh"], issues);
+		OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
 	}
 
 	
@@ -50,7 +50,7 @@ static OOAbstractMesh *ReadDAT(NSString *path, id <OOProblemReportManager> issue
 //	[reader setSmoothing:YES];
 	[reader setBrokenSmoothing:NO];
 	
-	OOAbstractMesh *result = [reader mesh];
+	OOAbstractMesh *result = [reader abstractMesh];
 	[reader release];
 	
 	return result;
@@ -62,7 +62,7 @@ static OOAbstractMesh *ReadOOMesh(NSString *path, id <OOProblemReportManager> is
 	OOMeshReader *reader = [[OOMeshReader alloc] initWithPath:path issues:issues];
 	if (reader == nil)  return nil;
 	
-	OOAbstractMesh *result = [reader mesh];
+	OOAbstractMesh *result = [reader abstractMesh];
 	[reader release];
 	
 	return result;

@@ -38,6 +38,10 @@
 #import "NSNumberOOExtensions.h"
 
 
+//	If set to 1, the use count for each vertex will be listed in the file (as comments on the position attribute).
+#define PRINT_USE_COUNTS	0
+
+
 /*
 	OOWriteToOOMesh
 	Property for writing to OOMesh files. This is implemented for the property
@@ -66,7 +70,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 	NSError *error = nil;
 	NSString *name = [path lastPathComponent];
 	
-	NSData *data = OODataFromMesh(mesh, name, issues);
+	NSData *data = OODataFromMesh(mesh, issues);
 	OK = (data != nil);
 	
 	if (OK)
@@ -83,7 +87,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 }
 
 
-NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReportManager> issues)
+NSData *OODataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
 {
 	if (mesh == nil)  return nil;
 	
@@ -94,7 +98,6 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 	NSMutableArray *vertices = [NSMutableArray array];
 	NSMutableDictionary *indices = [NSMutableDictionary dictionary];
 	NSUInteger vertexCount = 0;
-	NSUInteger dupeCount = 0;
 	
 	OOAbstractFaceGroup *faceGroup = nil;
 	OOAbstractFace *face = nil;
@@ -102,6 +105,9 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 	OOMaterialSpecification *material = nil;
 	
 	//	Unique vertices across groups, and count 'em.
+#if PRINT_USE_COUNTS
+	NSMutableArray *useCounts = [NSMutableArray array];
+#endif
 	foreach (faceGroup, mesh)
 	{
 		foreach (face, faceGroup)
@@ -112,25 +118,31 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 			{
 				vertex = [face vertexAtIndex:vIter];
 				
-				NSValue *boxed = [NSValue valueWithNonretainedObject:vertex];
-				NSNumber *index = [indices objectForKey:boxed];
+				NSNumber *index = [indices objectForKey:vertex];
 				if (index == nil)
 				{
 					index = [NSNumber numberWithUnsignedInteger:vertexCount++];
-					[indices setObject:index forKey:boxed];
+					[indices setObject:index forKey:vertex];
 					[vertices addObject:vertex];
+#if PRINT_USE_COUNTS
+					[useCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
+#endif
 				}
 				else
 				{
-					dupeCount++;
+#if PRINT_USE_COUNTS
+					NSUInteger indexVal = [index unsignedIntegerValue];
+					NSUInteger useCount = [useCounts oo_unsignedIntegerAtIndex:indexVal];
+					useCount++;
+					[useCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
+#endif
 				}
-
+				
 			}
 			
 			[pool drain];
 		}
 	}
-	
 	
 	//	Unique materials by name.
 	NSMutableDictionary *materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
@@ -155,13 +167,9 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 	
 	
 	//	Write header.
-	[result appendString:@"oomesh"];
-	if (name != nil)
-	{
-		if ([[[name pathExtension] lowercaseString] isEqualToString:@"oomesh"])  name = [name stringByDeletingPathExtension];
-		[result appendFormat:@" \"%@\"", EscapeString(name)];
-	}
-	[result appendFormat:@":\n{\n\tvertexCount: %lu // duplicates: %lu\n\tgroupCount: %lu\n", (unsigned long)vertexCount, (unsigned long)dupeCount, [mesh faceGroupCount]];
+	NSString *name = [mesh name];
+	if (name == nil)  name = @"<unnamed>";
+	[result appendFormat:@"oomesh \"%@\":\n{\n\tvertexCount: %lu\n", EscapeString(name), (unsigned long)vertexCount];
 	
 	
 	//	Write materials.
@@ -187,7 +195,7 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		NSDictionary *vertexSchema = [mesh vertexSchemaGettingHomogenity:NULL];	
+		NSDictionary *vertexSchema = [mesh vertexSchema];	
 		NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 		NSString *key = nil;
 		foreach (key, attributeKeys)
@@ -196,6 +204,10 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 			
 			[result appendFormat:@"\t\n\tattribute \"%@\":\n\t{\n\t\tsize: %lu\n\t\tdata:\n\t\t[\n", EscapeString(key), (unsigned long)count];
 			
+#if PRINT_USE_COUNTS
+			NSUInteger vIdx = [key isEqualToString:kOOPositionAttributeKey] ? 0 : NSNotFound;
+#endif
+			
 			foreach (vertex, vertices)
 			{
 				[result appendString:@"\t\t\t"];
@@ -203,7 +215,29 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 				OOFloatArray *attr = [vertex attributeForKey:key];
 				for (i = 0; i < count; i++)
 				{
-					[result appendFormat:@"%f%@", [attr floatAtIndex:i], (i == count - 1) ? @"\n" : @", "];
+					NSString *numStr = $sprintf(@"%.3f", [attr floatAtIndex:i]);
+					
+					//	This is teh nasty.
+					while ([numStr hasSuffix:@"0"])
+					{
+						numStr = [numStr substringToIndex:[numStr length] - 1];
+					}
+					if ([numStr hasSuffix:@"."])
+					{
+						numStr = [numStr substringToIndex:[numStr length] - 1];
+					}
+					if ([numStr length] == 0)  numStr = @"0";
+					
+					[result appendString:numStr];
+					
+#if PRINT_USE_COUNTS
+					if (vIdx != NSNotFound && i == count - 1)
+					{
+						[result appendFormat:@"\t// Uses: %@", [useCounts objectAtIndex:vIdx++]];
+					}
+#endif
+					
+					[result appendString:(i == count - 1) ? @"\n" : @",\t"];
 				}
 			}
 			
@@ -219,12 +253,13 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
+		NSString *materialKey = [[faceGroup material] materialKey];
+		if (materialKey == nil)  materialKey = @"<unnamed>";
 		NSString *name = [faceGroup name];
-		if (name == nil)  name = [[faceGroup material] materialKey];
+		if (name == nil)  name = materialKey;
 		if (name == nil)  name = @"<unnamed>";
 		
-		[result appendFormat:@"\t\n\tgroup \"%@\"", EscapeString([faceGroup name])];
-		[result appendFormat:@":\n\t{\n\t\tfaceCount: %lu\n\t\tdata:\n\t\t[\n", [faceGroup faceCount]];
+		[result appendFormat:@"\t\n\tgroup \"%@\":\n\t{\n\t\tfaceCount: %lu\n\t\tmaterial: \"%@\"\n\t\tdata:\n\t\t[\n", EscapeString(name), [faceGroup faceCount], EscapeString(materialKey)];
 		
 		foreach (face, faceGroup)
 		{
@@ -233,9 +268,7 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 			for (NSUInteger vIter = 0; vIter < 3; vIter++)
 			{
 				vertex = [face vertexAtIndex:vIter];
-				
-				NSValue *boxed = [NSValue valueWithNonretainedObject:vertex];
-				NSUInteger index = [indices oo_unsignedIntegerForKey:boxed];
+				NSUInteger index = [indices oo_unsignedIntegerForKey:vertex];
 				
 				[result appendFormat:@"%lu%@", (unsigned long)index, (vIter == 2) ? @"\n" : @", "];
 			}
@@ -257,6 +290,7 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, NSString *name, id <OOProblemReport
 
 static NSString *EscapeString(NSString *string)
 {
+	if (EXPECT_NOT(string == nil))  return nil;
 	static NSCharacterSet *charSet = nil;
 	
 	if (charSet == nil)
@@ -395,7 +429,7 @@ static BOOL IsValidDictChar(unichar c)
 }
 
 
-- (BOOL) oom_isValidDictKey
+- (BOOL) oo_isValidOOMeshDictKey
 {
 	NSUInteger i, length = [self length];
 	if (length == 0 || length > 60)  return NO;
@@ -443,7 +477,7 @@ enum
 
 @implementation NSArray (OOWriteToOOMesh)
 
-- (BOOL) oom_isSimpleArray
+- (BOOL) oo_isSimpleOOMeshArray
 {
 	/*	A "simple" array is one that can be written on a single line
 		without looking terrible. Here we use an element count limit and
@@ -490,7 +524,7 @@ enum
 	}
 	else
 	{
-		BOOL simple = [self oom_isSimpleArray] && indentLevel > 1, first = YES;
+		BOOL simple = [self oo_isSimpleOOMeshArray] && indentLevel > 1, first = YES;
 		
 		NSString *indent1 = IndentTabs(indentLevel);
 		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", IndentTabs(indentLevel + 1));
@@ -536,7 +570,7 @@ enum
 
 @implementation NSDictionary (OOWriteToOOMesh)
 
-- (BOOL) oom_isSimpleDictionary
+- (BOOL) oo_isSimpleOOMeshDictionary
 {
 	/*	A "simple" dictionary is one that can be written on a single line
 		without looking terrible. Here we use an element count limit and
@@ -586,7 +620,7 @@ enum
 	}
 	else
 	{
-		BOOL simple = [self oom_isSimpleDictionary] && indentLevel > 1, first = YES;
+		BOOL simple = [self oo_isSimpleOOMeshDictionary] && indentLevel > 1, first = YES;
 		
 		NSString *indent1 = IndentTabs(indentLevel);
 		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", IndentTabs(indentLevel + 1));
@@ -613,7 +647,7 @@ enum
 			}
 			[oomeshText appendString:indent2];
 			
-			if ([key oom_isValidDictKey])
+			if ([key oo_isValidOOMeshDictKey])
 			{
 				[oomeshText appendString:key];
 			}

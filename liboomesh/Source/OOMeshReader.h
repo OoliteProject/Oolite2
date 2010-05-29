@@ -41,16 +41,20 @@
 	
 	NSString						*_meshName;
 	NSUInteger						_vertexCount;
+	NSMutableDictionary				*_attributeArrays;
+	
+	NSMutableArray					*_groupIndexArrays;
+	NSMutableArray					*_groupMaterials;
 	
 	// ivars used only during parsing.
 	NSMutableSet					*_unknownSegmentTypes;
-	NSMutableDictionary				*_materials;
+	NSMutableDictionary				*_materialsByName;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)ioIssues;
 
 - (void) parse;
 
-- (OOAbstractMesh *) mesh;
+- (OOAbstractMesh *) abstractMesh;
 
 @end

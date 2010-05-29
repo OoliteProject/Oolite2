@@ -116,9 +116,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "OOMDATReaderTest" */;
 			buildPhases = (
+				1AEA258E11A73E6E00B361DC /* Copy Framework */,
 				8DD76F990486AA7600D96B5E /* Sources */,
 				8DD76F9B0486AA7600D96B5E /* Frameworks */,
-				1AEA258E11A73E6E00B361DC /* Copy Framework */,
 			);
 			buildRules = (
 			);

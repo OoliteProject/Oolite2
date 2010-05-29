@@ -29,7 +29,10 @@
 #import "OOProblemReportManager.h"
 #import "OOCollectionExtractors.h"
 #import "OOFloatArray.h"
+#import "OOIndexArray.h"
 #import "OOMaterialSpecification.h"
+#import "OOAbstractMesh.h"
+#import "OOAbstractFaceGroup.h"
 
 
 @interface OOMeshReader (Private)
@@ -37,7 +40,7 @@
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
-- (NSString *) priv_displayPath;
+- (NSString *) priv_displayName;
 
 - (BOOL) priv_readSegmentNamed:(NSString *)name ofType:(NSString *)type;
 - (BOOL) priv_readProperty:(id *)outProperty;
@@ -71,6 +74,10 @@
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
+	DESTROY(_meshName);
+	DESTROY(_attributeArrays);
+	DESTROY(_groupIndexArrays);
+	DESTROY(_groupMaterials);
 	
 	[super dealloc];
 }
@@ -80,11 +87,17 @@
 {
 	if (_lexer == nil)  return;	// Parsed already or initialization failed.
 	
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	
 	BOOL OK = YES;
 	NSMutableDictionary *rootProperties = [NSMutableDictionary dictionary];
 	
 	_unknownSegmentTypes = [NSMutableSet set];
-	_materials = [NSMutableDictionary dictionary];
+	_materialsByName = [NSMutableDictionary dictionary];
+	
+	_attributeArrays = [[NSMutableDictionary alloc] init];
+	_groupIndexArrays = [[NSMutableArray alloc] init];
+	_groupMaterials = [[NSMutableArray alloc] init];
 	
 	/*	The root element is structurally similar to a segment, but it's
 		currently the only one that can contain other segments, and there must
@@ -104,6 +117,7 @@
 	if (OK)
 	{
 		OK = [_lexer getString:&_meshName];
+		[_meshName retain];
 		if (EXPECT_NOT(!OK))  [self priv_reportBasicParseError:@"string"];
 	}
 	[_lexer consumeOptionalNewlines];
@@ -190,7 +204,7 @@
 		[_lexer consumeOptionalNewlines];
 		if (![_lexer getToken:kOOMeshTokenEOF])
 		{
-			OOReportWarning(_issues, @"unknownData", @"\"%@\" contains unknown data after then end of the file.", [self priv_displayPath]);
+			OOReportWarning(_issues, @"unknownData", @"\"%@\" contains unknown data after then end of the file.", [self priv_displayName]);
 		}
 	}
 	
@@ -198,14 +212,33 @@
 	DESTROY(_lexer);
 	
 	_unknownSegmentTypes = nil;
-	_materials = nil;
+	_materialsByName = nil;
+	
+	[pool drain];
 }
 
 
-- (OOAbstractMesh *) mesh
+- (OOAbstractMesh *) abstractMesh
 {
 	[self parse];
-	return nil;
+	
+	NSUInteger gIter, gCount = [_groupIndexArrays count];
+	OOAbstractMesh *mesh = [[[OOAbstractMesh alloc] init] autorelease];
+	[mesh setName:_meshName];
+	
+	for (gIter = 0; gIter < gCount; gIter++)
+	{
+		OOAbstractFaceGroup *group = [[OOAbstractFaceGroup alloc] initWithAttributeArrays:_attributeArrays
+																			  vertexCount:_vertexCount
+																			   indexArray:[_groupIndexArrays objectAtIndex:gIter]];
+		
+		if (EXPECT_NOT(group == nil))  return nil;
+		
+		[group setMaterial:[_groupMaterials objectAtIndex:gIter]];
+		[mesh addFaceGroup:group];
+	}
+	
+	return mesh;
 }
 
 @end
@@ -223,7 +256,7 @@
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayPath], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
 	[_issues addProblemOfType:kOOMProblemTypeError key:@"parseError" message:message];
 }
 
@@ -240,7 +273,7 @@
 }
 
 
-- (NSString *) priv_displayPath
+- (NSString *) priv_displayName
 {
 	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
@@ -297,11 +330,14 @@
 
 - (BOOL) priv_completeAttributeWithProperties:(NSDictionary *)properties data:(OOFloatArray *)data name:(NSString *)name
 {
+	[_attributeArrays setObject:data forKey:name];
+	// Size is implicitly _vertexCount/[data count]. No other properties are used at this time.
+	
 	return YES;
 }
 
 
-- (NSData *) priv_readGroupDataWithProperties:(NSDictionary *)properties name:(NSString *)name
+- (OOIndexArray *) priv_readGroupDataWithProperties:(NSDictionary *)properties name:(NSString *)name
 {
 	id faceCountObj = [properties objectForKey:@"faceCount"];
 	if (EXPECT_NOT(![faceCountObj isKindOfClass:[NSNumber class]]))
@@ -322,9 +358,8 @@
 	}
 	[_lexer consumeOptionalNewlines];
 	
-	// FIXME: use appropriate integer size based on vertexCount.
 	NSUInteger i, count = [faceCountObj unsignedIntegerValue] * 3;
-	unsigned *buffer = malloc(count * sizeof (unsigned));
+	GLuint *buffer = malloc(count * sizeof (GLuint));
 	if (EXPECT_NOT(buffer == nil))
 	{
 		[self priv_reportMallocFailure];
@@ -355,12 +390,40 @@
 		}
 	}
 	
-	return [NSData dataWithBytesNoCopy:buffer length:count * sizeof (unsigned) freeWhenDone:YES];
+	return [OOIndexArray arrayWithUnsignedIntsNoCopy:buffer count:count maximum:_vertexCount freeWhenDone:YES];
 }
 
 
-- (BOOL) priv_completeGroupWithProperties:(NSDictionary *)properties data:(NSData *)data name:(NSString *)name
+- (BOOL) priv_completeGroupWithProperties:(NSDictionary *)properties data:(OOIndexArray *)data name:(NSString *)name
 {
+	[_groupIndexArrays addObject:data];
+	
+	NSString *materialKey = [properties oo_stringForKey:@"material"];
+	OOMaterialSpecification *materialSpec = nil;
+	
+	if (materialKey != nil)
+	{
+		materialSpec = [_materialsByName objectForKey:materialKey];
+		if (materialSpec == nil)
+		{
+			OOReportWarning(_issues, @"undefinedMaterial", @"Mesh group \"%@\" in %@ specifies undefined material \"%@\", defining empty material.", name, [self priv_displayName]);
+		}
+	}
+	else
+	{
+		OOReportWarning(_issues, @"noMaterial", @"Mesh group \"%@\" in %@ does not specify a material, using empty material with same name as group.", name, [self priv_displayName]);
+		materialKey = name;
+	}
+	
+	if (materialSpec == nil)
+	{
+		// Either warning above.
+		materialSpec = [[[OOMaterialSpecification alloc] initWithMaterialKey:materialKey] autorelease];
+		[_materialsByName setObject:materialSpec forKey:materialKey];
+	}
+	
+	[_groupMaterials addObject:materialSpec];
+	
 	return YES;
 }
 
@@ -371,8 +434,10 @@
 	if (EXPECT_NOT(material == nil))  return NO;
 	
 	//	FIXME: set up material.
+	NSString *diffuseMap = [properties oo_stringForKey:@"diffuseMap"];
+	if (diffuseMap != nil)  [material setDiffuseMapName:diffuseMap];
 	
-	[_materials setObject:material forKey:name];
+	[_materialsByName setObject:material forKey:name];
 	[material release];
 	
 	return YES;
@@ -418,7 +483,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		if (![_unknownSegmentTypes containsObject:type])
 		{
 			[_unknownSegmentTypes addObject:type];
-			OOReportWarning(_issues, @"unknownSegmentType", @"Unknown segment of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayPath]);
+			OOReportWarning(_issues, @"unknownSegmentType", @"Unknown segment of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayName]);
 		}
 		// We still need to parse it to find the end reliably.
 	}
@@ -445,7 +510,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 	
 	while (OK)
 	{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
 		
 		OOMeshTokenType token = [_lexer currentTokenType];
 		if (token == kOOMeshTokenKeyword || token == kOOMeshTokenString)
@@ -462,8 +527,9 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 				
 				if (dataHander != NULL && [keyValue isEqualToString:@"data"])
 				{
+					[data release];
 					data = dataHander(self, dataHandlerSEL, properties, name);
-					[[data retain] autorelease];
+					[data retain];
 					OK = data != nil;
 				}
 				else
@@ -481,7 +547,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		}
 		else if (token == kOOMeshTokenCloseBrace)
 		{
-			[pool release];
+			[innerPool release];
 			break;
 		}
 		else
@@ -496,13 +562,18 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 			if (EXPECT_NOT(!OK))  [self priv_reportBasicParseError:@"comma or newline"];
 		}
 		
-		[pool release];
+		[innerPool release];
 	}
+	
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	
 	if (OK && completionHandler != NULL)
 	{
 		OK = completionHandler(self, completionHandlerSEL, properties, data, name);
 	}
+	[data release];
+	[pool drain];
+	
 	return OK;
 }
 

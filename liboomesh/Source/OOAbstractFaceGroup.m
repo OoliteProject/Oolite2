@@ -31,10 +31,14 @@
 #import "OOAbstractVertex.h"
 #import "CollectionUtils.h"
 #import "OOCollectionExtractors.h"
+#import "OOFloatArray.h"
+#import "OOIndexArray.h"
+#import "OOMaterialSpecification.h"
 
 
 @interface OOAbstractFaceGroup (Private)
 
+- (id) priv_initWithCapacity:(NSUInteger)capacity;
 - (void) priv_updateSchemaForFace:(OOAbstractFace *)face;
 
 @end
@@ -42,13 +46,100 @@
 
 @implementation OOAbstractFaceGroup
 
-- (id) init
+// Designated initializer.
+- (id) priv_initWithCapacity:(NSUInteger)capacity
 {
 	if ((self = [super init]))
 	{
-		_faces = [[NSMutableArray alloc] init];
+		_faces = [[NSMutableArray alloc] initWithCapacity:capacity];
 		if (_faces == nil)  DESTROY(self);
 	}
+	return self;
+}
+
+
+- (id) init
+{
+	return [self priv_initWithCapacity:0];
+}
+
+
+- (id) initWithAttributeArrays:(NSDictionary *)attributeArrays
+				   vertexCount:(NSUInteger)vertexCount
+					indexArray:(OOIndexArray *)indexArray
+{
+	NSUInteger faceCount = [indexArray count];
+	if (EXPECT_NOT(faceCount % 3 != 0))
+	{
+		[self release];
+		return nil;
+	}
+	faceCount /= 3;
+	
+	if ((self = [self priv_initWithCapacity:faceCount]))
+	{
+		NSUInteger aIter = 0, attrCount = [attributeArrays count];
+		NSMutableDictionary *schema = [NSMutableDictionary dictionaryWithCapacity:attrCount];
+		NSString *attrKey = nil;
+		unsigned attrSizes[attrCount];
+		NSString *attrKeys[attrCount];
+		OOFloatArray *attrValues[attrCount];
+		OOFloatArray *sourceArrays[attrCount];
+		
+		//	Determine schema.
+		foreachkey (attrKey, attributeArrays)
+		{
+			attrKeys[aIter] = attrKey;
+			OOFloatArray *attrArray = [attributeArrays oo_objectOfClass:[OOFloatArray class] forKey:attrKey];
+			sourceArrays[aIter] = attrArray;
+			NSUInteger attrCount = [attrArray count];
+			if (EXPECT_NOT(attrKey == nil || attrCount % vertexCount != 0))
+			{
+				[self release];
+				return nil;
+			}
+			
+			attrSizes[aIter] = attrCount / vertexCount;
+			[schema setObject:[NSNumber numberWithUnsignedInt:attrSizes[aIter]] forKey:attrKey];
+			aIter++;
+		}
+		
+		_vertexSchema = [[NSDictionary alloc] initWithDictionary:schema];
+		_homogeneous = YES;
+		
+		
+		// Set up faces.
+		NSUInteger fIter, vIter;
+		GLuint vIdx, elemIdx = 0;
+		for (fIter = 0; fIter < faceCount; fIter++)
+		{
+			OOAbstractVertex *verts[3];
+			
+			for (vIter = 0; vIter < 3; vIter++)
+			{
+				vIdx = [indexArray unsignedIntAtIndex:elemIdx++];
+				
+				for (aIter = 0; aIter < attrCount; aIter++)
+				{
+					NSRange range = { vIdx * attrSizes[aIter], attrSizes[aIter] };
+					attrValues[aIter] = (OOFloatArray *)[sourceArrays[aIter] subarrayWithRange:range];
+				}
+				
+				// FIXME: extend vertex to bypass dict?
+				NSDictionary *dict = [NSDictionary dictionaryWithObjects:attrValues forKeys:attrKeys count:attrCount];
+				verts[vIter] = [[OOAbstractVertex alloc] initWithAttributes:dict];
+			}
+			
+			OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertices:verts];
+			[_faces addObject:face];
+			
+			[face release];
+			[verts[0] release];
+			[verts[1] release];
+			[verts[2] release];
+		}
+	}
+	
 	return self;
 }
 
@@ -168,12 +259,6 @@
 - (BOOL) vertexSchemaIsHomogeneous
 {
 	return _homogeneous && _vertexSchema != nil;
-}
-
-
-- (void) homogenizeSchema
-{
-	// FIXME
 }
 
 

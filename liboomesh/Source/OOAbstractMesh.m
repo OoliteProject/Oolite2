@@ -43,9 +43,23 @@
 
 - (void) dealloc
 {
-	[_faceGroups release];
+	DESTROY(_faceGroups);
+	DESTROY(_name);
 	
 	[super dealloc];
+}
+
+
+- (NSString *) name
+{
+	return _name;
+}
+
+
+- (void) setName:(NSString *)name
+{
+	[_name autorelease];
+	_name = [name copy];
 }
 
 
@@ -103,7 +117,7 @@
 }
 
 
-- (NSDictionary *) vertexSchemaGettingHomogenity:(BOOL *)outIsHomogeneous
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
 {
 	NSDictionary *mergedSchema = nil, *groupSchema = nil;
 	BOOL homogeneous = YES;
@@ -121,8 +135,16 @@
 		}
 	}
 	
+	if (outSchema != NULL)  *outSchema = [NSDictionary dictionaryWithDictionary:mergedSchema];
 	if (outIsHomogeneous != NULL)  *outIsHomogeneous = homogeneous;
-	return [NSDictionary dictionaryWithDictionary:mergedSchema];
+}
+
+
+- (NSDictionary *) vertexSchema
+{
+	NSDictionary *result;
+	[self getVertexSchema:&result homogeneous:NULL];
+	return result;
 }
 
 @end

@@ -1,14 +1,9 @@
 /*
-	OOFloatArray.h
+	OOIndexArray.h
 	
-	An immutable array of floats.
-	
-	For interoperability, this is a subclass of NSArray. Using normal NSArray
-	methods, it will return NSNumber objects created on the fly. Using
-	-floatAtIndex: is obviously more efficient.
-	
-	OOFloatArray also implements optimized versions of the
-	OOCollectionExtractors methods.
+	Array class intended for handling vertex arrays. The interesting thing
+	about these is that the largest value they’ll contain is known in advance,
+	which can be used to pack them as tightly as possible.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -33,27 +28,30 @@
 */
 
 #import <Foundation/Foundation.h>
+#import <OpenGL/gl.h>
 
 
-@interface OOFloatArray: NSArray
+@interface OOIndexArray: NSArray
 
-+ (id) newWithArray:(NSArray *)array;
-+ (id) arrayWithArray:(NSArray *)array;
-- (id) initWithArray:(NSArray *)array;
-
-+ (id) newWithFloats:(float *)values count:(NSUInteger)count;
-+ (id) arrayWithFloats:(float *)values count:(NSUInteger)count;
-- (id) initWithFloats:(float *)values count:(NSUInteger)count;
++ (id) newWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
++ (id) arrayWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
+- (id) initWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
 
 /*	In the spirit of NSData, NoCopy is a hint. The implementation may choose
 	to copy the data (and immediately free it, if freeWhenDone).
 */
-+ (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
-+ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
-- (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
++ (id) newWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
+- (id) initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
 
-//	Returns NaN if index is out of range.
-- (float) floatAtIndex:(NSUInteger)index;
+- (GLenum) glType;
+
+/*	NOTE: exposes internal pointer for speed. This does not outlive the
+	OOIndexArray, and writing to it would break the array’s mutability.
+*/
+- (const void *) data;
+
+- (NSUInteger) unsignedIntAtIndex:(GLuint)index;
 
 /*	The default NSArray hash, at least under Mac OS X, is awful. However, a
 	subclass can't change the hash because it must be equal to the hash of
@@ -64,7 +62,3 @@
 - (NSUInteger) betterHash;
 
 @end
-
-
-#define $floatarray(FLOATS...)	({	float values[] = {FLOATS}; \
-									[OOFloatArray arrayWithFloats:values count:sizeof(values)/sizeof(float)]; })

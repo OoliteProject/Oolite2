@@ -248,6 +248,12 @@
 }
 
 
+- (NSEnumerator *) objectEnumerator
+{
+	return [_faces objectEnumerator];
+}
+
+
 - (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state
 								   objects:(id *)stackbuf
 									 count:(NSUInteger)len

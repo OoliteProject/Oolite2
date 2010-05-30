@@ -39,7 +39,7 @@
 
 
 //	If set to 1, the use count for each vertex will be listed in the file (as comments on the position attribute).
-#define PRINT_USE_COUNTS	0
+#define PRINT_USE_COUNTS	1
 
 
 /*
@@ -70,7 +70,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 	NSError *error = nil;
 	NSString *name = [path lastPathComponent];
 	
-	NSData *data = OODataFromMesh(mesh, issues);
+	NSData *data = OOMeshDataFromMesh(mesh, issues);
 	OK = (data != nil);
 	
 	if (OK)
@@ -87,7 +87,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 }
 
 
-NSData *OODataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
+NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
 {
 	if (mesh == nil)  return nil;
 	
@@ -282,7 +282,7 @@ NSData *OODataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
 	[result appendString:@"}\n"];
 	
 	NSData *data = [[result dataUsingEncoding:NSUTF8StringEncoding] retain];
-	[pool release];
+	[pool drain];
 	
 	return [data autorelease];
 }

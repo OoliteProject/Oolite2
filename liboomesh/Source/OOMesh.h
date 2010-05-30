@@ -7,6 +7,7 @@
 #import "OOAbstractMesh.h"
 
 #import "OODATReader.h"
+#import "OODATWriter.h"
 
 #import "OOOBJReader.h"
 

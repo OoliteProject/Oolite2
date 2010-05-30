@@ -168,7 +168,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	return [[OOAbstractVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
+	return [[OOConcreteVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
@@ -310,6 +310,70 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	return schema;
 }
 
+
+- (BOOL) conformsToSchema:(NSDictionary *)schema
+{
+	NSDictionary *selfSchema = [self schema];
+	NSString *attrKey = nil;
+	foreachkey(attrKey, selfSchema)
+	{
+		if ([selfSchema oo_unsignedIntForKey:attrKey] > [schema oo_unsignedIntForKey:attrKey])  return NO;
+	}
+	/*	NOTE: keys in schema but not in selfSchema don’t matter, since our
+		count is 0 and therefore definitely conformant.
+	*/
+	
+	return YES;
+}
+
+
+- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema
+{
+	NSDictionary *selfSchema = [self schema];
+	NSString *attrKey = nil;
+	foreachkey(attrKey, selfSchema)
+	{
+		if ([selfSchema oo_unsignedIntForKey:attrKey] != [schema oo_unsignedIntForKey:attrKey])  return NO;
+	}
+	
+	/*	In this case, we need to check both ways. Conceptually, it might be
+		cleaner to merge the sets of keys, but I don’t think it would be more
+		efficient.
+		-- Ahruman 2010-05-30
+	*/
+	foreachkey(attrKey, schema)
+	{
+		if ([selfSchema oo_unsignedIntForKey:attrKey] != [schema oo_unsignedIntForKey:attrKey])  return NO;
+	}
+	
+	return YES;
+}
+
+
+- (OOAbstractVertex *) vertexConformingToSchema:(NSDictionary *)schema
+{
+	if ([self conformsToSchema:schema])
+	{
+		return [[self retain] autorelease];
+	}
+	
+	OOMutableAbstractVertex *result = [[[OOMutableAbstractVertex alloc] init] autorelease];
+	NSString *attrKey = nil;
+	foreachkey(attrKey, schema)
+	{
+		OOFloatArray *value = [self attributeForKey:attrKey];
+		NSUInteger limit = [schema oo_unsignedIntegerForKey:attrKey];
+		if ([value count] > limit)
+		{
+			value = (OOFloatArray *)[value subarrayWithRange:(NSRange){ 0, limit }];
+		}
+		
+		[result setAttribute:value forKey:attrKey];
+	}
+	
+	return [[result copy] autorelease];
+}
+
 @end
 
 
@@ -403,13 +467,25 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (id) initWithAttributes:(NSDictionary *)attributes
 {
 	DESTROY(self);
-	return [[[self class] vertexWithAttributes:attributes] retain];
+	return [[OOMutableAbstractVertex vertexWithAttributes:attributes] retain];
 }
 
 
 - (void) setAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
 {
 	[self priv_subclassResponsibility:_cmd];
+}
+
+
+- (id) init
+{
+	return [self initWithAttributes:nil];
+}
+
+
+- (id) priv_init
+{
+	return [super init];
 }
 
 
@@ -503,7 +579,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) priv_initWithAttributes:(NSDictionary *)attributes verify:(BOOL)verify
 {
-	if ((self = [super init]))
+	if ((self = [super priv_init]))
 	{
 		_attributes = CopyAttributes(attributes, self, YES, verify);
 		if (_attributes == nil)  DESTROY(self);
@@ -597,6 +673,18 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 		return kZeroVector;
 	}
 
+}
+
+
+- (BOOL) conformsToSchema:(NSDictionary *)schema
+{
+	return [schema oo_unsignedIntForKey:kOOPositionAttributeKey] >= 3;
+}
+
+
+- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema
+{
+	return [schema count] == 1 && [schema oo_unsignedIntForKey:kOOPositionAttributeKey] == 3;
 }
 
 @end

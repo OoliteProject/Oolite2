@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A062E9911B2F64E00727C1D /* OODATWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062E9A11B2F64E00727C1D /* OODATWriter.m */; };
 		1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */; };
 		1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */; };
@@ -67,6 +69,8 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1A062E9911B2F64E00727C1D /* OODATWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATWriter.h; sourceTree = "<group>"; };
+		1A062E9A11B2F64E00727C1D /* OODATWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATWriter.m; sourceTree = "<group>"; };
 		1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFastArithmetic.m; sourceTree = "<group>"; };
 		1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshWriter.h; sourceTree = "<group>"; };
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
@@ -244,6 +248,8 @@
 			children = (
 				1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */,
 				1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */,
+				1A062E9911B2F64E00727C1D /* OODATWriter.h */,
+				1A062E9A11B2F64E00727C1D /* OODATWriter.m */,
 			);
 			name = Writers;
 			sourceTree = "<group>";
@@ -345,6 +351,7 @@
 				1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */,
 				1A7D37C911B16C1E00857CEF /* OOOBJReader.h in Headers */,
 				1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */,
+				1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +433,7 @@
 				1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */,
 				1A7D37C611B16C1500857CEF /* OOOBJLexer.m in Sources */,
 				1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */,
+				1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

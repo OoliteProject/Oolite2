@@ -72,6 +72,7 @@
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face;
 
 - (NSEnumerator *) faceEnumerator;
+- (NSEnumerator *) objectEnumerator;	// Same as faceEnumerator, only less descriptive.
 
 /*
 	The vertex schema is a dictionary whose keys are attribute names and whose

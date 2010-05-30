@@ -1,7 +1,7 @@
 /*
-	OOMeshWriter.h
+	OODATWriter.h
 	
-	OOMesh (Oolite 2.0) format exporter.
+	DAT (Oolite 1.x) format exporter.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -31,5 +31,5 @@
 @class OOAbstractMesh;
 
 
-NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues);
-BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);
+NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues);
+BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);

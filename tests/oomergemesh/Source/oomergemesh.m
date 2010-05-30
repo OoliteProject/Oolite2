@@ -43,6 +43,7 @@ int main (int argc, const char * argv[])
 	}
 	
 	OOWriteOOMesh(mergedMesh, @"meged-mesh.oomesh", issues);
+	OOWriteDAT(mergedMesh, @"meged-mesh.dat", issues);
 	
     [pool drain];
     return 0;

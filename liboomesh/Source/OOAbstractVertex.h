@@ -61,20 +61,36 @@
 
 - (NSEnumerator *) attributeKeyEnumerator;
 
-// Conveniences for attributes of one, two or three elements.
-// Undefined elements are zeroed.
+//	Conveniences for attributes of one, two or three elements.
+//	Undefined elements are zeroed.
 - (double) attributeAsDoubleForKey:(NSString *)key;
 - (NSPoint) attributeAsPointForKey:(NSString *)key;
 - (Vector2D) attributeAsVector2DForKey:(NSString *)key;
 - (Vector) attributeAsVectorForKey:(NSString *)key;
 
-// Create a new, immutable vertex by adding/removing attributes.
+//	Create a new, immutable vertex by adding/removing attributes.
 - (OOAbstractVertex *) vertexByAddingAttributes:(NSDictionary *)attributes;
 - (OOAbstractVertex *) vertexByAddingAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
 - (OOAbstractVertex *) vertexByRemovingAttributeForKey:(NSString *)key;
 
-// See comment on vertex schemata in OOAbstractFaceGroup.h.
+//	See comment on vertex schemata in OOAbstractFaceGroup.h.
 - (NSDictionary *) schema;
+
+/*	True if the vertex conforms to the specified schema. A vertex conforms if
+	it doesn’t have any attributes that fall outside the schema. For instance,
+	a vertex with schema { position: 3, texCoords: 2 } conforms to the schema
+	{ position: 3, texCoords: 3 }, but a vertex with the schema { position: 3,
+	texCoords: 3, normal: 3 } does not.
+*/
+- (BOOL) conformsToSchema:(NSDictionary *)schema;
+
+//	True only if the vertex strictly matches the specified schema.
+- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema;
+
+/*	Extract the attributes of a vertex that conform to the specified schema.
+	This doesn’t add anything, only takes away.
+*/
+- (OOAbstractVertex *) vertexConformingToSchema:(NSDictionary *)schema;
 
 @end
 
@@ -102,7 +118,7 @@
 - (void) removeAttributeForKey:(NSString *)key;
 - (void) removeAllAttributes;
 
-// Conveniences for attributes of one, two or three elements.
+//	Conveniences for attributes of one, two or three elements.
 - (void) setAttributeAsDouble:(double)value forKey:(NSString *)key;
 - (void) setAttributeAsPoint:(NSPoint)value forKey:(NSString *)key;
 - (void) setAttributeAsVector2D:(Vector2D)value forKey:(NSString *)key;

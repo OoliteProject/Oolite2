@@ -52,8 +52,11 @@
 - (BOOL) readInteger:(NSInteger *)outInt;
 - (BOOL) readReal:(float *)outReal;
 - (BOOL) readString:(NSString **)outString;
+- (BOOL) readUntilNewline:(NSString **)outString;	// NOTE: passes newline, but doesn't include it in outString.
 
 - (BOOL) readNewline;	// Returns YES if it reaches newline without seeing tokens.
-- (BOOL) skipNewline;	// Reads to newline and ignores tokens.
+- (BOOL) skipLine;		// Reads to newline and ignores tokens.
+
+- (BOOL) isAtEnd;
 
 @end

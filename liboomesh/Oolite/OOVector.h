@@ -128,6 +128,10 @@ OOINLINE Vector true_cross_product(Vector first, Vector second) CONST_FUNC;
 /* Triple product */
 OOINLINE OOScalar triple_product(Vector first, Vector second, Vector third) INLINE_CONST_FUNC;
 
+/* Clean out negative zeroes. */
+Vector clean_vector(Vector v)  CONST_FUNC;
+Vector2D clean_vector2D(Vector2D v)  CONST_FUNC;
+
 /* Given three points on a surface, returns the normal to the surface. */
 OOINLINE Vector normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;
 OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;

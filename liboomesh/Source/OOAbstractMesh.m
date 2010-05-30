@@ -111,6 +111,12 @@
 }
 
 
+- (NSEnumerator *) objectEnumerator
+{
+	return [_faceGroups objectEnumerator];
+}
+
+
 - (NSUInteger) countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
 	return [_faceGroups countByEnumeratingWithState:state objects:stackbuf count:len];
@@ -145,6 +151,16 @@
 	NSDictionary *result;
 	[self getVertexSchema:&result homogeneous:NULL];
 	return result;
+}
+
+
+- (void) mergeMesh:(OOAbstractMesh *)other
+{
+	OOAbstractFaceGroup *group = nil;
+	foreach (group, other)
+	{
+		[self addFaceGroup:group];
+	}
 }
 
 @end

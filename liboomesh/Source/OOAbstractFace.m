@@ -72,6 +72,13 @@
 }
 
 
+- (id) copyWithZone:(NSZone *)zone
+{
+	// Immutable.
+	return [self retain];
+}
+
+
 - (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index
 {
 	if (EXPECT_NOT(index >= 3))  return nil;

@@ -203,14 +203,14 @@
 		1A7D37BF11B16BD700857CEF /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */,
-				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
-				1AB7395D11B10B0300575507 /* OOAbstractFace.h */,
-				1AB7395E11B10B0300575507 /* OOAbstractFace.m */,
-				1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */,
-				1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */,
 				1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */,
 				1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */,
+				1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */,
+				1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */,
+				1AB7395D11B10B0300575507 /* OOAbstractFace.h */,
+				1AB7395E11B10B0300575507 /* OOAbstractFace.m */,
+				1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */,
+				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
 				1AF4293211A9897D008E883C /* OOMaterialSpecification.h */,
 				1AF4293311A9897D008E883C /* OOMaterialSpecification.m */,
 				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,

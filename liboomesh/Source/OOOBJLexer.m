@@ -112,6 +112,13 @@
 }
 
 
+- (BOOL) readUntilNewline:(NSString **)outString
+{
+	// FIXME
+	return NO;
+}
+
+
 - (BOOL) readNewline
 {
 	// FIXME
@@ -119,10 +126,17 @@
 }
 
 
-- (BOOL) skipNewline
+- (BOOL) skipLine
 {
 	// FIXME
 	return NO;
+}
+
+
+- (BOOL) isAtEnd
+{
+	// FIXME
+	return YES;
 }
 
 @end

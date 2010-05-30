@@ -4,6 +4,8 @@
 	A face is simply a collection of three vertices. All other attributes
 	depend on context.
 	
+	An OOAbstractFace is immutable, as are its vertices.
+	
 	
 	Copyright © 2010 Jens Ayton.
 	
@@ -31,7 +33,7 @@
 @class OOAbstractVertex;
 
 
-@interface OOAbstractFace: NSObject
+@interface OOAbstractFace: NSObject <NSCopying>
 {
 @private
 	OOAbstractVertex			*_vertices[3];

@@ -32,7 +32,7 @@
 @class OOAbstractFace, OOMaterialSpecification, OOIndexArray;
 
 
-@interface OOAbstractFaceGroup: NSObject <NSFastEnumeration>
+@interface OOAbstractFaceGroup: NSObject <NSFastEnumeration, NSCopying>
 {
 @private
 	NSString					*_name;

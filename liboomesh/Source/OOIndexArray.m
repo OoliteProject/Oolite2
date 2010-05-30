@@ -230,6 +230,34 @@
 	return [self retain];
 }
 
+
+- (BOOL) priv_isEqualToOOIndexArray:(OOIndexArray *)other
+{
+	NSUInteger selfCount = [self count], otherCount = [other count], iter;
+	if (selfCount != otherCount)  return NO;
+	
+	for (iter = 0; iter < selfCount; iter++)
+	{
+		if ([self unsignedIntAtIndex:iter] != [other unsignedIntAtIndex:iter])  return NO;
+	}
+	
+	return YES;
+}
+
+
+- (BOOL) isEqualToArray:(NSArray *)other
+{
+	if ([other isKindOfClass:[OOIndexArray class]])  return [self priv_isEqualToOOIndexArray:(OOIndexArray *)other];
+	return [super isEqualToArray:other];
+}
+
+
+- (BOOL) isEqual:(id)other
+{
+	if ([other isKindOfClass:[OOIndexArray class]])  return [self priv_isEqualToOOIndexArray:other];
+	return [super isEqual:other];
+}
+
 @end
 
 

@@ -36,7 +36,7 @@ typedef uint32_t FloatSizedInt;
 // Designated initializer.
 - (id) priv_init;
 
-- (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other;
+- (BOOL) priv_isEqualToOOFloatArray:(OOFloatArray *)other;
 
 //	Subclass responsibility:
 - (float *) priv_floatArray;
@@ -47,7 +47,7 @@ typedef uint32_t FloatSizedInt;
 enum
 {
 	/*
-		Largest count for which we will use OOMInlineFloatArray.
+		Largest count for which we will use OOInlineFloatArray.
 		This should be quite low when using garbage collection, because the
 		entire object is scanned for pointers.
 		Without GC, there's no particular reason to limit it (except that on
@@ -58,16 +58,16 @@ enum
 	*/
 	kMaxInlineCount				= 30,
 	
-	// Smallest count for which we will use OOMExternFloatArray.
+	// Smallest count for which we will use OOExternFloatArray.
 	kMinExternCount				= 8
 };
 
 
 /*	
-	OOMInlineFloatArray
+	OOInlineFloatArray
 	Concrete OOFloatArray which uses object_getIndexedIvars() as storage.
 */
-@interface OOMInlineFloatArray: OOFloatArray
+@interface OOInlineFloatArray: OOFloatArray
 {
 @private
 	FloatSizedInt				_count;
@@ -80,7 +80,7 @@ enum
 @end
 
 
-@interface OOMExternFloatArray: OOFloatArray
+@interface OOExternFloatArray: OOFloatArray
 {
 	NSUInteger					_freeWhenDone: 1,
 								_count: ((sizeof (NSUInteger) * CHAR_BIT) - 1);
@@ -107,13 +107,13 @@ enum
 // Choose a class for arrays that aren't NoCopy.
 static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
-	return (size <= kMaxInlineCount) ? [OOMInlineFloatArray class] : [OOMExternFloatArray class];
+	return (size <= kMaxInlineCount) ? [OOInlineFloatArray class] : [OOExternFloatArray class];
 }
 
 
 + (id) newWithArray:(NSArray *)array
 {
-	if (array == nil)  return [OOMInlineFloatArray priv_newWithFloats:nil count:0];
+	if (array == nil)  return [OOInlineFloatArray priv_newWithFloats:nil count:0];
 	if ([array isKindOfClass:[OOFloatArray class]])  return [array copy];
 	
 	NSUInteger i, count = [array count];
@@ -171,14 +171,14 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 + (id) arrayWithFloats:(float *)values count:(NSUInteger)count
 {
-	return [[OOMInlineFloatArray priv_newWithFloats:values count:count] autorelease];
+	return [[OOInlineFloatArray priv_newWithFloats:values count:count] autorelease];
 }
 
 
 - (id) initWithFloats:(float *)values count:(NSUInteger)count
 {
 	[self release];
-	return [OOMInlineFloatArray priv_newWithFloats:(float *)values count:count];
+	return [OOInlineFloatArray priv_newWithFloats:(float *)values count:count];
 }
 
 
@@ -190,7 +190,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	
 	if (count > kMinExternCount)
 	{
-		result = [[OOMExternFloatArray alloc] priv_initWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone];
+		result = [[OOExternFloatArray alloc] priv_initWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone];
 	}
 	else
 	{
@@ -253,14 +253,14 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 - (BOOL) isEqualToArray:(NSArray *)other
 {
-	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOMFloatArray:(OOFloatArray *)other];
+	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOFloatArray:(OOFloatArray *)other];
 	return [super isEqualToArray:other];
 }
 
 
 - (BOOL) isEqual:(id)other
 {
-	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOMFloatArray:other];
+	if ([other isKindOfClass:[OOFloatArray class]])  return [self priv_isEqualToOOFloatArray:other];
 	return [super isEqual:other];
 }
 
@@ -284,7 +284,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-- (BOOL) priv_isEqualToOOMFloatArray:(OOFloatArray *)other
+- (BOOL) priv_isEqualToOOFloatArray:(OOFloatArray *)other
 {
 	NSParameterAssert(other != nil);
 	
@@ -311,11 +311,11 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 @end
 
 
-@implementation OOMInlineFloatArray
+@implementation OOInlineFloatArray
 
 + (id) priv_newWithCapacity:(NSUInteger)count
 {
-	OOMInlineFloatArray *result = [NSAllocateObject(self, count * sizeof (float), NULL) priv_init];
+	OOInlineFloatArray *result = [NSAllocateObject(self, count * sizeof (float), NULL) priv_init];
 	if (result != nil)  result->_count = count;
 	return result;
 }
@@ -364,7 +364,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 @end
 
 
-@implementation OOMExternFloatArray
+@implementation OOExternFloatArray
 #if 0
 {
 	NSUInteger					_freeWhenDone: 1,
@@ -379,7 +379,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	float *buffer = malloc(sizeof(float) * count);
 	if (EXPECT_NOT(buffer == NULL))  return nil;
 	
-	return [[OOMExternFloatArray alloc] priv_initWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
+	return [[OOExternFloatArray alloc] priv_initWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
 }
 
 

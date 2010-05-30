@@ -51,8 +51,17 @@
 - (void) replaceFaceGroupAtIndex:(NSUInteger)index withFaceGroup:(OOAbstractFaceGroup *)faceGroup;
 
 - (NSEnumerator *) faceGroupEnumerator;
+- (NSEnumerator *) objectEnumerator;	// Same as faceGroupEnumerator, only less descriptive.
 
 - (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
 - (NSDictionary *) vertexSchema;
+
+//	Mesh manipulations.
+// - (void) applyTransform:(OOMatrix)transform;
+- (void) mergeMesh:(OOAbstractMesh *)other;
+
+// - (void) uniqueVertices;
+
+// - (void) mergeVerticesWithTolerance:(float)tolerance;
 
 @end

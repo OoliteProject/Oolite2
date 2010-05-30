@@ -95,3 +95,20 @@ Vector OOVectorRandomRadial(OOScalar maxLength)
 	return vector_multiply_scalar(OORandomUnitVector(), randf() * maxLength);
 }
 #endif
+
+
+Vector clean_vector(Vector v)
+{
+	if (v.x == -0.0f)  v.x = 0.0f;
+	if (v.y == -0.0f)  v.y = 0.0f;
+	if (v.z == -0.0f)  v.z = 0.0f;
+	return v;
+}
+
+
+Vector2D clean_vector2D(Vector2D v)
+{
+	if (v.x == -0.0f)  v.x = 0.0f;
+	if (v.y == -0.0f)  v.y = 0.0f;
+	return v;
+}

@@ -153,6 +153,21 @@
 }
 
 
+- (id) copyWithZone:(NSZone *)zone
+{
+	OOAbstractFaceGroup *result = [[OOAbstractFaceGroup allocWithZone:zone] initWithCapacity:[self faceCount]];
+	if (EXPECT_NOT(result == nil))  return nil;
+	
+	[result setName:[self name]];
+	[result setMaterial:[self material]];
+	[result->_faces addObjectsFromArray:_faces];
+	result->_vertexSchema = [_vertexSchema retain];
+	result->_homogeneous = _homogeneous;
+	
+	return result;
+}
+
+
 - (NSString *) name
 {
 	return _name;

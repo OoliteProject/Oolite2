@@ -26,6 +26,8 @@
 #import "OOOBJReader.h"
 #import "OOOBJLexer.h"
 #import "OOProblemReportManager.h"
+#import "CollectionUtils.h"
+#import "OOAbstractVertex.h"
 
 
 @interface OOOBJReader (Private) <OOOBJMaterialLibraryResolver>
@@ -35,6 +37,15 @@
 - (void) priv_reportMallocFailure;
 
 - (NSString *) priv_displayName;
+
+- (BOOL) priv_readVertexPosition;
+- (BOOL) priv_readVertexNormal;
+- (BOOL) priv_readVertexTexCoords;
+- (BOOL) priv_readFace;
+- (BOOL) priv_readMaterialLibrary;
+- (BOOL) priv_readObjectName;
+
+- (BOOL) priv_notifyIgnoredKeyword:(NSString *)keyword;
 
 @end
 
@@ -79,6 +90,31 @@
 - (void) parse
 {
 	if (_lexer == nil)  return;
+	
+	BOOL OK = YES;
+	
+	for (;;)
+	{
+		if ([_lexer isAtEnd])  break;
+		
+		NSString *keyword = nil;
+		OK = [_lexer readString:&keyword];
+		if (!OK)
+		{
+			[self priv_reportBasicParseError:@"keyword"];
+			break;
+		}
+		
+		if ([keyword isEqualToString:@"v"])  OK = [self priv_readVertexPosition];
+		else if ([keyword isEqualToString:@"vn"])  OK = [self priv_readVertexNormal];
+		else if ([keyword isEqualToString:@"vt"])  OK = [self priv_readVertexTexCoords];
+		else if ([keyword isEqualToString:@"f"])  OK = [self priv_readFace];
+		else if ([keyword isEqualToString:@"mtllib"])  OK = [self priv_readMaterialLibrary];
+		else if ([keyword isEqualToString:@"o"])  OK = [self priv_readObjectName];
+		else if ([keyword isEqualToString:@"g"])  OK = [_lexer skipLine];
+		else if ([keyword isEqualToString:@"mg"])  OK = [_lexer skipLine];
+		else  OK = [self priv_notifyIgnoredKeyword:keyword];
+	}
 }
 
 
@@ -130,6 +166,136 @@
 - (NSString *) priv_displayName
 {
 	return [[NSFileManager defaultManager] displayNameAtPath:_path];
+}
+
+
+- (BOOL) priv_readVectorForArray:(NSMutableArray *)array
+{
+	Vector v;
+	BOOL OK = [_lexer readReal:&v.x] &&
+	[_lexer readReal:&v.y] &&
+	[_lexer readReal:&v.y];
+	if (!OK)
+	{
+		[self priv_reportBasicParseError:@"number"];
+		return NO;
+	}
+	
+	if (![_lexer readNewline])
+	{
+		[self priv_reportBasicParseError:@"end of line"];
+		return NO;
+	}
+	
+	[array addObject:OOFloatArrayFromVector(clean_vector(v))];
+	 return YES;
+}
+
+
+- (BOOL) priv_readVertexPosition
+{
+	return [self priv_readVectorForArray:_positions];
+}
+
+
+- (BOOL) priv_readVertexNormal
+{
+	return [self priv_readVectorForArray:_normals];
+}
+
+
+- (BOOL) priv_readVertexTexCoords
+{
+	Vector2D v;
+	BOOL OK = [_lexer readReal:&v.x] &&
+			  [_lexer readReal:&v.y];
+	if (!OK)
+	{
+		[self priv_reportBasicParseError:@"number"];
+		return NO;
+	}
+	
+	if (![_lexer readNewline])
+	{
+		[self priv_reportBasicParseError:@"end of line"];
+		return NO;
+	}
+	
+	[_texCoords addObject:OOFloatArrayFromVector2D(clean_vector2D(v))];
+	return YES;
+}
+
+
+- (BOOL) priv_readFace
+{
+	return NO;
+}
+
+
+- (BOOL) priv_readMaterialLibrary
+{
+	return NO;
+}
+
+
+- (BOOL) priv_readObjectName
+{
+	if (_name != nil)  return [_lexer skipLine];
+	
+	if (![_lexer readUntilNewline:&_name])
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
+	
+	_name = [[_name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] retain];
+	return YES;
+}
+
+
+- (BOOL) priv_notifyIgnoredKeyword:(NSString *)keyword
+{
+	//	Set of keywords that are used for curved surfaces, which we don’t support.
+	NSSet *curveCommands = $set(@"vp", @"deg", @"bmat", @"step", @"cstype", @"curv", @"curv2", @"surf", @"parm", @"trim", @"hole", @"scrv", @"sp", @"end", @"con");
+	
+	// Rendering attributes we don’t support.
+	NSSet *renderAttribCommands = $set(@"bevel", @"c_interp", @"d_interp", @"lod", @"maplib", @"usemap", @"shadow_obj", @"trace_obj", @"ctech", @"stech");
+	
+	if ([curveCommands containsObject:keyword])
+	{
+		if (!_warnedAboutCurves)
+		{
+			OOReportWarning(_issues, @"\"%@\" contains curve data which will be ignored.", [self priv_displayName]);
+			_warnedAboutCurves = YES;
+		}
+	}
+	else if ([renderAttribCommands containsObject:keyword])
+	{
+		if (!_warnedAboutRenderAttribs)
+		{
+			OOReportWarning(_issues, @"\"%@\" contains rendering attributes which will be ignored.", [self priv_displayName]);
+			_warnedAboutRenderAttribs = YES;
+		}
+	}
+	else if ([keyword isEqual:@"l"] || [keyword isEqual:@"l"])
+	{
+		if (!_warnedAboutLinesOrPoints)
+		{
+			OOReportWarning(_issues, @"\"%@\" contains point or line data which will be ignored.", [self priv_displayName]);
+			_warnedAboutLinesOrPoints = YES;
+		}
+	}
+	else
+	{
+		if (!_warnedAboutUnknown)
+		{
+			OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" which will be ignored.", [self priv_displayName], keyword);
+			_warnedAboutUnknown = YES;
+		}
+	}
+	
+	
+	return [_lexer skipLine];
 }
 
 @end

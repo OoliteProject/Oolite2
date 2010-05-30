@@ -38,6 +38,18 @@
 	NSString							*_path;
 	OOOBJLexer							*_lexer;
 	id <OOOBJMaterialLibraryResolver>	_resolver;
+	
+	NSString							*_name;
+	
+	BOOL								_warnedAboutCurves;
+	BOOL								_warnedAboutRenderAttribs;
+	BOOL								_warnedAboutLinesOrPoints;
+	BOOL								_warnedAboutUnknown;
+	
+	// ivars used only during parsing.
+	NSMutableArray						*_positions;
+	NSMutableArray						*_normals;
+	NSMutableArray						*_texCoords;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;

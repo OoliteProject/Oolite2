@@ -45,7 +45,7 @@
 		NSData *fileData = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (fileData == nil)
 		{
-			OOReportError(issues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(issues, @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
 		return [self initWithData:fileData issues:issues];

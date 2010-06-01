@@ -158,7 +158,7 @@
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
+	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
 }
 
 

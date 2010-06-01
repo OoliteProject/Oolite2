@@ -85,6 +85,7 @@
 		1A7D37C811B16C1E00857CEF /* OOOBJReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJReader.m; sourceTree = "<group>"; };
 		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
 		1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A878BE711B58492001BB304 /* oomesh-specification.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "oomesh-specification.txt"; path = "../../Documentation/oomesh-specification.txt"; sourceTree = SOURCE_ROOT; };
 		1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroup.h; sourceTree = "<group>"; };
 		1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFaceGroup.m; sourceTree = "<group>"; };
 		1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractMesh.h; sourceTree = "<group>"; };
@@ -136,6 +137,7 @@
 		0867D691FE84028FC02AAC07 /* oomesh */ = {
 			isa = PBXGroup;
 			children = (
+				1A878BE711B58492001BB304 /* oomesh-specification.txt */,
 				1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */,
 				1A713DDD11B55E96009A9197 /* OOMeshTools.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,

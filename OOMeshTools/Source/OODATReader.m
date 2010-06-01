@@ -229,11 +229,11 @@ enum
 		{
 			if (secName == nil)
 			{
-				OOReportWarning(_issues, @"missingEnd", @"The document is missing an END line. This may indicate that the file is damaged.");
+				OOReportWarning(_issues, @"The document is missing an END line. This may indicate that the file is damaged.");
 			}
 			else
 			{
-				OOReportWarning(_issues, @"unknownData", @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
+				OOReportWarning(_issues, @"The document continues beyond where it was expected to end (expected \"END\", found \"%@\"). It may be of a newer format, and important information may be missed.", secName);
 			}
 		}
 	}
@@ -367,7 +367,7 @@ enum
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [self priv_displayName]);
+	OOReportError(_issues, @"Not enough memory to read %@.", [self priv_displayName]);
 }
 
 

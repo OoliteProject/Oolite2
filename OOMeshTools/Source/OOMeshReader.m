@@ -41,7 +41,7 @@
 - (void) priv_reportMallocFailure;
 - (NSString *) priv_displayName;
 
-- (BOOL) priv_readSegmentNamed:(NSString *)name ofType:(NSString *)type;
+- (BOOL) priv_readSectionNamed:(NSString *)name ofType:(NSString *)type;
 - (BOOL) priv_readProperty:(id *)outProperty;
 - (BOOL) priv_readDictionary:(NSDictionary **)outDictionary;
 - (BOOL) priv_readArray:(NSDictionary **)outArray;
@@ -91,15 +91,15 @@
 	BOOL OK = YES;
 	NSMutableDictionary *rootProperties = [NSMutableDictionary dictionary];
 	
-	_unknownSegmentTypes = [NSMutableSet set];
+	_unknownSectionTypes = [NSMutableSet set];
 	_materialsByName = [NSMutableDictionary dictionary];
 	
 	_attributeArrays = [[NSMutableDictionary alloc] init];
 	_groupIndexArrays = [[NSMutableArray alloc] init];
 	_groupMaterials = [[NSMutableArray alloc] init];
 	
-	/*	The root element is structurally similar to a segment, but it's
-		currently the only one that can contain other segments, and there must
+	/*	The root element is structurally similar to a section, but it's
+		currently the only one that can contain other sections, and there must
 		be exactly one root of type oomesh, so it's a special case.
 	*/
 	NSString *keyValue = nil;
@@ -135,14 +135,14 @@
 	
 	while (OK)
 	{
-		//	Root body: like a dictionary body, but with segments.
+		//	Root body: like a dictionary body, but with sections.
 		OOMeshTokenType token = [_lexer currentTokenType];
 		if (token == kOOMeshTokenKeyword || token == kOOMeshTokenString)
 		{
 			keyValue = [_lexer currentTokenString];
 			[_lexer consumeOptionalNewlines];
 			
-			// Distinguish segments from propertys.
+			// Distinguish sections from properties.
 			token = [_lexer currentTokenType];
 			if (token == kOOMeshTokenColon)
 			{
@@ -173,14 +173,14 @@
 			}
 			else if (token == kOOMeshTokenString)
 			{
-				// Segment.
-				NSString *segmentName = [_lexer currentTokenString];
-				OK = [self priv_readSegmentNamed:segmentName ofType:keyValue];
+				// Section.
+				NSString *sectionName = [_lexer currentTokenString];
+				OK = [self priv_readSectionNamed:sectionName ofType:keyValue];
 			}
 			else
 			{
 				OK = NO;
-				[self priv_reportBasicParseError:@"segment name or :"];
+				[self priv_reportBasicParseError:@"section name or :"];
 			}
 
 		}
@@ -203,14 +203,14 @@
 		[_lexer consumeOptionalNewlines];
 		if (![_lexer getToken:kOOMeshTokenEOF])
 		{
-			OOReportWarning(_issues, @"unknownData", @"\"%@\" contains unknown data after then end of the file.", [self priv_displayName]);
+			OOReportWarning(_issues, @"\"%@\" contains unknown data after then end of the file.", [self priv_displayName]);
 		}
 	}
 	
 	// FIXME: verify completeness.
 	DESTROY(_lexer);
 	
-	_unknownSegmentTypes = nil;
+	_unknownSectionTypes = nil;
 	_materialsByName = nil;
 	
 	[pool drain];
@@ -268,7 +268,7 @@
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"allocFailed", @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
+	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
 }
 
 
@@ -405,7 +405,7 @@
 		materialSpec = [_materialsByName objectForKey:materialKey];
 		if (materialSpec == nil)
 		{
-			OOReportWarning(_issues, @"undefinedMaterial", @"Mesh group \"%@\" in %@ specifies undefined material \"%@\", defining empty material.", name, [self priv_displayName]);
+			OOReportWarning(_issues, @"Mesh group \"%@\" in %@ specifies undefined material \"%@\", defining empty material.", name, [self priv_displayName]);
 		}
 	}
 	else
@@ -447,9 +447,9 @@
 typedef id (*dataHandlerIMP)(id self, SEL _cmd, NSDictionary *attributeProperties, NSString *name);
 typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributeProperties, id data, NSString *name);
 
-- (BOOL) priv_readSegmentNamed:(NSString *)name ofType:(NSString *)type
+- (BOOL) priv_readSectionNamed:(NSString *)name ofType:(NSString *)type
 {
-	/*	Segment contents are semantically identical to dictionaries, but they
+	/*	Section contents are semantically identical to dictionaries, but they
 		differ semantically in how the contents are used. Also, for efficiency,
 		the data sections are parsed differently.
 	*/
@@ -479,10 +479,10 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 	}
 	else
 	{
-		if (![_unknownSegmentTypes containsObject:type])
+		if (![_unknownSectionTypes containsObject:type])
 		{
-			[_unknownSegmentTypes addObject:type];
-			OOReportWarning(_issues, @"unknownSegmentType", @"Unknown segment of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayName]);
+			[_unknownSectionTypes addObject:type];
+			OOReportWarning(_issues, @"Unknown section of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayName]);
 		}
 		// We still need to parse it to find the end reliably.
 	}

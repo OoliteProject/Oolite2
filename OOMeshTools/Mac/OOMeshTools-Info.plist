@@ -16,5 +16,25 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.oomesh</string>
+			<key>UTTypeDescription</key>
+			<string>Oolite Mesh</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>oomesh</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

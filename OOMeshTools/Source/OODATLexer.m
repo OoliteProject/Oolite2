@@ -53,7 +53,7 @@ typedef enum OODATLexerEndMode
 		NSData *data = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
 		if (data == nil)
 		{
-			OOReportError(issues, @"noReadFile", @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
+			OOReportError(issues, @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
 			return nil;
 		}
 		return [self initWithData:data issues:issues];

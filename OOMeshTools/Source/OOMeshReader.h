@@ -46,7 +46,7 @@
 	NSMutableArray					*_groupMaterials;
 	
 	// ivars used only during parsing.
-	NSMutableSet					*_unknownSegmentTypes;
+	NSMutableSet					*_unknownSectionTypes;
 	NSMutableDictionary				*_materialsByName;
 }
 

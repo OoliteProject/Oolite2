@@ -43,7 +43,6 @@ SOFTWARE.
 #import <Foundation/Foundation.h>
 #import "OOFunctionAttributes.h"
 #import "OOMaths.h"
-#include <limits.h>
 
 
 @interface NSArray (OOExtractor)

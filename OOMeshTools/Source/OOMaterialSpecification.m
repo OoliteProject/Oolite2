@@ -25,7 +25,6 @@
 
 #import "OOMaterialSpecification.h"
 #import "OOTextureSpecification.h"
-#import "CollectionUtils.h"
 
 
 @implementation OOMaterialSpecification

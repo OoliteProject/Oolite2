@@ -24,7 +24,6 @@
 */
 
 #import "OOFloatArray.h"
-#import "CollectionUtils.h"
 
 
 typedef uint32_t FloatSizedInt;

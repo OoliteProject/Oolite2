@@ -30,11 +30,7 @@ MA 02110-1301, USA.
 #else
 
 
-#ifdef WIN32
-	#define FASTINVSQRT_ENABLED	0	/* Doesn't work on Windows (why?) */
-#else
-	#define FASTINVSQRT_ENABLED	0	/* Disabled due to precision problems. */
-#endif
+#define FASTINVSQRT_ENABLED	0	/* Disabled due to precision problems. */
 
 
 /* OO_PPC: whether to use PowerPC instruction intrinsics like __fsel(). */

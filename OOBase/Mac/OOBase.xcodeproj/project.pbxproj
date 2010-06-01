@@ -27,13 +27,23 @@
 		1A71416011B56810009A9197 /* OOBaseStringParsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A71415E11B56810009A9197 /* OOBaseStringParsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71415F11B56810009A9197 /* OOBaseStringParsing.m */; };
 		1A71431611B56EB7009A9197 /* oolite-shared-settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */; };
-		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		1A878B5F11B57749001BB304 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		1A878B6511B57766001BB304 /* NSObjectOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B6611B57766001BB304 /* NSObjectOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */; };
+		1A878B6911B57778001BB304 /* NSStringOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B6711B57778001BB304 /* NSStringOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B6A11B57778001BB304 /* NSStringOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B6811B57778001BB304 /* NSStringOOExtensions.m */; };
+		1A878B6F11B57793001BB304 /* NSNumberOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B6D11B57793001BB304 /* NSNumberOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B7011B57793001BB304 /* NSNumberOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B6E11B57793001BB304 /* NSNumberOOExtensions.m */; };
+		1A878B7411B577AE001BB304 /* NSThreadOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B7211B577AE001BB304 /* NSThreadOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B7511B577AE001BB304 /* NSThreadOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */; };
+		1A878B7D11B577E8001BB304 /* NSDictionaryOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B7E11B577E8001BB304 /* NSDictionaryOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */; };
+		1A878B9E11B57B04001BB304 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B9C11B57B04001BB304 /* MYCollectionUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A878B9F11B57B04001BB304 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1A713F5F11B5626F009A9197 /* OOBase-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OOBase-Info.plist"; sourceTree = "<group>"; };
 		1A713F9511B56397009A9197 /* OOBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOBase.h; path = ../Source/OOBase.h; sourceTree = SOURCE_ROOT; };
 		1A713FA811B56436009A9197 /* OOCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCocoa.h; sourceTree = "<group>"; };
@@ -55,8 +65,19 @@
 		1A71415E11B56810009A9197 /* OOBaseStringParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBaseStringParsing.h; sourceTree = "<group>"; };
 		1A71415F11B56810009A9197 /* OOBaseStringParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBaseStringParsing.m; sourceTree = "<group>"; };
 		1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectOOExtensions.h; sourceTree = "<group>"; };
+		1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectOOExtensions.m; sourceTree = "<group>"; };
+		1A878B6711B57778001BB304 /* NSStringOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringOOExtensions.h; sourceTree = "<group>"; };
+		1A878B6811B57778001BB304 /* NSStringOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringOOExtensions.m; sourceTree = "<group>"; };
+		1A878B6D11B57793001BB304 /* NSNumberOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNumberOOExtensions.h; sourceTree = "<group>"; };
+		1A878B6E11B57793001BB304 /* NSNumberOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNumberOOExtensions.m; sourceTree = "<group>"; };
+		1A878B7211B577AE001BB304 /* NSThreadOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSThreadOOExtensions.h; sourceTree = "<group>"; };
+		1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSThreadOOExtensions.m; sourceTree = "<group>"; };
+		1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryOOExtensions.h; sourceTree = "<group>"; };
+		1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionaryOOExtensions.m; sourceTree = "<group>"; };
+		1A878B9C11B57B04001BB304 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionUtilities.h; sourceTree = "<group>"; };
+		1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* OOBase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OOBase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
+				1A878B5F11B57749001BB304 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,19 +109,10 @@
 				32C88DFF0371C24200C91783 /* Basest */,
 				1A713FB811B564E5009A9197 /* Maths */,
 				08FB77AEFE84172EC02AAC07 /* Utilities */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = OOBase;
-			sourceTree = "<group>";
-		};
-		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
-			);
-			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
 		08FB77AEFE84172EC02AAC07 /* Utilities */ = {
@@ -110,27 +122,19 @@
 				1A71415F11B56810009A9197 /* OOBaseStringParsing.m */,
 				1A71414511B5678C009A9197 /* OOCollectionExtractors.h */,
 				1A71414611B5678C009A9197 /* OOCollectionExtractors.m */,
+				1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */,
+				1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */,
+				1A878B6711B57778001BB304 /* NSStringOOExtensions.h */,
+				1A878B6811B57778001BB304 /* NSStringOOExtensions.m */,
+				1A878B6D11B57793001BB304 /* NSNumberOOExtensions.h */,
+				1A878B6E11B57793001BB304 /* NSNumberOOExtensions.m */,
+				1A878B7211B577AE001BB304 /* NSThreadOOExtensions.h */,
+				1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */,
+				1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */,
+				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
 			);
 			name = Utilities;
 			path = ../Source;
-			sourceTree = "<group>";
-		};
-		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
-				D2F7E79907B2D74100F64583 /* CoreData.framework */,
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		1A713FB811B564E5009A9197 /* Maths */ = {
@@ -158,6 +162,8 @@
 				1A713FA811B56436009A9197 /* OOCocoa.h */,
 				1A713FA911B56436009A9197 /* OOCocoa.m */,
 				1A713FB911B564FB009A9197 /* OOFunctionAttributes.h */,
+				1A878B9C11B57B04001BB304 /* MYCollectionUtilities.h */,
+				1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */,
 			);
 			name = Basest;
 			path = ../Source;
@@ -181,6 +187,12 @@
 				1A713FE311B565D1009A9197 /* OORandom.h in Headers */,
 				1A71414711B5678C009A9197 /* OOCollectionExtractors.h in Headers */,
 				1A71416011B56810009A9197 /* OOBaseStringParsing.h in Headers */,
+				1A878B6511B57766001BB304 /* NSObjectOOExtensions.h in Headers */,
+				1A878B6911B57778001BB304 /* NSStringOOExtensions.h in Headers */,
+				1A878B6F11B57793001BB304 /* NSNumberOOExtensions.h in Headers */,
+				1A878B7411B577AE001BB304 /* NSThreadOOExtensions.h in Headers */,
+				1A878B7D11B577E8001BB304 /* NSDictionaryOOExtensions.h in Headers */,
+				1A878B9E11B57B04001BB304 /* MYCollectionUtilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +260,12 @@
 				1A713FE211B565D1009A9197 /* OORandom.c in Sources */,
 				1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */,
 				1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */,
+				1A878B6611B57766001BB304 /* NSObjectOOExtensions.m in Sources */,
+				1A878B6A11B57778001BB304 /* NSStringOOExtensions.m in Sources */,
+				1A878B7011B57793001BB304 /* NSNumberOOExtensions.m in Sources */,
+				1A878B7511B577AE001BB304 /* NSThreadOOExtensions.m in Sources */,
+				1A878B7E11B577E8001BB304 /* NSDictionaryOOExtensions.m in Sources */,
+				1A878B9F11B57B04001BB304 /* MYCollectionUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

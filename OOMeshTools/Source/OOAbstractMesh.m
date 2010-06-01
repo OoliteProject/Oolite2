@@ -25,7 +25,6 @@
 
 #import "OOAbstractMesh.h"
 #import "OOAbstractFaceGroup.h"
-#import "CollectionUtils.h"
 
 
 @implementation OOAbstractMesh

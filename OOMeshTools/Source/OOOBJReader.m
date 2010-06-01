@@ -26,7 +26,6 @@
 #import "OOOBJReader.h"
 #import "OOOBJLexer.h"
 #import "OOProblemReportManager.h"
-#import "CollectionUtils.h"
 #import "OOAbstractVertex.h"
 
 

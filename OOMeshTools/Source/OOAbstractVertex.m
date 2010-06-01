@@ -25,7 +25,6 @@
 
 #import "OOAbstractVertex.h"
 #import "OOFloatArray.h"
-#import "CollectionUtils.h"
 
 
 NSString * const kOOPositionAttributeKey	= @"position";

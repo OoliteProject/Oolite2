@@ -38,3 +38,10 @@ SOFTWARE.
 - (NSDictionary *) dictionaryByAddingEntriesFromDictionary:(NSDictionary *)dictionary;
 
 @end
+
+
+@interface NSMutableDictionary (OOExtensions)
+
+- (void)mergeEntriesFromDictionary:(NSDictionary *)otherDictionary;
+
+@end

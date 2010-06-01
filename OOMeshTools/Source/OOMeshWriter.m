@@ -25,7 +25,6 @@
 
 #import "OOMeshWriter.h"
 #import "OOProblemReportManager.h"
-#import "CollectionUtils.h"
 
 #import "OOFloatArray.h"
 #import "OOAbstractVertex.h"
@@ -34,7 +33,6 @@
 #import "OOAbstractMesh.h"
 #import "OOMaterialSpecification.h"
 #import "OOTextureSpecification.h"
-#import "NSNumberOOExtensions.h"
 
 
 //	If set to 1, the use count for each vertex will be listed in the file (as comments on the position attribute).

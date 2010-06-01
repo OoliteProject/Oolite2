@@ -45,29 +45,4 @@ SOFTWARE.
 #endif
 }
 
-
-- (BOOL) oo_isBoolean
-{
-	/*	There's no explicit way to test this. However, on Mac OS X boolean
-		NSNumbers are required to be constant objects because they're toll-
-		free bridged with kCFBooleanTrue and kCFBooleanFalse, so comparison to
-		those values has to work.
-		
-		In GNUstep, constant objects are also used, because they're not about
-		to miss such an obvious optimization.
-	*/
-	
-#if __COREFOUNDATION_CFNUMBER__
-	return self == (NSNumber *)kCFBooleanTrue || self == (NSNumber *)kCFBooleanFalse;
-#else
-	static NSNumber *sTrue = nil, *sFalse;
-	if (EXPECT_NOT(sTrue == nil))
-	{
-		sTrue = [[NSNumber numberWithBool:YES] retain];
-		sFalse = [[NSNumber numberWithBool:NO] retain];
-	}
-	return self == sTrue || self == sFalse;
-#endif
-}
-
 @end

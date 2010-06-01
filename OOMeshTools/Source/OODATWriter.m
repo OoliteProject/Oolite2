@@ -25,7 +25,6 @@
 
 #import "OODATWriter.h"
 #import "OOProblemReportManager.h"
-#import "CollectionUtils.h"
 
 #import "OOFloatArray.h"
 #import "OOAbstractVertex.h"

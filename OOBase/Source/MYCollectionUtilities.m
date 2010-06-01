@@ -1,12 +1,33 @@
-//
-//  CollectionUtils.m
-//  MYUtilities
-//
-//  Created by Jens Alfke on 1/5/08.
-//  Copyright 2008 Jens Alfke. All rights reserved.
-//
+/*
+	MYCollectionUtilities.m
+	
+	
+	Copyright © 2008, Jens Alfke <jens@mooseyard.com>. All rights reserved.
+	With modifications by Jens Ayton.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+	
+	• Redistributions of source code must retain the above copyright notice,
+	  this list of conditions and the following disclaimer.
+	• Redistributions in binary form must reproduce the above copyright notice,
+	  this list of conditions and the following disclaimer in the documentation
+	  and/or other materials provided with the distribution.
 
-#import "CollectionUtils.h"
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+	AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+	ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+	LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSE-
+	QUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+	GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+	OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+	SUCH DAMAGE.
+*/
+
+#import "MYCollectionUtilities.h"
 
 
 NSDictionary* _dictof(const struct _dictpair* pairs, size_t count)
@@ -179,83 +200,3 @@ NSString* $string( const char *utf8Str )
     else
         return nil;
 }
-
-
-@implementation NSArray (MYUtils)
-
-- (BOOL) my_containsObjectIdenticalTo: (id)object
-{
-    return [self indexOfObjectIdenticalTo: object] != NSNotFound;
-}
-
-@end
-
-
-
-
-@implementation NSSet (MYUtils)
-
-+ (NSSet*) my_unionOfSet: (NSSet*)set1 andSet: (NSSet*)set2
-{
-    if( set1 == set2 || set2.count==0 )
-        return set1;
-    else if( set1.count==0 )
-        return set2;
-    else {
-        NSMutableSet *result = [set1 mutableCopy];
-        [result unionSet: set2];
-        return [result autorelease];
-    }
-}
-
-+ (NSSet*) my_intersectionOfSet: (NSSet*)set1 andSet: (NSSet*)set2
-{
-    if( set1 == set2 || set1.count==0 )
-        return set1;
-    else if( set2.count==0 )
-        return set2;
-    else {
-        NSMutableSet *result = [set1 mutableCopy];
-        [result intersectSet: set2];
-        return [result autorelease];
-    }
-}
-
-+ (NSSet*) my_differenceOfSet: (NSSet*)set1 andSet: (NSSet*)set2
-{
-    if( set1.count==0 || set2.count==0 )
-        return set1;
-    else if( set1==set2 )
-        return [NSSet set];
-    else {
-        NSMutableSet *result = [set1 mutableCopy];
-        [result minusSet: set2];
-        return [result autorelease];
-    }
-}
-
-@end
-
-
-
-/*
- Copyright (c) 2008, Jens Alfke <jens@mooseyard.com>. All rights reserved.
- 
- Redistribution and use in source and binary forms, with or without modification, are permitted
- provided that the following conditions are met:
- 
- * Redistributions of source code must retain the above copyright notice, this list of conditions
- and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this list of conditions
- and the following disclaimer in the documentation and/or other materials provided with the
- distribution.
- 
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
- FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRI-
- BUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
- THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */

@@ -29,7 +29,6 @@
 #import "OOAbstractFaceGroup.h"
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
-#import "CollectionUtils.h"
 #import "OOFloatArray.h"
 #import "OOIndexArray.h"
 #import "OOMaterialSpecification.h"

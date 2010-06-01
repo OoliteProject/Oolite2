@@ -49,7 +49,7 @@
 	to copy the data (and immediately free it, if freeWhenDone).
 */
 + (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
-+ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
 - (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
 
 //	Returns NaN if index is out of range.

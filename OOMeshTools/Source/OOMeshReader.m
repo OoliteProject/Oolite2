@@ -235,6 +235,7 @@
 		
 		[group setMaterial:[_groupMaterials objectAtIndex:gIter]];
 		[mesh addFaceGroup:group];
+		[group release];
 	}
 	
 	return mesh;
@@ -322,7 +323,13 @@
 			return nil;
 		}
 	}
-	
+	/*	Static analyzer reports a retain count problem here. This is a false
+		positive: the method name includes “copy”, but not in the relevant
+		sense.
+		Mainline clang has an annotation for this, but it is’t available in
+		OS X at the time of writing. It should be picked up automatically
+		when it is.
+	*/
 	return [OOFloatArray arrayWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
 }
 
@@ -389,6 +396,13 @@
 		}
 	}
 	
+	/*	Static analyzer reports a retain count problem here. This is a false
+		positive: the method name includes “copy”, but not in the relevant
+		sense.
+		Mainline clang has an annotation for this, but it is’t available in
+		OS X at the time of writing. It should be picked up automatically
+		when it is.
+	*/
 	return [OOIndexArray arrayWithUnsignedIntsNoCopy:buffer count:count maximum:_vertexCount freeWhenDone:YES];
 }
 

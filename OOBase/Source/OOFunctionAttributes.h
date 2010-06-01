@@ -55,6 +55,11 @@
 #else
 	#define OO_RETURNS_RETAINED
 #endif
+#if __has_feature(attribute_ns_returns_not_retained)
+	#define OO_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
+#else
+	#define OO_RETURNS_NOT_RETAINED
+#endif
 
 
 #endif	/* INCLUDED_OOFUNCTIONATTRIBUTES_h */

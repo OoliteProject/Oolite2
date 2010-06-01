@@ -45,7 +45,7 @@
 	to copy the data (and immediately free it, if freeWhenDone).
 */
 + (id) newWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
-+ (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
 - (id) initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
 
 - (GLenum) glType;

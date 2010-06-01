@@ -130,7 +130,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 {
 	if (![self priv_isMutableType])
 	{
-		return [[OOPositionOnlyVertex alloc] initWithPosition:position];
+		return [[[OOPositionOnlyVertex alloc] initWithPosition:position] autorelease];
 	}
 	else
 	{
@@ -458,7 +458,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes
 {
-	return [[[OOConcreteMutableVertex alloc] priv_initWithAttributes:attributes verify:YES] retain];
+	return [[[OOConcreteMutableVertex alloc] priv_initWithAttributes:attributes verify:YES] autorelease];
 }
 
 

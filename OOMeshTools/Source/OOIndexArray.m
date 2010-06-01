@@ -161,6 +161,13 @@
 
 + (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
 {
+	/*	Static analyzer reports a retain count problem here. This is a false
+		positive: the method name includes “copy”, but not in the relevant
+		sense.
+		Mainline clang has an annotation for this, but it is’t available in
+		OS X at the time of writing. It should be picked up automatically
+		when it is.
+	*/
 	return [[self newWithUnsignedIntsNoCopy:values count:count maximum:maximum freeWhenDone:freeWhenDone] autorelease];
 }
 

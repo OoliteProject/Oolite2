@@ -477,7 +477,7 @@ void OOLoggingInit(OOLogOutputHandler *logHandler)
 	
 	if (sHandler != nil)  return;
 	if (logHandler != nil)  sHandler = [logHandler retain];
-	else  sHandler = logHandler = [[OOLogOutputHandler alloc] init];
+	else  sHandler = [[OOLogOutputHandler alloc] init];
 	
 	sLock = [[NSLock alloc] init];
 	[sLock ooSetName:@"OOLogging lock"];

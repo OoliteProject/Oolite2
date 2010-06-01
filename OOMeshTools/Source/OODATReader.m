@@ -271,6 +271,10 @@ enum
 	{
 		OK = [self priv_buildGroups];
 	}
+	if (!OK)
+	{
+		DESTROY(_mesh);
+	}
 	
 	for (NSUInteger vIter = 0; vIter < _fileVertexCount; vIter++)
 	{
@@ -337,6 +341,17 @@ enum
 {
 	[self parse];
 	return _fileFaceCount;
+}
+
+
+/*	This method exists purely to suppress Clang static analyzer warnings that
+ these ivars are unused (but may be used by categories, which they are).
+ FIXME: there must be a feature macro we can use to avoid actually building
+ this into the app, but I can't find it in docs.
+ */
+- (BOOL) suppressClangStuff
+{
+	return _haveTriangleAreas;
 }
 
 @end
@@ -437,7 +452,7 @@ enum
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
-			return NO;
+			break;
 		}
 		
 		/*	Canonicalize smooth group IDs. Starts with number 1, using 0
@@ -459,7 +474,7 @@ enum
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
-			return NO;
+			break;
 		}
 		CleanVector(&triangle->normal);
 		
@@ -474,7 +489,7 @@ enum
 		if (!OK || faceVertexCount != 3)
 		{
 			[self priv_reportBasicParseError:@"3"];
-			return NO;
+			break;
 		}
 		
 		OK = [_lexer readInteger:&triangle->vertex[0]] &&
@@ -483,7 +498,7 @@ enum
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
-			return NO;
+			break;
 		}
 		
 		for (NSUInteger vIter = 0; vIter < 3; vIter++)
@@ -499,7 +514,7 @@ enum
 	_usesSmoothGroups = [smoothGroups count] > 1;
 	[pool drain];
 	
-	return YES;
+	return OK;
 }
 
 
@@ -521,7 +536,7 @@ enum
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"string"];
-			return NO;
+			break;
 		}
 		
 		NSNumber *materialIndex = [materialKeyToIndex objectForKey:materialKey];
@@ -547,12 +562,12 @@ enum
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
-			return NO;
+			break;
 		}
 	}
 	[pool drain];
 	
-	return YES;
+	return OK;
 }
 
 
@@ -961,6 +976,7 @@ enum
 			
 			[faceGroup setName:materialName];
 			[faceGroup setMaterial:material];
+			[material release];
 		}
 		
 		for (fIter = 0; fIter < _fileFaceCount; fIter++)

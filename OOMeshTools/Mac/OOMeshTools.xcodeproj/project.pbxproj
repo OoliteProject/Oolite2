@@ -14,6 +14,8 @@
 		1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */; };
 		1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */; };
+		1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OOMeshTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A713DEA11B55EAF009A9197 /* OOMeshToolsBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
 		1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37C311B16C1500857CEF /* OOOBJLexer.h */; settings = {ATTRIBUTES = (); }; };
@@ -32,7 +34,6 @@
 		1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7398E11B10EC800575507 /* OOMeshReader.m */; };
 		1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReportManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReportManager.m */; };
-		1AEA251711A73AA100B361DC /* liboomeshbase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ABE11A5D94E005F2081 /* liboomeshbase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
 		1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA235C11A72E0B00B361DC /* OODATReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -52,7 +53,6 @@
 		1AEA252B11A73AB000B361DC /* CollectionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A864C9011A5EC26008CDC78 /* CollectionUtils.m */; };
 		1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA255911A73C4C00B361DC /* OOMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF426EE11A939F8008E883C /* OOFloatArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF426EC11A939F8008E883C /* OOFloatArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF426EF11A939F8008E883C /* OOFloatArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF426ED11A939F8008E883C /* OOFloatArray.m */; };
 		1AF4293411A9897D008E883C /* OOMaterialSpecification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF4293211A9897D008E883C /* OOMaterialSpecification.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,6 +76,9 @@
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
 		1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshLexer.h; sourceTree = "<group>"; };
 		1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshLexer.m; sourceTree = "<group>"; };
+		1A713DC611B55E05009A9197 /* OOMeshTools-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OOMeshTools-Info.plist"; sourceTree = "<group>"; };
+		1A713DDD11B55E96009A9197 /* OOMeshTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMeshTools.h; path = ../Source/OOMeshTools.h; sourceTree = SOURCE_ROOT; };
+		1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMeshToolsBase.h; path = ../Source/OOMeshToolsBase.h; sourceTree = SOURCE_ROOT; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
 		1A7D35B711B138A100857CEF /* OOIndexArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIndexArray.m; sourceTree = "<group>"; };
 		1A7D37C311B16C1500857CEF /* OOOBJLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJLexer.h; sourceTree = "<group>"; };
@@ -94,7 +97,6 @@
 		1AAB4A3211A5D83D005F2081 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractVertex.h; sourceTree = "<group>"; };
 		1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractVertex.m; sourceTree = "<group>"; };
-		1AAB4ABE11A5D94E005F2081 /* liboomeshbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = liboomeshbase.h; path = Source/liboomeshbase.h; sourceTree = "<group>"; };
 		1AAB4AC711A5D9D8005F2081 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
 		1AAB4AC811A5D9D8005F2081 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
 		1AAB4AC911A5D9D8005F2081 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
@@ -114,9 +116,7 @@
 		1AEA232F11A728C100B361DC /* OODATLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATLexer.m; sourceTree = "<group>"; };
 		1AEA235C11A72E0B00B361DC /* OODATReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATReader.h; sourceTree = "<group>"; };
 		1AEA235D11A72E0B00B361DC /* OODATReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATReader.m; sourceTree = "<group>"; };
-		1AEA251111A73A9200B361DC /* OOMesh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OOMesh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1AEA251311A73A9200B361DC /* OOMesh-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OOMesh-Info.plist"; sourceTree = "<group>"; };
-		1AEA255911A73C4C00B361DC /* OOMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMesh.h; path = Source/OOMesh.h; sourceTree = "<group>"; };
+		1AEA251111A73A9200B361DC /* OOMeshTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OOMeshTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF426EC11A939F8008E883C /* OOFloatArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFloatArray.h; sourceTree = "<group>"; };
 		1AF426ED11A939F8008E883C /* OOFloatArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFloatArray.m; sourceTree = "<group>"; };
 		1AF4293211A9897D008E883C /* OOMaterialSpecification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaterialSpecification.h; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1AEA251111A73A9200B361DC /* OOMesh.framework */,
+				1AEA251111A73A9200B361DC /* OOMeshTools.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,15 +153,15 @@
 		0867D691FE84028FC02AAC07 /* oomesh */ = {
 			isa = PBXGroup;
 			children = (
-				1AAB4ABE11A5D94E005F2081 /* liboomeshbase.h */,
-				1AEA255911A73C4C00B361DC /* OOMesh.h */,
+				1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */,
+				1A713DDD11B55E96009A9197 /* OOMeshTools.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,
 				1AAB4AC611A5D9D8005F2081 /* Oolite */,
 				1A864C8D11A5EC26008CDC78 /* Deps */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				1AAB4A3211A5D83D005F2081 /* Foundation.framework */,
-				1AEA251311A73A9200B361DC /* OOMesh-Info.plist */,
+				1A713DC611B55E05009A9197 /* OOMeshTools-Info.plist */,
 			);
 			name = oomesh;
 			sourceTree = "<group>";
@@ -183,7 +183,8 @@
 				1A7D37C111B16BE900857CEF /* Writers */,
 				1A7D37C211B16BF400857CEF /* Utility */,
 			);
-			path = Source;
+			name = Source;
+			path = ../Source;
 			sourceTree = "<group>";
 		};
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
@@ -273,7 +274,8 @@
 				1A864C8E11A5EC26008CDC78 /* CollectionUtils */,
 				1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */,
 			);
-			path = Deps;
+			name = Deps;
+			path = ../Deps;
 			sourceTree = "<group>";
 		};
 		1A864C8E11A5EC26008CDC78 /* CollectionUtils */ = {
@@ -303,7 +305,8 @@
 				1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */,
 				1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */,
 			);
-			path = Oolite;
+			name = Oolite;
+			path = ../Oolite;
 			sourceTree = "<group>";
 		};
 		1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */ = {
@@ -322,7 +325,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AEA251711A73AA100B361DC /* liboomeshbase.h in Headers */,
 				1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */,
 				1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */,
 				1AEA251E11A73AA500B361DC /* OOAbstractVertex.h in Headers */,
@@ -334,7 +336,6 @@
 				1AEA252711A73AAD00B361DC /* OOQuaternion.h in Headers */,
 				1AEA252911A73AAD00B361DC /* OOVector.h in Headers */,
 				1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */,
-				1AEA255A11A73C4C00B361DC /* OOMesh.h in Headers */,
 				1A8F1BDB11A882FC00C94CB0 /* OOAbstractFaceGroup.h in Headers */,
 				1A8F1CCC11A88CA600C94CB0 /* OOAbstractMesh.h in Headers */,
 				1AF426EE11A939F8008E883C /* OOFloatArray.h in Headers */,
@@ -352,15 +353,17 @@
 				1A7D37C911B16C1E00857CEF /* OOOBJReader.h in Headers */,
 				1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */,
 				1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */,
+				1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */,
+				1A713DEA11B55EAF009A9197 /* OOMeshToolsBase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1AEA251011A73A9200B361DC /* OOMesh */ = {
+		1AEA251011A73A9200B361DC /* OOMeshTools */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1AEA251611A73A9300B361DC /* Build configuration list for PBXNativeTarget "OOMesh" */;
+			buildConfigurationList = 1AEA251611A73A9300B361DC /* Build configuration list for PBXNativeTarget "OOMeshTools" */;
 			buildPhases = (
 				1AEA250C11A73A9200B361DC /* Headers */,
 				1AEA250D11A73A9200B361DC /* Resources */,
@@ -371,9 +374,9 @@
 			);
 			dependencies = (
 			);
-			name = OOMesh;
+			name = OOMeshTools;
 			productName = OOMesh;
-			productReference = 1AEA251111A73A9200B361DC /* OOMesh.framework */;
+			productReference = 1AEA251111A73A9200B361DC /* OOMeshTools.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -381,7 +384,7 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "oomesh" */;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OOMeshTools" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* oomesh */;
@@ -389,7 +392,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1AEA251011A73A9200B361DC /* OOMesh */,
+				1AEA251011A73A9200B361DC /* OOMeshTools */,
 			);
 		};
 /* End PBXProject section */
@@ -452,17 +455,18 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/liboomeshbase.h;
+				GCC_PREFIX_HEADER = ../Source/OOMeshToolsBase.h;
 				GCC_PREPROCESSOR_DEFINITIONS = "OO_DEBUG=1";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "OOMesh-Info.plist";
+				INFOPLIST_FILE = "OOMeshTools-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = OOMesh;
+				PRODUCT_NAME = OOMeshTools;
+				SYMROOT = ../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -483,20 +487,21 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Source/liboomeshbase.h;
+				GCC_PREFIX_HEADER = ../Source/OOMeshToolsBase.h;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"NS_BLOCK_ASSERTIONS=1",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				INFOPLIST_FILE = "OOMesh-Info.plist";
+				INFOPLIST_FILE = "OOMeshTools-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = OOMesh;
+				PRODUCT_NAME = OOMeshTools;
+				SYMROOT = ../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -535,7 +540,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1AEA251611A73A9300B361DC /* Build configuration list for PBXNativeTarget "OOMesh" */ = {
+		1AEA251611A73A9300B361DC /* Build configuration list for PBXNativeTarget "OOMeshTools" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1AEA251411A73A9300B361DC /* Debug */,
@@ -544,7 +549,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "oomesh" */ = {
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OOMeshTools" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,

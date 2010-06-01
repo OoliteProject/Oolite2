@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <OOMesh/CollectionUtils.h>
+#import <OOMeshTools/CollectionUtils.h>
 
 
 static id <OOMeshReading> NewDATReader(NSString *path, id <OOProblemReportManager> issues);

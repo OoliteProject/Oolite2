@@ -1,7 +1,10 @@
-/*
-	OOMeshWriter.h
+/*	
+	OOAbstractFace.h
 	
-	OOMesh (Oolite 2.0) format exporter.
+	A face is simply a collection of three vertices. All other attributes
+	depend on context.
+	
+	An OOAbstractFace is immutable, as are its vertices.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -25,11 +28,27 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
+#import "OOMeshToolsBase.h"
 
-@protocol OOProblemReportManager;
-@class OOAbstractMesh;
+@class OOAbstractVertex;
 
 
-NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues);
-BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);
+@interface OOAbstractFace: NSObject <NSCopying>
+{
+@private
+	OOAbstractVertex			*_vertices[3];
+}
+
++ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
+			   vertex1:(OOAbstractVertex *)vertex1
+			   vertex2:(OOAbstractVertex *)vertex2;
++ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
+
+- (id) initWithVertex0:(OOAbstractVertex *)vertex0
+			   vertex1:(OOAbstractVertex *)vertex1
+			   vertex2:(OOAbstractVertex *)vertex2;
+- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
+
+- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
+
+@end

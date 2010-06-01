@@ -1,10 +1,7 @@
-/*	
-	OOAbstractFace.h
+/*
+	OOTextureSpecification.h
 	
-	A face is simply a collection of three vertices. All other attributes
-	depend on context.
-	
-	An OOAbstractFace is immutable, as are its vertices.
+	Description of a texture map for oomesh.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -28,27 +25,19 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
+#import "OOMeshToolsBase.h"
+#import "JAPropertyListRepresentation.h"
 
-@class OOAbstractVertex;
 
-
-@interface OOAbstractFace: NSObject <NSCopying>
+@interface OOTextureSpecification: NSObject <JAPropertyListRepresentation>
 {
 @private
-	OOAbstractVertex			*_vertices[3];
+	NSString						*_name;
 }
 
-+ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-+ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
++ (id) textureSpecWithName:(NSString *)name;
 
-- (id) initWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
-
-- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
+- (NSString *) textureMapName;
+- (void) setTextureMapName:(NSString *)value;
 
 @end

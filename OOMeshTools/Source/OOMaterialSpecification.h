@@ -25,7 +25,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
+#import "OOMeshToolsBase.h"
 #import "JAPropertyListRepresentation.h"
 
 @class OOTextureSpecification;

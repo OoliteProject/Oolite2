@@ -27,7 +27,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
+#import "OOMeshToolsBase.h"
 
 @class OOAbstractFace, OOMaterialSpecification, OOIndexArray;
 

@@ -1,7 +1,7 @@
 /*
-	OOTextureSpecification.h
+	OODATWriter.h
 	
-	Description of a texture map for oomesh.
+	DAT (Oolite 1.x) format exporter.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -25,19 +25,11 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "liboomeshbase.h"
-#import "JAPropertyListRepresentation.h"
+#import "OOMeshToolsBase.h"
+
+@protocol OOProblemReportManager;
+@class OOAbstractMesh;
 
 
-@interface OOTextureSpecification: NSObject <JAPropertyListRepresentation>
-{
-@private
-	NSString						*_name;
-}
-
-+ (id) textureSpecWithName:(NSString *)name;
-
-- (NSString *) textureMapName;
-- (void) setTextureMapName:(NSString *)value;
-
-@end
+NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues);
+BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);

@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A713E9E11B56003009A9197 /* OOMeshTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A713E9D11B55FF5009A9197 /* OOMeshTools.framework */; };
+		1A878ABB11B5758F001BB304 /* OOMeshTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7142A311B56DB4009A9197 /* OOMeshTools.framework */; };
 		8DD76F9A0486AA7600D96B5E /* OOMDATReaderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* OOMDATReaderTest.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A713E9C11B55FF5009A9197 /* PBXContainerItemProxy */ = {
+		1A7142A211B56DB4009A9197 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A713E9811B55FF5009A9197 /* OOMeshTools.xcodeproj */;
+			containerPortal = 1A71429711B56DB4009A9197 /* OOMeshTools.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OOMeshTools;
 		};
-		1A713EE511B5611B009A9197 /* PBXContainerItemProxy */ = {
+		1A71433611B56EFD009A9197 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A713E9811B55FF5009A9197 /* OOMeshTools.xcodeproj */;
+			containerPortal = 1A71429711B56DB4009A9197 /* OOMeshTools.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OOMeshTools;
@@ -32,7 +32,8 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* OOMDATReaderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMDATReaderTest.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		1A713E9811B55FF5009A9197 /* OOMeshTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OOMeshTools.xcodeproj; path = ../../OOMeshTools/Mac/OOMeshTools.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A71429711B56DB4009A9197 /* OOMeshTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OOMeshTools.xcodeproj; path = ../../OOMeshTools/Mac/OOMeshTools.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1AEA254611A73BC700B361DC /* OOMDATReaderTest_prefix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMDATReaderTest_prefix.h; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* OOMDATReaderTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OOMDATReaderTest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -43,7 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
-				1A713E9E11B56003009A9197 /* OOMeshTools.framework in Frameworks */,
+				1A878ABB11B5758F001BB304 /* OOMeshTools.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +54,7 @@
 		08FB7794FE84155DC02AAC07 /* OOMDATReaderTest */ = {
 			isa = PBXGroup;
 			children = (
+				1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -72,16 +74,16 @@
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1A713E9811B55FF5009A9197 /* OOMeshTools.xcodeproj */,
+				1A71429711B56DB4009A9197 /* OOMeshTools.xcodeproj */,
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		1A713E9911B55FF5009A9197 /* Products */ = {
+		1A71429811B56DB4009A9197 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A713E9D11B55FF5009A9197 /* OOMeshTools.framework */,
+				1A7142A311B56DB4009A9197 /* OOMeshTools.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,7 +109,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				1A713EE611B5611B009A9197 /* PBXTargetDependency */,
+				1A71433711B56EFD009A9197 /* PBXTargetDependency */,
 			);
 			name = OOMDATReaderTest;
 			productInstallPath = "$(HOME)/bin";
@@ -127,8 +129,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1A713E9911B55FF5009A9197 /* Products */;
-					ProjectRef = 1A713E9811B55FF5009A9197 /* OOMeshTools.xcodeproj */;
+					ProductGroup = 1A71429811B56DB4009A9197 /* Products */;
+					ProjectRef = 1A71429711B56DB4009A9197 /* OOMeshTools.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -139,11 +141,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1A713E9D11B55FF5009A9197 /* OOMeshTools.framework */ = {
+		1A7142A311B56DB4009A9197 /* OOMeshTools.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = OOMeshTools.framework;
-			remoteRef = 1A713E9C11B55FF5009A9197 /* PBXContainerItemProxy */;
+			remoteRef = 1A7142A211B56DB4009A9197 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -160,10 +162,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1A713EE611B5611B009A9197 /* PBXTargetDependency */ = {
+		1A71433711B56EFD009A9197 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OOMeshTools;
-			targetProxy = 1A713EE511B5611B009A9197 /* PBXContainerItemProxy */;
+			targetProxy = 1A71433611B56EFD009A9197 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -203,27 +205,25 @@
 		};
 		1DEB927908733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
 		1DEB927A08733DD40010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};

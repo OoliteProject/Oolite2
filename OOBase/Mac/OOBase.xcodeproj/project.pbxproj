@@ -26,6 +26,7 @@
 		1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71414611B5678C009A9197 /* OOCollectionExtractors.m */; };
 		1A71416011B56810009A9197 /* OOBaseStringParsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A71415E11B56810009A9197 /* OOBaseStringParsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71415F11B56810009A9197 /* OOBaseStringParsing.m */; };
+		1A71431611B56EB7009A9197 /* oolite-shared-settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +54,7 @@
 		1A71414611B5678C009A9197 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A71415E11B56810009A9197 /* OOBaseStringParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBaseStringParsing.h; sourceTree = "<group>"; };
 		1A71415F11B56810009A9197 /* OOBaseStringParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBaseStringParsing.m; sourceTree = "<group>"; };
-		1A71418F11B56A07009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		8DC2EF5B0486A6940098B216 /* OOBase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OOBase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -81,7 +82,7 @@
 		0867D691FE84028FC02AAC07 /* OOBase */ = {
 			isa = PBXGroup;
 			children = (
-				1A71418F11B56A07009A9197 /* oolite-shared-settings.xcconfig */,
+				1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */,
 				1A713F9511B56397009A9197 /* OOBase.h */,
 				1A713F5F11B5626F009A9197 /* OOBase-Info.plist */,
 				32C88DFF0371C24200C91783 /* Basest */,
@@ -228,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A71431611B56EB7009A9197 /* oolite-shared-settings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,19 +293,20 @@
 		};
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A71418F11B56A07009A9197 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 			};
 			name = Debug;
 		};
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A71418F11B56A07009A9197 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

@@ -24,7 +24,6 @@
 */
 
 #import "OOIndexArray.h"
-#import "OOCollectionExtractors.h"
 
 
 @interface OOUByteIndexArray: OOIndexArray

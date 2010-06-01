@@ -25,7 +25,6 @@
 
 #import "OOAbstractVertex.h"
 #import "OOFloatArray.h"
-#import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
 
 

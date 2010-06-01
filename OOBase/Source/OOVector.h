@@ -64,6 +64,11 @@ extern const Vector2D	kZeroVector2D,		/* 0, 0 */
 OOINLINE Vector make_vector(OOScalar vx, OOScalar vy, OOScalar vz) INLINE_CONST_FUNC;
 OOINLINE Vector2D MakeVector2D(OOScalar vx, OOScalar vy) INLINE_CONST_FUNC;
 
+/* Generate random vectors. */
+Vector OORandomUnitVector(void);
+Vector OOVectorRandomSpatial(OOScalar maxLength);	// Random vector uniformly distributed in radius-maxLength sphere. (Longer vectors are more common.)
+Vector OOVectorRandomRadial(OOScalar maxLength);		// Random vector with uniform distribution of direction and radius in radius-maxLength sphere. (Causes clustering at centre.)
+
 #if !OOMATHS_STANDALONE
 /* Generate random vectors. */
 Vector OORandomUnitVector(void);
@@ -138,12 +143,6 @@ OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FU
 
 #if __OBJC__
 NSString *VectorDescription(Vector vector);	// @"(x, y, z)"
-#endif
-
-#if OOMATHS_OPENGL_INTEGRATION
-/*	OpenGL conveniences. Need to be macros to work with OOMacroOpenGL. */
-#define GLVertexOOVector(v) do { Vector v_ = v; glVertex3f(v_.x, v_.y, v_.z); } while (0)
-#define GLTranslateOOVector(v) do { Vector v_ = v; OOGL(glTranslatef(v_.x, v_.y, v_.z)); } while (0)
 #endif
 
 

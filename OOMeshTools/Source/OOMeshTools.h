@@ -1,4 +1,4 @@
-#import "OOMeshToolsBase.h"
+#import <OOBase/OOBase.h>
 #import "OOProblemReportManager.h"
 
 #import "OOAbstractVertex.h"

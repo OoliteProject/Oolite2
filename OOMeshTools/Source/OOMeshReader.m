@@ -27,7 +27,6 @@
 #import "OOMeshReader.h"
 #import "OOMeshLexer.h"
 #import "OOProblemReportManager.h"
-#import "OOCollectionExtractors.h"
 #import "OOFloatArray.h"
 #import "OOIndexArray.h"
 #import "OOMaterialSpecification.h"
@@ -302,7 +301,7 @@
 	
 	NSUInteger i, count = _vertexCount * [sizeObj unsignedIntegerValue];
 	float *buffer = malloc(count * sizeof (float));
-	if (EXPECT_NOT(buffer == nil))
+	if (EXPECT_NOT(buffer == NULL))
 	{
 		[self priv_reportMallocFailure];
 		return nil;
@@ -360,7 +359,7 @@
 	
 	NSUInteger i, count = [faceCountObj unsignedIntegerValue] * 3;
 	GLuint *buffer = malloc(count * sizeof (GLuint));
-	if (EXPECT_NOT(buffer == nil))
+	if (EXPECT_NOT(buffer == NULL))
 	{
 		[self priv_reportMallocFailure];
 		return nil;

@@ -9,13 +9,12 @@
 /* Begin PBXBuildFile section */
 		1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A062E9911B2F64E00727C1D /* OODATWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062E9A11B2F64E00727C1D /* OODATWriter.m */; };
-		1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */; };
 		1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */; };
 		1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */; };
 		1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OOMeshTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A713DEA11B55EAF009A9197 /* OOMeshToolsBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A71411011B5669A009A9197 /* OOBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A71410F11B56698009A9197 /* OOBase.framework */; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
 		1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37C311B16C1500857CEF /* OOOBJLexer.h */; settings = {ATTRIBUTES = (); }; };
@@ -39,17 +38,6 @@
 		1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA235C11A72E0B00B361DC /* OODATReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251B11A73AA400B361DC /* OODATReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA235D11A72E0B00B361DC /* OODATReader.m */; };
 		1AEA251E11A73AA500B361DC /* OOAbstractVertex.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252011A73AA900B361DC /* OOCollectionExtractors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252111A73AAA00B361DC /* OOCollectionExtractors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */; };
-		1AEA252211A73AAA00B361DC /* OOFastArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4AC711A5D9D8005F2081 /* OOFastArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252311A73AAB00B361DC /* OOFunctionAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4AC811A5D9D8005F2081 /* OOFunctionAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252411A73AAB00B361DC /* OOMaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4AC911A5D9D8005F2081 /* OOMaths.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252511A73AAC00B361DC /* OOMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ACA11A5D9D8005F2081 /* OOMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252611A73AAC00B361DC /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4ACB11A5D9D8005F2081 /* OOMatrix.m */; };
-		1AEA252711A73AAD00B361DC /* OOQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ACC11A5D9D8005F2081 /* OOQuaternion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252811A73AAD00B361DC /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4ACD11A5D9D8005F2081 /* OOQuaternion.m */; };
-		1AEA252911A73AAD00B361DC /* OOVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AAB4ACE11A5D9D8005F2081 /* OOVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AEA252A11A73AAE00B361DC /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4ACF11A5D9D8005F2081 /* OOVector.m */; };
 		1AEA252B11A73AB000B361DC /* CollectionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A864C9011A5EC26008CDC78 /* CollectionUtils.m */; };
 		1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
@@ -65,20 +53,35 @@
 		1AF42A7911A9AB27008E883C /* NSNumberOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1A71410E11B56698009A9197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A71410A11B56698009A9197 /* OOBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OOBase.framework */;
+			remoteInfo = OOBase;
+		};
+		1A71411111B566A8009A9197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A71410A11B56698009A9197 /* OOBase.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OOBase */;
+			remoteInfo = OOBase;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1A062E9911B2F64E00727C1D /* OODATWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATWriter.h; sourceTree = "<group>"; };
 		1A062E9A11B2F64E00727C1D /* OODATWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATWriter.m; sourceTree = "<group>"; };
-		1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFastArithmetic.m; sourceTree = "<group>"; };
 		1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshWriter.h; sourceTree = "<group>"; };
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
 		1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshLexer.h; sourceTree = "<group>"; };
 		1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshLexer.m; sourceTree = "<group>"; };
 		1A713DC611B55E05009A9197 /* OOMeshTools-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OOMeshTools-Info.plist"; sourceTree = "<group>"; };
 		1A713DDD11B55E96009A9197 /* OOMeshTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMeshTools.h; path = ../Source/OOMeshTools.h; sourceTree = SOURCE_ROOT; };
-		1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMeshToolsBase.h; path = ../Source/OOMeshToolsBase.h; sourceTree = SOURCE_ROOT; };
+		1A71410A11B56698009A9197 /* OOBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OOBase.xcodeproj; path = ../../OOBase/Mac/OOBase.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A71419E11B56A46009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../OOBase/Mac/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
 		1A7D35B711B138A100857CEF /* OOIndexArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIndexArray.m; sourceTree = "<group>"; };
 		1A7D37C311B16C1500857CEF /* OOOBJLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJLexer.h; sourceTree = "<group>"; };
@@ -86,26 +89,14 @@
 		1A7D37C711B16C1E00857CEF /* OOOBJReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJReader.h; sourceTree = "<group>"; };
 		1A7D37C811B16C1E00857CEF /* OOOBJReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJReader.m; sourceTree = "<group>"; };
 		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
-		1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCollectionExtractors.h; sourceTree = "<group>"; };
-		1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A864C8F11A5EC26008CDC78 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionUtils.h; sourceTree = "<group>"; };
 		1A864C9011A5EC26008CDC78 /* CollectionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionUtils.m; sourceTree = "<group>"; };
 		1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroup.h; sourceTree = "<group>"; };
 		1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFaceGroup.m; sourceTree = "<group>"; };
 		1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractMesh.h; sourceTree = "<group>"; };
 		1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractMesh.m; sourceTree = "<group>"; };
-		1AAB4A3211A5D83D005F2081 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractVertex.h; sourceTree = "<group>"; };
 		1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractVertex.m; sourceTree = "<group>"; };
-		1AAB4AC711A5D9D8005F2081 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
-		1AAB4AC811A5D9D8005F2081 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
-		1AAB4AC911A5D9D8005F2081 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
-		1AAB4ACA11A5D9D8005F2081 /* OOMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMatrix.h; sourceTree = "<group>"; };
-		1AAB4ACB11A5D9D8005F2081 /* OOMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMatrix.m; sourceTree = "<group>"; };
-		1AAB4ACC11A5D9D8005F2081 /* OOQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOQuaternion.h; sourceTree = "<group>"; };
-		1AAB4ACD11A5D9D8005F2081 /* OOQuaternion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOQuaternion.m; sourceTree = "<group>"; };
-		1AAB4ACE11A5D9D8005F2081 /* OOVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVector.h; sourceTree = "<group>"; };
-		1AAB4ACF11A5D9D8005F2081 /* OOVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOVector.m; sourceTree = "<group>"; };
 		1AB7395D11B10B0300575507 /* OOAbstractFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFace.h; sourceTree = "<group>"; };
 		1AB7395E11B10B0300575507 /* OOAbstractFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFace.m; sourceTree = "<group>"; };
 		1AB7398D11B10EC800575507 /* OOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReader.h; sourceTree = "<group>"; };
@@ -127,7 +118,6 @@
 		1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
 		1AF42A7611A9AB27008E883C /* NSNumberOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSNumberOOExtensions.h; sourceTree = "<group>"; };
 		1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSNumberOOExtensions.m; sourceTree = "<group>"; };
-		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */,
+				1A71411011B5669A009A9197 /* OOBase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,14 +144,13 @@
 		0867D691FE84028FC02AAC07 /* oomesh */ = {
 			isa = PBXGroup;
 			children = (
-				1A713DE911B55EAF009A9197 /* OOMeshToolsBase.h */,
+				1A71419E11B56A46009A9197 /* oolite-shared-settings.xcconfig */,
 				1A713DDD11B55E96009A9197 /* OOMeshTools.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,
 				1AAB4AC611A5D9D8005F2081 /* Oolite */,
 				1A864C8D11A5EC26008CDC78 /* Deps */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
-				1AAB4A3211A5D83D005F2081 /* Foundation.framework */,
 				1A713DC611B55E05009A9197 /* OOMeshTools-Info.plist */,
 			);
 			name = oomesh;
@@ -169,8 +159,8 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				1A71410A11B56698009A9197 /* OOBase.xcodeproj */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -187,22 +177,12 @@
 			path = ../Source;
 			sourceTree = "<group>";
 		};
-		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+		1A71410B11B56698009A9197 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+				1A71410F11B56698009A9197 /* OOBase.framework */,
 			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
-				D2F7E8BE07B2D77200F64583 /* CoreData.framework */,
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1A7D37BF11B16BD700857CEF /* Model */ = {
@@ -292,18 +272,6 @@
 			children = (
 				1AF42A7611A9AB27008E883C /* NSNumberOOExtensions.h */,
 				1AF42A7711A9AB27008E883C /* NSNumberOOExtensions.m */,
-				1AAB4AC711A5D9D8005F2081 /* OOFastArithmetic.h */,
-				1A0ECCC611A83F6E003C2D79 /* OOFastArithmetic.m */,
-				1AAB4AC811A5D9D8005F2081 /* OOFunctionAttributes.h */,
-				1AAB4AC911A5D9D8005F2081 /* OOMaths.h */,
-				1AAB4ACA11A5D9D8005F2081 /* OOMatrix.h */,
-				1AAB4ACB11A5D9D8005F2081 /* OOMatrix.m */,
-				1AAB4ACC11A5D9D8005F2081 /* OOQuaternion.h */,
-				1AAB4ACD11A5D9D8005F2081 /* OOQuaternion.m */,
-				1AAB4ACE11A5D9D8005F2081 /* OOVector.h */,
-				1AAB4ACF11A5D9D8005F2081 /* OOVector.m */,
-				1A864C3D11A5E85C008CDC78 /* OOCollectionExtractors.h */,
-				1A864C3E11A5E85C008CDC78 /* OOCollectionExtractors.m */,
 			);
 			name = Oolite;
 			path = ../Oolite;
@@ -328,13 +296,6 @@
 				1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */,
 				1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */,
 				1AEA251E11A73AA500B361DC /* OOAbstractVertex.h in Headers */,
-				1AEA252011A73AA900B361DC /* OOCollectionExtractors.h in Headers */,
-				1AEA252211A73AAA00B361DC /* OOFastArithmetic.h in Headers */,
-				1AEA252311A73AAB00B361DC /* OOFunctionAttributes.h in Headers */,
-				1AEA252411A73AAB00B361DC /* OOMaths.h in Headers */,
-				1AEA252511A73AAC00B361DC /* OOMatrix.h in Headers */,
-				1AEA252711A73AAD00B361DC /* OOQuaternion.h in Headers */,
-				1AEA252911A73AAD00B361DC /* OOVector.h in Headers */,
 				1AEA252F11A73AB100B361DC /* CollectionUtils.h in Headers */,
 				1A8F1BDB11A882FC00C94CB0 /* OOAbstractFaceGroup.h in Headers */,
 				1A8F1CCC11A88CA600C94CB0 /* OOAbstractMesh.h in Headers */,
@@ -354,7 +315,6 @@
 				1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */,
 				1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */,
 				1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */,
-				1A713DEA11B55EAF009A9197 /* OOMeshToolsBase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +333,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A71411211B566A8009A9197 /* PBXTargetDependency */,
 			);
 			name = OOMeshTools;
 			productName = OOMesh;
@@ -390,12 +351,28 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* oomesh */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1A71410B11B56698009A9197 /* Products */;
+					ProjectRef = 1A71410A11B56698009A9197 /* OOBase.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1AEA251011A73A9200B361DC /* OOMeshTools */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1A71410F11B56698009A9197 /* OOBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OOBase.framework;
+			remoteRef = 1A71410E11B56698009A9197 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1AEA250D11A73A9200B361DC /* Resources */ = {
@@ -414,12 +391,7 @@
 			files = (
 				1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */,
 				1AEA251B11A73AA400B361DC /* OODATReader.m in Sources */,
-				1AEA252111A73AAA00B361DC /* OOCollectionExtractors.m in Sources */,
-				1AEA252611A73AAC00B361DC /* OOMatrix.m in Sources */,
-				1AEA252811A73AAD00B361DC /* OOQuaternion.m in Sources */,
-				1AEA252A11A73AAE00B361DC /* OOVector.m in Sources */,
 				1AEA252B11A73AB000B361DC /* CollectionUtils.m in Sources */,
-				1A0ECCC711A83F6E003C2D79 /* OOFastArithmetic.m in Sources */,
 				1A8F1BDC11A882FC00C94CB0 /* OOAbstractFaceGroup.m in Sources */,
 				1A8F1CCD11A88CA600C94CB0 /* OOAbstractMesh.m in Sources */,
 				1AF426EF11A939F8008E883C /* OOFloatArray.m in Sources */,
@@ -442,6 +414,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1A71411211B566A8009A9197 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OOBase;
+			targetProxy = 1A71411111B566A8009A9197 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		1AEA251411A73A9300B361DC /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -455,7 +435,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = ../Source/OOMeshToolsBase.h;
+				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OOBase.framework/Headers/OOBase.h";
 				GCC_PREPROCESSOR_DEFINITIONS = "OO_DEBUG=1";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "OOMeshTools-Info.plist";
@@ -487,7 +467,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = ../Source/OOMeshToolsBase.h;
+				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OOBase.framework/Headers/OOBase.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"NS_BLOCK_ASSERTIONS=1",
@@ -513,27 +493,24 @@
 		};
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71419E11B56A46009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71419E11B56A46009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};

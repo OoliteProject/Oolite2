@@ -26,6 +26,7 @@ SOFTWARE.
 */
 
 #import "NSNumberOOExtensions.h"
+#import "OOFunctionAttributes.h"
 
 
 @implementation NSNumber (OOExtensions)

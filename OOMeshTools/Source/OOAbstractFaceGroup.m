@@ -30,7 +30,6 @@
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
 #import "CollectionUtils.h"
-#import "OOCollectionExtractors.h"
 #import "OOFloatArray.h"
 #import "OOIndexArray.h"
 #import "OOMaterialSpecification.h"
@@ -127,7 +126,7 @@
 				
 				// FIXME: extend vertex to bypass dict?
 				NSDictionary *dict = [NSDictionary dictionaryWithObjects:attrValues forKeys:attrKeys count:attrCount];
-				verts[vIter] = [[OOAbstractVertex alloc] initWithAttributes:dict];
+				verts[vIter] = [(OOAbstractVertex *)[OOAbstractVertex alloc] initWithAttributes:dict];
 			}
 			
 			OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertices:verts];

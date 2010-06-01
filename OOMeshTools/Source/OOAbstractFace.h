@@ -28,7 +28,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMeshToolsBase.h"
+#import <OOBase/OOBase.h>
 
 @class OOAbstractVertex;
 

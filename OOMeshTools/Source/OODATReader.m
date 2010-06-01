@@ -28,7 +28,6 @@
 #import "OOProblemReportManager.h"
 #import "OODATLexer.h"
 #import "CollectionUtils.h"
-#import "OOCollectionExtractors.h"
 
 #import "OOAbstractVertex.h"
 #import "OOAbstractFace.h"

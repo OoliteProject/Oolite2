@@ -24,7 +24,6 @@
 */
 
 #import "OOFloatArray.h"
-#import "OOCollectionExtractors.h"
 #import "CollectionUtils.h"
 
 
@@ -113,7 +112,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 
 + (id) newWithArray:(NSArray *)array
 {
-	if (array == nil)  return [OOInlineFloatArray priv_newWithFloats:nil count:0];
+	if (array == nil)  return [OOInlineFloatArray priv_newWithFloats:NULL count:0];
 	if ([array isKindOfClass:[OOFloatArray class]])  return [array copy];
 	
 	NSUInteger i, count = [array count];

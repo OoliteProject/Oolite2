@@ -96,19 +96,6 @@ OOINLINE void OOMatrixGetBasisVectors(OOMatrix m, Vector *outRight, Vector *outU
 OOMatrix OOMatrixOrthogonalize(OOMatrix m) CONST_FUNC;
 
 
-#if OOMATHS_OPENGL_INTEGRATION
-/*	OpenGL conveniences. Need to be macros to work with OOMacroOpenGL. */
-#define OOMatrixValuesForOpenGL(M) (&(M).m[0][0])
-#define GLMultOOMatrix(M) do { OOMatrix m_ = M; OOGL(glMultMatrixf(OOMatrixValuesForOpenGL(m_))); } while (0)
-#define GLLoadOOMatrix(M) do { OOMatrix m_ = M; OOGL(glLoadMatrixf(OOMatrixValuesForOpenGL(m_))); } while (0)
-#define GLMultTransposeOOMatrix(M) do { OOMatrix m_ = M; OOGL(glMultTransposeMatrixf(OOMatrixValuesForOpenGL(m_))); } while (0)
-#define GLLoadTransposeOOMatrix(M) do { OOMatrix m_ = M; OOGL(glLoadTransposeMatrixf(OOMatrixValuesForOpenGL(m_))); } while (0)
-#define GLUniformMatrix(location, M) do { OOGL(glUniformMatrix4fvARB(location, 1, NO, OOMatrixValuesForOpenGL(M))); } while (0)
-
-OOINLINE OOMatrix OOMatrixLoadGLMatrix(unsigned long /* GLenum */ matrixID) ALWAYS_INLINE_FUNC;
-#endif
-
-
 #if __OBJC__
 NSString *OOMatrixDescription(OOMatrix matrix);		// @"{{#, #, #, #}, {#, #, #, #}, {#, #, #, #}, {#, #, #, #}}"
 #endif
@@ -314,15 +301,5 @@ OOINLINE void OOMatrixGetBasisVectors(OOMatrix m, Vector *outRight, Vector *outU
 	*outUp		= make_vector(m.m[0][1], m.m[1][1], m.m[2][1]);
 	*outForward	= make_vector(m.m[0][2], m.m[1][2], m.m[2][2]);
 }
-
-
-#if OOMATHS_OPENGL_INTEGRATION
-OOINLINE OOMatrix OOMatrixLoadGLMatrix(unsigned long /* GLenum */ matrixID)
-{
-	OOMatrix m;
-	glGetFloatv(matrixID, OOMatrixValuesForOpenGL(m));
-	return m;
-}
-#endif
 
 #endif	/* INCLUDED_OOMATHS_h */

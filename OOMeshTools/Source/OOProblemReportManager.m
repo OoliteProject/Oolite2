@@ -104,25 +104,23 @@ void OOReportNSError(id <OOProblemReportManager> probMgr, NSString *context, NSE
 
 - (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
 {
-	NSString *prefix = @"";
+	NSString *messageClass = @"mesh.load.problem";
 	switch (type)
 	{
 		case kOOMProblemTypeInformative:
-			prefix = @"note";
+			messageClass = @"mesh.load.note";
 			break;
 			
 		case kOOMProblemTypeWarning:
-			prefix = @"warning";
+			messageClass = @"mesh.load.warning";
 			break;
 			
 		case kOOMProblemTypeError:
-			prefix = @"error";
+			messageClass = @"mesh.load.error";
 			break;
 	}
 	
-	message = [NSString stringWithFormat:@"%@: %@\n", prefix, message];
-	
-	fputs([message UTF8String], stderr);
+	OOLog(messageClass, @"%@", message);
 }
 
 

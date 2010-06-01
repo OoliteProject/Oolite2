@@ -29,7 +29,7 @@ int main (int argc, const char * argv[])
 	else if ([ext isEqualToString:@"obj"])  reader = NewOBJReader(path, issues);
 	else
 	{
-		OOReportError(issues, @"unknownType", @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
+		OOReportError(issues, @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
 	}
 	
 	OOAbstractMesh *mesh = [reader abstractMesh];

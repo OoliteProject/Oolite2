@@ -1,6 +1,7 @@
 #import <OOBase/OOCocoa.h>
 #import <OOBase/OOFunctionAttributes.h>
 #import <OOBase/MYCollectionUtilities.h>
+#import <OOBase/OOLogging.h>
 
 #import <OOBase/OOMaths.h>
 

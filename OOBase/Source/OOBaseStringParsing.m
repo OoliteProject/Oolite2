@@ -24,10 +24,13 @@ MA 02110-1301, USA.
 */
 
 #import "OOBaseStringParsing.h"
+#import "OOLogging.h"
 
 
-// FIXME
-#define OOLogERR(...) do {} while (0)
+static NSString * const kOOLogStringVectorConversion			= @"strings.conversion.vector";
+static NSString * const kOOLogStringQuaternionConversion		= @"strings.conversion.quaternion";
+static NSString * const kOOLogStringVecAndQuatConversion		= @"strings.conversion.vectorAndQuaternion";
+static NSString * const kOOLogStringRandomSeedConversion		= @"strings.conversion.randomSeed";
 
 
 BOOL OOScanVectorFromString(NSString *xyzString, Vector *outVector)

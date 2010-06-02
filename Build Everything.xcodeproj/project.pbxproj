@@ -1,0 +1,200 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		1A50F54111B6DB6F005D584E /* Build Everything */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1A50F54411B6DB81005D584E /* Build configuration list for PBXAggregateTarget "Build Everything" */;
+			buildPhases = (
+			);
+			dependencies = (
+				1A50F56211B6DBA8005D584E /* PBXTargetDependency */,
+				1A50F56411B6DBAC005D584E /* PBXTargetDependency */,
+			);
+			name = "Build Everything";
+			productName = "Build Everything";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		1A50F55411B6DB8E005D584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A50F54511B6DB8E005D584E /* OOMDATReaderTest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = OOMDATReaderTest;
+		};
+		1A50F55F11B6DB9D005D584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = oomergemesh;
+		};
+		1A50F56111B6DBA8005D584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
+			remoteInfo = oomergemesh;
+		};
+		1A50F56311B6DBAC005D584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A50F54511B6DB8E005D584E /* OOMDATReaderTest.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
+			remoteInfo = OOMDATReaderTest;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1A50F54511B6DB8E005D584E /* OOMDATReaderTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OOMDATReaderTest.xcodeproj; path = tests/OOMDATReaderTest/OOMDATReaderTest.xcodeproj; sourceTree = "<group>"; };
+		1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oomergemesh.xcodeproj; path = tests/oomergemesh/oomergemesh.xcodeproj; sourceTree = "<group>"; };
+		1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "Config/oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1A50F54611B6DB8E005D584E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A50F55511B6DB8E005D584E /* OOMDATReaderTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A50F55711B6DB9D005D584E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A50F56011B6DB9D005D584E /* oomergemesh */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AE4E99111B6DAF600A85342 = {
+			isa = PBXGroup;
+			children = (
+				1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */,
+				1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */,
+				1A50F54511B6DB8E005D584E /* OOMDATReaderTest.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		1AE4E99311B6DAF600A85342 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = 1AE4E99111B6DAF600A85342;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1A50F54611B6DB8E005D584E /* Products */;
+					ProjectRef = 1A50F54511B6DB8E005D584E /* OOMDATReaderTest.xcodeproj */;
+				},
+				{
+					ProductGroup = 1A50F55711B6DB9D005D584E /* Products */;
+					ProjectRef = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1A50F54111B6DB6F005D584E /* Build Everything */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1A50F55511B6DB8E005D584E /* OOMDATReaderTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OOMDATReaderTest;
+			remoteRef = 1A50F55411B6DB8E005D584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A50F56011B6DB9D005D584E /* oomergemesh */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = oomergemesh;
+			remoteRef = 1A50F55F11B6DB9D005D584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXTargetDependency section */
+		1A50F56211B6DBA8005D584E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = oomergemesh;
+			targetProxy = 1A50F56111B6DBA8005D584E /* PBXContainerItemProxy */;
+		};
+		1A50F56411B6DBAC005D584E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OOMDATReaderTest;
+			targetProxy = 1A50F56311B6DBAC005D584E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1A50F54211B6DB6F005D584E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Build Everything";
+			};
+			name = Debug;
+		};
+		1A50F54311B6DB6F005D584E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				PRODUCT_NAME = "Build Everything";
+			};
+			name = Release;
+		};
+		1AE4E99411B6DAF600A85342 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		1AE4E99511B6DAF600A85342 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A50F54411B6DB81005D584E /* Build configuration list for PBXAggregateTarget "Build Everything" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A50F54211B6DB6F005D584E /* Debug */,
+				1A50F54311B6DB6F005D584E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE4E99411B6DAF600A85342 /* Debug */,
+				1AE4E99511B6DAF600A85342 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1AE4E99311B6DAF600A85342 /* Project object */;
+}

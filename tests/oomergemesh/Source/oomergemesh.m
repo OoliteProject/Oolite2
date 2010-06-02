@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <OOMeshTools/OOMeshTools.h>
-#import <OOMeshTools/CollectionUtils.h>
 
 
 static OOAbstractMesh *LoadMesh(NSString *path, id <OOProblemReportManager> issues);

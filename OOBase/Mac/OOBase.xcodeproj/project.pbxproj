@@ -26,7 +26,6 @@
 		1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71414611B5678C009A9197 /* OOCollectionExtractors.m */; };
 		1A71416011B56810009A9197 /* OOBaseStringParsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A71415E11B56810009A9197 /* OOBaseStringParsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71415F11B56810009A9197 /* OOBaseStringParsing.m */; };
-		1A71431611B56EB7009A9197 /* oolite-shared-settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */; };
 		1A878B5F11B57749001BB304 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		1A878B6511B57766001BB304 /* NSObjectOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A878B6611B57766001BB304 /* NSObjectOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */; };
@@ -268,7 +267,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A71431611B56EB7009A9197 /* oolite-shared-settings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -78,8 +78,6 @@ static ShouldShowMessageInClassIMP	sShouldShowMessageInClass;
 
 // We could probably use less state variables.
 static NSLock						*sLock = nil;
-static NSMutableDictionary			*sExplicitSettings = nil;
-static NSMutableDictionary			*sDerivedSettingsCache = nil;
 #if USE_INDENT_GLOBALS
 static THREAD_LOCAL unsigned		sIndentLevel = 0;
 static THREAD_LOCAL OOLogIndentStackElement
@@ -88,9 +86,6 @@ static THREAD_LOCAL OOLogIndentStackElement
 static BOOL							sShowFunction = NO;
 static BOOL							sShowFileAndLine = NO;
 static BOOL							sShowClass = YES;
-static BOOL							sDefaultDisplay = YES;
-static BOOL							sOverrideInEffect = NO;
-static BOOL							sOverrideValue = NO;
 
 
 // To avoid recursion/self-dependencies, OOLog gets its own logging function.
@@ -473,8 +468,6 @@ void OOLogSetShowMessageClassTemporary(BOOL flag)
 
 void OOLoggingInit(OOLogOutputHandler *logHandler)
 {
-	NSAutoreleasePool		*pool = nil;
-	
 	if (sHandler != nil)  return;
 	if (logHandler != nil)  sHandler = [logHandler retain];
 	else  sHandler = [[OOLogOutputHandler alloc] init];

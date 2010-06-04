@@ -94,32 +94,6 @@ BOOL $equal(id obj1, id obj2)      // Like -isEqual: but works even if either/bo
 }
 
 
-NSValue* _box(const void *value, const char *encoding)
-{
-    // file:///Developer/Documentation/DocSets/com.apple.ADC_Reference_Library.DeveloperTools.docset/Contents/Resources/Documents/documentation/DeveloperTools/gcc-4.0.1/gcc/Type-encoding.html
-    char e = encoding[0];
-    if( e=='r' )                // ignore 'const' modifier
-        e = encoding[1];
-    switch( e ) {
-        case 'c':   return [NSNumber numberWithChar: *(char*)value];
-        case 'C':   return [NSNumber numberWithUnsignedChar: *(char*)value];
-        case 's':   return [NSNumber numberWithShort: *(short*)value];
-        case 'S':   return [NSNumber numberWithUnsignedShort: *(unsigned short*)value];
-        case 'i':   return [NSNumber numberWithInt: *(int*)value];
-        case 'I':   return [NSNumber numberWithUnsignedInt: *(unsigned int*)value];
-        case 'l':   return [NSNumber numberWithLong: *(long*)value];
-        case 'L':   return [NSNumber numberWithUnsignedLong: *(unsigned long*)value];
-        case 'q':   return [NSNumber numberWithLongLong: *(long long*)value];
-        case 'Q':   return [NSNumber numberWithUnsignedLongLong: *(unsigned long long*)value];
-        case 'f':   return [NSNumber numberWithFloat: *(float*)value];
-        case 'd':   return [NSNumber numberWithDouble: *(double*)value];
-        case '*':   return [NSString stringWithUTF8String: *(char**)value];
-        case '@':   return *(id*)value;
-        default:    return [NSValue value: value withObjCType: encoding];
-    }
-}
-
-
 id _cast( Class requiredClass, id object )
 {
     if( object && ! [object isKindOfClass: requiredClass] )

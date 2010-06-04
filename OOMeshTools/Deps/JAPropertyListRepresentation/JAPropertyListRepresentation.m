@@ -36,7 +36,7 @@
 	if (![self respondsToSelector:@selector(ja_propertyListRepresentationWithContext:)])
 	{
 		#ifndef NDEBUG
-			NSLog(@"%s: called for object of class %@, which does not implement -[%s].", __PRETTY_FUNCTION__, [self class], "ja_propertyListRepresentationWithContext:");
+			OOLog(@"propertyListRepresentation.badType", @"%s: called for object of class %@, which does not implement -[%s].", __PRETTY_FUNCTION__, [self class], "ja_propertyListRepresentationWithContext:");
 		#endif
 		return nil;
 	}
@@ -64,7 +64,7 @@
 	if (![self respondsToSelector:@selector(ja_propertyListRepresentationWithContext:)])
 	{
 		#ifndef NDEBUG
-			NSLog(@"%s: called for object of class %@, which does not implement -[%s].", __PRETTY_FUNCTION__, [self class], "ja_propertyListRepresentationWithContext:");
+			OOLog(@"propertyListRepresentation.badType", @"%s: called for object of class %@, which does not implement -[%s].", __PRETTY_FUNCTION__, [self class], "ja_propertyListRepresentationWithContext:");
 		#endif
 		return nil;
 	}

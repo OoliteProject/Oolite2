@@ -26,12 +26,7 @@
 #import "OODATWriter.h"
 #import "OOProblemReportManager.h"
 
-#import "OOFloatArray.h"
-#import "OOAbstractVertex.h"
-#import "OOAbstractFace.h"
-#import "OOAbstractFaceGroup.h"
 #import "OOAbstractMesh.h"
-#import "OOMaterialSpecification.h"
 
 
 BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
@@ -199,7 +194,7 @@ NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issu
 	/*
 		Write TANGENTS section.
 	*/
-	[result appendString:@"\nNORMALS\n"];
+	[result appendString:@"\nTANGENTS\n"];
 	
 	foreach (datVert, datVerts)
 	{

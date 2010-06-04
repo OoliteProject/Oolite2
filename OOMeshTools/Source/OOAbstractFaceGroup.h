@@ -28,8 +28,9 @@
 */
 
 #import <OOBase/OOBase.h>
+#import "OOAbstractFace.h"
 
-@class OOAbstractFace, OOMaterialSpecification, OOIndexArray;
+@class OOMaterialSpecification, OOIndexArray;
 
 
 @interface OOAbstractFaceGroup: NSObject <NSFastEnumeration, NSCopying>

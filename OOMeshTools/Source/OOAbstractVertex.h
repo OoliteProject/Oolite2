@@ -33,8 +33,7 @@
 */
 
 #import <OOBase/OOBase.h>
-
-@class OOFloatArray;
+#import "OOFloatArray.h"
 
 
 @interface OOAbstractVertex: NSObject <NSCopying, NSMutableCopying>
@@ -48,6 +47,9 @@
 
 + (id) vertexWithAttributes:(NSDictionary *)attributes;
 - (id) initWithAttributes:(NSDictionary *)attributes;
+
++ (id) vertexWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
+- (id) initWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key;
 
 + (id) vertexWithPosition:(Vector)position;
 

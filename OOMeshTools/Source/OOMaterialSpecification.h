@@ -27,8 +27,7 @@
 
 #import <OOBase/OOBase.h>
 #import "JAPropertyListRepresentation.h"
-
-@class OOTextureSpecification;
+#import "OOTextureSpecification.h"
 
 
 @interface OOMaterialSpecification: NSObject <JAPropertyListRepresentation>

@@ -33,17 +33,18 @@
 @interface OODATLexer: NSObject
 {
 @private
-	const char				*_cursor;
-	const char				*_end;
-	size_t					_tokenLength;
-	NSData					*_data;
-	unsigned				_lineNumber;
-	NSString				*_tokenString;
+	id <OOProblemReportManager>	_issues;
+	const char					*_cursor;
+	const char					*_end;
+	size_t						_tokenLength;
+	NSData						*_data;
+	unsigned					_lineNumber;
+	NSString					*_tokenString;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues;
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues;
+- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithData:(NSData *)data issues:(id <OOProblemReportManager>)issues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 

@@ -28,11 +28,7 @@
 #import "OOProblemReportManager.h"
 #import "OODATLexer.h"
 
-#import "OOAbstractVertex.h"
-#import "OOAbstractFace.h"
-#import "OOAbstractFaceGroup.h"
 #import "OOAbstractMesh.h"
-#import "OOMaterialSpecification.h"
 
 
 static void CleanVector(Vector *v)

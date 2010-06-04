@@ -28,7 +28,7 @@
 #import "OOMeshReading.h"
 
 @protocol OOOBJMaterialLibraryResolver;
-@class OOOBJLexer, OOAbstractMesh;
+@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup;
 
 
 @interface OOOBJReader: NSObject <OOMeshReading>
@@ -39,17 +39,31 @@
 	OOOBJLexer							*_lexer;
 	id <OOOBJMaterialLibraryResolver>	_resolver;
 	
+	OOAbstractMesh						*_abstractMesh;
 	NSString							*_name;
 	
-	BOOL								_warnedAboutCurves;
-	BOOL								_warnedAboutRenderAttribs;
-	BOOL								_warnedAboutLinesOrPoints;
-	BOOL								_warnedAboutUnknown;
+	unsigned							_warnedAboutCurves: 1,
+										_warnedAboutRenderAttribs: 1,
+										_warnedAboutLinesOrPoints: 1,
+										_warnedAboutUnknown: 1,
+										_haveAllTexCoords: 1,
+										_haveAllNormals: 1;
+	
+	NSInteger							_positionCount;
+	NSInteger							_texCoordCount;
+	NSInteger							_normalCount;
+	NSUInteger							_faceCount;
 	
 	// ivars used only during parsing.
 	NSMutableArray						*_positions;
-	NSMutableArray						*_normals;
 	NSMutableArray						*_texCoords;
+	NSMutableArray						*_normals;
+	NSMutableArray						*_currentSmoothGroup;
+	NSMutableDictionary					*_smoothGroups;
+	NSMutableDictionary					*_materials;
+	NSMutableDictionary					*_materialGroups;
+	NSMutableSet						*_vertexCache;
+	OOAbstractFaceGroup					*_currentGroup;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
@@ -57,6 +71,8 @@
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;
+
+- (NSString *) name;
 
 @end
 

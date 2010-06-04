@@ -27,11 +27,9 @@
 #import "OOMeshReader.h"
 #import "OOMeshLexer.h"
 #import "OOProblemReportManager.h"
-#import "OOFloatArray.h"
 #import "OOIndexArray.h"
-#import "OOMaterialSpecification.h"
+
 #import "OOAbstractMesh.h"
-#import "OOAbstractFaceGroup.h"
 
 
 @interface OOMeshReader (Private)

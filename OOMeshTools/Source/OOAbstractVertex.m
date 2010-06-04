@@ -126,6 +126,24 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
++ (id) vertexWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
+{
+	NSParameterAssert((attribute == nil) == (key == nil));
+	if (key == nil)  return [[[self alloc] init] autorelease];
+	
+	if ([attribute count] == 3 && [key isEqualToString:kOOPositionAttributeKey])
+	{
+		Vector position =
+		{
+			[attribute oo_floatAtIndex:0], [attribute oo_floatAtIndex:1], [attribute oo_floatAtIndex:2]
+		};
+		return [[[OOPositionOnlyVertex alloc] initWithPosition:position] autorelease];
+	}
+	
+	return [[[OOConcreteVertex alloc] priv_initWithAttributes:[NSDictionary dictionaryWithObject:attribute forKey:key] verify:NO] autorelease];
+}
+
+
 + (id) vertexWithPosition:(Vector)position
 {
 	if (![self priv_isMutableType])
@@ -136,7 +154,6 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 	{
 		return [self vertexWithAttributes:AttributesDictFromVector(kOOPositionAttributeKey, position)];
 	}
-
 }
 
 
@@ -155,6 +172,24 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 		// Plain OOAbstractVertex is OK for empty, immutable vertex.
 		return [self init];
 	}
+}
+
+
+- (id) initWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
+{
+	NSParameterAssert((attribute == nil) == (key == nil));
+	
+	if (attribute != nil)
+	{
+		DESTROY(self);
+		return [[OOAbstractVertex vertexWithAttribute:attribute forKey:key] retain];
+	}
+	else
+	{
+		// Plain OOAbstractVertex is OK for empty, immutable vertex.
+		return [self init];
+	}
+
 }
 
 
@@ -462,10 +497,28 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
++ (id) vertexWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
+{
+	NSParameterAssert((attribute == nil) == (key == nil));
+	
+	NSDictionary *dict = nil;
+	if (key != nil)  dict = [NSDictionary dictionaryWithObject:attribute forKey:key];
+	
+	return [[[OOConcreteMutableVertex alloc] priv_initWithAttributes:dict verify:NO] autorelease];
+}
+
+
 - (id) initWithAttributes:(NSDictionary *)attributes
 {
 	DESTROY(self);
 	return [[OOMutableAbstractVertex vertexWithAttributes:attributes] retain];
+}
+
+
+- (id) initWithAttribute:(OOFloatArray *)attribute forKey:(NSString *)key
+{
+	DESTROY(self);
+	return [[OOMutableAbstractVertex vertexWithAttribute:attribute forKey:key] retain];
 }
 
 

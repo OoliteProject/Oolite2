@@ -32,6 +32,7 @@ SOFTWARE.
 #import "OOFunctionAttributes.h"
 #import "NSThreadOOExtensions.h"
 #import "OOLogOutputHandler.h"
+#import "MYCollectionUtilities.h"
 
 #undef NSLog		// We need to be able to call the real NSLog.
 
@@ -220,7 +221,7 @@ OOINLINE unsigned GetIndentLevel(void)
 OOINLINE void SetIndentLevel(unsigned value)
 {
 	NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
-	[threadDict setObject:[NSNumber numberWithUnsignedInt:value] forKey:kIndentLevelKey];
+	[threadDict setObject:$int(value) forKey:kIndentLevelKey];
 }
 
 
@@ -256,7 +257,7 @@ void OOLogPopIndent(void)
 	
 	if (elem != NULL)
 	{
-		[threadDict setObject:[NSNumber numberWithUnsignedInt:elem->indent] forKey:kIndentLevelKey];
+		[threadDict setObject:$int(elem->indent) forKey:kIndentLevelKey];
 		[threadDict setObject:[NSValue valueWithPointer:elem->link] forKey:kIndentStackKey];
 		free(elem);
 	}

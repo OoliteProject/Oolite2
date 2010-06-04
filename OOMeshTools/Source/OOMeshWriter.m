@@ -26,17 +26,13 @@
 #import "OOMeshWriter.h"
 #import "OOProblemReportManager.h"
 
-#import "OOFloatArray.h"
-#import "OOAbstractVertex.h"
-#import "OOAbstractFace.h"
-#import "OOAbstractFaceGroup.h"
 #import "OOAbstractMesh.h"
-#import "OOMaterialSpecification.h"
-#import "OOTextureSpecification.h"
 
 
-//	If set to 1, the use count for each vertex will be listed in the file (as comments on the position attribute).
-#define PRINT_USE_COUNTS	1
+/*	If set to 1, information about the mesh structure will be added in
+	comments.
+*/
+#define ANNOTATE			1
 
 
 /*
@@ -102,7 +98,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 	OOMaterialSpecification *material = nil;
 	
 	//	Unique vertices across groups, and count 'em.
-#if PRINT_USE_COUNTS
+#if ANNOTATE
 	NSMutableArray *useCounts = [NSMutableArray array];
 #endif
 	foreach (faceGroup, mesh)
@@ -121,13 +117,13 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 					index = [NSNumber numberWithUnsignedInteger:vertexCount++];
 					[indices setObject:index forKey:vertex];
 					[vertices addObject:vertex];
-#if PRINT_USE_COUNTS
+#if ANNOTATE
 					[useCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
 #endif
 				}
 				else
 				{
-#if PRINT_USE_COUNTS
+#if ANNOTATE
 					NSUInteger indexVal = [index unsignedIntegerValue];
 					NSUInteger useCount = [useCounts oo_unsignedIntegerAtIndex:indexVal];
 					useCount++;
@@ -144,8 +140,11 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 	//	Unique materials by name.
 	NSMutableDictionary *materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
 	OOMaterialSpecification *anonMaterial = nil;
+#if ANNOTATE
+	NSUInteger faceCount = 0;
+#endif
 	
-	foreach (faceGroup, [mesh faceGroupEnumerator])
+	foreach (faceGroup, mesh)
 	{
 		material = [faceGroup material];
 		
@@ -160,13 +159,34 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 		}
 		
 		[materials setObject:material forKey:[material materialKey]];
+		
+#if ANNOTATE
+		faceCount += [faceGroup faceCount];
+#endif
 	}
 	
 	
 	//	Write header.
 	NSString *name = [mesh name];
 	if (name == nil)  name = @"<unnamed>";
-	[result appendFormat:@"oomesh \"%@\":\n{\n\tvertexCount: %lu\n", EscapeString(name), (unsigned long)vertexCount];
+	[result appendFormat:@"oomesh \"%@\":\n{\n\tvertexCount: %lu", EscapeString(name), (unsigned long)vertexCount];
+#if ANNOTATE
+	[result appendFormat:@"\t// Average %g uses per vertex.", (float)(faceCount * 3) / (float)vertexCount];
+#endif
+	[result appendString:@"\n"];
+	
+	NSDictionary *vertexSchema = [mesh vertexSchema];
+	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
+	NSString *key = nil;
+	
+#if ANNOTATE
+	[result appendString:@"\t\n\t// Vertex schema:\n"];
+	foreach (key, attributeKeys)
+	{
+		[result appendFormat:@"\t//   %@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
+	}
+	[result appendFormat:@"\t//\n\t// %lu triangle%@ in %lu group%@.\n\t\n", (unsigned long)faceCount, faceCount == 1 ? @"" : @"s", (unsigned long)[mesh faceGroupCount], [mesh faceGroupCount] == 1 ? @"" : @""];
+#endif
 	
 	
 	//	Write materials.
@@ -192,16 +212,13 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		NSDictionary *vertexSchema = [mesh vertexSchema];	
-		NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
-		NSString *key = nil;
 		foreach (key, attributeKeys)
 		{
 			NSUInteger i, count = [vertexSchema oo_unsignedIntegerForKey:key];
 			
 			[result appendFormat:@"\t\n\tattribute \"%@\":\n\t{\n\t\tsize: %lu\n\t\tdata:\n\t\t[\n", EscapeString(key), (unsigned long)count];
 			
-#if PRINT_USE_COUNTS
+#if ANNOTATE
 			NSUInteger vIdx = [key isEqualToString:kOOPositionAttributeKey] ? 0 : NSNotFound;
 #endif
 			
@@ -227,7 +244,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 					
 					[result appendString:numStr];
 					
-#if PRINT_USE_COUNTS
+#if ANNOTATE
 					if (vIdx != NSNotFound && i == count - 1)
 					{
 						[result appendFormat:@"\t// Uses: %@", [useCounts objectAtIndex:vIdx++]];
@@ -246,7 +263,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 	
 	
 	//	Write groups.
-	foreach (faceGroup, [mesh faceGroupEnumerator])
+	foreach (faceGroup, mesh)
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		

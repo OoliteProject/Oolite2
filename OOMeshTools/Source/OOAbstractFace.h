@@ -29,8 +29,7 @@
 */
 
 #import <OOBase/OOBase.h>
-
-@class OOAbstractVertex;
+#import "OOAbstractVertex.h"
 
 
 @interface OOAbstractFace: NSObject <NSCopying>

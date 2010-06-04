@@ -33,17 +33,19 @@
 @interface OOOBJLexer: NSObject
 {
 @private
-	const char				*_cursor;
-	const char				*_end;
-	size_t					_tokenLength;
-	NSData					*_data;
-	unsigned				_lineNumber;
-	NSString				*_tokenString;
+	id <OOProblemReportManager>	_issues;
+	const char					*_cursor;
+	const char					*_end;
+	size_t						_tokenLength;
+	NSData						*_data;
+	unsigned					_lineNumber;
+	NSString					*_tokenString;
+	BOOL						_startOfLine;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues;
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues;
+- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithData:(NSData *)data issues:(id <OOProblemReportManager>)issues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
@@ -57,6 +59,10 @@
 - (BOOL) readNewline;	// Returns YES if it reaches newline without seeing tokens.
 - (BOOL) skipLine;		// Reads to newline and ignores tokens.
 
-- (BOOL) isAtEnd;
+- (BOOL) isAtSlash;
+- (BOOL) skipSlash;
+- (BOOL) isAtEndOfLine;
+
+- (BOOL) isAtEndOfFile;
 
 @end

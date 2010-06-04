@@ -33,7 +33,7 @@ SOFTWARE.
 
 
 #ifndef OOLOG_POISON_NSLOG
-	#define OOLOG_POISON_NSLOG	0
+	#define OOLOG_POISON_NSLOG	1
 #endif
 
 

@@ -121,7 +121,7 @@ OOINLINE OOScalar distance(Vector v1, Vector v2) INLINE_CONST_FUNC;
 OOINLINE OOScalar fast_distance(Vector v1, Vector v2) INLINE_CONST_FUNC;
 
 /* Dot product */
-OOINLINE OOScalar dot_product (Vector first, Vector second) INLINE_CONST_FUNC;
+OOINLINE OOScalar dot_product(Vector first, Vector second) INLINE_CONST_FUNC;
 
 /* NORMALIZED cross product */
 OOINLINE Vector cross_product(Vector first, Vector second) INLINE_CONST_FUNC;
@@ -142,7 +142,8 @@ OOINLINE Vector normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;
 OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;
 
 #if __OBJC__
-NSString *VectorDescription(Vector vector);	// @"(x, y, z)"
+NSString *OOVectorDescription(Vector vector);		// @"(x, y, z)"
+NSString *OOVector2DDescription(Vector2D vector);	// @"(x, y)"
 #endif
 
 

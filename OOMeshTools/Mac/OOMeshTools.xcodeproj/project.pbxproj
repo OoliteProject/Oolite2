@@ -300,6 +300,7 @@
 				1AEA250D11A73A9200B361DC /* Resources */,
 				1AEA250E11A73A9200B361DC /* Sources */,
 				1AEA250F11A73A9200B361DC /* Frameworks */,
+				1A60EE1411B6FEE900224F2D /* Make headers read-only */,
 			);
 			buildRules = (
 			);
@@ -354,6 +355,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A60EE1411B6FEE900224F2D /* Make headers read-only */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Make headers read-only";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "chmod 444 $CONFIGURATION_BUILD_DIR/$PUBLIC_HEADERS_FOLDER_PATH/*\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1AEA250E11A73A9200B361DC /* Sources */ = {

@@ -54,14 +54,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A60ECFD11B6DF8E00224F2D /* OOBase.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OOBase.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = OOBase;
 		};
 		1A60ED0711B6DF9500224F2D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A60ED0311B6DF9500224F2D /* OOMeshTools.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OOMeshTools.framework */;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OOMeshTools;
 		};
 /* End PBXContainerItemProxy section */
@@ -140,7 +140,7 @@
 		1AE4E99311B6DAF600A85342 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 0;
 			mainGroup = 1AE4E99111B6DAF600A85342;
 			projectDirPath = "";

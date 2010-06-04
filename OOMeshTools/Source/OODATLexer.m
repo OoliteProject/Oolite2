@@ -36,21 +36,19 @@ typedef enum OODATLexerEndMode
 
 @interface OODATLexer (Private)
 
-- (BOOL)advanceWithEndMode:(OODATLexerEndMode)mode;
-
-- (NSString *)describeToken;
+- (BOOL) advanceWithEndMode:(OODATLexerEndMode)mode;
 
 @end
 
 
 @implementation OODATLexer
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues
+- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReportManager>)issues
 {
-	if ([inURL isFileURL])
+	if ([url isFileURL])
 	{
 		NSError *error = nil;
-		NSData *data = [[NSData alloc] initWithContentsOfURL:inURL options:0 error:&error];
+		NSData *data = [[NSData alloc] initWithContentsOfURL:url options:0 error:&error];
 		if (data == nil)
 		{
 			OOReportError(issues, @"The document could not be loaded, because an error occurred: %@", [error localizedDescription]);
@@ -60,22 +58,22 @@ typedef enum OODATLexerEndMode
 	}
 	else
 	{
-		[NSException raise:NSInvalidArgumentException format:@"OODATLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
+		[NSException raise:NSInvalidArgumentException format:@"OODATLexer does not support non-file URLs such as %@", [url absoluteURL]];
 	}
 	
 	return nil;
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
 {
-	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:issues];
+	return [self initWithURL:[NSURL fileURLWithPath:path] issues:issues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues
+- (id) initWithData:(NSData *)data issues:(id <OOProblemReportManager>)issues
 {
-	if ([inData length] == 0)
+	if ([data length] == 0)
 	{
 		[self release];
 		return nil;
@@ -83,9 +81,10 @@ typedef enum OODATLexerEndMode
 	
 	if ((self = [super init]))
 	{
-		_data = [inData retain];
-		_cursor = [inData bytes];
-		_end = _cursor + [inData length];
+		_issues = [issues retain];
+		_data = [data retain];
+		_cursor = [data bytes];
+		_end = _cursor + [data length];
 		_tokenLength = 0;
 		_lineNumber = 1;
 	}
@@ -96,6 +95,7 @@ typedef enum OODATLexerEndMode
 
 - (void) dealloc
 {
+	DESTROY(_issues);
 	DESTROY(_data);
 	DESTROY(_tokenString);
 	
@@ -155,55 +155,46 @@ typedef enum OODATLexerEndMode
 - (BOOL) readInteger:(NSUInteger *)outInt
 {
 	NSParameterAssert(outInt != NULL);
+	if (EXPECT_NOT(![self advanceWithEndMode:kEndNormal]))  return NO;
 	
-	if (EXPECT([self advanceWithEndMode:kEndNormal]))
+	unsigned result = 0;
+	const char *str = _cursor;
+	size_t rem = _tokenLength;
+	
+	if (EXPECT_NOT(rem == 0))  return NO;
+	
+	do
 	{
-		unsigned result = 0;
-		const char *str = _cursor;
-		size_t rem = _tokenLength;
-		
-		if (EXPECT_NOT(rem == 0))  return NO;
-		
-		do
+		char c = *str++;
+		if (EXPECT('0' <= c && c <= '9'))
 		{
-			char c = *str++;
-			if (EXPECT('0' <= c && c <= '9'))
-			{
-				result = result * 10 + c - '0';
-			}
-			else
-			{
-				return NO;
-			}
+			result = result * 10 + c - '0';
 		}
-		while (--rem);
-		
-		*outInt = result;
-		return YES;
+		else
+		{
+			return NO;
+		}
 	}
+	while (--rem);
 	
-	return NO;
+	*outInt = result;
+	return YES;
 }
 
 
 - (BOOL) readReal:(float *)outReal
 {
 	NSParameterAssert(outReal != NULL);
+	if (EXPECT_NOT(![self advanceWithEndMode:kEndNormal]))  return NO;
 	
-	if (EXPECT([self advanceWithEndMode:kEndNormal]))
-	{
-		/*	Make null-terminated copy of token on stack and strtod() it.
-			Float parsing is way to fiddly for a custom version to be worth it.
-		*/
-		char buffer[_tokenLength + 1];
-		memcpy(buffer, _cursor, _tokenLength);
-		buffer[_tokenLength] = '\0';
-		
-		*outReal = strtod(buffer, NULL);
-		return YES;
-	}
+	//	Make null-terminated copy of token on stack and strtod() it.
+	char buffer[_tokenLength + 1];
+	memcpy(buffer, _cursor, _tokenLength);
+	buffer[_tokenLength] = '\0';
 	
-	return NO;
+	*outReal = strtod(buffer, NULL);
+	
+	return YES;
 }
 
 
@@ -251,10 +242,10 @@ static inline BOOL IsLineEndChar(char c)
 	_cursor += _tokenLength;
 	NSAssert(_cursor <= _end, @"DAT lexer passed end of buffer");
 	
-	[_tokenString release];
-	_tokenString = nil;
+	DESTROY(_tokenString);
+	_tokenLength = 0;
 	
-#define EOF_BREAK()  do { if (EXPECT_NOT(_cursor == _end))  return NO; } while (0)
+#define EOF_BREAK()  do { if (EXPECT_NOT(_cursor == _end))  return YES; } while (0)
 #define COMMENT_AT(loc)  (*(loc) == '#' || (*(loc) == '/' && (loc) + 1 < _end && *((loc) + 1) == '/'))
 	
 	/*	SKIP_WHILE: skip characters matching predicate, returning if we reach
@@ -312,9 +303,8 @@ static inline BOOL IsLineEndChar(char c)
 	}
 	else
 	{
-#ifndef NDEBUG
-		[NSException raise:NSInternalInconsistencyException format:@"Invalid end mode in DAT lexer: %u", mode];
-#endif
+		OOReportError(_issues, @"Internal error: unknown DAT lexer end mode %u.", mode);
+		return NO;
 	}
 	
 	_tokenLength = endCursor - _cursor;

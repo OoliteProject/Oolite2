@@ -1,9 +1,11 @@
 /*
 	MYCollectionUtilities.h
 	
+	Based on Jens Alfke’s CollectionUtils, heavily modified for Oolite.
+	
 	
 	Copyright © 2008, Jens Alfke <jens@mooseyard.com>. All rights reserved.
-	With modifications by Jens Ayton.
+	With modifications © 2010 Jens Ayton.
 	
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -50,8 +52,6 @@ extern "C" {
 #define $mdict(PAIRS...)    ({struct _dictpair pairs[]={PAIRS}; \
                               _mdictof(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
 
-#define $object(VAL)        ({__typeof(VAL) v=(VAL); _box(&v,@encode(__typeof(v)));})
-
 
 // Apply a selector to each array element, returning an array of the results:
 NSArray* $apply( NSArray *src, SEL selector, id defaultValue );
@@ -91,20 +91,9 @@ BOOL ifSetString( NSString **var, NSString *value );
 #if OOLITE_LEOPARD
 #define foreach(VAR,ARR) for(VAR in ARR)
 #define foreachkey(VAR,DICT) for(VAR in DICT)
-
 #else
-struct foreachstate {NSArray *array; unsigned n, i;};
-static inline struct foreachstate _initforeach( NSArray *arr ) {
-    struct foreachstate s;
-    s.array = arr;
-    s.n = [arr count];
-    s.i = 0;
-    return s;
-}
-#define foreach(VAR,ARR) for( struct foreachstate _s = _initforeach((ARR)); \
-                                   _s.i<_s.n && ((VAR)=[_s.array objectAtIndex: _s.i], YES); \
-                                   _s.i++ )
-#define foreachkey(VAR,DICT) foreach(VAR,[DICT allKeys])
+#define foreach(VAR,OBJ) for (NSEnumerator *ooForEachEnum = [(OBJ) objectEnumerator]; ((VAR) = [ooForEachEnum nextObject]); )
+#define foreachkey(VAR,DICT) for (NSEnumerator *ooForEachEnum = [(DICT) keyEnumerator]; ((VAR) = [ooForEachEnum nextObject]); )
 #endif
 
 

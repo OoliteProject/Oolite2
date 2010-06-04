@@ -26,8 +26,8 @@
 */
 
 #import <OOBase/OOBase.h>
-
-@class OOAbstractFaceGroup;
+#import "OOAbstractFaceGroup.h"
+#import "OOMaterialSpecification.h"
 
 
 @interface OOAbstractMesh: NSObject <NSFastEnumeration>

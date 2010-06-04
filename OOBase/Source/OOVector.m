@@ -36,14 +36,19 @@ const Vector2D			kBasisYVector2D = { 0.0f, 1.0f };
 
 
 #if __OBJC__
-NSString *VectorDescription(Vector vector)
+NSString *OOVectorDescription(Vector vector)
 {
 	return [NSString stringWithFormat:@"(%g, %g, %g)", vector.x, vector.y, vector.z];
+}
+
+
+NSString *OOVector2DDescription(Vector2D vector)
+{
+	return [NSString stringWithFormat:@"(%g, %g)", vector.x, vector.y];
 }
 #endif
 
 
-#if !OOMATHS_STANDALONE
 /*	This generates random vectors distrubuted evenly over the surface of the
 	unit sphere. It does this the simple way, by generating vectors in the
 	half-unit cube and rejecting those outside the half-unit sphere (and the
@@ -90,7 +95,6 @@ Vector OOVectorRandomRadial(OOScalar maxLength)
 {
 	return vector_multiply_scalar(OORandomUnitVector(), randf() * maxLength);
 }
-#endif
 
 
 Vector clean_vector(Vector v)

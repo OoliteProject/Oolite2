@@ -26,6 +26,8 @@
 		1A8F1BDC11A882FC00C94CB0 /* OOAbstractFaceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */; };
 		1A8F1CCC11A88CA600C94CB0 /* OOAbstractMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1CCD11A88CA600C94CB0 /* OOAbstractMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */; };
+		1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AABAAA411B9C7ED003487D5 /* OOColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AABAAA711B9C7ED003487D5 /* OOColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AABAAA511B9C7ED003487D5 /* OOColor.m */; };
 		1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */; };
 		1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7395D11B10B0300575507 /* OOAbstractFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7395E11B10B0300575507 /* OOAbstractFace.m */; };
@@ -92,6 +94,8 @@
 		1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractMesh.m; sourceTree = "<group>"; };
 		1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractVertex.h; sourceTree = "<group>"; };
 		1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractVertex.m; sourceTree = "<group>"; };
+		1AABAAA411B9C7ED003487D5 /* OOColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOColor.h; sourceTree = "<group>"; };
+		1AABAAA511B9C7ED003487D5 /* OOColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOColor.m; sourceTree = "<group>"; };
 		1AB7395D11B10B0300575507 /* OOAbstractFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFace.h; sourceTree = "<group>"; };
 		1AB7395E11B10B0300575507 /* OOAbstractFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFace.m; sourceTree = "<group>"; };
 		1AB7398D11B10EC800575507 /* OOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReader.h; sourceTree = "<group>"; };
@@ -237,6 +241,8 @@
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
 				1A7D35B611B138A100857CEF /* OOIndexArray.h */,
 				1A7D35B711B138A100857CEF /* OOIndexArray.m */,
+				1AABAAA411B9C7ED003487D5 /* OOColor.h */,
+				1AABAAA511B9C7ED003487D5 /* OOColor.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -286,6 +292,7 @@
 				1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */,
 				1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */,
 				1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */,
+				1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,6 +403,7 @@
 				1A7D37C611B16C1500857CEF /* OOOBJLexer.m in Sources */,
 				1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */,
 				1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */,
+				1AABAAA711B9C7ED003487D5 /* OOColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -968,7 +968,7 @@ enum
 			}
 			
 			OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:materialName];
-			if (diffuseMapName != nil)  [material setDiffuseMapName:diffuseMapName];
+			if (diffuseMapName != nil)  [material setDiffuseMap:[OOTextureSpecification textureSpecWithName:diffuseMapName]];
 			
 			[faceGroup setName:materialName];
 			[faceGroup setMaterial:material];

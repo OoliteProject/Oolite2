@@ -446,7 +446,7 @@
 	
 	//	FIXME: set up material.
 	NSString *diffuseMap = [properties oo_stringForKey:@"diffuseMap"];
-	if (diffuseMap != nil)  [material setDiffuseMapName:diffuseMap];
+	if (diffuseMap != nil)  [material setDiffuseMap:[OOTextureSpecification textureSpecWithName:diffuseMap]];
 	
 	[_materialsByName setObject:material forKey:name];
 	[material release];

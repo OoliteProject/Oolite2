@@ -28,6 +28,7 @@
 #import <OOBase/OOBase.h>
 #import "JAPropertyListRepresentation.h"
 #import "OOTextureSpecification.h"
+#import "OOColor.h"
 
 
 @interface OOMaterialSpecification: NSObject <JAPropertyListRepresentation>
@@ -35,16 +36,93 @@
 @private
 	NSString					*_materialKey;
 	
+	OOColor						*_diffuseColor;
+	OOColor						*_ambientColor;
 	OOTextureSpecification		*_diffuseMap;
+	
+	OOColor						*_specularColor;
+	OOColor						*_specularModulateColor;
+	OOTextureSpecification		*_specularMap;
+	int							_specularExponent;
+	
+	OOColor						*_emissionColor;
+	OOColor						*_emissionModulateColor;
+	OOTextureSpecification		*_emissionMap;
+	OOColor						*_illuminationModulateColor;
+	OOTextureSpecification		*_illuminationMap;
+	
+	OOTextureSpecification		*_normalMap;
+	OOTextureSpecification		*_parallaxMap;
+	float						_parallaxScale;
+	float						_parallaxBias;
+	
+	NSMutableDictionary			*_extraAttributes;
 }
 
 //	Material key: a string identifying the material. Must be unique per file.
 - (id) initWithMaterialKey:(NSString *)materialKey;
+- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues;
+
+- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues;
 
 - (NSString *) materialKey;
 
+- (OOColor *) diffuseColor;
+- (void) setDiffuseColor:(OOColor *)color;
+- (OOColor *) ambientColor;
+- (void) setAmbientColor:(OOColor *)color;
 - (OOTextureSpecification *) diffuseMap;
 - (void) setDiffuseMap:(OOTextureSpecification *)texture;
-- (void) setDiffuseMapName:(NSString *)name;
+
+- (OOColor *) specularColor;
+- (void) setSpecularColor:(OOColor *)color;
+- (OOColor *) specularModulateColor;
+- (void) setSpecularModulateColor:(OOColor *)color;
+- (OOTextureSpecification *) specularMap;
+- (void) setSpecularMap:(OOTextureSpecification *)texture;
+- (unsigned) specularExponent;
+- (void) setSpecularExponent:(unsigned)value;
+
+- (OOColor *) emissionColor;
+- (void) setEmissionColor:(OOColor *)color;
+- (OOColor *) emissionModulateColor;
+- (void) setEmissionModulateColor:(OOColor *)color;
+- (OOTextureSpecification *) emissionMap;
+- (void) setEmissionMap:(OOTextureSpecification *)texture;
+- (OOColor *) illuminationModulateColor;
+- (void) setIlluminationModulateColor:(OOColor *)color;
+- (OOTextureSpecification *) illuminationMap;
+- (void) setIlluminationMap:(OOTextureSpecification *)texture;
+
+- (OOTextureSpecification *) normalMap;
+- (void) setNormalMap:(OOTextureSpecification *)texture;
+- (OOTextureSpecification *) parallaxMap;
+- (void) setParallaxMap:(OOTextureSpecification *)texture;
+- (float) parallaxScale;
+- (void) setParallaxScale:(float)value;
+- (float) parallaxBias;
+- (void) setParallaxBias:(float)value;
 
 @end
+
+
+NSString * const kOOMaterialDiffuseColorName;
+NSString * const kOOMaterialAmbientColorName;
+NSString * const kOOMaterialDiffuseMapName;
+
+NSString * const kOOMaterialSpecularColorName;
+NSString * const kOOMaterialSpecularModulateColorName;
+NSString * const kOOMaterialSpecularMapName;
+NSString * const kOOMaterialSpecularExponentName;
+
+NSString * const kOOMaterialEmissionColorName;
+NSString * const kOOMaterialEmissionModulateColorName;
+NSString * const kOOMaterialIlluminationModulateColorName;
+NSString * const kOOMaterialEmissionMapName;
+NSString * const kOOMaterialIlluminationMapName;
+
+NSString * const kOOMaterialNormalMapName;
+NSString * const kOOMaterialParallaxMapName;
+
+NSString * const kOOMaterialParallaxScale;
+NSString * const kOOMaterialParallaxBias;

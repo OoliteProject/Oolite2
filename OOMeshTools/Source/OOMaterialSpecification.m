@@ -27,6 +27,35 @@
 #import "OOTextureSpecification.h"
 
 
+NSString * const kOOMaterialDiffuseColorName				= @"diffuseColor";
+NSString * const kOOMaterialAmbientColorName				= @"ambientColor";
+NSString * const kOOMaterialDiffuseMapName					= @"diffuseMap";
+
+NSString * const kOOMaterialSpecularColorName				= @"specularColor";
+NSString * const kOOMaterialSpecularModulateColorName		= @"specularModulateColor";
+NSString * const kOOMaterialSpecularMapName					= @"specularMap";
+NSString * const kOOMaterialSpecularExponentName			= @"specularExponent";
+
+NSString * const kOOMaterialEmissionColorName				= @"emissionColor";
+NSString * const kOOMaterialEmissionModulateColorName		= @"emissionModulateColor";
+NSString * const kOOMaterialIlluminationModulateColorName	= @"illuminationModulateColor";
+NSString * const kOOMaterialEmissionMapName					= @"emissionMap";
+NSString * const kOOMaterialIlluminationMapName				= @"illuminationMap";
+
+NSString * const kOOMaterialNormalMapName					= @"normalMap";
+NSString * const kOOMaterialParallaxMapName					= @"parallaxMap";
+
+NSString * const kOOMaterialParallaxScale					= @"parallaxScale";
+NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
+
+
+#define kDefaultSpecularIntensity		(0.2f)
+#define kDefaultSpecularExponentWithMap	(128)
+#define kDefaultSpecularExponentNoMap	(10)
+#define kDefaultParallaxScale			(0.01f)
+#define kDefaultParallaxBias			(0.0f)
+
+
 @implementation OOMaterialSpecification
 
 - (id) initWithMaterialKey:(NSString *)materialKey
@@ -40,6 +69,21 @@
 	if ((self = [super init]))
 	{
 		_materialKey = [materialKey copy];
+		
+		_specularExponent = -1;	// causes appropriate default value to be used.
+		_parallaxScale = kDefaultParallaxScale;
+		_parallaxBias = kDefaultParallaxBias;
+	}
+	
+	return self;
+}
+
+
+- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues
+{
+	if ((self = [self initWithMaterialKey:materialKey]))
+	{
+		if (![self loadPropertyListRepresentation:propertyList issues:issues])  DESTROY(self);
 	}
 	
 	return self;
@@ -50,13 +94,146 @@
 {
 	DESTROY(_materialKey);
 	
+	DESTROY(_diffuseColor);
+	DESTROY(_ambientColor);
+	DESTROY(_diffuseMap);
+	
+	DESTROY(_specularColor);
+	DESTROY(_specularModulateColor);
+	DESTROY(_specularMap);
+	
+	DESTROY(_emissionColor);
+	DESTROY(_emissionModulateColor);
+	DESTROY(_emissionMap);
+	DESTROY(_illuminationModulateColor);
+	DESTROY(_illuminationMap);
+	
+	DESTROY(_normalMap);
+	DESTROY(_parallaxMap);
+	
 	[super dealloc];
+}
+
+
+static void GetColor(NSMutableDictionary *plist, NSString *key, OOColor **color)
+{
+	NSCParameterAssert(plist != nil && key != nil && color != NULL);
+	
+	id colorDesc = [plist objectForKey:key];
+	if (colorDesc != nil)
+	{
+		[plist removeObjectForKey:key];
+		[*color release];
+		*color = [[OOColor colorWithDescription:colorDesc] retain];
+	}
+}
+
+
+static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpecification **textureSpec, id <OOProblemReportManager> issues)
+{
+	NSCParameterAssert(plist != nil && key != nil && textureSpec != NULL);
+	
+	id textureDesc = [plist objectForKey:key];
+	if (textureDesc != nil)
+	{
+		[plist removeObjectForKey:key];
+		[*textureSpec release];
+		*textureSpec = [[OOTextureSpecification textureSpecWithPropertyListRepresentation:textureDesc issues:issues] retain];
+	}
+}
+
+
+- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues
+{
+	if (propertyList == nil)  return NO;
+	
+	NSMutableDictionary *plist = [NSMutableDictionary dictionaryWithDictionary:propertyList];
+	
+	GetColor(plist, kOOMaterialDiffuseColorName, &_diffuseColor);
+	GetColor(plist, kOOMaterialAmbientColorName, &_ambientColor);
+	GetTexture(plist, kOOMaterialDiffuseMapName, &_diffuseMap, issues);
+	
+	GetColor(plist, kOOMaterialSpecularColorName, &_specularColor);
+	GetColor(plist, kOOMaterialSpecularModulateColorName, &_specularModulateColor);
+	GetTexture(plist, kOOMaterialSpecularMapName, &_specularMap, issues);
+	if ([plist objectForKey:kOOMaterialSpecularExponentName] != nil)
+	{
+		_specularExponent = [plist oo_unsignedIntForKey:kOOMaterialSpecularExponentName];
+		[plist removeObjectForKey:kOOMaterialSpecularExponentName];
+		 if (_specularExponent < 0)  _specularExponent = 0;
+	}
+	
+	GetColor(plist, kOOMaterialEmissionColorName, &_emissionColor);
+	GetColor(plist, kOOMaterialEmissionModulateColorName, &_emissionModulateColor);
+	GetColor(plist, kOOMaterialIlluminationModulateColorName, &_illuminationModulateColor);
+	GetTexture(plist, kOOMaterialEmissionMapName, &_emissionMap, issues);
+	GetTexture(plist, kOOMaterialIlluminationMapName, &_illuminationMap, issues);
+	
+	GetTexture(plist, kOOMaterialNormalMapName, &_normalMap, issues);
+	GetTexture(plist, kOOMaterialParallaxMapName, &_parallaxMap, issues);
+	if ([plist objectForKey:kOOMaterialParallaxScale] != nil)
+	{
+		_parallaxScale = [plist oo_unsignedIntForKey:kOOMaterialParallaxScale];
+		[plist removeObjectForKey:kOOMaterialParallaxScale];
+	}
+	if ([plist objectForKey:kOOMaterialParallaxBias] != nil)
+	{
+		_parallaxBias = [plist oo_unsignedIntForKey:kOOMaterialParallaxBias];
+		[plist removeObjectForKey:kOOMaterialParallaxBias];
+	}
+	
+	if ([plist count] != 0)
+	{
+		if (_extraAttributes == nil)
+		{
+			_extraAttributes = [plist retain];
+		}
+		else
+		{
+			[_extraAttributes addEntriesFromDictionary:plist];
+		}
+
+	}
+	
+	return YES;
 }
 
 
 - (NSString *) materialKey
 {
 	return _materialKey;
+}
+
+
+- (OOColor *) diffuseColor
+{
+	return _diffuseColor;
+}
+
+
+- (void) setDiffuseColor:(OOColor *)color
+{
+	if (color != _diffuseColor)
+	{
+		[_diffuseColor release];
+		_diffuseColor = [color copy];
+	}
+}
+
+
+- (OOColor *) ambientColor
+{
+	return _ambientColor;
+}
+
+
+- (void) setAmbientColor:(OOColor *)color
+{
+	if (color != _ambientColor)
+	{
+		[_ambientColor release];
+		_ambientColor = [color copy];
+	}
 }
 
 
@@ -68,23 +245,254 @@
 
 - (void) setDiffuseMap:(OOTextureSpecification *)texture
 {
-	[_diffuseMap autorelease];
-	_diffuseMap = [texture retain];
+	if (_diffuseMap != texture)
+	{
+		[_diffuseMap release];
+		_diffuseMap = [texture retain];
+	}
 }
 
 
-- (void) setDiffuseMapName:(NSString *)name
+- (OOColor *) specularColor
 {
-	[self setDiffuseMap:[OOTextureSpecification textureSpecWithName:(NSString *)name]];
+	return _specularColor;
+}
+
+
+- (void) setSpecularColor:(OOColor *)color
+{
+	if (color != _specularColor)
+	{
+		[_specularColor release];
+		_specularColor = [color copy];
+	}
+}
+
+
+- (OOColor *) specularModulateColor
+{
+	return _specularModulateColor;
+}
+
+
+- (void) setSpecularModulateColor:(OOColor *)color
+{
+	if (color != _specularModulateColor)
+	{
+		[_specularModulateColor release];
+		_specularModulateColor = [color copy];
+	}
+}
+
+
+- (OOTextureSpecification *) specularMap
+{
+	return _specularMap;
+}
+
+
+- (void) setSpecularMap:(OOTextureSpecification *)texture
+{
+	if (_specularMap != texture)
+	{
+		[_specularMap release];
+		_specularMap = [texture retain];
+	}
+}
+
+
+- (unsigned) specularExponent
+{
+	if (_specularExponent >= 0)  _specularExponent;
+	else  return (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+}
+
+
+- (void) setSpecularExponent:(unsigned)value
+{
+	_specularExponent = value;
+}
+
+
+- (OOColor *) emissionColor
+{
+	return _emissionColor;
+}
+
+
+- (void) setEmissionColor:(OOColor *)color
+{
+	if (color != _emissionColor)
+	{
+		[_emissionColor release];
+		_emissionColor = [color copy];
+	}
+}
+
+
+- (OOColor *) emissionModulateColor
+{
+	return _emissionModulateColor;
+}
+
+
+- (void) setEmissionModulateColor:(OOColor *)color
+{
+	if (color != _emissionModulateColor)
+	{
+		[_emissionModulateColor release];
+		_emissionModulateColor = [color copy];
+	}
+}
+
+
+- (OOTextureSpecification *) emissionMap
+{
+	return _emissionMap;
+}
+
+
+- (void) setEmissionMap:(OOTextureSpecification *)texture
+{
+	if (_emissionMap != texture)
+	{
+		[_emissionMap release];
+		_emissionMap = [texture retain];
+	}
+}
+
+
+- (OOColor *) illuminationModulateColor
+{
+	return _illuminationModulateColor;
+}
+
+
+- (void) setIlluminationModulateColor:(OOColor *)color
+{
+	if (color != _illuminationModulateColor)
+	{
+		[_illuminationModulateColor release];
+		_illuminationModulateColor = [color copy];
+	}
+}
+
+
+- (OOTextureSpecification *) illuminationMap
+{
+	return _illuminationMap;
+}
+
+
+- (void) setIlluminationMap:(OOTextureSpecification *)texture
+{
+	if (_illuminationMap != texture)
+	{
+		[_illuminationMap release];
+		_illuminationMap = [texture retain];
+	}
+}
+
+
+- (OOTextureSpecification *) normalMap
+{
+	return _normalMap;
+}
+
+
+- (void) setNormalMap:(OOTextureSpecification *)texture
+{
+	if (_normalMap != texture)
+	{
+		[_normalMap release];
+		_normalMap = [texture retain];
+	}
+}
+
+
+- (OOTextureSpecification *) parallaxMap
+{
+	return _parallaxMap;
+}
+
+
+- (void) setParallaxMap:(OOTextureSpecification *)texture
+{
+	if (_parallaxMap != texture)
+	{
+		[_parallaxMap release];
+		_parallaxMap = [texture retain];
+	}
+}
+
+
+- (float) parallaxScale
+{
+	return _parallaxScale;
+}
+
+
+- (void) setParallaxScale:(float)value
+{
+	_parallaxScale = value;
+}
+
+
+- (float) parallaxBias
+{
+	return _parallaxBias;
+}
+
+
+- (void) setParallaxBias:(float)value
+{
+	_parallaxBias = value;
 }
 
 
 - (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
 {
-	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:_extraAttributes];
 	
-	id diffuseSpec = [_diffuseMap ja_propertyListRepresentation];
-	if (diffuseSpec != nil)  [result setObject:diffuseSpec forKey:@"diffuseMap"];
+#define ADD_COLOR(key, color_, defaultValue) \
+	do { \
+		OOColor *color = (color_); \
+		if (color != nil && ![color isEqual:(defaultValue)]) \
+		{ \
+			[result setObject:[color normalizedArray] forKey:(key)]; \
+		} \
+	} while (0)
+	
+#define ADD_TEXTURE(key, textureSpec) \
+	do \
+	{ \
+		id description = [(textureSpec) ja_propertyListRepresentation]; \
+		if (description != nil)  [result setObject:description forKey:(key)]; \
+	} while (0)
+	
+	OOColor *white = [OOColor whiteColor];
+	ADD_COLOR(kOOMaterialDiffuseColorName, _diffuseColor, white);
+	ADD_COLOR(kOOMaterialAmbientColorName, _ambientColor, white);
+	ADD_TEXTURE(kOOMaterialDiffuseMapName, _diffuseMap);
+	
+	OOColor *defaultSpecular = (_specularExponent > 0.0f) ? [OOColor colorWithWhite:0.2f alpha:1.0f] : [OOColor blackColor];
+	ADD_COLOR(kOOMaterialSpecularColorName, _specularColor, defaultSpecular);
+	ADD_COLOR(kOOMaterialSpecularModulateColorName, _specularModulateColor, white);
+	ADD_TEXTURE(kOOMaterialSpecularMapName, _specularMap);
+	unsigned defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+	if (_specularExponent != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
+	
+	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);
+	ADD_COLOR(kOOMaterialEmissionModulateColorName, _emissionModulateColor, white);
+	ADD_COLOR(kOOMaterialIlluminationModulateColorName, _illuminationModulateColor, white);
+	ADD_TEXTURE(kOOMaterialEmissionMapName, _emissionMap);
+	ADD_TEXTURE(kOOMaterialIlluminationMapName, _illuminationMap);
+	
+	ADD_TEXTURE(kOOMaterialNormalMapName, _normalMap);
+	ADD_TEXTURE(kOOMaterialParallaxMapName, _parallaxMap);
+	if (_parallaxScale != kDefaultParallaxScale)  [result oo_setFloat:_parallaxScale forKey:kOOMaterialParallaxScale];
+	if (_parallaxBias != kDefaultParallaxBias)  [result oo_setFloat:_parallaxBias forKey:kOOMaterialParallaxBias];
+	
 	
 #if 0
 	// Test data

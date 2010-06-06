@@ -103,6 +103,9 @@
 - (float) parallaxBias;
 - (void) setParallaxBias:(float)value;
 
+- (id) valueForKey:(NSString *)key;
+- (void) setValue:(id)value forKey:(NSString *)key;
+
 @end
 
 

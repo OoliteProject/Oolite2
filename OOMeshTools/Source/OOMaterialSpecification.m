@@ -321,6 +321,19 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
+- (NSNumber *) boxed_specularExponent
+{
+	return $int([self specularExponent]);
+}
+
+
+- (void) setBoxedSpecularExponent:(NSNumber *)value
+{
+	if (EXPECT_NOT(![value respondsToSelector:@selector(intValue)]))  return;
+	return [self setSpecularExponent:[value intValue]];
+}
+
+
 - (OOColor *) emissionColor
 {
 	if (_emissionColor == nil)  return [OOColor blackColor];
@@ -451,6 +464,19 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
+- (NSNumber *) boxed_parallaxScale
+{
+	return $float([self parallaxScale]);
+}
+
+
+- (void) setBoxedParallaxScale:(NSNumber *)value
+{
+	if (EXPECT_NOT(![value respondsToSelector:@selector(doubleValue)]))  return;
+	return [self setParallaxScale:[value doubleValue]];
+}
+
+
 - (float) parallaxBias
 {
 	return _parallaxBias;
@@ -460,6 +486,81 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 - (void) setParallaxBias:(float)value
 {
 	_parallaxBias = value;
+}
+
+
+- (NSNumber *) boxed_parallaxBias
+{
+	return $float([self parallaxBias]);
+}
+
+
+- (void) setBoxedParallaxBias:(NSNumber *)value
+{
+	if (EXPECT_NOT(![value respondsToSelector:@selector(doubleValue)]))  return;
+	return [self setParallaxBias:[value doubleValue]];
+}
+
+
+- (id) valueForKey:(NSString *)key
+{
+	if ([key rangeOfString:@":"].location == NSNotFound)
+	{
+		SEL selector = NSSelectorFromString([@"boxed_" stringByAppendingString:key]);
+		if ([self respondsToSelector:selector])
+		{
+			return [self performSelector:selector];
+		}
+		selector = NSSelectorFromString(key);
+		if ([self respondsToSelector:selector])
+		{
+			return [self performSelector:selector];
+		}
+	}
+	
+	return [_extraAttributes objectForKey:key];
+}
+
+
+static OOColor *Color(id value)
+{
+	if ([value isKindOfClass:[OOColor class]])  return value;
+	else  return [OOColor colorWithDescription:value];
+}
+
+
+static OOTextureSpecification *TextureSpec(id value)
+{
+	if ([value isKindOfClass:[OOTextureSpecification class]])  return value;
+	else  return [OOTextureSpecification textureSpecWithPropertyListRepresentation:value issues:nil];
+}
+
+
+- (void) setValue:(id)value forKey:(NSString *)key
+{
+	if ([key isEqualToString:kOOMaterialDiffuseColorName])  [self setDiffuseColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialAmbientColorName])  [self setAmbientColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialDiffuseMapName])  [self setDiffuseMap:TextureSpec(value)];
+	
+	if ([key isEqualToString:kOOMaterialSpecularColorName])  [self setSpecularColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialSpecularModulateColorName])  [self setSpecularModulateColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialSpecularMapName])  [self setSpecularMap:TextureSpec(value)];
+	if ([key isEqualToString:kOOMaterialSpecularExponentName])  [self setBoxedSpecularExponent:value];
+	
+	if ([key isEqualToString:kOOMaterialEmissionColorName])  [self setEmissionColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialEmissionModulateColorName])  [self setEmissionModulateColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialIlluminationModulateColorName])  [self setIlluminationModulateColor:Color(value)];
+	if ([key isEqualToString:kOOMaterialEmissionMapName])  [self setEmissionMap:TextureSpec(value)];
+	if ([key isEqualToString:kOOMaterialIlluminationMapName])  [self setIlluminationMap:TextureSpec(value)];
+	
+	if ([key isEqualToString:kOOMaterialNormalMapName])  [self setNormalMap:TextureSpec(value)];
+	if ([key isEqualToString:kOOMaterialParallaxMapName])  [self setParallaxMap:TextureSpec(value)];
+	
+	if ([key isEqualToString:kOOMaterialParallaxScale])  [self setBoxedParallaxScale:value];
+	if ([key isEqualToString:kOOMaterialParallaxBias])  [self setBoxedParallaxBias:value];
+	
+	if (_extraAttributes == nil)  _extraAttributes = [[NSMutableDictionary alloc] init];
+	[_extraAttributes setObject:value forKey:key];
 }
 
 

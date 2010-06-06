@@ -441,12 +441,10 @@
 
 - (BOOL) priv_completeMaterialWithProperties:(NSDictionary *)properties data:(id)ignored name:(NSString *)name
 {
-	OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:name];
+	OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:name
+																  propertyListRepresentation:properties
+																					  issues:_issues];
 	if (EXPECT_NOT(material == nil))  return NO;
-	
-	//	FIXME: set up material.
-	NSString *diffuseMap = [properties oo_stringForKey:@"diffuseMap"];
-	if (diffuseMap != nil)  [material setDiffuseMap:[OOTextureSpecification textureSpecWithName:diffuseMap]];
 	
 	[_materialsByName setObject:material forKey:name];
 	[material release];

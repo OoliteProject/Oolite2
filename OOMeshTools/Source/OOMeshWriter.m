@@ -54,6 +54,7 @@
 
 
 static NSString *EscapeString(NSString *string);
+static NSString *FloatString(float number);
 
 
 BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
@@ -229,20 +230,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 				OOFloatArray *attr = [vertex attributeForKey:key];
 				for (i = 0; i < count; i++)
 				{
-					NSString *numStr = $sprintf(@"%.3f", [attr floatAtIndex:i]);
-					
-					//	This is teh nasty.
-					while ([numStr hasSuffix:@"0"])
-					{
-						numStr = [numStr substringToIndex:[numStr length] - 1];
-					}
-					if ([numStr hasSuffix:@"."])
-					{
-						numStr = [numStr substringToIndex:[numStr length] - 1];
-					}
-					if ([numStr length] == 0)  numStr = @"0";
-					
-					[result appendString:numStr];
+					[result appendString:FloatString([attr floatAtIndex:i])];
 					
 #if ANNOTATE
 					if (vIdx != NSNotFound && i == count - 1)
@@ -376,6 +364,25 @@ static NSString *EscapeString(NSString *string)
 }
 
 
+static NSString *FloatString(float number)
+{
+	NSString *result = $sprintf(@"%.3f", number);
+	
+	//	This is teh nasty.
+	while ([result hasSuffix:@"0"])
+	{
+		result = [result substringToIndex:[result length] - 1];
+	}
+	if ([result hasSuffix:@"."])
+	{
+		result = [result substringToIndex:[result length] - 1];
+	}
+	if ([result length] == 0)  result = @"0";
+	
+	return result;
+}
+
+
 static NSString *IndentTabs(NSUInteger count)
 {
 	NSString * const staticTabs[] =
@@ -471,7 +478,7 @@ static BOOL IsValidDictChar(unichar c)
 	if (afterPunct)  [oomeshText appendString:@" "];
 	if ([self oo_isFloatingPointNumber])
 	{
-		[oomeshText appendFormat:@"%f", [self doubleValue]];
+		[oomeshText appendString:FloatString([self floatValue])];
 	}
 	else
 	{
@@ -484,7 +491,7 @@ static BOOL IsValidDictChar(unichar c)
 
 enum
 {
-	kMaxSimpleCount = 3,
+	kMaxSimpleCount = 4,
 	kMaxSimpleLength = 60
 };
 

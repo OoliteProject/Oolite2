@@ -28,7 +28,7 @@
 #import "OOMeshReading.h"
 
 @protocol OOOBJMaterialLibraryResolver;
-@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup;
+@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification;
 
 
 @interface OOOBJReader: NSObject <OOMeshReading>
@@ -64,6 +64,10 @@
 	NSMutableDictionary					*_materialGroups;
 	NSMutableSet						*_vertexCache;
 	OOAbstractFaceGroup					*_currentGroup;
+	
+	// ivars used only during material library parsing.
+	OOMaterialSpecification				*_currentMaterial;
+	NSString							*_currentMaterialLibraryName;
 }
 
 - (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;

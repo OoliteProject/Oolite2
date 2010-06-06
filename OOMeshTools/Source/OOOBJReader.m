@@ -37,6 +37,8 @@
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
+- (void) priv_reportMaterialParseError:(NSString *)format, ...;
+- (void) priv_reportBasicMaterialParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
 - (NSString *) priv_displayName;
@@ -50,7 +52,19 @@
 - (BOOL) priv_readObjectName;
 - (BOOL) priv_readSmoothGroup;
 
+- (BOOL) priv_readMaterialNewMaterial;
+- (BOOL) priv_readMaterialDiffuseColor;
+- (BOOL) priv_readMaterialAmbientColor;
+- (BOOL) priv_readMaterialSpecularColor;
+- (BOOL) priv_readMaterialEmissionColor;
+- (BOOL) priv_readMaterialDiffuseMap;
+- (BOOL) priv_readMaterialSpecularMap;
+- (BOOL) priv_readMaterialEmissionMap;
+- (BOOL) priv_readMaterialSpecularExponent;
+- (BOOL) priv_readMaterialOverallAlpha;
+
 - (BOOL) priv_notifyIgnoredKeyword:(NSString *)keyword;
+- (BOOL) priv_notifyIgnoredMaterialKeyword:(NSString *)keyword;
 
 @end
 
@@ -235,6 +249,27 @@
 
 
 - (void) priv_reportBasicParseError:(NSString *)expected
+{
+	[self priv_reportParseError:@"expected %@, got \"%@\"", expected, [_lexer currentTokenString]];
+}
+
+
+- (void) priv_reportMaterialParseError:(NSString *)format, ...
+{
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@. Rest of material library will be ignored.");
+	format = OOLocalizeProblemString(_issues, format);
+	
+	va_list args;
+	va_start(args, format);
+	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+	va_end(args);
+	
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], _currentMaterialLibraryName, message];
+	[_issues addProblemOfType:kOOMProblemTypeWarning message:message];
+}
+
+
+- (void) priv_reportBasicMaterialParseError:(NSString *)expected
 {
 	[self priv_reportParseError:@"expected %@, got \"%@\"", expected, [_lexer currentTokenString]];
 }
@@ -442,12 +477,67 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 - (BOOL) priv_readMaterialLibrary
 {
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	
 	NSString *name = nil;
 	[_lexer readUntilNewline:&name];
-	if (_lexer == nil)  return NO;
+	if (name == nil)
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
 	
-	OOReportInfo(_issues, @"Ignoring material library \"%@\".", name);
+	OOOBJLexer *mtlLexer = nil;
+	NSData *materialLibraryData = [_resolver oo_objReader:self findMaterialLibrary:name];
+	if (materialLibraryData != nil)  mtlLexer = [[[OOOBJLexer alloc] initWithData:materialLibraryData issues:_issues] autorelease];
+	if (mtlLexer == nil)
+	{
+		OOReportWarning(_issues, @"Could not read material library \"%@\"", name);
+		return YES;	// Not fatal.
+	}
 	
+	OOOBJLexer *savedLexer = _lexer;
+	_lexer = mtlLexer;
+	_currentMaterialLibraryName = name;
+	
+	BOOL OK = YES;
+	while (OK && ![_lexer isAtEndOfFile])
+	{
+		NSString *keyword = nil;
+		OK = [_lexer readString:&keyword];
+		if (!OK)
+		{
+			[self priv_reportBasicMaterialParseError:@"keyword"];
+			break;
+		}
+		if (EXPECT_NOT([keyword length] == 0))  continue;
+		
+		if ([keyword isEqualToString:@"newmtl"])  OK = [self priv_readMaterialNewMaterial];
+		else if ([keyword isEqualToString:@"Kd"])  OK = [self priv_readMaterialDiffuseColor];
+		else if ([keyword isEqualToString:@"Ka"])  OK = [self priv_readMaterialAmbientColor];
+		else if ([keyword isEqualToString:@"Ks"])  OK = [self priv_readMaterialSpecularColor];
+		else if ([keyword isEqualToString:@"Ke"])  OK = [self priv_readMaterialEmissionColor];
+		else if ([keyword isEqualToString:@"map_Kd"])  OK = [self priv_readMaterialDiffuseMap];
+		else if ([keyword isEqualToString:@"map_Ks"])  OK = [self priv_readMaterialSpecularMap];
+		else if ([keyword isEqualToString:@"map_Ke"])  OK = [self priv_readMaterialEmissionMap];
+		else if ([keyword isEqualToString:@"Ns"])  OK = [self priv_readMaterialSpecularExponent];
+		else if ([keyword isEqualToString:@"d"] || [keyword isEqualToString:@"Tr"])  OK = [self priv_readMaterialOverallAlpha];
+		// illum=1 means no specular highlight, illum=2 means specular highlight with Ks being required. We just use Ks and ignore illum.
+		else if ([keyword isEqualToString:@"illum"])  OK = [_lexer skipLine];
+		else  OK = [self priv_notifyIgnoredMaterialKeyword:keyword];
+		
+		if (OK && ![_lexer readNewline])
+		{
+			[self priv_reportBasicParseError:@"end of line"];
+			OK = NO;
+		}
+	}
+	
+	_lexer = savedLexer;
+	_currentMaterial = nil;
+	_currentMaterialLibraryName = nil;
+	
+	[pool drain];
 	return YES;
 }
 
@@ -456,7 +546,11 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 {
 	NSString *name = nil;
 	[_lexer readUntilNewline:&name];
-	if (_lexer == nil)  return NO;
+	if (name == nil)
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
 	
 	OOAbstractFaceGroup *group = [_materialGroups objectForKey:name];
 	if (group == nil)
@@ -531,6 +625,199 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 }
 
 
+- (BOOL) priv_readMaterialNewMaterial
+{
+	NSString *name = nil;
+	[_lexer readUntilNewline:&name];
+	if (name == nil)
+	{
+		[self priv_reportBasicMaterialParseError:@"string"];
+		return NO;
+	}
+	
+	/*	NOTE: according to official OBJ semantics, the first material library
+		specified takes precendence, and the effect of specifying a material
+		library after a material use is unspecified but implicitly should work.
+		In this implementation, the last usage seen will apply for new usemtl
+		commands. Since deliberate use of conflicting definitions is unlikely,
+		this is not a problem, unless there are real-world files where mtllib
+		comes after usemtl.
+	*/
+	_currentMaterial = [[OOMaterialSpecification alloc] initWithMaterialKey:name];
+	[_materials setObject:_currentMaterial forKey:name];
+	
+	//	Set silly OBJ defaults, which will presumably be overriden with sane values.
+	[_currentMaterial setAmbientColor:[OOColor colorWithWhite:0.2 alpha:1.0]];
+	[_currentMaterial setDiffuseColor:[OOColor colorWithWhite:0.8 alpha:1.0]];
+	
+	[_currentMaterial setSpecularExponent:0];
+	
+	[_currentMaterial release];
+	
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialDiffuseColor
+{
+	float r, g, b, a = 1.0f;
+	
+	if (!([_lexer readReal:&r] && [_lexer readReal:&g] && [_lexer readReal:&b]))
+	{
+		[self priv_reportBasicMaterialParseError:@"number"];
+	}
+	
+	if (![_lexer isAtEndOfLine])
+	{
+		// Alpha isn't part of the spec, but a logical extension.
+		[_lexer readReal:&a];	// Ignore failure.
+	}
+	
+	[_currentMaterial setDiffuseColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialAmbientColor
+{
+	float r, g, b, a = 1.0f;
+	
+	if (!([_lexer readReal:&r] && [_lexer readReal:&g] && [_lexer readReal:&b]))
+	{
+		[self priv_reportBasicMaterialParseError:@"number"];
+	}
+	
+	if (![_lexer isAtEndOfLine])
+	{
+		// Alpha isn't part of the spec, but a logical extension.
+		[_lexer readReal:&a];	// Ignore failure.
+	}
+	
+	[_currentMaterial setAmbientColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialSpecularColor
+{
+	float r, g, b, a = 1.0f;
+	
+	if (!([_lexer readReal:&r] && [_lexer readReal:&g] && [_lexer readReal:&b]))
+	{
+		[self priv_reportBasicMaterialParseError:@"number"];
+	}
+	
+	if (![_lexer isAtEndOfLine])
+	{
+		// Alpha isn't part of the spec, but a logical extension.
+		[_lexer readReal:&a];	// Ignore failure.
+	}
+	
+	/*	The distinction between specular colour and specular modulate colour
+		does not exist in OBJ. It is not clear whether Ks should be used as
+		modulate colour when there's a specular map, or ignored.
+		
+		This interpretation produces default results if Ks = 1,1,1,1.
+	 */
+	[_currentMaterial setSpecularColor:[OOColor colorWithRed:r * 0.2f green:g * 0.2f blue:b * 0.2f alpha:a]];
+	[_currentMaterial setSpecularModulateColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialEmissionColor
+{
+	float r, g, b, a = 1.0f;
+	
+	if (!([_lexer readReal:&r] && [_lexer readReal:&g] && [_lexer readReal:&b]))
+	{
+		[self priv_reportBasicMaterialParseError:@"number"];
+	}
+	
+	if (![_lexer isAtEndOfLine])
+	{
+		// Alpha isn't part of the spec, but a logical extension.
+		[_lexer readReal:&a];	// Ignore failure.
+	}
+	
+	/*	The distinction between emission colour and emission modulate colour
+		does not exist in OBJ. It is not clear whether Ks should be used as
+		modulate colour when there's a nemission map, or ignored.
+		
+		This interpretation produces default results if Ks = 0,0,0,1.
+	 */
+	[_currentMaterial setEmissionColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialDiffuseMap
+{
+	NSString *name = nil;
+	[_lexer readUntilNewline:&name];
+	if (name == nil)
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
+	
+	[_currentMaterial setDiffuseMap:[OOTextureSpecification textureSpecWithName:name]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialSpecularMap
+{
+	NSString *name = nil;
+	[_lexer readUntilNewline:&name];
+	if (name == nil)
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
+	
+	[_currentMaterial setSpecularMap:[OOTextureSpecification textureSpecWithName:name]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialEmissionMap
+{
+	NSString *name = nil;
+	[_lexer readUntilNewline:&name];
+	if (name == nil)
+	{
+		[self priv_reportBasicParseError:@"string"];
+		return NO;
+	}
+	
+	[_currentMaterial setEmissionMap:[OOTextureSpecification textureSpecWithName:name]];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialSpecularExponent
+{
+	float value;
+	[_lexer readReal:&value];
+	[_currentMaterial setSpecularExponent:OOClamp_0_max_f(value, 256.0f)];
+	return YES;
+}
+
+
+- (BOOL) priv_readMaterialOverallAlpha
+{
+	float value;
+	[_lexer readReal:&value];
+	if (value != 1.0f)
+	{
+		OOReportWarning(_issues, @"Material \"%@\" in material libary \"%@\" specifies an overall alpha of %g. This will be ignored.", [_currentMaterial materialKey], _currentMaterialLibraryName, value);
+	}
+	
+	return YES;
+}
+
+
 - (BOOL) priv_notifyIgnoredKeyword:(NSString *)keyword
 {
 	//	Set of keywords that are used for curved surfaces, which we don’t support.
@@ -555,7 +842,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 			_warnedAboutRenderAttribs = YES;
 		}
 	}
-	else if ([keyword isEqual:@"l"] || [keyword isEqual:@"l"])
+	else if ([keyword isEqual:@"l"] || [keyword isEqual:@"p"])
 	{
 		if (!_warnedAboutLinesOrPoints)
 		{
@@ -573,6 +860,17 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	}
 	
 	
+	return [_lexer skipLine];
+}
+
+
+- (BOOL) priv_notifyIgnoredMaterialKeyword:(NSString *)keyword
+{
+	if (!_warnedAboutUnknown)
+	{
+		OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" which will be ignored.", _currentMaterialLibraryName, keyword);
+		_warnedAboutUnknown = YES;
+	}
 	return [_lexer skipLine];
 }
 

@@ -207,12 +207,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) diffuseColor
 {
+	if (_diffuseColor == nil)  return [OOColor whiteColor];
 	return _diffuseColor;
 }
 
 
 - (void) setDiffuseColor:(OOColor *)color
 {
+	if ([color isWhite])  color = nil;
 	if (color != _diffuseColor)
 	{
 		[_diffuseColor release];
@@ -223,12 +225,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) ambientColor
 {
+	if (_ambientColor == nil)  return [OOColor whiteColor];
 	return _ambientColor;
 }
 
 
 - (void) setAmbientColor:(OOColor *)color
 {
+	if ([color isWhite])  color = nil;
 	if (color != _ambientColor)
 	{
 		[_ambientColor release];
@@ -255,6 +259,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) specularColor
 {
+	if (_specularColor == nil)  return [OOColor colorWithWhite:kDefaultSpecularIntensity alpha:1.0];
 	return _specularColor;
 }
 
@@ -271,12 +276,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) specularModulateColor
 {
+	if (_specularModulateColor == nil)  return [OOColor whiteColor];
 	return _specularModulateColor;
 }
 
 
 - (void) setSpecularModulateColor:(OOColor *)color
 {
+	if ([color isWhite])  color = nil;
 	if (color != _specularModulateColor)
 	{
 		[_specularModulateColor release];
@@ -316,12 +323,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) emissionColor
 {
+	if (_emissionColor == nil)  return [OOColor blackColor];
 	return _emissionColor;
 }
 
 
 - (void) setEmissionColor:(OOColor *)color
 {
+	if ([color isBlack])  color = nil;
 	if (color != _emissionColor)
 	{
 		[_emissionColor release];
@@ -332,12 +341,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) emissionModulateColor
 {
+	if (_emissionModulateColor == nil)  return [OOColor whiteColor];
 	return _emissionModulateColor;
 }
 
 
 - (void) setEmissionModulateColor:(OOColor *)color
 {
+	if ([color isWhite])  color = nil;
 	if (color != _emissionModulateColor)
 	{
 		[_emissionModulateColor release];
@@ -364,12 +375,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) illuminationModulateColor
 {
+	if (_illuminationModulateColor == nil)  return [OOColor whiteColor];
 	return _illuminationModulateColor;
 }
 
 
 - (void) setIlluminationModulateColor:(OOColor *)color
 {
+	if ([color isWhite])  color = nil;
 	if (color != _illuminationModulateColor)
 	{
 		[_illuminationModulateColor release];

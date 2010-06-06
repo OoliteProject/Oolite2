@@ -173,7 +173,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 
 
 #define SET_BITS(mask, value)  do { OOTextureOptionFlags mask_ = (mask); _optionFlags = (_optionFlags & ~mask_) | ((value) & mask_); } while (0)
-#define SET_FLAG(mask, value) do { OOTextureOptionFlags mask_ = (mask); SET_BITS(mask_, (value) ? mask_ : 0); } while (0)
+#define SET_FLAG(mask, value) do { OOTextureOptionFlags mask__ = (mask); SET_BITS(mask__, (value) ? mask__ : 0); } while (0)
 
 
 
@@ -347,7 +347,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		
 		[result setObject:_name forKey:kOOTextureNameKey];
 		NSString *stringValue = nil;
-		if (_optionFlags & kOOTextureMinFilterMask != kOOTextureMinFilterDefault)
+		if ((_optionFlags & kOOTextureMinFilterMask) != kOOTextureMinFilterDefault)
 		{
 			switch (_optionFlags & kOOTextureMinFilterMask)
 			{
@@ -366,7 +366,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 			if (stringValue != nil)  [result setObject:stringValue forKey:kOOTextureMinFilterKey];
 		}
 		
-		if (_optionFlags & kOOTextureMagFilterMask == kOOTextureMagFilterNearest)
+		if ((_optionFlags & kOOTextureMagFilterMask) == kOOTextureMagFilterNearest)
 		{
 			[result setObject:kOOTextureNearestFilterName forKey:kOOTextureMagFilterKey];
 		}
@@ -379,7 +379,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		if (_anisotropy != kOOTextureDefaultAnisotropy)  [result oo_setFloat:_anisotropy forKey:kOOTextureAnisotropyKey];
 		if (_lodBias != kOOTextureDefaultLODBias)  [result oo_setFloat:_lodBias forKey:kOOTextureLODBiasKey];
 		
-		if (_optionFlags & kOOTextureExtractChannelMask != kOOTextureExtractChannelNone)
+		if ((_optionFlags & kOOTextureExtractChannelMask) != kOOTextureExtractChannelNone)
 		{
 			switch (_optionFlags & kOOTextureExtractChannelMask)
 			{

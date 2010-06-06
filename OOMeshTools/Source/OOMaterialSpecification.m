@@ -310,7 +310,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (unsigned) specularExponent
 {
-	if (_specularExponent >= 0)  _specularExponent;
+	if (_specularExponent >= 0)  return _specularExponent;
 	else  return (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
 }
 
@@ -593,7 +593,7 @@ static OOTextureSpecification *TextureSpec(id value)
 	ADD_COLOR(kOOMaterialSpecularColorName, _specularColor, defaultSpecular);
 	ADD_COLOR(kOOMaterialSpecularModulateColorName, _specularModulateColor, white);
 	ADD_TEXTURE(kOOMaterialSpecularMapName, _specularMap);
-	unsigned defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+	int defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
 	if (_specularExponent != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
 	
 	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);

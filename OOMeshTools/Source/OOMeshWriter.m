@@ -186,7 +186,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> iss
 	{
 		[result appendFormat:@"\t//   %@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
 	}
-	[result appendFormat:@"\t//\n\t// %lu triangle%@ in %lu group%@.\n\t\n", (unsigned long)faceCount, faceCount == 1 ? @"" : @"s", (unsigned long)[mesh faceGroupCount], [mesh faceGroupCount] == 1 ? @"" : @""];
+	[result appendFormat:@"\t//\n\t// %lu triangle%@ in %lu group%@.\n\t\n", (unsigned long)faceCount, faceCount == 1 ? @"" : @"s", (unsigned long)[mesh faceGroupCount], [mesh faceGroupCount] == 1 ? @"" : @"s"];
 #endif
 	
 	

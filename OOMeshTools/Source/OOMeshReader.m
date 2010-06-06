@@ -49,7 +49,9 @@
 
 @implementation OOMeshReader
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues
 {
 	if ((self = [super init]))
 	{

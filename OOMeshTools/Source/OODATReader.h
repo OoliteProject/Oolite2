@@ -34,31 +34,35 @@
 @interface OODATReader: NSObject <OOMeshReading>
 {
 @private
-	id <OOProblemReportManager>		_issues;
-	NSString						*_path;
-	OODATLexer						*_lexer;
+	id <OOProblemReportManager>			_issues;
+	id <OOProgressReporting>			_progressReporter;
+	float								_lastProgress;
+	NSString							*_path;
+	OODATLexer							*_lexer;
 	
-	OOAbstractMesh					*_mesh;
+	OOAbstractMesh						*_mesh;
 	
-	unsigned						_smoothing: 1,
-									_brokenSmoothing: 1,
-									_explicitNormals: 1,
-									_explicitTangents: 1,
-									_usesSmoothGroups: 1,
-									_haveTriangleAreas: 1;
+	unsigned							_smoothing: 1,
+										_brokenSmoothing: 1,
+										_explicitNormals: 1,
+										_explicitTangents: 1,
+										_usesSmoothGroups: 1,
+										_haveTriangleAreas: 1;
 	
-	NSUInteger						_materialCount;
-	NSUInteger						_fileVertexCount;
-	NSUInteger						_fileFaceCount;
+	NSUInteger							_materialCount;
+	NSUInteger							_fileVertexCount;
+	NSUInteger							_fileFaceCount;
 	
 	// ivars used only during parsing.
-	struct RawDATTriangle			*_rawTriangles;
-	OOAbstractVertex				**_fileVertices;
-	struct VertexFaceRef			*_faceRefs;
-	NSMutableArray					*_materialKeys;
+	struct RawDATTriangle				*_rawTriangles;
+	OOAbstractVertex					**_fileVertices;
+	struct VertexFaceRef				*_faceRefs;
+	NSMutableArray						*_materialKeys;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

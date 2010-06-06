@@ -2,7 +2,11 @@
 #import <OOMeshTools/OOMeshTools.h>
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProblemReportManager> issues);
+@interface OOSimpleProgressReporter: NSObject <OOProgressReporting>
+@end
+
+
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues);
 
 
 int main (int argc, const char * argv[])
@@ -14,6 +18,7 @@ int main (int argc, const char * argv[])
 		return EXIT_FAILURE;
 	}
 	
+	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
 	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
 	NSMutableArray *meshes = [NSMutableArray arrayWithCapacity:argc - 1];
 	
@@ -27,7 +32,7 @@ int main (int argc, const char * argv[])
 		realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
 		path = [NSString stringWithUTF8String:buffer];
 		
-		OOAbstractMesh *mesh = LoadMesh(path, issues);
+		OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 		if (mesh == nil)  return EXIT_FAILURE;
 		[meshes addObject:mesh];
 		
@@ -49,25 +54,25 @@ int main (int argc, const char * argv[])
 }
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProblemReportManager> issues)
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues)
 {
 	id <OOMeshReading> reader = nil;
 	NSString *ext = [[path pathExtension] lowercaseString];
 	
 	if ([ext isEqualToString:@"dat"])
 	{
-		OODATReader *datReader = [[OODATReader alloc] initWithPath:path issues:issues];
+		OODATReader *datReader = [[OODATReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
 	//	[datReader setSmoothing:YES];
 		[datReader setBrokenSmoothing:YES];
 		reader = datReader;
 	}
 	else if ([ext isEqualToString:@"oomesh"])
 	{
-		reader = [[OOMeshReader alloc] initWithPath:path issues:issues];
+		reader = [[OOMeshReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
 	}
 	else if ([ext isEqualToString:@"obj"])
 	{
-		reader = [[OOOBJReader alloc] initWithPath:path issues:issues];
+		reader = [[OOOBJReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
 	}
 	else
 	{
@@ -77,3 +82,15 @@ static OOAbstractMesh *LoadMesh(NSString *path, id <OOProblemReportManager> issu
 	
 	return [reader abstractMesh];
 }
+
+
+@implementation  OOSimpleProgressReporter
+
+- (void) task:(id)task reportsProgress:(float)progress
+{
+	printf("\r%.u %%", (unsigned)(progress * 100.0f));
+	if (progress < 1.0)  fflush(stdout);
+	else  printf("\n");
+}
+
+@end

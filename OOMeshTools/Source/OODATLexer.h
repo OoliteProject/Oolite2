@@ -34,6 +34,7 @@
 {
 @private
 	id <OOProblemReportManager>	_issues;
+	const char					*_start;
 	const char					*_cursor;
 	const char					*_end;
 	size_t						_tokenLength;
@@ -59,5 +60,7 @@
 - (BOOL) readReal:(float *)outReal;
 - (BOOL) readString:(NSString **)outString;
 - (BOOL) readUntilNewline:(NSString **)outString;
+
+- (float) progressEstimate;
 
 @end

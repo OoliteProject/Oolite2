@@ -86,7 +86,7 @@ typedef enum OOOBJLexerEndMode
 	{
 		_issues = [issues retain];
 		_data = [data retain];
-		_cursor = [data bytes];
+		_cursor = _start = [data bytes];
 		_end = _cursor + [data length];
 		_tokenLength = 0;
 		_lineNumber = 1;
@@ -273,6 +273,14 @@ static inline BOOL IsLineEndChar(char c)
 	_tokenLength = 0;
 	
 	return _cursor >= _end;
+}
+
+
+- (float) progressEstimate
+{
+	off_t total = _end - _start;
+	off_t processed = _cursor - _start;
+	return (float)processed / (float)total;
 }
 
 

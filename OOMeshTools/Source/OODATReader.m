@@ -81,6 +81,11 @@ static NSUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, NSUInteger index);
 static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct.
 
 
+//	Rough estimate of time portions used by parsing and post-processing.
+#define kParseTimePortion		(0.15f)
+#define kProcessTimePortion		(1.0f - kParseTimePortion)
+
+
 enum
 {
 	kMaxDATMaterials			= 8
@@ -92,6 +97,8 @@ enum
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
+
+- (void) priv_reportProgress;
 
 - (NSString *) priv_displayName;
 
@@ -113,11 +120,14 @@ enum
 
 @implementation OODATReader
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues
 {
 	if ((self = [super init]))
 	{
 		_issues = [issues retain];
+		_progressReporter = [progressReporter retain];
 		_path = [path copy];
 		_brokenSmoothing = YES;
 		
@@ -132,6 +142,7 @@ enum
 - (void) dealloc
 {
 	DESTROY(_issues);
+	DESTROY(_progressReporter);
 	DESTROY(_path);
 	DESTROY(_lexer);
 	
@@ -382,6 +393,17 @@ enum
 }
 
 
+- (void) priv_reportProgress
+{
+	float progress = [_lexer progressEstimate] * kParseTimePortion;
+	if (progress > _lastProgress + 0.01f)
+	{
+		[_progressReporter task:self reportsProgress:progress];
+		_lastProgress = progress;
+	}
+}
+
+
 - (NSString *) priv_displayName
 {
 	return [[NSFileManager defaultManager] displayNameAtPath:_path];
@@ -416,6 +438,11 @@ enum
 		CleanVector(&v);
 		
 		_fileVertices[vIter] = [OOAbstractVertex vertexWithPosition:v];
+		
+		if ((vIter & 0xFF) == 0 && _progressReporter != nil)
+		{
+			[self priv_reportProgress];
+		}
 	}
 	
 	return YES;
@@ -505,6 +532,11 @@ enum
 			//	Cache vertex positions for post-processing.
 			triangle->position[vIter] = [_fileVertices[triangle->vertex[vIter]] position];
 		}
+		
+		if ((fIter & 0xFF) == 0 && _progressReporter != nil)
+		{
+			[self priv_reportProgress];
+		}
 	}
 	
 	_usesSmoothGroups = [smoothGroups count] > 1;
@@ -559,6 +591,11 @@ enum
 		{
 			[self priv_reportBasicParseError:@"number"];
 			break;
+		}
+		
+		if ((fIter & 0xFF) == 0 && _progressReporter != nil)
+		{
+			[self priv_reportProgress];
 		}
 	}
 	[pool drain];
@@ -616,6 +653,11 @@ enum
 		CleanVector(&normal);
 		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOFloatArrayFromVector(normal)
 																	  forKey:kOONormalAttributeKey];
+		
+		if ((vIter & 0xFF) == 0 && _progressReporter != nil)
+		{
+			[self priv_reportProgress];
+		}
 	}
 	
 	return YES;
@@ -644,6 +686,11 @@ enum
 		CleanVector(&tangent);
 		_fileVertices[vIter] = [_fileVertices[vIter] vertexByAddingAttribute:OOFloatArrayFromVector(tangent)
 																	  forKey:kOOTangentAttributeKey];
+		
+		if ((vIter & 0xFF) == 0 && _progressReporter != nil)
+		{
+			[self priv_reportProgress];
+		}
 	}
 	
 	return YES;
@@ -950,7 +997,7 @@ enum
 		doesn't allow more than 7) it's not a big deal.
 	*/
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSUInteger poolTime = 0;
+	NSUInteger iterCount = 0;
 	
 	for (mIter = 0; mIter < _materialCount; mIter++)
 	{
@@ -1029,9 +1076,28 @@ enum
 				total loading time about 5 % faster than doing it ever
 				iteration and 10 % faster than not doing it at all.
 			*/
-			poolTime = (poolTime + 1) & 0x1F;
-			if (poolTime == 0)
+			iterCount++;
+			if ((iterCount & 0x1F) == 0)
 			{
+				/*	Every 256 faces, update the progress reporter if at least 1 %
+					change.
+				*/
+				if ((iterCount & 0xFF) == 0)
+				{
+					if (_progressReporter != nil)
+					{
+						float progress = (float)fIter / (float)_fileFaceCount;
+						progress = kParseTimePortion + kProcessTimePortion * progress;
+						
+						if (progress > _lastProgress + 0.01f)
+						{
+							[_progressReporter task:self reportsProgress:progress];
+							_lastProgress = progress;
+						}
+					}
+					iterCount = 0;
+				}
+				
 				[pool drain];
 				pool = [NSAutoreleasePool new];
 			}
@@ -1042,6 +1108,7 @@ enum
 	}
 	[pool drain];
 	
+	[_progressReporter task:self reportsProgress:1.0f];
 	return YES;
 }
 

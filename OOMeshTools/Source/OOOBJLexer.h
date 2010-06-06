@@ -34,6 +34,7 @@
 {
 @private
 	id <OOProblemReportManager>	_issues;
+	const char					*_start;
 	const char					*_cursor;
 	const char					*_end;
 	size_t						_tokenLength;
@@ -64,5 +65,7 @@
 - (BOOL) isAtEndOfLine;
 
 - (BOOL) isAtEndOfFile;
+
+- (float) progressEstimate;
 
 @end

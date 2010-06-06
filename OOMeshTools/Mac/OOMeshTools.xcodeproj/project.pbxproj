@@ -35,7 +35,8 @@
 		1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7398E11B10EC800575507 /* OOMeshReader.m */; };
 		1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReportManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReportManager.m */; };
-		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AC98DB511BC58910034572F /* OOProgressReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AC98DB411BC58910034572F /* OOProgressReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
 		1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA235C11A72E0B00B361DC /* OODATReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251B11A73AA400B361DC /* OODATReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA235D11A72E0B00B361DC /* OODATReader.m */; };
@@ -102,6 +103,7 @@
 		1AB7398E11B10EC800575507 /* OOMeshReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshReader.m; sourceTree = "<group>"; };
 		1AB7399111B10ECE00575507 /* OOProblemReportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReportManager.h; sourceTree = "<group>"; };
 		1AB7399211B10ECE00575507 /* OOProblemReportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReportManager.m; sourceTree = "<group>"; };
+		1AC98DB411BC58910034572F /* OOProgressReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProgressReporting.h; sourceTree = "<group>"; };
 		1AEA232E11A728C100B361DC /* OODATLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATLexer.h; sourceTree = "<group>"; };
 		1AEA232F11A728C100B361DC /* OODATLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATLexer.m; sourceTree = "<group>"; };
 		1AEA235C11A72E0B00B361DC /* OODATReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATReader.h; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 			children = (
 				1AB7399111B10ECE00575507 /* OOProblemReportManager.h */,
 				1AB7399211B10ECE00575507 /* OOProblemReportManager.m */,
+				1AC98DB411BC58910034572F /* OOProgressReporting.h */,
 				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
 				1A7D35B611B138A100857CEF /* OOIndexArray.h */,
@@ -293,6 +296,7 @@
 				1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */,
 				1A713DDE11B55E96009A9197 /* OOMeshTools.h in Headers */,
 				1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */,
+				1AC98DB511BC58910034572F /* OOProgressReporting.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

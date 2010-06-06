@@ -1,9 +1,11 @@
 #import <OOMeshTools/OOMeshTools.h>
 
 
-static id <OOMeshReading> NewDATReader(NSString *path, id <OOProblemReportManager> issues);
-static id <OOMeshReading> NewOOMeshReader(NSString *path, id <OOProblemReportManager> issues);
-static id <OOMeshReading> NewOBJReader(NSString *path, id <OOProblemReportManager> issues);
+@interface OOSimpleProgressReporter: NSObject <OOProgressReporting>
+@end
+
+
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues);
 
 
 int main (int argc, const char * argv[])
@@ -20,51 +22,56 @@ int main (int argc, const char * argv[])
 	realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
 	path = [NSString stringWithUTF8String:buffer];
 	
+	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
 	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
-	id <OOMeshReading> reader = nil;
 	
-	NSString *ext = [[path pathExtension] lowercaseString];
-	if ([ext isEqualToString:@"dat"])  reader = NewDATReader(path, issues);
-	else if ([ext isEqualToString:@"oomesh"])  reader = NewOOMeshReader(path, issues);
-	else if ([ext isEqualToString:@"obj"])  reader = NewOBJReader(path, issues);
-	else
-	{
-		OOReportError(issues, @"Cannot read %@ because it is of an unknown type.", [path lastPathComponent]);
-	}
+	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
+	if (mesh == nil)  exit(EXIT_FAILURE);
 	
-	OOAbstractMesh *mesh = [reader abstractMesh];
-	
-	if (mesh == nil)
-	{
-		exit(EXIT_FAILURE);
-	}
-	
-	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
+//	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
 	
     [pool drain];
     return 0;
 }
 
 
-static id <OOMeshReading> NewDATReader(NSString *path, id <OOProblemReportManager> issues)
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues)
 {
-	OODATReader *reader = [[OODATReader alloc] initWithPath:path issues:issues];
-	if (reader == nil)  return nil;
+	id <OOMeshReading> reader = nil;
+	NSString *ext = [[path pathExtension] lowercaseString];
 	
-//	[reader setSmoothing:YES];
-	[reader setBrokenSmoothing:NO];
+	if ([ext isEqualToString:@"dat"])
+	{
+		OODATReader *datReader = [[OODATReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
+		//	[datReader setSmoothing:YES];
+		[datReader setBrokenSmoothing:YES];
+		reader = datReader;
+	}
+	else if ([ext isEqualToString:@"oomesh"])
+	{
+		reader = [[OOMeshReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
+	}
+	else if ([ext isEqualToString:@"obj"])
+	{
+		reader = [[OOOBJReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
+	}
+	else
+	{
+		OOReportError(issues, @"%@: unknown mesh type.", [path lastPathComponent]);
+		return nil;
+	}
 	
-	return reader;
+	return [reader abstractMesh];
 }
 
 
-static id <OOMeshReading> NewOOMeshReader(NSString *path, id <OOProblemReportManager> issues)
+@implementation  OOSimpleProgressReporter
+
+- (void) task:(id)task reportsProgress:(float)progress
 {
-	return [[OOMeshReader alloc] initWithPath:path issues:issues];
+	printf("\r%.u %%", (unsigned)(progress * 100.0f));
+	if (progress < 1.0)  fflush(stdout);
+	else  printf("\n");
 }
 
-
-static id <OOMeshReading> NewOBJReader(NSString *path, id <OOProblemReportManager> issues)
-{
-	return [[OOOBJReader alloc] initWithPath:path issues:issues];
-}
+@end

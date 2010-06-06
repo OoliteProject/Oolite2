@@ -1,12 +1,15 @@
 #import <Foundation/Foundation.h>
+#import "OOProblemReportManager.h"
+#import "OOProgressReporting.h"
 
-@protocol OOProblemReportManager;
 @class OOAbstractMesh;
 
 
 @protocol OOMeshReading <NSObject>
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

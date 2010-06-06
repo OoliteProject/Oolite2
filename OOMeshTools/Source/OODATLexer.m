@@ -36,7 +36,7 @@ typedef enum OODATLexerEndMode
 
 @interface OODATLexer (Private)
 
-- (BOOL) advanceWithEndMode:(OODATLexerEndMode)mode;
+- (BOOL) priv_advanceWithEndMode:(OODATLexerEndMode)mode;
 
 @end
 
@@ -83,7 +83,7 @@ typedef enum OODATLexerEndMode
 	{
 		_issues = [issues retain];
 		_data = [data retain];
-		_cursor = [data bytes];
+		_cursor = _start = [data bytes];
 		_end = _cursor + [data length];
 		_tokenLength = 0;
 		_lineNumber = 1;
@@ -132,7 +132,7 @@ typedef enum OODATLexerEndMode
 
 - (NSString *) nextToken
 {
-	if ([self advanceWithEndMode:kEndNormal])
+	if ([self priv_advanceWithEndMode:kEndNormal])
 	{
 		return [self currentTokenString];
 	}
@@ -143,7 +143,7 @@ typedef enum OODATLexerEndMode
 
 - (BOOL) expectLiteral:(const char *)literal
 {
-	if ([self advanceWithEndMode:kEndNormal])
+	if ([self priv_advanceWithEndMode:kEndNormal])
 	{
 		return (strncmp(literal, _cursor, _tokenLength) == 0);
 	}
@@ -155,7 +155,7 @@ typedef enum OODATLexerEndMode
 - (BOOL) readInteger:(NSUInteger *)outInt
 {
 	NSParameterAssert(outInt != NULL);
-	if (EXPECT_NOT(![self advanceWithEndMode:kEndNormal]))  return NO;
+	if (EXPECT_NOT(![self priv_advanceWithEndMode:kEndNormal]))  return NO;
 	
 	unsigned result = 0;
 	const char *str = _cursor;
@@ -185,7 +185,7 @@ typedef enum OODATLexerEndMode
 - (BOOL) readReal:(float *)outReal
 {
 	NSParameterAssert(outReal != NULL);
-	if (EXPECT_NOT(![self advanceWithEndMode:kEndNormal]))  return NO;
+	if (EXPECT_NOT(![self priv_advanceWithEndMode:kEndNormal]))  return NO;
 	
 	//	Make null-terminated copy of token on stack and strtod() it.
 	char buffer[_tokenLength + 1];
@@ -215,13 +215,21 @@ typedef enum OODATLexerEndMode
 {
 	NSParameterAssert(outString != NULL);
 	
-	if (EXPECT([self advanceWithEndMode:kEndEOL]))
+	if (EXPECT([self priv_advanceWithEndMode:kEndEOL]))
 	{
 		*outString = [self currentTokenString];
 		return YES;
 	}
 	
 	return NO;
+}
+
+
+- (float) progressEstimate
+{
+	off_t total = _end - _start;
+	off_t processed = _cursor - _start;
+	return (float)processed / (float)total;
 }
 
 
@@ -237,7 +245,7 @@ static inline BOOL IsLineEndChar(char c)
 }
 
 
-- (BOOL) advanceWithEndMode:(OODATLexerEndMode)mode
+- (BOOL) priv_advanceWithEndMode:(OODATLexerEndMode)mode
 {
 	_cursor += _tokenLength;
 	NSAssert(_cursor <= _end, @"DAT lexer passed end of buffer");

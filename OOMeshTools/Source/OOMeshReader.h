@@ -50,7 +50,9 @@
 	NSMutableDictionary				*_materialsByName;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

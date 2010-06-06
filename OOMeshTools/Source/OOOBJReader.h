@@ -35,6 +35,8 @@
 {
 @private
 	id <OOProblemReportManager>			_issues;
+	id <OOProgressReporting>			_progressReporter;
+	float								_lastProgress;
 	NSString							*_path;
 	OOOBJLexer							*_lexer;
 	id <OOOBJMaterialLibraryResolver>	_resolver;
@@ -62,7 +64,7 @@
 	NSMutableDictionary					*_smoothGroups;
 	NSMutableDictionary					*_materials;
 	NSMutableDictionary					*_materialGroups;
-	NSMutableSet						*_vertexCache;
+	NSMutableDictionary					*_vertexCache;
 	OOAbstractFaceGroup					*_currentGroup;
 	
 	// ivars used only during material library parsing.
@@ -70,8 +72,14 @@
 	NSString							*_currentMaterialLibraryName;
 }
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues resolver:(id <OOOBJMaterialLibraryResolver>)resolver;
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues;
+
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues
+		   resolver:(id <OOOBJMaterialLibraryResolver>)resolver;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

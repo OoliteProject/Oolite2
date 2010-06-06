@@ -25,7 +25,6 @@
 
 #import "OOOBJReader.h"
 #import "OOOBJLexer.h"
-#import "OOProblemReportManager.h"
 
 #import "OOAbstractMesh.h"
 
@@ -69,15 +68,68 @@
 @end
 
 
-@implementation OOOBJReader
-
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
+@interface OOOBJVertexCacheKey: NSObject <NSCopying>
 {
-	return [self initWithPath:path issues:issues resolver:nil];
+@private
+	NSUInteger			_v, _vn, _vt;
+}
+
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt;
+
+@end
+
+
+@implementation OOOBJVertexCacheKey
+
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt
+{
+	if ((self = [super init]))
+	{
+		_v = v;
+		_vn = vn;
+		_vt = vt;
+	}
+	return self;
 }
 
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues resolver:(id <OOOBJMaterialLibraryResolver>)resolver
+- (BOOL) isEqual:(id)other
+{
+	NSParameterAssert([other isKindOfClass:[OOOBJVertexCacheKey class]]);
+	OOOBJVertexCacheKey *otherKey = other;
+	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt;
+}
+
+
+- (NSUInteger) hash
+{
+	return (_v * 1089) ^ (_vn * 33) ^ _vt;
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
+}
+
+@end
+
+
+
+@implementation OOOBJReader
+
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues
+{
+	return [self initWithPath:path progressReporter:progressReporter issues:issues resolver:nil];
+}
+
+
+- (id) initWithPath:(NSString *)path
+   progressReporter:(id < OOProgressReporting>)progressReporter
+			 issues:(id <OOProblemReportManager>)issues
+		   resolver:(id <OOOBJMaterialLibraryResolver>)resolver
 {
 	if ((self = [super init]))
 	{
@@ -98,12 +150,23 @@
 - (void) dealloc
 {
 	DESTROY(_issues);
+	DESTROY(_progressReporter);
 	DESTROY(_path);
 	DESTROY(_resolver);
 	DESTROY(_lexer);
 	DESTROY(_abstractMesh);
 	
 	[super dealloc];
+}
+
+
+- (void) setProgressReporter:(id <OOProgressReporting>)progressReporter
+{
+	if (progressReporter != _progressReporter)
+	{
+		[_progressReporter release];
+		_progressReporter = [progressReporter retain];
+	}
 }
 
 
@@ -120,7 +183,7 @@
 	_smoothGroups = [NSMutableDictionary dictionary];
 	_materials = [NSMutableDictionary dictionary];
 	_materialGroups = [NSMutableDictionary dictionary];
-	_vertexCache = [NSMutableSet set];
+	_vertexCache = [NSMutableDictionary dictionary];
 	_haveAllTexCoords = YES;
 	_haveAllNormals = YES;
 	_currentGroup = [[[OOAbstractFaceGroup alloc] init] autorelease];
@@ -130,6 +193,9 @@
 	[_materials setObject:anonMaterial forKey:kAnonymousMaterialName];
 	[_materialGroups setObject:_currentGroup forKey:kAnonymousMaterialName];
 	[anonMaterial release];
+	
+	NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
+	NSUInteger iterCount = 0;
 	
 	while (OK && ![_lexer isAtEndOfFile])
 	{
@@ -159,18 +225,39 @@
 			[self priv_reportBasicParseError:@"end of line"];
 			OK = NO;
 		}
+		
+		/*	Drain pool every 16 lines.
+			This value has been tweaked with a large model and is slightly
+			better than every 8 or 32 times.
+		*/
+		iterCount++;
+		if ((iterCount & 0xF) == 0)
+		{
+			/*	Every 256 lines, update the progress reporter if at least 1 %
+				change.
+			*/
+			if ((iterCount & 0xFF) == 0)
+			{
+				if (_progressReporter != nil)
+				{
+					float progress = [_lexer progressEstimate];
+					if (progress > _lastProgress + 0.01f)
+					{
+						[_progressReporter task:self reportsProgress:progress];
+						_lastProgress = progress;
+					}
+				}
+				iterCount = 0;
+			}
+			
+			[innerPool drain];
+			innerPool = [NSAutoreleasePool new];
+		}
 	}
 	
+	[_progressReporter task:self reportsProgress:1.0f];
+	[innerPool drain];
 	DESTROY(_lexer);
-	
-	if (OK)
-	{
-		OOLog(@"temp.objParser", @"Read OBJ \"%@\" with %u vertex positions, %u normals, %u tex coords, %u effective vertices, %u smooth groups, %u faces, %u materials.", [self name], (unsigned long)_positionCount, (unsigned long)_texCoordCount, (unsigned long)_normalCount, (unsigned long)[_vertexCache count], (unsigned long)[_smoothGroups count], (unsigned long)_faceCount, (unsigned long)[_materials count]);
-	}
-	else
-	{
-		OOLog(@"temp.objParser.failed", @"OBJ parser failed.");
-	}
 	
 	_abstractMesh = [[OOAbstractMesh alloc] init];
 	[_abstractMesh setName:[self name]];
@@ -324,16 +411,30 @@
 - (BOOL) priv_readVertexTexCoords
 {
 	_texCoordCount++;
-	Vector2D v;
-	BOOL OK = [_lexer readReal:&v.x] &&
-			  [_lexer readReal:&v.y];
+	float x, y, z;
+	BOOL OK = [_lexer readReal:&x] &&
+			  [_lexer readReal:&y];
 	if (!OK)
 	{
 		[self priv_reportBasicParseError:@"number"];
 		return NO;
 	}
 	
-	[_texCoords addObject:OOFloatArrayFromVector2D(clean_vector2D(v))];
+	/*	vt is defined to take two parameters, but I've seen one with three
+		in the wild - probably a mistake, since it was only one set of tex
+		coords for the whole file, but since we conceptually support 3D tex
+		coords we might as well parse it.
+	*/
+	BOOL is3D = [_lexer readReal:&z];
+	if (!is3D || z == 0.0f)
+	{
+		[_texCoords addObject:OOFloatArrayFromVector2D(clean_vector2D((Vector2D){x, y}))];
+	}
+	else
+	{
+		[_texCoords addObject:OOFloatArrayFromVector(clean_vector((Vector){x, y, z}))];
+	}
+
 	return YES;
 }
 
@@ -412,26 +513,45 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		[self priv_reportParseError:@"vertex normal index out of range: %lu out of %lu", (unsigned long)evn, (unsigned long)_normalCount];
 		return nil;
 	}
-	
-	OOMutableAbstractVertex *vertex = [[OOMutableAbstractVertex alloc] initWithAttribute:[_positions objectAtIndex:ev - 1] forKey:kOOPositionAttributeKey];
-	if (vt != NSNotFound)
+
+	OOOBJVertexCacheKey *cacheKey = [[OOOBJVertexCacheKey alloc] initWithV:ev vn:evn vt:evt];
+	OOMutableAbstractVertex *vertex = [_vertexCache objectForKey:cacheKey];
+	if (vertex == nil)
 	{
-		[vertex setAttribute:[_texCoords objectAtIndex:evt - 1] forKey:kOOTexCoordsAttributeKey];
+		/*	Create a vertex object.
+			This is ugly, but several times faster than using a mutable vertex.
+		*/
+		OOFloatArray *vAttr = [_positions objectAtIndex:ev - 1], *vtAttr = nil, *vnAttr = nil;
+		if (vt != NSNotFound)
+		{
+			vtAttr = [_texCoords objectAtIndex:evt - 1];
+			if (vn != NSNotFound)
+			{
+				vnAttr = [_normals objectAtIndex:evn - 1];
+				vertex = [OOAbstractVertex vertexWithAttributes:$dict(kOOPositionAttributeKey, vAttr, kOONormalAttributeKey, vnAttr, kOOTexCoordsAttributeKey, vtAttr)];
+			}
+			else
+			{
+				vertex = [OOAbstractVertex vertexWithAttributes:$dict(kOOPositionAttributeKey, vAttr, kOOTexCoordsAttributeKey, vtAttr)];
+			}
+		}
+		else
+		{
+			if (vn != NSNotFound)
+			{
+				vnAttr = [_normals objectAtIndex:evn - 1];
+				vertex = [OOAbstractVertex vertexWithAttributes:$dict(kOOPositionAttributeKey, vAttr, kOONormalAttributeKey, vnAttr)];
+			}
+			else
+			{
+				vertex = [OOAbstractVertex vertexWithAttribute:vAttr forKey:kOOPositionAttributeKey];
+			}
+		}
+		
+		[_vertexCache setObject:vertex forKey:cacheKey];
 	}
-	if (vn != NSNotFound)
-	{
-		[vertex setAttribute:[_normals objectAtIndex:evn - 1] forKey:kOONormalAttributeKey];
-	}
-	
-	OOMutableAbstractVertex *cached = [_vertexCache member:vertex];
-	if (cached == nil)
-	{
-		cached = [vertex copy];
-		[_vertexCache addObject:cached];
-	}
-	// The vertex cache will live long enough to hold on to the vertex for us.
-	[vertex release];
-	return cached;
+	[cacheKey release];
+	return vertex;
 }
 
 
@@ -854,7 +974,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutUnknown)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" which will be ignored.", [self priv_displayName], keyword);
+			OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" (line %lu) which will be ignored.", [self priv_displayName], keyword, (unsigned long)[_lexer lineNumber]);
 			_warnedAboutUnknown = YES;
 		}
 	}

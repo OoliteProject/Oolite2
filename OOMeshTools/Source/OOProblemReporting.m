@@ -1,5 +1,5 @@
 /*
-	OOProblemReportManager.m
+	OOProblemReporting.m
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -23,10 +23,10 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 
-void OOReportIssueWithArgs(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *formatKey, va_list args)
+void OOReportIssueWithArgs(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, va_list args)
 {
 	if (probMgr == nil || formatKey == nil)  return;
 	
@@ -37,7 +37,7 @@ void OOReportIssueWithArgs(id <OOProblemReportManager> probMgr, OOProblemReportT
 }
 
 
-NSString *OOLocalizeProblemString(id <OOProblemReportManager> probMgr, NSString *string)
+NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *string)
 {
 	NSString *result = [probMgr localizedProblemStringForKey:string];
 	if (result == nil)
@@ -50,7 +50,7 @@ NSString *OOLocalizeProblemString(id <OOProblemReportManager> probMgr, NSString 
 }
 
 
-void OOReportIssue(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *formatKey, ...)
+void OOReportIssue(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
@@ -60,7 +60,7 @@ void OOReportIssue(id <OOProblemReportManager> probMgr, OOProblemReportType type
 
 
 
-void OOReportInfo(id <OOProblemReportManager> probMgr, NSString *formatKey, ...)
+void OOReportInfo(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
@@ -69,7 +69,7 @@ void OOReportInfo(id <OOProblemReportManager> probMgr, NSString *formatKey, ...)
 }
 
 
-void OOReportWarning(id <OOProblemReportManager> probMgr, NSString *formatKey, ...)
+void OOReportWarning(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
@@ -78,7 +78,7 @@ void OOReportWarning(id <OOProblemReportManager> probMgr, NSString *formatKey, .
 }
 
 
-void OOReportError(id <OOProblemReportManager> probMgr, NSString *formatKey, ...)
+void OOReportError(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
@@ -87,7 +87,7 @@ void OOReportError(id <OOProblemReportManager> probMgr, NSString *formatKey, ...
 }
 
 
-void OOReportNSError(id <OOProblemReportManager> probMgr, NSString *context, NSError *error)
+void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError *error)
 {
 	NSString *desc = [error localizedFailureReason];
 	if (desc == nil)  desc = [error localizedDescription];

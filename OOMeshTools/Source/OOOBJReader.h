@@ -27,19 +27,19 @@
 
 #import "OOMeshReading.h"
 
-@protocol OOOBJMaterialLibraryResolver;
+@protocol OOOBJMaterialLibraryResolving;
 @class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification;
 
 
 @interface OOOBJReader: NSObject <OOMeshReading>
 {
 @private
-	id <OOProblemReportManager>			_issues;
+	id <OOProblemReporting>				_issues;
 	id <OOProgressReporting>			_progressReporter;
 	float								_lastProgress;
 	NSString							*_path;
 	OOOBJLexer							*_lexer;
-	id <OOOBJMaterialLibraryResolver>	_resolver;
+	id <OOOBJMaterialLibraryResolving>	_resolver;
 	
 	OOAbstractMesh						*_abstractMesh;
 	NSString							*_name;
@@ -74,12 +74,12 @@
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues;
+			 issues:(id <OOProblemReporting>)issues;
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues
-		   resolver:(id <OOOBJMaterialLibraryResolver>)resolver;
+			 issues:(id <OOProblemReporting>)issues
+		   resolver:(id <OOOBJMaterialLibraryResolving>)resolver;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;
@@ -93,7 +93,7 @@
 	is responsible for finding these.
 	If none is specified, a default resolver will look adjacent to the 
 */
-@protocol OOOBJMaterialLibraryResolver <NSObject>
+@protocol OOOBJMaterialLibraryResolving <NSObject>
 
 - (NSData *) oo_objReader:(OOOBJReader *)reader findMaterialLibrary:(NSString *)fileName;
 

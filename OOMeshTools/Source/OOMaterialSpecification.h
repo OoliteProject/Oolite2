@@ -61,9 +61,9 @@
 
 //	Material key: a string identifying the material. Must be unique per file.
 - (id) initWithMaterialKey:(NSString *)materialKey;
-- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues;
+- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues;
 
-- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues;
+- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues;
 
 - (NSString *) materialKey;
 

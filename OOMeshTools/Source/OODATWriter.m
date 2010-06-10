@@ -24,12 +24,12 @@
 */
 
 #import "OODATWriter.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 
 
-BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
+BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
@@ -53,7 +53,7 @@ BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager
 }
 
 
-NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
+NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 {
 	/*
 		DAT format (as we use it) has a vertex list with a fixed vertex schema:

@@ -32,7 +32,7 @@
 #define kAnonymousMaterialName @"<unnamed>"
 
 
-@interface OOOBJReader (Private) <OOOBJMaterialLibraryResolver>
+@interface OOOBJReader (Private) <OOOBJMaterialLibraryResolving>
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
@@ -79,48 +79,11 @@
 @end
 
 
-@implementation OOOBJVertexCacheKey
-
-- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt
-{
-	if ((self = [super init]))
-	{
-		_v = v;
-		_vn = vn;
-		_vt = vt;
-	}
-	return self;
-}
-
-
-- (BOOL) isEqual:(id)other
-{
-	NSParameterAssert([other isKindOfClass:[OOOBJVertexCacheKey class]]);
-	OOOBJVertexCacheKey *otherKey = other;
-	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt;
-}
-
-
-- (NSUInteger) hash
-{
-	return (_v * 1089) ^ (_vn * 33) ^ _vt;
-}
-
-
-- (id) copyWithZone:(NSZone *)zone
-{
-	return [self retain];
-}
-
-@end
-
-
-
 @implementation OOOBJReader
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues
+			 issues:(id <OOProblemReporting>)issues
 {
 	return [self initWithPath:path progressReporter:progressReporter issues:issues resolver:nil];
 }
@@ -128,8 +91,8 @@
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues
-		   resolver:(id <OOOBJMaterialLibraryResolver>)resolver
+			 issues:(id <OOProblemReporting>)issues
+		   resolver:(id <OOOBJMaterialLibraryResolving>)resolver
 {
 	if ((self = [super init]))
 	{
@@ -259,6 +222,12 @@
 	[innerPool drain];
 	DESTROY(_lexer);
 	
+	/*	TODO: track whether we have nonzero tex coords and avoid adding all-
+		zero ones to the list. To support this, add special handling of all-
+		zero OOFloatArrays, and treat them as equivalent to non-existent ones
+		for OOAbstractVertex. (Ideally, trailing zeroes should be equivalent
+		to holes, too.)
+	*/
 	_abstractMesh = [[OOAbstractMesh alloc] init];
 	[_abstractMesh setName:[self name]];
 	OOAbstractFaceGroup *group = nil;
@@ -992,6 +961,42 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		_warnedAboutUnknown = YES;
 	}
 	return [_lexer skipLine];
+}
+
+@end
+
+
+@implementation OOOBJVertexCacheKey
+
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt
+{
+	if ((self = [super init]))
+	{
+		_v = v;
+		_vn = vn;
+		_vt = vt;
+	}
+	return self;
+}
+
+
+- (BOOL) isEqual:(id)other
+{
+	NSParameterAssert([other isKindOfClass:[OOOBJVertexCacheKey class]]);
+	OOOBJVertexCacheKey *otherKey = other;
+	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt;
+}
+
+
+- (NSUInteger) hash
+{
+	return (_v * 1089) ^ (_vn * 33) ^ _vt;
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
 }
 
 @end

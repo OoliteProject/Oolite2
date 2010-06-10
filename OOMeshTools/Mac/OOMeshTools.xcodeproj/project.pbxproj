@@ -33,8 +33,8 @@
 		1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7395E11B10B0300575507 /* OOAbstractFace.m */; };
 		1AB7398F11B10EC800575507 /* OOMeshReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7398D11B10EC800575507 /* OOMeshReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7398E11B10EC800575507 /* OOMeshReader.m */; };
-		1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReportManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReportManager.m */; };
+		1AB7399311B10ECE00575507 /* OOProblemReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AB7399411B10ECE00575507 /* OOProblemReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReporting.m */; };
 		1AC98DB511BC58910034572F /* OOProgressReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AC98DB411BC58910034572F /* OOProgressReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
@@ -101,8 +101,8 @@
 		1AB7395E11B10B0300575507 /* OOAbstractFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFace.m; sourceTree = "<group>"; };
 		1AB7398D11B10EC800575507 /* OOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReader.h; sourceTree = "<group>"; };
 		1AB7398E11B10EC800575507 /* OOMeshReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshReader.m; sourceTree = "<group>"; };
-		1AB7399111B10ECE00575507 /* OOProblemReportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReportManager.h; sourceTree = "<group>"; };
-		1AB7399211B10ECE00575507 /* OOProblemReportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReportManager.m; sourceTree = "<group>"; };
+		1AB7399111B10ECE00575507 /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
+		1AB7399211B10ECE00575507 /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
 		1AC98DB411BC58910034572F /* OOProgressReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProgressReporting.h; sourceTree = "<group>"; };
 		1AEA232E11A728C100B361DC /* OODATLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATLexer.h; sourceTree = "<group>"; };
 		1AEA232F11A728C100B361DC /* OODATLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATLexer.m; sourceTree = "<group>"; };
@@ -237,8 +237,8 @@
 		1A7D37C211B16BF400857CEF /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				1AB7399111B10ECE00575507 /* OOProblemReportManager.h */,
-				1AB7399211B10ECE00575507 /* OOProblemReportManager.m */,
+				1AB7399111B10ECE00575507 /* OOProblemReporting.h */,
+				1AB7399211B10ECE00575507 /* OOProblemReporting.m */,
 				1AC98DB411BC58910034572F /* OOProgressReporting.h */,
 				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
@@ -287,7 +287,7 @@
 				1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */,
 				1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */,
 				1AB7398F11B10EC800575507 /* OOMeshReader.h in Headers */,
-				1AB7399311B10ECE00575507 /* OOProblemReportManager.h in Headers */,
+				1AB7399311B10ECE00575507 /* OOProblemReporting.h in Headers */,
 				1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */,
 				1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */,
 				1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */,
@@ -401,7 +401,7 @@
 				1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */,
 				1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */,
 				1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */,
-				1AB7399411B10ECE00575507 /* OOProblemReportManager.m in Sources */,
+				1AB7399411B10ECE00575507 /* OOProblemReporting.m in Sources */,
 				1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */,
 				1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */,
 				1A7D37C611B16C1500857CEF /* OOOBJLexer.m in Sources */,
@@ -431,6 +431,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -464,6 +465,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OOBase.framework/Headers/OOBase.h";

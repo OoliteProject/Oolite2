@@ -24,7 +24,7 @@
 */
 
 #import "OOMeshWriter.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 
@@ -57,7 +57,7 @@ static NSString *EscapeString(NSString *string);
 static NSString *FloatString(float number);
 
 
-BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues)
+BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
@@ -81,7 +81,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportMana
 }
 
 
-NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues)
+NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 {
 	if (mesh == nil)  return nil;
 	

@@ -25,7 +25,7 @@
 */
 
 #import "OODATReader.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 #import "OODATLexer.h"
 
 #import "OOAbstractMesh.h"
@@ -122,7 +122,7 @@ enum
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues
+			 issues:(id <OOProblemReporting>)issues
 {
 	if ((self = [super init]))
 	{

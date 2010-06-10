@@ -1,6 +1,6 @@
 #import <OOBase/OOBase.h>
 
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 #import "OOAbstractVertex.h"
 #import "OOAbstractFace.h"

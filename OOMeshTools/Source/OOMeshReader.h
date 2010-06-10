@@ -34,7 +34,7 @@
 @interface OOMeshReader: NSObject <OOMeshReading>
 {
 @private
-	id <OOProblemReportManager>		_issues;
+	id <OOProblemReporting>			_issues;
 	NSString						*_path;
 	OOMeshLexer						*_lexer;
 	
@@ -52,7 +52,7 @@
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues;
+			 issues:(id <OOProblemReporting>)issues;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

@@ -79,7 +79,7 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 }
 
 
-- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues
+- (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues
 {
 	if ((self = [self initWithMaterialKey:materialKey]))
 	{
@@ -129,7 +129,7 @@ static void GetColor(NSMutableDictionary *plist, NSString *key, OOColor **color)
 }
 
 
-static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpecification **textureSpec, id <OOProblemReportManager> issues)
+static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpecification **textureSpec, id <OOProblemReporting> issues)
 {
 	NSCParameterAssert(plist != nil && key != nil && textureSpec != NULL);
 	
@@ -143,7 +143,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReportManager>)issues
+- (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues
 {
 	if (propertyList == nil)  return NO;
 	

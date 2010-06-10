@@ -27,9 +27,9 @@
 
 #import <OOBase/OOBase.h>
 
-@protocol OOProblemReportManager;
+@protocol OOProblemReporting;
 @class OOAbstractMesh;
 
 
-NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReportManager> issues);
-BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReportManager> issues);
+NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues);
+BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues);

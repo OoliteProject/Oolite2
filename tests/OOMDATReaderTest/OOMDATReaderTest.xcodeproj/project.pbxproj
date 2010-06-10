@@ -196,9 +196,11 @@
 				FRAMEWORK_SEARCH_PATHS = "$(OBJROOT)/$CONFIGURATION/";
 				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = OOMDATReaderTest_prefix.h;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
 				PRODUCT_NAME = OOMDATReaderTest;
+				SDKROOT = macosx10.6;
 				SYMROOT = ../../build;
 			};
 			name = Release;

@@ -24,7 +24,7 @@
 */
 
 #import "OOMeshLexer.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 
 
@@ -37,7 +37,7 @@
 
 @implementation OOMeshLexer
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReporting>)issues
 {
 	if ([inURL isFileURL])
 	{
@@ -59,13 +59,13 @@
 }
 
 
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReporting>)issues
 {
 	return [self initWithURL:[NSURL fileURLWithPath:inPath] issues:issues];
 }
 
 
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReporting>)issues
 {
 	if ([inData length] == 0)
 	{

@@ -1,5 +1,5 @@
 /*
-	OOProblemReportManager.h
+	OOProblemReporting.h
 	
 	Protocol for reporting multiple errors and other issues.
 	
@@ -37,7 +37,7 @@ typedef enum OOProblemReportType
 } OOProblemReportType;
 
 
-@protocol OOProblemReportManager <NSObject>
+@protocol OOProblemReporting <NSObject>
 
 - (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message;
 
@@ -50,20 +50,20 @@ typedef enum OOProblemReportType
 /*	These helper functions will look up keys using -localizedProblemStringForKey:
 	or -[NSBundle localizedStringForKey:value:table:] as appropriate.
  */
-void OOReportIssueWithArgs(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *formatKey, va_list args);
-void OOReportIssue(id <OOProblemReportManager> probMgr, OOProblemReportType type, NSString *formatKey, ...);
+void OOReportIssueWithArgs(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, va_list args);
+void OOReportIssue(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, ...);
 
-void OOReportInfo(id <OOProblemReportManager> probMgr, NSString *formatKey, ...);
-void OOReportWarning(id <OOProblemReportManager> probMgr, NSString *formatKey, ...);
-void OOReportError(id <OOProblemReportManager> probMgr, NSString *formatKey, ...);
+void OOReportInfo(id <OOProblemReporting> probMgr, NSString *formatKey, ...);
+void OOReportWarning(id <OOProblemReporting> probMgr, NSString *formatKey, ...);
+void OOReportError(id <OOProblemReporting> probMgr, NSString *formatKey, ...);
 
-void OOReportNSError(id <OOProblemReportManager> probMgr, NSString *context, NSError *error);
+void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError *error);
 
-NSString *OOLocalizeProblemString(id <OOProblemReportManager> probMgr, NSString *string);
+NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *string);
 
 
-/*	Trivial implementation of OOProblemReportManager.
+/*	Trivial implementation of OOProblemReporting.
 	Problems are printed to stderr. Strings are not localized.
 */
-@interface OOSimpleProblemReportManager: NSObject <OOProblemReportManager>
+@interface OOSimpleProblemReportManager: NSObject <OOProblemReporting>
 @end

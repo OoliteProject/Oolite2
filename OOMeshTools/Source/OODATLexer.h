@@ -27,13 +27,13 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol OOProblemReportManager;
+@protocol OOProblemReporting;
 
 
 @interface OODATLexer: NSObject
 {
 @private
-	id <OOProblemReportManager>	_issues;
+	id <OOProblemReporting>	_issues;
 	const char					*_start;
 	const char					*_cursor;
 	const char					*_end;
@@ -43,9 +43,9 @@
 	NSString					*_tokenString;
 }
 
-- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues;
-- (id) initWithData:(NSData *)data issues:(id <OOProblemReportManager>)issues;
+- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReporting>)issues;
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReporting>)issues;
+- (id) initWithData:(NSData *)data issues:(id <OOProblemReporting>)issues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 

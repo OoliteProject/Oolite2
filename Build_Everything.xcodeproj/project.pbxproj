@@ -139,7 +139,7 @@
 /* Begin PBXProject section */
 		1AE4E99311B6DAF600A85342 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything" */;
+			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything copy" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 0;
 			mainGroup = 1AE4E99111B6DAF600A85342;
@@ -257,7 +257,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything" */ = {
+		1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build Everything copy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1AE4E99411B6DAF600A85342 /* Debug */,

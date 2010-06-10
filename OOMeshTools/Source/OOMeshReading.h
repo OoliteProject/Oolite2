@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 #import "OOProgressReporting.h"
 
 @class OOAbstractMesh;
@@ -9,7 +9,7 @@
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues;
+			 issues:(id <OOProblemReporting>)issues;
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;

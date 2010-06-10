@@ -27,7 +27,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol OOProblemReportManager;
+@protocol OOProblemReporting;
 
 
 
@@ -62,7 +62,7 @@ typedef enum OOMeshTokenType
 @interface OOMeshLexer: NSObject
 {
 @private
-	id <OOProblemReportManager>	_issues;
+	id <OOProblemReporting>	_issues;
 	struct OOMeshLexerState
 	{
 		OOMeshTokenType				tokenType;
@@ -75,9 +75,9 @@ typedef enum OOMeshTokenType
 	NSString						*_tokenString;
 }
 
-- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReportManager>)issues;
-- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReportManager>)issues;
-- (id) initWithData:(NSData *)inData issues:(id <OOProblemReportManager>)issues;
+- (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReporting>)issues;
+- (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReporting>)issues;
+- (id) initWithData:(NSData *)inData issues:(id <OOProblemReporting>)issues;
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 

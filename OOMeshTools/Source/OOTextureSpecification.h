@@ -28,7 +28,7 @@
 #import <OOBase/OOBase.h>
 #import "JAPropertyListRepresentation.h"
 
-@protocol OOProblemReportManager;
+@protocol OOProblemReporting;
 
 
 /*	Note that these enumeration values are assigned such that they can be
@@ -101,7 +101,7 @@ typedef uint32_t OOTextureOptionFlags;
 }
 
 + (id) textureSpecWithName:(NSString *)name;
-+ (id) textureSpecWithPropertyListRepresentation:(id)rep issues:(id <OOProblemReportManager>)issues;
++ (id) textureSpecWithPropertyListRepresentation:(id)rep issues:(id <OOProblemReporting>)issues;
 
 - (NSString *) textureMapName;
 - (void) setTextureMapName:(NSString *)value;

@@ -24,7 +24,7 @@
 */
 
 #import "OOOBJLexer.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 
 typedef enum OOOBJLexerEndMode
@@ -46,7 +46,7 @@ typedef enum OOOBJLexerEndMode
 
 @implementation OOOBJLexer
 
-- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReportManager>)issues
+- (id) initWithURL:(NSURL *)url issues:(id <OOProblemReporting>)issues
 {
 	if ([url isFileURL])
 	{
@@ -68,13 +68,13 @@ typedef enum OOOBJLexerEndMode
 }
 
 
-- (id) initWithPath:(NSString *)path issues:(id <OOProblemReportManager>)issues
+- (id) initWithPath:(NSString *)path issues:(id <OOProblemReporting>)issues
 {
 	return [self initWithURL:[NSURL fileURLWithPath:path] issues:issues];
 }
 
 
-- (id) initWithData:(NSData *)data issues:(id <OOProblemReportManager>)issues
+- (id) initWithData:(NSData *)data issues:(id <OOProblemReporting>)issues
 {
 	if ([data length] == 0)
 	{

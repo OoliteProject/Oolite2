@@ -24,7 +24,7 @@
 */
 
 #import "OOTextureSpecification.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 
 
 NSString * const kOOTextureNameKey				= @"name";
@@ -61,7 +61,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 }
 
 
-+ (id) textureSpecWithPropertyListRepresentation:(id)rep issues:(id <OOProblemReportManager>)issues
++ (id) textureSpecWithPropertyListRepresentation:(id)rep issues:(id <OOProblemReporting>)issues
 {
 	OOTextureSpecification *result = [[[self alloc] init] autorelease];
 	

@@ -26,7 +26,7 @@
 
 #import "OOMeshReader.h"
 #import "OOMeshLexer.h"
-#import "OOProblemReportManager.h"
+#import "OOProblemReporting.h"
 #import "OOIndexArray.h"
 
 #import "OOAbstractMesh.h"
@@ -51,7 +51,7 @@
 
 - (id) initWithPath:(NSString *)path
    progressReporter:(id < OOProgressReporting>)progressReporter
-			 issues:(id <OOProblemReportManager>)issues
+			 issues:(id <OOProblemReporting>)issues
 {
 	if ((self = [super init]))
 	{

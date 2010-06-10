@@ -5,7 +5,7 @@
 @end
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues);
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues);
 
 
 int main (int argc, const char * argv[])
@@ -23,7 +23,7 @@ int main (int argc, const char * argv[])
 	path = [NSString stringWithUTF8String:buffer];
 	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
-	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
+	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
 	
 	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 	if (mesh == nil)  exit(EXIT_FAILURE);
@@ -35,7 +35,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues)
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues)
 {
 	id <OOMeshReading> reader = nil;
 	NSString *ext = [[path pathExtension] lowercaseString];

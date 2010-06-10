@@ -6,7 +6,7 @@
 @end
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues);
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues);
 
 
 int main (int argc, const char * argv[])
@@ -19,7 +19,7 @@ int main (int argc, const char * argv[])
 	}
 	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
-	id <OOProblemReportManager> issues = [[OOSimpleProblemReportManager new] autorelease];
+	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
 	NSMutableArray *meshes = [NSMutableArray arrayWithCapacity:argc - 1];
 	
 	unsigned i;
@@ -54,7 +54,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReportManager> issues)
+static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues)
 {
 	id <OOMeshReading> reader = nil;
 	NSString *ext = [[path pathExtension] lowercaseString];

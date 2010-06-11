@@ -10,43 +10,25 @@ static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progres
 
 int main (int argc, const char * argv[])
 {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	if (argc < 3)
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	if (argc < 2)
 	{
 		fprintf(stderr, "An input file name must be specified.\n");
 		return EXIT_FAILURE;
 	}
 	
+	NSString *path = [NSString stringWithUTF8String:argv[1]];
+	char buffer[PATH_MAX];
+	realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
+	path = [NSString stringWithUTF8String:buffer];
+	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
 	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
-	NSMutableArray *meshes = [NSMutableArray arrayWithCapacity:argc - 1];
 	
-	unsigned i;
-	for (i = 1; i < argc; i++)
-	{
-		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
-		
-		NSString *path = [NSString stringWithUTF8String:argv[i]];
-		char buffer[PATH_MAX];
-		realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
-		path = [NSString stringWithUTF8String:buffer];
-		
-		OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
-		if (mesh == nil)  return EXIT_FAILURE;
-		[meshes addObject:mesh];
-		
-		[innerPool drain];
-	}
+	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
+	if (mesh == nil)  exit(EXIT_FAILURE);
 	
-	OOAbstractMesh *mergedMesh = [meshes objectAtIndex:0];
-	for (i = 1; i < argc - 1; i++)
-	{
-		OOAbstractMesh *mesh = [meshes objectAtIndex:i];
-		[mergedMesh mergeMesh:mesh];
-	}
-	
-	OOWriteOOMesh(mergedMesh, @"meged-mesh.oomesh", issues);
-	OOWriteDAT(mergedMesh, @"meged-mesh.dat", issues);
+//	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
 	
     [pool drain];
     return 0;
@@ -61,7 +43,7 @@ static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progres
 	if ([ext isEqualToString:@"dat"])
 	{
 		OODATReader *datReader = [[OODATReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	//	[datReader setSmoothing:YES];
+		//	[datReader setSmoothing:YES];
 		[datReader setBrokenSmoothing:YES];
 		reader = datReader;
 	}

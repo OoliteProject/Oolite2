@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'OOBase' target in the 'OOBase' project.
-//
-
-#ifdef __OBJC__
-    #import <Cocoa/Cocoa.h>
-#endif

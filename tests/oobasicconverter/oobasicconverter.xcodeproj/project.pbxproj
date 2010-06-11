@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A1A37BB11C2F9290086265F /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A373911C2F9180086265F /* OoliteGraphics.framework */; };
-		8DD76F9A0486AA7600D96B5E /* oomergemesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* oomergemesh.m */; settings = {ATTRIBUTES = (); }; };
+		1A1A369711C2F8820086265F /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A369611C2F8800086265F /* OoliteGraphics.framework */; };
+		8DD76F9A0486AA7600D96B5E /* oobasicconverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* oobasicconverter.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A1A373811C2F9180086265F /* PBXContainerItemProxy */ = {
+		1A1A369511C2F8800086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */;
+			containerPortal = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OoliteGraphics.framework */;
 			remoteInfo = OoliteGraphics;
 		};
-		1A1A373A11C2F9200086265F /* PBXContainerItemProxy */ = {
+		1A1A369811C2F8900086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */;
+			containerPortal = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
 			remoteInfo = OoliteGraphics;
@@ -30,10 +30,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08FB7796FE84155DC02AAC07 /* oomergemesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = oomergemesh.m; sourceTree = "<group>"; };
+		08FB7796FE84155DC02AAC07 /* oobasicconverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = oobasicconverter.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../../OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
-		8DD76FA10486AA7600D96B5E /* oomergemesh */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = oomergemesh; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../../OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		8DD76FA10486AA7600D96B5E /* oobasicconverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = oobasicconverter; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,44 +43,45 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
-				1A1A37BB11C2F9290086265F /* OoliteGraphics.framework in Frameworks */,
+				1A1A369711C2F8820086265F /* OoliteGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08FB7794FE84155DC02AAC07 /* oomergemesh */ = {
+		08FB7794FE84155DC02AAC07 /* OOMDATReaderTest */ = {
 			isa = PBXGroup;
 			children = (
+				1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 			);
-			name = oomergemesh;
+			name = OOMDATReaderTest;
 			sourceTree = "<group>";
 		};
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				08FB7796FE84155DC02AAC07 /* oomergemesh.m */,
+				08FB7796FE84155DC02AAC07 /* oobasicconverter.m */,
 			);
-			path = Source;
+			name = Source;
 			sourceTree = "<group>";
 		};
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */,
+				1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */,
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		1A1A372E11C2F9180086265F /* Products */ = {
+		1A1A368B11C2F8800086265F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A1A373911C2F9180086265F /* OoliteGraphics.framework */,
+				1A1A369611C2F8800086265F /* OoliteGraphics.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +89,7 @@
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8DD76FA10486AA7600D96B5E /* oomergemesh */,
+				8DD76FA10486AA7600D96B5E /* oobasicconverter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +97,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DD76F960486AA7600D96B5E /* oomergemesh */ = {
+		8DD76F960486AA7600D96B5E /* oobasicconverter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "oomergemesh" */;
+			buildConfigurationList = 1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "oobasicconverter" */;
 			buildPhases = (
 				8DD76F990486AA7600D96B5E /* Sources */,
 				8DD76F9B0486AA7600D96B5E /* Frameworks */,
@@ -105,12 +107,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				1A1A373B11C2F9200086265F /* PBXTargetDependency */,
+				1A1A369911C2F8900086265F /* PBXTargetDependency */,
 			);
-			name = oomergemesh;
+			name = oobasicconverter;
 			productInstallPath = "$(HOME)/bin";
-			productName = oomergemesh;
-			productReference = 8DD76FA10486AA7600D96B5E /* oomergemesh */;
+			productName = OOMDATReaderTest;
+			productReference = 8DD76FA10486AA7600D96B5E /* oobasicconverter */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -118,30 +120,30 @@
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oomergemesh" */;
+			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oobasicconverter" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
-			mainGroup = 08FB7794FE84155DC02AAC07 /* oomergemesh */;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* OOMDATReaderTest */;
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1A1A372E11C2F9180086265F /* Products */;
-					ProjectRef = 1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */;
+					ProductGroup = 1A1A368B11C2F8800086265F /* Products */;
+					ProjectRef = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
-				8DD76F960486AA7600D96B5E /* oomergemesh */,
+				8DD76F960486AA7600D96B5E /* oobasicconverter */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1A1A373911C2F9180086265F /* OoliteGraphics.framework */ = {
+		1A1A369611C2F8800086265F /* OoliteGraphics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = OoliteGraphics.framework;
-			remoteRef = 1A1A373811C2F9180086265F /* PBXContainerItemProxy */;
+			remoteRef = 1A1A369511C2F8800086265F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -151,17 +153,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DD76F9A0486AA7600D96B5E /* oomergemesh.m in Sources */,
+				8DD76F9A0486AA7600D96B5E /* oobasicconverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1A1A373B11C2F9200086265F /* PBXTargetDependency */ = {
+		1A1A369911C2F8900086265F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OoliteGraphics;
-			targetProxy = 1A1A373A11C2F9200086265F /* PBXContainerItemProxy */;
+			targetProxy = 1A1A369811C2F8900086265F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -178,7 +180,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
-				PRODUCT_NAME = oomergemesh;
+				PRODUCT_NAME = oobasicconverter;
 				SYMROOT = ../../build;
 			};
 			name = Debug;
@@ -190,43 +192,43 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = "$(OBJROOT)/$CONFIGURATION/";
 				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
-				PRODUCT_NAME = oomergemesh;
+				PRODUCT_NAME = oobasicconverter;
+				SDKROOT = macosx10.6;
 				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
 		1DEB927908733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
 		1DEB927A08733DD40010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "oomergemesh" */ = {
+		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "oobasicconverter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB927508733DD40010E9CD /* Debug */,
@@ -235,7 +237,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oomergemesh" */ = {
+		1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oobasicconverter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB927908733DD40010E9CD /* Debug */,

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema version="1.0"	xmlns="http://www.apple.com/metadata"
+						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						xsi:schemaLocation="http://www.apple.com/metadata file:///System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Resources/MetadataSchema.xsd">
+	<attributes>
+		<attribute name="org_aegidian_oolite_shipids" multivalued="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_shipclassnames" multivalued="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_shiproles" multivalued="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_shipmodels" multivalued="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_combatrating" multivalued="false" uniqued="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_systemname" multivalued="false" type="CFString"/>
+		<attribute name="org_aegidian_oolite_minversion" nosearch="true" type="CFString"/>
+		<attribute name="org_aegidian_oolite_maxversion" nosearch="true" type="CFString"/>
+	</attributes>
+	
+	<types>
+		<type name="org.aegidian.oolite.save">
+			<allattrs>
+				org_aegidian_oolite_shipids
+				org_aegidian_oolite_shipclassnames
+				org_aegidian_oolite_combatrating
+				org_aegidian_oolite_systemname
+			</allattrs>
+            <displayattrs>
+				kMDItemTitle
+				org_aegidian_oolite_shipclassnames
+				org_aegidian_oolite_combatrating
+				org_aegidian_oolite_systemname
+            </displayattrs>
+        </type>
+		<type name="org.aegidian.oolite.oxp">
+			<allattrs>
+				kMDItemTitle
+				kMDItemVersion
+				kMDItemAuthors
+				kMDItemCopyright
+				kMDItemIdentifier
+				kMDItemDescription
+				kMDItemURL
+				org_aegidian_oolite_shipids
+				org_aegidian_oolite_shipclassnames
+				org_aegidian_oolite_shiproles
+				org_aegidian_oolite_shipmodels
+				org_aegidian_oolite_minversion
+				org_aegidian_oolite_maxversion
+			</allattrs>
+            <displayattrs>
+				kMDItemTitle
+				kMDItemVersion
+				kMDItemCopyright
+				org_aegidian_oolite_minversion
+				org_aegidian_oolite_maxversion
+            </displayattrs>
+        </type>
+    </types>
+</schema>

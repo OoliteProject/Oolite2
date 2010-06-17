@@ -26,6 +26,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOAbstractFaceGroup.h"
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
@@ -34,7 +36,14 @@
 #import "OOMaterialSpecification.h"
 
 
+NSString * const kOOAbstractFaceGroupChangedNotification = @"org.oolite OOAbstractFaceGroup changed";
+NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupChangeIsAdditive";
+
+
 @interface OOAbstractFaceGroup (Private)
+
+// Must be called whenever face group is mutated.
+- (void) priv_becomeDirtyWithAdditions:(BOOL)additions;
 
 - (id) priv_initWithCapacity:(NSUInteger)capacity;
 - (void) priv_updateSchemaForFace:(OOAbstractFace *)face;
@@ -174,6 +183,8 @@
 
 - (void) setName:(NSString *)name
 {
+	[self priv_becomeDirtyWithAdditions:NO];
+	
 	[_name autorelease];
 	_name = [name copy];
 }
@@ -187,6 +198,8 @@
 
 - (void) setMaterial:(OOMaterialSpecification *)material
 {
+	[self priv_becomeDirtyWithAdditions:NO];
+	
 	[_material autorelease];
 	_material = [material retain];
 }
@@ -206,6 +219,8 @@
 
 - (void) addFace:(OOAbstractFace *)face
 {
+	[self priv_becomeDirtyWithAdditions:YES];
+	
 	[_faces addObject:face];
 	[self priv_updateSchemaForFace:face];
 }
@@ -213,6 +228,8 @@
 
 - (void) insertFace:(OOAbstractFace *)face atIndex:(NSUInteger)index
 {
+	[self priv_becomeDirtyWithAdditions:YES];
+	
 	[_faces insertObject:face atIndex:index];
 	[self priv_updateSchemaForFace:face];
 }
@@ -220,6 +237,8 @@
 
 - (void) removeLastFace
 {
+	[self priv_becomeDirtyWithAdditions:NO];
+	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeLastObject];
 }
@@ -227,6 +246,8 @@
 
 - (void) removeFaceAtIndex:(NSUInteger)index
 {
+	[self priv_becomeDirtyWithAdditions:NO];
+	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeObjectAtIndex:index];
 }
@@ -234,6 +255,8 @@
 
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face
 {
+	[self priv_becomeDirtyWithAdditions:YES];
+	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces replaceObjectAtIndex:index withObject:face];
 	[self priv_updateSchemaForFace:face];
@@ -304,6 +327,18 @@
 	}
 }
 
+
+- (void) priv_becomeDirtyWithAdditions:(BOOL)additions
+{
+	NSDictionary *userInfo = nil;
+	if (additions)  userInfo = [NSDictionary dictionaryWithObject:$true
+														   forKey:kOOAbstractFaceGroupChangeIsAdditive];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kOOAbstractFaceGroupChangedNotification
+														object:self
+													  userInfo:userInfo];
+}
+
 @end
 
 
@@ -329,3 +364,5 @@ NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b)
 	
 	return result;
 }
+
+#endif	// OOLITE_LEAN

@@ -32,6 +32,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import <OoliteBase/OoliteBase.h>
 #import "OOFloatArray.h"
 
@@ -174,3 +176,5 @@ Vector OOVectorFromArray(NSArray *array);
 - (NSComparisonResult) oo_compareByVertexAttributeOrder:(NSString *)other;
 
 @end
+
+#endif	// OOLITE_LEAN

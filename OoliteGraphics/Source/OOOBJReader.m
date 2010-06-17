@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOOBJReader.h"
 #import "OOOBJLexer.h"
 
@@ -257,6 +259,12 @@
 {
 	[self parse];
 	return _abstractMesh;
+}
+
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications
+{
+	[[self abstractMesh] getRenderMesh:renderMesh andMaterialSpecs:materialSpecifications];
 }
 
 
@@ -1000,3 +1008,5 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 }
 
 @end
+
+#endif	// OOLITE_LEAN

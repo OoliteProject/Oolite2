@@ -25,6 +25,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
 
 #import "OOMeshReading.h"
 
@@ -66,6 +67,7 @@
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
 /*	Smoothing:
 	Before parsing, this determines whether smoothing should be applied to
@@ -94,3 +96,5 @@
 - (NSUInteger) fileFaceCount;
 
 @end
+
+#endif	// OOLITE_LEAN

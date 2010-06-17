@@ -61,7 +61,8 @@ static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progres
 		return nil;
 	}
 	
-	return [reader abstractMesh];
+//	return [reader abstractMesh];
+	return (id)[reader renderMesh];
 }
 
 

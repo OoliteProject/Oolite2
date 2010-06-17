@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOMeshWriter.h"
 #import "OOProblemReporting.h"
 
@@ -154,7 +156,7 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 			// Generate a blank material.
 			if (anonMaterial == nil)
 			{
-				anonMaterial = [[[OOMaterialSpecification alloc] initWithMaterialKey:@"<unnamed>"] autorelease];
+				anonMaterial = [OOMaterialSpecification anonymousMaterial];
 			}
 			material = anonMaterial;
 		}
@@ -695,3 +697,5 @@ enum
 }
 
 @end
+
+#endif	// OOLITE_LEAN

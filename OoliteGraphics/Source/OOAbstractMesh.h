@@ -25,16 +25,23 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import <OoliteBase/OoliteBase.h>
 #import "OOAbstractFaceGroup.h"
 #import "OOMaterialSpecification.h"
+#import "OORenderMesh.h"
 
 
-@interface OOAbstractMesh: NSObject <NSFastEnumeration>
+@interface OOAbstractMesh: NSObject <NSFastEnumeration, NSCopying>
 {
 @private
 	NSMutableArray				*_faceGroups;
 	NSString					*_name;
+	
+	OORenderMesh				*_renderMesh;
+	NSArray						*_materialSpecs;
+	BOOL						_verticesAreUnique;
 }
 
 - (NSString *) name;
@@ -60,8 +67,23 @@
 // - (void) applyTransform:(OOMatrix)transform;
 - (void) mergeMesh:(OOAbstractMesh *)other;
 
-// - (void) uniqueVertices;
+- (void) uniqueVertices;
 
 // - (void) mergeVerticesWithTolerance:(float)tolerance;
 
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
+
 @end
+
+
+@interface OORenderMesh (OOAbstractMeshSupport)
+
+/*	Convert render mesh to abstract mesh. NOTE: since render meshes don’t
+	contain materials, neither does the resulting abstractMesh.
+*/
+- (OOAbstractMesh *) abstractMesh;
+
+@end
+
+#endif	// OOLITE_LEAN

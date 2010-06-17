@@ -25,6 +25,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import <OoliteBase/OoliteBase.h>
 
 @protocol OOProblemReporting;
@@ -33,3 +35,5 @@
 
 NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues);
 BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues);
+
+#endif	// OOLITE_LEAN

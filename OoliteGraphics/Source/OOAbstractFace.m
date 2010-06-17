@@ -26,6 +26,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
 
@@ -81,9 +83,21 @@
 
 - (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index
 {
-	if (EXPECT_NOT(index >= 3))  return nil;
+	NSParameterAssert(index < 3);
 	
 	return _vertices[index];
 }
 
+
+- (void) getVertices:(OOAbstractVertex *[3])vertices
+{
+	NSParameterAssert(&vertices[0] != NULL);
+	
+	vertices[0] = _vertices[0];
+	vertices[1] = _vertices[1];
+	vertices[2] = _vertices[2];
+}
+
 @end
+
+#endif	// OOLITE_LEAN

@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OODATWriter.h"
 #import "OOProblemReporting.h"
 
@@ -209,3 +211,5 @@ NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 	
 	return [data autorelease];
 }
+
+#endif	// OOLITE_LEAN

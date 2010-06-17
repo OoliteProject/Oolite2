@@ -5,6 +5,7 @@ extern "C" {
 
 #import <OoliteBase/OOCocoa.h>
 #import <OoliteBase/OOFunctionAttributes.h>
+#import <OoliteBase/OOGarbageCollectionSupport.h>
 #import <OoliteBase/MYCollectionUtilities.h>
 #import <OoliteBase/OOLogging.h>
 

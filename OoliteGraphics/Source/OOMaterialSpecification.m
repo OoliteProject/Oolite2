@@ -90,6 +90,12 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 }
 
 
++ (id) anonymousMaterial
+{
+	return [[[[self class] alloc] initWithMaterialKey:@"<unnamed>"] autorelease];
+}
+
+
 - (void) dealloc
 {
 	DESTROY(_materialKey);

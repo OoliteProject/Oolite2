@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOAbstractVertex.h"
 #import "OOFloatArray.h"
 
@@ -949,3 +951,5 @@ Vector OOVectorFromArray(NSArray *array)
 	if (count > 2)  result.z = [array oo_floatAtIndex:2];
 	return result;
 }
+
+#endif	// OOLITE_LEAN

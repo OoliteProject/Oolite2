@@ -384,15 +384,3 @@ enum {
 #ifndef OO_DEBUG
 #define OO_DEBUG 0
 #endif
-
-
-/*	Memory management attributes for garbage-collected Objective-C. Currently
-	only used in Mac-only tools.
-*/
-#if OOLITE_LEOPARD
-#define OO_STRONG	__strong
-#define OO_WEAK		__weak
-#else
-#define OO_STRONG
-#define OO_WEAK
-#endif

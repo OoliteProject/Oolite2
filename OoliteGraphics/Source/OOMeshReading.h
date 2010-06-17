@@ -3,6 +3,7 @@
 #import "OOProgressReporting.h"
 
 @class OOAbstractMesh;
+@class OORenderMesh;
 
 
 @protocol OOMeshReading <NSObject>
@@ -12,6 +13,11 @@
 			 issues:(id <OOProblemReporting>)issues;
 
 - (void) parse;
+
+#if !OOLITE_LEAN
 - (OOAbstractMesh *) abstractMesh;
+#endif
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
 @end

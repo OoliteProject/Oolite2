@@ -1,10 +1,5 @@
-/*	
-	OOAbstractFace.h
-	
-	A face is simply a collection of three vertices. All other attributes
-	depend on context.
-	
-	An OOAbstractFace is immutable, as are its vertices.
+/*
+	OOGarbageCollectionSupport.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -28,31 +23,36 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#if !OOLITE_LEAN
-
-#import <OoliteBase/OoliteBase.h>
-#import "OOAbstractVertex.h"
+#import "OOGarbageCollectionSupport.h"
 
 
-@interface OOAbstractFace: NSObject <NSCopying>
+#if OOLITE_LEOPARD
+
+static BOOL IsGC(void)
 {
-@private
-	OOAbstractVertex			*_vertices[3];
+	static enum { kOff, kOn, kUnknown } state = kUnknown;
+	
+	if (EXPECT_NOT(state == kUnknown))
+	{
+		state = [[NSGarbageCollector defaultCollector] isEnabled] ? kOn : kOff;
+	}
+	
+	return state;
 }
 
-+ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-+ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
 
-- (id) initWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
+void *OOAllocScanned(size_t size)
+{
+	if (!IsGC())
+	{
+		return calloc(size, 1);
+	}
+	else
+	{
+		void *result = NSAllocateCollectable(size, NSScannedOption | NSCollectorDisabledOption);
+		if (EXPECT(result != NULL))  bzero(result, size);	// It's likely that NSAllocateCollectable() clears memory, but not explicitly documented.
+		return result;
+	}
+}
 
-- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
-- (void) getVertices:(OOAbstractVertex *[3])vertices;
-
-@end
-
-#endif	// OOLITE_LEAN
+#endif

@@ -35,6 +35,9 @@
 		1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7398E11B10EC800575507 /* OOMeshReader.m */; };
 		1AB7399311B10ECE00575507 /* OOProblemReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7399111B10ECE00575507 /* OOProblemReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7399411B10ECE00575507 /* OOProblemReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7399211B10ECE00575507 /* OOProblemReporting.m */; };
+		1ABAC2B311C3974A005301BA /* OORenderMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ABAC2B111C3974A005301BA /* OORenderMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ABAC2B411C3974A005301BA /* OORenderMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAC2B211C3974A005301BA /* OORenderMesh.m */; };
+		1ABAC2C211C39A1D005301BA /* OOOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ABAC2C011C39A1D005301BA /* OOOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AC98DB511BC58910034572F /* OOProgressReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AC98DB411BC58910034572F /* OOProgressReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
@@ -103,6 +106,9 @@
 		1AB7398E11B10EC800575507 /* OOMeshReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshReader.m; sourceTree = "<group>"; };
 		1AB7399111B10ECE00575507 /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
 		1AB7399211B10ECE00575507 /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
+		1ABAC2B111C3974A005301BA /* OORenderMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OORenderMesh.h; sourceTree = "<group>"; };
+		1ABAC2B211C3974A005301BA /* OORenderMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OORenderMesh.m; sourceTree = "<group>"; };
+		1ABAC2C011C39A1D005301BA /* OOOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOpenGL.h; sourceTree = "<group>"; };
 		1AC98DB411BC58910034572F /* OOProgressReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProgressReporting.h; sourceTree = "<group>"; };
 		1AEA232E11A728C100B361DC /* OODATLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATLexer.h; sourceTree = "<group>"; };
 		1AEA232F11A728C100B361DC /* OODATLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATLexer.m; sourceTree = "<group>"; };
@@ -167,7 +173,8 @@
 		08FB77AEFE84172EC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1A7D37BF11B16BD700857CEF /* Model */,
+				1ABAC2B011C3973F005301BA /* Rendering */,
+				1A7D37BF11B16BD700857CEF /* Abstract */,
 				1A7D37C011B16BE000857CEF /* Readers */,
 				1A7D37C111B16BE900857CEF /* Writers */,
 				1A7D37C211B16BF400857CEF /* Utility */,
@@ -184,7 +191,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A7D37BF11B16BD700857CEF /* Model */ = {
+		1A7D37BF11B16BD700857CEF /* Abstract */ = {
 			isa = PBXGroup;
 			children = (
 				1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */,
@@ -200,7 +207,7 @@
 				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,
 				1AF429B911A98B4D008E883C /* OOTextureSpecification.m */,
 			);
-			name = Model;
+			name = Abstract;
 			sourceTree = "<group>";
 		};
 		1A7D37C011B16BE000857CEF /* Readers */ = {
@@ -259,6 +266,16 @@
 			path = ../Deps;
 			sourceTree = "<group>";
 		};
+		1ABAC2B011C3973F005301BA /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				1ABAC2C011C39A1D005301BA /* OOOpenGL.h */,
+				1ABAC2B111C3974A005301BA /* OORenderMesh.h */,
+				1ABAC2B211C3974A005301BA /* OORenderMesh.m */,
+			);
+			name = Rendering;
+			sourceTree = "<group>";
+		};
 		1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +314,8 @@
 				1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */,
 				1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */,
 				1AC98DB511BC58910034572F /* OOProgressReporting.h in Headers */,
+				1ABAC2B311C3974A005301BA /* OORenderMesh.h in Headers */,
+				1ABAC2C211C39A1D005301BA /* OOOpenGL.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +427,7 @@
 				1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */,
 				1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */,
 				1AABAAA711B9C7ED003487D5 /* OOColor.m in Sources */,
+				1ABAC2B411C3974A005301BA /* OORenderMesh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

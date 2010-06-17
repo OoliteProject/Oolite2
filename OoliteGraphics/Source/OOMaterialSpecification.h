@@ -63,6 +63,8 @@
 - (id) initWithMaterialKey:(NSString *)materialKey;
 - (id) initWithMaterialKey:(NSString *)materialKey propertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues;
 
++ (id) anonymousMaterial;
+
 - (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues;
 
 - (NSString *) materialKey;

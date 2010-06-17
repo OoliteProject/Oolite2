@@ -1,7 +1,7 @@
 /*
 	MYCollectionUtilities.h
 	
-	Based on Jens Alfke’s CollectionUtils, heavily modified for Oolite.
+	Based on Jens Alfke’s CollectionUtils, modified and simplified for Oolite.
 	
 	
 	Copyright © 2008, Jens Alfke <jens@mooseyard.com>. All rights reserved.
@@ -48,33 +48,19 @@ extern "C" {
                               [NSMutableSet setWithObjects: objs count: sizeof(objs)/sizeof(id)];})
 
 #define $dict(PAIRS...)     ({struct _dictpair pairs[]={PAIRS}; \
-                              _dictof(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
+                              OOMYDictOf(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
 #define $mdict(PAIRS...)    ({struct _dictpair pairs[]={PAIRS}; \
-                              _mdictof(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
-
-
-// Apply a selector to each array element, returning an array of the results:
-NSArray* $apply( NSArray *src, SEL selector, id defaultValue );
-NSArray* $applyKeyPath( NSArray *src, NSString *keyPath, id defaultValue );
+                              OOMYMDictOf(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
 
 
 // Object conveniences:
-
+	
+#define $equal OOObjectsEqual
 BOOL $equal(id obj1, id obj2);      // Like -isEqual: but works even if either/both are nil
 
-NSString* $string( const char *utf8Str );
+	
 
 #define $sprintf(FORMAT, ARGS... )  [NSString stringWithFormat: (FORMAT), ARGS]
-
-#define $cast(CLASSNAME,OBJ)        ((CLASSNAME*)(_cast([CLASSNAME class],(OBJ))))
-#define $castNotNil(CLASSNAME,OBJ)  ((CLASSNAME*)(_castNotNil([CLASSNAME class],(OBJ))))
-#define $castIf(CLASSNAME,OBJ)      ((CLASSNAME*)(_castIf([CLASSNAME class],(OBJ))))
-#define $castArrayOf(ITEMCLASSNAME,OBJ) _castArrayOf([ITEMCLASSNAME class],(OBJ)))
-
-void setObj( id *var, id value );
-BOOL ifSetObj( id *var, id value );
-void setString( NSString **var, NSString *value );
-BOOL ifSetString( NSString **var, NSString *value );
 
 
 #define $true		((NSNumber*)kCFBooleanTrue)
@@ -99,13 +85,8 @@ BOOL ifSetString( NSString **var, NSString *value );
 
 // Internals (don't use directly)
 struct _dictpair { id key; id value; };
-NSDictionary* _dictof(const struct _dictpair*, size_t count);
-NSMutableDictionary* _mdictof(const struct _dictpair*, size_t count);
-NSValue* _box(const void *value, const char *encoding);
-id _cast(Class,id);
-id _castNotNil(Class,id);
-id _castIf(Class,id);
-NSArray* _castArrayOf(Class,NSArray*);
+NSDictionary* OOMYDictOf(const struct _dictpair*, size_t count);
+NSMutableDictionary* OOMYMDictOf(const struct _dictpair*, size_t count);
 
 
 	

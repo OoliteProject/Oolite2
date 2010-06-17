@@ -29,6 +29,8 @@
 #import "OOProblemReporting.h"
 #import "OOIndexArray.h"
 
+#import "OORenderMesh.h"
+#import "OOMaterialSpecification.h"
 #import "OOAbstractMesh.h"
 
 
@@ -73,6 +75,9 @@
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
+	DESTROY(_abstractMesh);
+	DESTROY(_renderMesh);
+	
 	DESTROY(_meshName);
 	DESTROY(_attributeArrays);
 	DESTROY(_groupIndexArrays);
@@ -217,28 +222,48 @@
 }
 
 
+#if !OOLITE_LEAN
+
 - (OOAbstractMesh *) abstractMesh
 {
-	[self parse];
-	
-	NSUInteger gIter, gCount = [_groupIndexArrays count];
-	OOAbstractMesh *mesh = [[[OOAbstractMesh alloc] init] autorelease];
-	[mesh setName:_meshName];
-	
-	for (gIter = 0; gIter < gCount; gIter++)
+	if (_abstractMesh == nil)
 	{
-		OOAbstractFaceGroup *group = [[OOAbstractFaceGroup alloc] initWithAttributeArrays:_attributeArrays
-																			  vertexCount:_vertexCount
-																			   indexArray:[_groupIndexArrays objectAtIndex:gIter]];
+		OORenderMesh *renderMesh = nil;
+		[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
+		_abstractMesh = [[renderMesh abstractMesh] retain];
 		
-		if (EXPECT_NOT(group == nil))  return nil;
-		
-		[group setMaterial:[_groupMaterials objectAtIndex:gIter]];
-		[mesh addFaceGroup:group];
-		[group release];
+		NSUInteger i, count = [_groupMaterials count];
+		for (i = 0; i < count; i++)
+		{
+			[[_abstractMesh faceGroupAtIndex:i] setMaterial:[_groupMaterials objectAtIndex:i]];
+		}
 	}
 	
-	return mesh;
+	return _abstractMesh;
+}
+
+#endif
+
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications
+{
+	if (renderMesh != NULL)
+	{
+		if (_renderMesh == nil)
+		{
+			[self parse];
+			_renderMesh = [[OORenderMesh alloc] initWithName:_meshName
+												 vertexCount:_vertexCount
+												  attributes:_attributeArrays
+													  groups:_groupIndexArrays];
+		}
+		*renderMesh = _renderMesh;
+	}
+	
+	if (materialSpecifications != NULL)
+	{
+		*materialSpecifications = _groupMaterials;
+	}
 }
 
 @end

@@ -25,6 +25,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOMeshReading.h"
 
 @protocol OOOBJMaterialLibraryResolving;
@@ -83,6 +85,7 @@
 
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
 - (NSString *) name;
 
@@ -99,3 +102,4 @@
 
 @end
 
+#endif	// OOLITE_LEAN

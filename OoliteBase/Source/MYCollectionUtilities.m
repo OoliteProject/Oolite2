@@ -30,7 +30,7 @@
 #import "MYCollectionUtilities.h"
 
 
-NSDictionary* _dictof(const struct _dictpair* pairs, size_t count)
+NSDictionary* OOMYDictOf(const struct _dictpair* pairs, size_t count)
 {
     id objects[count], keys[count];
     size_t n = 0;
@@ -45,7 +45,7 @@ NSDictionary* _dictof(const struct _dictpair* pairs, size_t count)
 }
 
 
-NSMutableDictionary* _mdictof(const struct _dictpair* pairs, size_t count)
+NSMutableDictionary* OOMYMDictOf(const struct _dictpair* pairs, size_t count)
 {
     id objects[count], keys[count];
     size_t n = 0;
@@ -91,86 +91,4 @@ BOOL $equal(id obj1, id obj2)      // Like -isEqual: but works even if either/bo
         return obj2 && [obj1 isEqual: obj2];
     else
         return obj2==nil;
-}
-
-
-id _cast( Class requiredClass, id object )
-{
-    if( object && ! [object isKindOfClass: requiredClass] )
-        [NSException raise: NSInvalidArgumentException format: @"%@ required, but got %@ %p",
-         requiredClass,[object class],object];
-    return object;
-}
-
-id _castNotNil( Class requiredClass, id object )
-{
-    if( ! [object isKindOfClass: requiredClass] )
-        [NSException raise: NSInvalidArgumentException format: @"%@ required, but got %@ %p",
-         requiredClass,[object class],object];
-    return object;
-}
-
-id _castIf( Class requiredClass, id object )
-{
-    if( object && ! [object isKindOfClass: requiredClass] )
-        object = nil;
-    return object;
-}
-
-NSArray* _castArrayOf(Class itemClass, NSArray *a)
-{
-    id item;
-    foreach( item, $cast(NSArray,a) )
-        _cast(itemClass,item);
-    return a;
-}
-
-
-void setObj( id *var, id value )
-{
-    if( value != *var ) {
-        [*var release];
-        *var = [value retain];
-    }
-}
-
-BOOL ifSetObj( id *var, id value )
-{
-    if( value != *var && ![value isEqual: *var] ) {
-        [*var release];
-        *var = [value retain];
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-
-void setString( NSString **var, NSString *value )
-{
-    if( value != *var ) {
-        [*var release];
-        *var = [value copy];
-    }
-}
-
-
-BOOL ifSetString( NSString **var, NSString *value )
-{
-    if( value != *var && ![value isEqualToString: *var] ) {
-        [*var release];
-        *var = [value copy];
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-
-NSString* $string( const char *utf8Str )
-{
-    if( utf8Str )
-        return [NSString stringWithCString: utf8Str encoding: NSUTF8StringEncoding];
-    else
-        return nil;
 }

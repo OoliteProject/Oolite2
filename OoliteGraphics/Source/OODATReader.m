@@ -1,6 +1,5 @@
 /*
 	OODATReader.m
-	liboomesh
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -23,6 +22,8 @@
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 	DEALINGS IN THE SOFTWARE.
 */
+
+#if !OOLITE_LEAN
 
 #import "OODATReader.h"
 #import "OOProblemReporting.h"
@@ -64,7 +65,11 @@ typedef struct RawDATTriangle
 */
 enum
 {
-	kVertexFaceDefInternalCount	= 7
+#if OOLITE_64_BIT
+	kVertexFaceDefInternalCount	= 11	// sizeof (VertexFaceRef) = 32
+#else
+	kVertexFaceDefInternalCount	= 5		// sizeof (VertexFaceRef) = 16
+#endif
 };
 
 typedef struct VertexFaceRef
@@ -79,9 +84,6 @@ static void VFRAddFace(VertexFaceRef *vfr, NSUInteger index);
 static NSUInteger VFRGetCount(VertexFaceRef *vfr);
 static NSUInteger VFRGetFaceAtIndex(VertexFaceRef *vfr, NSUInteger index);
 static void VFRRelease(VertexFaceRef *vfr);	// N.b. does not zero out the struct.
-
-static void *AllocObjectArray(size_t count);
-static void FreeObjectArray(void *array);
 
 
 //	Rough estimate of time portions used by parsing and post-processing.
@@ -290,11 +292,12 @@ enum
 	{
 		VFRRelease(&_faceRefs[vIter]);
 	}
+	OOFreeScanned(_faceRefs);
 	_faceRefs = NULL;
 	
 	DESTROY(_lexer);
 	DESTROY(_materialKeys);
-	FreeObjectArray(_fileVertices);
+	OOFreeScanned(_fileVertices);
 	_fileVertices = NULL;
 	free(_rawTriangles);
 	_rawTriangles = NULL;
@@ -307,6 +310,12 @@ enum
 {
 	[self parse];
 	return _mesh;
+}
+
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications
+{
+	[[self abstractMesh] getRenderMesh:renderMesh andMaterialSpecs:materialSpecifications];
 }
 
 
@@ -417,8 +426,8 @@ enum
 {
 	BOOL OK = YES;
 	
-	_fileVertices = AllocObjectArray(_fileVertexCount);
-	_faceRefs = calloc(sizeof *_faceRefs, _fileVertexCount);
+	_fileVertices = OOAllocObjectArray(_fileVertexCount);
+	_faceRefs = OOAllocScanned(sizeof *_faceRefs * _fileVertexCount);
 	if (_fileVertices == NULL || _faceRefs == NULL)
 	{
 		[self priv_reportMallocFailure];
@@ -1157,29 +1166,7 @@ static void VFRRelease(VertexFaceRef *vfr)
 {
 	NSCParameterAssert(vfr != NULL);
 	
-	[vfr->extra release];
+	DESTROY(vfr->extra);
 }
 
-
-static void *AllocObjectArray(size_t count)
-{
-#if OOLITE_LEOPARD
-	if ([[NSGarbageCollector defaultCollector] isEnabled])
-	{
-		return NSAllocateCollectable(count * sizeof (id), NSScannedOption);
-	}
-#endif
-	return malloc(count * sizeof (id));
-}
-
-
-void FreeObjectArray(void *array)
-{
-#if OOLITE_LEOPARD
-	if ([[NSGarbageCollector defaultCollector] isEnabled])
-	{
-		return;
-	}
-#endif
-	free(array);
-}
+#endif	// OOLITE_LEAN

@@ -17,14 +17,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OoliteGraphics.framework */;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 		1A1A369811C2F8900086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 /* End PBXContainerItemProxy section */

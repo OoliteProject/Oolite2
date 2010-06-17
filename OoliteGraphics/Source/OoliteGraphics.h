@@ -14,3 +14,5 @@
 
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"
+
+#import "OORenderMesh.h"

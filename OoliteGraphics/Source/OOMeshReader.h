@@ -38,6 +38,9 @@
 	NSString						*_path;
 	OOMeshLexer						*_lexer;
 	
+	OOAbstractMesh					*_abstractMesh;
+	OORenderMesh					*_renderMesh;
+	
 	NSString						*_meshName;
 	NSUInteger						_vertexCount;
 	NSMutableDictionary				*_attributeArrays;
@@ -55,6 +58,11 @@
 			 issues:(id <OOProblemReporting>)issues;
 
 - (void) parse;
+
+#if !OOLITE_LEAN
 - (OOAbstractMesh *) abstractMesh;
+#endif
+
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
 @end

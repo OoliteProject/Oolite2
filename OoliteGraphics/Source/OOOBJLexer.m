@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OOOBJLexer.h"
 #import "OOProblemReporting.h"
 
@@ -405,3 +407,5 @@ static BOOL IsIntegerChar(char c)
 }
 
 @end
+
+#endif	// OOLITE_LEAN

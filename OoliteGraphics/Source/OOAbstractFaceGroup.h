@@ -27,6 +27,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import <OoliteBase/OoliteBase.h>
 #import "OOAbstractFace.h"
 
@@ -89,3 +91,9 @@
 
 
 NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b);
+
+
+extern NSString * const kOOAbstractFaceGroupChangedNotification;
+extern NSString * const kOOAbstractFaceGroupChangeIsAdditive;	// UserInfo key for boolean flag indicating change added faces - either true or nil.
+
+#endif	// OOLITE_LEAN

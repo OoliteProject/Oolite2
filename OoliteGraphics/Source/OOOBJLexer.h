@@ -25,6 +25,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import <Foundation/Foundation.h>
 
 @protocol OOProblemReporting;
@@ -69,3 +71,5 @@
 - (float) progressEstimate;
 
 @end
+
+#endif	// OOLITE_LEAN

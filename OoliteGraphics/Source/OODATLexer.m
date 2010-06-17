@@ -23,6 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
+#if !OOLITE_LEAN
+
 #import "OODATLexer.h"
 #import "OOProblemReporting.h"
 
@@ -325,3 +327,5 @@ static inline BOOL IsLineEndChar(char c)
 }
 
 @end
+
+#endif	// OOLITE_LEAN

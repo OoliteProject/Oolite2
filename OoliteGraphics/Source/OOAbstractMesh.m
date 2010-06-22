@@ -202,7 +202,7 @@
 }
 
 
-- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous
 {
 	NSDictionary *mergedSchema = nil, *groupSchema = nil;
 	BOOL homogeneous = YES;

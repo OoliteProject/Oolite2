@@ -966,7 +966,7 @@ enum
 {
 	NSUInteger vIter, fIter, mIter;
 	BOOL isEdgeVertex[_fileVertexCount];
-	BOOL seenSmoothGroup[_fileVertexCount];
+	uint16_t seenSmoothGroup[_fileVertexCount];
 	memset(seenSmoothGroup, 0, sizeof seenSmoothGroup);
 	
 	if (_usesSmoothGroups)

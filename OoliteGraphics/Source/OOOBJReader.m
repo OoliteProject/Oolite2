@@ -548,16 +548,16 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	
 	if (!ReadFaceTriple(self, _lexer, &v, &vt, &vn))  return NO;
 	OOAbstractVertex *v1 = [self priv_vertexWithPositionIdx:v
-												texCoordIdx:haveTex ? vt : NSNotFound
-												  normalIdx:haveNormals ? vn : NSNotFound];
+												texCoordIdx:haveTex ? vt : (NSInteger)NSNotFound
+												  normalIdx:haveNormals ? vn : (NSInteger)NSNotFound];
 	if (v1 == nil)  return NO;
 	
 	while (![_lexer isAtEndOfLine])
 	{
 		if (!ReadFaceTriple(self, _lexer, &v, &vt, &vn))  return NO;
 		OOAbstractVertex *v2 = [self priv_vertexWithPositionIdx:v
-													texCoordIdx:haveTex ? vt : NSNotFound
-													  normalIdx:haveNormals ? vn : NSNotFound];
+													texCoordIdx:haveTex ? vt : (NSInteger)NSNotFound
+													  normalIdx:haveNormals ? vn : (NSInteger)NSNotFound];
 		if (v2 == nil)  return NO;
 		
 		OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertex0:v0 vertex1:v1 vertex2:v2];

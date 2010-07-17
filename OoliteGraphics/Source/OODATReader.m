@@ -380,7 +380,7 @@ enum
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -388,7 +388,7 @@ enum
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
 	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
@@ -401,7 +401,7 @@ enum
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"Not enough memory to read %@.", [self priv_displayName]);
+	OOReportError(_issues, @"The document could not be read, becuase there is not enough memory.");
 }
 
 

@@ -42,8 +42,6 @@
 - (void) priv_reportBasicMaterialParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
-- (NSString *) priv_displayName;
-
 - (BOOL) priv_readVertexPosition;
 - (BOOL) priv_readVertexNormal;
 - (BOOL) priv_readVertexTexCoords;
@@ -299,7 +297,7 @@
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -307,7 +305,7 @@
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
 	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
@@ -342,12 +340,6 @@
 - (void) priv_reportMallocFailure
 {
 	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
-}
-
-
-- (NSString *) priv_displayName
-{
-	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
 
 
@@ -927,7 +919,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutCurves)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains curve data which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains curve data which will be ignored.");
 			_warnedAboutCurves = YES;
 		}
 	}
@@ -935,7 +927,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutRenderAttribs)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains rendering attributes which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains rendering attributes which will be ignored.");
 			_warnedAboutRenderAttribs = YES;
 		}
 	}
@@ -943,7 +935,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutLinesOrPoints)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains point or line data which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains point or line data which will be ignored.");
 			_warnedAboutLinesOrPoints = YES;
 		}
 	}
@@ -951,7 +943,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutUnknown)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" (line %lu) which will be ignored.", [self priv_displayName], keyword, (unsigned long)[_lexer lineNumber]);
+			OOReportWarning(_issues, @"The document contains unknown commands such as \"%@\" (line %lu) which will be ignored.", keyword, (unsigned long)[_lexer lineNumber]);
 			_warnedAboutUnknown = YES;
 		}
 	}

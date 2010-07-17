@@ -39,7 +39,6 @@
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
-- (NSString *) priv_displayName;
 
 - (BOOL) priv_readSectionNamed:(NSString *)name ofType:(NSString *)type;
 - (BOOL) priv_readProperty:(id *)outProperty;
@@ -207,7 +206,7 @@
 		[_lexer consumeOptionalNewlines];
 		if (![_lexer getToken:kOOMeshTokenEOF])
 		{
-			OOReportWarning(_issues, @"\"%@\" contains unknown data after then end of the file.", [self priv_displayName]);
+			OOReportWarning(_issues, @"There is unknown data after the end of the file, which will be ignored.");
 		}
 	}
 	
@@ -279,7 +278,7 @@
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -287,7 +286,7 @@
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
 	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
@@ -301,12 +300,6 @@
 - (void) priv_reportMallocFailure
 {
 	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
-}
-
-
-- (NSString *) priv_displayName
-{
-	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
 
 
@@ -450,12 +443,12 @@
 		materialSpec = [_materialsByName objectForKey:materialKey];
 		if (materialSpec == nil)
 		{
-			OOReportWarning(_issues, @"Mesh group \"%@\" in %@ specifies undefined material \"%@\", defining empty material.", name, [self priv_displayName]);
+			OOReportWarning(_issues, @"Mesh group \"%@\" specifies undefined material \"%@\", defining empty material.", name);
 		}
 	}
 	else
 	{
-		OOReportWarning(_issues, @"noMaterial", @"Mesh group \"%@\" in %@ does not specify a material, using empty material with same name as group.", name, [self priv_displayName]);
+		OOReportWarning(_issues, @"noMaterial", @"Mesh group \"%@\" does not specify a material, using empty material with same name as group.", name);
 		materialKey = name;
 	}
 	
@@ -525,7 +518,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		if (![_unknownSectionTypes containsObject:type])
 		{
 			[_unknownSectionTypes addObject:type];
-			OOReportWarning(_issues, @"Unknown section of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayName]);
+			OOReportWarning(_issues, @"Unknown section of type \"%@\" on line %u; contents will be ignored.", type, [_lexer lineNumber]);
 		}
 		// We still need to parse it to find the end reliably.
 	}

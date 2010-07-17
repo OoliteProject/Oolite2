@@ -23,12 +23,14 @@ int main (int argc, const char * argv[])
 	path = [NSString stringWithUTF8String:buffer];
 	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
-	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
+	OOSimpleProblemReportManager *issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:YES] autorelease];
 	
 	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 	if (mesh == nil)  exit(EXIT_FAILURE);
 	
-	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
+	path = [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"];
+	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:NO] autorelease];
+	OOWriteOOMesh(mesh, path, issues);
 	
     [pool drain];
     return 0;

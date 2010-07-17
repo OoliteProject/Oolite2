@@ -63,7 +63,20 @@ NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *str
 
 
 /*	Trivial implementation of OOProblemReporting.
-	Problems are printed to stderr. Strings are not localized.
+	Problems are printed to OOLog. Strings are not localized.
+	If contextString is not nil, it is printed before the first problem report.
+	messageClassPrefix is prepended to the OOLog message class used for problem
+	reports.
 */
 @interface OOSimpleProblemReportManager: NSObject <OOProblemReporting>
+{
+@private
+	BOOL					_hadContextString;
+	NSString				*_contextString;
+	NSString				*_messageClassPrefix;
+}
+
+- (id) initWithContextString:(NSString *)context messageClassPrefix:(NSString *)messageClassPrefix;
+- (id) initWithMeshFilePath:(NSString *)path forReading:(BOOL)forReading;
+
 @end

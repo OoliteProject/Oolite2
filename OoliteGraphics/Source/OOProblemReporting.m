@@ -102,25 +102,69 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 
 @implementation OOSimpleProblemReportManager
 
+// Designated initializer: -init.
+
+
+- (id) initWithContextString:(NSString *)context messageClassPrefix:(NSString *)messageClassPrefix
+{
+	if ((self = [self init]))
+	{
+		_contextString = [context retain];
+		_messageClassPrefix = [messageClassPrefix retain];
+	}
+	return self;
+}
+
+
+- (id) initWithMeshFilePath:(NSString *)path forReading:(BOOL)forReading
+{
+	return [self initWithContextString:[NSString stringWithFormat:@"%@ \"%@\":", forReading ? @"Loading" : @"Writing", [[NSFileManager defaultManager] displayNameAtPath:path]]
+					messageClassPrefix:@"mesh.load"];
+}
+
+
+- (void) dealloc
+{
+	DESTROY(_contextString);
+	DESTROY(_messageClassPrefix);
+	
+	[super dealloc];
+}
+
+
 - (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
 {
-	NSString *messageClass = @"mesh.load.problem";
+	if (_contextString != nil)
+	{
+		OOLog((_messageClassPrefix != nil) ? _messageClassPrefix : @"problems", @"%@", _contextString);
+		DESTROY(_contextString);
+		_hadContextString = YES;
+	}
+	
+	NSString *messageClass = @"problem";
 	switch (type)
 	{
 		case kOOProblemTypeInformative:
-			messageClass = @"mesh.load.note";
+			messageClass = @"note";
 			break;
 			
 		case kOOProblemTypeWarning:
-			messageClass = @"mesh.load.warning";
+			messageClass = @"warning";
 			break;
 			
 		case kOOProblemTypeError:
-			messageClass = @"mesh.load.error";
+			messageClass = @"error";
 			break;
 	}
 	
+	if (_messageClassPrefix != nil)
+	{
+		messageClass = [NSString stringWithFormat:@"%@.%@", _messageClassPrefix, messageClass];
+	}
+	
+	if (_hadContextString)  OOLogIndent();
 	OOLog(messageClass, @"%@", message);
+	if (_hadContextString)  OOLogOutdent();
 }
 
 

@@ -170,7 +170,7 @@ static NSString *LoadString(const char *string)
 			
 			if (count > 1)
 			{
-				OOReportWarning(_issues, @"%@ contains %u UV mappings, which may have textures associated with them. All UV mappings have been imported, but only one material has been generated.", [self priv_displayName], count);
+				OOReportWarning(_issues, @"The document contains %u UV mappings, which may have textures associated with them. All UV mappings have been imported, but only one material has been generated.", count);
 			}
 		}
 		
@@ -193,7 +193,7 @@ static NSString *LoadString(const char *string)
 						newKey = [NSString stringWithFormat:@"%@%u", key, nameI++];
 					}  while ([_attributes objectForKey:key] != nil);
 					
-					OOReportWarning(_issues, @"Attribute \"%@\" in %@ renamed to \"%@\" to ensure uniqueness.", key, [self priv_displayName], newKey);
+					OOReportWarning(_issues, @"Attribute \"%@\" renamed to \"%@\" to ensure uniqueness.", key, newKey);
 					key = newKey;
 				}
 			}
@@ -229,7 +229,7 @@ static NSString *LoadString(const char *string)
 	}
 	else
 	{
-		OOReportError(_issues, @"Failed to load %@, because an OpenCTM error occurred: %s.", [self priv_displayName], ctmErrorString(error));
+		OOReportError(_issues, @"Failed to load the document, because an OpenCTM error occurred: %s.", ctmErrorString(error));
 	}
 	
 	[self priv_destroyContext];

@@ -1,9 +1,6 @@
 /*
 	OOAbstractFaceGroup.m
 	
-	A face group represents a list of faces to be drawn with the same state.
-	In rendering terms, it corresponds to an element array.
-	
 	
 	Copyright © 2010 Jens Ayton.
 	
@@ -28,7 +25,7 @@
 
 #if !OOLITE_LEAN
 
-#import "OOAbstractFaceGroup.h"
+#import "OOAbstractFaceGroupInternal.h"
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
 #import "OOFloatArray.h"
@@ -41,9 +38,6 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 
 @interface OOAbstractFaceGroup (Private)
-
-// Must be called whenever face group is mutated.
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions;
 
 - (id) priv_initWithCapacity:(NSUInteger)capacity;
 - (void) priv_updateSchemaForFace:(OOAbstractFace *)face;
@@ -159,6 +153,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 {
 	DESTROY(_faces);
 	DESTROY(_vertexSchema);
+	DESTROY(_temporaryAttributes);
 	
 	[super dealloc];
 }
@@ -187,7 +182,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) setName:(NSString *)name
 {
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyWithAdditions:NO];
 	
 	[_name autorelease];
 	_name = [name copy];
@@ -202,7 +197,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) setMaterial:(OOMaterialSpecification *)material
 {
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyWithAdditions:NO];
 	
 	[_material autorelease];
 	_material = [material retain];
@@ -223,7 +218,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) addFace:(OOAbstractFace *)face
 {
-	[self priv_becomeDirtyWithAdditions:YES];
+	[self internal_becomeDirtyWithAdditions:YES];
 	
 	[_faces addObject:face];
 	[self priv_updateSchemaForFace:face];
@@ -232,7 +227,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) insertFace:(OOAbstractFace *)face atIndex:(NSUInteger)index
 {
-	[self priv_becomeDirtyWithAdditions:YES];
+	[self internal_becomeDirtyWithAdditions:YES];
 	
 	[_faces insertObject:face atIndex:index];
 	[self priv_updateSchemaForFace:face];
@@ -241,7 +236,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) removeLastFace
 {
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyWithAdditions:NO];
 	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeLastObject];
@@ -250,7 +245,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) removeFaceAtIndex:(NSUInteger)index
 {
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyWithAdditions:NO];
 	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeObjectAtIndex:index];
@@ -259,11 +254,34 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face
 {
-	[self priv_becomeDirtyWithAdditions:YES];
+	[self internal_becomeDirtyWithAdditions:YES];
 	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces replaceObjectAtIndex:index withObject:face];
 	[self priv_updateSchemaForFace:face];
+}
+
+
+- (BOOL) isAttributeTemporary:(NSString *)attributeKey
+{
+	return [_temporaryAttributes containsObject:attributeKey];
+}
+
+
+- (void) setAttribute:(NSString *)attributeKey temporary:(BOOL)temporary
+{
+	if (attributeKey != nil)
+	{
+		if (temporary)
+		{
+			[_temporaryAttributes removeObject:attributeKey];
+		}
+		else
+		{
+			if (_temporaryAttributes == nil)  _temporaryAttributes = [[NSMutableSet alloc] init];
+			[_temporaryAttributes addObject:attributeKey];
+		}
+	}
 }
 
 
@@ -302,6 +320,23 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 }
 
 
+- (NSDictionary *) vertexSchemaIgnoringTemporary
+{
+	NSDictionary *schema = [self vertexSchema];
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[schema count]];
+	NSString *attributeKey = nil;
+	foreachkey(attributeKey, schema)
+	{
+		if (![self isAttributeTemporary:attributeKey])
+		{
+			[result	setObject:[schema objectForKey:attributeKey] forKey:attributeKey];
+		}
+	}
+	
+	return result;
+}
+
+
 - (BOOL) vertexSchemaIsHomogeneous
 {
 	return _homogeneous && _vertexSchema != nil;
@@ -332,7 +367,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 }
 
 
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions
+- (void) internal_becomeDirtyWithAdditions:(BOOL)additions
 {
 	NSDictionary *userInfo = nil;
 	if (additions)  userInfo = [NSDictionary dictionaryWithObject:$true

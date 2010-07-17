@@ -64,8 +64,9 @@
 - (NSEnumerator *) faceGroupEnumerator;
 - (NSEnumerator *) objectEnumerator;	// Same as faceGroupEnumerator, only less descriptive.
 
-- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous ignoringTemporary:(BOOL)ignoreTemporary;
 - (NSDictionary *) vertexSchema;
+- (NSDictionary *) vertexSchemaIgnoringTemporary;
 
 //	Mesh manipulations.
 // - (void) applyTransform:(OOMatrix)transform;

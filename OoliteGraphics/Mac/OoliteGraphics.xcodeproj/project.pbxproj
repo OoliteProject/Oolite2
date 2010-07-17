@@ -29,6 +29,9 @@
 		1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AABAAA411B9C7ED003487D5 /* OOColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AABAAA711B9C7ED003487D5 /* OOColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AABAAA511B9C7ED003487D5 /* OOColor.m */; };
 		1AB369EE11F20E90006E68A3 /* OOMeshReading.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB369ED11F20E90006E68A3 /* OOMeshReading.m */; };
+		1AB36A2B11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AB36A2C11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */; };
+		1AB36A8711F22692006E68A3 /* OOAbstractFaceGroupInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB36A8611F22692006E68A3 /* OOAbstractFaceGroupInternal.h */; };
 		1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */; };
 		1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7395D11B10B0300575507 /* OOAbstractFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7395E11B10B0300575507 /* OOAbstractFace.m */; };
@@ -119,6 +122,9 @@
 		1AABAAA411B9C7ED003487D5 /* OOColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOColor.h; sourceTree = "<group>"; };
 		1AABAAA511B9C7ED003487D5 /* OOColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOColor.m; sourceTree = "<group>"; };
 		1AB369ED11F20E90006E68A3 /* OOMeshReading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshReading.m; sourceTree = "<group>"; };
+		1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOAbstractMesh+NormalSynthesis.h"; sourceTree = "<group>"; };
+		1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOAbstractMesh+NormalSynthesis.m"; sourceTree = "<group>"; };
+		1AB36A8611F22692006E68A3 /* OOAbstractFaceGroupInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroupInternal.h; sourceTree = "<group>"; };
 		1AB7395D11B10B0300575507 /* OOAbstractFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFace.h; sourceTree = "<group>"; };
 		1AB7395E11B10B0300575507 /* OOAbstractFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFace.m; sourceTree = "<group>"; };
 		1AB7398D11B10EC800575507 /* OOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReader.h; sourceTree = "<group>"; };
@@ -221,11 +227,14 @@
 				1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */,
 				1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */,
 				1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */,
+				1AB36A8611F22692006E68A3 /* OOAbstractFaceGroupInternal.h */,
 				1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */,
 				1AB7395D11B10B0300575507 /* OOAbstractFace.h */,
 				1AB7395E11B10B0300575507 /* OOAbstractFace.m */,
 				1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */,
 				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
+				1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */,
+				1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */,
 				1AF4293211A9897D008E883C /* OOMaterialSpecification.h */,
 				1AF4293311A9897D008E883C /* OOMaterialSpecification.m */,
 				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,
@@ -360,6 +369,8 @@
 				1ABAC2B311C3974A005301BA /* OORenderMesh.h in Headers */,
 				1ABAC2C211C39A1D005301BA /* OOOpenGL.h in Headers */,
 				1ACBCF6611EE48790067E95D /* OOCTMReader.h in Headers */,
+				1AB36A2B11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h in Headers */,
+				1AB36A8711F22692006E68A3 /* OOAbstractFaceGroupInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +500,7 @@
 				1ABAC2B411C3974A005301BA /* OORenderMesh.m in Sources */,
 				1ACBCF6711EE48790067E95D /* OOCTMReader.m in Sources */,
 				1AB369EE11F20E90006E68A3 /* OOMeshReading.m in Sources */,
+				1AB36A2C11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

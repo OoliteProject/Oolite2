@@ -1,3 +1,8 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #import <OoliteBase/OoliteBase.h>
 
 #import "OOProblemReporting.h"
@@ -14,3 +19,10 @@
 #import "OOMeshWriter.h"
 
 #import "OOCTMReader.h"
+
+#import "OOAbstractMesh+NormalSynthesis.h"
+
+
+#ifdef __cplusplus
+}
+#endif

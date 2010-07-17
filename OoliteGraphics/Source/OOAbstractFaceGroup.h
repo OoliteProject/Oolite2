@@ -42,6 +42,7 @@
 	NSMutableArray				*_faces;
 	OOMaterialSpecification		*_material;
 	NSDictionary				*_vertexSchema;
+	NSMutableSet				*_temporaryAttributes;
 	BOOL						_homogeneous;
 }
 
@@ -74,6 +75,10 @@
 - (void) removeFaceAtIndex:(NSUInteger)index;
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face;
 
+// Temporary attributes: attributes generated for convenience of tools, not intended to be saved.
+- (BOOL) isAttributeTemporary:(NSString *)attributeKey;
+- (void) setAttribute:(NSString *)attributeKey temporary:(BOOL)temporary;
+
 - (NSEnumerator *) faceEnumerator;
 - (NSEnumerator *) objectEnumerator;	// Same as faceEnumerator, only less descriptive.
 
@@ -83,8 +88,9 @@
 	attribute across all vertices.
 	A vertex schema is homogeneous if all vertices fulfill the schema
 	completely.
-*/
+ */
 - (NSDictionary *) vertexSchema;
+- (NSDictionary *) vertexSchemaIgnoringTemporary;
 - (BOOL) vertexSchemaIsHomogeneous;
 
 @end

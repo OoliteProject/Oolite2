@@ -216,7 +216,7 @@
 }
 
 
-- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous ignoringTemporary:(BOOL)ignoringTemporary
 {
 	NSDictionary *mergedSchema = nil, *groupSchema = nil;
 	BOOL homogeneous = YES;
@@ -224,7 +224,7 @@
 	OOAbstractFaceGroup *group = nil;
 	foreach (group, _faceGroups)
 	{
-		groupSchema = [group vertexSchema];
+		groupSchema = ignoringTemporary ? [group vertexSchemaIgnoringTemporary] : [group vertexSchema];
 		homogeneous = homogeneous && [group vertexSchemaIsHomogeneous];
 		if (mergedSchema == nil)  mergedSchema = groupSchema;
 		else if (![groupSchema isEqualToDictionary:mergedSchema])
@@ -242,7 +242,15 @@
 - (NSDictionary *) vertexSchema
 {
 	NSDictionary *result;
-	[self getVertexSchema:&result homogeneous:NULL];
+	[self getVertexSchema:&result homogeneous:NULL ignoringTemporary:NO];
+	return result;
+}
+
+
+- (NSDictionary *) vertexSchemaIgnoringTemporary
+{
+	NSDictionary *result;
+	[self getVertexSchema:&result homogeneous:NULL ignoringTemporary:YES];
 	return result;
 }
 

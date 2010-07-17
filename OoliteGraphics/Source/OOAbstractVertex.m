@@ -209,7 +209,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) mutableCopyWithZone:(NSZone *)zone
 {
-	return [[OOMutableAbstractVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
+	return [[OOConcreteMutableVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 

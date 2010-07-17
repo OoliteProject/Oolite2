@@ -389,7 +389,7 @@ enum
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 

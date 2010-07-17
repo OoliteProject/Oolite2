@@ -308,7 +308,7 @@
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 
@@ -329,7 +329,7 @@
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], _currentMaterialLibraryName, message];
-	[_issues addProblemOfType:kOOMProblemTypeWarning message:message];
+	[_issues addProblemOfType:kOOProblemTypeWarning message:message];
 }
 
 

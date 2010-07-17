@@ -64,7 +64,7 @@ void OOReportInfo(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOReportIssueWithArgs(probMgr, kOOMProblemTypeInformative, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOProblemTypeInformative, formatKey, args);
 	va_end(args);
 }
 
@@ -73,7 +73,7 @@ void OOReportWarning(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOReportIssueWithArgs(probMgr, kOOMProblemTypeWarning, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOProblemTypeWarning, formatKey, args);
 	va_end(args);
 }
 
@@ -82,7 +82,7 @@ void OOReportError(id <OOProblemReporting> probMgr, NSString *formatKey, ...)
 {
 	va_list args;
 	va_start(args, formatKey);
-	OOReportIssueWithArgs(probMgr, kOOMProblemTypeError, formatKey, args);
+	OOReportIssueWithArgs(probMgr, kOOProblemTypeError, formatKey, args);
 	va_end(args);
 }
 
@@ -96,7 +96,7 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 	if (desc == nil)  desc = context;
 	else  desc = [NSString stringWithFormat:@"%@ %@", context, desc];
 	
-	[probMgr addProblemOfType:kOOMProblemTypeError message:desc];
+	[probMgr addProblemOfType:kOOProblemTypeError message:desc];
 }
 
 
@@ -107,15 +107,15 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 	NSString *messageClass = @"mesh.load.problem";
 	switch (type)
 	{
-		case kOOMProblemTypeInformative:
+		case kOOProblemTypeInformative:
 			messageClass = @"mesh.load.note";
 			break;
 			
-		case kOOMProblemTypeWarning:
+		case kOOProblemTypeWarning:
 			messageClass = @"mesh.load.warning";
 			break;
 			
-		case kOOMProblemTypeError:
+		case kOOProblemTypeError:
 			messageClass = @"mesh.load.error";
 			break;
 	}

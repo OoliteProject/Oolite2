@@ -54,10 +54,11 @@
 	OOFloatArray				**_attributeArrays;
 	GLuint						*_attributeSizes;
 	NSArray						*_attributeNames;
+	GLuint						*_vertexBufferObjects;
 	
 	OOIndexArray				**_groups;
 	
-	GLuint						_vertexBufferObject;
+	GLuint						_vertexArrayObject;
 }
 
 - (id) initWithName:(NSString *)name vertexCount:(NSUInteger)vertexCount attributes:(NSDictionary *)attributes groups:(NSArray *)groups;

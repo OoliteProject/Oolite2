@@ -108,11 +108,25 @@
 {
 #ifndef NDEBUG
 	// render mesh doesn't have a name if NDEBUG is defined.
+	if ([name isEqualToString:_name])  return;
 	[self priv_becomeDirtyWithAdditions:NO];
 #endif
 	
 	[_name autorelease];
 	_name = [name copy];
+}
+
+
+- (NSString *) modelDescription
+{
+	return _modelDescription;
+}
+
+
+- (void) setModelDescription:(NSString *)value
+{
+	[_modelDescription autorelease];
+	_modelDescription = [value copy];
 }
 
 
@@ -130,7 +144,7 @@
 
 - (void) addFaceGroup:(OOAbstractFaceGroup *)faceGroup
 {
-	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != 0))  return;
+	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != NSNotFound))  return;
 	
 	[self priv_becomeDirtyWithAdditions:YES];
 	[self priv_observeFaceGroup:faceGroup];
@@ -141,7 +155,7 @@
 
 - (void) insertFaceGroup:(OOAbstractFaceGroup *)faceGroup atIndex:(NSUInteger)idx
 {
-	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != 0))  return;
+	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != NSNotFound))  return;
 	
 	[self priv_becomeDirtyWithAdditions:YES];
 	[self priv_observeFaceGroup:faceGroup];

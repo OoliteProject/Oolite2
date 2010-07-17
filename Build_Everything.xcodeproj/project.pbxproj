@@ -139,6 +139,9 @@
 /* Begin PBXProject section */
 		1AE4E99311B6DAF600A85342 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
 			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build_Everything" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 0;

@@ -33,7 +33,7 @@
 	GLubyte					*_values;
 }
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count;
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count;
 
 @end
 
@@ -45,7 +45,7 @@
 	GLushort				*_values;
 }
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count;
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count;
 
 @end
 
@@ -58,8 +58,8 @@
 	BOOL					_freeWhenDone;
 }
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count;
-- (id) priv_initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count freeWhenDone:(BOOL)freeWhenDone;
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count;
+- (id) priv_initWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count freeWhenDone:(BOOL)freeWhenDone;
 
 @end
 
@@ -107,7 +107,7 @@
 }
 
 
-+ (id) newWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
++ (id) newWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
@@ -128,20 +128,20 @@
 }
 
 
-+ (id) arrayWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
++ (id) arrayWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
 {
 	return [[self newWithUnsignedInts:values count:count maximum:maximum] autorelease];
 }
 
 
-- (id) initWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
+- (id) initWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum
 {
 	[self release];
 	return [OOIndexArray newWithUnsignedInts:values count:count maximum:maximum];
 }
 
 
-+ (id) newWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
++ (id) newWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
@@ -149,7 +149,7 @@
 	if (maximum <= 0xFFFF || count == 0)
 	{
 		result = [self newWithUnsignedInts:values count:count maximum:maximum];
-		if (freeWhenDone)  free(values);
+		if (freeWhenDone)  free((void *)values);
 	}
 	else
 	{
@@ -159,7 +159,7 @@
 }
 
 
-+ (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
++ (id) arrayWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
 {
 	/*	Static analyzer reports a retain count problem here. This is a false
 		positive: the method name includes “copy”, but not in the relevant
@@ -172,7 +172,7 @@
 }
 
 
-- (id) initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
+- (id) initWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone
 {
 	[self release];
 	return [OOIndexArray newWithUnsignedIntsNoCopy:values count:count maximum:maximum freeWhenDone:freeWhenDone];
@@ -269,7 +269,7 @@
 
 @implementation OOUByteIndexArray
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count
 {
 	if ((self = [super priv_init]))
 	{
@@ -349,7 +349,7 @@
 
 @implementation OOUShortIndexArray
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count
 {
 	if ((self = [super priv_init]))
 	{
@@ -429,7 +429,7 @@
 
 @implementation OOUIntIndexArray
 
-- (id) priv_initWithUnsignedInts:(GLuint *)values count:(GLuint)count
+- (id) priv_initWithUnsignedInts:(const GLuint *)values count:(GLuint)count
 {
 	_values = malloc(count * sizeof (GLuint));
 	NSUInteger i;
@@ -441,11 +441,11 @@
 }
 
 
-- (id) priv_initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count freeWhenDone:(BOOL)freeWhenDone
+- (id) priv_initWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count freeWhenDone:(BOOL)freeWhenDone
 {
 	if ((self = [super priv_init]))
 	{
-		_values = values;
+		_values = (GLuint *)values;
 		_count = count;
 		_freeWhenDone = freeWhenDone;
 	}

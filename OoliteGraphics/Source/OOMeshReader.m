@@ -75,7 +75,6 @@
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
-	DESTROY(_abstractMesh);
 	DESTROY(_renderMesh);
 	
 	DESTROY(_meshName);
@@ -226,20 +225,20 @@
 
 - (OOAbstractMesh *) abstractMesh
 {
-	if (_abstractMesh == nil)
+	OORenderMesh *renderMesh = nil;
+	[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
+	OOAbstractMesh *mesh = [renderMesh abstractMesh];
+	
+	NSUInteger i, count = [_groupMaterials count];
+	for (i = 0; i < count; i++)
 	{
-		OORenderMesh *renderMesh = nil;
-		[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
-		_abstractMesh = [[renderMesh abstractMesh] retain];
-		
-		NSUInteger i, count = [_groupMaterials count];
-		for (i = 0; i < count; i++)
-		{
-			[[_abstractMesh faceGroupAtIndex:i] setMaterial:[_groupMaterials objectAtIndex:i]];
-		}
+		[[mesh faceGroupAtIndex:i] setMaterial:[_groupMaterials objectAtIndex:i]];
 	}
 	
-	return _abstractMesh;
+	if (_meshName != nil)  [mesh setName:_meshName];
+	if (_meshDescription != nil)  [mesh setModelDescription:_meshDescription];
+	
+	return mesh;
 }
 
 #endif
@@ -266,6 +265,13 @@
 	}
 }
 
+- (NSString *) meshDescription
+{
+	[self parse];
+	
+	return _meshDescription;
+}
+
 @end
 
 
@@ -282,7 +288,7 @@
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 

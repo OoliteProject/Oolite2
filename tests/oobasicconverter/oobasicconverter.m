@@ -28,7 +28,7 @@ int main (int argc, const char * argv[])
 	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 	if (mesh == nil)  exit(EXIT_FAILURE);
 	
-//	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
+	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
 	
     [pool drain];
     return 0;
@@ -55,14 +55,24 @@ static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progres
 	{
 		reader = [[OOOBJReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
 	}
+	else if ([ext isEqualToString:@"ctm"])
+	{
+		reader = [[OOCTMReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
+	}
 	else
 	{
 		OOReportError(issues, @"%@: unknown mesh type.", [path lastPathComponent]);
 		return nil;
 	}
 	
-//	return [reader abstractMesh];
-	return (id)[reader renderMesh];
+#if 1
+	return [reader abstractMesh];
+#else
+	OORenderMesh *mesh = nil;
+	NSArray *materials = nil;
+	[reader getRenderMesh:&mesh andMaterialSpecs:&materials];
+	return nil;
+#endif
 }
 
 

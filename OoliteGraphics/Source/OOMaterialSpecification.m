@@ -599,8 +599,8 @@ static OOTextureSpecification *TextureSpec(id value)
 	ADD_COLOR(kOOMaterialSpecularColorName, _specularColor, defaultSpecular);
 	ADD_COLOR(kOOMaterialSpecularModulateColorName, _specularModulateColor, white);
 	ADD_TEXTURE(kOOMaterialSpecularMapName, _specularMap);
-	int defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
-	if (_specularExponent != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
+	unsigned defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+	if ([self specularExponent] != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
 	
 	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);
 	ADD_COLOR(kOOMaterialEmissionModulateColorName, _emissionModulateColor, white);

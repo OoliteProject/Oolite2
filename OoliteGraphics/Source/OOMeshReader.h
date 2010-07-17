@@ -38,10 +38,11 @@
 	NSString						*_path;
 	OOMeshLexer						*_lexer;
 	
-	OOAbstractMesh					*_abstractMesh;
 	OORenderMesh					*_renderMesh;
 	
 	NSString						*_meshName;
+	NSString						*_meshDescription;
+	
 	NSUInteger						_vertexCount;
 	NSMutableDictionary				*_attributeArrays;
 	
@@ -64,5 +65,7 @@
 #endif
 
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
+
+- (NSString *) meshDescription;
 
 @end

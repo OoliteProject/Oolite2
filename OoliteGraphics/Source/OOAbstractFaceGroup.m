@@ -120,6 +120,8 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 		GLuint vIdx, elemIdx = 0;
 		for (fIter = 0; fIter < faceCount; fIter++)
 		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
 			OOAbstractVertex *verts[3];
 			
 			for (vIter = 0; vIter < 3; vIter++)
@@ -144,6 +146,8 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 			[verts[0] release];
 			[verts[1] release];
 			[verts[2] release];
+			
+			[pool drain];
 		}
 	}
 	

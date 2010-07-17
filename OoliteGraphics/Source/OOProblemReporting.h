@@ -31,9 +31,9 @@
 
 typedef enum OOProblemReportType
 {
-	kOOMProblemTypeInformative,
-	kOOMProblemTypeWarning,
-	kOOMProblemTypeError
+	kOOProblemTypeInformative,
+	kOOProblemTypeWarning,
+	kOOProblemTypeError
 } OOProblemReportType;
 
 

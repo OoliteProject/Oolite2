@@ -37,7 +37,7 @@ typedef uint32_t FloatSizedInt;
 - (BOOL) priv_isEqualToOOFloatArray:(OOFloatArray *)other;
 
 //	Subclass responsibility:
-- (float *) priv_floatArray;
+- (const float *) priv_floatArray;
 
 @end
 
@@ -73,7 +73,7 @@ enum
 
 // Create a new array with allocated space and count but no values filled in.
 + (id) priv_newWithCapacity:(NSUInteger)count;
-+ (id) priv_newWithFloats:(float *)values count:(NSUInteger)count;
++ (id) priv_newWithFloats:(const float *)values count:(NSUInteger)count;
 
 @end
 
@@ -82,12 +82,12 @@ enum
 {
 	NSUInteger					_freeWhenDone: 1,
 								_count: ((sizeof (NSUInteger) * CHAR_BIT) - 1);
-	float						*_floats;
+	const float					*_floats;
 }
 
 // Create a new array with allocated space and count but no values filled in.
 + (id) priv_newWithCapacity:(NSUInteger)count;
-- (id) priv_initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
+- (id) priv_initWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
 
 @end
 
@@ -120,7 +120,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	
 	if (result != nil)
 	{
-		float *next = [result priv_floatArray];
+		float *next = (float *)[result priv_floatArray];
 		for (i = 0; i < count; i++)
 		{
 			*next++ = [array oo_floatAtIndex:i];
@@ -158,7 +158,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-+ (id) newWithFloats:(float *)values count:(NSUInteger)count
++ (id) newWithFloats:(const float *)values count:(NSUInteger)count
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
@@ -167,20 +167,20 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-+ (id) arrayWithFloats:(float *)values count:(NSUInteger)count
++ (id) arrayWithFloats:(const float *)values count:(NSUInteger)count
 {
 	return [[OOInlineFloatArray priv_newWithFloats:values count:count] autorelease];
 }
 
 
-- (id) initWithFloats:(float *)values count:(NSUInteger)count
+- (id) initWithFloats:(const float *)values count:(NSUInteger)count
 {
 	[self release];
 	return [OOInlineFloatArray priv_newWithFloats:(float *)values count:count];
 }
 
 
-+ (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
++ (id) newWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
@@ -193,13 +193,13 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	else
 	{
 		result = [self newWithFloats:values count:count];
-		if (freeWhenDone)  free(values);
+		if (freeWhenDone)  free((void *)values);
 	}
 	return result;
 }
 
 
-+ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
++ (id) arrayWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
 {
 	/*	Static analyzer reports a retain count problem here. This is a false
 		positive: the method name includes “copy”, but not in the relevant
@@ -212,7 +212,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-- (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+- (id) initWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
 {
 	[self release];
 	return [[self class] newWithFloatsNoCopy:values count:count freeWhenDone:freeWhenDone];
@@ -236,7 +236,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	NSUInteger hash = 5381;
 	
-	float *array = [self priv_floatArray];
+	const float *array = [self priv_floatArray];
 	NSUInteger count = [self count];
 	for (NSUInteger i = 0; i < count; i++)
 	{
@@ -274,7 +274,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	if (EXPECT_NOT(range.location + range.length > [self count]))  return [super subarrayWithRange:range];
 	
-	float *array = [self priv_floatArray];
+	const float *array = [self priv_floatArray];
 	return [OOFloatArray arrayWithFloats:array + range.location count:range.length];
 }
 
@@ -296,8 +296,8 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	NSUInteger count = [self count];
 	if (count != [other count])  return NO;
 	
-	float *mine = [self priv_floatArray];
-	float *theirs = [self priv_floatArray];
+	const float *mine = [self priv_floatArray];
+	const float *theirs = [self priv_floatArray];
 	for (NSUInteger i = 0; i < count; i++)
 	{
 		if (*mine++ != *theirs++)  return NO;
@@ -307,7 +307,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-- (float *) priv_floatArray
+- (const float *) priv_floatArray
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%s is a subclass responsibility.", __PRETTY_FUNCTION__];
 	return NULL;
@@ -326,7 +326,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-+ (id) priv_newWithFloats:(float *)values count:(NSUInteger)count
++ (id) priv_newWithFloats:(const float *)values count:(NSUInteger)count
 {
 	if (count != 0 && values == NULL)  return nil;
 	size_t size = sizeof *values * count;
@@ -334,7 +334,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	OOFloatArray *result = [self priv_newWithCapacity:count];
 	if (result != nil)
 	{
-		memcpy([result priv_floatArray], values, size);
+		memcpy((float *)[result priv_floatArray], values, size);
 	}
 	
 	return result;
@@ -388,7 +388,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-- (id) priv_initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
+- (id) priv_initWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone
 {
 	NSParameterAssert(values != NULL || count == 0);
 	
@@ -412,7 +412,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	if (_freeWhenDone)
 	{
-		free(_floats);
+		free((void *)_floats);
 		_floats = NULL;
 	}
 	
@@ -424,7 +424,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 {
 	if (_freeWhenDone)
 	{
-		free(_floats);
+		free((void *)_floats);
 		_floats = NULL;
 	}
 	
@@ -432,7 +432,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 
-- (float *) priv_floatArray
+- (const float *) priv_floatArray
 {
 	return _floats;
 }

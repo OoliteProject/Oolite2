@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1ACBCF2411EE46DC0067E95D /* compressMG1.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF1C11EE46DC0067E95D /* compressMG1.c */; };
+		1ACBCF2511EE46DC0067E95D /* compressMG2.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF1D11EE46DC0067E95D /* compressMG2.c */; };
+		1ACBCF2611EE46DC0067E95D /* compressRAW.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF1E11EE46DC0067E95D /* compressRAW.c */; };
+		1ACBCF2711EE46DC0067E95D /* internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBCF1F11EE46DC0067E95D /* internal.h */; };
+		1ACBCF2811EE46DC0067E95D /* openctm.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF2011EE46DC0067E95D /* openctm.c */; };
+		1ACBCF2911EE46DC0067E95D /* openctm.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBCF2111EE46DC0067E95D /* openctm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ACBCF2A11EE46DC0067E95D /* openctmpp.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBCF2211EE46DC0067E95D /* openctmpp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1ACBCF2B11EE46DC0067E95D /* stream.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF2311EE46DC0067E95D /* stream.c */; };
+		1ACBD01D11EE5BDE0067E95D /* Alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBD00F11EE5BDE0067E95D /* Alloc.c */; };
+		1ACBD01E11EE5BDE0067E95D /* Alloc.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01011EE5BDE0067E95D /* Alloc.h */; };
+		1ACBD01F11EE5BDE0067E95D /* LzFind.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBD01111EE5BDE0067E95D /* LzFind.c */; };
+		1ACBD02011EE5BDE0067E95D /* LzFind.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01211EE5BDE0067E95D /* LzFind.h */; };
+		1ACBD02111EE5BDE0067E95D /* LzHash.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01311EE5BDE0067E95D /* LzHash.h */; };
+		1ACBD02211EE5BDE0067E95D /* LzmaDec.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBD01411EE5BDE0067E95D /* LzmaDec.c */; };
+		1ACBD02311EE5BDE0067E95D /* LzmaDec.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01511EE5BDE0067E95D /* LzmaDec.h */; };
+		1ACBD02411EE5BDE0067E95D /* LzmaEnc.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBD01611EE5BDE0067E95D /* LzmaEnc.c */; };
+		1ACBD02511EE5BDE0067E95D /* LzmaEnc.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01711EE5BDE0067E95D /* LzmaEnc.h */; };
+		1ACBD02611EE5BDE0067E95D /* LzmaLib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBD01811EE5BDE0067E95D /* LzmaLib.c */; };
+		1ACBD02711EE5BDE0067E95D /* LzmaLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01911EE5BDE0067E95D /* LzmaLib.h */; };
+		1ACBD02811EE5BDE0067E95D /* NameMangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01A11EE5BDE0067E95D /* NameMangle.h */; };
+		1ACBD02911EE5BDE0067E95D /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01C11EE5BDE0067E95D /* Types.h */; };
+		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1ACBCF1C11EE46DC0067E95D /* compressMG1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressMG1.c; path = lib/compressMG1.c; sourceTree = "<group>"; };
+		1ACBCF1D11EE46DC0067E95D /* compressMG2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressMG2.c; path = lib/compressMG2.c; sourceTree = "<group>"; };
+		1ACBCF1E11EE46DC0067E95D /* compressRAW.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressRAW.c; path = lib/compressRAW.c; sourceTree = "<group>"; };
+		1ACBCF1F11EE46DC0067E95D /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = internal.h; path = lib/internal.h; sourceTree = "<group>"; };
+		1ACBCF2011EE46DC0067E95D /* openctm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = openctm.c; path = lib/openctm.c; sourceTree = "<group>"; };
+		1ACBCF2111EE46DC0067E95D /* openctm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctm.h; path = lib/openctm.h; sourceTree = "<group>"; };
+		1ACBCF2211EE46DC0067E95D /* openctmpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctmpp.h; path = lib/openctmpp.h; sourceTree = "<group>"; };
+		1ACBCF2311EE46DC0067E95D /* stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stream.c; path = lib/stream.c; sourceTree = "<group>"; };
+		1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1ACBD00F11EE5BDE0067E95D /* Alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Alloc.c; sourceTree = "<group>"; };
+		1ACBD01011EE5BDE0067E95D /* Alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alloc.h; sourceTree = "<group>"; };
+		1ACBD01111EE5BDE0067E95D /* LzFind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzFind.c; sourceTree = "<group>"; };
+		1ACBD01211EE5BDE0067E95D /* LzFind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzFind.h; sourceTree = "<group>"; };
+		1ACBD01311EE5BDE0067E95D /* LzHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzHash.h; sourceTree = "<group>"; };
+		1ACBD01411EE5BDE0067E95D /* LzmaDec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaDec.c; sourceTree = "<group>"; };
+		1ACBD01511EE5BDE0067E95D /* LzmaDec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaDec.h; sourceTree = "<group>"; };
+		1ACBD01611EE5BDE0067E95D /* LzmaEnc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaEnc.c; sourceTree = "<group>"; };
+		1ACBD01711EE5BDE0067E95D /* LzmaEnc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaEnc.h; sourceTree = "<group>"; };
+		1ACBD01811EE5BDE0067E95D /* LzmaLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzmaLib.c; sourceTree = "<group>"; };
+		1ACBD01911EE5BDE0067E95D /* LzmaLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LzmaLib.h; sourceTree = "<group>"; };
+		1ACBD01A11EE5BDE0067E95D /* NameMangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NameMangle.h; sourceTree = "<group>"; };
+		1ACBD01B11EE5BDE0067E95D /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		1ACBD01C11EE5BDE0067E95D /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		D2AAC07E0554694100DB518D /* libOpenCTM-for-oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libOpenCTM-for-oolite.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libOpenCTM-for-oolite.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* OpenCTM */ = {
+			isa = PBXGroup;
+			children = (
+				1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */,
+				1ACBCF1B11EE46C00067E95D /* OpenCTM */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = OpenCTM;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				D2F7E8BE07B2D77200F64583 /* CoreData.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1ACBCF1B11EE46C00067E95D /* OpenCTM */ = {
+			isa = PBXGroup;
+			children = (
+				1ACBCF1C11EE46DC0067E95D /* compressMG1.c */,
+				1ACBCF1D11EE46DC0067E95D /* compressMG2.c */,
+				1ACBCF1E11EE46DC0067E95D /* compressRAW.c */,
+				1ACBCF1F11EE46DC0067E95D /* internal.h */,
+				1ACBCF2011EE46DC0067E95D /* openctm.c */,
+				1ACBCF2111EE46DC0067E95D /* openctm.h */,
+				1ACBCF2211EE46DC0067E95D /* openctmpp.h */,
+				1ACBCF2311EE46DC0067E95D /* stream.c */,
+				1ACBD00E11EE5BDE0067E95D /* liblzma */,
+			);
+			name = OpenCTM;
+			path = ../Deps/OpenCTM;
+			sourceTree = "<group>";
+		};
+		1ACBD00E11EE5BDE0067E95D /* liblzma */ = {
+			isa = PBXGroup;
+			children = (
+				1ACBD00F11EE5BDE0067E95D /* Alloc.c */,
+				1ACBD01011EE5BDE0067E95D /* Alloc.h */,
+				1ACBD01111EE5BDE0067E95D /* LzFind.c */,
+				1ACBD01211EE5BDE0067E95D /* LzFind.h */,
+				1ACBD01311EE5BDE0067E95D /* LzHash.h */,
+				1ACBD01411EE5BDE0067E95D /* LzmaDec.c */,
+				1ACBD01511EE5BDE0067E95D /* LzmaDec.h */,
+				1ACBD01611EE5BDE0067E95D /* LzmaEnc.c */,
+				1ACBD01711EE5BDE0067E95D /* LzmaEnc.h */,
+				1ACBD01811EE5BDE0067E95D /* LzmaLib.c */,
+				1ACBD01911EE5BDE0067E95D /* LzmaLib.h */,
+				1ACBD01A11EE5BDE0067E95D /* NameMangle.h */,
+				1ACBD01B11EE5BDE0067E95D /* readme.txt */,
+				1ACBD01C11EE5BDE0067E95D /* Types.h */,
+			);
+			name = liblzma;
+			path = lib/liblzma;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ACBCF2711EE46DC0067E95D /* internal.h in Headers */,
+				1ACBCF2911EE46DC0067E95D /* openctm.h in Headers */,
+				1ACBCF2A11EE46DC0067E95D /* openctmpp.h in Headers */,
+				1ACBD01E11EE5BDE0067E95D /* Alloc.h in Headers */,
+				1ACBD02011EE5BDE0067E95D /* LzFind.h in Headers */,
+				1ACBD02111EE5BDE0067E95D /* LzHash.h in Headers */,
+				1ACBD02311EE5BDE0067E95D /* LzmaDec.h in Headers */,
+				1ACBD02511EE5BDE0067E95D /* LzmaEnc.h in Headers */,
+				1ACBD02711EE5BDE0067E95D /* LzmaLib.h in Headers */,
+				1ACBD02811EE5BDE0067E95D /* NameMangle.h in Headers */,
+				1ACBD02911EE5BDE0067E95D /* Types.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* OpenCTM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "OpenCTM" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpenCTM;
+			productName = OpenCTM;
+			productReference = D2AAC07E0554694100DB518D /* libOpenCTM-for-oolite.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* OpenCTM */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* OpenCTM */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1ACBCF2411EE46DC0067E95D /* compressMG1.c in Sources */,
+				1ACBCF2511EE46DC0067E95D /* compressMG2.c in Sources */,
+				1ACBCF2611EE46DC0067E95D /* compressRAW.c in Sources */,
+				1ACBCF2811EE46DC0067E95D /* openctm.c in Sources */,
+				1ACBCF2B11EE46DC0067E95D /* stream.c in Sources */,
+				1ACBD01D11EE5BDE0067E95D /* Alloc.c in Sources */,
+				1ACBD01F11EE5BDE0067E95D /* LzFind.c in Sources */,
+				1ACBD02211EE5BDE0067E95D /* LzmaDec.c in Sources */,
+				1ACBD02411EE5BDE0067E95D /* LzmaEnc.c in Sources */,
+				1ACBD02611EE5BDE0067E95D /* LzmaLib.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "OpenCTM-for-oolite";
+				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
+				SYMROOT = ../../build;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
+				PRODUCT_NAME = "OpenCTM-for-oolite";
+				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
+				SYMROOT = ../../build;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.5;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "OpenCTM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

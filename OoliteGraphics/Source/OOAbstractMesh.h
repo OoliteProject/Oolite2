@@ -38,6 +38,7 @@
 @private
 	NSMutableArray				*_faceGroups;
 	NSString					*_name;
+	NSString					*_modelDescription;
 	
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materialSpecs;
@@ -46,6 +47,9 @@
 
 - (NSString *) name;
 - (void) setName:(NSString *)name;
+
+- (NSString *) modelDescription;
+- (void) setModelDescription:(NSString *)value;
 
 - (NSUInteger) faceGroupCount;
 

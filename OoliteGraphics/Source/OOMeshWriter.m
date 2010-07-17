@@ -178,6 +178,12 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 #endif
 	[result appendString:@"\n"];
 	
+	NSString *modelDesc = [mesh modelDescription];
+	if (modelDesc != nil)
+	{
+		[result appendFormat:@"\tdescription: \"%@\"\n", EscapeString(modelDesc)];
+	}
+	
 	NSDictionary *vertexSchema = [mesh vertexSchema];
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	NSString *key = nil;

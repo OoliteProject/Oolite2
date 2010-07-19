@@ -49,6 +49,7 @@
 - (id) initWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
 
 - (GLenum) glType;
+- (size_t) elementSize;
 
 /*	NOTE: exposes internal pointer for speed. This does not outlive the
 	OOIndexArray, and writing to it would break the array’s mutability.
@@ -64,5 +65,12 @@
 	Note that this is NOT comparable with -[OOFloatArray betterHash].
 */
 - (NSUInteger) betterHash;
+
+@end
+
+
+@interface OOIndexArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(GLenum)usage;
 
 @end

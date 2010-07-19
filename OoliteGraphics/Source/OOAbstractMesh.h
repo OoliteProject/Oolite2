@@ -43,6 +43,12 @@
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materialSpecs;
 	BOOL						_verticesAreUnique;
+	
+	NSUInteger					_batchLevel;
+	BOOL						_batchPendingChange;
+	BOOL						_batchAffectsUniqueness;
+	BOOL						_batchAffectsSchema;
+	BOOL						_batchAffectsRenderMesh;
 }
 
 - (NSString *) name;
@@ -68,6 +74,8 @@
 - (NSDictionary *) vertexSchema;
 - (NSDictionary *) vertexSchemaIgnoringTemporary;
 
+- (void) restrictToSchema:(NSDictionary *)schema;
+
 //	Mesh manipulations.
 // - (void) applyTransform:(OOMatrix)transform;
 - (void) mergeMesh:(OOAbstractMesh *)other;
@@ -79,6 +87,10 @@
 
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
+// Batch edits: coalesce change notifications.
+- (void) beginBatchEdit;
+- (void) endBatchEdit;
+
 @end
 
 
@@ -89,6 +101,14 @@
 */
 - (OOAbstractMesh *) abstractMesh;
 
+- (OOAbstractMesh *) abstractMeshWithMaterialSpecs:(NSArray *)materialSpecs;
+
 @end
+
+
+extern NSString * const kOOAbstractMeshChangedNotification;
+extern NSString * const kOOAbstractMeshChangeAffectsUniqueness;
+extern NSString * const kOOAbstractMeshChangeAffectsVertexSchema;
+extern NSString * const kOOAbstractMeshChangeAffectsRenderMesh;
 
 #endif	// OOLITE_LEAN

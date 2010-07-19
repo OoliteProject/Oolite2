@@ -1,10 +1,7 @@
-/*	
-	OOAbstractFace.h
+/*
+	OOAbstractMesh+Winding.h
 	
-	A face is simply a collection of three vertices. All other attributes
-	depend on context.
-	
-	An OOAbstractFace is immutable, as are its vertices.
+	Utility method to reverse mesh winding.
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -28,38 +25,18 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#if !OOLITE_LEAN
-
-#import <OoliteBase/OoliteBase.h>
-#import "OOAbstractVertex.h"
+#import "OOAbstractMesh.h"
 
 
-@interface OOAbstractFace: NSObject <NSCopying>
-{
-@private
-	OOAbstractVertex			*_vertices[3];
-}
+@interface OOAbstractMesh (Winding)
 
-+ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-+ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
-
-- (id) initWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
-
-- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
-- (void) getVertices:(OOAbstractVertex *[3])vertices;
-
-- (NSDictionary *) schema;
-
-- (BOOL) conformsToSchema:(NSDictionary *)schema;
-- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema;
-
-- (OOAbstractFace *) faceStrictlyConformingToSchema:(NSDictionary *)schema;
+- (BOOL) reverseWinding;
 
 @end
 
-#endif	// OOLITE_LEAN
+
+@interface OOAbstractFaceGroup (Winding)
+
+- (BOOL) reverseWinding;
+
+@end

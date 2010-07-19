@@ -33,7 +33,14 @@
 @interface OOAbstractFaceGroup (Internal)
 
 // Must be called whenever face group is mutated.
-- (void) internal_becomeDirtyWithAdditions:(BOOL)additions;
+- (void) internal_becomeDirtyAffectingUniqueness:(BOOL)affectsUniqueness	// True if change may de-unique vertices.
+									vertexSchema:(BOOL)affectsSchema		// True if change may affect vertex schema.
+									  renderMesh:(BOOL)affectsRenderMesh;	// True if change may affect render mesh or materials.
+
+- (void) internal_replaceAllFaces:(NSMutableArray *)faces
+			  affectingUniqueness:(BOOL)affectsUniqueness
+					 vertexSchema:(BOOL)affectsSchema
+					   renderMesh:(BOOL)affectsRenderMesh;
 
 @end
 

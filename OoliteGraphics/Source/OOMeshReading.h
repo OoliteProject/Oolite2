@@ -39,11 +39,17 @@
 
 - (void) parse;
 
+- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
+
 #if !OOLITE_LEAN
 - (OOAbstractMesh *) abstractMesh;
-#endif
 
-- (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
+// True if it is more efficient to load the abstract mesh, false if it is more efficient to load the render mesh.
+- (BOOL) prefersAbstractMesh;
+
+- (NSString *) meshName;
+- (NSString *) meshDescription;
+#endif
 
 @end
 

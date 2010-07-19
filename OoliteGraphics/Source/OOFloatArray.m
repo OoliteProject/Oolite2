@@ -541,3 +541,15 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 }
 
 @end
+
+
+#import "OOOpenGLUtilities.h"
+
+@implementation OOFloatArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(GLenum)usage
+{
+	OOGL(glBufferData(GL_ARRAY_BUFFER, [self count] * sizeof (float), [self priv_floatArray], usage));
+}
+
+@end

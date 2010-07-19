@@ -385,7 +385,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (OOAbstractVertex *) vertexConformingToSchema:(NSDictionary *)schema
+- (OOAbstractVertex *) vertexStrictlyConformingToSchema:(NSDictionary *)schema
 {
 	if ([self conformsToSchema:schema])
 	{

@@ -226,18 +226,35 @@
 {
 	OORenderMesh *renderMesh = nil;
 	[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
-	OOAbstractMesh *mesh = [renderMesh abstractMesh];
 	
-	NSUInteger i, count = [_groupMaterials count];
-	for (i = 0; i < count; i++)
-	{
-		[[mesh faceGroupAtIndex:i] setMaterial:[_groupMaterials objectAtIndex:i]];
-	}
+	OOAbstractMesh *mesh = [renderMesh abstractMeshWithMaterialSpecs:_groupMaterials];
 	
 	if (_meshName != nil)  [mesh setName:_meshName];
 	if (_meshDescription != nil)  [mesh setModelDescription:_meshDescription];
 	
 	return mesh;
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return NO;
+}
+
+
+- (NSString *) meshName
+{
+	[self parse];
+	
+	return _meshName;
+}
+
+
+- (NSString *) meshDescription
+{
+	[self parse];
+	
+	return _meshDescription;
 }
 
 #endif
@@ -262,13 +279,6 @@
 	{
 		*materialSpecifications = _groupMaterials;
 	}
-}
-
-- (NSString *) meshDescription
-{
-	[self parse];
-	
-	return _meshDescription;
 }
 
 @end

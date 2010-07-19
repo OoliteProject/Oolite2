@@ -4,11 +4,13 @@ extern "C" {
 
 
 #import <OoliteBase/OoliteBase.h>
+	
+#import "OOOpenGL.h"
+#import "OOOpenGLUtilities.h"
 
 #import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
-#import "OORenderMesh.h"
 
 #import "OODATReader.h"
 #import "OODATWriter.h"
@@ -21,6 +23,11 @@ extern "C" {
 #import "OOCTMReader.h"
 
 #import "OOAbstractMesh+NormalSynthesis.h"
+#import "OOAbstractMesh+Winding.h"
+
+#import "OORenderMesh.h"
+
+#import "OOShaderProgram.h"
 
 
 #ifdef __cplusplus

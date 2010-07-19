@@ -12,6 +12,11 @@
 		1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A35D711C2F7570086265F /* OoliteBase.framework */; };
 		1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */; };
+		1A663E3F11F25C2D0049AE20 /* OOShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A663E4011F25C2D0049AE20 /* OOShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */; };
+		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */; };
 		1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -22,16 +27,21 @@
 		1A7D37C911B16C1E00857CEF /* OOOBJReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37C711B16C1E00857CEF /* OOOBJReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D37CA11B16C1E00857CEF /* OOOBJReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D37C811B16C1E00857CEF /* OOOBJReader.m */; };
 		1A7D37DC11B16EC000857CEF /* OOMeshReading.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D37DB11B16EC000857CEF /* OOMeshReading.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8A296E11F3A95400775894 /* OOAbstractMesh+Winding.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8A296C11F3A95400775894 /* OOAbstractMesh+Winding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A8A296F11F3A95400775894 /* OOAbstractMesh+Winding.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A296D11F3A95400775894 /* OOAbstractMesh+Winding.m */; };
 		1A8F1BDB11A882FC00C94CB0 /* OOAbstractFaceGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1BDC11A882FC00C94CB0 /* OOAbstractFaceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */; };
 		1A8F1CCC11A88CA600C94CB0 /* OOAbstractMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A8F1CCD11A88CA600C94CB0 /* OOAbstractMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */; };
+		1A988AAF11F30C6B00C7CF6B /* OOOpenGLUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A988AAD11F30C6B00C7CF6B /* OOOpenGLUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A988AB011F30C6B00C7CF6B /* OOOpenGLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A988AAE11F30C6B00C7CF6B /* OOOpenGLUtilities.m */; };
 		1AABAAA611B9C7ED003487D5 /* OOColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AABAAA411B9C7ED003487D5 /* OOColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AABAAA711B9C7ED003487D5 /* OOColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AABAAA511B9C7ED003487D5 /* OOColor.m */; };
 		1AB369EE11F20E90006E68A3 /* OOMeshReading.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB369ED11F20E90006E68A3 /* OOMeshReading.m */; };
 		1AB36A2B11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB36A2C11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */; };
 		1AB36A8711F22692006E68A3 /* OOAbstractFaceGroupInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB36A8611F22692006E68A3 /* OOAbstractFaceGroupInternal.h */; };
+		1AB36BF311F25389006E68A3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB36BF211F25389006E68A3 /* OpenGL.framework */; };
 		1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */; };
 		1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB7395D11B10B0300575507 /* OOAbstractFace.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7395E11B10B0300575507 /* OOAbstractFace.m */; };
@@ -100,6 +110,11 @@
 		1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshWriter.h; sourceTree = "<group>"; };
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
+		1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShaderProgram.h; sourceTree = "<group>"; };
+		1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShaderProgram.m; sourceTree = "<group>"; };
+		1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMacroOpenGL.h; sourceTree = "<group>"; };
+		1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOpenGLExtensionManager.h; sourceTree = "<group>"; };
+		1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOpenGLExtensionManager.m; sourceTree = "<group>"; };
 		1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshLexer.h; sourceTree = "<group>"; };
 		1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshLexer.m; sourceTree = "<group>"; };
 		1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteGraphics-Info.plist"; sourceTree = "<group>"; };
@@ -113,10 +128,14 @@
 		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
 		1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A878BE711B58492001BB304 /* oomesh-specification.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "oomesh-specification.txt"; path = "../../Documentation/oomesh-specification.txt"; sourceTree = SOURCE_ROOT; };
+		1A8A296C11F3A95400775894 /* OOAbstractMesh+Winding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOAbstractMesh+Winding.h"; sourceTree = "<group>"; };
+		1A8A296D11F3A95400775894 /* OOAbstractMesh+Winding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOAbstractMesh+Winding.m"; sourceTree = "<group>"; };
 		1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroup.h; sourceTree = "<group>"; };
 		1A8F1BDA11A882FC00C94CB0 /* OOAbstractFaceGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFaceGroup.m; sourceTree = "<group>"; };
 		1A8F1CCA11A88CA600C94CB0 /* OOAbstractMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractMesh.h; sourceTree = "<group>"; };
 		1A8F1CCB11A88CA600C94CB0 /* OOAbstractMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractMesh.m; sourceTree = "<group>"; };
+		1A988AAD11F30C6B00C7CF6B /* OOOpenGLUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOpenGLUtilities.h; sourceTree = "<group>"; };
+		1A988AAE11F30C6B00C7CF6B /* OOOpenGLUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOpenGLUtilities.m; sourceTree = "<group>"; };
 		1AAB4AB511A5D894005F2081 /* OOAbstractVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractVertex.h; sourceTree = "<group>"; };
 		1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractVertex.m; sourceTree = "<group>"; };
 		1AABAAA411B9C7ED003487D5 /* OOColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOColor.h; sourceTree = "<group>"; };
@@ -125,6 +144,7 @@
 		1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOAbstractMesh+NormalSynthesis.h"; sourceTree = "<group>"; };
 		1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOAbstractMesh+NormalSynthesis.m"; sourceTree = "<group>"; };
 		1AB36A8611F22692006E68A3 /* OOAbstractFaceGroupInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroupInternal.h; sourceTree = "<group>"; };
+		1AB36BF211F25389006E68A3 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1AB7395D11B10B0300575507 /* OOAbstractFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFace.h; sourceTree = "<group>"; };
 		1AB7395E11B10B0300575507 /* OOAbstractFace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAbstractFace.m; sourceTree = "<group>"; };
 		1AB7398D11B10EC800575507 /* OOMeshReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReader.h; sourceTree = "<group>"; };
@@ -161,6 +181,7 @@
 				1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */,
 				1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */,
 				1ACBCF5D11EE47FF0067E95D /* libOpenCTM-for-oolite.a in Frameworks */,
+				1AB36BF311F25389006E68A3 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +214,7 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1AB36BF211F25389006E68A3 /* OpenGL.framework */,
 				1ACBCF5311EE47E50067E95D /* OpenCTM.xcodeproj */,
 				1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
@@ -235,6 +257,8 @@
 				1AAB4AB611A5D894005F2081 /* OOAbstractVertex.m */,
 				1AB36A2911F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h */,
 				1AB36A2A11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m */,
+				1A8A296C11F3A95400775894 /* OOAbstractMesh+Winding.h */,
+				1A8A296D11F3A95400775894 /* OOAbstractMesh+Winding.m */,
 				1AF4293211A9897D008E883C /* OOMaterialSpecification.h */,
 				1AF4293311A9897D008E883C /* OOMaterialSpecification.m */,
 				1AF429B811A98B4D008E883C /* OOTextureSpecification.h */,
@@ -307,8 +331,15 @@
 			isa = PBXGroup;
 			children = (
 				1ABAC2C011C39A1D005301BA /* OOOpenGL.h */,
+				1A988AAD11F30C6B00C7CF6B /* OOOpenGLUtilities.h */,
+				1A988AAE11F30C6B00C7CF6B /* OOOpenGLUtilities.m */,
+				1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */,
+				1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */,
+				1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */,
 				1ABAC2B111C3974A005301BA /* OORenderMesh.h */,
 				1ABAC2B211C3974A005301BA /* OORenderMesh.m */,
+				1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */,
+				1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */,
 			);
 			name = Rendering;
 			sourceTree = "<group>";
@@ -371,6 +402,11 @@
 				1ACBCF6611EE48790067E95D /* OOCTMReader.h in Headers */,
 				1AB36A2B11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.h in Headers */,
 				1AB36A8711F22692006E68A3 /* OOAbstractFaceGroupInternal.h in Headers */,
+				1A663E3F11F25C2D0049AE20 /* OOShaderProgram.h in Headers */,
+				1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */,
+				1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */,
+				1A988AAF11F30C6B00C7CF6B /* OOOpenGLUtilities.h in Headers */,
+				1A8A296E11F3A95400775894 /* OOAbstractMesh+Winding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +537,10 @@
 				1ACBCF6711EE48790067E95D /* OOCTMReader.m in Sources */,
 				1AB369EE11F20E90006E68A3 /* OOMeshReading.m in Sources */,
 				1AB36A2C11F212B6006E68A3 /* OOAbstractMesh+NormalSynthesis.m in Sources */,
+				1A663E4011F25C2D0049AE20 /* OOShaderProgram.m in Sources */,
+				1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */,
+				1A988AB011F30C6B00C7CF6B /* OOOpenGLUtilities.m in Sources */,
+				1A8A296F11F3A95400775894 /* OOAbstractMesh+Winding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,7 +574,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
-				GCC_PREPROCESSOR_DEFINITIONS = "OO_DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OO_CHECK_GL_HEAVY=1",
+					"OO_DEBUG=1",
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = "$(OBJROOT)/$(CONFIGURATION)/OpenCTM/";
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";

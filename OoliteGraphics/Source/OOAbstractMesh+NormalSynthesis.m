@@ -37,12 +37,107 @@
 
 - (BOOL) synthesizeNormalsSmoothly:(BOOL)smooth replacingExisting:(BOOL)replace
 {
+	BOOL OK = YES;
+	
+	[self beginBatchEdit];
+	
 	OOAbstractFaceGroup *group = nil;
 	foreach (group, self)
 	{
-		if (![group synthesizeNormalsSmoothly:smooth replacingExisting:replace])  return NO;
+		if (![group synthesizeNormalsSmoothly:smooth replacingExisting:replace])  OK = NO;
 	}
 	
+	[self endBatchEdit];
+	
+	return YES;
+}
+
+
+- (BOOL) flipNormals
+{
+	[self beginBatchEdit];
+	
+	// Use a map so we don't completely de-unique vertices.
+	NSMapTable *vertexMap = NSCreateMapTable(NSObjectMapKeyCallBacks, NSObjectMapValueCallBacks, 0);
+	OOAbstractFaceGroup *group = nil;
+	
+	foreach (group, self)
+	{
+		NSArray *faces = [group faces];
+		NSUInteger fIter, fCount = [faces count];
+		NSMutableArray *newFaces = [[NSMutableArray alloc] initWithCapacity:fCount];
+		BOOL changedAnyInGroup = NO;
+		
+		for (fIter = 0; fIter < fCount; fIter++)
+		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
+			OOAbstractFace *oldFace = [faces objectAtIndex:fIter];
+			OOAbstractVertex *oldVertices[3];
+			OOAbstractVertex *newVertices[3];
+			BOOL changedAnyInFace = NO;
+			
+			[oldFace getVertices:oldVertices];
+			for (unsigned vIter = 0; vIter < 3; vIter++)
+			{
+				newVertices[vIter] = NSMapGet(vertexMap, oldVertices[vIter]);
+				if (newVertices[vIter] == nil)
+				{
+					OOFloatArray *oldNormal = [oldVertices[vIter] attributeForKey:kOONormalAttributeKey];
+					if (oldNormal != nil)
+					{
+						NSUInteger cIter, cCount = [oldNormal count];
+						float components[cCount];
+						for (cIter = 0; cIter < cCount; cIter++)
+						{
+							if (components[cIter] != 0.0f)
+							{
+								components[cIter] = -[oldNormal floatAtIndex:cIter];
+								changedAnyInFace = YES;
+							}
+						}
+						
+						OOFloatArray *newNormal = [OOFloatArray arrayWithFloats:components count:cCount];
+						
+						OOMutableAbstractVertex *mv = [oldVertices[vIter] mutableCopy];
+						[mv setAttribute:newNormal forKey:kOONormalAttributeKey];
+						newVertices[vIter] = [[mv copy] autorelease];
+						[mv release];
+						
+						NSMapInsertKnownAbsent(vertexMap, oldVertices[vIter], newVertices[vIter]);
+					}
+					else
+					{
+						newVertices[vIter] = oldVertices[vIter];
+					}
+
+				}
+				else  changedAnyInFace = YES;
+			}
+			
+			
+			if (changedAnyInFace)
+			{
+				changedAnyInGroup = YES;
+				[newFaces addObject:[OOAbstractFace faceWithVertices:newVertices]];
+			}
+			else
+			{
+				[newFaces addObject:oldFace];
+			}
+
+			
+			[pool release];
+		}
+		
+		if (changedAnyInGroup)
+		{
+			[group internal_replaceAllFaces:newFaces affectingUniqueness:NO vertexSchema:NO renderMesh:YES];
+		}
+		[newFaces release];
+	}
+	
+	[self endBatchEdit];
 	return YES;
 }
 
@@ -165,8 +260,9 @@ OOINLINE void CalculateFaceNormals(NSArray *faces, Vector *faceNormals, NSMapTab
 			The cross product of two vectors is normal to both of them and has
 			the area of the parallelogram they span. Hence, the cross product
 			of two sides of the triangle is a normal whose magnitude is twice
-			the area of the triangle. Since we only use the area as a weight,
-			the factor 2 can be ignored.
+			the area of the triangle. Adding this area-weighted normal for
+			each face touching a vertex and then normalizing produces an
+			area-weighted average.
 		*/
 		Vector AB = vector_subtract(positions[1], positions[0]);
 		Vector AC = vector_subtract(positions[2], positions[0]);
@@ -305,10 +401,11 @@ OOINLINE NSMutableArray *ApplyFlatNormals(NSArray *faces, Vector *faceNormals, B
 			{
 				newFaces = ApplyFlatNormals(_faces, faceNormals, replace);
 			}
-			[_faces release];
-			_faces = [newFaces retain];
 			
-			[self internal_becomeDirtyWithAdditions:!smooth];
+			[self internal_replaceAllFaces:newFaces
+					   affectingUniqueness:!smooth
+							  vertexSchema:NO
+								renderMesh:YES];
 			
 			success = YES;
 		}

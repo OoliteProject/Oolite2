@@ -35,6 +35,7 @@
 @interface OOAbstractMesh (NormalSynthesis)
 
 - (BOOL) synthesizeNormalsSmoothly:(BOOL)smooth replacingExisting:(BOOL)replace;
+- (BOOL) flipNormals;
 
 @end
 

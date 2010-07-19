@@ -229,7 +229,7 @@
 		to holes, too.)
 	*/
 	_abstractMesh = [[OOAbstractMesh alloc] init];
-	[_abstractMesh setName:[self name]];
+	[_abstractMesh setName:[self meshName]];
 	OOAbstractFaceGroup *group = nil;
 	foreach (group, [_materialGroups allValues])
 	{
@@ -266,7 +266,7 @@
 }
 
 
-- (NSString *) name
+- (NSString *) meshName
 {
 	[self parse];
 	
@@ -281,6 +281,18 @@
 	}
 	
 	return _name;
+}
+
+
+- (NSString *) meshDescription
+{
+	return [[self abstractMesh] modelDescription];
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return YES;
 }
 
 @end

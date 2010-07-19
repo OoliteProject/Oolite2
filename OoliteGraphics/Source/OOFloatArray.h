@@ -33,6 +33,7 @@
 */
 
 #import <Foundation/Foundation.h>
+#import <OpenGL/gl.h>
 
 
 @interface OOFloatArray: NSArray
@@ -62,6 +63,13 @@
 	Note that this is NOT comparable with -[OOFloatArray betterHash].
 */
 - (NSUInteger) betterHash;
+
+@end
+
+
+@interface OOFloatArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(GLenum)usage;
 
 @end
 

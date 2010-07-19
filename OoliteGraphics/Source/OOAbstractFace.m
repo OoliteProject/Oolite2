@@ -29,6 +29,7 @@
 #if !OOLITE_LEAN
 
 #import "OOAbstractFace.h"
+#import "OOAbstractFaceGroup.h"
 #import "OOAbstractVertex.h"
 
 
@@ -96,6 +97,43 @@
 	vertices[0] = _vertices[0];
 	vertices[1] = _vertices[1];
 	vertices[2] = _vertices[2];
+}
+
+- (NSDictionary *) schema
+{
+	return OOUnionOfSchemata([_vertices[0] schema], OOUnionOfSchemata([_vertices[1] schema], [_vertices[2] schema]));
+}
+
+
+- (BOOL) conformsToSchema:(NSDictionary *)schema
+{
+	return [_vertices[0] conformsToSchema:schema] && [_vertices[1] conformsToSchema:schema] && [_vertices[2] conformsToSchema:schema];
+}
+
+
+- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema
+{
+	return [_vertices[0] strictlyConformsToSchema:schema] && [_vertices[1] strictlyConformsToSchema:schema] && [_vertices[2] strictlyConformsToSchema:schema];
+}
+
+
+- (OOAbstractFace *) faceStrictlyConformingToSchema:(NSDictionary *)schema
+{
+	OOAbstractVertex *vertices[3];
+	vertices[0] = [_vertices[0] vertexStrictlyConformingToSchema:schema];
+	vertices[1] = [_vertices[1] vertexStrictlyConformingToSchema:schema];
+	vertices[2] = [_vertices[2] vertexStrictlyConformingToSchema:schema];
+	
+	if (vertices[0] != _vertices[0] ||
+		vertices[1] != _vertices[1] ||
+		vertices[2] != _vertices[2])
+	{
+		return [OOAbstractFace faceWithVertices:vertices];
+	}
+	else
+	{
+		return self;
+	}
 }
 
 @end

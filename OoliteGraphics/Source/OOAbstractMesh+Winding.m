@@ -1,10 +1,5 @@
-/*	
-	OOAbstractFace.h
-	
-	A face is simply a collection of three vertices. All other attributes
-	depend on context.
-	
-	An OOAbstractFace is immutable, as are its vertices.
+/*
+	OOAbstractMesh+Winding.m
 	
 	
 	Copyright © 2010 Jens Ayton.
@@ -28,38 +23,60 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#if !OOLITE_LEAN
-
-#import <OoliteBase/OoliteBase.h>
-#import "OOAbstractVertex.h"
+#import "OOAbstractMesh+Winding.h"
+#import "OOAbstractFaceGroupInternal.h"
 
 
-@interface OOAbstractFace: NSObject <NSCopying>
+@implementation OOAbstractMesh (Winding)
+
+- (BOOL) reverseWinding
 {
-@private
-	OOAbstractVertex			*_vertices[3];
+	BOOL OK = YES;
+	
+	[self beginBatchEdit];
+	
+	OOAbstractFaceGroup *group = nil;
+	
+	foreach (group, self)
+	{
+		if (![group reverseWinding])  OK = NO;
+	}
+	
+	[self endBatchEdit];
+	
+	return YES;
 }
-
-+ (id) faceWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-+ (id) faceWithVertices:(OOAbstractVertex *[3])vertices;
-
-- (id) initWithVertex0:(OOAbstractVertex *)vertex0
-			   vertex1:(OOAbstractVertex *)vertex1
-			   vertex2:(OOAbstractVertex *)vertex2;
-- (id) initWithVertices:(OOAbstractVertex *[3])vertices;
-
-- (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
-- (void) getVertices:(OOAbstractVertex *[3])vertices;
-
-- (NSDictionary *) schema;
-
-- (BOOL) conformsToSchema:(NSDictionary *)schema;
-- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema;
-
-- (OOAbstractFace *) faceStrictlyConformingToSchema:(NSDictionary *)schema;
 
 @end
 
-#endif	// OOLITE_LEAN
+
+@implementation OOAbstractFaceGroup (Winding)
+
+- (BOOL) reverseWinding
+{
+	NSMutableArray *newFaces = [[NSMutableArray alloc] initWithCapacity:[self faceCount]];
+	OOAbstractFace *face = nil;
+	
+	foreach (face, self)
+	{
+		OOAbstractVertex *vertices[3];
+		OOAbstractVertex *temp;
+		
+		[face getVertices:vertices];
+		temp = vertices[0];
+		vertices[0] = vertices[2];
+		vertices[2] = temp;
+		
+		[newFaces addObject:[OOAbstractFace faceWithVertices:vertices]];
+	}
+	
+	[self internal_replaceAllFaces:newFaces
+			   affectingUniqueness:NO
+					  vertexSchema:NO
+						renderMesh:YES];
+	[newFaces release];
+	
+	return YES;
+}
+
+@end

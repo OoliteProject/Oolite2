@@ -319,6 +319,24 @@ enum
 }
 
 
+- (NSString *) meshName
+{
+	return [[self abstractMesh] name];
+}
+
+
+- (NSString *) meshDescription
+{
+	return [[self abstractMesh] modelDescription];
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return YES;
+}
+
+
 - (BOOL) smoothing
 {
 	return _smoothing;

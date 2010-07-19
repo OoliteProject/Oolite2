@@ -62,10 +62,11 @@
 
 #if !OOLITE_LEAN
 - (OOAbstractMesh *) abstractMesh;
+
+- (NSString *) meshName;
+- (NSString *) meshDescription;
 #endif
 
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
-
-- (NSString *) meshDescription;
 
 @end

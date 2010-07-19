@@ -66,6 +66,7 @@
 - (void) setMaterial:(OOMaterialSpecification *)material;
 
 - (NSUInteger) faceCount;
+- (NSArray *) faces;
 
 - (OOAbstractFace *) faceAtIndex:(NSUInteger)index;
 
@@ -74,6 +75,8 @@
 - (void) removeLastFace;
 - (void) removeFaceAtIndex:(NSUInteger)index;
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face;
+
+- (void) replaceAllFaces:(NSArray *)faces;
 
 // Temporary attributes: attributes generated for convenience of tools, not intended to be saved.
 - (BOOL) isAttributeTemporary:(NSString *)attributeKey;
@@ -93,6 +96,8 @@
 - (NSDictionary *) vertexSchemaIgnoringTemporary;
 - (BOOL) vertexSchemaIsHomogeneous;
 
+- (void) restrictToSchema:(NSDictionary *)schema;
+
 @end
 
 
@@ -100,6 +105,8 @@ NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b);
 
 
 extern NSString * const kOOAbstractFaceGroupChangedNotification;
-extern NSString * const kOOAbstractFaceGroupChangeIsAdditive;	// UserInfo key for boolean flag indicating change added faces - either true or nil.
+extern NSString * const kOOAbstractFaceGroupChangeAffectsUniqueness;
+extern NSString * const kOOAbstractFaceGroupChangeAffectsVertexSchema;
+extern NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh;
 
 #endif	// OOLITE_LEAN

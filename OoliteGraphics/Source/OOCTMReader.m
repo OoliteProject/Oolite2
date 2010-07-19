@@ -240,13 +240,7 @@ static NSString *LoadString(const char *string)
 {
 	[self parse];
 	
-	OOAbstractMesh *mesh = [_renderMesh abstractMesh];
-	if (_materials != nil)
-	{
-		NSAssert([mesh faceGroupCount] == 1 && [_materials count] == 1, @"Expected a single face group and material in OOCTMReader.");
-		
-		[[mesh faceGroupAtIndex:0] setMaterial:[_materials objectAtIndex:0]];
-	}
+	OOAbstractMesh *mesh = [_renderMesh abstractMeshWithMaterialSpecs:_materials];
 	
 	if (_name != nil)  [mesh setName:_name];
 	if (_comment != nil)  [mesh setModelDescription:_comment];
@@ -264,7 +258,19 @@ static NSString *LoadString(const char *string)
 }
 
 
-- (NSString *) fileComment
+- (BOOL) prefersAbstractMesh
+{
+	return NO;
+}
+
+
+- (NSString *) meshName
+{
+	return _name;
+}
+
+
+- (NSString *) meshDescription
 {
 	[self parse];
 	

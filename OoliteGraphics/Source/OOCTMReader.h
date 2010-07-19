@@ -61,7 +61,8 @@
 - (OOAbstractMesh *) abstractMesh;
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
-- (NSString *) fileComment;
+- (NSString *) meshName;
+- (NSString *) meshDescription;
 
 @end
 

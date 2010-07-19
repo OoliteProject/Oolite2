@@ -205,7 +205,7 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-- (Quaternion) oo_quaternionAtIndex:(NSUInteger)index defaultValue:(Quaternion)value;
+- (Quaternion) oo_quaternionAtIndex:(NSUInteger)index defaultValue:(Quaternion)value
 {
 	return OOQuaternionFromObject([self oo_objectAtIndex:index], value);
 }
@@ -1023,7 +1023,7 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-- (void) oo_insertUnsignedInteger:(unsigned long)value atIndex:(NSUInteger)index;
+- (void) oo_insertUnsignedInteger:(unsigned long)value atIndex:(NSUInteger)index
 {
 	[self insertObject:[NSNumber numberWithUnsignedLong:value] atIndex:index];
 }

@@ -100,7 +100,7 @@ NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 				if (idx == nil)
 				{
 					idx = [NSNumber numberWithUnsignedInteger:vertexCount++];
-					datVert = [vertex vertexConformingToSchema:datVertSchema];
+					datVert = [vertex vertexStrictlyConformingToSchema:datVertSchema];
 					[datVerts addObject:datVert];
 					[datVertToIndex setObject:idx forKey:datVert];
 					[vertexToIndex setObject:idx forKey:vertex];

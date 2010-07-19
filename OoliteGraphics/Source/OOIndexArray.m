@@ -204,6 +204,13 @@
 }
 
 
+- (size_t) elementSize
+{
+	[NSException raise:NSInternalInconsistencyException format:@"%s is a subclass responsibility.", __PRETTY_FUNCTION__];
+	return 0;
+}
+
+
 - (const void *) data
 {
 	[NSException raise:NSInternalInconsistencyException format:@"%s is a subclass responsibility.", __PRETTY_FUNCTION__];
@@ -320,6 +327,12 @@
 }
 
 
+- (size_t) elementSize
+{
+	return sizeof *_values;
+}
+
+
 - (const void *) data
 {
 	return _values;
@@ -397,6 +410,12 @@
 - (GLenum) glType
 {
 	return GL_UNSIGNED_SHORT;
+}
+
+
+- (size_t) elementSize
+{
+	return sizeof *_values;
 }
 
 
@@ -479,6 +498,12 @@
 - (GLenum) glType
 {
 	return GL_UNSIGNED_INT;
+}
+
+
+- (size_t) elementSize
+{
+	return sizeof *_values;
 }
 
 
@@ -602,6 +627,18 @@
 - (BOOL) oo_boolAtIndex:(NSUInteger)index defaultValue:(BOOL)value
 {
 	return [self oo_unsignedIntegerAtIndex:index defaultValue:value] != 0;
+}
+
+@end
+
+
+#import "OOOpenGLUtilities.h"
+
+@implementation OOIndexArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(unsigned int /* GLenum */)usage
+{
+	OOGL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, [self count] * [self elementSize], [self data], usage));
 }
 
 @end

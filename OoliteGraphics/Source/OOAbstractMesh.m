@@ -26,13 +26,22 @@
 #if !OOLITE_LEAN
 
 #import "OOAbstractMesh.h"
-#import "OOAbstractFaceGroup.h"
+#import "OOAbstractFaceGroupInternal.h"
+
+
+NSString * const kOOAbstractMeshChangedNotification = @"org.oolite OOAbstractMesh changed";
+NSString * const kOOAbstractMeshChangeAffectsUniqueness = @"kOOAbstractMeshChangeAffectsUniqueness";
+NSString * const kOOAbstractMeshChangeAffectsVertexSchema = @"kOOAbstractMeshChangeAffectsVertexSchema";
+NSString * const kOOAbstractMeshChangeAffectsRenderMesh = @"kOOAbstractMeshChangeAffectsRenderMesh";
 
 
 @interface OOAbstractMesh (Private)
 
 // Must be called whenever mesh is mutated.
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions;
+- (void) internal_becomeDirtyAffectingUniqueness:(BOOL)affectsUniqueness
+									vertexSchema:(BOOL)affectsSchema	
+									  renderMesh:(BOOL)affectsRenderMesh;
+
 - (void) priv_observeFaceGroup:(OOAbstractFaceGroup *)faceGroup;
 - (void) priv_stopObservingFaceGroup:(OOAbstractFaceGroup *)faceGroup;
 
@@ -61,6 +70,8 @@
 
 - (void) dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:nil name:kOOAbstractMeshChangedNotification object:self];
+	
 	DESTROY(_faceGroups);
 	DESTROY(_name);
 	
@@ -84,7 +95,7 @@
 		
 		[result setName:[self name]];
 		
-		result->_renderMesh = [_renderMesh copy];
+		result->_renderMesh = [_renderMesh retain];
 		result->_materialSpecs = [_materialSpecs copy];
 	}
 	
@@ -109,7 +120,7 @@
 #ifndef NDEBUG
 	// render mesh doesn't have a name if NDEBUG is defined.
 	if ([name isEqualToString:_name])  return;
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:NO renderMesh:YES];
 #endif
 	
 	[_name autorelease];
@@ -146,10 +157,10 @@
 {
 	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != NSNotFound))  return;
 	
-	[self priv_becomeDirtyWithAdditions:YES];
 	[self priv_observeFaceGroup:faceGroup];
-	
 	[_faceGroups addObject:faceGroup];
+	
+	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
 }
 
 
@@ -157,10 +168,10 @@
 {
 	if (EXPECT_NOT(faceGroup == nil || [_faceGroups indexOfObject:faceGroup] != NSNotFound))  return;
 	
-	[self priv_becomeDirtyWithAdditions:YES];
 	[self priv_observeFaceGroup:faceGroup];
-	
 	[_faceGroups insertObject:faceGroup atIndex:idx];
+	
+	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
 }
 
 
@@ -168,10 +179,10 @@
 {
 	if (EXPECT_NOT([_faceGroups count] == 0))  return;
 	
-	[self priv_becomeDirtyWithAdditions:NO];
 	[self priv_stopObservingFaceGroup:[_faceGroups lastObject]];
-	
 	[_faceGroups removeLastObject];
+	
+	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:YES renderMesh:YES];
 }
 
 
@@ -179,10 +190,10 @@
 {
 	if (EXPECT_NOT(idx >= [_faceGroups count]))  return;
 	
-	[self priv_becomeDirtyWithAdditions:NO];
 	[self priv_stopObservingFaceGroup:[_faceGroups objectAtIndex:idx]];
-	
 	[_faceGroups removeObjectAtIndex:idx];
+	
+	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:YES renderMesh:YES];
 }
 
 
@@ -190,11 +201,11 @@
 {
 	if (EXPECT_NOT(idx >= [_faceGroups count]))  return;
 	
-	[self priv_becomeDirtyWithAdditions:YES];
 	[self priv_stopObservingFaceGroup:[_faceGroups objectAtIndex:idx]];
 	[self priv_observeFaceGroup:faceGroup];
-	
 	[_faceGroups replaceObjectAtIndex:idx withObject:faceGroup];
+	
+	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
 }
 
 
@@ -255,13 +266,31 @@
 }
 
 
+- (void) restrictToSchema:(NSDictionary *)schema
+{
+	[self beginBatchEdit];
+	
+	OOAbstractFaceGroup *group = nil;
+	foreach (group, self)
+	{
+		[group restrictToSchema:schema];
+	}
+	
+	[self endBatchEdit];
+}
+
+
 - (void) mergeMesh:(OOAbstractMesh *)other
 {
+	[self beginBatchEdit];
+	
 	OOAbstractFaceGroup *group = nil;
 	foreach (group, other)
 	{
 		[self addFaceGroup:group];
 	}
+	
+	[self endBatchEdit];
 }
 
 
@@ -280,13 +309,71 @@
 }
 
 
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions
+- (void) beginBatchEdit
 {
-	DESTROY(_renderMesh);
-	DESTROY(_materialSpecs);
-	
-	// Vertices can't be de-uniqued by removing faces.
-	if (additions)  _verticesAreUnique = NO;
+	_batchLevel++;
+}
+
+
+- (void) endBatchEdit
+{
+	if (_batchLevel > 0)
+	{
+		if (--_batchLevel == 0)
+		{
+			if (_batchPendingChange)
+			{
+				BOOL affectsUniqueness = _batchAffectsUniqueness;
+				BOOL affectsSchema = _batchAffectsSchema;
+				BOOL affectsRenderMesh = _batchAffectsRenderMesh;
+				
+				_batchPendingChange = NO;
+				_batchAffectsUniqueness = NO;
+				_batchAffectsSchema = NO;
+				_batchAffectsRenderMesh = NO;
+				
+				[self internal_becomeDirtyAffectingUniqueness:affectsUniqueness
+												 vertexSchema:affectsSchema
+												   renderMesh:affectsRenderMesh];
+			}
+		}
+	}
+}
+
+
+- (void) internal_becomeDirtyAffectingUniqueness:(BOOL)affectsUniqueness
+									vertexSchema:(BOOL)affectsSchema	
+									  renderMesh:(BOOL)affectsRenderMesh
+{
+	if (_batchLevel == 0)
+	{
+		if (affectsUniqueness)
+		{
+			_verticesAreUnique = NO;
+		}
+		
+		if (affectsRenderMesh)
+		{
+			DESTROY(_renderMesh);
+			DESTROY(_materialSpecs);
+		}
+		
+		NSDictionary *userInfo = $dict(kOOAbstractMeshChangeAffectsUniqueness, $bool(affectsUniqueness),
+									   kOOAbstractMeshChangeAffectsVertexSchema, $bool(affectsSchema),
+									   kOOAbstractMeshChangeAffectsRenderMesh, $bool(affectsRenderMesh));
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:kOOAbstractMeshChangedNotification
+															object:self
+														  userInfo:userInfo];
+	}
+	else
+	{
+		_batchPendingChange = YES;
+		_batchAffectsUniqueness = _batchAffectsUniqueness || affectsUniqueness;
+		_batchAffectsSchema = _batchAffectsSchema || affectsSchema;
+		_batchAffectsRenderMesh = _batchAffectsRenderMesh || affectsRenderMesh;
+	}
+
 }
 
 
@@ -308,7 +395,10 @@
 
 - (void) priv_faceGroupChanged:(NSNotification *)notification
 {
-	[self priv_becomeDirtyWithAdditions:[[notification userInfo] oo_boolForKey:kOOAbstractFaceGroupChangeIsAdditive]];
+	NSDictionary *info = [notification userInfo];
+	[self internal_becomeDirtyAffectingUniqueness:[info oo_boolForKey:kOOAbstractFaceGroupChangeAffectsUniqueness]
+									 vertexSchema:[info oo_boolForKey:kOOAbstractFaceGroupChangeAffectsVertexSchema]
+									   renderMesh:[info oo_boolForKey:kOOAbstractFaceGroupChangeAffectsRenderMesh]];
 }
 
 
@@ -340,10 +430,12 @@
 	}
 	
 	if (outUseCounts != NULL)  useCounts = [NSMutableArray array];
+	[self beginBatchEdit];
 	
 	foreach (faceGroup, self)
 	{
 		NSUInteger faceIndex = 0;
+		NSMutableArray *newFaces = [NSMutableArray arrayWithCapacity:[faceGroup faceCount]];
 		
 		foreach (face, faceGroup)
 		{
@@ -385,19 +477,23 @@
 						[useCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
 					}
 				}
-				
-				if (changedVert)
-				{
-					// Apply uniqued face.
-					face = [OOAbstractFace faceWithVertices:faceVerts];
-					[faceGroup replaceFaceAtIndex:faceIndex withFace:face];
-				}
 			}
+			
+			if (changedVert)
+			{
+				// Apply uniqued face.
+				face = [OOAbstractFace faceWithVertices:faceVerts];
+			}
+			[newFaces addObject:face];
 			
 			[innerPool drain];
 			faceIndex++;
 		}
+		
+		[faceGroup internal_replaceAllFaces:newFaces affectingUniqueness:YES vertexSchema:NO renderMesh:NO];
 	}
+	
+	[self endBatchEdit];
 	
 	if (outVertices != NULL)  *outVertices = [vertices retain];
 	if (outIndices != NULL)  *outIndices = [indices retain];
@@ -417,7 +513,6 @@
 {
 	NSArray					*vertices = nil;
 	NSDictionary			*indices = nil;
-	NSMutableArray			*materials = nil;
 	
 	DESTROY(_renderMesh);
 	DESTROY(_materialSpecs);
@@ -425,15 +520,37 @@
 	// Get uniqued vertices.
 	[self priv_uniqueVerticesGettingResults:&vertices indices:&indices useCounts:NULL updatingFaces:NO];
 	
-	
-	
-	// Build material array.
+	// Build group index arrays and material array.
 	OOAbstractFaceGroup		*faceGroup = nil;
 	OOMaterialSpecification	*anonMaterial = nil;
 	
-	materials = [NSMutableArray arrayWithCapacity:[self faceGroupCount]];
+	GLuint vertexCount = [vertices count];
+	NSMutableArray *materials = [NSMutableArray arrayWithCapacity:[self faceGroupCount]];
+	NSMutableArray *groups = [NSMutableArray arrayWithCapacity:[self faceGroupCount]];
 	foreach (faceGroup, self)
 	{
+		// Index array.
+		GLuint indexCount = [faceGroup faceCount] * 3;
+		GLuint *indexArray = malloc(indexCount * sizeof (GLuint));
+		if (indexArray == NULL)  return;
+		
+		OOAbstractFace *face = nil;
+		GLuint *next = indexArray;
+		foreach (face, faceGroup)
+		{
+			OOAbstractVertex *vertices[3];
+			[face getVertices:vertices];
+			
+			for (unsigned vIter = 0; vIter < 3; vIter++)
+			{
+				*next++ = [indices oo_unsignedIntForKey:vertices[vIter]];
+			}
+		}
+		
+		[groups addObject:[OOIndexArray arrayWithUnsignedInts:indexArray count:indexCount maximum:vertexCount]];
+		free(indexArray);
+		
+		// Material array.
 		OOMaterialSpecification *material = [faceGroup material];
 		if (material == nil)
 		{
@@ -446,6 +563,39 @@
 		
 		[materials addObject:material];
 	}
+	
+	// Build attribute arrays.
+	NSDictionary *schema = [self vertexSchema];
+	NSString *attrKey = nil;
+	OOFloatArray *emptyAttr = [OOFloatArray array];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:[schema count]];
+	
+	foreachkey (attrKey, schema)
+	{
+		unsigned size = [schema oo_unsignedIntForKey:attrKey];
+		float *attrArray = malloc(sizeof (float) * size * vertexCount);
+		if (attrArray == NULL)  return;
+		float *next = attrArray;
+		
+		for (GLuint vIter = 0; vIter < vertexCount; vIter++)
+		{
+			OOAbstractVertex *vertex = [vertices objectAtIndex:vIter];
+			OOFloatArray *attribute = [vertex attributeForKey:attrKey];
+			if (attribute == nil)  attribute = emptyAttr;
+			
+			for (unsigned cIter = 0; cIter < size; cIter++)
+			{
+				*next++ = [attribute floatAtIndex:cIter];
+			}
+		}
+		
+		[attributes setObject:[OOFloatArray arrayWithFloatsNoCopy:attrArray
+															count:size * vertexCount
+													 freeWhenDone:YES]
+					   forKey:attrKey];
+	}
+	
+	_renderMesh = [[OORenderMesh alloc] initWithName:[self name] vertexCount:vertexCount attributes:attributes groups:groups];
 	_materialSpecs = [[NSArray alloc] initWithArray:materials];
 }
 
@@ -475,6 +625,23 @@
 		if (EXPECT_NOT(faceGroup == nil))  return nil;
 		
 		[mesh addFaceGroup:faceGroup];
+	}
+	
+	return mesh;
+}
+
+
+- (OOAbstractMesh *) abstractMeshWithMaterialSpecs:(NSArray *)materialSpecs
+{
+	OOAbstractMesh *mesh = [self abstractMesh];
+	
+	if (mesh != nil && materialSpecs != nil)
+	{
+		NSUInteger i, count = [mesh faceGroupCount];
+		for (i = 0; i < count; i++)
+		{
+			[[mesh faceGroupAtIndex:i] setMaterial:[materialSpecs objectAtIndex:i]];
+		}
 	}
 	
 	return mesh;

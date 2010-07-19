@@ -69,6 +69,9 @@
 - (OOAbstractMesh *) abstractMesh;
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
+- (NSString *) meshName;
+- (NSString *) meshDescription;
+
 /*	Smoothing:
 	Before parsing, this determines whether smoothing should be applied to
 	meshes without per-vertex normals.

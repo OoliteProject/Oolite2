@@ -54,7 +54,9 @@
 	OOFloatArray				**_attributeArrays;
 	GLuint						*_attributeSizes;
 	NSArray						*_attributeNames;
-	GLuint						*_vertexBufferObjects;
+	NSDictionary				*_attributeIndices; // String->integer
+	GLuint						*_attributeVBOs;
+	GLuint						*_elementVBOs;
 	
 	OOIndexArray				**_groups;
 	
@@ -64,12 +66,15 @@
 - (id) initWithName:(NSString *)name vertexCount:(NSUInteger)vertexCount attributes:(NSDictionary *)attributes groups:(NSArray *)groups;
 
 - (NSUInteger) attributeIndexForKey:(NSString *)key;
+- (OOFloatArray *) attributeArrayForKey:(NSString *)key;
+- (NSUInteger) attributeSizeForKey:(NSString *)key;
 
 - (void) renderWithMaterials:(NSArray *)materials;
 
-
 - (NSDictionary *) attributeArrays;
 - (NSArray *) indexArrays;
+- (NSDictionary *) attributeIndices;
+- (NSDictionary *) prefixedAttributeIndices;	// Converts "attribute" to "aAttribute".
 - (NSUInteger) vertexCount;
 
 #ifndef NDEBUG

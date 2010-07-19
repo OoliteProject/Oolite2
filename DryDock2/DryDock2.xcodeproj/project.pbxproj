@@ -1,0 +1,726 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A17D13611C1838100F96041 /* JASceneGraphView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D10211C1838100F96041 /* JASceneGraphView.mm */; };
+		1A17D13911C1838100F96041 /* SGLight.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D10811C1838100F96041 /* SGLight.mm */; };
+		1A17D13A11C1838100F96041 /* SGLightManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D10A11C1838100F96041 /* SGLightManager.mm */; };
+		1A17D13B11C1838100F96041 /* SGMaterial.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D10D11C1838100F96041 /* SGMaterial.m */; };
+		1A17D13C11C1838100F96041 /* SGTexture2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D10F11C1838100F96041 /* SGTexture2D.m */; };
+		1A17D13D11C1838100F96041 /* SGAxisNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11211C1838100F96041 /* SGAxisNode.mm */; };
+		1A17D13E11C1838100F96041 /* SGDisplayListCacheNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11411C1838100F96041 /* SGDisplayListCacheNode.mm */; };
+		1A17D14011C1838100F96041 /* SGPointCloudNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11811C1838100F96041 /* SGPointCloudNode.mm */; };
+		1A17D14111C1838100F96041 /* SGSceneNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11A11C1838100F96041 /* SGSceneNode.mm */; };
+		1A17D14211C1838100F96041 /* SGSceneGraph+GraphVizGeneration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11C11C1838100F96041 /* SGSceneGraph+GraphVizGeneration.mm */; };
+		1A17D14311C1838100F96041 /* SGSceneGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D11E11C1838100F96041 /* SGSceneGraph.mm */; };
+		1A17D14411C1838100F96041 /* SGConditionalTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12211C1838100F96041 /* SGConditionalTag.m */; };
+		1A17D14511C1838100F96041 /* SGDepthBufferStateTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12411C1838100F96041 /* SGDepthBufferStateTag.m */; };
+		1A17D14611C1838100F96041 /* SGLineWidthTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12611C1838100F96041 /* SGLineWidthTag.m */; };
+		1A17D14711C1838100F96041 /* SGPointSizeTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12811C1838100F96041 /* SGPointSizeTag.m */; };
+		1A17D14811C1838100F96041 /* SGPolygonModeTag.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12A11C1838100F96041 /* SGPolygonModeTag.m */; };
+		1A17D14911C1838100F96041 /* SGSceneTag.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12C11C1838100F96041 /* SGSceneTag.mm */; };
+		1A17D14A11C1838100F96041 /* SGSimpleTag.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D12E11C1838100F96041 /* SGSimpleTag.mm */; };
+		1A17D14B11C1838100F96041 /* SGMatrixTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D13111C1838100F96041 /* SGMatrixTypes.mm */; };
+		1A17D14C11C1838100F96041 /* SGSceneGraphUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D13311C1838100F96041 /* SGSceneGraphUtilities.m */; };
+		1A17D14D11C1838100F96041 /* SGVectorTypes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D13511C1838100F96041 /* SGVectorTypes.mm */; };
+		1A17D17211C184F200F96041 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A17D17111C184F200F96041 /* OpenGL.framework */; };
+		1A17D19211C1854A00F96041 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A17D19111C1854A00F96041 /* Accelerate.framework */; };
+		1A17D26C11C18F7200F96041 /* DDMainDocumentView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D26B11C18F7200F96041 /* DDMainDocumentView.mm */; };
+		1A17D27511C18FB100F96041 /* DDDocumentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D27411C18FB100F96041 /* DDDocumentWindowController.m */; };
+		1A17D34F11C198A800F96041 /* DDMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D34E11C198A800F96041 /* DDMesh.mm */; };
+		1A17D3AB11C19F2E00F96041 /* DDMeshSceneNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */; };
+		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
+		1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392B811C3CE5B002F405C /* PreviewShader.vs */; };
+		1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392C011C3D0CD002F405C /* PreviewShader.fs */; };
+		1A8A287911F393C400775894 /* MABaseFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A286E11F393C300775894 /* MABaseFuture.m */; };
+		1A8A287A11F393C400775894 /* MACompoundFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287011F393C300775894 /* MACompoundFuture.m */; };
+		1A8A287B11F393C400775894 /* MAFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287211F393C300775894 /* MAFuture.m */; };
+		1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287511F393C300775894 /* MAMethodSignatureCache.m */; };
+		1A8A287D11F393C400775894 /* MAProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287711F393C300775894 /* MAProxy.m */; };
+		1ABAC28011C393FD005301BA /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27F11C393FB005301BA /* OoliteBase.framework */; };
+		1ABAC28111C393FF005301BA /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27911C393F5005301BA /* OoliteGraphics.framework */; };
+		1ABAC28211C3940C005301BA /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27F11C393FB005301BA /* OoliteBase.framework */; };
+		1ABAC28311C3940C005301BA /* OoliteGraphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27911C393F5005301BA /* OoliteGraphics.framework */; };
+		1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* DDDocument.xib */; };
+		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
+		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
+		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
+		8D15AC310486D014006FF6A4 /* DDDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* DDDocument.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC320486D014006FF6A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4B0FDCFA73011CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1ABAC27811C393F5005301BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
+			remoteInfo = OoliteGraphics;
+		};
+		1ABAC27E11C393FB005301BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = OoliteBase;
+		};
+		1ABAC28411C39415005301BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
+			remoteInfo = OoliteGraphics;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1A17CF7111C16C7000F96041 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1ABAC28211C3940C005301BA /* OoliteBase.framework in Copy Frameworks */,
+				1ABAC28311C3940C005301BA /* OoliteGraphics.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A17D10111C1838100F96041 /* JASceneGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JASceneGraphView.h; sourceTree = "<group>"; };
+		1A17D10211C1838100F96041 /* JASceneGraphView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JASceneGraphView.mm; sourceTree = "<group>"; };
+		1A17D10711C1838100F96041 /* SGLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGLight.h; sourceTree = "<group>"; };
+		1A17D10811C1838100F96041 /* SGLight.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGLight.mm; sourceTree = "<group>"; };
+		1A17D10911C1838100F96041 /* SGLightManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGLightManager.h; sourceTree = "<group>"; };
+		1A17D10A11C1838100F96041 /* SGLightManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGLightManager.mm; sourceTree = "<group>"; };
+		1A17D10C11C1838100F96041 /* SGMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGMaterial.h; sourceTree = "<group>"; };
+		1A17D10D11C1838100F96041 /* SGMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGMaterial.m; sourceTree = "<group>"; };
+		1A17D10E11C1838100F96041 /* SGTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGTexture2D.h; sourceTree = "<group>"; };
+		1A17D10F11C1838100F96041 /* SGTexture2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGTexture2D.m; sourceTree = "<group>"; };
+		1A17D11111C1838100F96041 /* SGAxisNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGAxisNode.h; sourceTree = "<group>"; };
+		1A17D11211C1838100F96041 /* SGAxisNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGAxisNode.mm; sourceTree = "<group>"; };
+		1A17D11311C1838100F96041 /* SGDisplayListCacheNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGDisplayListCacheNode.h; sourceTree = "<group>"; };
+		1A17D11411C1838100F96041 /* SGDisplayListCacheNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGDisplayListCacheNode.mm; sourceTree = "<group>"; };
+		1A17D11511C1838100F96041 /* SGImageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGImageNode.h; sourceTree = "<group>"; };
+		1A17D11611C1838100F96041 /* SGImageNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGImageNode.m; sourceTree = "<group>"; };
+		1A17D11711C1838100F96041 /* SGPointCloudNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGPointCloudNode.h; sourceTree = "<group>"; };
+		1A17D11811C1838100F96041 /* SGPointCloudNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGPointCloudNode.mm; sourceTree = "<group>"; };
+		1A17D11911C1838100F96041 /* SGSceneNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSceneNode.h; sourceTree = "<group>"; };
+		1A17D11A11C1838100F96041 /* SGSceneNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGSceneNode.mm; sourceTree = "<group>"; };
+		1A17D11B11C1838100F96041 /* SGSceneGraph+GraphVizGeneration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SGSceneGraph+GraphVizGeneration.h"; sourceTree = "<group>"; };
+		1A17D11C11C1838100F96041 /* SGSceneGraph+GraphVizGeneration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "SGSceneGraph+GraphVizGeneration.mm"; sourceTree = "<group>"; };
+		1A17D11D11C1838100F96041 /* SGSceneGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSceneGraph.h; sourceTree = "<group>"; };
+		1A17D11E11C1838100F96041 /* SGSceneGraph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGSceneGraph.mm; sourceTree = "<group>"; };
+		1A17D11F11C1838100F96041 /* SGSceneGraphBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSceneGraphBase.h; sourceTree = "<group>"; };
+		1A17D12111C1838100F96041 /* SGConditionalTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGConditionalTag.h; sourceTree = "<group>"; };
+		1A17D12211C1838100F96041 /* SGConditionalTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGConditionalTag.m; sourceTree = "<group>"; };
+		1A17D12311C1838100F96041 /* SGDepthBufferStateTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGDepthBufferStateTag.h; sourceTree = "<group>"; };
+		1A17D12411C1838100F96041 /* SGDepthBufferStateTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGDepthBufferStateTag.m; sourceTree = "<group>"; };
+		1A17D12511C1838100F96041 /* SGLineWidthTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGLineWidthTag.h; sourceTree = "<group>"; };
+		1A17D12611C1838100F96041 /* SGLineWidthTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGLineWidthTag.m; sourceTree = "<group>"; };
+		1A17D12711C1838100F96041 /* SGPointSizeTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGPointSizeTag.h; sourceTree = "<group>"; };
+		1A17D12811C1838100F96041 /* SGPointSizeTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGPointSizeTag.m; sourceTree = "<group>"; };
+		1A17D12911C1838100F96041 /* SGPolygonModeTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGPolygonModeTag.h; sourceTree = "<group>"; };
+		1A17D12A11C1838100F96041 /* SGPolygonModeTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGPolygonModeTag.m; sourceTree = "<group>"; };
+		1A17D12B11C1838100F96041 /* SGSceneTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSceneTag.h; sourceTree = "<group>"; };
+		1A17D12C11C1838100F96041 /* SGSceneTag.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGSceneTag.mm; sourceTree = "<group>"; };
+		1A17D12D11C1838100F96041 /* SGSimpleTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSimpleTag.h; sourceTree = "<group>"; };
+		1A17D12E11C1838100F96041 /* SGSimpleTag.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGSimpleTag.mm; sourceTree = "<group>"; };
+		1A17D13011C1838100F96041 /* SGMatrixTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGMatrixTypes.h; sourceTree = "<group>"; };
+		1A17D13111C1838100F96041 /* SGMatrixTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGMatrixTypes.mm; sourceTree = "<group>"; };
+		1A17D13211C1838100F96041 /* SGSceneGraphUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSceneGraphUtilities.h; sourceTree = "<group>"; };
+		1A17D13311C1838100F96041 /* SGSceneGraphUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGSceneGraphUtilities.m; sourceTree = "<group>"; };
+		1A17D13411C1838100F96041 /* SGVectorTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGVectorTypes.h; sourceTree = "<group>"; };
+		1A17D13511C1838100F96041 /* SGVectorTypes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SGVectorTypes.mm; sourceTree = "<group>"; };
+		1A17D15711C183D700F96041 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionUtils.h; sourceTree = "<group>"; };
+		1A17D16411C1846300F96041 /* JAPropertyListAccessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListAccessors.h; sourceTree = "<group>"; };
+		1A17D17111C184F200F96041 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		1A17D19111C1854A00F96041 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		1A17D26A11C18F7200F96041 /* DDMainDocumentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMainDocumentView.h; sourceTree = "<group>"; };
+		1A17D26B11C18F7200F96041 /* DDMainDocumentView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDMainDocumentView.mm; sourceTree = "<group>"; };
+		1A17D27311C18FB100F96041 /* DDDocumentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDDocumentWindowController.h; sourceTree = "<group>"; };
+		1A17D27411C18FB100F96041 /* DDDocumentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDDocumentWindowController.m; sourceTree = "<group>"; };
+		1A17D34D11C198A800F96041 /* DDMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMesh.h; sourceTree = "<group>"; };
+		1A17D34E11C198A800F96041 /* DDMesh.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDMesh.mm; sourceTree = "<group>"; };
+		1A17D3A911C19F2E00F96041 /* DDMeshSceneNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMeshSceneNode.h; sourceTree = "<group>"; };
+		1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDMeshSceneNode.mm; sourceTree = "<group>"; };
+		1A4CC2D411F4E58700D7144C /* DDSceneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSceneView.h; sourceTree = "<group>"; };
+		1A4CC2D511F4E58700D7144C /* DDSceneView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDSceneView.mm; sourceTree = "<group>"; };
+		1A7392B811C3CE5B002F405C /* PreviewShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.vs; sourceTree = "<group>"; };
+		1A7392C011C3D0CD002F405C /* PreviewShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		1A8A286D11F393C300775894 /* MABaseFuture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MABaseFuture.h; sourceTree = "<group>"; };
+		1A8A286E11F393C300775894 /* MABaseFuture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MABaseFuture.m; sourceTree = "<group>"; };
+		1A8A286F11F393C300775894 /* MACompoundFuture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MACompoundFuture.h; sourceTree = "<group>"; };
+		1A8A287011F393C300775894 /* MACompoundFuture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MACompoundFuture.m; sourceTree = "<group>"; };
+		1A8A287111F393C300775894 /* MAFuture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAFuture.h; sourceTree = "<group>"; };
+		1A8A287211F393C300775894 /* MAFuture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAFuture.m; sourceTree = "<group>"; };
+		1A8A287311F393C300775894 /* MAFutureInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAFutureInternal.h; sourceTree = "<group>"; };
+		1A8A287411F393C300775894 /* MAMethodSignatureCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAMethodSignatureCache.h; sourceTree = "<group>"; };
+		1A8A287511F393C300775894 /* MAMethodSignatureCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAMethodSignatureCache.m; sourceTree = "<group>"; };
+		1A8A287611F393C300775894 /* MAProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAProxy.h; sourceTree = "<group>"; };
+		1A8A287711F393C300775894 /* MAProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAProxy.m; sourceTree = "<group>"; };
+		1A8A287811F393C300775894 /* tester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tester.m; sourceTree = "<group>"; };
+		1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DDDocument.xib; sourceTree = "<group>"; };
+		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2564AD2C0F5327BB00F57823 /* DryDock2_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DryDock2_Prefix.pch; sourceTree = "<group>"; };
+		2A37F4ACFDCFA73011CA2CEA /* DDDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDDocument.m; sourceTree = "<group>"; };
+		2A37F4AEFDCFA73011CA2CEA /* DDDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDDocument.h; sourceTree = "<group>"; };
+		2A37F4B0FDCFA73011CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2A37F4BAFDCFA73011CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
+		8D15AC360486D014006FF6A4 /* DryDock2-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; languageSpecificationIdentifier = html; lastKnownFileType = text.plist.xml; path = "DryDock2-Info.plist"; sourceTree = "<group>"; };
+		8D15AC370486D014006FF6A4 /* Dry Dock for Oolite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dry Dock for Oolite.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D15AC330486D014006FF6A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
+				1A17D17211C184F200F96041 /* OpenGL.framework in Frameworks */,
+				1A17D19211C1854A00F96041 /* Accelerate.framework in Frameworks */,
+				1ABAC28011C393FD005301BA /* OoliteBase.framework in Frameworks */,
+				1ABAC28111C393FF005301BA /* OoliteGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FB0FE9D524F11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D15AC370486D014006FF6A4 /* Dry Dock for Oolite.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A17D0FF11C1838100F96041 /* SGSceneGraph */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D10011C1838100F96041 /* Accessories */,
+				1A17D10511C1838100F96041 /* Scene Graph */,
+			);
+			name = SGSceneGraph;
+			path = Dependencies/SGSceneGraph;
+			sourceTree = "<group>";
+		};
+		1A17D10011C1838100F96041 /* Accessories */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D10111C1838100F96041 /* JASceneGraphView.h */,
+				1A17D10211C1838100F96041 /* JASceneGraphView.mm */,
+			);
+			path = Accessories;
+			sourceTree = "<group>";
+		};
+		1A17D10511C1838100F96041 /* Scene Graph */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D10611C1838100F96041 /* Lighting */,
+				1A17D10B11C1838100F96041 /* Materials */,
+				1A17D11011C1838100F96041 /* Nodes */,
+				1A17D11B11C1838100F96041 /* SGSceneGraph+GraphVizGeneration.h */,
+				1A17D11C11C1838100F96041 /* SGSceneGraph+GraphVizGeneration.mm */,
+				1A17D11D11C1838100F96041 /* SGSceneGraph.h */,
+				1A17D11E11C1838100F96041 /* SGSceneGraph.mm */,
+				1A17D11F11C1838100F96041 /* SGSceneGraphBase.h */,
+				1A17D12011C1838100F96041 /* Tags */,
+				1A17D12F11C1838100F96041 /* Utilities */,
+			);
+			path = "Scene Graph";
+			sourceTree = "<group>";
+		};
+		1A17D10611C1838100F96041 /* Lighting */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D10711C1838100F96041 /* SGLight.h */,
+				1A17D10811C1838100F96041 /* SGLight.mm */,
+				1A17D10911C1838100F96041 /* SGLightManager.h */,
+				1A17D10A11C1838100F96041 /* SGLightManager.mm */,
+			);
+			path = Lighting;
+			sourceTree = "<group>";
+		};
+		1A17D10B11C1838100F96041 /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D10C11C1838100F96041 /* SGMaterial.h */,
+				1A17D10D11C1838100F96041 /* SGMaterial.m */,
+				1A17D10E11C1838100F96041 /* SGTexture2D.h */,
+				1A17D10F11C1838100F96041 /* SGTexture2D.m */,
+			);
+			path = Materials;
+			sourceTree = "<group>";
+		};
+		1A17D11011C1838100F96041 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D11111C1838100F96041 /* SGAxisNode.h */,
+				1A17D11211C1838100F96041 /* SGAxisNode.mm */,
+				1A17D11311C1838100F96041 /* SGDisplayListCacheNode.h */,
+				1A17D11411C1838100F96041 /* SGDisplayListCacheNode.mm */,
+				1A17D11511C1838100F96041 /* SGImageNode.h */,
+				1A17D11611C1838100F96041 /* SGImageNode.m */,
+				1A17D11711C1838100F96041 /* SGPointCloudNode.h */,
+				1A17D11811C1838100F96041 /* SGPointCloudNode.mm */,
+				1A17D11911C1838100F96041 /* SGSceneNode.h */,
+				1A17D11A11C1838100F96041 /* SGSceneNode.mm */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		1A17D12011C1838100F96041 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D12111C1838100F96041 /* SGConditionalTag.h */,
+				1A17D12211C1838100F96041 /* SGConditionalTag.m */,
+				1A17D12311C1838100F96041 /* SGDepthBufferStateTag.h */,
+				1A17D12411C1838100F96041 /* SGDepthBufferStateTag.m */,
+				1A17D12511C1838100F96041 /* SGLineWidthTag.h */,
+				1A17D12611C1838100F96041 /* SGLineWidthTag.m */,
+				1A17D12711C1838100F96041 /* SGPointSizeTag.h */,
+				1A17D12811C1838100F96041 /* SGPointSizeTag.m */,
+				1A17D12911C1838100F96041 /* SGPolygonModeTag.h */,
+				1A17D12A11C1838100F96041 /* SGPolygonModeTag.m */,
+				1A17D12B11C1838100F96041 /* SGSceneTag.h */,
+				1A17D12C11C1838100F96041 /* SGSceneTag.mm */,
+				1A17D12D11C1838100F96041 /* SGSimpleTag.h */,
+				1A17D12E11C1838100F96041 /* SGSimpleTag.mm */,
+			);
+			path = Tags;
+			sourceTree = "<group>";
+		};
+		1A17D12F11C1838100F96041 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D13011C1838100F96041 /* SGMatrixTypes.h */,
+				1A17D13111C1838100F96041 /* SGMatrixTypes.mm */,
+				1A17D13211C1838100F96041 /* SGSceneGraphUtilities.h */,
+				1A17D13311C1838100F96041 /* SGSceneGraphUtilities.m */,
+				1A17D13411C1838100F96041 /* SGVectorTypes.h */,
+				1A17D13511C1838100F96041 /* SGVectorTypes.mm */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		1A17D26F11C18F8C00F96041 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D34D11C198A800F96041 /* DDMesh.h */,
+				1A17D34E11C198A800F96041 /* DDMesh.mm */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		1A17D27011C18F9000F96041 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1A4CC2D411F4E58700D7144C /* DDSceneView.h */,
+				1A4CC2D511F4E58700D7144C /* DDSceneView.mm */,
+				1A17D26A11C18F7200F96041 /* DDMainDocumentView.h */,
+				1A17D26B11C18F7200F96041 /* DDMainDocumentView.mm */,
+				1A17D3A911C19F2E00F96041 /* DDMeshSceneNode.h */,
+				1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		1A17D27111C18F9700F96041 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4AEFDCFA73011CA2CEA /* DDDocument.h */,
+				2A37F4ACFDCFA73011CA2CEA /* DDDocument.m */,
+				1A17D27311C18FB100F96041 /* DDDocumentWindowController.h */,
+				1A17D27411C18FB100F96041 /* DDDocumentWindowController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		1A7392BA11C3CE5C002F405C /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				1A7392B811C3CE5B002F405C /* PreviewShader.vs */,
+				1A7392C011C3D0CD002F405C /* PreviewShader.fs */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
+		1A8A286C11F393C300775894 /* MAFuture */ = {
+			isa = PBXGroup;
+			children = (
+				1A8A286D11F393C300775894 /* MABaseFuture.h */,
+				1A8A286E11F393C300775894 /* MABaseFuture.m */,
+				1A8A286F11F393C300775894 /* MACompoundFuture.h */,
+				1A8A287011F393C300775894 /* MACompoundFuture.m */,
+				1A8A287111F393C300775894 /* MAFuture.h */,
+				1A8A287211F393C300775894 /* MAFuture.m */,
+				1A8A287311F393C300775894 /* MAFutureInternal.h */,
+				1A8A287411F393C300775894 /* MAMethodSignatureCache.h */,
+				1A8A287511F393C300775894 /* MAMethodSignatureCache.m */,
+				1A8A287611F393C300775894 /* MAProxy.h */,
+				1A8A287711F393C300775894 /* MAProxy.m */,
+				1A8A287811F393C300775894 /* tester.m */,
+			);
+			name = MAFuture;
+			path = Dependencies/MAFuture;
+			sourceTree = "<group>";
+		};
+		1ABAC26E11C393F5005301BA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1ABAC27911C393F5005301BA /* OoliteGraphics.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1ABAC27B11C393FB005301BA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1ABAC27F11C393FB005301BA /* OoliteBase.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A37F4AAFDCFA73011CA2CEA /* DryDock2 */ = {
+			isa = PBXGroup;
+			children = (
+				1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */,
+				2A37F4ABFDCFA73011CA2CEA /* Classes */,
+				1A17D0FF11C1838100F96041 /* SGSceneGraph */,
+				1A8A286C11F393C300775894 /* MAFuture */,
+				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
+				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
+				19C28FB0FE9D524F11CA2CBB /* Products */,
+			);
+			name = DryDock2;
+			sourceTree = "<group>";
+		};
+		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D26F11C18F8C00F96041 /* Model */,
+				1A17D27011C18F9000F96041 /* View */,
+				1A17D27111C18F9700F96041 /* Controller */,
+			);
+			name = Classes;
+			path = Source;
+			sourceTree = "<group>";
+		};
+		2A37F4AFFDCFA73011CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				2564AD2C0F5327BB00F57823 /* DryDock2_Prefix.pch */,
+				2A37F4B0FDCFA73011CA2CEA /* main.m */,
+				1A17D15711C183D700F96041 /* CollectionUtils.h */,
+				1A17D16411C1846300F96041 /* JAPropertyListAccessors.h */,
+			);
+			name = "Other Sources";
+			path = Source;
+			sourceTree = "<group>";
+		};
+		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
+				8D15AC360486D014006FF6A4 /* DryDock2-Info.plist */,
+				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				1DDD58280DA1D0D100B32029 /* DDDocument.xib */,
+				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+				1A7392BA11C3CE5C002F405C /* Shaders */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A17D19111C1854A00F96041 /* Accelerate.framework */,
+				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+				1A17D17111C184F200F96041 /* OpenGL.framework */,
+				1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */,
+				1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D15AC270486D014006FF6A4 /* DryDock2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "DryDock2" */;
+			buildPhases = (
+				8D15AC2B0486D014006FF6A4 /* Resources */,
+				1A17CF7111C16C7000F96041 /* Copy Frameworks */,
+				8D15AC300486D014006FF6A4 /* Sources */,
+				8D15AC330486D014006FF6A4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1ABAC28511C39415005301BA /* PBXTargetDependency */,
+			);
+			name = DryDock2;
+			productInstallPath = "$(HOME)/Applications";
+			productName = DryDock2;
+			productReference = 8D15AC370486D014006FF6A4 /* Dry Dock for Oolite.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* DryDock2 */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1ABAC27B11C393FB005301BA /* Products */;
+					ProjectRef = 1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */;
+				},
+				{
+					ProductGroup = 1ABAC26E11C393F5005301BA /* Products */;
+					ProjectRef = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8D15AC270486D014006FF6A4 /* DryDock2 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1ABAC27911C393F5005301BA /* OoliteGraphics.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteGraphics.framework;
+			remoteRef = 1ABAC27811C393F5005301BA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1ABAC27F11C393FB005301BA /* OoliteBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteBase.framework;
+			remoteRef = 1ABAC27E11C393FB005301BA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D15AC2B0486D014006FF6A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */,
+				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */,
+				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
+				1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */,
+				1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D15AC300486D014006FF6A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D15AC310486D014006FF6A4 /* DDDocument.m in Sources */,
+				8D15AC320486D014006FF6A4 /* main.m in Sources */,
+				1A17D13611C1838100F96041 /* JASceneGraphView.mm in Sources */,
+				1A17D13911C1838100F96041 /* SGLight.mm in Sources */,
+				1A17D13A11C1838100F96041 /* SGLightManager.mm in Sources */,
+				1A17D13B11C1838100F96041 /* SGMaterial.m in Sources */,
+				1A17D13C11C1838100F96041 /* SGTexture2D.m in Sources */,
+				1A17D13D11C1838100F96041 /* SGAxisNode.mm in Sources */,
+				1A17D13E11C1838100F96041 /* SGDisplayListCacheNode.mm in Sources */,
+				1A17D14011C1838100F96041 /* SGPointCloudNode.mm in Sources */,
+				1A17D14111C1838100F96041 /* SGSceneNode.mm in Sources */,
+				1A17D14211C1838100F96041 /* SGSceneGraph+GraphVizGeneration.mm in Sources */,
+				1A17D14311C1838100F96041 /* SGSceneGraph.mm in Sources */,
+				1A17D14411C1838100F96041 /* SGConditionalTag.m in Sources */,
+				1A17D14511C1838100F96041 /* SGDepthBufferStateTag.m in Sources */,
+				1A17D14611C1838100F96041 /* SGLineWidthTag.m in Sources */,
+				1A17D14711C1838100F96041 /* SGPointSizeTag.m in Sources */,
+				1A17D14811C1838100F96041 /* SGPolygonModeTag.m in Sources */,
+				1A17D14911C1838100F96041 /* SGSceneTag.mm in Sources */,
+				1A17D14A11C1838100F96041 /* SGSimpleTag.mm in Sources */,
+				1A17D14B11C1838100F96041 /* SGMatrixTypes.mm in Sources */,
+				1A17D14C11C1838100F96041 /* SGSceneGraphUtilities.m in Sources */,
+				1A17D14D11C1838100F96041 /* SGVectorTypes.mm in Sources */,
+				1A17D26C11C18F7200F96041 /* DDMainDocumentView.mm in Sources */,
+				1A17D27511C18FB100F96041 /* DDDocumentWindowController.m in Sources */,
+				1A17D34F11C198A800F96041 /* DDMesh.mm in Sources */,
+				1A17D3AB11C19F2E00F96041 /* DDMeshSceneNode.mm in Sources */,
+				1A8A287911F393C400775894 /* MABaseFuture.m in Sources */,
+				1A8A287A11F393C400775894 /* MACompoundFuture.m in Sources */,
+				1A8A287B11F393C400775894 /* MAFuture.m in Sources */,
+				1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */,
+				1A8A287D11F393C400775894 /* MAProxy.m in Sources */,
+				1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1ABAC28511C39415005301BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteGraphics;
+			targetProxy = 1ABAC28411C39415005301BA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1660FE840EACC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58280DA1D0D100B32029 /* DDDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58290DA1D0D100B32029 /* English */,
+			);
+			name = DDDocument.xib;
+			sourceTree = "<group>";
+		};
+		1DDD582A0DA1D0D100B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD582B0DA1D0D100B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2A37F4BAFDCFA73011CA2CEA /* English */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C05733C808A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Source/DryDock2_Prefix.pch;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "Resources/DryDock2-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "Dry Dock for Oolite";
+				SDKROOT = macosx10.6;
+				SYMROOT = ../build;
+			};
+			name = Debug;
+		};
+		C05733C908A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Source/DryDock2_Prefix.pch;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "Resources/DryDock2-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "Dry Dock for Oolite";
+				SDKROOT = macosx10.6;
+				SYMROOT = ../build;
+			};
+			name = Release;
+		};
+		C05733CC08A9546B00998B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C05733CD08A9546B00998B17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "DryDock2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733C808A9546B00998B17 /* Debug */,
+				C05733C908A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C05733CC08A9546B00998B17 /* Debug */,
+				C05733CD08A9546B00998B17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+}

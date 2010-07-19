@@ -1,0 +1,38 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\froman\fcharset0 TimesNewRomanPSMT;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11260\viewh17280\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\b\fs28 \cf0 SGSceneGraph
+\b0 \
+
+\fs26 \'a9 2004\'962009 Jens Ayton
+\f1\fs28 \
+\
+SGSceneGraph is a framework, or a basis for a framework \'96\'a0a scaffolding, perhaps? \'96 that I\'92ve been refining for five years without ever getting closer to a complete out-of-the-box solution. Nevertheless, I keep using it, and it makes my life easier, so it\'92s clearly good for something. I\'92ve mostly put it here so that I have a single canonical version for use in my own projects, but others may use it under the MIT/X11 license.\
+\
+SGSceneGraph is a 3D scene graph library for Cocoa. It prioritizes ease of use over performance; the goal is to allow simple 3D manipulation without complex set-up, not to drive the next generation of games.\
+\
+An SGSceneGraph object manages a tree of SGSceneNodes, each of which may have arbitrarily many SGSceneTags attached to it. SGSceneNodes manage rendering and transformations, while SGSceneTags handle state. \'93State\'94 consists of both OpenGL rendering state and a mutable dictionary that is copied to each node\'92s children.\
+\
+An SGSceneGraph also manages a collection of lights through an SGLightManager (but this may be disabled by predefining the SCENGRAPH_LIGHTING macro to 0).\
+\
+For an example of a scene graph, see Example Scene Graph.pdf. The scene graph in the example is rigged so that the scene\'92s contents can be controlled through bindings on tags. For instance, to choose which model is displayed, the $\'93Shade shape\'94 tag is bound to a controller\'92s shapeIndex attribute. Setting the controller\'92s shapeIndex causes the conditional tags in the right hand side to update and the entire scene graph to redraw. (The PDF was generated with {\field{\*\fldinst{HYPERLINK "http://www.pixelglow.com/graphviz/"}}{\fldrslt Graphviz}} and SGSceneGraph\'92s -writeGraphVizToPath: method.)\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\b\fs26 \cf0 What\'92s missing
+\f1\b0\fs28 \
+Most notably, nodes that implement any sort of useful geometry. Every project I\'92ve used it in so far has used a special-purpose node class for its actual content rendering; the scene graph is used to hide and show objects, manage redrawing etc.\
+\
+The material model is rudimentary and barely tested. More flexible materials with bindable shaders (along the lines of my {\field{\*\fldinst{HYPERLINK "http://jens.ayton.se/blag/glsl-uniform-bindings-for-cocoa/"}}{\fldrslt GLSL Bindings}} sample code) would be good.\
+\
+A camera model.\
+\
+A better view; JASceneGraphView is too specialized.\
+\
+Documentation.\
+\
+Some other stuff I forgot.\
+}

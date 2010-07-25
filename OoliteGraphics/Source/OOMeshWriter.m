@@ -183,7 +183,13 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 		[result appendFormat:@"\tdescription: \"%@\"\n", EscapeString(modelDesc)];
 	}
 	
-	NSDictionary *vertexSchema = [mesh vertexSchema];
+	NSDictionary *vertexSchema = [mesh vertexSchemaIgnoringTemporary];
+	if ([vertexSchema objectForKey:kOOSmoothGroupAttributeKey] != nil)
+	{
+		NSMutableDictionary *mutableSchema = [NSMutableDictionary dictionaryWithDictionary:vertexSchema];
+		[mutableSchema removeObjectForKey:kOOSmoothGroupAttributeKey];
+		vertexSchema = mutableSchema;
+	}
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	NSString *key = nil;
 	

@@ -27,6 +27,8 @@
 - (IBAction) flipNormals:(id)sender;
 - (IBAction) reverseWinding:(id)sender;
 
+- (IBAction) deleteSmoothGroups:(id)sender;
+
 // Meshes: an array of DDMesh.
 - (NSArray *) meshes;
 - (void) addMesh:(DDMesh *)mesh;

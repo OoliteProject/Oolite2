@@ -71,10 +71,10 @@
 @interface OOOBJVertexCacheKey: NSObject <NSCopying>
 {
 @private
-	NSUInteger			_v, _vn, _vt;
+	NSUInteger			_v, _vn, _vt, _s;
 }
 
-- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt;
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt s:(NSUInteger)s;
 
 @end
 
@@ -144,6 +144,7 @@
 	_texCoords = [NSMutableArray array];
 	_normals = [NSMutableArray array];
 	_smoothGroups = [NSMutableDictionary dictionary];
+	_smoothGroupIDs = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
 	_materials = [NSMutableDictionary dictionary];
 	_materialGroups = [NSMutableDictionary dictionary];
 	_vertexCache = [NSMutableDictionary dictionary];
@@ -239,10 +240,13 @@
 		}
 	}
 	
+	NSFreeMapTable(_smoothGroupIDs);
+	
 	_positions = nil;
 	_texCoords = nil;
 	_normals = nil;
 	_smoothGroups = nil;
+	_smoothGroupIDs = nil;
 	_currentSmoothGroup = nil;
 	_materials = nil;
 	_materialGroups = nil;
@@ -495,8 +499,8 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return nil;
 	}
 
-	OOOBJVertexCacheKey *cacheKey = [[OOOBJVertexCacheKey alloc] initWithV:ev vn:evn vt:evt];
-	OOMutableAbstractVertex *vertex = [_vertexCache objectForKey:cacheKey];
+	OOOBJVertexCacheKey *cacheKey = [[OOOBJVertexCacheKey alloc] initWithV:ev vn:evn vt:evt s:_currentSmoothGroupID];
+	OOAbstractVertex *vertex = [_vertexCache objectForKey:cacheKey];
 	if (vertex == nil)
 	{
 		/*	Create a vertex object.
@@ -527,6 +531,13 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 			{
 				vertex = [OOAbstractVertex vertexWithAttribute:vAttr forKey:kOOPositionAttributeKey];
 			}
+		}
+		
+		// Smooth groups are relatively rare, so we take the slower path.
+		if (_currentSmoothGroupID != 0)
+		{
+			if (_currentSmoothGroupFloatArray == nil)  _currentSmoothGroupFloatArray = OOFloatArrayFromDouble(_currentSmoothGroupID);
+			vertex = [vertex vertexByAddingAttribute:_currentSmoothGroupFloatArray forKey:kOOSmoothGroupAttributeKey];
 		}
 		
 		[_vertexCache setObject:vertex forKey:cacheKey];
@@ -564,7 +575,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 													  normalIdx:haveNormals ? vn : (NSInteger)NSNotFound];
 		if (v2 == nil)  return NO;
 		
-		OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertex0:v0 vertex1:v1 vertex2:v2];
+		OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertex0:v2 vertex1:v1 vertex2:v0];	// Reverse winding.
 		v1 = v2;
 		
 		[_currentGroup addFace:face];
@@ -707,18 +718,24 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return NO;
 	}
 	
+	_currentSmoothGroupFloatArray = nil;
+	
 	if ([key isEqualToString:@"0"] || [key isEqualToString:@"off"])
 	{
 		// No smooth group.
 		_currentSmoothGroup = nil;
+		_currentSmoothGroupID = 0;
 	}
 	else
 	{
 		_currentSmoothGroup = [_smoothGroups objectForKey:key];
 		if (_currentSmoothGroup == nil)
 		{
-			_currentSmoothGroup = [NSArray array];
+			_currentSmoothGroup = [NSMutableArray array];
 			[_smoothGroups setObject:_currentSmoothGroup forKey:key];
+			
+			_currentSmoothGroupID = [_smoothGroups count];
+			NSMapInsertKnownAbsent(_smoothGroupIDs, key, (void *)_currentSmoothGroupID);
 		}
 	}
 	
@@ -980,13 +997,14 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 @implementation OOOBJVertexCacheKey
 
-- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt s:(NSUInteger)s
 {
 	if ((self = [super init]))
 	{
 		_v = v;
 		_vn = vn;
 		_vt = vt;
+		_s = s;
 	}
 	return self;
 }
@@ -994,15 +1012,18 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 - (BOOL) isEqual:(id)other
 {
+	if (self == other)  return YES;
+	
 	NSParameterAssert([other isKindOfClass:[OOOBJVertexCacheKey class]]);
 	OOOBJVertexCacheKey *otherKey = other;
-	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt;
+	
+	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt && _s == otherKey->_s;
 }
 
 
 - (NSUInteger) hash
 {
-	return (_v * 1089) ^ (_vn * 33) ^ _vt;
+	return (_v * 1089) ^ (_vn * 33) ^ (_vt * 17) ^ _s;
 }
 
 

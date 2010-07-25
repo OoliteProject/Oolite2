@@ -146,6 +146,7 @@ extern NSString * const kOOPositionAttributeKey;	// "position"
 extern NSString * const kOONormalAttributeKey;		// "normal"
 extern NSString * const kOOTangentAttributeKey;		// "tangent"
 extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
+extern NSString * const kOOSmoothGroupAttributeKey;	// "_smoothGroup" -- not saved in oomesh.
 
 
 @interface NSArray (OOAbstractVertex)

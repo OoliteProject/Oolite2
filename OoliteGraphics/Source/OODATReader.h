@@ -48,6 +48,7 @@
 										_explicitNormals: 1,
 										_explicitTangents: 1,
 										_usesSmoothGroups: 1,
+										_hasSmoothGroups: 1,
 										_haveTriangleAreas: 1;
 	
 	NSUInteger							_materialCount;

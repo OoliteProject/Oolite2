@@ -33,6 +33,7 @@ NSString * const kOOPositionAttributeKey	= @"position";
 NSString * const kOONormalAttributeKey		= @"normal";
 NSString * const kOOTangentAttributeKey		= @"tangent";
 NSString * const kOOTexCoordsAttributeKey	= @"texCoords";
+NSString * const kOOSmoothGroupAttributeKey	= @"_smoothGroup";
 
 
 #ifndef NDEBUG

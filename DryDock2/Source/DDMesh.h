@@ -45,4 +45,7 @@
 - (void) flipNormals;
 - (void) reverseWinding;
 
+@property (readonly) BOOL hasSmoothGroups;
+- (void) deleteSmoothGroups;
+
 @end

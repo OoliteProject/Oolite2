@@ -271,6 +271,25 @@ extern "C" {
 }
 
 
+- (BOOL) hasSmoothGroups
+{
+	return [self.abstractMesh.vertexSchema objectForKey:kOOSmoothGroupAttributeKey] != nil;
+}
+
+
+- (void) deleteSmoothGroups
+{
+	OOAbstractMesh *mesh = self.abstractMesh;
+	NSMutableDictionary *schema = [NSMutableDictionary dictionaryWithDictionary:mesh.vertexSchema];
+	
+	if ([schema objectForKey:kOOSmoothGroupAttributeKey] != nil)
+	{
+		[schema removeObjectForKey:kOOSmoothGroupAttributeKey];
+		[mesh restrictToSchema:schema];
+	}
+}
+
+
 - (void) priv_abstractMeshChanged:(NSNotification *)notification
 {
 	if (!_pendingRenderMeshUpdate && [notification.userInfo oo_boolForKey:kOOAbstractMeshChangeAffectsRenderMesh])

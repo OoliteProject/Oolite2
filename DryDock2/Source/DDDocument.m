@@ -109,6 +109,7 @@
 }
 
 
+// Simple undo: just replace entire mesh[es].
 - (void) performSimpleUndoWithMeshes:(NSArray *)meshes
 {
 	NSMutableArray *redoMeshes = [NSMutableArray arrayWithCapacity:self.meshes.count];
@@ -137,6 +138,27 @@
 	
 	[self.undoManager setActionName:actionName];
 	[[self.undoManager prepareWithInvocationTarget:self] performSimpleUndoWithMeshes:meshes];
+}
+
+
+- (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
+{
+	SEL action = [anItem action];
+	
+	if (action == @selector(deleteSmoothGroups:))
+	{
+		for (DDMesh *mesh in self.meshes)
+		{
+			if (mesh.hasSmoothGroups)  return YES;
+		}
+		return NO;
+	}
+	
+	if ([super respondsToSelector:@selector(validateUserInterfaceItem:)])
+	{
+		return [super validateUserInterfaceItem:anItem];
+	}
+	return YES;
 }
 
 
@@ -189,6 +211,19 @@
 	for (DDMesh *mesh in self.meshes)
 	{
 		[mesh reverseWinding];
+	}
+}
+
+
+- (IBAction) deleteSmoothGroups:(id)sender
+{
+	[self prepareSimpleUndoWithName:NSLocalizedString(@"Delete Smooth Groups", NULL)];
+	
+	// TODO: deal with selections.
+	for (DDMesh *mesh in self.meshes)
+	{
+		[mesh deleteSmoothGroups];
+		[mesh generateNormalsSmooth:YES];
 	}
 }
 

@@ -457,8 +457,8 @@ enum
 		
 		Vector v;
 		OK = [_lexer readReal:&v.x] &&
-		[_lexer readReal:&v.y] &&
-		[_lexer readReal:&v.z];
+			 [_lexer readReal:&v.y] &&
+			 [_lexer readReal:&v.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
@@ -490,7 +490,7 @@ enum
 	}
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
+	NSMapTable *smoothGroups = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
 	
 	for (NSUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
 	{
@@ -499,8 +499,8 @@ enum
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		NSUInteger smoothGroupID, unused, faceVertexCount;
 		OK = [_lexer readInteger:&smoothGroupID] &&
-		[_lexer readInteger:&unused] &&
-		[_lexer readInteger:&unused];
+			 [_lexer readInteger:&unused] &&
+			 [_lexer readInteger:&unused];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
@@ -508,21 +508,20 @@ enum
 		}
 		
 		/*	Canonicalize smooth group IDs. Starts with number 1, using 0
-		 as "unknown" marker.
-		 */
-		NSNumber *key = [NSNumber numberWithUnsignedInteger:smoothGroupID];
-		uint16_t smoothGroup = [smoothGroups oo_unsignedIntForKey:key];
+			 as "unknown" marker.
+		*/
+		NSInteger smoothGroup = (NSInteger)NSMapGet(smoothGroups, (void *)smoothGroupID);
 		if (smoothGroup == 0)
 		{
-			smoothGroup = [smoothGroups count] + 1;
-			[smoothGroups setObject:[NSNumber numberWithUnsignedInteger:smoothGroup] forKey:key];
+			smoothGroup = NSCountMapTable(smoothGroups) + 1;
+			NSMapInsertKnownAbsent(smoothGroups, (void *)smoothGroupID, (void *)smoothGroup);
 		}
 		
 		triangle->smoothGroup = smoothGroup;
 		
 		OK = [_lexer readReal:&triangle->normal.x] &&
-		[_lexer readReal:&triangle->normal.y] &&
-		[_lexer readReal:&triangle->normal.z];
+			 [_lexer readReal:&triangle->normal.y] &&
+			 [_lexer readReal:&triangle->normal.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
@@ -545,8 +544,8 @@ enum
 		}
 		
 		OK = [_lexer readInteger:&triangle->vertex[0]] &&
-		[_lexer readInteger:&triangle->vertex[1]] &&
-		[_lexer readInteger:&triangle->vertex[2]];
+			 [_lexer readInteger:&triangle->vertex[1]] &&
+			 [_lexer readInteger:&triangle->vertex[2]];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
@@ -568,7 +567,10 @@ enum
 		}
 	}
 	
-	_usesSmoothGroups = [smoothGroups count] > 1;
+	_hasSmoothGroups = NSCountMapTable(smoothGroups) > 1;
+	_usesSmoothGroups = _hasSmoothGroups;
+	
+	NSFreeMapTable(smoothGroups);
 	[pool drain];
 	
 	return OK;
@@ -1011,10 +1013,6 @@ enum
 		}
 	}
 	
-#define UNIQUE_VERTICES 0
-#if UNIQUE_VERTICES
-	NSMutableSet *uniquedVertices = [NSMutableSet set];
-#endif
 	_mesh = [OOAbstractMesh new];
 	
 	NSString *name = [self priv_displayName];
@@ -1099,6 +1097,13 @@ enum
 														  forKey:kOOTexCoordsAttributeKey];
 					}
 					
+					if (_hasSmoothGroups)
+					{
+						// Add in smooth group to keep vertices unique.
+						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromDouble(triangle->smoothGroup)
+														  forKey:kOOSmoothGroupAttributeKey];
+					}
+					
 					triVertices[vIter] = vertex;
 				}
 				
@@ -1140,6 +1145,8 @@ enum
 		[faceGroup release];
 	}
 	[pool drain];
+	
+	[_mesh uniqueVertices];
 	
 	[_progressReporter task:self reportsProgress:1.0f];
 	return YES;

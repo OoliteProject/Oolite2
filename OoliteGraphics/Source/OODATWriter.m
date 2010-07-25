@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OODATWriter.h"
-#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 

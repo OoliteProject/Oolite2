@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OOMeshWriter.h"
-#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 
@@ -418,7 +417,6 @@ static NSString *IndentTabs(NSUInteger count)
 		}
 		return result;
 	}
-
 }
 
 

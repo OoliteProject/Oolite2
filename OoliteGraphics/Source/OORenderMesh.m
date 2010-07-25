@@ -247,8 +247,6 @@
 
 - (void) renderWithMaterials:(NSArray *)materials
 {
-	// FIXME
-	
 	if (_attributeVBOs == NULL)
 	{
 		[self priv_setUpVBOs];

@@ -24,7 +24,6 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "OOProblemReporting.h"
 #import "OOProgressReporting.h"
 
 @class OOAbstractMesh;

@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OODATReader.h"
-#import "OOProblemReporting.h"
 #import "OODATLexer.h"
 
 #import "OOAbstractMesh.h"
@@ -532,12 +531,12 @@ enum
 		CleanVector(&triangle->normal);
 		
 		/*	Oolite (and Dry Dock) attempt to "support" more than three
-		 vertices for legacy files by only using the first three and
-		 then skipping the rest. However, this leaves the texture
-		 coordinates in the TEXTURES section ill-defined. Without a
-		 real example of such a file, it's not clear how to implement
-		 this support in a way that would actually be useful.
-		 */
+			vertices for legacy files by only using the first three and
+			then skipping the rest. However, this leaves the texture
+			coordinates in the TEXTURES section ill-defined. Without a
+			real example of such a file, it's not clear how to implement
+			this support in a way that would actually be useful.
+		*/
 		OK = [_lexer readInteger:&faceVertexCount];
 		if (!OK || faceVertexCount != 3)
 		{
@@ -1061,7 +1060,9 @@ enum
 				
 				for (vIter = 0; vIter < 3; vIter++)
 				{
-					NSUInteger vi = triangle->vertex[vIter];
+					NSUInteger vindex = 2 - vIter;	// Reverse winding to convert from Oolite 1.x convention to Oolite 2.x convention.
+					
+					NSUInteger vi = triangle->vertex[vindex];
 					NSAssert(vi < _fileVertexCount, @"Vertex index out of range.");
 					
 					OOAbstractVertex *vertex = nil;
@@ -1094,7 +1095,7 @@ enum
 					if (haveMaterial)
 					{
 						// Add in texture coordinate.
-						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromVector2D(triangle->texCoords[vIter])
+						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromVector2D(triangle->texCoords[vindex])
 														  forKey:kOOTexCoordsAttributeKey];
 					}
 					

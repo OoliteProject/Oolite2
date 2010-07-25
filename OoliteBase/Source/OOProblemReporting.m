@@ -24,6 +24,8 @@
 */
 
 #import "OOProblemReporting.h"
+#import "OOCocoa.h"
+#import "OOLogging.h"
 
 
 void OOReportIssueWithArgs(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, va_list args)

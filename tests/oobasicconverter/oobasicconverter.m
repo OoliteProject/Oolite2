@@ -39,33 +39,7 @@ int main (int argc, const char * argv[])
 
 static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues)
 {
-	id <OOMeshReading> reader = nil;
-	NSString *ext = [[path pathExtension] lowercaseString];
-	
-	if ([ext isEqualToString:@"dat"])
-	{
-		OODATReader *datReader = [[OODATReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-		//	[datReader setSmoothing:YES];
-		[datReader setBrokenSmoothing:YES];
-		reader = datReader;
-	}
-	else if ([ext isEqualToString:@"oomesh"])
-	{
-		reader = [[OOMeshReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	}
-	else if ([ext isEqualToString:@"obj"])
-	{
-		reader = [[OOOBJReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	}
-	else if ([ext isEqualToString:@"ctm"])
-	{
-		reader = [[OOCTMReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	}
-	else
-	{
-		OOReportError(issues, @"%@: unknown mesh type.", [path lastPathComponent]);
-		return nil;
-	}
+	id <OOMeshReading> reader = OOReadMeshFromFile(path, progressReporter, issues);
 	
 #if 1
 	return [reader abstractMesh];

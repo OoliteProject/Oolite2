@@ -8,8 +8,6 @@ extern "C" {
 #import "OOOpenGL.h"
 #import "OOOpenGLUtilities.h"
 
-#import "OOProblemReporting.h"
-
 #import "OOAbstractMesh.h"
 
 #import "OODATReader.h"

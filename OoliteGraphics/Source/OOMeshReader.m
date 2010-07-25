@@ -26,7 +26,6 @@
 
 #import "OOMeshReader.h"
 #import "OOMeshLexer.h"
-#import "OOProblemReporting.h"
 #import "OOIndexArray.h"
 
 #import "OORenderMesh.h"

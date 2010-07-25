@@ -101,7 +101,7 @@ static const GLuint kFallbackAttributes[] =
 	if (self == nil)  return nil;
 	
 	_radius = 1.0;
-	[self resetCamera];
+	[self resetCamera:nil];
 	self.cameraType = kViewType3D;
 	
 	return self;
@@ -172,11 +172,11 @@ static const GLuint kFallbackAttributes[] =
 {
 	_radius = inRadius;
 	if (_radius < 1) _radius = 1;
-	[self resetZoom];
+	[self resetZoom:nil];
 }
 
 
-- (void)resetRotation
+- (IBAction) resetRotation:(id)sender
 {
 	_cameraRotation.SetIdentity();
 	_cameraRotation.RotateY(-30.0f * M_PI / 180.0f);
@@ -185,23 +185,23 @@ static const GLuint kFallbackAttributes[] =
 }
 
 
-- (void)resetPan
+- (IBAction) resetPan:(id)sender
 {
 	[self setFocusPoint:kSGVector3Zero];
 }
 
 
-- (void)resetZoom
+- (IBAction) resetZoom:(id)sender
 {
 	self.cameraDistance = _radius * -2.5;
 }
 
 
-- (void)resetCamera
+- (IBAction) resetCamera:(id)sender
 {
-	[self resetRotation];
-	[self resetPan];
-	[self resetZoom];
+	[self resetRotation:sender];
+	[self resetPan:sender];
+	[self resetZoom:sender];
 }
 
 

@@ -84,10 +84,10 @@ typedef enum
 
 @property (nonatomic) JASceneGraphViewCameraType cameraType;
 
-- (void) resetRotation;
-- (void) resetPan;
-- (void) resetZoom;
-- (void) resetCamera;
+- (IBAction) resetRotation:(id)sender;
+- (IBAction) resetPan:(id)sender;
+- (IBAction) resetZoom:(id)sender;
+- (IBAction) resetCamera:(id)sender;
 
 // Subclass stuff
 - (unsigned) dragActionForEvent:(NSEvent *)inEvent;

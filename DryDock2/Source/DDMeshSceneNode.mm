@@ -20,8 +20,16 @@
 @property (readwrite) OORenderMesh *renderMesh;
 @property (readwrite, assign) NSArray *materialSpecifications;
 
-- (void) priv_renderImmediateMode;
+- (void) priv_renderFilledNormal;
+- (void) priv_renderFilledWhite;
+- (void) priv_renderWireframe;
 - (void) priv_renderNormalsWithScale:(float)scale;
+
+- (void) priv_renderImmediateMode;
+
+- (OOShaderProgram *) priv_whiteShader;
+- (OOShaderProgram *) priv_wireframeShader;
+- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name;
 
 @end
 
@@ -74,44 +82,51 @@
 }
 
 
-- (void) renderWithState:(NSDictionary *)inState
+- (void) renderWithState:(NSDictionary *)state
 {
-//	OOLogOpenGLState();
-//	[self priv_renderNormalsWithScale:0.01f];
-	
-	OOGL(glEnable(GL_CULL_FACE));
-	
-#if 1
-	OORenderMesh *renderMesh = self.renderMesh;
-	if (renderMesh == nil)  return;
-	
-	if (_shader == nil)
+	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:0.1f];
+	if ([state oo_boolForKey:@"show wireframe"])  [self priv_renderWireframe];
+	if ([state oo_boolForKey:@"show faces"])
 	{
-		NSURL *url = [[NSBundle mainBundle] URLForResource:@"PreviewShader" withExtension:@"vs"];
-		NSString *vertexShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-		url = [[NSBundle mainBundle] URLForResource:@"PreviewShader" withExtension:@"fs"];
-		NSString *fragmentShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-		
-		_shader = [OOShaderProgram shaderProgramWithVertexShader:vertexShader
-												  fragmentShader:fragmentShader
-												vertexShaderName:@"PreviewShader.vs"
-												vertexShaderName:@"PreviewShader.fs"
-														  prefix:nil
-											   attributeBindings:renderMesh.prefixedAttributeIndices];
+		if ([state oo_boolForKey:@"use white shader"])  [self priv_renderFilledWhite];
+		else  [self priv_renderFilledNormal];
 	}
 	
-	// TODO: reify materials.
-	[_shader apply];
-	
-	[renderMesh renderWithMaterials:nil];
-	
 	[OOShaderProgram applyNone];
-#else
-	[self priv_renderImmediateMode];
-#endif
-	OOGL(glDisable(GL_CULL_FACE));
-	
 	OOCheckOpenGLErrors(@"After rendering DDMeshSceneNode");
+}
+
+
+- (void) priv_renderFilledNormal
+{
+	// TODO: use materials.
+	[self priv_renderFilledWhite];
+}
+
+
+- (void) priv_renderFilledWhite
+{
+	[[self priv_whiteShader] apply];
+	
+	OOGL(glEnable(GL_CULL_FACE));
+	[self.renderMesh renderWithMaterials:nil];
+	OOGL(glDisable(GL_CULL_FACE));
+}
+
+
+- (void) priv_renderWireframe
+{
+	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glPolygonOffset(1, 1));
+	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+	
+	[[self priv_wireframeShader] apply];
+	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.7f, 0.0f, 0.0f));
+	
+	[self.renderMesh renderWithMaterials:nil];
+	
+	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
 }
 
 
@@ -168,18 +183,62 @@
 		next += 6;
 	}
 	
-	SGWFModeContext wfmc;
-	SGEnterWireframeMode(&wfmc);
+	[[self priv_wireframeShader] apply];
+	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.0f, 0.0f, 0.0f));
 	
-	OOGL(glColor3f(0.0f, 1.0f, 1.0f));
+	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glPolygonOffset(1, 1));
+	
+	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
 	OOGL(glEnableClientState(GL_VERTEX_ARRAY));
 	OOGL(glVertexPointer(3, GL_FLOAT, 0, buffer));
 	OOGL(glDrawArrays(GL_LINES, 0, vCount * 2));
 	OOGL(glDisableClientState(GL_VERTEX_ARRAY));
 	
-	SGExitWireframeMode(&wfmc);
+	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
 	
 	free(buffer);
+}
+
+
+- (OOShaderProgram *) priv_whiteShader
+{
+	if (_shader == nil)
+	{
+		_shader = [self priv_loadShaderNamed:@"PreviewShader"];
+	}
+	return _shader;
+}
+
+
+- (OOShaderProgram *) priv_wireframeShader
+{
+	if (_wireframeShader == nil)
+	{
+		_wireframeShader = [self priv_loadShaderNamed:@"WireframeShader"];
+		if (_wireframeShader != nil)
+		{
+			OOGL(_wireframeColorUniform = glGetUniformLocation(_wireframeShader.program, "uColor"));
+		}
+	}
+	return _wireframeShader;
+}
+
+
+- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name
+{
+	NSURL *url = [[NSBundle mainBundle] URLForResource:name withExtension:@"vs"];
+	NSString *vertexShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+	url = [[NSBundle mainBundle] URLForResource:name withExtension:@"fs"];
+	NSString *fragmentShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+	
+	return [OOShaderProgram shaderProgramWithVertexShader:vertexShader
+										   fragmentShader:fragmentShader
+										 vertexShaderName:[name stringByAppendingPathExtension:@"vs"]
+										 vertexShaderName:[name stringByAppendingPathExtension:@"fs"]
+												   prefix:nil
+										attributeBindings:self.renderMesh.prefixedAttributeIndices];
 }
 
 @end

@@ -32,4 +32,15 @@
 
 - (IBAction) takeViewFromTag:(NSMenuItem *)sender;
 
+- (IBAction) toggleShowWireframe:(id)sender;
+- (IBAction) toggleShowFaces:(id)sender;
+- (IBAction) toggleShowNormals:(id)sender;
+- (IBAction) toggleShowTangents:(id)sender;
+
+- (IBAction) switchToWhiteShader:(id)sender;
+- (IBAction) switchToMaterialShader:(id)sender;
+
+- (IBAction) resetCamera:(id)sender;
+- (IBAction) recenterCamera:(id)sender;
+
 @end

@@ -24,6 +24,7 @@
 */
 
 #import "SGConditionalTag.h"
+#import "CollectionUtils.h"
 
 
 @implementation SGConditionalTag

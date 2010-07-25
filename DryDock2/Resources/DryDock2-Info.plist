@@ -89,7 +89,7 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Oolite Mesh</string>
+			<string>Oolite 2 Mesh</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.oolite.oomesh</string>
 			<key>UTTypeTagSpecification</key>
@@ -110,7 +110,7 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Oolite Model</string>
+			<string>Oolite 1 Mesh</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.aegidian.oolite.mesh</string>
 			<key>UTTypeTagSpecification</key>

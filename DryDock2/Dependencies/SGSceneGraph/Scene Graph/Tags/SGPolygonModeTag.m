@@ -24,6 +24,7 @@
 */
 
 #import "SGPolygonModeTag.h"
+#import "CollectionUtils.h"
 
 
 @implementation SGPolygonModeTag

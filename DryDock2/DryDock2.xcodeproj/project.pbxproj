@@ -34,7 +34,16 @@
 		1A17D27511C18FB100F96041 /* DDDocumentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D27411C18FB100F96041 /* DDDocumentWindowController.m */; };
 		1A17D34F11C198A800F96041 /* DDMesh.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D34E11C198A800F96041 /* DDMesh.mm */; };
 		1A17D3AB11C19F2E00F96041 /* DDMeshSceneNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */; };
+		1A2F86B711F7336700435A2E /* ToolbarShowFaces.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B411F7336700435A2E /* ToolbarShowFaces.icns */; };
+		1A2F86B811F7336700435A2E /* ToolbarShowNormals.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B511F7336700435A2E /* ToolbarShowNormals.icns */; };
+		1A2F86B911F7336700435A2E /* ToolbarShowWireframe.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B611F7336700435A2E /* ToolbarShowWireframe.icns */; };
+		1A2F86D411F738B500435A2E /* DDProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F86D311F738B500435A2E /* DDProblemReportManager.m */; };
+		1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86E211F73D5800435A2E /* DDProblemReportManager.xib */; };
+		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; };
+		1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */; };
 		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
+		1A6B97D511F5DC2600B2E78A /* WireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */; };
+		1A6B97D911F5DC7B00B2E78A /* WireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */; };
 		1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392B811C3CE5B002F405C /* PreviewShader.vs */; };
 		1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392C011C3D0CD002F405C /* PreviewShader.fs */; };
 		1A8A287911F393C400775894 /* MABaseFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A286E11F393C300775894 /* MABaseFuture.m */; };
@@ -155,8 +164,20 @@
 		1A17D34E11C198A800F96041 /* DDMesh.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDMesh.mm; sourceTree = "<group>"; };
 		1A17D3A911C19F2E00F96041 /* DDMeshSceneNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMeshSceneNode.h; sourceTree = "<group>"; };
 		1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDMeshSceneNode.mm; sourceTree = "<group>"; };
+		1A2F86B411F7336700435A2E /* ToolbarShowFaces.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ToolbarShowFaces.icns; sourceTree = "<group>"; };
+		1A2F86B511F7336700435A2E /* ToolbarShowNormals.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ToolbarShowNormals.icns; sourceTree = "<group>"; };
+		1A2F86B611F7336700435A2E /* ToolbarShowWireframe.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ToolbarShowWireframe.icns; sourceTree = "<group>"; };
+		1A2F86D211F738B500435A2E /* DDProblemReportManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDProblemReportManager.h; sourceTree = "<group>"; };
+		1A2F86D311F738B500435A2E /* DDProblemReportManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDProblemReportManager.m; sourceTree = "<group>"; };
+		1A2F86E311F73D5800435A2E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DDProblemReportManager.xib; sourceTree = "<group>"; };
+		1A2F870A11F7481B00435A2E /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconFamily.h; sourceTree = "<group>"; };
+		1A2F870B11F7481B00435A2E /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconFamily.m; sourceTree = "<group>"; };
+		1A2F871811F7496400435A2E /* NSString+CarbonFSRefCreation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CarbonFSRefCreation.h"; sourceTree = "<group>"; };
+		1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CarbonFSRefCreation.m"; sourceTree = "<group>"; };
 		1A4CC2D411F4E58700D7144C /* DDSceneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSceneView.h; sourceTree = "<group>"; };
 		1A4CC2D511F4E58700D7144C /* DDSceneView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDSceneView.mm; sourceTree = "<group>"; };
+		1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = WireframeShader.vs; sourceTree = "<group>"; };
+		1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = WireframeShader.fs; sourceTree = "<group>"; };
 		1A7392B811C3CE5B002F405C /* PreviewShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.vs; sourceTree = "<group>"; };
 		1A7392C011C3D0CD002F405C /* PreviewShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1A8A286D11F393C300775894 /* MABaseFuture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MABaseFuture.h; sourceTree = "<group>"; };
@@ -214,8 +235,7 @@
 				1A17D10011C1838100F96041 /* Accessories */,
 				1A17D10511C1838100F96041 /* Scene Graph */,
 			);
-			name = SGSceneGraph;
-			path = Dependencies/SGSceneGraph;
+			path = SGSceneGraph;
 			sourceTree = "<group>";
 		};
 		1A17D10011C1838100F96041 /* Accessories */ = {
@@ -346,8 +366,42 @@
 				2A37F4ACFDCFA73011CA2CEA /* DDDocument.m */,
 				1A17D27311C18FB100F96041 /* DDDocumentWindowController.h */,
 				1A17D27411C18FB100F96041 /* DDDocumentWindowController.m */,
+				1A2F86D211F738B500435A2E /* DDProblemReportManager.h */,
+				1A2F86D311F738B500435A2E /* DDProblemReportManager.m */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		1A2F86B311F7335E00435A2E /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				1A2F86B411F7336700435A2E /* ToolbarShowFaces.icns */,
+				1A2F86B511F7336700435A2E /* ToolbarShowNormals.icns */,
+				1A2F86B611F7336700435A2E /* ToolbarShowWireframe.icns */,
+			);
+			name = Icons;
+			sourceTree = "<group>";
+		};
+		1A2F870811F7480100435A2E /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1A2F870911F7481B00435A2E /* IconFamily */,
+				1A17D0FF11C1838100F96041 /* SGSceneGraph */,
+				1A8A286C11F393C300775894 /* MAFuture */,
+			);
+			name = Libraries;
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		1A2F870911F7481B00435A2E /* IconFamily */ = {
+			isa = PBXGroup;
+			children = (
+				1A2F870A11F7481B00435A2E /* IconFamily.h */,
+				1A2F870B11F7481B00435A2E /* IconFamily.m */,
+				1A2F871811F7496400435A2E /* NSString+CarbonFSRefCreation.h */,
+				1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */,
+			);
+			path = IconFamily;
 			sourceTree = "<group>";
 		};
 		1A7392BA11C3CE5C002F405C /* Shaders */ = {
@@ -355,6 +409,8 @@
 			children = (
 				1A7392B811C3CE5B002F405C /* PreviewShader.vs */,
 				1A7392C011C3D0CD002F405C /* PreviewShader.fs */,
+				1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */,
+				1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -375,8 +431,7 @@
 				1A8A287711F393C300775894 /* MAProxy.m */,
 				1A8A287811F393C300775894 /* tester.m */,
 			);
-			name = MAFuture;
-			path = Dependencies/MAFuture;
+			path = MAFuture;
 			sourceTree = "<group>";
 		};
 		1ABAC26E11C393F5005301BA /* Products */ = {
@@ -400,8 +455,7 @@
 			children = (
 				1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
-				1A17D0FF11C1838100F96041 /* SGSceneGraph */,
-				1A8A286C11F393C300775894 /* MAFuture */,
+				1A2F870811F7480100435A2E /* Libraries */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
@@ -441,7 +495,9 @@
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 				1DDD58280DA1D0D100B32029 /* DDDocument.xib */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
+				1A2F86E211F73D5800435A2E /* DDProblemReportManager.xib */,
 				1A7392BA11C3CE5C002F405C /* Shaders */,
+				1A2F86B311F7335E00435A2E /* Icons */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -536,6 +592,12 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */,
 				1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */,
+				1A6B97D511F5DC2600B2E78A /* WireframeShader.vs in Resources */,
+				1A6B97D911F5DC7B00B2E78A /* WireframeShader.fs in Resources */,
+				1A2F86B711F7336700435A2E /* ToolbarShowFaces.icns in Resources */,
+				1A2F86B811F7336700435A2E /* ToolbarShowNormals.icns in Resources */,
+				1A2F86B911F7336700435A2E /* ToolbarShowWireframe.icns in Resources */,
+				1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +641,9 @@
 				1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */,
 				1A8A287D11F393C400775894 /* MAProxy.m in Sources */,
 				1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */,
+				1A2F86D411F738B500435A2E /* DDProblemReportManager.m in Sources */,
+				1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */,
+				1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,6 +664,14 @@
 				089C1660FE840EACC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1A2F86E211F73D5800435A2E /* DDProblemReportManager.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A2F86E311F73D5800435A2E /* English */,
+			);
+			name = DDProblemReportManager.xib;
 			sourceTree = "<group>";
 		};
 		1DDD58280DA1D0D100B32029 /* DDDocument.xib */ = {

@@ -233,19 +233,23 @@ extern "C" {
 		expected result is a smooth model. However, the generation of flat
 		normals will have de-uniqued the vertices. By deleting all normals
 		and uniquing vertices, we get the expected result.
+		We also need to remove tangents so that they don't cause unwanted
+		uniqueness.
 	*/
-	if (smooth)
+	NSMutableDictionary *schema = [NSMutableDictionary dictionaryWithDictionary:mesh.vertexSchema];
+	BOOL hadTangents = [schema objectForKey:kOOTangentAttributeKey] != nil;
+	
+	if (hadTangents || [schema objectForKey:kOONormalAttributeKey] != nil)
 	{
-		NSMutableDictionary *schema = [NSMutableDictionary dictionaryWithDictionary:mesh.vertexSchema];
-		if ([schema objectForKey:kOONormalAttributeKey] != nil)
-		{
-			[schema removeObjectForKey:kOONormalAttributeKey];
-			[mesh restrictToSchema:schema];
-			[mesh uniqueVertices];
-		}	 
+		[schema removeObjectForKey:kOONormalAttributeKey];
+		[schema removeObjectForKey:kOOTangentAttributeKey];
+		[mesh restrictToSchema:schema];
+		[mesh uniqueVertices];
 	}
 	
 	[mesh synthesizeNormalsSmoothly:smooth replacingExisting:YES];
+	
+	// FIXME: if (hadTangents), synthesize new tangents.
 	
 	OOAbstractFaceGroup *group = nil;
 	for (group in mesh)
@@ -264,7 +268,6 @@ extern "C" {
 - (void) reverseWinding
 {
 	[self.abstractMesh reverseWinding];
-	[self.abstractMesh flipNormals];
 }
 
 

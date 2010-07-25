@@ -24,6 +24,7 @@
 */
 
 #import "SGPointSizeTag.h"
+#import "CollectionUtils.h"
 
 
 @implementation SGPointSizeTag

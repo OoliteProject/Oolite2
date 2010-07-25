@@ -11,6 +11,7 @@
 #import "DDMesh.h"
 
 #import <OoliteGraphics/OoliteGraphics.h>
+#import "DDProblemReportManager.h"
 
 
 @interface DDDocument ()
@@ -55,20 +56,39 @@
 }
 
 
-- (NSData *) dataOfType:(NSString *)typeName error:(NSError **)outError
+- (BOOL) writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-    // Insert code here to write your document to data of the specified type. If the given outError != NULL, ensure that you set *outError when returning nil.
-
-    // You can also choose to override -fileWrapperOfType:error:, -writeToURL:ofType:error:, or -writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-
-    // For applications targeted for Panther or earlier systems, you should use the deprecated API -dataRepresentationOfType:. In this case you can also choose to override -fileWrapperRepresentationOfType: or -writeToFile:ofType: instead.
-
-    if ( outError != NULL )
+	DDProblemReportManager *issues = [[DDProblemReportManager alloc] initWithContext:kDDPRContextSave fileURL:absoluteURL];
+	NSData *data = nil;
+	
+	if ([typeName isEqualToString:@"org.oolite.oomesh"])
 	{
-		*outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:NULL];
+		data = OOMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
 	}
-	return nil;
+	else if ([typeName isEqualToString:@"org.aegidian.oolite.mesh"])
+	{
+		data = OODATDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
+	}
+	else
+	{
+		OOReportError(issues, @"The file format \"%@\" is currently not supported for saving.", [[NSWorkspace sharedWorkspace] localizedDescriptionForType:typeName]);
+	}
+	
+	[issues runReportModalForWindow:[self windowForSheet] completionHandler:^(BOOL continueFlag){
+		if (continueFlag)
+		{
+			NSError *error = nil;
+			BOOL OK = [data writeToURL:absoluteURL options:NSDataWritingAtomic error:&error];
+			if (!OK)
+			{
+				[self presentError:error];
+			}
+		}
+	}];
+	
+	return YES;	// Don’t want NSDocument’s error messages.
 }
+
 
 - (BOOL) readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
@@ -76,8 +96,7 @@
 	
 	NSString *path = [absoluteURL path];
 	
-	// FIXME: better error reporter.
-	OOSimpleProblemReportManager *issues = [[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:YES];
+	DDProblemReportManager *issues = [[DDProblemReportManager alloc] initWithContext:kDDPRContextLoad fileURL:absoluteURL];
 	id <OOProgressReporting> progressReporter = nil;
 	
 	Class readerClass = OOSelectMeshReaderForUTI(typeName);
@@ -86,7 +105,7 @@
 	DDMesh *mesh = [[DDMesh alloc] initWithReader:reader issues:issues];
 	if (mesh != nil)  [self addMesh:mesh];
 	
-    return mesh != nil;
+    return mesh != nil && [issues showReportApplicationModal];
 }
 
 

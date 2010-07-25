@@ -15,6 +15,7 @@
 			dependencies = (
 				1A1A37FD11C2F9ED0086265F /* PBXTargetDependency */,
 				1A50F56211B6DBA8005D584E /* PBXTargetDependency */,
+				1A4587F611F89656000CBCF0 /* PBXTargetDependency */,
 			);
 			name = "Build Everything";
 			productName = "Build Everything";
@@ -50,6 +51,20 @@
 			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
 			remoteInfo = oobasicconverter;
 		};
+		1A4587F311F8964F000CBCF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D15AC370486D014006FF6A4;
+			remoteInfo = DryDock2;
+		};
+		1A4587F511F89656000CBCF0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
+			remoteInfo = DryDock2;
+		};
 		1A50F55F11B6DB9D005D584E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
@@ -70,6 +85,7 @@
 		1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oobasicconverter.xcodeproj; path = tests/oobasicconverter/oobasicconverter.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
+		1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DryDock2.xcodeproj; path = DryDock2/DryDock2.xcodeproj; sourceTree = "<group>"; };
 		1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oomergemesh.xcodeproj; path = tests/oomergemesh/oomergemesh.xcodeproj; sourceTree = "<group>"; };
 		1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "Config/oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,6 +115,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A4587EA11F8964E000CBCF0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A4587F411F8964F000CBCF0 /* Dry Dock for Oolite.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1A50F55711B6DB9D005D584E /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +145,7 @@
 			children = (
 				1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */,
 				1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */,
+				1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -148,6 +173,10 @@
 			mainGroup = 1AE4E99111B6DAF600A85342;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 1A4587EA11F8964E000CBCF0 /* Products */;
+					ProjectRef = 1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */;
+				},
 				{
 					ProductGroup = 1A1A37E711C2F9C30086265F /* Products */;
 					ProjectRef = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
@@ -194,6 +223,13 @@
 			remoteRef = 1A1A37FA11C2F9E20086265F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		1A4587F411F8964F000CBCF0 /* Dry Dock for Oolite.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Dry Dock for Oolite.app";
+			remoteRef = 1A4587F311F8964F000CBCF0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1A50F56011B6DB9D005D584E /* oomergemesh */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -208,6 +244,11 @@
 			isa = PBXTargetDependency;
 			name = oobasicconverter;
 			targetProxy = 1A1A37FC11C2F9ED0086265F /* PBXContainerItemProxy */;
+		};
+		1A4587F611F89656000CBCF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DryDock2;
+			targetProxy = 1A4587F511F89656000CBCF0 /* PBXContainerItemProxy */;
 		};
 		1A50F56211B6DBA8005D584E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

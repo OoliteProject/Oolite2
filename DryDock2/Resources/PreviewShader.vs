@@ -17,7 +17,6 @@ void main(void)
 	
 	vNormal = normalize(gl_NormalMatrix * aNormal);
 	vEyeVector = gl_ModelViewMatrix * position;
-//	vLightVector = (uLightPosition + vEyeVector).xyz;
 	vLightVector = uLightPosition.xyz;
 	
 	gl_Position = vPosition = gl_ModelViewProjectionMatrix * position;

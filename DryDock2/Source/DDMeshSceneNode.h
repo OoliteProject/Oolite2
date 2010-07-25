@@ -23,6 +23,11 @@
 	
 	// TEMP
 	OOShaderProgram				*_shader;
+	OOShaderProgram				*_wireframeShader;
+	GLint						_wireframeColorUniform;
+	
+	GLuint						_normalVectorVBO;
+	GLuint						_normalVBO;
 }
 
 - (id) initWithMesh:(DDMesh *)mesh;

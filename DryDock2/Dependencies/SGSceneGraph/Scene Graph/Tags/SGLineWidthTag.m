@@ -24,6 +24,7 @@
 */
 
 #import "SGLineWidthTag.h"
+#import "CollectionUtils.h"
 
 
 @implementation SGLineWidthTag

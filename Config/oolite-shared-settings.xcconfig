@@ -1,4 +1,4 @@
-WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces
 
 ARCHS									= ppc i386 x86_64
 SDKROOT									= macosx10.5

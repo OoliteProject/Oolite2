@@ -290,6 +290,12 @@ extern "C" {
 }
 
 
+- (struct OOBoundingBox) boundingBox
+{
+	return self.abstractMesh.boundingBox;
+}
+
+
 - (void) priv_abstractMeshChanged:(NSNotification *)notification
 {
 	if (!_pendingRenderMeshUpdate && [notification.userInfo oo_boolForKey:kOOAbstractMeshChangeAffectsRenderMesh])

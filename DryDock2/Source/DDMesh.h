@@ -37,6 +37,8 @@
 @property (copy) NSString *name;
 @property (copy) NSString *modelDescription;
 
+@property (readonly) struct OOBoundingBox boundingBox;
+
 @property SGMatrix4x4 transform;
 
 @property (copy) NSValue *boxedTransform;	// Matrix wrapped in NSValue for bindings.

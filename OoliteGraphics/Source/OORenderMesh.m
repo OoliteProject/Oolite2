@@ -263,6 +263,9 @@
 		OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementVBOs[gIter]));
 		OOGL(glDrawElements(GL_TRIANGLES, [_groups[gIter] count], [_groups[gIter] glType], NULL));
 	}
+	
+	OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	OOGL(glBindVertexArrayAPPLE(0));
 }
 
 

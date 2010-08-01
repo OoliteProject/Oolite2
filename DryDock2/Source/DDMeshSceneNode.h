@@ -22,8 +22,9 @@
 	NSArray						*_materials;
 	
 	// TEMP
-	OOShaderProgram				*_shader;
+	OOShaderProgram				*_whiteShader;
 	OOShaderProgram				*_wireframeShader;
+	OOShaderProgram				*_boundingBoxShader;
 	GLint						_wireframeColorUniform;
 	
 	GLuint						_normalVectorVBO;

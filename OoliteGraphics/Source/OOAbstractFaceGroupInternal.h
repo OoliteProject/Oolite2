@@ -30,18 +30,31 @@
 #import "OOAbstractFaceGroup.h"
 
 
+// Bitmask of effects a change to an abstract face group or mesh can have.
+enum
+{
+	kOOChangeInvalidatesUniqueness			= 0x0001,	// True if change may de-unique vertices.
+	kOOChangeInvalidatesSchema				= 0x0002,	// True if change may affect vertex schema.
+	kOOChangeInvalidatesRenderMesh			= 0x0004,	// True if change may affect render mesh or materials.
+	kOOChangeInvalidatesBoundingBox			= 0x0008,	// True if change may remove or reposition vertices.
+	kOOChangeGuaranteesUniqueness			= 0x0010,
+	
+	kOOChangeInvalidatesEverything			= kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh | kOOChangeInvalidatesBoundingBox
+};
+typedef uint32_t OOAbstractMeshEffectMask;
+
+
 @interface OOAbstractFaceGroup (Internal)
 
 // Must be called whenever face group is mutated.
-- (void) internal_becomeDirtyAffectingUniqueness:(BOOL)affectsUniqueness	// True if change may de-unique vertices.
-									vertexSchema:(BOOL)affectsSchema		// True if change may affect vertex schema.
-									  renderMesh:(BOOL)affectsRenderMesh;	// True if change may affect render mesh or materials.
+- (void) internal_becomeDirtyWithEffects:(OOAbstractMeshEffectMask)effects;
 
 - (void) internal_replaceAllFaces:(NSMutableArray *)faces
-			  affectingUniqueness:(BOOL)affectsUniqueness
-					 vertexSchema:(BOOL)affectsSchema
-					   renderMesh:(BOOL)affectsRenderMesh;
+					  withEffects:(OOAbstractMeshEffectMask)effects;
 
 @end
 
 #endif
+
+
+extern NSString * const kOOAbstractFaceGroupEffectMask;

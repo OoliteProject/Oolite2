@@ -31,6 +31,7 @@
 
 #import <OoliteBase/OoliteBase.h>
 #import "OOAbstractFace.h"
+#import "OOBoundingBox.h"
 
 @class OOMaterialSpecification, OOIndexArray;
 
@@ -43,7 +44,11 @@
 	OOMaterialSpecification		*_material;
 	NSDictionary				*_vertexSchema;
 	NSMutableSet				*_temporaryAttributes;
+	
+	OOBoundingBox				_boundingBox;
+	
 	BOOL						_homogeneous;
+	BOOL						_boundingBoxIsValid;
 }
 
 - (id) init;
@@ -97,6 +102,8 @@
 - (BOOL) vertexSchemaIsHomogeneous;
 
 - (void) restrictToSchema:(NSDictionary *)schema;
+
+- (OOBoundingBox) boundingBox;
 
 @end
 

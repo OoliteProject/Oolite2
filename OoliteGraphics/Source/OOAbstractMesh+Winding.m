@@ -70,10 +70,7 @@
 		[newFaces addObject:[OOAbstractFace faceWithVertices:vertices]];
 	}
 	
-	[self internal_replaceAllFaces:newFaces
-			   affectingUniqueness:NO
-					  vertexSchema:NO
-						renderMesh:YES];
+	[self internal_replaceAllFaces:newFaces withEffects:kOOChangeInvalidatesRenderMesh];
 	[newFaces release];
 	
 	return YES;

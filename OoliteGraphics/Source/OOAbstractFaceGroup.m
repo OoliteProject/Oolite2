@@ -38,6 +38,7 @@ NSString * const kOOAbstractFaceGroupChangedNotification = @"org.oolite OOAbstra
 NSString * const kOOAbstractFaceGroupChangeAffectsUniqueness = @"kOOAbstractFaceGroupChangeAffectsUniqueness";
 NSString * const kOOAbstractFaceGroupChangeAffectsVertexSchema = @"kOOAbstractFaceGroupChangeAffectsVertexSchema";
 NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFaceGroupChangeAffectsRenderMesh";
+NSString * const kOOAbstractFaceGroupEffectMask = @"kOOAbstractFaceGroupEffectMask";
 
 
 @interface OOAbstractFaceGroup (Private)
@@ -187,7 +188,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 
 - (void) setName:(NSString *)name
 {
-	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:NO renderMesh:NO];
+	[self internal_becomeDirtyWithEffects:0];
 	
 	[_name autorelease];
 	_name = [name copy];
@@ -205,7 +206,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 	[_material autorelease];
 	_material = [material retain];
 	
-	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:NO renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesRenderMesh];
 }
 
 
@@ -232,7 +233,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 	[_faces addObject:face];
 	[self priv_updateSchemaForFace:face];
 	
-	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
 }
 
 
@@ -241,7 +242,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 	[_faces insertObject:face atIndex:index];
 	[self priv_updateSchemaForFace:face];
 	
-	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
 }
 
 
@@ -250,7 +251,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeLastObject];
 	
-	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:YES renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh | kOOChangeInvalidatesBoundingBox];
 }
 
 
@@ -259,7 +260,7 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeObjectAtIndex:index];
 	
-	[self internal_becomeDirtyAffectingUniqueness:NO vertexSchema:YES renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh | kOOChangeInvalidatesBoundingBox];
 }
 
 
@@ -267,27 +268,26 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 {	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces replaceObjectAtIndex:index withObject:face];
+	_boundingBoxIsValid = NO;
 	[self priv_updateSchemaForFace:face];
 	
-	[self internal_becomeDirtyAffectingUniqueness:YES vertexSchema:YES renderMesh:YES];
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesEverything];
 }
 
 
 - (void) replaceAllFaces:(NSArray *)faces
 {
-	[self internal_replaceAllFaces:[[faces mutableCopy] autorelease] affectingUniqueness:YES vertexSchema:YES renderMesh:YES];
+	[self internal_replaceAllFaces:[[faces mutableCopy] autorelease] withEffects:kOOChangeInvalidatesEverything];
 }
 
 
 - (void) internal_replaceAllFaces:(NSMutableArray *)faces
-			  affectingUniqueness:(BOOL)affectsUniqueness
-					 vertexSchema:(BOOL)affectsSchema
-					   renderMesh:(BOOL)affectsRenderMesh
+					  withEffects:(OOAbstractMeshEffectMask)effects
 {
 	DESTROY(_faces);
 	_faces = [faces mutableCopy];
 	
-	[self internal_becomeDirtyAffectingUniqueness:affectsUniqueness vertexSchema:affectsSchema renderMesh:affectsRenderMesh];
+	[self internal_becomeDirtyWithEffects:effects];
 }
 
 
@@ -374,6 +374,11 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 
 - (void) restrictToSchema:(NSDictionary *)schema
 {
+	if ([schema oo_unsignedIntegerForKey:kOOPositionAttributeKey] == 0)
+	{
+		[NSException raise:NSInvalidArgumentException format:@"Cannot restrict a face group to a schema that does not include position."];
+	}
+	
 	NSMutableArray *newFaces = [[NSMutableArray alloc] initWithCapacity:[_faces count]];
 	OOAbstractFace *face = nil;
 	
@@ -382,7 +387,31 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 		[newFaces addObject:[face faceStrictlyConformingToSchema:schema]];
 	}
 	
-	[self internal_replaceAllFaces:newFaces affectingUniqueness:YES vertexSchema:YES renderMesh:YES];
+	[self internal_replaceAllFaces:newFaces withEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
+}
+
+
+- (OOBoundingBox) boundingBox
+{
+	if (!_boundingBoxIsValid)
+	{
+		_boundingBox = kOOZeroBoundingBox;
+		
+		OOAbstractFace *face = nil;
+		foreach (face, self)
+		{
+			OOAbstractVertex *vertices[3];
+			[face getVertices:vertices];
+			
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[0] position]);
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[1] position]);
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[2] position]);
+		}
+		
+		_boundingBoxIsValid = YES;
+	}
+	
+	return _boundingBox;
 }
 
 
@@ -390,7 +419,8 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 {
 	for (unsigned i = 0; i < 3; i++)
 	{
-		NSDictionary *schema = [[face vertexAtIndex:i] schema];
+		OOAbstractVertex *vertex = [face vertexAtIndex:i];
+		NSDictionary *schema = [vertex schema];
 		if (_vertexSchema != nil)
 		{
 			if (![schema isEqualToDictionary:_vertexSchema])
@@ -406,19 +436,23 @@ NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFace
 			_homogeneous = YES;
 			_vertexSchema = [[NSDictionary alloc] initWithDictionary:schema];
 		}
+		
+		if (_boundingBoxIsValid)  OOBoundingBoxAddVector(&_boundingBox, [vertex position]);
 	}
 }
 
 
-- (void) internal_becomeDirtyAffectingUniqueness:(BOOL)affectsUniqueness
-									vertexSchema:(BOOL)affectsSchema	
-									  renderMesh:(BOOL)affectsRenderMesh
+- (void) internal_becomeDirtyWithEffects:(OOAbstractMeshEffectMask)effects
 {
-	if (affectsSchema)  DESTROY(_vertexSchema);
+	NSParameterAssert(((effects & kOOChangeInvalidatesUniqueness) == 0) || ((effects & kOOChangeGuaranteesUniqueness) == 0));
 	
-	NSDictionary *userInfo = $dict(kOOAbstractFaceGroupChangeAffectsUniqueness, $bool(affectsUniqueness),
-								   kOOAbstractFaceGroupChangeAffectsVertexSchema, $bool(affectsSchema),
-								   kOOAbstractFaceGroupChangeAffectsRenderMesh, $bool(affectsRenderMesh));
+	if (effects & kOOChangeInvalidatesSchema)  DESTROY(_vertexSchema);
+	if (effects & kOOChangeInvalidatesBoundingBox)  _boundingBoxIsValid = NO;
+	
+	NSDictionary *userInfo = $dict(kOOAbstractFaceGroupEffectMask, $int(effects),
+								   kOOAbstractFaceGroupChangeAffectsUniqueness, $bool(effects & kOOChangeInvalidatesUniqueness),
+								   kOOAbstractFaceGroupChangeAffectsVertexSchema, $bool(effects & kOOChangeInvalidatesSchema),
+								   kOOAbstractFaceGroupChangeAffectsRenderMesh, $bool(effects & kOOChangeInvalidatesRenderMesh));
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kOOAbstractFaceGroupChangedNotification
 														object:self

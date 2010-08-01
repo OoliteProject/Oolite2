@@ -132,7 +132,7 @@
 		
 		if (changedAnyInGroup)
 		{
-			[group internal_replaceAllFaces:newFaces affectingUniqueness:NO vertexSchema:NO renderMesh:YES];
+			[group internal_replaceAllFaces:newFaces withEffects:kOOChangeInvalidatesRenderMesh];
 		}
 		[newFaces release];
 	}
@@ -402,10 +402,9 @@ OOINLINE NSMutableArray *ApplyFlatNormals(NSArray *faces, Vector *faceNormals, B
 				newFaces = ApplyFlatNormals(_faces, faceNormals, replace);
 			}
 			
-			[self internal_replaceAllFaces:newFaces
-					   affectingUniqueness:!smooth
-							  vertexSchema:NO
-								renderMesh:YES];
+			OOAbstractMeshEffectMask effects = kOOChangeInvalidatesRenderMesh;
+			if (!smooth)  effects |= kOOChangeInvalidatesUniqueness;
+			[self internal_replaceAllFaces:newFaces withEffects:effects];
 			
 			success = YES;
 		}

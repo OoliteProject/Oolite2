@@ -23,12 +23,14 @@
 - (void) priv_renderFilledNormal;
 - (void) priv_renderFilledWhite;
 - (void) priv_renderWireframe;
+- (void) priv_renderBoundingBox;
 - (void) priv_renderNormalsWithScale:(float)scale;
 
 - (void) priv_renderImmediateMode;
 
 - (OOShaderProgram *) priv_whiteShader;
 - (OOShaderProgram *) priv_wireframeShader;
+- (OOShaderProgram *) priv_boundingBoxShader;
 - (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name;
 
 @end
@@ -68,6 +70,12 @@
 - (void) setRenderMesh:(OORenderMesh *)mesh
 {
 	[self becomeDirty];
+	
+	// Shader attribute indices may need rebinding. This is wasteful, but gets the job done:
+	_whiteShader = nil;
+	_wireframeShader = nil;
+	_boundingBoxShader = nil;
+	
 	_renderMesh = mesh;
 }
 
@@ -84,8 +92,12 @@
 
 - (void) renderWithState:(NSDictionary *)state
 {
+	[self priv_renderBoundingBox];
 	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:0.1f];
-	if ([state oo_boolForKey:@"show wireframe"])  [self priv_renderWireframe];
+	if ([state oo_boolForKey:@"show wireframe"])
+	{
+		[self priv_renderWireframe];
+	}
 	if ([state oo_boolForKey:@"show faces"])
 	{
 		if ([state oo_boolForKey:@"use white shader"])  [self priv_renderFilledWhite];
@@ -121,12 +133,49 @@
 	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
 	
 	[[self priv_wireframeShader] apply];
-	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.7f, 0.0f, 0.0f));
+	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.7f, 0.0f, 1.0f));
 	
 	[self.renderMesh renderWithMaterials:nil];
 	
 	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
 	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glPolygonOffset(0, 0));
+}
+
+
+- (void) priv_renderBoundingBox
+{
+	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glPolygonOffset(1, 1));
+	
+	[[self priv_boundingBoxShader] apply];
+	
+	OOBoundingBox bbox = self.mesh.boundingBox;
+	
+	float vertices[8 * 3];
+	float *next = vertices;
+	unsigned i;
+	for (i = 0; i < 8; i++)
+	{
+#define COMPONENT(mask) (mask ? bbox.max : bbox.min)
+		*next++ = COMPONENT(i & 1).x;
+		*next++ = COMPONENT(i & 2).y;
+		*next++ = COMPONENT(i & 4).z;
+	}
+	
+	GLuint indices[] =
+	{
+		0, 1, 2, 3
+	};
+	
+	GLuint attributeID = [self.renderMesh attributeIndexForKey:kOOPositionAttributeKey];
+	OOGL(glVertexAttribPointer(attributeID, 3, GL_FLOAT, GL_FALSE, 0, vertices));
+	OOGL(glEnableVertexAttribArray(attributeID));
+	OOGL(glDrawElements(GL_LINES, sizeof indices / sizeof *indices, GL_UNSIGNED_INT, indices));
+	OOGL(glDisableVertexAttribArray(attributeID));
+	
+	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glPolygonOffset(0, 0));
 }
 
 
@@ -158,6 +207,8 @@
 
 - (void) priv_renderNormalsWithScale:(float)scale
 {
+	// FIXME: use VBO & VAO.
+	
 	OORenderMesh *rMesh = self.renderMesh;
 	NSUInteger pSize = [rMesh attributeSizeForKey:kOOPositionAttributeKey];
 	NSUInteger nSize = [rMesh attributeSizeForKey:kOONormalAttributeKey];
@@ -204,11 +255,11 @@
 
 - (OOShaderProgram *) priv_whiteShader
 {
-	if (_shader == nil)
+	if (_whiteShader == nil)
 	{
-		_shader = [self priv_loadShaderNamed:@"PreviewShader"];
+		_whiteShader = [self priv_loadShaderNamed:@"PreviewShader"];
 	}
-	return _shader;
+	return _whiteShader;
 }
 
 
@@ -223,6 +274,16 @@
 		}
 	}
 	return _wireframeShader;
+}
+
+
+- (OOShaderProgram *) priv_boundingBoxShader
+{
+	if (_boundingBoxShader == nil)
+	{
+		_boundingBoxShader = [self priv_loadShaderNamed:@"BoundingBoxShader"];
+	}
+	return _boundingBoxShader;
 }
 
 

@@ -31,6 +31,7 @@
 #import "OOAbstractFaceGroup.h"
 #import "OOMaterialSpecification.h"
 #import "OORenderMesh.h"
+#import "OOBoundingBox.h"
 
 
 @interface OOAbstractMesh: NSObject <NSFastEnumeration, NSCopying>
@@ -42,13 +43,16 @@
 	
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materialSpecs;
-	BOOL						_verticesAreUnique;
 	
-	NSUInteger					_batchLevel;
-	BOOL						_batchPendingChange;
-	BOOL						_batchAffectsUniqueness;
-	BOOL						_batchAffectsSchema;
-	BOOL						_batchAffectsRenderMesh;
+	OOBoundingBox				_boundingBox;
+	
+	uint16_t					_batchLevel;
+	
+	uint16_t					_verticesAreUnique: 1,
+								_boundingBoxIsValid: 1,
+								_batchPendingChange: 1;
+	
+	uint32_t					_batchedEffects;
 }
 
 - (NSString *) name;
@@ -75,6 +79,8 @@
 - (NSDictionary *) vertexSchemaIgnoringTemporary;
 
 - (void) restrictToSchema:(NSDictionary *)schema;
+
+- (OOBoundingBox) boundingBox;
 
 //	Mesh manipulations.
 // - (void) applyTransform:(OOMatrix)transform;

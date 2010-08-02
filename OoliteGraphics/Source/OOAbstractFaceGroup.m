@@ -156,6 +156,10 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 	DESTROY(_faces);
 	DESTROY(_vertexSchema);
 	
+	[[NSNotificationCenter defaultCenter] removeObserver:nil
+													name:kOOAbstractFaceGroupChangedNotification
+												  object:self];
+	
 	[super dealloc];
 }
 

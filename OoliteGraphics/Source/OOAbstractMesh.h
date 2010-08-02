@@ -86,4 +86,7 @@
 
 @end
 
+
+extern NSString * const kOOAbstractMeshChangedNotification;
+
 #endif	// OOLITE_LEAN

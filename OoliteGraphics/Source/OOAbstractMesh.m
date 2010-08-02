@@ -29,6 +29,9 @@
 #import "OOAbstractFaceGroup.h"
 
 
+NSString * const kOOAbstractMeshChangedNotification = @"org.oolite OOAbstractMesh changed";
+
+
 @interface OOAbstractMesh (Private)
 
 // Must be called whenever mesh is mutated.
@@ -66,6 +69,10 @@
 	
 	DESTROY(_renderMesh);
 	DESTROY(_materialSpecs);
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:nil
+													name:kOOAbstractMeshChangedNotification
+												  object:self];
 	
 	[super dealloc];
 }
@@ -265,6 +272,10 @@
 	
 	// Vertices can't be de-uniqued by removing faces.
 	if (additions)  _verticesAreUnique = NO;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kOOAbstractMeshChangedNotification
+														object:self
+													  userInfo:nil];
 }
 
 

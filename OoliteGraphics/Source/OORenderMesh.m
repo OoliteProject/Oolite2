@@ -256,16 +256,21 @@
 		[self priv_setUpVAO];
 		if (_vertexArrayObject == 0)  return;
 	}
+	else
+	{
+		OOGL(glBindVertexArrayAPPLE(_vertexArrayObject));
+	}
 	
-	OOGL(glBindVertexArrayAPPLE(_vertexArrayObject));
 	for (GLuint gIter = 0; gIter < _groupCount; gIter++)
 	{
 		OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementVBOs[gIter]));
 		OOGL(glDrawElements(GL_TRIANGLES, [_groups[gIter] count], [_groups[gIter] glType], NULL));
 	}
 	
-	OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 	OOGL(glBindVertexArrayAPPLE(0));
+	OOGL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	
 }
 
 

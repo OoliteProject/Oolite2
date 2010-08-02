@@ -14,4 +14,5 @@ void main(void)
 	float intensity = kLightFactor * normalize(vNormal).z + kAmbientFactor;
 	
 	gl_FragColor = uColor * intensity;
+	gl_FragDepth = gl_FragCoord.z * (1.0 - 1e-5);	// Offset slightly toward camera to avoid Z-fighting.
 }

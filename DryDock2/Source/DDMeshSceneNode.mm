@@ -31,7 +31,7 @@
 - (OOShaderProgram *) priv_whiteShader;
 - (OOShaderProgram *) priv_wireframeShader;
 - (OOShaderProgram *) priv_boundingBoxShader;
-- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name;
+- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name attributeMap:(NSDictionary *)attributeMap;
 
 @end
 
@@ -92,10 +92,10 @@
 
 - (void) renderWithState:(NSDictionary *)state
 {
-	[self priv_renderBoundingBox];
 	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:0.1f];
 	if ([state oo_boolForKey:@"show wireframe"])
 	{
+		[self priv_renderBoundingBox];
 		[self priv_renderWireframe];
 	}
 	if ([state oo_boolForKey:@"show faces"])
@@ -128,8 +128,6 @@
 
 - (void) priv_renderWireframe
 {
-	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
-	OOGL(glPolygonOffset(1, 1));
 	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
 	
 	[[self priv_wireframeShader] apply];
@@ -138,18 +136,11 @@
 	[self.renderMesh renderWithMaterials:nil];
 	
 	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
-	OOGL(glPolygonOffset(0, 0));
 }
 
 
 - (void) priv_renderBoundingBox
 {
-	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
-	OOGL(glPolygonOffset(1, 1));
-	
-	[[self priv_boundingBoxShader] apply];
-	
 	OOBoundingBox bbox = self.mesh.boundingBox;
 	
 	float vertices[8 * 3];
@@ -157,7 +148,7 @@
 	unsigned i;
 	for (i = 0; i < 8; i++)
 	{
-#define COMPONENT(mask) (mask ? bbox.max : bbox.min)
+#define COMPONENT(mask) ((mask) ? bbox.max : bbox.min)
 		*next++ = COMPONENT(i & 1).x;
 		*next++ = COMPONENT(i & 2).y;
 		*next++ = COMPONENT(i & 4).z;
@@ -165,17 +156,17 @@
 	
 	GLuint indices[] =
 	{
-		0, 1, 2, 3
+		0, 1, 1, 3, 3, 2, 2, 0,
+		4, 5, 5, 7, 7, 6, 6, 4,
+		0, 4, 1, 5, 2, 6, 3, 7
 	};
 	
-	GLuint attributeID = [self.renderMesh attributeIndexForKey:kOOPositionAttributeKey];
-	OOGL(glVertexAttribPointer(attributeID, 3, GL_FLOAT, GL_FALSE, 0, vertices));
-	OOGL(glEnableVertexAttribArray(attributeID));
-	OOGL(glDrawElements(GL_LINES, sizeof indices / sizeof *indices, GL_UNSIGNED_INT, indices));
-	OOGL(glDisableVertexAttribArray(attributeID));
+	[[self priv_boundingBoxShader] apply];
 	
-	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
-	OOGL(glPolygonOffset(0, 0));
+	OOGL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices));
+	OOGL(glEnableVertexAttribArray(0));
+	OOGL(glDrawElements(GL_LINES, sizeof indices / sizeof *indices, GL_UNSIGNED_INT, indices));
+	OOGL(glDisableVertexAttribArray(0));
 }
 
 
@@ -257,7 +248,7 @@
 {
 	if (_whiteShader == nil)
 	{
-		_whiteShader = [self priv_loadShaderNamed:@"PreviewShader"];
+		_whiteShader = [self priv_loadShaderNamed:@"PreviewShader" attributeMap:nil];
 	}
 	return _whiteShader;
 }
@@ -267,7 +258,7 @@
 {
 	if (_wireframeShader == nil)
 	{
-		_wireframeShader = [self priv_loadShaderNamed:@"WireframeShader"];
+		_wireframeShader = [self priv_loadShaderNamed:@"WireframeShader" attributeMap:nil];
 		if (_wireframeShader != nil)
 		{
 			OOGL(_wireframeColorUniform = glGetUniformLocation(_wireframeShader.program, "uColor"));
@@ -281,25 +272,27 @@
 {
 	if (_boundingBoxShader == nil)
 	{
-		_boundingBoxShader = [self priv_loadShaderNamed:@"BoundingBoxShader"];
+		_boundingBoxShader = [self priv_loadShaderNamed:@"BoundingBoxShader" attributeMap:$dict(@"aPosition", $int(0))];
 	}
 	return _boundingBoxShader;
 }
 
 
-- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name
+- (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name attributeMap:(NSDictionary *)attributeMap
 {
 	NSURL *url = [[NSBundle mainBundle] URLForResource:name withExtension:@"vs"];
 	NSString *vertexShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 	url = [[NSBundle mainBundle] URLForResource:name withExtension:@"fs"];
 	NSString *fragmentShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 	
+	if (attributeMap == nil)  attributeMap = self.renderMesh.prefixedAttributeIndices;
+	
 	return [OOShaderProgram shaderProgramWithVertexShader:vertexShader
 										   fragmentShader:fragmentShader
 										 vertexShaderName:[name stringByAppendingPathExtension:@"vs"]
 										 vertexShaderName:[name stringByAppendingPathExtension:@"fs"]
 												   prefix:nil
-										attributeBindings:self.renderMesh.prefixedAttributeIndices];
+										attributeBindings:attributeMap];
 }
 
 @end

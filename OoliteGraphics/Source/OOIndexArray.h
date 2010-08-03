@@ -37,18 +37,19 @@
 + (id) arrayWithArray:(NSArray *)array;
 - (id) initWithArray:(NSArray *)array;
 
-+ (id) newWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
-+ (id) arrayWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
-- (id) initWithUnsignedInts:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
++ (id) newWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
++ (id) arrayWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
+- (id) initWithUnsignedInts:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum;
 
 /*	In the spirit of NSData, NoCopy is a hint. The implementation may choose
 	to copy the data (and immediately free it, if freeWhenDone).
 */
-+ (id) newWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
-+ (id) arrayWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
-- (id) initWithUnsignedIntsNoCopy:(GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
++ (id) newWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
+- (id) initWithUnsignedIntsNoCopy:(const GLuint *)values count:(GLuint)count maximum:(GLuint)maximum freeWhenDone:(BOOL)freeWhenDone;
 
 - (GLenum) glType;
+- (size_t) elementSize;
 
 /*	NOTE: exposes internal pointer for speed. This does not outlive the
 	OOIndexArray, and writing to it would break the array’s mutability.
@@ -64,5 +65,12 @@
 	Note that this is NOT comparable with -[OOFloatArray betterHash].
 */
 - (NSUInteger) betterHash;
+
+@end
+
+
+@interface OOIndexArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(GLenum)usage;
 
 @end

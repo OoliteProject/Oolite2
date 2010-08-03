@@ -31,6 +31,7 @@
 
 #import <OoliteBase/OoliteBase.h>
 #import "OOAbstractFace.h"
+#import "OOBoundingBox.h"
 
 @class OOMaterialSpecification, OOIndexArray;
 
@@ -42,7 +43,12 @@
 	NSMutableArray				*_faces;
 	OOMaterialSpecification		*_material;
 	NSDictionary				*_vertexSchema;
+	NSMutableSet				*_temporaryAttributes;
+	
+	OOBoundingBox				_boundingBox;
+	
 	BOOL						_homogeneous;
+	BOOL						_boundingBoxIsValid;
 }
 
 - (id) init;
@@ -65,6 +71,7 @@
 - (void) setMaterial:(OOMaterialSpecification *)material;
 
 - (NSUInteger) faceCount;
+- (NSArray *) faces;
 
 - (OOAbstractFace *) faceAtIndex:(NSUInteger)index;
 
@@ -73,6 +80,12 @@
 - (void) removeLastFace;
 - (void) removeFaceAtIndex:(NSUInteger)index;
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face;
+
+- (void) replaceAllFaces:(NSArray *)faces;
+
+// Temporary attributes: attributes generated for convenience of tools, not intended to be saved.
+- (BOOL) isAttributeTemporary:(NSString *)attributeKey;
+- (void) setAttribute:(NSString *)attributeKey temporary:(BOOL)temporary;
 
 - (NSEnumerator *) faceEnumerator;
 - (NSEnumerator *) objectEnumerator;	// Same as faceEnumerator, only less descriptive.
@@ -83,9 +96,14 @@
 	attribute across all vertices.
 	A vertex schema is homogeneous if all vertices fulfill the schema
 	completely.
-*/
+ */
 - (NSDictionary *) vertexSchema;
+- (NSDictionary *) vertexSchemaIgnoringTemporary;
 - (BOOL) vertexSchemaIsHomogeneous;
+
+- (void) restrictToSchema:(NSDictionary *)schema;
+
+- (OOBoundingBox) boundingBox;
 
 @end
 
@@ -94,6 +112,8 @@ NSDictionary *OOUnionOfSchemata(NSDictionary *a, NSDictionary *b);
 
 
 extern NSString * const kOOAbstractFaceGroupChangedNotification;
-extern NSString * const kOOAbstractFaceGroupChangeIsAdditive;	// UserInfo key for boolean flag indicating change added faces - either true or nil.
+extern NSString * const kOOAbstractFaceGroupChangeAffectsUniqueness;
+extern NSString * const kOOAbstractFaceGroupChangeAffectsVertexSchema;
+extern NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh;
 
 #endif	// OOLITE_LEAN

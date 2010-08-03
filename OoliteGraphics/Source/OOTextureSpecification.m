@@ -24,7 +24,6 @@
 */
 
 #import "OOTextureSpecification.h"
-#import "OOProblemReporting.h"
 
 
 NSString * const kOOTextureNameKey				= @"name";

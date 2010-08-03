@@ -48,6 +48,7 @@
 										_explicitNormals: 1,
 										_explicitTangents: 1,
 										_usesSmoothGroups: 1,
+										_hasSmoothGroups: 1,
 										_haveTriangleAreas: 1;
 	
 	NSUInteger							_materialCount;
@@ -68,6 +69,9 @@
 - (void) parse;
 - (OOAbstractMesh *) abstractMesh;
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
+
+- (NSString *) meshName;
+- (NSString *) meshDescription;
 
 /*	Smoothing:
 	Before parsing, this determines whether smoothing should be applied to

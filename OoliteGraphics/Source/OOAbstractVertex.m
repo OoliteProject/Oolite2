@@ -33,6 +33,7 @@ NSString * const kOOPositionAttributeKey	= @"position";
 NSString * const kOONormalAttributeKey		= @"normal";
 NSString * const kOOTangentAttributeKey		= @"tangent";
 NSString * const kOOTexCoordsAttributeKey	= @"texCoords";
+NSString * const kOOSmoothGroupAttributeKey	= @"_smoothGroup";
 
 
 #ifndef NDEBUG
@@ -209,7 +210,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 
 - (id) mutableCopyWithZone:(NSZone *)zone
 {
-	return [[OOMutableAbstractVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
+	return [[OOConcreteMutableVertex allocWithZone:zone] priv_initWithAttributes:[self allAttributes] verify:NO];
 }
 
 
@@ -385,7 +386,7 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
-- (OOAbstractVertex *) vertexConformingToSchema:(NSDictionary *)schema
+- (OOAbstractVertex *) vertexStrictlyConformingToSchema:(NSDictionary *)schema
 {
 	if ([self conformsToSchema:schema])
 	{

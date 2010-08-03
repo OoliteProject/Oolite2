@@ -1,0 +1,10 @@
+//
+// Prefix header for all source files of the 'DryDock2' target in the 'DryDock2' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
+
+
+#define SCENGRAPH_LIGHTING 0

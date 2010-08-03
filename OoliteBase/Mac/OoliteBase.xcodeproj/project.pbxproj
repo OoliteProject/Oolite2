@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */; };
 		1A60EDE811B6FD8600224F2D /* OODeepCopy.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A60EDE611B6FD8500224F2D /* OODeepCopy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A60EDE911B6FD8600224F2D /* OODeepCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A60EDE711B6FD8500224F2D /* OODeepCopy.m */; };
 		1A713F9611B56397009A9197 /* OoliteBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713F9511B56397009A9197 /* OoliteBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -43,6 +45,8 @@
 		1A878B9F11B57B04001BB304 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */; };
 		1ABAC2DF11C39AE3005301BA /* OOGarbageCollectionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */; };
+		1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */; };
 		1AED64FF11B5A84900811A44 /* OOLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED64FC11B5A84900811A44 /* OOLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AED650011B5A84900811A44 /* OOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AED64FD11B5A84900811A44 /* OOLogging.m */; };
 		1AED650111B5A84900811A44 /* OOLoggingExtended.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED64FE11B5A84900811A44 /* OOLoggingExtended.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -52,6 +56,8 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIsNumberLiteral.h; sourceTree = "<group>"; };
+		1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIsNumberLiteral.m; sourceTree = "<group>"; };
 		1A60EDE611B6FD8500224F2D /* OODeepCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODeepCopy.h; sourceTree = "<group>"; };
 		1A60EDE711B6FD8500224F2D /* OODeepCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODeepCopy.m; sourceTree = "<group>"; };
 		1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteBase-Info.plist"; sourceTree = "<group>"; };
@@ -89,6 +95,8 @@
 		1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = "<group>"; };
 		1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGarbageCollectionSupport.h; sourceTree = "<group>"; };
 		1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGarbageCollectionSupport.m; sourceTree = "<group>"; };
+		1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
+		1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
 		1AED64FC11B5A84900811A44 /* OOLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLogging.h; path = ../Source/OOLogging.h; sourceTree = SOURCE_ROOT; };
 		1AED64FD11B5A84900811A44 /* OOLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLogging.m; path = ../Source/OOLogging.m; sourceTree = SOURCE_ROOT; };
 		1AED64FE11B5A84900811A44 /* OOLoggingExtended.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLoggingExtended.h; path = ../Source/OOLoggingExtended.h; sourceTree = SOURCE_ROOT; };
@@ -142,6 +150,8 @@
 				1A60EDE711B6FD8500224F2D /* OODeepCopy.m */,
 				1A71415E11B56810009A9197 /* OOBaseStringParsing.h */,
 				1A71415F11B56810009A9197 /* OOBaseStringParsing.m */,
+				1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */,
+				1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */,
 				1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */,
 				1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */,
 				1A878B6711B57778001BB304 /* NSStringOOExtensions.h */,
@@ -152,6 +162,8 @@
 				1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */,
 				1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */,
 				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
+				1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */,
+				1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */,
 			);
 			name = Utilities;
 			path = ../Source;
@@ -233,6 +245,8 @@
 				1AED650811B5A8D400811A44 /* OOLogOutputHandler.h in Headers */,
 				1A60EDE811B6FD8600224F2D /* OODeepCopy.h in Headers */,
 				1ABAC2DF11C39AE3005301BA /* OOGarbageCollectionSupport.h in Headers */,
+				1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */,
+				1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +340,8 @@
 				1AED650911B5A8D400811A44 /* OOLogOutputHandler.m in Sources */,
 				1A60EDE911B6FD8600224F2D /* OODeepCopy.m in Sources */,
 				1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */,
+				1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */,
+				1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

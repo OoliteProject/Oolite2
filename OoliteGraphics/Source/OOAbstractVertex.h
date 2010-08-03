@@ -94,7 +94,7 @@
 /*	Extract the attributes of a vertex that conform to the specified schema.
 	This doesn’t add anything, only takes away.
 */
-- (OOAbstractVertex *) vertexConformingToSchema:(NSDictionary *)schema;
+- (OOAbstractVertex *) vertexStrictlyConformingToSchema:(NSDictionary *)schema;
 
 @end
 
@@ -146,6 +146,7 @@ extern NSString * const kOOPositionAttributeKey;	// "position"
 extern NSString * const kOONormalAttributeKey;		// "normal"
 extern NSString * const kOOTangentAttributeKey;		// "tangent"
 extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
+extern NSString * const kOOSmoothGroupAttributeKey;	// "_smoothGroup" -- not saved in oomesh.
 
 
 @interface NSArray (OOAbstractVertex)

@@ -42,8 +42,6 @@
 - (void) priv_reportBasicMaterialParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
-- (NSString *) priv_displayName;
-
 - (BOOL) priv_readVertexPosition;
 - (BOOL) priv_readVertexNormal;
 - (BOOL) priv_readVertexTexCoords;
@@ -73,10 +71,10 @@
 @interface OOOBJVertexCacheKey: NSObject <NSCopying>
 {
 @private
-	NSUInteger			_v, _vn, _vt;
+	NSUInteger			_v, _vn, _vt, _s;
 }
 
-- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt;
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt s:(NSUInteger)s;
 
 @end
 
@@ -146,6 +144,7 @@
 	_texCoords = [NSMutableArray array];
 	_normals = [NSMutableArray array];
 	_smoothGroups = [NSMutableDictionary dictionary];
+	_smoothGroupIDs = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
 	_materials = [NSMutableDictionary dictionary];
 	_materialGroups = [NSMutableDictionary dictionary];
 	_vertexCache = [NSMutableDictionary dictionary];
@@ -231,7 +230,7 @@
 		to holes, too.)
 	*/
 	_abstractMesh = [[OOAbstractMesh alloc] init];
-	[_abstractMesh setName:[self name]];
+	[_abstractMesh setName:[self meshName]];
 	OOAbstractFaceGroup *group = nil;
 	foreach (group, [_materialGroups allValues])
 	{
@@ -241,10 +240,13 @@
 		}
 	}
 	
+	NSFreeMapTable(_smoothGroupIDs);
+	
 	_positions = nil;
 	_texCoords = nil;
 	_normals = nil;
 	_smoothGroups = nil;
+	_smoothGroupIDs = nil;
 	_currentSmoothGroup = nil;
 	_materials = nil;
 	_materialGroups = nil;
@@ -268,7 +270,7 @@
 }
 
 
-- (NSString *) name
+- (NSString *) meshName
 {
 	[self parse];
 	
@@ -285,6 +287,18 @@
 	return _name;
 }
 
+
+- (NSString *) meshDescription
+{
+	return [[self abstractMesh] modelDescription];
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return YES;
+}
+
 @end
 
 
@@ -299,7 +313,7 @@
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -307,8 +321,8 @@
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 
@@ -329,7 +343,7 @@
 	va_end(args);
 	
 	message = [NSString stringWithFormat:base, [_lexer lineNumber], _currentMaterialLibraryName, message];
-	[_issues addProblemOfType:kOOMProblemTypeWarning message:message];
+	[_issues addProblemOfType:kOOProblemTypeWarning message:message];
 }
 
 
@@ -342,12 +356,6 @@
 - (void) priv_reportMallocFailure
 {
 	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
-}
-
-
-- (NSString *) priv_displayName
-{
-	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
 
 
@@ -491,8 +499,8 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return nil;
 	}
 
-	OOOBJVertexCacheKey *cacheKey = [[OOOBJVertexCacheKey alloc] initWithV:ev vn:evn vt:evt];
-	OOMutableAbstractVertex *vertex = [_vertexCache objectForKey:cacheKey];
+	OOOBJVertexCacheKey *cacheKey = [[OOOBJVertexCacheKey alloc] initWithV:ev vn:evn vt:evt s:_currentSmoothGroupID];
+	OOAbstractVertex *vertex = [_vertexCache objectForKey:cacheKey];
 	if (vertex == nil)
 	{
 		/*	Create a vertex object.
@@ -525,6 +533,13 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 			}
 		}
 		
+		// Smooth groups are relatively rare, so we take the slower path.
+		if (_currentSmoothGroupID != 0)
+		{
+			if (_currentSmoothGroupFloatArray == nil)  _currentSmoothGroupFloatArray = OOFloatArrayFromDouble(_currentSmoothGroupID);
+			vertex = [vertex vertexByAddingAttribute:_currentSmoothGroupFloatArray forKey:kOOSmoothGroupAttributeKey];
+		}
+		
 		[_vertexCache setObject:vertex forKey:cacheKey];
 	}
 	[cacheKey release];
@@ -548,19 +563,19 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	
 	if (!ReadFaceTriple(self, _lexer, &v, &vt, &vn))  return NO;
 	OOAbstractVertex *v1 = [self priv_vertexWithPositionIdx:v
-												texCoordIdx:haveTex ? vt : NSNotFound
-												  normalIdx:haveNormals ? vn : NSNotFound];
+												texCoordIdx:haveTex ? vt : (NSInteger)NSNotFound
+												  normalIdx:haveNormals ? vn : (NSInteger)NSNotFound];
 	if (v1 == nil)  return NO;
 	
 	while (![_lexer isAtEndOfLine])
 	{
 		if (!ReadFaceTriple(self, _lexer, &v, &vt, &vn))  return NO;
 		OOAbstractVertex *v2 = [self priv_vertexWithPositionIdx:v
-													texCoordIdx:haveTex ? vt : NSNotFound
-													  normalIdx:haveNormals ? vn : NSNotFound];
+													texCoordIdx:haveTex ? vt : (NSInteger)NSNotFound
+													  normalIdx:haveNormals ? vn : (NSInteger)NSNotFound];
 		if (v2 == nil)  return NO;
 		
-		OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertex0:v0 vertex1:v1 vertex2:v2];
+		OOAbstractFace *face = [[OOAbstractFace alloc] initWithVertex0:v2 vertex1:v1 vertex2:v0];	// Reverse winding.
 		v1 = v2;
 		
 		[_currentGroup addFace:face];
@@ -703,18 +718,24 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return NO;
 	}
 	
+	_currentSmoothGroupFloatArray = nil;
+	
 	if ([key isEqualToString:@"0"] || [key isEqualToString:@"off"])
 	{
 		// No smooth group.
 		_currentSmoothGroup = nil;
+		_currentSmoothGroupID = 0;
 	}
 	else
 	{
 		_currentSmoothGroup = [_smoothGroups objectForKey:key];
 		if (_currentSmoothGroup == nil)
 		{
-			_currentSmoothGroup = [NSArray array];
+			_currentSmoothGroup = [NSMutableArray array];
 			[_smoothGroups setObject:_currentSmoothGroup forKey:key];
+			
+			_currentSmoothGroupID = [_smoothGroups count];
+			NSMapInsertKnownAbsent(_smoothGroupIDs, key, (void *)_currentSmoothGroupID);
 		}
 	}
 	
@@ -927,7 +948,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutCurves)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains curve data which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains curve data which will be ignored.");
 			_warnedAboutCurves = YES;
 		}
 	}
@@ -935,7 +956,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutRenderAttribs)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains rendering attributes which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains rendering attributes which will be ignored.");
 			_warnedAboutRenderAttribs = YES;
 		}
 	}
@@ -943,7 +964,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutLinesOrPoints)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains point or line data which will be ignored.", [self priv_displayName]);
+			OOReportWarning(_issues, @"The document contains point or line data which will be ignored.");
 			_warnedAboutLinesOrPoints = YES;
 		}
 	}
@@ -951,7 +972,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	{
 		if (!_warnedAboutUnknown)
 		{
-			OOReportWarning(_issues, @"\"%@\" contains unknown commands such as \"%@\" (line %lu) which will be ignored.", [self priv_displayName], keyword, (unsigned long)[_lexer lineNumber]);
+			OOReportWarning(_issues, @"The document contains unknown commands such as \"%@\" (line %lu) which will be ignored.", keyword, (unsigned long)[_lexer lineNumber]);
 			_warnedAboutUnknown = YES;
 		}
 	}
@@ -976,13 +997,14 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 @implementation OOOBJVertexCacheKey
 
-- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt
+- (id) initWithV:(NSInteger)v vn:(NSInteger)vn vt:(NSInteger)vt s:(NSUInteger)s
 {
 	if ((self = [super init]))
 	{
 		_v = v;
 		_vn = vn;
 		_vt = vt;
+		_s = s;
 	}
 	return self;
 }
@@ -990,15 +1012,18 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 - (BOOL) isEqual:(id)other
 {
+	if (self == other)  return YES;
+	
 	NSParameterAssert([other isKindOfClass:[OOOBJVertexCacheKey class]]);
 	OOOBJVertexCacheKey *otherKey = other;
-	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt;
+	
+	return _v == otherKey->_v && _vn == otherKey->_vn && _vt == otherKey->_vt && _s == otherKey->_s;
 }
 
 
 - (NSUInteger) hash
 {
-	return (_v * 1089) ^ (_vn * 33) ^ _vt;
+	return (_v * 1089) ^ (_vn * 33) ^ (_vt * 17) ^ _s;
 }
 
 

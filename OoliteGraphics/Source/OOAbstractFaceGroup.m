@@ -1,9 +1,6 @@
 /*
 	OOAbstractFaceGroup.m
 	
-	A face group represents a list of faces to be drawn with the same state.
-	In rendering terms, it corresponds to an element array.
-	
 	
 	Copyright © 2010 Jens Ayton.
 	
@@ -28,7 +25,7 @@
 
 #if !OOLITE_LEAN
 
-#import "OOAbstractFaceGroup.h"
+#import "OOAbstractFaceGroupInternal.h"
 #import "OOAbstractFace.h"
 #import "OOAbstractVertex.h"
 #import "OOFloatArray.h"
@@ -37,13 +34,14 @@
 
 
 NSString * const kOOAbstractFaceGroupChangedNotification = @"org.oolite OOAbstractFaceGroup changed";
-NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupChangeIsAdditive";
+
+NSString * const kOOAbstractFaceGroupChangeAffectsUniqueness = @"kOOAbstractFaceGroupChangeAffectsUniqueness";
+NSString * const kOOAbstractFaceGroupChangeAffectsVertexSchema = @"kOOAbstractFaceGroupChangeAffectsVertexSchema";
+NSString * const kOOAbstractFaceGroupChangeAffectsRenderMesh = @"kOOAbstractFaceGroupChangeAffectsRenderMesh";
+NSString * const kOOAbstractFaceGroupEffectMask = @"kOOAbstractFaceGroupEffectMask";
 
 
 @interface OOAbstractFaceGroup (Private)
-
-// Must be called whenever face group is mutated.
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions;
 
 - (id) priv_initWithCapacity:(NSUInteger)capacity;
 - (void) priv_updateSchemaForFace:(OOAbstractFace *)face;
@@ -120,6 +118,8 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 		GLuint vIdx, elemIdx = 0;
 		for (fIter = 0; fIter < faceCount; fIter++)
 		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
 			OOAbstractVertex *verts[3];
 			
 			for (vIter = 0; vIter < 3; vIter++)
@@ -144,6 +144,8 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 			[verts[0] release];
 			[verts[1] release];
 			[verts[2] release];
+			
+			[pool drain];
 		}
 	}
 	
@@ -153,8 +155,11 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:nil name:kOOAbstractFaceGroupChangedNotification object:self];
+	
 	DESTROY(_faces);
 	DESTROY(_vertexSchema);
+	DESTROY(_temporaryAttributes);
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:nil
 													name:kOOAbstractFaceGroupChangedNotification
@@ -166,7 +171,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	OOAbstractFaceGroup *result = [[OOAbstractFaceGroup allocWithZone:zone] initWithCapacity:[self faceCount]];
+	OOAbstractFaceGroup *result = [[OOAbstractFaceGroup allocWithZone:zone] priv_initWithCapacity:[self faceCount]];
 	if (EXPECT_NOT(result == nil))  return nil;
 	
 	[result setName:[self name]];
@@ -187,7 +192,7 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) setName:(NSString *)name
 {
-	[self priv_becomeDirtyWithAdditions:NO];
+	[self internal_becomeDirtyWithEffects:0];
 	
 	[_name autorelease];
 	_name = [name copy];
@@ -202,16 +207,22 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) setMaterial:(OOMaterialSpecification *)material
 {
-	[self priv_becomeDirtyWithAdditions:NO];
-	
 	[_material autorelease];
 	_material = [material retain];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesRenderMesh];
 }
 
 
 - (NSUInteger) faceCount
 {
 	return [_faces count];
+}
+
+
+- (NSArray *) faces
+{
+	return _faces;
 }
 
 
@@ -223,47 +234,87 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 
 - (void) addFace:(OOAbstractFace *)face
 {
-	[self priv_becomeDirtyWithAdditions:YES];
-	
 	[_faces addObject:face];
 	[self priv_updateSchemaForFace:face];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
 }
 
 
 - (void) insertFace:(OOAbstractFace *)face atIndex:(NSUInteger)index
 {
-	[self priv_becomeDirtyWithAdditions:YES];
-	
 	[_faces insertObject:face atIndex:index];
 	[self priv_updateSchemaForFace:face];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
 }
 
 
 - (void) removeLastFace
 {
-	[self priv_becomeDirtyWithAdditions:NO];
-	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeLastObject];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh | kOOChangeInvalidatesBoundingBox];
 }
 
 
 - (void) removeFaceAtIndex:(NSUInteger)index
 {
-	[self priv_becomeDirtyWithAdditions:NO];
-	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces removeObjectAtIndex:index];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh | kOOChangeInvalidatesBoundingBox];
 }
 
 
 - (void) replaceFaceAtIndex:(NSUInteger)index withFace:(OOAbstractFace *)face
-{
-	[self priv_becomeDirtyWithAdditions:YES];
-	
+{	
 	if (!_homogeneous)  DESTROY(_vertexSchema);
 	[_faces replaceObjectAtIndex:index withObject:face];
+	_boundingBoxIsValid = NO;
 	[self priv_updateSchemaForFace:face];
+	
+	[self internal_becomeDirtyWithEffects:kOOChangeInvalidatesEverything];
+}
+
+
+- (void) replaceAllFaces:(NSArray *)faces
+{
+	[self internal_replaceAllFaces:[[faces mutableCopy] autorelease] withEffects:kOOChangeInvalidatesEverything];
+}
+
+
+- (void) internal_replaceAllFaces:(NSMutableArray *)faces
+					  withEffects:(OOAbstractMeshEffectMask)effects
+{
+	DESTROY(_faces);
+	_faces = [faces mutableCopy];
+	
+	[self internal_becomeDirtyWithEffects:effects];
+}
+
+
+- (BOOL) isAttributeTemporary:(NSString *)attributeKey
+{
+	return [_temporaryAttributes containsObject:attributeKey];
+}
+
+
+- (void) setAttribute:(NSString *)attributeKey temporary:(BOOL)temporary
+{
+	if (attributeKey != nil)
+	{
+		if (temporary)
+		{
+			[_temporaryAttributes removeObject:attributeKey];
+		}
+		else
+		{
+			if (_temporaryAttributes == nil)  _temporaryAttributes = [[NSMutableSet alloc] init];
+			[_temporaryAttributes addObject:attributeKey];
+		}
+	}
 }
 
 
@@ -302,9 +353,69 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 }
 
 
+- (NSDictionary *) vertexSchemaIgnoringTemporary
+{
+	NSDictionary *schema = [self vertexSchema];
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[schema count]];
+	NSString *attributeKey = nil;
+	foreachkey(attributeKey, schema)
+	{
+		if (![self isAttributeTemporary:attributeKey])
+		{
+			[result	setObject:[schema objectForKey:attributeKey] forKey:attributeKey];
+		}
+	}
+	
+	return result;
+}
+
+
 - (BOOL) vertexSchemaIsHomogeneous
 {
 	return _homogeneous && _vertexSchema != nil;
+}
+
+
+- (void) restrictToSchema:(NSDictionary *)schema
+{
+	if ([schema oo_unsignedIntegerForKey:kOOPositionAttributeKey] == 0)
+	{
+		[NSException raise:NSInvalidArgumentException format:@"Cannot restrict a face group to a schema that does not include position."];
+	}
+	
+	NSMutableArray *newFaces = [[NSMutableArray alloc] initWithCapacity:[_faces count]];
+	OOAbstractFace *face = nil;
+	
+	foreach (face, self)
+	{
+		[newFaces addObject:[face faceStrictlyConformingToSchema:schema]];
+	}
+	
+	[self internal_replaceAllFaces:newFaces withEffects:kOOChangeInvalidatesUniqueness | kOOChangeInvalidatesSchema | kOOChangeInvalidatesRenderMesh];
+}
+
+
+- (OOBoundingBox) boundingBox
+{
+	if (!_boundingBoxIsValid)
+	{
+		_boundingBox = kOOZeroBoundingBox;
+		
+		OOAbstractFace *face = nil;
+		foreach (face, self)
+		{
+			OOAbstractVertex *vertices[3];
+			[face getVertices:vertices];
+			
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[0] position]);
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[1] position]);
+			OOBoundingBoxAddVector(&_boundingBox, [vertices[2] position]);
+		}
+		
+		_boundingBoxIsValid = YES;
+	}
+	
+	return _boundingBox;
 }
 
 
@@ -312,7 +423,8 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 {
 	for (unsigned i = 0; i < 3; i++)
 	{
-		NSDictionary *schema = [[face vertexAtIndex:i] schema];
+		OOAbstractVertex *vertex = [face vertexAtIndex:i];
+		NSDictionary *schema = [vertex schema];
 		if (_vertexSchema != nil)
 		{
 			if (![schema isEqualToDictionary:_vertexSchema])
@@ -328,15 +440,23 @@ NSString * const kOOAbstractFaceGroupChangeIsAdditive = @"kOOAbstractFaceGroupCh
 			_homogeneous = YES;
 			_vertexSchema = [[NSDictionary alloc] initWithDictionary:schema];
 		}
+		
+		if (_boundingBoxIsValid)  OOBoundingBoxAddVector(&_boundingBox, [vertex position]);
 	}
 }
 
 
-- (void) priv_becomeDirtyWithAdditions:(BOOL)additions
+- (void) internal_becomeDirtyWithEffects:(OOAbstractMeshEffectMask)effects
 {
-	NSDictionary *userInfo = nil;
-	if (additions)  userInfo = [NSDictionary dictionaryWithObject:$true
-														   forKey:kOOAbstractFaceGroupChangeIsAdditive];
+	NSParameterAssert(((effects & kOOChangeInvalidatesUniqueness) == 0) || ((effects & kOOChangeGuaranteesUniqueness) == 0));
+	
+	if (effects & kOOChangeInvalidatesSchema)  DESTROY(_vertexSchema);
+	if (effects & kOOChangeInvalidatesBoundingBox)  _boundingBoxIsValid = NO;
+	
+	NSDictionary *userInfo = $dict(kOOAbstractFaceGroupEffectMask, $int(effects),
+								   kOOAbstractFaceGroupChangeAffectsUniqueness, $bool(effects & kOOChangeInvalidatesUniqueness),
+								   kOOAbstractFaceGroupChangeAffectsVertexSchema, $bool(effects & kOOChangeInvalidatesSchema),
+								   kOOAbstractFaceGroupChangeAffectsRenderMesh, $bool(effects & kOOChangeInvalidatesRenderMesh));
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kOOAbstractFaceGroupChangedNotification
 														object:self

@@ -14,12 +14,15 @@ extern "C" {
 #import <OoliteBase/OOBaseStringParsing.h>
 #import <OoliteBase/OOCollectionExtractors.h>
 #import <OoliteBase/OODeepCopy.h>
+#import <OoliteBase/OOIsNumberLiteral.h>
 
 #import <OoliteBase/NSObjectOOExtensions.h>
 #import <OoliteBase/NSDictionaryOOExtensions.h>
 #import <OoliteBase/NSNumberOOExtensions.h>
 #import <OoliteBase/NSStringOOExtensions.h>
 #import <OoliteBase/NSThreadOOExtensions.h>
+	
+#import <OoliteBase/OOProblemReporting.h>
 
 
 #ifdef __cplusplus

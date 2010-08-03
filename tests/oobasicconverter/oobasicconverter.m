@@ -23,12 +23,14 @@ int main (int argc, const char * argv[])
 	path = [NSString stringWithUTF8String:buffer];
 	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
-	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
+	OOSimpleProblemReportManager *issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:YES] autorelease];
 	
 	OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 	if (mesh == nil)  exit(EXIT_FAILURE);
 	
-//	OOWriteOOMesh(mesh, [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"], issues);
+	path = [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"];
+	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:NO] autorelease];
+	OOWriteOOMesh(mesh, path, issues);
 	
     [pool drain];
     return 0;
@@ -37,32 +39,16 @@ int main (int argc, const char * argv[])
 
 static OOAbstractMesh *LoadMesh(NSString *path, id <OOProgressReporting> progressReporter, id <OOProblemReporting> issues)
 {
-	id <OOMeshReading> reader = nil;
-	NSString *ext = [[path pathExtension] lowercaseString];
+	id <OOMeshReading> reader = OOReadMeshFromFile(path, progressReporter, issues);
 	
-	if ([ext isEqualToString:@"dat"])
-	{
-		OODATReader *datReader = [[OODATReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-		//	[datReader setSmoothing:YES];
-		[datReader setBrokenSmoothing:YES];
-		reader = datReader;
-	}
-	else if ([ext isEqualToString:@"oomesh"])
-	{
-		reader = [[OOMeshReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	}
-	else if ([ext isEqualToString:@"obj"])
-	{
-		reader = [[OOOBJReader alloc] initWithPath:path progressReporter:progressReporter issues:issues];
-	}
-	else
-	{
-		OOReportError(issues, @"%@: unknown mesh type.", [path lastPathComponent]);
-		return nil;
-	}
-	
-//	return [reader abstractMesh];
-	return (id)[reader renderMesh];
+#if 1
+	return [reader abstractMesh];
+#else
+	OORenderMesh *mesh = nil;
+	NSArray *materials = nil;
+	[reader getRenderMesh:&mesh andMaterialSpecs:&materials];
+	return nil;
+#endif
 }
 
 

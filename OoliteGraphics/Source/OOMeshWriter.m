@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OOMeshWriter.h"
-#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 
@@ -74,7 +73,7 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting>
 		OK = [data writeToFile:path options:NSAtomicWrite error:&error];
 		if (!OK)
 		{
-			OOReportNSError(issues, $sprintf(@"Could not write to %@", name), error);
+			OOReportNSError(issues, $sprintf(@"Could not write to file \"%@\"", name), error);
 		}
 	}
 	
@@ -178,7 +177,19 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 #endif
 	[result appendString:@"\n"];
 	
-	NSDictionary *vertexSchema = [mesh vertexSchema];
+	NSString *modelDesc = [mesh modelDescription];
+	if (modelDesc != nil)
+	{
+		[result appendFormat:@"\tdescription: \"%@\"\n", EscapeString(modelDesc)];
+	}
+	
+	NSDictionary *vertexSchema = [mesh vertexSchemaIgnoringTemporary];
+	if ([vertexSchema objectForKey:kOOSmoothGroupAttributeKey] != nil)
+	{
+		NSMutableDictionary *mutableSchema = [NSMutableDictionary dictionaryWithDictionary:vertexSchema];
+		[mutableSchema removeObjectForKey:kOOSmoothGroupAttributeKey];
+		vertexSchema = mutableSchema;
+	}
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	NSString *key = nil;
 	
@@ -412,7 +423,6 @@ static NSString *IndentTabs(NSUInteger count)
 		}
 		return result;
 	}
-
 }
 
 

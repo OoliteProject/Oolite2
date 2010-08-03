@@ -31,6 +31,7 @@
 #import "OOAbstractFaceGroup.h"
 #import "OOMaterialSpecification.h"
 #import "OORenderMesh.h"
+#import "OOBoundingBox.h"
 
 
 @interface OOAbstractMesh: NSObject <NSFastEnumeration, NSCopying>
@@ -38,14 +39,27 @@
 @private
 	NSMutableArray				*_faceGroups;
 	NSString					*_name;
+	NSString					*_modelDescription;
 	
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materialSpecs;
-	BOOL						_verticesAreUnique;
+	
+	OOBoundingBox				_boundingBox;
+	
+	uint16_t					_batchLevel;
+	
+	uint16_t					_verticesAreUnique: 1,
+								_boundingBoxIsValid: 1,
+								_batchPendingChange: 1;
+	
+	uint32_t					_batchedEffects;
 }
 
 - (NSString *) name;
 - (void) setName:(NSString *)name;
+
+- (NSString *) modelDescription;
+- (void) setModelDescription:(NSString *)value;
 
 - (NSUInteger) faceGroupCount;
 
@@ -60,8 +74,13 @@
 - (NSEnumerator *) faceGroupEnumerator;
 - (NSEnumerator *) objectEnumerator;	// Same as faceGroupEnumerator, only less descriptive.
 
-- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous;
+- (void) getVertexSchema:(NSDictionary **)outSchema homogeneous:(BOOL *)outIsHomogeneous ignoringTemporary:(BOOL)ignoreTemporary;
 - (NSDictionary *) vertexSchema;
+- (NSDictionary *) vertexSchemaIgnoringTemporary;
+
+- (void) restrictToSchema:(NSDictionary *)schema;
+
+- (OOBoundingBox) boundingBox;
 
 //	Mesh manipulations.
 // - (void) applyTransform:(OOMatrix)transform;
@@ -74,6 +93,10 @@
 
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
+// Batch edits: coalesce change notifications.
+- (void) beginBatchEdit;
+- (void) endBatchEdit;
+
 @end
 
 
@@ -84,9 +107,14 @@
 */
 - (OOAbstractMesh *) abstractMesh;
 
+- (OOAbstractMesh *) abstractMeshWithMaterialSpecs:(NSArray *)materialSpecs;
+
 @end
 
 
 extern NSString * const kOOAbstractMeshChangedNotification;
+extern NSString * const kOOAbstractMeshChangeAffectsUniqueness;
+extern NSString * const kOOAbstractMeshChangeAffectsVertexSchema;
+extern NSString * const kOOAbstractMeshChangeAffectsRenderMesh;
 
 #endif	// OOLITE_LEAN

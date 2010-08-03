@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OODATWriter.h"
-#import "OOProblemReporting.h"
 
 #import "OOAbstractMesh.h"
 
@@ -46,7 +45,7 @@ BOOL OOWriteDAT(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> is
 		OK = [data writeToFile:path options:NSAtomicWrite error:&error];
 		if (!OK)
 		{
-			OOReportNSError(issues, $sprintf(@"Could not write to %@", name), error);
+			OOReportNSError(issues, $sprintf(@"Could not write to file \"%@\"", name), error);
 		}
 	}
 	
@@ -100,7 +99,7 @@ NSData *OODATDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 				if (idx == nil)
 				{
 					idx = [NSNumber numberWithUnsignedInteger:vertexCount++];
-					datVert = [vertex vertexConformingToSchema:datVertSchema];
+					datVert = [vertex vertexStrictlyConformingToSchema:datVertSchema];
 					[datVerts addObject:datVert];
 					[datVertToIndex setObject:idx forKey:datVert];
 					[vertexToIndex setObject:idx forKey:vertex];

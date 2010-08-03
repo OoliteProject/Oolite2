@@ -53,6 +53,13 @@
 - (OOAbstractVertex *) vertexAtIndex:(NSUInteger)index;
 - (void) getVertices:(OOAbstractVertex *[3])vertices;
 
+- (NSDictionary *) schema;
+
+- (BOOL) conformsToSchema:(NSDictionary *)schema;
+- (BOOL) strictlyConformsToSchema:(NSDictionary *)schema;
+
+- (OOAbstractFace *) faceStrictlyConformingToSchema:(NSDictionary *)schema;
+
 @end
 
 #endif	// OOLITE_LEAN

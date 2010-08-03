@@ -24,8 +24,6 @@
 */
 
 #import "OOMeshLexer.h"
-#import "OOProblemReporting.h"
-
 
 
 @interface OOMeshLexer (Private)

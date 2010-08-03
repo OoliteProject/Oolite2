@@ -33,6 +33,7 @@
 */
 
 #import <Foundation/Foundation.h>
+#import <OpenGL/gl.h>
 
 
 @interface OOFloatArray: NSArray
@@ -41,16 +42,16 @@
 + (id) arrayWithArray:(NSArray *)array;
 - (id) initWithArray:(NSArray *)array;
 
-+ (id) newWithFloats:(float *)values count:(NSUInteger)count;
-+ (id) arrayWithFloats:(float *)values count:(NSUInteger)count;
-- (id) initWithFloats:(float *)values count:(NSUInteger)count;
++ (id) newWithFloats:(const float *)values count:(NSUInteger)count;
++ (id) arrayWithFloats:(const float *)values count:(NSUInteger)count;
+- (id) initWithFloats:(const float *)values count:(NSUInteger)count;
 
 /*	In the spirit of NSData, NoCopy is a hint. The implementation may choose
 	to copy the data (and immediately free it, if freeWhenDone).
 */
-+ (id) newWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
-+ (id) arrayWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
-- (id) initWithFloatsNoCopy:(float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
++ (id) newWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
++ (id) arrayWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone OO_RETURNS_NOT_RETAINED;
+- (id) initWithFloatsNoCopy:(const float *)values count:(NSUInteger)count freeWhenDone:(BOOL)freeWhenDone;
 
 //	Returns NaN if index is out of range.
 - (float) floatAtIndex:(NSUInteger)index;
@@ -62,6 +63,13 @@
 	Note that this is NOT comparable with -[OOFloatArray betterHash].
 */
 - (NSUInteger) betterHash;
+
+@end
+
+
+@interface OOFloatArray (OpenGL)
+
+- (void) glBufferDataWithUsage:(GLenum)usage;
 
 @end
 

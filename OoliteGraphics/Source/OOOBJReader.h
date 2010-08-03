@@ -30,7 +30,7 @@
 #import "OOMeshReading.h"
 
 @protocol OOOBJMaterialLibraryResolving;
-@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification;
+@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification, OOFloatArray;
 
 
 @interface OOOBJReader: NSObject <OOMeshReading>
@@ -63,7 +63,10 @@
 	NSMutableArray						*_texCoords;
 	NSMutableArray						*_normals;
 	NSMutableArray						*_currentSmoothGroup;
+	NSUInteger							_currentSmoothGroupID;
+	OOFloatArray						*_currentSmoothGroupFloatArray;
 	NSMutableDictionary					*_smoothGroups;
+	NSMapTable							*_smoothGroupIDs;
 	NSMutableDictionary					*_materials;
 	NSMutableDictionary					*_materialGroups;
 	NSMutableDictionary					*_vertexCache;
@@ -87,7 +90,8 @@
 - (OOAbstractMesh *) abstractMesh;
 - (void) getRenderMesh:(OORenderMesh **)renderMesh andMaterialSpecs:(NSArray **)materialSpecifications;
 
-- (NSString *) name;
+- (NSString *) meshName;
+- (NSString *) meshDescription;
 
 @end
 

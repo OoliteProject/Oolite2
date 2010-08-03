@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OODATReader.h"
-#import "OOProblemReporting.h"
 #import "OODATLexer.h"
 
 #import "OOAbstractMesh.h"
@@ -319,6 +318,24 @@ enum
 }
 
 
+- (NSString *) meshName
+{
+	return [[self abstractMesh] name];
+}
+
+
+- (NSString *) meshDescription
+{
+	return [[self abstractMesh] modelDescription];
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return YES;
+}
+
+
 - (BOOL) smoothing
 {
 	return _smoothing;
@@ -380,7 +397,7 @@ enum
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -388,8 +405,8 @@ enum
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 
@@ -401,7 +418,7 @@ enum
 
 - (void) priv_reportMallocFailure
 {
-	OOReportError(_issues, @"Not enough memory to read %@.", [self priv_displayName]);
+	OOReportError(_issues, @"The document could not be read, becuase there is not enough memory.");
 }
 
 
@@ -440,8 +457,8 @@ enum
 		
 		Vector v;
 		OK = [_lexer readReal:&v.x] &&
-		[_lexer readReal:&v.y] &&
-		[_lexer readReal:&v.z];
+			 [_lexer readReal:&v.y] &&
+			 [_lexer readReal:&v.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
@@ -473,7 +490,7 @@ enum
 	}
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSMutableDictionary *smoothGroups = [NSMutableDictionary dictionary];
+	NSMapTable *smoothGroups = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
 	
 	for (NSUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
 	{
@@ -482,8 +499,8 @@ enum
 		RawDATTriangle *triangle = &_rawTriangles[fIter];
 		NSUInteger smoothGroupID, unused, faceVertexCount;
 		OK = [_lexer readInteger:&smoothGroupID] &&
-		[_lexer readInteger:&unused] &&
-		[_lexer readInteger:&unused];
+			 [_lexer readInteger:&unused] &&
+			 [_lexer readInteger:&unused];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
@@ -491,21 +508,20 @@ enum
 		}
 		
 		/*	Canonicalize smooth group IDs. Starts with number 1, using 0
-		 as "unknown" marker.
-		 */
-		NSNumber *key = [NSNumber numberWithUnsignedInteger:smoothGroupID];
-		uint16_t smoothGroup = [smoothGroups oo_unsignedIntForKey:key];
+			 as "unknown" marker.
+		*/
+		NSInteger smoothGroup = (NSInteger)NSMapGet(smoothGroups, (void *)smoothGroupID);
 		if (smoothGroup == 0)
 		{
-			smoothGroup = [smoothGroups count] + 1;
-			[smoothGroups setObject:[NSNumber numberWithUnsignedInteger:smoothGroup] forKey:key];
+			smoothGroup = NSCountMapTable(smoothGroups) + 1;
+			NSMapInsertKnownAbsent(smoothGroups, (void *)smoothGroupID, (void *)smoothGroup);
 		}
 		
 		triangle->smoothGroup = smoothGroup;
 		
 		OK = [_lexer readReal:&triangle->normal.x] &&
-		[_lexer readReal:&triangle->normal.y] &&
-		[_lexer readReal:&triangle->normal.z];
+			 [_lexer readReal:&triangle->normal.y] &&
+			 [_lexer readReal:&triangle->normal.z];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"number"];
@@ -514,12 +530,12 @@ enum
 		CleanVector(&triangle->normal);
 		
 		/*	Oolite (and Dry Dock) attempt to "support" more than three
-		 vertices for legacy files by only using the first three and
-		 then skipping the rest. However, this leaves the texture
-		 coordinates in the TEXTURES section ill-defined. Without a
-		 real example of such a file, it's not clear how to implement
-		 this support in a way that would actually be useful.
-		 */
+			vertices for legacy files by only using the first three and
+			then skipping the rest. However, this leaves the texture
+			coordinates in the TEXTURES section ill-defined. Without a
+			real example of such a file, it's not clear how to implement
+			this support in a way that would actually be useful.
+		*/
 		OK = [_lexer readInteger:&faceVertexCount];
 		if (!OK || faceVertexCount != 3)
 		{
@@ -528,8 +544,8 @@ enum
 		}
 		
 		OK = [_lexer readInteger:&triangle->vertex[0]] &&
-		[_lexer readInteger:&triangle->vertex[1]] &&
-		[_lexer readInteger:&triangle->vertex[2]];
+			 [_lexer readInteger:&triangle->vertex[1]] &&
+			 [_lexer readInteger:&triangle->vertex[2]];
 		if (!OK)
 		{
 			[self priv_reportBasicParseError:@"integer"];
@@ -551,7 +567,10 @@ enum
 		}
 	}
 	
-	_usesSmoothGroups = [smoothGroups count] > 1;
+	_hasSmoothGroups = NSCountMapTable(smoothGroups) > 1;
+	_usesSmoothGroups = _hasSmoothGroups;
+	
+	NSFreeMapTable(smoothGroups);
 	[pool drain];
 	
 	return OK;
@@ -966,7 +985,7 @@ enum
 {
 	NSUInteger vIter, fIter, mIter;
 	BOOL isEdgeVertex[_fileVertexCount];
-	BOOL seenSmoothGroup[_fileVertexCount];
+	uint16_t seenSmoothGroup[_fileVertexCount];
 	memset(seenSmoothGroup, 0, sizeof seenSmoothGroup);
 	
 	if (_usesSmoothGroups)
@@ -994,10 +1013,6 @@ enum
 		}
 	}
 	
-#define UNIQUE_VERTICES 0
-#if UNIQUE_VERTICES
-	NSMutableSet *uniquedVertices = [NSMutableSet set];
-#endif
 	_mesh = [OOAbstractMesh new];
 	
 	NSString *name = [self priv_displayName];
@@ -1043,7 +1058,9 @@ enum
 				
 				for (vIter = 0; vIter < 3; vIter++)
 				{
-					NSUInteger vi = triangle->vertex[vIter];
+					NSUInteger vindex = 2 - vIter;	// Reverse winding to convert from Oolite 1.x convention to Oolite 2.x convention.
+					
+					NSUInteger vi = triangle->vertex[vindex];
 					NSAssert(vi < _fileVertexCount, @"Vertex index out of range.");
 					
 					OOAbstractVertex *vertex = nil;
@@ -1076,8 +1093,15 @@ enum
 					if (haveMaterial)
 					{
 						// Add in texture coordinate.
-						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromVector2D(triangle->texCoords[vIter])
+						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromVector2D(triangle->texCoords[vindex])
 														  forKey:kOOTexCoordsAttributeKey];
+					}
+					
+					if (_hasSmoothGroups)
+					{
+						// Add in smooth group to keep vertices unique.
+						vertex = [vertex vertexByAddingAttribute:OOFloatArrayFromDouble(triangle->smoothGroup)
+														  forKey:kOOSmoothGroupAttributeKey];
 					}
 					
 					triVertices[vIter] = vertex;
@@ -1121,6 +1145,8 @@ enum
 		[faceGroup release];
 	}
 	[pool drain];
+	
+	[_mesh uniqueVertices];
 	
 	[_progressReporter task:self reportsProgress:1.0f];
 	return YES;

@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OODATLexer.h"
-#import "OOProblemReporting.h"
 
 
 typedef enum OODATLexerEndMode

@@ -17,14 +17,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OoliteGraphics.framework */;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 		1A1A373A11C2F9200086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A372D11C2F9180086265F /* OoliteGraphics.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 /* End PBXContainerItemProxy section */
@@ -118,6 +118,9 @@
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
 			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oomergemesh" */;
 			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;

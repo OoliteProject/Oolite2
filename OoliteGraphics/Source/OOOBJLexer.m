@@ -26,7 +26,6 @@
 #if !OOLITE_LEAN
 
 #import "OOOBJLexer.h"
-#import "OOProblemReporting.h"
 
 
 typedef enum OOOBJLexerEndMode

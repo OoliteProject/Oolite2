@@ -18,8 +18,8 @@ int main (int argc, const char * argv[])
 	}
 	
 	id <OOProgressReporting> progressReporter = [[OOSimpleProgressReporter new] autorelease];
-	id <OOProblemReporting> issues = [[OOSimpleProblemReportManager new] autorelease];
 	NSMutableArray *meshes = [NSMutableArray arrayWithCapacity:argc - 1];
+	OOSimpleProblemReportManager *issues = nil;
 	
 	unsigned i;
 	for (i = 1; i < argc; i++)
@@ -31,6 +31,7 @@ int main (int argc, const char * argv[])
 		realpath([[path stringByExpandingTildeInPath] UTF8String], buffer);
 		path = [NSString stringWithUTF8String:buffer];
 		
+		issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:YES] autorelease];
 		OOAbstractMesh *mesh = LoadMesh(path, progressReporter, issues);
 		if (mesh == nil)  return EXIT_FAILURE;
 		[meshes addObject:mesh];
@@ -45,8 +46,11 @@ int main (int argc, const char * argv[])
 		[mergedMesh mergeMesh:mesh];
 	}
 	
-	OOWriteOOMesh(mergedMesh, @"meged-mesh.oomesh", issues);
-	OOWriteDAT(mergedMesh, @"meged-mesh.dat", issues);
+	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:@"merged-mesh.oomesh" forReading:NO] autorelease];
+	OOWriteOOMesh(mergedMesh, @"merged-mesh.oomesh", issues);
+	
+	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:@"merged-mesh.dat" forReading:NO] autorelease];
+	OOWriteDAT(mergedMesh, @"merged-mesh.dat", issues);
 	
     [pool drain];
     return 0;

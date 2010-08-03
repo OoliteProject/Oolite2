@@ -26,7 +26,6 @@
 
 #import "OOMeshReader.h"
 #import "OOMeshLexer.h"
-#import "OOProblemReporting.h"
 #import "OOIndexArray.h"
 
 #import "OORenderMesh.h"
@@ -39,7 +38,6 @@
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
-- (NSString *) priv_displayName;
 
 - (BOOL) priv_readSectionNamed:(NSString *)name ofType:(NSString *)type;
 - (BOOL) priv_readProperty:(id *)outProperty;
@@ -75,7 +73,6 @@
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
-	DESTROY(_abstractMesh);
 	DESTROY(_renderMesh);
 	
 	DESTROY(_meshName);
@@ -208,7 +205,7 @@
 		[_lexer consumeOptionalNewlines];
 		if (![_lexer getToken:kOOMeshTokenEOF])
 		{
-			OOReportWarning(_issues, @"\"%@\" contains unknown data after then end of the file.", [self priv_displayName]);
+			OOReportWarning(_issues, @"There is unknown data after the end of the file, which will be ignored.");
 		}
 	}
 	
@@ -226,20 +223,37 @@
 
 - (OOAbstractMesh *) abstractMesh
 {
-	if (_abstractMesh == nil)
-	{
-		OORenderMesh *renderMesh = nil;
-		[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
-		_abstractMesh = [[renderMesh abstractMesh] retain];
-		
-		NSUInteger i, count = [_groupMaterials count];
-		for (i = 0; i < count; i++)
-		{
-			[[_abstractMesh faceGroupAtIndex:i] setMaterial:[_groupMaterials objectAtIndex:i]];
-		}
-	}
+	OORenderMesh *renderMesh = nil;
+	[self getRenderMesh:&renderMesh andMaterialSpecs:NULL];
 	
-	return _abstractMesh;
+	OOAbstractMesh *mesh = [renderMesh abstractMeshWithMaterialSpecs:_groupMaterials];
+	
+	if (_meshName != nil)  [mesh setName:_meshName];
+	if (_meshDescription != nil)  [mesh setModelDescription:_meshDescription];
+	
+	return mesh;
+}
+
+
+- (BOOL) prefersAbstractMesh
+{
+	return NO;
+}
+
+
+- (NSString *) meshName
+{
+	[self parse];
+	
+	return _meshName;
+}
+
+
+- (NSString *) meshDescription
+{
+	[self parse];
+	
+	return _meshDescription;
 }
 
 #endif
@@ -273,7 +287,7 @@
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
-	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u of %@: %@.");
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
 	format = OOLocalizeProblemString(_issues, format);
 	
 	va_list args;
@@ -281,8 +295,8 @@
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], [self priv_displayName], message];
-	[_issues addProblemOfType:kOOMProblemTypeError message:message];
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
 
@@ -295,12 +309,6 @@
 - (void) priv_reportMallocFailure
 {
 	OOReportError(_issues, @"Not enough memory to read %@.", [[NSFileManager defaultManager] displayNameAtPath:_path]);
-}
-
-
-- (NSString *) priv_displayName
-{
-	return [[NSFileManager defaultManager] displayNameAtPath:_path];
 }
 
 
@@ -444,12 +452,12 @@
 		materialSpec = [_materialsByName objectForKey:materialKey];
 		if (materialSpec == nil)
 		{
-			OOReportWarning(_issues, @"Mesh group \"%@\" in %@ specifies undefined material \"%@\", defining empty material.", name, [self priv_displayName]);
+			OOReportWarning(_issues, @"Mesh group \"%@\" specifies undefined material \"%@\", defining empty material.", name);
 		}
 	}
 	else
 	{
-		OOReportWarning(_issues, @"noMaterial", @"Mesh group \"%@\" in %@ does not specify a material, using empty material with same name as group.", name, [self priv_displayName]);
+		OOReportWarning(_issues, @"noMaterial", @"Mesh group \"%@\" does not specify a material, using empty material with same name as group.", name);
 		materialKey = name;
 	}
 	
@@ -519,7 +527,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		if (![_unknownSectionTypes containsObject:type])
 		{
 			[_unknownSectionTypes addObject:type];
-			OOReportWarning(_issues, @"Unknown section of type \"%@\" on line %u of %@; contents will be ignored.", type, [_lexer lineNumber], [self priv_displayName]);
+			OOReportWarning(_issues, @"Unknown section of type \"%@\" on line %u; contents will be ignored.", type, [_lexer lineNumber]);
 		}
 		// We still need to parse it to find the end reliably.
 	}

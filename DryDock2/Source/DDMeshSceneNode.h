@@ -23,9 +23,10 @@
 	
 	// TEMP
 	OOShaderProgram				*_whiteShader;
-	OOShaderProgram				*_wireframeShader;
-	OOShaderProgram				*_boundingBoxShader;
-	GLint						_wireframeColorUniform;
+	OOShaderProgram				*_shadedWireframeShader;
+	OOShaderProgram				*_solidWireframeShader;
+	GLint						_shadedWireframeColorUniform;
+	GLint						_solidWireframeColorUniform;
 	
 	GLuint						_normalVectorVBO;
 	GLuint						_normalVBO;

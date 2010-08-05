@@ -42,10 +42,10 @@
 		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; };
 		1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */; };
 		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
-		1A5838ED1205E83200118F45 /* BoundingBoxShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EB1205E83200118F45 /* BoundingBoxShader.fs */; };
-		1A5838EE1205E83200118F45 /* BoundingBoxShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EC1205E83200118F45 /* BoundingBoxShader.vs */; };
-		1A6B97D511F5DC2600B2E78A /* WireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */; };
-		1A6B97D911F5DC7B00B2E78A /* WireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */; };
+		1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */; };
+		1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */; };
+		1A6B97D511F5DC2600B2E78A /* ShadedWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */; };
+		1A6B97D911F5DC7B00B2E78A /* ShadedWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */; };
 		1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392B811C3CE5B002F405C /* PreviewShader.vs */; };
 		1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392C011C3D0CD002F405C /* PreviewShader.fs */; };
 		1A8A287911F393C400775894 /* MABaseFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A286E11F393C300775894 /* MABaseFuture.m */; };
@@ -178,10 +178,10 @@
 		1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CarbonFSRefCreation.m"; sourceTree = "<group>"; };
 		1A4CC2D411F4E58700D7144C /* DDSceneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSceneView.h; sourceTree = "<group>"; };
 		1A4CC2D511F4E58700D7144C /* DDSceneView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDSceneView.mm; sourceTree = "<group>"; };
-		1A5838EB1205E83200118F45 /* BoundingBoxShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = BoundingBoxShader.fs; sourceTree = "<group>"; };
-		1A5838EC1205E83200118F45 /* BoundingBoxShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = BoundingBoxShader.vs; sourceTree = "<group>"; };
-		1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = WireframeShader.vs; sourceTree = "<group>"; };
-		1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = WireframeShader.fs; sourceTree = "<group>"; };
+		1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.fs; sourceTree = "<group>"; };
+		1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.vs; sourceTree = "<group>"; };
+		1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = ShadedWireframeShader.vs; sourceTree = "<group>"; };
+		1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = ShadedWireframeShader.fs; sourceTree = "<group>"; };
 		1A7392B811C3CE5B002F405C /* PreviewShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.vs; sourceTree = "<group>"; };
 		1A7392C011C3D0CD002F405C /* PreviewShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.fs; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		1A8A286D11F393C300775894 /* MABaseFuture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MABaseFuture.h; sourceTree = "<group>"; };
@@ -411,12 +411,12 @@
 		1A7392BA11C3CE5C002F405C /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				1A5838EC1205E83200118F45 /* BoundingBoxShader.vs */,
-				1A5838EB1205E83200118F45 /* BoundingBoxShader.fs */,
+				1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */,
+				1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */,
 				1A7392B811C3CE5B002F405C /* PreviewShader.vs */,
 				1A7392C011C3D0CD002F405C /* PreviewShader.fs */,
-				1A6B97D411F5DC2600B2E78A /* WireframeShader.vs */,
-				1A6B97D811F5DC7B00B2E78A /* WireframeShader.fs */,
+				1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */,
+				1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -598,14 +598,14 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */,
 				1A7392C111C3D0CD002F405C /* PreviewShader.fs in Resources */,
-				1A6B97D511F5DC2600B2E78A /* WireframeShader.vs in Resources */,
-				1A6B97D911F5DC7B00B2E78A /* WireframeShader.fs in Resources */,
+				1A6B97D511F5DC2600B2E78A /* ShadedWireframeShader.vs in Resources */,
+				1A6B97D911F5DC7B00B2E78A /* ShadedWireframeShader.fs in Resources */,
 				1A2F86B711F7336700435A2E /* ToolbarShowFaces.icns in Resources */,
 				1A2F86B811F7336700435A2E /* ToolbarShowNormals.icns in Resources */,
 				1A2F86B911F7336700435A2E /* ToolbarShowWireframe.icns in Resources */,
 				1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */,
-				1A5838ED1205E83200118F45 /* BoundingBoxShader.fs in Resources */,
-				1A5838EE1205E83200118F45 /* BoundingBoxShader.vs in Resources */,
+				1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */,
+				1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

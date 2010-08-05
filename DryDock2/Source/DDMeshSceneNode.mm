@@ -29,8 +29,8 @@
 - (void) priv_renderImmediateMode;
 
 - (OOShaderProgram *) priv_whiteShader;
-- (OOShaderProgram *) priv_wireframeShader;
-- (OOShaderProgram *) priv_boundingBoxShader;
+- (OOShaderProgram *) priv_shadedWireframeShader;
+- (OOShaderProgram *) priv_solidWireframeShader;
 - (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name attributeMap:(NSDictionary *)attributeMap;
 
 @end
@@ -73,8 +73,8 @@
 	
 	// Shader attribute indices may need rebinding. This is wasteful, but gets the job done:
 	_whiteShader = nil;
-	_wireframeShader = nil;
-	_boundingBoxShader = nil;
+	_shadedWireframeShader = nil;
+	_solidWireframeShader = nil;
 	
 	_renderMesh = mesh;
 }
@@ -92,7 +92,7 @@
 
 - (void) renderWithState:(NSDictionary *)state
 {
-	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:0.1f];
+	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:1.0f];
 	if ([state oo_boolForKey:@"show wireframe"])
 	{
 		[self priv_renderBoundingBox];
@@ -130,8 +130,8 @@
 {
 	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
 	
-	[[self priv_wireframeShader] apply];
-	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.7f, 0.0f, 1.0f));
+	[[self priv_shadedWireframeShader] apply];
+	OOGL(glUniform4f(_shadedWireframeColorUniform, 0.7f, 0.7f, 0.0f, 1.0f));
 	
 	[self.renderMesh renderWithMaterials:nil];
 	
@@ -161,38 +161,13 @@
 		0, 4, 1, 5, 2, 6, 3, 7
 	};
 	
-	[[self priv_boundingBoxShader] apply];
+	[[self priv_solidWireframeShader] apply];
+	OOGL(glUniform4f(_shadedWireframeColorUniform, 0.7f, 0.7f, 0.7f, 1.0f));
 	
 	OOGL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices));
 	OOGL(glEnableVertexAttribArray(0));
 	OOGL(glDrawElements(GL_LINES, sizeof indices / sizeof *indices, GL_UNSIGNED_INT, indices));
 	OOGL(glDisableVertexAttribArray(0));
-}
-
-
-- (void) priv_renderImmediateMode
-{
-	// Immediate-mode rendering from abstract mesh, for debugging.
-	
-	glColor4f(1, 1, 1, 1);
-	glEnable(GL_LIGHT0);
-	
-	glBegin(GL_TRIANGLES);
-	for (OOAbstractFaceGroup *group in self.mesh.abstractMesh)
-	{
-		for (OOAbstractFace *face in group)
-		{
-			for (unsigned i = 0; i < 3; i++)
-			{
-				OOAbstractVertex *vertex = [face vertexAtIndex:i];
-				Vector v = vertex.normal;
-				glNormal3f(v.x, v.y, v.z);
-				v = vertex.position;
-				glVertex3f(v.x, v.y, v.z);
-			}
-		}
-	}
-	glEnd();
 }
 
 
@@ -225,22 +200,41 @@
 		next += 6;
 	}
 	
-	[[self priv_wireframeShader] apply];
-	OOGL(glUniform4f(_wireframeColorUniform, 0.7f, 0.0f, 0.0f, 0.0f));
+	[[self priv_solidWireframeShader] apply];
+	OOGL(glUniform4f(_shadedWireframeColorUniform, 1.0f, 0.3f, 0.3f, 1.0f));
 	
-	OOGL(glEnable(GL_POLYGON_OFFSET_LINE));
-	OOGL(glPolygonOffset(1, 1));
-	
-	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
-	OOGL(glEnableClientState(GL_VERTEX_ARRAY));
-	OOGL(glVertexPointer(3, GL_FLOAT, 0, buffer));
+	OOGL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, buffer));
+	OOGL(glEnableVertexAttribArray(0));
 	OOGL(glDrawArrays(GL_LINES, 0, vCount * 2));
-	OOGL(glDisableClientState(GL_VERTEX_ARRAY));
-	
-	OOGL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-	OOGL(glDisable(GL_POLYGON_OFFSET_LINE));
+	OOGL(glDisableVertexAttribArray(0));
 	
 	free(buffer);
+}
+
+
+- (void) priv_renderImmediateMode
+{
+	// Immediate-mode rendering from abstract mesh, for debugging.
+	
+	glColor4f(1, 1, 1, 1);
+	glEnable(GL_LIGHT0);
+	
+	glBegin(GL_TRIANGLES);
+	for (OOAbstractFaceGroup *group in self.mesh.abstractMesh)
+	{
+		for (OOAbstractFace *face in group)
+		{
+			for (unsigned i = 0; i < 3; i++)
+			{
+				OOAbstractVertex *vertex = [face vertexAtIndex:i];
+				Vector v = vertex.normal;
+				glNormal3f(v.x, v.y, v.z);
+				v = vertex.position;
+				glVertex3f(v.x, v.y, v.z);
+			}
+		}
+	}
+	glEnd();
 }
 
 
@@ -254,27 +248,31 @@
 }
 
 
-- (OOShaderProgram *) priv_wireframeShader
+- (OOShaderProgram *) priv_shadedWireframeShader
 {
-	if (_wireframeShader == nil)
+	if (_shadedWireframeShader == nil)
 	{
-		_wireframeShader = [self priv_loadShaderNamed:@"WireframeShader" attributeMap:nil];
-		if (_wireframeShader != nil)
+		_shadedWireframeShader = [self priv_loadShaderNamed:@"ShadedWireframeShader" attributeMap:nil];
+		if (_shadedWireframeShader != nil)
 		{
-			OOGL(_wireframeColorUniform = glGetUniformLocation(_wireframeShader.program, "uColor"));
+			OOGL(_shadedWireframeColorUniform = glGetUniformLocation(_shadedWireframeShader.program, "uColor"));
 		}
 	}
-	return _wireframeShader;
+	return _shadedWireframeShader;
 }
 
 
-- (OOShaderProgram *) priv_boundingBoxShader
+- (OOShaderProgram *) priv_solidWireframeShader
 {
-	if (_boundingBoxShader == nil)
+	if (_solidWireframeShader == nil)
 	{
-		_boundingBoxShader = [self priv_loadShaderNamed:@"BoundingBoxShader" attributeMap:$dict(@"aPosition", $int(0))];
+		_solidWireframeShader = [self priv_loadShaderNamed:@"SolidWireframeShader" attributeMap:$dict(@"aPosition", $int(0))];
+		if (_solidWireframeShader != nil)
+		{
+			OOGL(_solidWireframeColorUniform = glGetUniformLocation(_solidWireframeShader.program, "uColor"));
+		}
 	}
-	return _boundingBoxShader;
+	return _solidWireframeShader;
 }
 
 

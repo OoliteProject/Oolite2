@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1A1A369711C2F8820086265F /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A369611C2F8800086265F /* OoliteGraphics.framework */; };
+		1A808EC51227DC3C0040B04F /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A808EC41227DC380040B04F /* OoliteBase.framework */; };
 		8DD76F9A0486AA7600D96B5E /* oobasicconverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* oobasicconverter.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,13 @@
 			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
+		1A808EC31227DC380040B04F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A808EBF1227DC380040B04F /* OoliteBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = OoliteBase;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +42,7 @@
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../../OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A71420D11B56D38009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A808EBF1227DC380040B04F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		8DD76FA10486AA7600D96B5E /* oobasicconverter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = oobasicconverter; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -44,6 +53,7 @@
 			files = (
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
 				1A1A369711C2F8820086265F /* OoliteGraphics.framework in Frameworks */,
+				1A808EC51227DC3C0040B04F /* OoliteBase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +82,7 @@
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1A808EBF1227DC380040B04F /* OoliteBase.xcodeproj */,
 				1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */,
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
 			);
@@ -82,6 +93,14 @@
 			isa = PBXGroup;
 			children = (
 				1A1A369611C2F8800086265F /* OoliteGraphics.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A808EC01227DC380040B04F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A808EC41227DC380040B04F /* OoliteBase.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,6 +149,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1A808EC01227DC380040B04F /* Products */;
+					ProjectRef = 1A808EBF1227DC380040B04F /* OoliteBase.xcodeproj */;
+				},
+				{
 					ProductGroup = 1A1A368B11C2F8800086265F /* Products */;
 					ProjectRef = 1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */;
 				},
@@ -147,6 +170,13 @@
 			fileType = wrapper.framework;
 			path = OoliteGraphics.framework;
 			remoteRef = 1A1A369511C2F8800086265F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A808EC41227DC380040B04F /* OoliteBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteBase.framework;
+			remoteRef = 1A808EC31227DC380040B04F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

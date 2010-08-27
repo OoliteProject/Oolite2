@@ -129,7 +129,7 @@ static NSString *EscapedString(NSString *string);
 		size_t i, count = self.tagCount;
 		if (count != 0)
 		{
-			[ioString appendString:@"\t\t\n\t\t// Tags\n\t\tnode [shape=none]\n"];
+			[ioString appendString:@"\t\t\n\t\t// Tags\n\t\tnode [color=grey]\n"];
 			for (i = 0; i != count; ++i)
 			{
 				SGSceneTag *tag = [self tagAtIndex:i];

@@ -33,6 +33,15 @@
 #import "OOAbstractMesh.h"
 
 
+typedef enum
+{
+	kStoppedWithoutSeparator,
+	kStoppedWithSeparator,
+	kStoppedWithTerminator,
+	kStoppedWithDoubleComma
+} ConsumeSeparatorOrTerminatorResult;
+
+
 @interface OOMeshReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...;
@@ -43,6 +52,12 @@
 - (BOOL) priv_readProperty:(id *)outProperty;
 - (BOOL) priv_readDictionary:(NSDictionary **)outDictionary;
 - (BOOL) priv_readArray:(NSDictionary **)outArray;
+
+/*	Advance when reading a dictionary or array.
+	A separator consists of at least one newline, or zero or more newlines with one comma in.
+	A terminator consists of an optional separator of either form, followed by the specified terminator token.
+*/
+- (ConsumeSeparatorOrTerminatorResult) priv_consumeSeparatorOrTerminator:(OOMeshTokenType)terminator;
 
 @end
 
@@ -266,12 +281,24 @@
 		if (_renderMesh == nil)
 		{
 			[self parse];
-			_renderMesh = [[OORenderMesh alloc] initWithName:_meshName
-												 vertexCount:_vertexCount
-												  attributes:_attributeArrays
-													  groups:_groupIndexArrays];
+			if ([_attributeArrays count] > 0 && [_groupIndexArrays count] > 0)
+			{
+				_renderMesh = [[OORenderMesh alloc] initWithName:_meshName
+													 vertexCount:_vertexCount
+													  attributes:_attributeArrays
+														  groups:_groupIndexArrays];
+			}
+			else
+			{
+				_renderMesh = [[NSNull null] retain];
+			}
+
 		}
-		*renderMesh = _renderMesh;
+		
+		if (_renderMesh != (id)[NSNull null])
+		{
+			*renderMesh = _renderMesh;
+		}
 	}
 	
 	if (materialSpecifications != NULL)
@@ -551,8 +578,9 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 	[_lexer consumeOptionalNewlines];
 	
 	id data = nil;
+	BOOL stop = ([_lexer currentTokenType] == kOOMeshTokenCloseBrace);
 	
-	while (OK)
+	while (OK && !stop)
 	{
 		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
 		
@@ -589,21 +617,24 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 			}
 			
 		}
-		else if (token == kOOMeshTokenCloseBrace)
+		else switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
 		{
-			[innerPool release];
-			break;
-		}
-		else
-		{
-			OK = NO;
-			[self priv_reportBasicParseError:@"key or }"];
-		}
-		
-		if (OK)
-		{
-			OK = [_lexer consumeCommaOrNewlines];
-			if (EXPECT_NOT(!OK))  [self priv_reportBasicParseError:@"comma or newline"];
+			case kStoppedWithoutSeparator:
+				OK = NO;
+				[self priv_reportBasicParseError:@"comma, newline or }"];
+				break;
+				
+			case kStoppedWithSeparator:
+				break;
+				
+			case kStoppedWithTerminator:
+				stop = YES;
+				break;
+				
+			case kStoppedWithDoubleComma:
+				OK = NO;
+				[self priv_reportBasicParseError:@"newline or key"];
+				break;
 		}
 		
 		[innerPool release];
@@ -701,8 +732,9 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 	BOOL OK = YES;
 	NSMutableDictionary *result = [NSMutableDictionary dictionary];
 	[_lexer consumeOptionalNewlines];
+	BOOL stop = ([_lexer currentTokenType] == kOOMeshTokenCloseBrace);
 	
-	while (OK)
+	while (OK && !stop)
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
@@ -729,21 +761,24 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 			}
 			
 		}
-		else if (token == kOOMeshTokenCloseBrace)
+		else switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
 		{
-			[pool release];
-			break;
-		}
-		else
-		{
-			OK = NO;
-			[self priv_reportBasicParseError:@"key or }"];
-		}
-		
-		if (OK)
-		{
-			OK = [_lexer consumeCommaOrNewlines];
-			if (EXPECT_NOT(!OK))  [self priv_reportBasicParseError:@"comma or newline"];
+			case kStoppedWithoutSeparator:
+				OK = NO;
+				[self priv_reportBasicParseError:@"comma, newline or }"];
+				break;
+				
+			case kStoppedWithSeparator:
+				break;
+				
+			case kStoppedWithTerminator:
+				stop = YES;
+				break;
+				
+			case kStoppedWithDoubleComma:
+				OK = NO;
+				[self priv_reportBasicParseError:@"newline or key"];
+				break;
 		}
 		
 		[pool release];
@@ -761,33 +796,82 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 	BOOL OK = YES;
 	NSMutableArray *result = [NSMutableArray array];
 	[_lexer consumeOptionalNewlines];
+	BOOL stop = ([_lexer currentTokenType] == kOOMeshTokenCloseBracket);
 	
-	while (OK)
+	while (OK && !stop)
 	{
-		if ([_lexer currentTokenType] != kOOMeshTokenCloseBracket)
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		
+		id propertyValue = nil;
+		OK = [self priv_readProperty:&propertyValue];
+		if (OK)
 		{
-			NSAutoreleasePool *pool = [NSAutoreleasePool new];
-			
-			id propertyValue = nil;
-			OK = [self priv_readProperty:&propertyValue];
-			if (OK)
-			{
-				[result addObject:propertyValue];
-				OK = [_lexer consumeCommaOrNewlines];
-				if (EXPECT_NOT(!OK))  [self priv_reportBasicParseError:@"comma or newline"];
-			}
-			
-			[pool release];
+			[result addObject:propertyValue];
 		}
-		else
+		[pool release];
+		
+		switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBracket])
 		{
-			break;
+			case kStoppedWithoutSeparator:
+				OK = NO;
+				[self priv_reportBasicParseError:@"comma, newline or ]"];
+				break;
+				
+			case kStoppedWithSeparator:
+				break;
+				
+			case kStoppedWithTerminator:
+				stop = YES;
+				break;
+				
+			case kStoppedWithDoubleComma:
+				OK = NO;
+				[self priv_reportBasicParseError:@"newline or value"];
+				break;
 		}
-
 	}
 	
 	if (OK)  *outArray = [NSArray arrayWithArray:result];
 	return OK;
+}
+
+
+- (ConsumeSeparatorOrTerminatorResult) priv_consumeSeparatorOrTerminator:(OOMeshTokenType)terminator
+{
+	ConsumeSeparatorOrTerminatorResult result = kStoppedWithoutSeparator;
+	BOOL haveComma = NO;
+	
+	for (;;)
+	{
+		if (EXPECT_NOT(![_lexer advance]))  return result;
+		
+		OOMeshTokenType tok = [_lexer currentTokenType];
+		if (tok == kOOMeshTokenNewline)
+		{
+			result = kStoppedWithSeparator;
+		}
+		else if (tok == kOOMeshTokenComma)
+		{
+			if (!haveComma)
+			{
+				result = kStoppedWithSeparator;
+				haveComma = YES;
+			}
+			else
+			{
+				return kStoppedWithDoubleComma;
+			}
+
+		}
+		else
+		{
+			if (tok == terminator)
+			{
+				result = kStoppedWithTerminator;
+			}
+			return result;
+		}
+	}
 }
 
 @end

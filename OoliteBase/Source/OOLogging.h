@@ -124,3 +124,8 @@ extern NSString * const kOOLogOpenGLError;					// @"rendering.opengl.error"
 
 // Don't use. However, #defining it as @"unclassified.module" can be used as a stepping stone to OOLog support.
 extern NSString * const kOOLogUnconvertedNSLog;				// @"unclassified"
+
+
+#define JA_DUMP_LOG(...) OOLog(@"temp.dump", __VA_ARGS__)
+#define OODUMP JA_DUMP
+#import "JAValueToString.h"

@@ -47,6 +47,8 @@
 		1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */; };
 		1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */; };
+		1AE9F1B11221B15B007A4B97 /* JAValueToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE9F1B21221B15B007A4B97 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE9F1B01221B15B007A4B97 /* JAValueToString.m */; };
 		1AED64FF11B5A84900811A44 /* OOLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED64FC11B5A84900811A44 /* OOLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AED650011B5A84900811A44 /* OOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AED64FD11B5A84900811A44 /* OOLogging.m */; };
 		1AED650111B5A84900811A44 /* OOLoggingExtended.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED64FE11B5A84900811A44 /* OOLoggingExtended.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,6 +99,8 @@
 		1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGarbageCollectionSupport.m; sourceTree = "<group>"; };
 		1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
 		1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
+		1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAValueToString.h; path = ../Dependencies/JAValueToString/JAValueToString.h; sourceTree = SOURCE_ROOT; };
+		1AE9F1B01221B15B007A4B97 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JAValueToString.m; path = ../Dependencies/JAValueToString/JAValueToString.m; sourceTree = SOURCE_ROOT; };
 		1AED64FC11B5A84900811A44 /* OOLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLogging.h; path = ../Source/OOLogging.h; sourceTree = SOURCE_ROOT; };
 		1AED64FD11B5A84900811A44 /* OOLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLogging.m; path = ../Source/OOLogging.m; sourceTree = SOURCE_ROOT; };
 		1AED64FE11B5A84900811A44 /* OOLoggingExtended.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLoggingExtended.h; path = ../Source/OOLoggingExtended.h; sourceTree = SOURCE_ROOT; };
@@ -164,6 +168,8 @@
 				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
 				1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */,
 				1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */,
+				1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */,
+				1AE9F1B01221B15B007A4B97 /* JAValueToString.m */,
 			);
 			name = Utilities;
 			path = ../Source;
@@ -247,6 +253,7 @@
 				1ABAC2DF11C39AE3005301BA /* OOGarbageCollectionSupport.h in Headers */,
 				1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */,
 				1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */,
+				1AE9F1B11221B15B007A4B97 /* JAValueToString.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +349,7 @@
 				1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */,
 				1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */,
 				1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */,
+				1AE9F1B21221B15B007A4B97 /* JAValueToString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

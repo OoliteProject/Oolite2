@@ -166,7 +166,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1A1AB0810909AE56001039FA /* Build configuration list for PBXProject "Oolite-importer" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Oolite-importer */;
 			projectDirPath = "";
 			projectRoot = "";

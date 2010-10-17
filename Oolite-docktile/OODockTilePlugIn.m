@@ -146,7 +146,7 @@ static NSArray *ResourceManagerRootPaths(void);
 
 - (NSString *) screenShotsPath
 {
-	return [NSHomeDirectory() stringByAppendingPathComponent:@SNAPSHOTDIR];
+	return [NSHomeDirectory() stringByAppendingPathComponent:@"Oolite Screen Shots"];
 }
 
 

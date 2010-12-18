@@ -27,14 +27,14 @@ SOFTWARE.
 
 #import "OOLeopardFeaturesLoader.h"
 #import "OOLogging.h"
-#import "JoystickHandlerOSXLeopard.h"
+#import "OOLeopardJoystickManager.h"
 
 
 @implementation OOLeopardFeaturesLoader
 
 - (id) init
 {
-	[JoystickHandler setStickHandlerClass:[JoystickHandlerOSXLeopard class]];
+	[OOJoystickManager setStickHandlerClass:[OOLeopardJoystickManager class]];
 	
 	return [super init];
 }

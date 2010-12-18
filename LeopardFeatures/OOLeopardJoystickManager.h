@@ -1,7 +1,7 @@
 /*
 
-JoystickHandlerOSXLeopard.h
-By Alex Smith
+OOLeopardJoystickManager.h
+By Alex Smith and Jens Ayton
 
 Oolite
 Copyright (C) 2004-2010 Giles C Williams and contributors
@@ -25,20 +25,24 @@ MA 02110-1301, USA.
 
 
 #import <IOKit/hid/IOHIDManager.h>
-#import "JoystickHandler.h"
+#import "OOJoystickManager.h"
 
 
 #define STICK_GAMMA 2.0
 
 
-@interface JoystickHandlerOSXLeopard: JoystickHandler
+enum
+{
+	kJoystickGammaTableSize = 256
+};
+
+
+@interface OOLeopardJoystickManager: OOJoystickManager
 {
 @private
-	IOHIDManagerRef		ioHIDManagerRef;
-	int					gammaTable[256];
+	IOHIDManagerRef			hidManager;
+	CFMutableArrayRef		devices;
+	int						gammaTable[kJoystickGammaTableSize];
 }
-
-- (char*) getJoystickName:(int)stickNumber;
-- (int16_t) getAxisWithStick:(int) stickNum axis:(int) axisNum;
 
 @end

@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A09F11912BD2F6700BF7F48 /* OOLeopardJoystickManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A09F11812BD2F6700BF7F48 /* OOLeopardJoystickManager.m */; };
 		1A38FA1F1165F39800D81FBC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A38FA1E1165F39800D81FBC /* Foundation.framework */; };
 		1A38FBE4116604D100D81FBC /* OOLeopardFeaturesLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A38FBE3116604D100D81FBC /* OOLeopardFeaturesLoader.m */; };
 		1A38FD0E11663A6E00D81FBC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A38FD0D11663A6E00D81FBC /* IOKit.framework */; };
-		1A8DF49312BD0389006D580F /* JoystickHandlerOSXLeopard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DF49212BD0389006D580F /* JoystickHandlerOSXLeopard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,14 +38,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A09F11712BD2F6700BF7F48 /* OOLeopardJoystickManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLeopardJoystickManager.h; sourceTree = "<group>"; };
+		1A09F11812BD2F6700BF7F48 /* OOLeopardJoystickManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLeopardJoystickManager.m; sourceTree = "<group>"; };
 		1A38FA1E1165F39800D81FBC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A38FBB51165F4BF00D81FBC /* Oolite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Oolite.xcodeproj; path = ../../Oolite.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A38FBE2116604D100D81FBC /* OOLeopardFeaturesLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLeopardFeaturesLoader.h; sourceTree = "<group>"; };
 		1A38FBE3116604D100D81FBC /* OOLeopardFeaturesLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLeopardFeaturesLoader.m; sourceTree = "<group>"; };
 		1A38FC131166089C00D81FBC /* oolite-options.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-options.xcconfig"; path = "../../src/Cocoa/oolite-options.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A38FD0D11663A6E00D81FBC /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		1A8DF49112BD0389006D580F /* JoystickHandlerOSXLeopard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoystickHandlerOSXLeopard.h; sourceTree = "<group>"; };
-		1A8DF49212BD0389006D580F /* JoystickHandlerOSXLeopard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoystickHandlerOSXLeopard.m; sourceTree = "<group>"; };
 		8D576316048677EA00EA77CD /* Oolite Leopard support.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Oolite Leopard support.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,8 +98,8 @@
 			children = (
 				1A38FBE2116604D100D81FBC /* OOLeopardFeaturesLoader.h */,
 				1A38FBE3116604D100D81FBC /* OOLeopardFeaturesLoader.m */,
-				1A8DF49112BD0389006D580F /* JoystickHandlerOSXLeopard.h */,
-				1A8DF49212BD0389006D580F /* JoystickHandlerOSXLeopard.m */,
+				1A09F11712BD2F6700BF7F48 /* OOLeopardJoystickManager.h */,
+				1A09F11812BD2F6700BF7F48 /* OOLeopardJoystickManager.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A38FBE4116604D100D81FBC /* OOLeopardFeaturesLoader.m in Sources */,
-				1A8DF49312BD0389006D580F /* JoystickHandlerOSXLeopard.m in Sources */,
+				1A09F11912BD2F6700BF7F48 /* OOLeopardJoystickManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

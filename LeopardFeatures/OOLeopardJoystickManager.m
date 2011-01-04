@@ -148,59 +148,166 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 }
 
 
+static int AxisIndex(uint32_t page, uint32_t usage)
+{
+	/*
+		Map axis-like HID usages to SDL-like axis indices. These are all the
+		commonly used joystick axes according to Microsoft's DirectInput
+		documentation (hey, you've got to get your info somewhere).
+		
+		GD_Slider, GD_Dial, DG_Wheel and Sim_Throttle are actually distinct;
+		unlike the others, they're uncentered. (By implication,
+		IOHIDElementHasPreferredState() should be false.) This should, in
+		particular, be considered when mapping to the throttle: centered axes
+		should provide relative input (for gamepads), while uncentered ones
+		should provide absolute input. Since that festering pool of pus, SDL,
+		can't make this distinction, OOJoystickManager can't either (yet).
+		-- Ahruman 2011-01-04
+	*/
+	
+	switch (page)
+	{
+		case kHIDPage_GenericDesktop:
+			switch (usage)
+			{
+				case kHIDUsage_GD_X: return 0;
+				case kHIDUsage_GD_Y: return 1;
+				case kHIDUsage_GD_Z: return 2;
+				case kHIDUsage_GD_Rx: return 3;
+				case kHIDUsage_GD_Ry: return 4;
+				case kHIDUsage_GD_Rz: return 5;
+				case kHIDUsage_GD_Slider: return 6;
+				case kHIDUsage_GD_Dial: return 7;
+				case kHIDUsage_GD_Wheel: return 8;
+			}
+			break;
+		
+		case kHIDPage_Simulation:
+			switch (usage)
+		{
+			case kHIDUsage_Sim_Throttle:
+				return 9;
+		}
+	}
+	
+	// Negative numbers indicate non-axis.
+	return -1;
+}
+
+
+static uint8_t MapHatValue(CFIndex value, CFIndex max)
+{
+	/*
+		A hat switch has four or eight values, indicating directions. 0
+		is straight up/forwards, and subsequent values increase clockwise.
+		Out-of-range values are nulls, indicating no direction is pressed.
+	*/
+	
+	uint8_t result = JOYHAT_CENTERED;
+	if (0 <= value && value <= max)
+	{
+		if (max == 3)  switch (value)
+		{
+			case 0:
+				result = JOYHAT_UP;
+				break;
+				
+			case 1:
+				result = JOYHAT_RIGHT;
+				break;
+				
+			case 2:
+				result = JOYHAT_DOWN;
+				break;
+				
+			case 3:
+				result = JOYHAT_LEFT;
+				break;
+		}
+		else if (max == 7)  switch (value)
+		{
+			case 0:
+				result = JOYHAT_UP;
+				break;
+				
+			case 1:
+				result = JOYHAT_RIGHTUP;
+				break;
+				
+			case 2:
+				result = JOYHAT_RIGHT;
+				break;
+				
+			case 3:
+				result = JOYHAT_RIGHTDOWN;
+				break;
+				
+			case 4:
+				result = JOYHAT_DOWN;
+				break;
+				
+			case 5:
+				result = JOYHAT_LEFTDOWN;
+				break;
+				
+			case 6:
+				result = JOYHAT_LEFT;
+				break;
+				
+			case 7:
+				result = JOYHAT_LEFTUP;
+				break;
+		}
+	}
+	return result;
+}
+
+
 - (void) handleInputEvent:(IOHIDValueRef)value
 {
 	IOHIDElementRef	element = IOHIDValueGetElement(value);
 	uint32_t usagePage = IOHIDElementGetUsagePage(element);
 	uint32_t usage = IOHIDElementGetUsage(element);
-	BOOL isAxis = NO;
-	BOOL validEvent = NO;
 	int buttonNum = 0;
 	int axisNum = 0;
 	
-	if (usagePage == 0x01)
+	axisNum = AxisIndex(usagePage, usage);
+	if (axisNum >= 0)
 	{
-			// Axis Event
-		if( (usage >= 0x30) && (usage < 0x30 + MAX_AXES))
-		{
-			// Axis in range 
-			axisNum = usage - 0x30;
-			isAxis = YES;
-			validEvent = YES;
-		}
-		// Code to handle PS3 button forces/accelerometer goes here ...
+		JoyAxisEvent evt;
+		evt.type = JOYAXISMOTION;
+		evt.which = 0;
+		evt.axis = axisNum;
+		// FIXME: assumption that axes range from 0-255 is invalid.
+		evt.value = gammaTable[IOHIDValueGetIntegerValue(value) % kJoystickGammaTableSize];
+		[self decodeAxisEvent:&evt];
 	}
-	
-	if (usagePage == 0x09)
+	else if (usagePage == kHIDPage_GenericDesktop && usage == kHIDUsage_GD_Hatswitch)
+	{
+		CFIndex max = IOHIDElementGetLogicalMax(element);
+		CFIndex min = IOHIDElementGetLogicalMin(element);
+		
+		JoyHatEvent evt =
+		{
+			.type = JOYHAT_MOTION,
+			.which = 0,
+			.hat = 0,	// The abuse of usage values for identifying elements means we can't distinguish between hats.
+			.value = MapHatValue(IOHIDValueGetIntegerValue(value) - min, max - min)
+		};
+		
+		[self decodeHatEvent:&evt];
+	}
+	else if (usagePage == kHIDPage_Button)
 	{
 		// Button Event
-		isAxis = NO;
-		validEvent = YES;
 		buttonNum = usage;
-	}
-	
-	if (validEvent)
-	{
-		if (isAxis)
-		{
-			JoyAxisEvent evt;
-			evt.type = JOYAXISMOTION;
-			evt.which = 0;
-			evt.axis = axisNum;
-			// FIXME: assumption that axes range from 0-255 is invalid.
-			evt.value = gammaTable[IOHIDValueGetIntegerValue(value) % kJoystickGammaTableSize];
-			[self decodeAxisEvent:&evt];
-		}
-		else
-		{
-			JoyButtonEvent evt;
-			BOOL buttonState = (IOHIDValueGetIntegerValue(value) != 0);
-			evt.type = buttonState ? JOYBUTTONDOWN : JOYBUTTONUP;
-			evt.which = 0;
-			evt.button = buttonNum;
-			evt.state = buttonState ? 1 : 0;	
-			[self decodeButtonEvent:&evt];
-		}
+		JoyButtonEvent evt;
+		BOOL buttonState = (IOHIDValueGetIntegerValue(value) != 0);
+		evt.type = buttonState ? JOYBUTTONDOWN : JOYBUTTONUP;
+		evt.which = 0;
+		evt.button = buttonNum;
+		evt.state = buttonState ? 1 : 0;	
+		[self decodeButtonEvent:&evt];
 	}
 }
 

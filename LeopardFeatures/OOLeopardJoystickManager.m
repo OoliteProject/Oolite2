@@ -203,63 +203,20 @@ static uint8_t MapHatValue(CFIndex value, CFIndex max)
 		Out-of-range values are nulls, indicating no direction is pressed.
 	*/
 	
-	uint8_t result = JOYHAT_CENTERED;
 	if (0 <= value && value <= max)
 	{
-		if (max == 3)  switch (value)
+		if (max == 3)
 		{
-			case 0:
-				result = JOYHAT_UP;
-				break;
-				
-			case 1:
-				result = JOYHAT_RIGHT;
-				break;
-				
-			case 2:
-				result = JOYHAT_DOWN;
-				break;
-				
-			case 3:
-				result = JOYHAT_LEFT;
-				break;
+			const uint8_t valueMap4[4] = { JOYHAT_UP, JOYHAT_RIGHT, JOYHAT_DOWN, JOYHAT_LEFT };
+			return valueMap4[value];
 		}
-		else if (max == 7)  switch (value)
+		else if (max == 7)
 		{
-			case 0:
-				result = JOYHAT_UP;
-				break;
-				
-			case 1:
-				result = JOYHAT_RIGHTUP;
-				break;
-				
-			case 2:
-				result = JOYHAT_RIGHT;
-				break;
-				
-			case 3:
-				result = JOYHAT_RIGHTDOWN;
-				break;
-				
-			case 4:
-				result = JOYHAT_DOWN;
-				break;
-				
-			case 5:
-				result = JOYHAT_LEFTDOWN;
-				break;
-				
-			case 6:
-				result = JOYHAT_LEFT;
-				break;
-				
-			case 7:
-				result = JOYHAT_LEFTUP;
-				break;
+			const uint8_t valueMap8[8] = { JOYHAT_UP, JOYHAT_RIGHTUP, JOYHAT_RIGHT, JOYHAT_RIGHTDOWN, JOYHAT_DOWN, JOYHAT_LEFTDOWN, JOYHAT_LEFT, JOYHAT_LEFTUP };
+			return valueMap8[value];
 		}
 	}
-	return result;
+	return JOYHAT_CENTERED;
 }
 
 

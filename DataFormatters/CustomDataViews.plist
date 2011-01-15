@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>File Version</key>
+	<string>1</string>
+	
+	
+	<!-- JavaScript values -->
+	<key>jsval</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>{JSValueToStrSafeDbg($VAR)}:s</string>
+	</dict>
+	<key>jsval *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>{(char *)JSValueToStrSafeDbg(*$VAR)}:s</string>
+	</dict>
+	<key>jsid</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>{(char *)JSIDToStrSafeDbg($VAR)}:s</string>
+	</dict>
+	<key>JSObject *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>{JSObjectToStrSafeDbg($VAR)}:s</string>
+	</dict>
+	<key>JSString *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>{JSStringToStrSafeDbg($VAR)}:s</string>
+	</dict>
+	
+	<key>JSScript *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%filename%:s:%lineno</string>
+	</dict>
+	
+	
+	<!-- Objective-C classes -->
+	<key>AI *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%stateMachineName%:s:%currentState%:s for %ownerDesc%:s</string>
+	</dict>
+	<key>OOEquipmentType *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%_name%:s" (%_identifier%:s)</string>
+	</dict>
+	<key>OOJSScript *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%name%:s"</string>
+	</dict>
+	<key>OOMesh *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%baseFile%:s" (%vertexCount% vertices, %faceCount% faces, %materialCount% materials)</string>
+	</dict>
+	<key>OOPolygonSprite *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%_name%:s" ({$VAR-&gt;_solidCount / 3} triangles)</string>
+	</dict>
+	<key>OOTimeProfile *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%_totalTime%s</string>
+	</dict>
+	<key>OOTimeProfileEntry *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%_function%:s x%_hitCount% (%_totalTimeSum% total, %_selfTimeSum% self)</string>
+	</dict>
+	<key>OOSelfDrawingEntity</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%basefile%:s" (%vertexCount% vertices, %faceCount% faces, %textureCount% textures)</string>
+	</dict>
+	<key>OOConcreteTexture *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%_key%:s</string>
+	</dict>
+	<key>OOConcreteTexture</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%_key%:s</string>
+	</dict>
+	<key>ShipEntity *</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%_shipKey%:s"</string>
+	</dict>
+	<key>ShipEntity</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>"%_shipKey%:s"</string>
+	</dict>
+	
+	
+	<!-- Structs -->
+	<key>Random_Seed</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%a%, %b%, %c%, %d%, %e%, %f%</string>
+	</dict>
+	<key>RANROTSeed</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%high%, %low%</string>
+	</dict>
+	<key>RNG_Seed</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%a%, %b%, %c%, %d%</string>
+	</dict>
+	<key>Vector</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>(%x%, %y%, %z%)</string>
+	</dict>
+	<key>Quaternion</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>(%w% + %x%i + %y%j + %z%k)</string>
+	</dict>
+	<key>OOPixMap</key>
+	<dict>
+		<key>SummaryString</key>
+		<string>%width% x %height%</string>
+	</dict>
+</dict>
+</plist>

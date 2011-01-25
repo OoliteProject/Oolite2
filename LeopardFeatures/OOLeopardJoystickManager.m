@@ -111,30 +111,34 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 	
 	if (OOLogWillDisplayMessagesInClass(@"joystick.connect.element"))
 	{
-		OOLogIndent();
-		
 		// Print out elements of new device
-		CFArrayRef elementList = IOHIDDeviceCopyMatchingElements( device, NULL, 0L );
-		CFIndex idx, count = CFArrayGetCount(elementList);
-		
-		for (idx = 0; idx < count; idx++)
+		CFArrayRef elementList = IOHIDDeviceCopyMatchingElements(device, NULL, 0L);
+		if (elementList != NULL)
 		{
-			IOHIDElementRef element = (IOHIDElementRef)CFArrayGetValueAtIndex(elementList, idx);
-			IOHIDElementType elementType = IOHIDElementGetType(element);
-			if (elementType > kIOHIDElementTypeInput_ScanCodes)
+			OOLogIndent();
+			
+			CFIndex idx, count = CFArrayGetCount(elementList);
+			
+			for (idx = 0; idx < count; idx++)
 			{
-				continue;
+				IOHIDElementRef element = (IOHIDElementRef)CFArrayGetValueAtIndex(elementList, idx);
+				IOHIDElementType elementType = IOHIDElementGetType(element);
+				if (elementType > kIOHIDElementTypeInput_ScanCodes)
+				{
+					continue;
+				}
+				IOHIDElementCookie elementCookie = IOHIDElementGetCookie(element);
+				uint32_t usagePage = IOHIDElementGetUsagePage(element);
+				uint32_t usage = IOHIDElementGetUsage(element);
+				uint32_t min = (uint32_t)IOHIDElementGetPhysicalMin(element);
+				uint32_t max = (uint32_t)IOHIDElementGetPhysicalMax(element);
+				NSString *name = (NSString *)IOHIDElementGetProperty(element, CFSTR(kIOHIDElementNameKey)) ?: @"unnamed";
+				OOLog(@"joystick.connect.element", @"%@ - usage %d:%d, cookie %d, range %d-%d", name, usagePage, usage, (int) elementCookie, min, max);
 			}
-			IOHIDElementCookie elementCookie = IOHIDElementGetCookie(element);
-			uint32_t usagePage = IOHIDElementGetUsagePage(element);
-			uint32_t usage = IOHIDElementGetUsage(element);
-			uint32_t min = (uint32_t)IOHIDElementGetPhysicalMin(element);
-			uint32_t max = (uint32_t)IOHIDElementGetPhysicalMax(element);
-			NSString *name = (NSString *)IOHIDElementGetProperty(element, CFSTR(kIOHIDElementNameKey)) ?: @"unnamed";
-			OOLog(@"joystick.connect.element", @"%@ - usage %d:%d, cookie %d, range %d-%d", name, usagePage, usage, (int) elementCookie, min, max);
+			
+			OOLogOutdent();
+			CFRelease(elementList);
 		}
-		
-		OOLogOutdent();
 	}
 }
 

@@ -21,13 +21,6 @@
 			remoteGlobalIDString = 0865432206B8447D000CA0AB;
 			remoteInfo = Oolite;
 		};
-		1A38FBBD1165F4BF00D81FBC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1A38FBB51165F4BF00D81FBC /* Oolite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1A71E6F30BCE340C00CD5C13;
-			remoteInfo = "libpng-custom";
-		};
 		1A38FBBF1165F4C700D81FBC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A38FBB51165F4BF00D81FBC /* Oolite.xcodeproj */;
@@ -116,7 +109,6 @@
 			isa = PBXGroup;
 			children = (
 				1A38FBBC1165F4BF00D81FBC /* Oolite.app */,
-				1A38FBBE1165F4BF00D81FBC /* libpng_for_oolite.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -179,13 +171,6 @@
 			fileType = wrapper.application;
 			path = Oolite.app;
 			remoteRef = 1A38FBBB1165F4BF00D81FBC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1A38FBBE1165F4BF00D81FBC /* libpng_for_oolite.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libpng_for_oolite.a;
-			remoteRef = 1A38FBBD1165F4BF00D81FBC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

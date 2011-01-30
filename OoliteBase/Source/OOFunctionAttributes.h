@@ -55,10 +55,20 @@
 #else
 	#define OO_RETURNS_RETAINED
 #endif
+
 #if __has_feature(attribute_ns_returns_not_retained)
 	#define OO_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
 #else
 	#define OO_RETURNS_NOT_RETAINED
+#endif
+
+// OO_NS_CONSUMED: indicates that a reference to an object parameter is "consumed".
+#ifndef OO_NS_CONSUMED
+#if __has_feature(attribute_ns_consumed)
+#define OO_NS_CONSUMED __attribute__((ns_consumed))
+#else
+#define OO_NS_CONSUMED
+#endif
 #endif
 
 // OO_UNREACHABLE(): a statement that should never be executed (Clang optimization hint).
@@ -68,5 +78,23 @@
 	#define OO_UNREACHABLE() do {} while (0)
 #endif
 
+
+#if __OBJC__
+/*	OOConsumeReference()
+	Decrements the Clang Static Analyzer's notion of an object's reference
+	count. This is used to work around cases where the analyzer claims an
+	object is being leaked but it actually isn't, due to a pattern the
+	analyzer doesn't understand (like singletons, or references being stored
+	in JavaScript objects' private field).
+	Do not use this blindly. If you aren't absolutely certain it's appropriate,
+	don't use it.
+	-- Ahruman 2011-01-28
+*/
+OOINLINE id OOConsumeReference(id OO_NS_CONSUMED value) ALWAYS_INLINE_FUNC;
+OOINLINE id OOConsumeReference(id OO_NS_CONSUMED value)
+{
+	return value;
+}
+#endif
 
 #endif	/* INCLUDED_OOFUNCTIONATTRIBUTES_h */

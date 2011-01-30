@@ -267,6 +267,8 @@ size_t OOPixMapBytesPerPixelForFormat(OOPixMapFormat format)
 		case kOOPixMapRGBA: return 4;
 	}
 	
+	[NSException raise:NSInvalidArgumentException format:@"Invalid pixel format %li.", (long)format];
+	OO_UNREACHABLE();
 	return -1;
 }
 #endif

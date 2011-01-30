@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities
+END
+SGSceneGraphUtilities.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGSceneGraphUtilities.m
+END
+SGVectorTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGVectorTypes.h
+END
+SGMatrixTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGMatrixTypes.h
+END
+SGVectorTypes.mm
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGVectorTypes.mm
+END
+SGMatrixTypes.mm
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGMatrixTypes.mm
+END
+SGSceneGraphUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Utilities/SGSceneGraphUtilities.h
+END

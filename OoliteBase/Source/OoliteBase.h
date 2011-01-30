@@ -15,6 +15,8 @@ extern "C" {
 #import <OoliteBase/OOCollectionExtractors.h>
 #import <OoliteBase/OODeepCopy.h>
 #import <OoliteBase/OOIsNumberLiteral.h>
+#import <OoliteBase/OOCPUInfo.h>
+#import <OoliteBase/OOWeakReference.h>
 
 #import <OoliteBase/NSObjectOOExtensions.h>
 #import <OoliteBase/NSDictionaryOOExtensions.h>

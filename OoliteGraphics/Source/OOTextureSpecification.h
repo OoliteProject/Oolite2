@@ -67,11 +67,13 @@ typedef enum
 
 enum
 {
-	kOOTextureNoShrink				= 0x00000010UL,
-	kOOTextureRepeatS				= 0x00000020UL,
-	kOOTextureRepeatT				= 0x00000040UL,
-	kOOTextureNoFNFMessage			= 0x00000080UL,	// Don't log file not found error
-	kOOTextureNeverScale			= 0x00000100UL,	// Don't rescale texture, even if rect textures are not available. This *must not* be used for regular textures, but may be passed to OOTextureLoader when being used for other purposes.
+	kOOTextureShrinkIfLarge			= 0x00000010UL,
+	kOOTextureNoShrink				= 0x00000020UL,
+	kOOTextureNeverScale			= 0x00000040UL,	// Don't rescale texture, even if result is not usable as texture. This *must not* be used for regular textures, but may be passed to OOTextureLoader when being used for other purposes.
+	
+	kOOTextureRepeatS				= 0x00000080UL,
+	kOOTextureRepeatT				= 0x00000100UL,
+	kOOTextureNoFNFMessage			= 0x00000200UL,	// Don't log file not found error
 	kOOTextureAlphaMask				= 0x00000200UL,	// Single-channel texture should be GL_ALPHA, not GL_LUMINANCE. No effect for multi-channel textures.
 	kOOTextureCubeMap				= 0x00000400UL,
 	

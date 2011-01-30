@@ -25,6 +25,8 @@ extern "C" {
 
 #import "OORenderMesh.h"
 
+#import "OOTexture.h"
+
 #import "OOShaderProgram.h"
 
 

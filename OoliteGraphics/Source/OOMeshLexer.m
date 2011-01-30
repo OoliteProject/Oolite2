@@ -729,7 +729,13 @@ OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 - (BOOL) advance
 {
 	DESTROY(_tokenString);
-	return ScanBase(&_state);
+	BOOL result = ScanBase(&_state);
+	
+#if 0
+	if (result)  NSLog(@"TOKEN: %@", [self currentTokenDescription]);
+#endif
+	
+	return result;
 }
 
 

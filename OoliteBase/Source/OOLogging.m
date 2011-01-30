@@ -66,7 +66,9 @@ struct OOLogIndentStackElement
 };
 
 
-typedef void (*PrintLogMessageIMP)(id self, SEL _cmd, NSString *message);
+#define PRINTLOGMESSAGE_SEL	@selector(printLogMessage:ofClass:)
+
+typedef void (*PrintLogMessageIMP)(id self, SEL _cmd, NSString *message, NSString *mclass);
 typedef BOOL (*ShouldShowMessageInClassIMP)(id self, SEL _cmd, NSString *messageClass);
 
 
@@ -137,9 +139,9 @@ NSString *OOLogGetParentMessageClass(NSString *messageClass)
 }
 
 
-OOINLINE void OOLogOutputHandlerPrint(NSString *message)
+OOINLINE void OOLogOutputHandlerPrint(NSString *message, NSString *mclass)
 {
-	sPrintLogMessage(sHandler, @selector(printLogMessage:), message);
+	sPrintLogMessage(sHandler, PRINTLOGMESSAGE_SEL, message, mclass);
 }
 
 
@@ -378,7 +380,7 @@ void OOLogWithFunctionFileAndLineAndArguments(NSString *messageClass, const char
 			formattedMessage = [NSString stringWithFormat:@"%s%@", indentString, formattedMessage];
 		}
 		
-		OOLogOutputHandlerPrint(formattedMessage);
+		OOLogOutputHandlerPrint(formattedMessage, messageClass);
 	NS_HANDLER
 		OOLogInternal(OOLOG_EXCEPTION_IN_LOG, @"***** Exception thrown during logging: %@ : %@", [localException name], [localException reason]);
 	NS_ENDHANDLER
@@ -479,7 +481,7 @@ void OOLoggingInit(OOLogOutputHandler *logHandler)
 		exit(EXIT_FAILURE);
 	}
 	
-	sPrintLogMessage = (PrintLogMessageIMP)[sHandler methodForSelector:@selector(printLogMessage:)];
+	sPrintLogMessage = (PrintLogMessageIMP)[sHandler methodForSelector:PRINTLOGMESSAGE_SEL];
 	sShouldShowMessageInClass = (ShouldShowMessageInClassIMP)[sHandler methodForSelector:@selector(shouldShowMessageInClass:)];
 	
 	if (sPrintLogMessage == NULL || sShouldShowMessageInClass == NULL)
@@ -514,7 +516,7 @@ void OOLogInsertMarker(void)
 	[sLock unlock];
 	
 	marker = [NSString stringWithFormat:@"\n\n========== [Marker %u] ==========", thisMarkerID];
-	OOLogOutputHandlerPrint(marker);
+	OOLogOutputHandlerPrint(marker, @"marker");
 }
 
 
@@ -551,7 +553,7 @@ static void OOLogInternal_(const char *function, NSString *format, ...)
 		
 		if (sHandler != nil)
 		{
-			OOLogOutputHandlerPrint(formattedMessage);
+			OOLogOutputHandlerPrint(formattedMessage, @"");
 		}
 		else
 		{

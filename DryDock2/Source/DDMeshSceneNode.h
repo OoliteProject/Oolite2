@@ -8,7 +8,7 @@
 
 #import "SGSceneNode.h"
 
-@class DDMesh, OORenderMesh, OOShaderProgram;
+@class DDMesh, OORenderMesh, OOShaderProgram, OOTexture;
 
 
 @interface DDMeshSceneNode: SGSceneNode
@@ -30,6 +30,9 @@
 	
 	GLuint						_normalVectorVBO;
 	GLuint						_normalVBO;
+	
+	// TEMP
+	OOTexture					*_testTexture;
 }
 
 - (id) initWithMesh:(DDMesh *)mesh;

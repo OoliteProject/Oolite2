@@ -92,6 +92,11 @@
 
 - (void) renderWithState:(NSDictionary *)state
 {
+	_testTexture = [OOTexture textureFromFile:[[NSBundle mainBundle] pathForResource:@"Placeholder Texture" ofType:@"png"]
+									  options:kOOTextureDefaultOptions
+								   anisotropy:kOOTextureDefaultAnisotropy
+									  lodBias:kOOTextureDefaultLODBias];
+	
 	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:1.0f];
 	if ([state oo_boolForKey:@"show wireframe"])
 	{

@@ -317,7 +317,8 @@ NSString *kSGSceneNodeModifiedNotification = @"se.ayton.jens SGSceneNode modifie
 
 - (void) setBoxedTransform:(NSValue *)value
 {
-	self.transform = [value sg_matrix4x4Value];
+	SGMatrix4x4 matrix = [value sg_matrix4x4Value];
+	self.transform = matrix;
 }
 
 

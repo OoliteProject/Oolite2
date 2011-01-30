@@ -56,6 +56,27 @@
 		1ACBCF5D11EE47FF0067E95D /* libOpenCTM-for-oolite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ACBCF5811EE47E50067E95D /* libOpenCTM-for-oolite.a */; };
 		1ACBCF6611EE48790067E95D /* OOCTMReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBCF6411EE48790067E95D /* OOCTMReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACBCF6711EE48790067E95D /* OOCTMReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF6511EE48790067E95D /* OOCTMReader.m */; };
+		1AD8418B1229211E00FC382A /* OOPNGTextureLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841841229211E00FC382A /* OOPNGTextureLoader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		1AD8418C1229211E00FC382A /* OOPNGTextureLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841851229211E00FC382A /* OOPNGTextureLoader.m */; };
+		1AD8418D1229211E00FC382A /* OOTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841861229211E00FC382A /* OOTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD8418E1229211E00FC382A /* OOTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841871229211E00FC382A /* OOTexture.m */; };
+		1AD8418F1229211E00FC382A /* OOTextureInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841881229211E00FC382A /* OOTextureInternal.h */; };
+		1AD841901229211E00FC382A /* OOTextureLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841891229211E00FC382A /* OOTextureLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD841911229211E00FC382A /* OOTextureLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8418A1229211E00FC382A /* OOTextureLoader.m */; };
+		1AD841951229214100FC382A /* OOConcreteTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841931229214100FC382A /* OOConcreteTexture.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		1AD841961229214100FC382A /* OOConcreteTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841941229214100FC382A /* OOConcreteTexture.m */; };
+		1AD841991229214F00FC382A /* OONullTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841971229214F00FC382A /* OONullTexture.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		1AD8419A1229214F00FC382A /* OONullTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841981229214F00FC382A /* OONullTexture.m */; };
+		1AD841A81229217F00FC382A /* OOPixMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841A21229217F00FC382A /* OOPixMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD841A91229217F00FC382A /* OOPixMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841A31229217F00FC382A /* OOPixMap.m */; };
+		1AD841AA1229217F00FC382A /* OOPixMapChannelOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841A41229217F00FC382A /* OOPixMapChannelOperations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD841AB1229217F00FC382A /* OOPixMapChannelOperations.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841A51229217F00FC382A /* OOPixMapChannelOperations.m */; };
+		1AD842821229224E00FC382A /* OOPixMapScaling.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD842801229224E00FC382A /* OOPixMapScaling.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD842831229224E00FC382A /* OOPixMapScaling.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD842811229224E00FC382A /* OOPixMapScaling.m */; };
+		1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD842BB1229234200FC382A /* OOTextureGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD842BC1229234200FC382A /* OOTextureGenerator.m */; };
+		1AD843BA1229316100FC382A /* libpng-for-oolite-graphics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD843B71229314400FC382A /* libpng-for-oolite-graphics.a */; };
+		1AD843D11229323E00FC382A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD843D01229323E00FC382A /* libz.dylib */; };
 		1AEA251811A73AA300B361DC /* OODATLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA232E11A728C100B361DC /* OODATLexer.h */; settings = {ATTRIBUTES = (); }; };
 		1AEA251911A73AA400B361DC /* OODATLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEA232F11A728C100B361DC /* OODATLexer.m */; };
 		1AEA251A11A73AA400B361DC /* OODATReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AEA235C11A72E0B00B361DC /* OODATReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -100,6 +121,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = OpenCTM;
+		};
+		1AD843B61229314400FC382A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AD843B21229314400FC382A /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
+			remoteInfo = libpng;
+		};
+		1AD843B81229315900FC382A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AD843B21229314400FC382A /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = libpng;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -158,6 +193,27 @@
 		1ACBCF5311EE47E50067E95D /* OpenCTM.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = OpenCTM.xcodeproj; sourceTree = "<group>"; };
 		1ACBCF6411EE48790067E95D /* OOCTMReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCTMReader.h; sourceTree = "<group>"; };
 		1ACBCF6511EE48790067E95D /* OOCTMReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCTMReader.m; sourceTree = "<group>"; };
+		1AD841841229211E00FC382A /* OOPNGTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPNGTextureLoader.h; sourceTree = "<group>"; };
+		1AD841851229211E00FC382A /* OOPNGTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPNGTextureLoader.m; sourceTree = "<group>"; };
+		1AD841861229211E00FC382A /* OOTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTexture.h; sourceTree = "<group>"; };
+		1AD841871229211E00FC382A /* OOTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTexture.m; sourceTree = "<group>"; };
+		1AD841881229211E00FC382A /* OOTextureInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTextureInternal.h; sourceTree = "<group>"; };
+		1AD841891229211E00FC382A /* OOTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTextureLoader.h; sourceTree = "<group>"; };
+		1AD8418A1229211E00FC382A /* OOTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTextureLoader.m; sourceTree = "<group>"; };
+		1AD841931229214100FC382A /* OOConcreteTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConcreteTexture.h; sourceTree = "<group>"; };
+		1AD841941229214100FC382A /* OOConcreteTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOConcreteTexture.m; sourceTree = "<group>"; };
+		1AD841971229214F00FC382A /* OONullTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OONullTexture.h; sourceTree = "<group>"; };
+		1AD841981229214F00FC382A /* OONullTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OONullTexture.m; sourceTree = "<group>"; };
+		1AD841A21229217F00FC382A /* OOPixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPixMap.h; sourceTree = "<group>"; };
+		1AD841A31229217F00FC382A /* OOPixMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPixMap.m; sourceTree = "<group>"; };
+		1AD841A41229217F00FC382A /* OOPixMapChannelOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPixMapChannelOperations.h; sourceTree = "<group>"; };
+		1AD841A51229217F00FC382A /* OOPixMapChannelOperations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPixMapChannelOperations.m; sourceTree = "<group>"; };
+		1AD842801229224E00FC382A /* OOPixMapScaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPixMapScaling.h; sourceTree = "<group>"; };
+		1AD842811229224E00FC382A /* OOPixMapScaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPixMapScaling.m; sourceTree = "<group>"; };
+		1AD842BB1229234200FC382A /* OOTextureGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTextureGenerator.h; sourceTree = "<group>"; };
+		1AD842BC1229234200FC382A /* OOTextureGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTextureGenerator.m; sourceTree = "<group>"; };
+		1AD843B21229314400FC382A /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = libpng.xcodeproj; sourceTree = "<group>"; };
+		1AD843D01229323E00FC382A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1AEA232E11A728C100B361DC /* OODATLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATLexer.h; sourceTree = "<group>"; };
 		1AEA232F11A728C100B361DC /* OODATLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATLexer.m; sourceTree = "<group>"; };
 		1AEA235C11A72E0B00B361DC /* OODATReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATReader.h; sourceTree = "<group>"; };
@@ -182,6 +238,8 @@
 				1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */,
 				1ACBCF5D11EE47FF0067E95D /* libOpenCTM-for-oolite.a in Frameworks */,
 				1AB36BF311F25389006E68A3 /* OpenGL.framework in Frameworks */,
+				1AD843BA1229316100FC382A /* libpng-for-oolite-graphics.a in Frameworks */,
+				1AD843D11229323E00FC382A /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +265,7 @@
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */,
+				1AD843D01229323E00FC382A /* libz.dylib */,
 			);
 			name = oomesh;
 			sourceTree = "<group>";
@@ -214,10 +273,11 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+				1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */,
 				1AB36BF211F25389006E68A3 /* OpenGL.framework */,
 				1ACBCF5311EE47E50067E95D /* OpenCTM.xcodeproj */,
-				1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */,
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+				1AD843B21229314400FC382A /* libpng.xcodeproj */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -226,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				1ABAC2B011C3973F005301BA /* Rendering */,
+				1AD841A11229216800FC382A /* Pixmap */,
 				1A7D37BF11B16BD700857CEF /* Abstract */,
 				1A7D37C011B16BE000857CEF /* Readers */,
 				1A7D37C111B16BE900857CEF /* Writers */,
@@ -320,7 +381,6 @@
 		1A864C8D11A5EC26008CDC78 /* Deps */ = {
 			isa = PBXGroup;
 			children = (
-				1ACBCEF611EE45260067E95D /* OpenCTM */,
 				1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */,
 			);
 			name = Deps;
@@ -338,23 +398,66 @@
 				1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */,
 				1ABAC2B111C3974A005301BA /* OORenderMesh.h */,
 				1ABAC2B211C3974A005301BA /* OORenderMesh.m */,
-				1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */,
-				1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */,
+				1AD841831229210F00FC382A /* Materials */,
 			);
 			name = Rendering;
-			sourceTree = "<group>";
-		};
-		1ACBCEF611EE45260067E95D /* OpenCTM */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = OpenCTM;
 			sourceTree = "<group>";
 		};
 		1ACBCF5411EE47E50067E95D /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				1ACBCF5811EE47E50067E95D /* libOpenCTM-for-oolite.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AD841831229210F00FC382A /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */,
+				1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */,
+				1AD841921229212000FC382A /* Textures */,
+			);
+			name = Materials;
+			sourceTree = "<group>";
+		};
+		1AD841921229212000FC382A /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				1AD841861229211E00FC382A /* OOTexture.h */,
+				1AD841871229211E00FC382A /* OOTexture.m */,
+				1AD841881229211E00FC382A /* OOTextureInternal.h */,
+				1AD841931229214100FC382A /* OOConcreteTexture.h */,
+				1AD841941229214100FC382A /* OOConcreteTexture.m */,
+				1AD841971229214F00FC382A /* OONullTexture.h */,
+				1AD841981229214F00FC382A /* OONullTexture.m */,
+				1AD841891229211E00FC382A /* OOTextureLoader.h */,
+				1AD8418A1229211E00FC382A /* OOTextureLoader.m */,
+				1AD842BB1229234200FC382A /* OOTextureGenerator.h */,
+				1AD842BC1229234200FC382A /* OOTextureGenerator.m */,
+				1AD841841229211E00FC382A /* OOPNGTextureLoader.h */,
+				1AD841851229211E00FC382A /* OOPNGTextureLoader.m */,
+			);
+			name = Textures;
+			sourceTree = "<group>";
+		};
+		1AD841A11229216800FC382A /* Pixmap */ = {
+			isa = PBXGroup;
+			children = (
+				1AD841A31229217F00FC382A /* OOPixMap.m */,
+				1AD841A21229217F00FC382A /* OOPixMap.h */,
+				1AD841A41229217F00FC382A /* OOPixMapChannelOperations.h */,
+				1AD841A51229217F00FC382A /* OOPixMapChannelOperations.m */,
+				1AD842801229224E00FC382A /* OOPixMapScaling.h */,
+				1AD842811229224E00FC382A /* OOPixMapScaling.m */,
+			);
+			name = Pixmap;
+			sourceTree = "<group>";
+		};
+		1AD843B31229314400FC382A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AD843B71229314400FC382A /* libpng-for-oolite-graphics.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -407,6 +510,16 @@
 				1A988AAF11F30C6B00C7CF6B /* OOOpenGLUtilities.h in Headers */,
 				1A8A296E11F3A95400775894 /* OOAbstractMesh+Winding.h in Headers */,
 				1A5838521205C21800118F45 /* OOBoundingBox.h in Headers */,
+				1AD8418B1229211E00FC382A /* OOPNGTextureLoader.h in Headers */,
+				1AD8418D1229211E00FC382A /* OOTexture.h in Headers */,
+				1AD8418F1229211E00FC382A /* OOTextureInternal.h in Headers */,
+				1AD841901229211E00FC382A /* OOTextureLoader.h in Headers */,
+				1AD841951229214100FC382A /* OOConcreteTexture.h in Headers */,
+				1AD841991229214F00FC382A /* OONullTexture.h in Headers */,
+				1AD841A81229217F00FC382A /* OOPixMap.h in Headers */,
+				1AD841AA1229217F00FC382A /* OOPixMapChannelOperations.h in Headers */,
+				1AD842821229224E00FC382A /* OOPixMapScaling.h in Headers */,
+				1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +541,7 @@
 			dependencies = (
 				1A1A35D911C2F7610086265F /* PBXTargetDependency */,
 				1ACBCF5C11EE47F30067E95D /* PBXTargetDependency */,
+				1AD843B91229315900FC382A /* PBXTargetDependency */,
 			);
 			name = OoliteGraphics;
 			productName = OOMesh;
@@ -444,11 +558,22 @@
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OoliteGraphics" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* oomesh */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 1AD843B31229314400FC382A /* Products */;
+					ProjectRef = 1AD843B21229314400FC382A /* libpng.xcodeproj */;
+				},
 				{
 					ProductGroup = 1A1A35D011C2F7570086265F /* Products */;
 					ProjectRef = 1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */;
@@ -478,6 +603,13 @@
 			fileType = archive.ar;
 			path = "libOpenCTM-for-oolite.a";
 			remoteRef = 1ACBCF5711EE47E50067E95D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1AD843B71229314400FC382A /* libpng-for-oolite-graphics.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libpng-for-oolite-graphics.a";
+			remoteRef = 1AD843B61229314400FC382A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -541,6 +673,15 @@
 				1A988AB011F30C6B00C7CF6B /* OOOpenGLUtilities.m in Sources */,
 				1A8A296F11F3A95400775894 /* OOAbstractMesh+Winding.m in Sources */,
 				1A5838531205C21800118F45 /* OOBoundingBox.m in Sources */,
+				1AD8418C1229211E00FC382A /* OOPNGTextureLoader.m in Sources */,
+				1AD8418E1229211E00FC382A /* OOTexture.m in Sources */,
+				1AD841911229211E00FC382A /* OOTextureLoader.m in Sources */,
+				1AD841961229214100FC382A /* OOConcreteTexture.m in Sources */,
+				1AD8419A1229214F00FC382A /* OONullTexture.m in Sources */,
+				1AD841A91229217F00FC382A /* OOPixMap.m in Sources */,
+				1AD841AB1229217F00FC382A /* OOPixMapChannelOperations.m in Sources */,
+				1AD842831229224E00FC382A /* OOPixMapScaling.m in Sources */,
+				1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +697,11 @@
 			isa = PBXTargetDependency;
 			name = OpenCTM;
 			targetProxy = 1ACBCF5B11EE47F30067E95D /* PBXContainerItemProxy */;
+		};
+		1AD843B91229315900FC382A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libpng;
+			targetProxy = 1AD843B81229315900FC382A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -579,7 +725,10 @@
 					"OO_DEBUG=1",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				HEADER_SEARCH_PATHS = "$(OBJROOT)/$(CONFIGURATION)/OpenCTM/";
+				HEADER_SEARCH_PATHS = (
+					"$(OBJROOT)/$(CONFIGURATION)/png/",
+					"$(OBJROOT)/$(CONFIGURATION)/OpenCTM/",
+				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				LIBRARY_SEARCH_PATHS = (
@@ -620,7 +769,10 @@
 					"NS_BLOCK_ASSERTIONS=1",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				HEADER_SEARCH_PATHS = "$(OBJROOT)/$(CONFIGURATION)/OpenCTM/";
+				HEADER_SEARCH_PATHS = (
+					"$(OBJROOT)/$(CONFIGURATION)/png/",
+					"$(OBJROOT)/$(CONFIGURATION)/OpenCTM/",
+				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				LIBRARY_SEARCH_PATHS = (

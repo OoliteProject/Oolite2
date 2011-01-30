@@ -32,7 +32,7 @@ SOFTWARE.
 
 @implementation OOLogOutputHandler: NSObject
 
-- (void) printLogMessage:(NSString *)message
+- (void) printLogMessage:(NSString *)message ofClass:(NSString *)mclass
 {
 	fprintf(stderr, "%s\n", [message UTF8String]);
 }

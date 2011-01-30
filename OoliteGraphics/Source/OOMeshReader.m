@@ -299,6 +299,11 @@ typedef enum
 		{
 			*renderMesh = _renderMesh;
 		}
+		else
+		{
+			*renderMesh = nil;
+		}
+
 	}
 	
 	if (materialSpecifications != NULL)
@@ -587,10 +592,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		OOMeshTokenType token = [_lexer currentTokenType];
 		if (token == kOOMeshTokenKeyword || token == kOOMeshTokenString)
 		{
-			NSString *keyValue = nil;
-			id propertyValue = nil;
-			
-			keyValue = [_lexer currentTokenString];
+			NSString *keyValue = [_lexer currentTokenString];
 			[_lexer consumeOptionalNewlines];
 			OK = [_lexer getToken:kOOMeshTokenColon];
 			if (OK)
@@ -606,6 +608,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 				}
 				else
 				{
+					id propertyValue = nil;
 					OK = [self priv_readProperty:&propertyValue];
 					if (OK)  [properties setObject:propertyValue forKey:keyValue];
 				}
@@ -617,7 +620,8 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 			}
 			
 		}
-		else switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
+		
+		switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
 		{
 			case kStoppedWithoutSeparator:
 				OK = NO;
@@ -675,7 +679,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 		}
 			
 		case kOOMeshTokenString:
-			*outProperty = [_lexer currentTokenString];
+			OK = [_lexer getString:outProperty];
 			break;
 			
 		case kOOMeshTokenNatural:
@@ -761,7 +765,8 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 			}
 			
 		}
-		else switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
+		
+		switch ([self priv_consumeSeparatorOrTerminator:kOOMeshTokenCloseBrace])
 		{
 			case kStoppedWithoutSeparator:
 				OK = NO;

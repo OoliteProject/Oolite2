@@ -45,6 +45,10 @@
 		1A878B9F11B57B04001BB304 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */; };
 		1ABAC2DF11C39AE3005301BA /* OOGarbageCollectionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */; };
+		1AD841D2122921DD00FC382A /* OOCPUInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841D0122921DD00FC382A /* OOCPUInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD841D3122921DD00FC382A /* OOCPUInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841D1122921DD00FC382A /* OOCPUInfo.m */; };
+		1AD8429C122922BD00FC382A /* OOWeakReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD8429A122922BD00FC382A /* OOWeakReference.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD8429D122922BD00FC382A /* OOWeakReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8429B122922BD00FC382A /* OOWeakReference.m */; };
 		1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */; };
 		1AE9F1B11221B15B007A4B97 /* JAValueToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,6 +101,10 @@
 		1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = "<group>"; };
 		1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGarbageCollectionSupport.h; sourceTree = "<group>"; };
 		1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGarbageCollectionSupport.m; sourceTree = "<group>"; };
+		1AD841D0122921DD00FC382A /* OOCPUInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPUInfo.h; sourceTree = "<group>"; };
+		1AD841D1122921DD00FC382A /* OOCPUInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPUInfo.m; sourceTree = "<group>"; };
+		1AD8429A122922BD00FC382A /* OOWeakReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOWeakReference.h; sourceTree = "<group>"; };
+		1AD8429B122922BD00FC382A /* OOWeakReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOWeakReference.m; sourceTree = "<group>"; };
 		1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
 		1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
 		1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAValueToString.h; path = ../Dependencies/JAValueToString/JAValueToString.h; sourceTree = SOURCE_ROOT; };
@@ -170,6 +178,10 @@
 				1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */,
 				1AE9F1AF1221B15B007A4B97 /* JAValueToString.h */,
 				1AE9F1B01221B15B007A4B97 /* JAValueToString.m */,
+				1AD841D0122921DD00FC382A /* OOCPUInfo.h */,
+				1AD841D1122921DD00FC382A /* OOCPUInfo.m */,
+				1AD8429A122922BD00FC382A /* OOWeakReference.h */,
+				1AD8429B122922BD00FC382A /* OOWeakReference.m */,
 			);
 			name = Utilities;
 			path = ../Source;
@@ -254,6 +266,8 @@
 				1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */,
 				1AE24BFD11FB0A4F00D96B3B /* OOProblemReporting.h in Headers */,
 				1AE9F1B11221B15B007A4B97 /* JAValueToString.h in Headers */,
+				1AD841D2122921DD00FC382A /* OOCPUInfo.h in Headers */,
+				1AD8429C122922BD00FC382A /* OOWeakReference.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +301,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OoliteBase" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* OOBase */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -350,6 +371,8 @@
 				1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */,
 				1AE24BFE11FB0A4F00D96B3B /* OOProblemReporting.m in Sources */,
 				1AE9F1B21221B15B007A4B97 /* JAValueToString.m in Sources */,
+				1AD841D3122921DD00FC382A /* OOCPUInfo.m in Sources */,
+				1AD8429D122922BD00FC382A /* OOWeakReference.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Lighting
+END
+SGLightManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Lighting/SGLightManager.h
+END
+SGLightManager.mm
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Lighting/SGLightManager.mm
+END
+SGLight.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/56/trunk/Graphics/SGSceneGraph/Scene%20Graph/Lighting/SGLight.h
+END
+SGLight.mm
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/36/trunk/Graphics/SGSceneGraph/Scene%20Graph/Lighting/SGLight.mm
+END

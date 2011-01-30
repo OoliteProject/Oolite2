@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <OoliteGraphics/OoliteGraphics.h>
 #import "SGSceneGraph.h"
 
 @class OOAbstractMesh, OORenderMesh;

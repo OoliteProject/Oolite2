@@ -105,7 +105,7 @@
 	DDMesh *mesh = [[DDMesh alloc] initWithReader:reader issues:issues];
 	if (mesh != nil)  [self addMesh:mesh];
 	
-    return mesh != nil && [issues showReportApplicationModal];
+    return [issues showReportApplicationModal] && mesh != nil;
 }
 
 

@@ -62,21 +62,29 @@ extern "C" {
 			*/
 			[reader getRenderMesh:&_renderMesh andMaterialSpecs:&_materialSpecs];
 			
-			_abstractMesh = MABackgroundFuture(^{
-				OOAbstractMesh *mesh = [self.renderMesh abstractMeshWithMaterialSpecs:self.materialSpecifications];
-				mesh.name = self.name;
-				mesh.modelDescription = self.modelDescription;
-				_abstractMesh = mesh;	// Replace future with real thing. This is necessary for notifications to work.
-				
-				dispatch_async(dispatch_get_main_queue(), ^{
-					// Crucially, it's OK for this stuff to happen even after the mesh has first been used.
-					[self priv_noteAbstractMeshSet];
+			if (_renderMesh != nil)
+			{
+				_abstractMesh = MABackgroundFuture(^{
+					OOAbstractMesh *mesh = [self.renderMesh abstractMeshWithMaterialSpecs:self.materialSpecifications];
+					mesh.name = self.name;
+					mesh.modelDescription = self.modelDescription;
+					_abstractMesh = mesh;	// Replace future with real thing. This is necessary for notifications to work.
+					
+					dispatch_async(dispatch_get_main_queue(), ^{
+						// Crucially, it's OK for this stuff to happen even after the mesh has first been used.
+						[self priv_noteAbstractMeshSet];
+					});
+					
+					return mesh;
 				});
 				
-				return mesh;
-			});
-			
-			hasNormals = [_renderMesh attributeArrayForKey:kOONormalAttributeKey] != nil;
+				hasNormals = [_renderMesh attributeArrayForKey:kOONormalAttributeKey] != nil;
+			}
+		}
+		
+		if (_abstractMesh == nil)
+		{
+			return nil;
 		}
 		
 		_name = reader.meshName;
@@ -201,7 +209,8 @@ extern "C" {
 
 - (void) setBoxedTransform:(NSValue *)value
 {
-	self.transform = [value sg_matrix4x4Value];
+	SGMatrix4x4 matrix = [value sg_matrix4x4Value];
+	self.transform = matrix;
 }
 
 

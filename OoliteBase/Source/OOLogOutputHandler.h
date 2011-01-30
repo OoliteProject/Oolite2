@@ -41,8 +41,12 @@ SOFTWARE.
 	The method may not be dynamically altered: the logging system will IMP
 	cache it.
 	This method may be called on any thread.
+	
+	Note: the message class will have been integrated into the message if
+	-showMessageClass returns YES. It is included in case additional filtering
+	is desired.
 */
-- (void) printLogMessage:(NSString *)message;
+- (void) printLogMessage:(NSString *)message ofClass:(NSString *)mclass;
 
 /*	Used to determine which messages to show.
 	This is called very often, from any thread, and is IMP cached.

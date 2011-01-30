@@ -63,8 +63,13 @@ BOOL $equal(id obj1, id obj2);      // Like -isEqual: but works even if either/b
 #define $sprintf(FORMAT, ARGS... )  [NSString stringWithFormat: (FORMAT), ARGS]
 
 
+#if OOLITE_MAC_OS_X
 #define $true		((NSNumber*)kCFBooleanTrue)
 #define $false		((NSNumber*)kCFBooleanFalse)
+#else
+#define $true		[NSNumber numberWithBool:YES]
+#define $false		[NSNumber numberWithBool:NO]
+#endif
 #define $bool(v)	((v) ? $true : $false)
 	
 	

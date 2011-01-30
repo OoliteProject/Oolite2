@@ -26,6 +26,7 @@
 #import "OOMeshReading.h"
 
 #import "OOMeshReader.h"
+#import "OOJMeshReader.h"
 #import "OODATReader.h"
 #import "OOOBJReader.h"
 #import "OOCTMReader.h"
@@ -36,6 +37,10 @@ Class OOSelectMeshReaderForExtension(NSString *fileNameExtension)
 	if ([fileNameExtension isEqualToString:@"oomesh"])
 	{
 		return [OOMeshReader class];
+	}
+	else if ([fileNameExtension isEqualToString:@"oojmesh"])
+	{
+		return [OOJMeshReader class];
 	}
 #if !OOLITE_LEAN
 	else if ([fileNameExtension isEqualToString:@"dat"])
@@ -62,6 +67,10 @@ Class OOSelectMeshReaderForUTI(NSString *uti)
 	if ([uti isEqualToString:@"org.oolite.oomesh"])
 	{
 		return [OOMeshReader class];
+	}
+	else if ([uti isEqualToString:@"org.oolite.oojmesh"])
+	{
+		return [OOJMeshReader class];
 	}
 	else if ([uti isEqualToString:@"org.aegidian.oolite.mesh"])
 	{

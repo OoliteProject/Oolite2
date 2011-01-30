@@ -51,7 +51,7 @@ typedef enum
 - (BOOL) priv_readSectionNamed:(NSString *)name ofType:(NSString *)type;
 - (BOOL) priv_readProperty:(id *)outProperty;
 - (BOOL) priv_readDictionary:(NSDictionary **)outDictionary;
-- (BOOL) priv_readArray:(NSDictionary **)outArray;
+- (BOOL) priv_readArray:(NSArray **)outArray;
 
 /*	Advance when reading a dictionary or array.
 	A separator consists of at least one newline, or zero or more newlines with one comma in.
@@ -794,7 +794,7 @@ typedef BOOL(*completionIMP)(id self, SEL _cmd, NSDictionary *attributePropertie
 }
 
 
-- (BOOL) priv_readArray:(NSDictionary **)outArray
+- (BOOL) priv_readArray:(NSArray **)outArray
 {
 	NSParameterAssert(outArray != NULL && [_lexer getToken:kOOMeshTokenOpenBracket]);
 	

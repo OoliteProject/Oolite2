@@ -77,6 +77,9 @@ BOOL $equal(id obj1, id obj2);      // Like -isEqual: but works even if either/b
 #define $float(v)	[NSNumber numberWithDouble:v]
 
 
+#define $null		[NSNull null]
+
+
 //	FOREACH
 
 #if OOLITE_LEOPARD

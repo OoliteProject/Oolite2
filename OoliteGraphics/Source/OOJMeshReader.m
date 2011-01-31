@@ -715,7 +715,7 @@ typedef enum
 	[_lexer advance];
 	
 	BOOL				OK = YES;
-	BOOL				stop = [_lexer currentTokenType] == kOOJMeshTokenCloseBrace;
+	BOOL				stop = [_lexer currentTokenType] == kOOJMeshTokenCloseBracket;
 	
 	while (OK && !stop)
 	{
@@ -815,9 +815,25 @@ typedef enum
 				dictionary without generating a value if outProperty is NULL.
 			*/
 			
-		case kOOJMeshTokenKeyword:	// Unquoted strings are not permitted as values.
+		case kOOJMeshTokenKeyword:
+		{
+			NSString *stringValue = [_lexer currentTokenString];
+			
+			OK = YES;
+			if ([@"true" isEqualToString:stringValue])  result = $true;
+			else if ([@"false" isEqualToString:stringValue])  result = $false;
+			else if ([@"null" isEqualToString:stringValue])  result = $null;
+			else
+			{
+				[self priv_reportBasicParseError:@"value"];
+				OK = NO;
+			}
+			
+			break;
+		}
+			
 		default:
-			[self priv_reportParseError:@"value"];
+			[self priv_reportBasicParseError:@"value"];
 			OK = NO;
 	}
 	

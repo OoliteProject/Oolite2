@@ -3,7 +3,7 @@
 OOPNGTextureLoader.m
 
 
-Copyright (C) 2007-2010 Jens Ayton
+Copyright (C) 2007-2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ SOFTWARE.
 
 */
 
-#import "png.h"
 #import "OOPNGTextureLoader.h"
 
 
@@ -146,6 +145,7 @@ static void PNGRead(png_structp png, png_bytep bytes, png_size_t size);
 	}
 	
 	png_read_update_info(png, pngInfo);
+	png_set_interlace_handling(png);
 	
 	// Metadata is acceptable; load data.
 	_width = pngWidth;
@@ -199,17 +199,34 @@ FAIL:
 @end
 
 
+/*	Minor detail: libpng 1.4.0 removed trailing .s from error and warning
+	messages. It's also binary-incompatible with 1.2 and earlier, so it's
+	reasonable to make this test at build time.
+*/
+#if PNG_LIBPNG_VER >= 10400
+#define MSG_TERMINATOR "."
+#else
+#define MSG_TERMINATOR ""
+#endif
+
+
 static void PNGError(png_structp png, png_const_charp message)
 {
 	OOPNGTextureLoader *loader = png_get_io_ptr(png);
-	OOLog(@"texture.load.png.error", @"***** A PNG loading error occurred for %@: %s.", [loader path], message);
+	OOLog(@"texture.load.png.error", @"***** A PNG loading error occurred for %@: %s" MSG_TERMINATOR, [loader path], message);
+	
+#if PNG_LIBPNG_VER >= 10500
+	png_longjmp(png, 1);
+#else
+	longjmp(png_jmpbuf(png), 1);
+#endif
 }
 
 
 static void PNGWarning(png_structp png, png_const_charp message)
 {
 	OOPNGTextureLoader *loader = png_get_io_ptr(png);
-	OOLog(@"texture.load.png.warning", @"----- A PNG loading warning occurred for %@: %s.", [loader path], message);
+	OOLog(@"texture.load.png.warning", @"----- A PNG loading warning occurred for %@: %s" MSG_TERMINATOR, [loader path], message);
 }
 
 

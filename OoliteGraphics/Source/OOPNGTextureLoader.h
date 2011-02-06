@@ -5,7 +5,7 @@ OOPNGTextureLoader.h
 It's a texture loader. Which loads PNGs.
 
 
-Copyright (C) 2007-2010 Jens Ayton
+Copyright (C) 2007-2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,15 @@ SOFTWARE.
 
 */
 
+#import "png.h"
 #import "OOTextureLoader.h"
 
 
 @interface OOPNGTextureLoader: OOTextureLoader
 {
-	struct png_struct_def		*png;
-	struct png_info_struct		*pngInfo;
-	struct png_info_struct		*pngEndInfo;
+	png_structp					png;
+	png_infop					pngInfo;
+	png_infop					pngEndInfo;
 	NSData						*fileData;
 	size_t						length;
 	size_t						offset;

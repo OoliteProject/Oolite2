@@ -6,7 +6,7 @@ Standard implementation of OOTexture. This is an implementation detail, use
 OOTexture instead.
 
 
-Copyright (C) 2007-2010 Jens Ayton and contributors
+Copyright (C) 2007-2011 Jens Ayton and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,9 +40,15 @@ SOFTWARE.
 #if OOTEXTURE_RELOADABLE
 	NSString				*_path;
 #endif
+	NSString				*_key;
 	uint8_t					_loaded: 1,
 							_uploaded: 1,
+#if GL_EXT_texture_rectangle
+							_isRectTexture: 1,
+#endif
+#if OO_TEXTURE_CUBE_MAP
 							_isCubeMap: 1,
+#endif
 							_valid: 1;
 	uint8_t					_mipLevels;
 	
@@ -51,7 +57,9 @@ SOFTWARE.
 	void					*_bytes;
 	GLuint					_textureName;
 	uint32_t				_width,
-							_height;
+							_height,
+							_originalWidth,
+							_originalHeight;
 	
 	OOTextureDataFormat		_format;
 	uint32_t				_options;
@@ -68,11 +76,13 @@ SOFTWARE.
 }
 
 - (id) initWithLoader:(OOTextureLoader *)loader
+				  key:(NSString *)key
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy
 			  lodBias:(GLfloat)lodBias;
 
 - (id)initWithPath:(NSString *)path
+			   key:(NSString *)key
 		   options:(uint32_t)options
 		anisotropy:(float)anisotropy
 		   lodBias:(GLfloat)lodBias;

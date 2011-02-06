@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 
 @interface NSString (OOExtensions)
 
-/*	+stringWithContentsOfUnicodeFile:
+/*	+oo_stringWithContentsOfUnicodeFile:
 	
 	Like +stringWithContentsOfFile:, but biased towards Unicode encodings and
 	cross-system consistency. Specifically:
@@ -37,37 +37,50 @@ MA 02110-1301, USA.
 	* Otherwise, if the file can be interpreted as UTF-8, assume UTF-8.
 	* Otherwise, assume ISO-Latin-1.
 */
-+ (id)stringWithContentsOfUnicodeFile:(NSString *)path;
++ (id) oo_stringWithContentsOfUnicodeFile:(NSString *)path;
 
 
-/*	+stringWithUTF16String:
+/*	+oo_stringWithUTF16String:
 	
 	Takes a NUL-terminated native-endian UTF-16 string.
 */
-+ (id)stringWithUTF16String:(const unichar *)chars;
++ (id) oo_stringWithUTF16String:(const unichar *)chars;
 
 
-/*	-utf16DataWithBOM:
+/*	-oo_utf16DataWithBOM:
+	
 	Convert to native-endian UTF-16 data.
 */
-- (NSData *)utf16DataWithBOM:(BOOL)includeByteOrderMark;
+- (NSData *) oo_utf16DataWithBOM:(BOOL)includeByteOrderMark;
 
-/*	- oo_hash
+/*	-oo_hash
+	
 	Hash function for when we want consistency across platforms and versions.
 	It implements modified djb2 (with xor rather than addition) in terms of
 	UTF-16 code elements.
 */
 - (uint32_t) oo_hash;
 
+
+/*	-oo_escapedForJavaScriptLiteral
+	
+	Add escape codes for string so that it's a valid JavaScript literal (if
+	you put "" or '' around it). Also valid for GraphViz and, of course, JSON.
+	
+	This is here rather than in JavaScript support because it's used by
+	OoliteGraphics.
+*/
+- (NSString *) oo_escapedForJavaScriptLiteral;
+
 @end
 
 
 @interface NSMutableString (OOExtensions)
 
-- (void) appendLine:(NSString *)line;
-- (void) appendFormatLine:(NSString *)fmt, ...;
-- (void) appendFormatLine:(NSString *)fmt arguments:(va_list)args;
+- (void) oo_appendLine:(NSString *)line;
+- (void) oo_appendFormatLine:(NSString *)fmt, ...;
+- (void) oo_appendFormatLine:(NSString *)fmt arguments:(va_list)args;
 
-- (void) deleteCharacterAtIndex:(unsigned long)index;
+- (void) oo_deleteCharacterAtIndex:(unsigned long)index;
 
 @end

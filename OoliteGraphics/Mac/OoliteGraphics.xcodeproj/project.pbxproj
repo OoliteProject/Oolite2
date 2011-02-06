@@ -56,6 +56,8 @@
 		1ACBCF5D11EE47FF0067E95D /* libOpenCTM-for-oolite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ACBCF5811EE47E50067E95D /* libOpenCTM-for-oolite.a */; };
 		1ACBCF6611EE48790067E95D /* OOCTMReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBCF6411EE48790067E95D /* OOCTMReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ACBCF6711EE48790067E95D /* OOCTMReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACBCF6511EE48790067E95D /* OOCTMReader.m */; };
+		1AD736F712F78002008CCC38 /* OOJMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD736F512F78002008CCC38 /* OOJMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AD736F812F78002008CCC38 /* OOJMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD736F612F78002008CCC38 /* OOJMeshWriter.m */; };
 		1AD8418B1229211E00FC382A /* OOPNGTextureLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841841229211E00FC382A /* OOPNGTextureLoader.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1AD8418C1229211E00FC382A /* OOPNGTextureLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD841851229211E00FC382A /* OOPNGTextureLoader.m */; };
 		1AD8418D1229211E00FC382A /* OOTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841861229211E00FC382A /* OOTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -77,7 +79,7 @@
 		1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD842BC1229234200FC382A /* OOTextureGenerator.m */; };
 		1AD843BA1229316100FC382A /* libpng-for-oolite-graphics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD843B71229314400FC382A /* libpng-for-oolite-graphics.a */; };
 		1AD843D11229323E00FC382A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD843D01229323E00FC382A /* libz.dylib */; };
-		1ADF40F212F5EAA300F7CF71 /* OOJMeshReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ADF40F012F5EAA300F7CF71 /* OOJMeshReader.h */; };
+		1ADF40F212F5EAA300F7CF71 /* OOJMeshReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ADF40F012F5EAA300F7CF71 /* OOJMeshReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ADF40F312F5EAA300F7CF71 /* OOJMeshReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF40F112F5EAA300F7CF71 /* OOJMeshReader.m */; };
 		1ADF410C12F5F0AA00F7CF71 /* OOJMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ADF410A12F5F0AA00F7CF71 /* OOJMeshLexer.h */; };
 		1ADF410D12F5F0AA00F7CF71 /* OOJMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADF410B12F5F0AA00F7CF71 /* OOJMeshLexer.m */; };
@@ -197,6 +199,8 @@
 		1ACBCF5311EE47E50067E95D /* OpenCTM.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = OpenCTM.xcodeproj; sourceTree = "<group>"; };
 		1ACBCF6411EE48790067E95D /* OOCTMReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCTMReader.h; sourceTree = "<group>"; };
 		1ACBCF6511EE48790067E95D /* OOCTMReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCTMReader.m; sourceTree = "<group>"; };
+		1AD736F512F78002008CCC38 /* OOJMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOJMeshWriter.h; sourceTree = "<group>"; };
+		1AD736F612F78002008CCC38 /* OOJMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOJMeshWriter.m; sourceTree = "<group>"; };
 		1AD841841229211E00FC382A /* OOPNGTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPNGTextureLoader.h; sourceTree = "<group>"; };
 		1AD841851229211E00FC382A /* OOPNGTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPNGTextureLoader.m; sourceTree = "<group>"; };
 		1AD841861229211E00FC382A /* OOTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTexture.h; sourceTree = "<group>"; };
@@ -368,6 +372,8 @@
 			children = (
 				1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */,
 				1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */,
+				1AD736F512F78002008CCC38 /* OOJMeshWriter.h */,
+				1AD736F612F78002008CCC38 /* OOJMeshWriter.m */,
 				1A062E9911B2F64E00727C1D /* OODATWriter.h */,
 				1A062E9A11B2F64E00727C1D /* OODATWriter.m */,
 			);
@@ -534,6 +540,7 @@
 				1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */,
 				1ADF40F212F5EAA300F7CF71 /* OOJMeshReader.h in Headers */,
 				1ADF410C12F5F0AA00F7CF71 /* OOJMeshLexer.h in Headers */,
+				1AD736F712F78002008CCC38 /* OOJMeshWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,6 +705,7 @@
 				1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */,
 				1ADF40F312F5EAA300F7CF71 /* OOJMeshReader.m in Sources */,
 				1ADF410D12F5F0AA00F7CF71 /* OOJMeshLexer.m in Sources */,
+				1AD736F812F78002008CCC38 /* OOJMeshWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

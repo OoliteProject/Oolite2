@@ -65,6 +65,10 @@
 	{
 		data = OOMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
 	}
+	else if ([typeName isEqualToString:@"org.oolite.oojmesh"])
+	{
+		data = OOJMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
+	}
 	else if ([typeName isEqualToString:@"org.aegidian.oolite.mesh"])
 	{
 		data = OODATDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);

@@ -18,6 +18,9 @@ extern "C" {
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"
 
+#import "OOJMeshReader.h"
+#import "OOJMeshWriter.h"
+
 #import "OOCTMReader.h"
 
 #import "OOAbstractMesh+NormalSynthesis.h"

@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 
 @implementation NSString (OOExtensions)
 
-+ (id)stringWithContentsOfUnicodeFile:(NSString *)path
++ (id) oo_stringWithContentsOfUnicodeFile:(NSString *)path
 {
 	id				result = nil;
 	BOOL			OK = YES;
@@ -90,7 +90,7 @@ MA 02110-1301, USA.
 }
 
 
-+ (id)stringWithUTF16String:(const unichar *)chars
++ (id) oo_stringWithUTF16String:(const unichar *)chars
 {
 	size_t			length;
 	const unichar	*end;
@@ -106,7 +106,7 @@ MA 02110-1301, USA.
 }
 
 
-- (NSData *)utf16DataWithBOM:(BOOL)includeByteOrderMark
+- (NSData *) oo_utf16DataWithBOM:(BOOL)includeByteOrderMark
 {
 	size_t			lengthInChars;
 	size_t			lengthInBytes;
@@ -148,35 +148,97 @@ MA 02110-1301, USA.
 	return hash;
 }
 
+
+- (NSString *) oo_escapedForJavaScriptLiteral
+{
+	NSMutableString			*result = nil;
+	unsigned				i, length;
+	unichar					c;
+	NSAutoreleasePool		*pool = nil;
+	
+	length = [self length];
+	result = [NSMutableString stringWithCapacity:[self length]];
+	
+	// Not hugely efficient.
+	pool = [[NSAutoreleasePool alloc] init];
+	for (i = 0; i != length; ++i)
+	{
+		c = [self characterAtIndex:i];
+		switch (c)
+		{
+			case '\\':
+				[result appendString:@"\\\\"];
+				break;
+				
+			case '\b':
+				[result appendString:@"\\b"];
+				break;
+				
+			case '\f':
+				[result appendString:@"\\f"];
+				break;
+				
+			case '\n':
+				[result appendString:@"\\n"];
+				break;
+				
+			case '\r':
+				[result appendString:@"\\r"];
+				break;
+				
+			case '\t':
+				[result appendString:@"\\t"];
+				break;
+				
+			case '\v':
+				[result appendString:@"\\v"];
+				break;
+				
+			case '\'':
+				[result appendString:@"\\\'"];
+				break;
+				
+			case '\"':
+				[result appendString:@"\\\""];
+				break;
+				
+			default:
+				[result appendString:[NSString stringWithCharacters:&c length:1]];
+		}
+	}
+	[pool release];
+	return result;
+}
+
 @end
 
 
 @implementation NSMutableString (OOExtensions)
 
-- (void) appendLine:(NSString *)line
+- (void) oo_appendLine:(NSString *)line
 {
 	[self appendString:line ? [line stringByAppendingString:@"\n"] : (NSString *)@"\n"];
 }
 
 
-- (void) appendFormatLine:(NSString *)fmt, ...
+- (void) oo_appendFormatLine:(NSString *)fmt, ...
 {
 	va_list args;
 	va_start(args, fmt);
-	[self appendFormatLine:fmt arguments:args];
+	[self oo_appendFormatLine:fmt arguments:args];
 	va_end(args);
 }
 
 
-- (void) appendFormatLine:(NSString *)fmt arguments:(va_list)args
+- (void) oo_appendFormatLine:(NSString *)fmt arguments:(va_list)args
 {
 	NSString *formatted = [[NSString alloc] initWithFormat:fmt arguments:args];
-	[self appendLine:formatted];
+	[self oo_appendLine:formatted];
 	[formatted release];
 }
 
 
-- (void) deleteCharacterAtIndex:(unsigned long)index
+- (void) oo_deleteCharacterAtIndex:(unsigned long)index
 {
 	[self deleteCharactersInRange:NSMakeRange(index, 1)];
 }

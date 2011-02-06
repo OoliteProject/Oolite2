@@ -39,6 +39,7 @@
 #define kGroupsSectionKey		@"groups"
 #define kSizeKey				@"size"
 #define kFaceCountKey			@"faceCount"
+#define kMeshDescriptionKey		@"description"
 
 
 enum
@@ -691,6 +692,22 @@ typedef enum
 		}
 		
 		return [self priv_readDictionary:NULL ofType:kDictTypeGroupsSection withKey:key];
+	}
+	else if ([kMeshDescriptionKey isEqualToString:key])
+	{
+		id property = nil;
+		if (![self priv_readProperty:&property])  return NO;
+		
+		if ([property isKindOfClass:[NSString class]])
+		{
+			DESTROY(_meshDescription);
+			_meshDescription = [property retain];
+		}
+		else
+		{
+			OOReportWarning(_issues, @"Ignoring \"description\" value because it isn't a string.");
+		}
+		return YES;
 	}
 	else
 	{

@@ -104,6 +104,22 @@ void OOLogGenericParameterErrorForFunction(const char *function);
 void OOLogGenericSubclassResponsibilityForFunction(const char *function);
 
 
+// OODebugLog() is only included in debug builds.
+#if OO_DEBUG
+#define OODebugLog OOLog
+#else
+#define OODebugLog(...)  do {} while (0)
+#endif
+
+
+// OOExtraLog() is included in debug and test-release builds, but not deployment builds.
+#ifndef NDEBUG
+#define OOExtraLog OOLog
+#else
+#define OOExtraLog(...)  do {} while (0)
+#endif
+
+
 // *** Predefined message classes.
 /*	These are general coding error types. Generally a subclass should be used
 	for each instance -- for instance, -[Entity warnAboutHostiles] uses

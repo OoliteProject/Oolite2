@@ -2,7 +2,7 @@
 
 OOWeakReference.m
 
-Written by Jens Ayton in 2007-2010 for Oolite.
+Written by Jens Ayton in 2007-2011 for Oolite.
 This code is hereby placed in the public domain.
 
 */
@@ -85,6 +85,12 @@ This code is hereby placed in the public domain.
 - (Class) class
 {
 	return [_object class];
+}
+
+
+- (BOOL) isProxy
+{
+	return YES;
 }
 
 

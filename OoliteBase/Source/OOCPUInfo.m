@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "OOCPUInfo.h"
-#import "OOLogging.h"
 #import <stdlib.h>
 
 #if OOLITE_MAC_OS_X

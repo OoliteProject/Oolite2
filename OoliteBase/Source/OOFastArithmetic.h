@@ -5,7 +5,7 @@ OOFastArithmetic.h
 Mathematical framework for Oolite.
 
 Oolite
-Copyright (C) 2004-2010 Giles C Williams and contributors
+Copyright (C) 2004-2011 Giles C Williams and contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -28,9 +28,6 @@ MA 02110-1301, USA.
 #ifndef INCLUDED_OOMATHS_h
 	#error Do not include OOFastArithmetic.h directly; include OOMaths.h.
 #else
-
-
-#define FASTINVSQRT_ENABLED	0	/* Disabled due to precision problems. */
 
 
 /* OO_PPC: whether to use PowerPC instruction intrinsics like __fsel(). */
@@ -71,6 +68,9 @@ OOINLINE float OOClamp_0_1_f(float value) INLINE_CONST_FUNC;
 OOINLINE double OOClamp_0_1_d(double value) INLINE_CONST_FUNC;
 OOINLINE float OOClamp_0_max_f(float value, float max) INLINE_CONST_FUNC;
 OOINLINE double OOClamp_0_max_d(double value, double max) INLINE_CONST_FUNC;
+
+/* Linear interpolation. */
+OOINLINE float OOLerp(float v0, float v1, float fraction) INLINE_CONST_FUNC;
 
 
 #if OO_PPC
@@ -160,18 +160,6 @@ OOINLINE float OOInvSqrtf(float x)
 
 OOINLINE float OOFastInvSqrtf(float x)
 {
-/*	This appears to have been responsible for a lack of laser accuracy, as
-	well as not working at all under Windows. Disabled for now.
-	Could probably be made faster on PPC using frsqrte[s], but would need to
-	ensure precision.
-*/
-#if FASTINVSQRT_ENABLED
-	float xhalf = 0.5f * x;
-	int i = *(int*)&x;
-	i = 0x5f375a86 - (i>>1);
-	x = *(float*)&i;
-	x = x * (1.5f - xhalf * x * x);
-	return x;
 #elif OO_PPC
 	return OOInvSqrtf(x);
 #else
@@ -289,6 +277,13 @@ OOINLINE float OOFastInvSqrtf(float x)
 		return fmax(0.0, fmin(value, max));
 	}
 #endif
+
+
+OOINLINE float OOLerp(float v0, float v1, float fraction)
+{
+	// Linear interpolation - equivalent to v0 * (1.0f - fraction) + v1 * fraction.
+	return v0 + fraction * (v1 - v0);
+}
 
 
 #endif	/* INCLUDED_OOMATHS_h */

@@ -69,13 +69,6 @@ Vector OORandomUnitVector(void);
 Vector OOVectorRandomSpatial(OOScalar maxLength);	// Random vector uniformly distributed in radius-maxLength sphere. (Longer vectors are more common.)
 Vector OOVectorRandomRadial(OOScalar maxLength);		// Random vector with uniform distribution of direction and radius in radius-maxLength sphere. (Causes clustering at centre.)
 
-#if !OOMATHS_STANDALONE
-/* Generate random vectors. */
-Vector OORandomUnitVector(void);
-Vector OOVectorRandomSpatial(OOScalar maxLength);	// Random vector uniformly distributed in radius-maxLength sphere. (Longer vectors are more common.)
-Vector OOVectorRandomRadial(OOScalar maxLength);		// Random vector with uniform distribution of direction and radius in radius-maxLength sphere. (Causes clustering at centre.)
-#endif
-
 /* Multiply vector by scalar (in place) */
 OOINLINE void scale_vector(Vector *outVector, OOScalar factor) ALWAYS_INLINE_FUNC NONNULL_FUNC;
 

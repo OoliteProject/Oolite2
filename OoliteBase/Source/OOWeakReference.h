@@ -85,7 +85,7 @@ OOWeakReferenceSupport implementation is also simple:
 @end
 
 
-Copyright (C) 2007-2010 Jens Ayton
+Copyright (C) 2007-2011 Jens Ayton
 This code is hereby placed in the public domain.
 
 */
@@ -112,7 +112,7 @@ This code is hereby placed in the public domain.
 - (BOOL)weakRefObjectStillExists;
 - (id)weakRefUnderlyingObject;
 
-- (id)weakRetain;	// Returns self for weakrefs.
+- (id)weakRetain OO_RETURNS_RETAINED;	// Returns [self retain] for weakrefs.
 
 // For referred object only:
 + (id)weakRefWithObject:(id<OOWeakReferenceSupport>)object;

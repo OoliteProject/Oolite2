@@ -26,6 +26,7 @@ SOFTWARE.
 */
 
 #import "OODeepCopy.h"
+#import "MYCollectionUtilities.h"
 
 
 id OODeepCopy(id object)

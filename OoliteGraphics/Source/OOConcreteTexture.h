@@ -40,7 +40,6 @@ SOFTWARE.
 #if OOTEXTURE_RELOADABLE
 	NSString				*_path;
 #endif
-	NSString				*_key;
 	uint8_t					_loaded: 1,
 							_uploaded: 1,
 #if GL_EXT_texture_rectangle
@@ -76,13 +75,11 @@ SOFTWARE.
 }
 
 - (id) initWithLoader:(OOTextureLoader *)loader
-				  key:(NSString *)key
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy
 			  lodBias:(GLfloat)lodBias;
 
 - (id)initWithPath:(NSString *)path
-			   key:(NSString *)key
 		   options:(uint32_t)options
 		anisotropy:(float)anisotropy
 		   lodBias:(GLfloat)lodBias;

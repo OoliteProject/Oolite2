@@ -24,6 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOCPUInfo.h"
 #import <stdlib.h>
+#import "OOLogging.h"
 
 #if OOLITE_MAC_OS_X
 #import <sys/sysctl.h>

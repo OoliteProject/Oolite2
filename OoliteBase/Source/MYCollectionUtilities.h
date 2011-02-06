@@ -80,9 +80,19 @@ BOOL $equal(id obj1, id obj2);      // Like -isEqual: but works even if either/b
 #define $null		[NSNull null]
 
 
-//	FOREACH
-
-#if OOLITE_LEOPARD
+/*	Enumeration macros:
+	foreach(VAR, COLLECTION) enumerates the members of an array or set, setting
+	the variable VAR to a member on each pass.
+	foreachkey(VAR, DICT) enumerates the keys of a dictionary the same way.
+	
+	Example:
+		id element = nil;
+		foreach (element, array)
+		{
+			OOLog(@"element", @"%@", element);
+		}
+*/
+#if OOLITE_FAST_ENUMERATION
 #define foreach(VAR,ARR) for(VAR in ARR)
 #define foreachkey(VAR,DICT) for(VAR in DICT)
 #else

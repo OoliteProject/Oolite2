@@ -153,8 +153,10 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 		[mutableSchema removeObjectForKey:kOOSmoothGroupAttributeKey];
 		vertexSchema = mutableSchema;
 	}
+#if 0
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	NSString *key = nil;
+#endif
 	
 #if ANNOTATE
 	[result appendString:@"/*\n\t"];

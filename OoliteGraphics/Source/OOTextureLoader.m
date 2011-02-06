@@ -190,6 +190,8 @@ static BOOL					sHaveSetUp = NO;
 
 - (BOOL) getResult:(OOPixMap *)result
 			format:(OOTextureDataFormat *)outFormat
+	 originalWidth:(uint32_t *)outWidth
+	originalHeight:(uint32_t *)outHeight
 {
 	NSParameterAssert(result != NULL && outFormat != NULL);
 	
@@ -209,6 +211,8 @@ static BOOL					sHaveSetUp = NO;
 		_data = NULL;
 		*outFormat = _format;
 		OK = OOIsValidPixMap(*result);
+		if (outWidth != NULL)  *outWidth = _originalWidth;
+		if (outHeight != NULL)  *outHeight = _originalHeight;
 	}
 	
 	if (!OK)
@@ -327,6 +331,12 @@ static BOOL					sHaveSetUp = NO;
 	OOPixMap			pixMap;
 	
 	components = OOTextureComponentsForFormat(_format);
+	
+	// Apply defaults.
+	if (_originalWidth == 0)  _originalWidth = _width;
+	if (_originalHeight == 0)  _originalHeight = _height;
+	if (_rowBytes == 0)  _rowBytes = _width * components;
+	
 	pixMap = OOMakePixMap(_data, _width, _height, components, _rowBytes, 0);
 	
 	if (_extractChannel)
@@ -342,7 +352,6 @@ static BOOL					sHaveSetUp = NO;
 		}
 	}
 	
-	if (_rowBytes == 0)  _rowBytes = _width * components;
 	[self getDesiredWidth:&desiredWidth andHeight:&desiredHeight];
 	
 	// Rescale if needed.

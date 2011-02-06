@@ -25,6 +25,11 @@ MA 02110-1301, USA.
 
 */
 
+#ifdef NDEBUG
+#define NS_BLOCK_ASSERTIONS 1
+#endif
+
+
 #import <math.h>
 #import <Foundation/Foundation.h>
 
@@ -64,6 +69,9 @@ MA 02110-1301, USA.
 	#if defined MAC_OS_X_VERSION_10_5 && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
 		#define OOLITE_LEOPARD		1
 	#endif
+	#if defined MAC_OS_X_VERSION_10_6 && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
+		#define OOLITE_SNOW_LEOPARD	1
+	#endif
 #endif
 
 
@@ -73,6 +81,16 @@ MA 02110-1301, USA.
 
 #ifndef OOLITE_LEOPARD
 	#define OOLITE_LEOPARD			0
+#endif
+
+#ifndef OOLITE_SNOW_LEOPARD
+	#define OOLITE_SNOW_LEOPARD		0
+#endif
+
+
+#if defined(__GNUC__) && !defined(__clang__)
+// GCC version; for instance, 40300 for 4.3.0. Deliberately undefined in Clang (which defines fake __GNUC__ macros for compatibility).
+#define OOLITE_GCC_VERSION			(__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
 
 
@@ -215,8 +233,6 @@ enum {
 #define OOLITE_HAVE_APPKIT		0
 #endif
 
-#define OOLITE_HAVE_JOYSTICK	OOLITE_SDL
-
 
 // When Oolite-Linux used AppKit, the load/save dialogs didn't work well with the SDL window, so we use a separate macro for this.
 #define OOLITE_USE_APPKIT_LOAD_SAVE	OOLITE_MAC_OS_X
@@ -226,12 +242,12 @@ enum {
 
 /*	In order to allow implementations of -description to inherit description
 	components from superclasses, and to allow implementations of -description
-	and -javaScriptDescription to share code, both are implemented as wrappers
+	and -oo_jsDescription to share code, both are implemented as wrappers
 	around -descriptionComponents. -descriptionComponents should provide
 	information about an object without a class name or surrounding
 	punctuation. -description will wrap the components like this:
 		<ClassName 0xnnnnnnnn>{descriptionComponents}
-	and -javaScriptDescription will wrap them like this:
+	and -oo_jsDescription will wrap them like this:
 		[JSClassName descriptionComponents]
 */
 - (NSString *)descriptionComponents;
@@ -248,18 +264,8 @@ enum {
 @end
 
 
-/*	Under Mac OS X 10.4 and earlier, but not GNUstep, the error string
-	parameters for the property list parsing primitive methods in
-	NSPropertyListSerialization would contain unreleased strings. To avoid
-	leaking, it is necessary to release them. This does not affect programs
-	linked against the Mac OS X 10.5 SDK.
-*/
 #if OOLITE_MAC_OS_X
-	#if defined OOLITE_LEOPARD
-		#define OOLITE_RELEASE_PLIST_ERROR_STRINGS 0
-	#else
-		#define OOLITE_RELEASE_PLIST_ERROR_STRINGS 1
-	#endif
+	#define OOLITE_RELEASE_PLIST_ERROR_STRINGS 1
 #else
 	#define OOLITE_RELEASE_PLIST_ERROR_STRINGS 0
 #endif
@@ -307,7 +313,7 @@ enum {
 #endif
 
 #ifndef OOLITE_64_BIT
-	#define OOLITE_64_BIT			0
+	#define OOLITE_64_BIT				0
 #endif
 
 
@@ -316,17 +322,21 @@ enum {
  */
 
 #if OOLITE_MAC_OS_X
+	#define OOLITE_NATIVE_EXCEPTIONS	1
+	
 	#undef NS_DURING
 	#undef NS_HANDLER
 	#undef NS_ENDHANDLER
 	#undef NS_VALUERETURN
 	#undef NS_VOIDRETURN
 	
-	#define NS_DURING			@try {
-	#define NS_HANDLER			} @catch (NSException *localException) {
-	#define NS_ENDHANDLER		}
-	#define NS_VALUERETURN(v,t)	return (v)
-	#define NS_VOIDRETURN		return
+	#define NS_DURING					@try {
+	#define NS_HANDLER					} @catch (NSException *localException) {
+	#define NS_ENDHANDLER				}
+	#define NS_VALUERETURN(v,t)			return (v)
+	#define NS_VOIDRETURN				return
+#elif OOLITE_GNUSTEP
+	#define OOLITE_NATIVE_EXCEPTIONS	defined(_NATIVE_OBJC_EXCEPTIONS)
 #endif
 
 
@@ -341,10 +351,32 @@ enum {
 #endif
 
 
-#if OOLITE_MAC_OS_X && OOLITE_LEOPARD
-	#define OOLITE_FAST_ENUMERATION		1
+/*	Fast enumeration (for (x in y) syntax) is supported in all Mac compilers
+	when targeting 10.5 or later, and in gcc 4.6 with the GNU libobjc runtime.
+	At the time of writing, GNUstep stable does not support gcc 4.6, but it
+	already has support for the fast enumeration protocol in its collection
+	classes.
+	
+	All release versions of clang support fast enumeration, assuming libobjc2
+	or ObjectiveC2.framework is being used. We shall make that assumption.
+	
+	References:
+		http://lists.gnu.org/archive/html/discuss-gnustep/2011-02/msg00019.html
+		http://wiki.gnustep.org/index.php/ObjC2_FAQ
+	-- Ahruman 2011-02-04
+*/
+#if OOLITE_MAC_OS_X
+	#define OOLITE_FAST_ENUMERATION		OOLITE_LEOPARD
 #else
-	#define OOLITE_FAST_ENUMERATION		0
+	#if __clang__
+		#define OOLITE_FAST_ENUMERATION 1
+	#elif defined (__GNU_LIBOBJC__)
+		#define OOLITE_FAST_ENUMERATION (OOLITE_GCC_VERSION >= 40600)
+	#endif
+#endif
+
+#ifndef OOLITE_FAST_ENUMERATION
+#define OOLITE_FAST_ENUMERATION			0
 #endif
 
 

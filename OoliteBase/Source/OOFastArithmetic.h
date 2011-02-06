@@ -160,7 +160,7 @@ OOINLINE float OOInvSqrtf(float x)
 
 OOINLINE float OOFastInvSqrtf(float x)
 {
-#elif OO_PPC
+#if OO_PPC
 	return OOInvSqrtf(x);
 #else
 	return OOReciprocalEstimate(sqrt(x));

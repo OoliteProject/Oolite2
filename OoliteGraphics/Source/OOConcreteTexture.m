@@ -26,15 +26,12 @@
 
 #import "OOTextureInternal.h"
 #import "OOConcreteTexture.h"
+#import "OOOpenGLUtilities.h"
 
 #import "OOTextureLoader.h"
 
-#import "OOCollectionExtractors.h"
-#import "Universe.h"
-#import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
-#import "OOCPUInfo.h"
 #import "OOPixMap.h"
 
 #ifndef NDEBUG
@@ -75,7 +72,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 @implementation OOConcreteTexture
 
 - (id) initWithLoader:(OOTextureLoader *)loader
-				  key:(NSString *)key
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy
 			  lodBias:(GLfloat)lodBias
@@ -106,16 +102,11 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	}
 #endif
 	
-	_key = [key copy];
-	
-	[self addToCaches];
-	
 	return self;
 }
 
 
 - (id)initWithPath:(NSString *)path
-			   key:(NSString *)key
 		   options:(uint32_t)options
 		anisotropy:(float)anisotropy
 		   lodBias:(GLfloat)lodBias
@@ -127,7 +118,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		return nil;
 	}
 	
-	if ((self = [self initWithLoader:loader key:key options:options anisotropy:anisotropy lodBias:lodBias]))
+	if ((self = [self initWithLoader:loader options:options anisotropy:anisotropy lodBias:lodBias]))
 	{
 #if OOTEXTURE_RELOADABLE
 		_path = [path retain];
@@ -160,12 +151,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		_bytes = NULL;
 	}
 	
-#ifndef OOTEXTURE_NO_CACHE
-	[self removeFromCaches];
-	[_key autorelease];
-	_key = nil;
-#endif
-	
 	DESTROY(_loader);
 	
 #ifndef NDEBUG
@@ -178,31 +163,21 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (NSString *) descriptionComponents
 {
-	NSString				*stateDesc = nil;
-	
 	if (_loaded)
 	{
 		if (_valid)
 		{
-			stateDesc = [NSString stringWithFormat:@"%u x %u", _width, _height];
+			return [NSString stringWithFormat:@"%u x %u", _width, _height];
 		}
 		else
 		{
-			stateDesc = @"LOAD ERROR";
+			return @"LOAD ERROR";
 		}
 	}
 	else
 	{
-		stateDesc = @"loading";
+		return @"loading";
 	}
-	
-	return [NSString stringWithFormat:@"%@, %@", _key, stateDesc];
-}
-
-
-- (NSString *) shortDescriptionComponents
-{
-	return _key;
 }
 
 
@@ -211,11 +186,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 {
 	if (_name != nil)  return _name;
 	
-#if OOTEXTURE_RELOADABLE
 	NSString *name = [_path lastPathComponent];
-#else
-	NSString *name = [[[[self cacheKey] componentsSeparatedByString:@":"] objectAtIndex:0] lastPathComponent];
-#endif
 	
 	NSString *channelSuffix = nil;
 	switch (_options & kOOTextureExtractChannelMask)
@@ -267,12 +238,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 - (BOOL) isFinishedLoading
 {
 	return _loaded || [_loader isReady];
-}
-
-
-- (NSString *) cacheKey
-{
-	return _key;
 }
 
 
@@ -387,17 +352,9 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	}
 	else
 	{
-		// Not loaded
-		if (!_options & kOOTextureAllowRectTexture)
-		{
-			return NSMakeSize(1.0f, 1.0f);
-		}
-		else
-		{
-			// Finishing may clear the rectangle texture flag (if the texture turns out to be POT)
-			[self ensureFinishedLoading];
-			return [self texCoordsScale];
-		}
+		// Finishing may clear the rectangle texture flag (if the texture turns out to be POT)
+		[self ensureFinishedLoading];
+		return [self texCoordsScale];
 	}
 #else
 	return NSMakeSize(1.0f, 1.0f);
@@ -475,7 +432,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		OOGL(glBindTexture(texTarget, _textureName));
 		
 		// Select wrap mode
-		GLint clampMode = gOOTextureInfo.clampToEdgeAvailable ? GL_CLAMP_TO_EDGE : GL_CLAMP;
+		GLint clampMode = GL_CLAMP_TO_EDGE;
 		GLint wrapS = (_options & kOOTextureRepeatS) ? GL_REPEAT : clampMode;
 		GLint wrapT = (_options & kOOTextureRepeatT) ? GL_REPEAT : clampMode;
 		
@@ -519,13 +476,13 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		if (texTarget == GL_TEXTURE_2D)
 		{
 			[self uploadTextureDataWithMipMap:mipMap format:_format];
-			OOLog(@"texture.upload", @"Uploaded texture %u (%ux%u pixels, %@)", _textureName, _width, _height, _key);
+			OOLog(@"texture.upload", @"Uploaded texture %u (%ux%u pixels)", _textureName, _width, _height);
 		}
 #if OO_TEXTURE_CUBE_MAP
 		else if (texTarget == GL_TEXTURE_CUBE_MAP)
 		{
 			[self uploadTextureCubeMapDataWithMipMap:mipMap format:_format];
-			OOLog(@"texture.upload", @"Uploaded cube map texture %u (%ux%ux6 pixels, %@)", _textureName, _width, _width, _key);
+			OOLog(@"texture.upload", @"Uploaded cube map texture %u (%ux%ux6 pixels)", _textureName, _width, _width);
 		}
 #endif
 		else

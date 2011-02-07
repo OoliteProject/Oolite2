@@ -25,11 +25,15 @@ MA 02110-1301, USA.
 
 #import "OODockTilePlugIn.h"
 #import "NSFileManagerOOExtensions.h"
+#import "JAPersistentFileReference.h"
+
+
+#define OOLITE_LEOPARD 1
 
 
 @interface OODockTilePlugIn ()
 
-- (NSString *) screenShotsPath;
+- (NSURL *) snapshotsURLCreatingIfNeeded:(BOOL)create;
 - (NSString *) latestLogPath;
 - (NSString *) logFolderPath;
 
@@ -86,7 +90,7 @@ static NSArray *ResourceManagerRootPaths(void);
 {
 	NSLog(@"%s called.", __FUNCTION__);
 	
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:[self screenShotsPath]]];
+	[[NSWorkspace sharedWorkspace] openURL:[self snapshotsURLCreatingIfNeeded:NO]];
 }
 
 
@@ -133,7 +137,7 @@ static NSArray *ResourceManagerRootPaths(void);
 	
 	if (action == @selector(showScreenShots:))
 	{
-		return [[NSFileManager defaultManager] fileExistsAtPath:[self screenShotsPath]];
+		return [[NSFileManager defaultManager] fileExistsAtPath:[[self snapshotsURLCreatingIfNeeded:NO] path]];
 	}
 	if (action == @selector(showLatestLog:))
 	{
@@ -144,9 +148,129 @@ static NSArray *ResourceManagerRootPaths(void);
 }
 
 
-- (NSString *) screenShotsPath
+static id GetPreference(NSString *key, Class expectedClass)
 {
-	return [NSHomeDirectory() stringByAppendingPathComponent:@"Oolite Screen Shots"];
+	// Use CFPreferences instead of NSDefaults so we can specify the app ID.
+	CFPropertyListRef value = CFPreferencesCopyAppValue((CFStringRef)key, CFSTR("org.aegidian.oolite"));
+	id result = [NSMakeCollectable(value) autorelease];
+	if (expectedClass != Nil && ![result isKindOfClass:expectedClass])  result = nil;
+	
+	return result;
+}
+
+
+static void SetPreference(NSString *key, id value)
+{
+	CFPreferencesSetAppValue((CFStringRef)key, value, CFSTR("org.aegidian.oolite"));
+}
+
+
+static void RemovePreference(NSString *key)
+{
+	SetPreference(key, nil);
+}
+
+
+static NSString *DESC(NSString *key)
+{
+	static NSDictionary *descs = nil;
+	if (descs == nil)
+	{
+		// Get default description.plist from Oolite.
+		NSURL *url = [[NSBundle mainBundle] bundleURL];
+		url = [NSURL URLWithString:@"../Resources/Config/description.plist" relativeToURL:url];
+		NSLog(@"description.plist URL: %@ = %@", url, [[url absoluteURL] path]);
+		
+		descs = [NSDictionary dictionaryWithContentsOfURL:url];
+		if (descs == nil)  descs = [NSDictionary dictionary];
+		[descs retain];
+	}
+	
+	NSString *result = [descs objectForKey:key];
+	if (![result isKindOfClass:[NSString class]])  result = nil;	// We don't need to deal with arrays.
+	return result;
+}
+
+
+#define kSnapshotsDirRefKey		@"snapshots-directory-reference"
+#define kSnapshotsDirNameKey	@"snapshots-directory-name"
+
+- (NSURL *) snapshotsURLCreatingIfNeeded:(BOOL)create
+{
+	BOOL			stale = NO;
+	NSDictionary	*snapshotDirDict = GetPreference(kSnapshotsDirRefKey, [NSDictionary class]);
+	NSURL			*url = nil;
+	NSString		*name = DESC(@"snapshots-directory-name-mac");
+	
+	if (snapshotDirDict != nil)
+	{
+		url = JAURLFromPersistentFileReference(snapshotDirDict, kJAPersistentFileReferenceWithoutUI | kJAPersistentFileReferenceWithoutMounting, &stale);
+		if (url != nil)
+		{
+			NSString *existingName = [[url path] lastPathComponent];
+			if ([existingName compare:name options:NSCaseInsensitiveSearch] != 0)
+			{
+				// Check name from previous access, because we might have changed localizations.
+				NSString *originalOldName = GetPreference(kSnapshotsDirNameKey, [NSString class]);
+				if ([existingName compare:originalOldName options:NSCaseInsensitiveSearch] != 0)
+				{
+					url = nil;
+				}
+			}
+			
+			// did we put the old directory in the trash?
+			Boolean inTrash = false;
+			const UInt8* utfPath = (UInt8*)[[url path] UTF8String];
+			
+			OSStatus err = DetermineIfPathIsEnclosedByFolder(kOnAppropriateDisk, kTrashFolderType, utfPath, false, &inTrash);
+			// if so, create a new directory.
+			if (err == noErr && inTrash == true) url = nil;
+		}
+	}
+	
+	if (url == nil)
+	{
+		NSString *path = nil;
+		NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
+		if ([searchPaths count] > 0)
+		{
+			path = [[searchPaths objectAtIndex:0] stringByAppendingPathComponent:name];
+		}
+		url = [NSURL fileURLWithPath:path];
+		
+		if (url != nil)
+		{
+			stale = YES;
+			if (create)
+			{
+				NSFileManager *fmgr = [NSFileManager defaultManager];
+				if (![fmgr fileExistsAtPath:path])
+				{
+#if OOLITE_LEOPARD
+					[fmgr createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:NULL];
+#else
+					[fmgr createDirectoryAtPath:path attributes:nil];
+#endif
+				}
+			}
+		}
+	}
+	
+	if (stale)
+	{
+		snapshotDirDict = JAPersistentFileReferenceFromURL(url);
+		if (snapshotDirDict != nil)
+		{
+			SetPreference(kSnapshotsDirRefKey, snapshotDirDict);
+			SetPreference(kSnapshotsDirNameKey, [[url path] lastPathComponent]);
+		}
+		else
+		{
+			RemovePreference(kSnapshotsDirRefKey);
+		}
+	}
+	
+	return url;
 }
 
 

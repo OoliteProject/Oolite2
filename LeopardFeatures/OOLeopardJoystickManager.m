@@ -239,8 +239,15 @@ static uint8_t MapHatValue(CFIndex value, CFIndex max)
 		evt.type = JOYAXISMOTION;
 		evt.which = 0;
 		evt.axis = axisNum;
-		// FIXME: assumption that axes range from 0-255 is invalid.
-		evt.value = gammaTable[IOHIDValueGetIntegerValue(value) % kJoystickGammaTableSize];
+		
+		CFIndex intValue = IOHIDValueGetIntegerValue(value);
+		CFIndex max = IOHIDElementGetLogicalMax(element);
+		CFIndex min = IOHIDElementGetLogicalMin(element);
+		float axisValue = (float)(intValue - min) / (float)(max + 1 - min);
+		
+		// Note: this is designed so gammaIndex == intValue if min == 0 and max == kJoystickGammaTableSize - 1 (the common case).
+		unsigned gammaIndex = floor(axisValue * (kJoystickGammaTableSize));
+		evt.value = gammaTable[gammaIndex];
 		[self decodeAxisEvent:&evt];
 	}
 	else if (usagePage == kHIDPage_GenericDesktop && usage == kHIDUsage_GD_Hatswitch)

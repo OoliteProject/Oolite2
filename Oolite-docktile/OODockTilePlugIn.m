@@ -50,22 +50,8 @@ static NSArray *ResourceManagerRootPaths(void);
 @synthesize dockMenu = _dockMenu;
 
 
-+ (void) load
-{
-	NSLog(@"%s called.", __FUNCTION__);
-}
-
-
-+ (void) initialize
-{
-	NSLog(@"%s called.", __FUNCTION__);
-}
-
-
 - (id) init
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	if ((self = [super init]))
 	{
 		[NSBundle loadNibNamed:@"OODockTilePlugIn" owner:self];
@@ -77,8 +63,6 @@ static NSArray *ResourceManagerRootPaths(void);
 
 - (void) dealloc
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	self.dockTile = nil;
 	self.dockMenu = nil;
 	
@@ -88,16 +72,12 @@ static NSArray *ResourceManagerRootPaths(void);
 
 - (IBAction) showScreenShots:(id)sender
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	[[NSWorkspace sharedWorkspace] openURL:[self snapshotsURLCreatingIfNeeded:NO]];
 }
 
 
 - (IBAction) showExpansionPacks:(id)sender
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	// Adapted from -[GameController showAddOnsAction:].
 	BOOL			pathIsDirectory;
 	NSString		*path = nil;
@@ -115,31 +95,25 @@ static NSArray *ResourceManagerRootPaths(void);
 
 - (IBAction) showLatestLog:(id)sender
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:[self latestLogPath]]];
 }
 
 
 - (IBAction) showLogFolder:(id)sender
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:[self logFolderPath]]];
 }
 
 
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
-	NSLog(@"%s called.", __FUNCTION__);
-	
 	SEL action = [menuItem action];
 	
 	if (action == @selector(showScreenShots:))
 	{
 		return [[NSFileManager defaultManager] fileExistsAtPath:[[self snapshotsURLCreatingIfNeeded:NO] path]];
 	}
-	if (action == @selector(showLatestLog:))
+	else if (action == @selector(showLatestLog:))
 	{
 		return [[NSFileManager defaultManager] fileExistsAtPath:[self latestLogPath]];
 	}
@@ -177,9 +151,8 @@ static NSString *DESC(NSString *key)
 	if (descs == nil)
 	{
 		// Get default description.plist from Oolite.
-		NSURL *url = [[NSBundle mainBundle] bundleURL];
-		url = [NSURL URLWithString:@"../Resources/Config/description.plist" relativeToURL:url];
-		NSLog(@"description.plist URL: %@ = %@", url, [[url absoluteURL] path]);
+		NSURL *url = [[NSBundle bundleForClass:[OODockTilePlugIn class]] bundleURL];
+		url = [NSURL URLWithString:@"../../Resources/Config/descriptions.plist" relativeToURL:url];
 		
 		descs = [NSDictionary dictionaryWithContentsOfURL:url];
 		if (descs == nil)  descs = [NSDictionary dictionary];
@@ -187,7 +160,7 @@ static NSString *DESC(NSString *key)
 	}
 	
 	NSString *result = [descs objectForKey:key];
-	if (![result isKindOfClass:[NSString class]])  result = nil;	// We don't need to deal with arrays.
+	if (![result isKindOfClass:[NSString class]])  result = key;	// We don't need to deal with arrays.
 	return result;
 }
 

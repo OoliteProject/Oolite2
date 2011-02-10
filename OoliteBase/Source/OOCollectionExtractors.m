@@ -1341,7 +1341,7 @@ float OONonNegativeFloatFromObject(id object, float defaultValue)
 	else if ([object respondsToSelector:@selector(intValue)])  result = [object intValue];
 	else return defaultValue;	// Don't clamp default
 	
-	return OOMax_f(result, 0.0f);
+	return fmaxf(result, 0.0f);
 }
 
 
@@ -1354,7 +1354,7 @@ double OONonNegativeDoubleFromObject(id object, double defaultValue)
 	else if ([object respondsToSelector:@selector(intValue)])  result = [object intValue];
 	else return defaultValue;	// Don't clamp default
 	
-	return OOMax_d(result, 0.0f);
+	return fmax(result, 0.0);
 }
 
 

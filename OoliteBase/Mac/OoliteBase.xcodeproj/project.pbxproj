@@ -16,7 +16,6 @@
 		1A713FAB11B56436009A9197 /* OOCocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FA911B56436009A9197 /* OOCocoa.m */; };
 		1A713FBA11B564FB009A9197 /* OOFunctionAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FB911B564FB009A9197 /* OOFunctionAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FC811B5652E009A9197 /* OOFastArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FBF11B5652E009A9197 /* OOFastArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A713FC911B5652E009A9197 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FC011B5652E009A9197 /* OOFastArithmetic.m */; };
 		1A713FCA11B5652E009A9197 /* OOMaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FC111B5652E009A9197 /* OOMaths.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FCB11B5652E009A9197 /* OOMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FC211B5652E009A9197 /* OOMatrix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FCC11B5652E009A9197 /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FC311B5652E009A9197 /* OOMatrix.m */; };
@@ -72,7 +71,6 @@
 		1A713FA911B56436009A9197 /* OOCocoa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCocoa.m; sourceTree = "<group>"; };
 		1A713FB911B564FB009A9197 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
 		1A713FBF11B5652E009A9197 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
-		1A713FC011B5652E009A9197 /* OOFastArithmetic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFastArithmetic.m; sourceTree = "<group>"; };
 		1A713FC111B5652E009A9197 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
 		1A713FC211B5652E009A9197 /* OOMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMatrix.h; sourceTree = "<group>"; };
 		1A713FC311B5652E009A9197 /* OOMatrix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMatrix.m; sourceTree = "<group>"; };
@@ -192,7 +190,6 @@
 			children = (
 				1A713FC111B5652E009A9197 /* OOMaths.h */,
 				1A713FBF11B5652E009A9197 /* OOFastArithmetic.h */,
-				1A713FC011B5652E009A9197 /* OOFastArithmetic.m */,
 				1A713FC611B5652E009A9197 /* OOVector.h */,
 				1A713FC711B5652E009A9197 /* OOVector.m */,
 				1A713FC211B5652E009A9197 /* OOMatrix.h */,
@@ -351,7 +348,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A713FAB11B56436009A9197 /* OOCocoa.m in Sources */,
-				1A713FC911B5652E009A9197 /* OOFastArithmetic.m in Sources */,
 				1A713FCC11B5652E009A9197 /* OOMatrix.m in Sources */,
 				1A713FCE11B5652E009A9197 /* OOQuaternion.m in Sources */,
 				1A713FD011B5652E009A9197 /* OOVector.m in Sources */,

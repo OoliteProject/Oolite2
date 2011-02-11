@@ -133,39 +133,38 @@ id OODeepCopy(id object)
 		tempObjects = YES;
 	}
 	
-	[self getObjects:members];
-	NS_DURING
+	@try
+	{
+		[self getObjects:members];
+		
 		// Deep copy members.
 		for (i = 0; i < count; i++)
 		{
 			members[i] = [members[i] ooDeepCopyWithSharedObjects:objects];
 		}
-	NS_HANDLER
-		// Clean up and rethrow.
+		
+#if !OOLITE_MAC_OS_X
+		// Make NSArray of results.
+		result = [[NSArray alloc] initWithObjects:members count:count];
+		
+		// Release objects.
+		for (i = 0; i < count; i++)
+		{
+			[members[i] release];
+		}
+#else
+		// Use CF to avoid redundant retain and release.
+		CFArrayCallBacks arrayCB = kCFTypeArrayCallBacks;
+		arrayCB.version = 0;
+		arrayCB.retain = NULL;
+		result = (NSArray *)CFArrayCreate(kCFAllocatorDefault, (const void **)members, count, &arrayCB);
+#endif
+	}
+	@finally
+	{
 		free(members);
 		if (tempObjects)  [objects release];
-		[localException raise];
-	NS_ENDHANDLER
-	
-#if !OOLITE_MAC_OS_X
-	// Make NSArray of results.
-	result = [[NSArray alloc] initWithObjects:members count:count];
-	
-	// Release objects.
-	for (i = 0; i < count; i++)
-	{
-		[members[i] release];
 	}
-#else
-	// Use CF to avoid redundant retain and release.
-	CFArrayCallBacks arrayCB = kCFTypeArrayCallBacks;
-	arrayCB.version = 0;
-	arrayCB.retain = NULL;
-	result = (NSArray *)CFArrayCreate(kCFAllocatorDefault, (const void **)members, count, &arrayCB);
-#endif
-	
-	free(members);
-	if (tempObjects)  [objects release];
 	
 	// Collections are not reused because comparing them is arbitrarily slow.
 	return result;
@@ -192,14 +191,15 @@ id OODeepCopy(id object)
 		[NSException raise:NSMallocException format:@"Failed to allocate space for %lu objects in %s.", (unsigned long)count, __PRETTY_FUNCTION__];
 	}
 	
-	// Ensure there's an objects set even if passed nil.
-	if (objects == nil)
+	@try
 	{
-		objects = [[NSMutableSet alloc] init];
-		tempObjects = YES;
-	}
-	
-	NS_DURING
+		// Ensure there's an objects set even if passed nil.
+		if (objects == nil)
+		{
+			objects = [[NSMutableSet alloc] init];
+			tempObjects = YES;
+		}
+		
 		i = 0;
 		id member = nil;
 		// Deep copy members.
@@ -208,32 +208,29 @@ id OODeepCopy(id object)
 			members[i] = [member ooDeepCopyWithSharedObjects:objects];
 			i++;
 		}
-	NS_HANDLER
-		// Clean up and rethrow.
+		
+#if !OOLITE_MAC_OS_X
+		// Make NSArray of results.
+		result = [[NSSet alloc] initWithObjects:members count:count];
+		
+		// Release objects.
+		for (i = 0; i < count; i++)
+		{
+			[members[i] release];
+		}
+#else
+		// Use CF to avoid redundant retain and release.
+		CFSetCallBacks setCB = kCFTypeSetCallBacks;
+		setCB.version = 0;
+		setCB.retain = NULL;
+		result = (NSSet *)CFSetCreate(kCFAllocatorDefault, (const void **)members, count, &setCB);
+#endif
+	}
+	@finally
+	{
 		free(members);
 		if (tempObjects)  [objects release];
-		[localException raise];
-	NS_ENDHANDLER
-	
-#if !OOLITE_MAC_OS_X
-	// Make NSArray of results.
-	result = [[NSSet alloc] initWithObjects:members count:count];
-	
-	// Release objects.
-	for (i = 0; i < count; i++)
-	{
-		[members[i] release];
 	}
-#else
-	// Use CF to avoid redundant retain and release.
-	CFSetCallBacks setCB = kCFTypeSetCallBacks;
-	setCB.version = 0;
-	setCB.retain = NULL;
-	result = (NSSet *)CFSetCreate(kCFAllocatorDefault, (const void **)members, count, &setCB);
-#endif
-	
-	free(members);
-	if (tempObjects)  [objects release];
 	
 	// Collections are not reused because comparing them is arbitrarily slow.
 	return result;
@@ -264,14 +261,15 @@ id OODeepCopy(id object)
 		[NSException raise:NSMallocException format:@"Failed to allocate space for %lu objects in %s.", (unsigned long)count, __PRETTY_FUNCTION__];
 	}
 	
-	// Ensure there's an objects set even if passed nil.
-	if (objects == nil)
+	@try
 	{
-		objects = [[NSMutableSet alloc] init];
-		tempObjects = YES;
-	}
-	
-	NS_DURING
+		// Ensure there's an objects set even if passed nil.
+		if (objects == nil)
+		{
+			objects = [[NSMutableSet alloc] init];
+			tempObjects = YES;
+		}
+		
 		i = 0;
 		id key = nil;
 		// Deep copy members.
@@ -281,38 +279,34 @@ id OODeepCopy(id object)
 			values[i] = [[self objectForKey:key] ooDeepCopyWithSharedObjects:objects];
 			i++;
 		}
-	NS_HANDLER
-		// Clean up and rethrow.
+		
+#if !OOLITE_MAC_OS_X
+		// Make NSArray of results.
+		result = [[NSDictionary alloc] initWithObjects:values forKeys:keys count:count];
+		
+		// Release objects.
+		for (i = 0; i < count; i++)
+		{
+			[keys[i] release];
+			[values[i] release];
+		}
+#else
+		// Use CF to avoid redundant retain and release.
+		CFDictionaryKeyCallBacks keyCB = kCFTypeDictionaryKeyCallBacks;
+		CFDictionaryValueCallBacks valueCB = kCFTypeDictionaryValueCallBacks;
+		keyCB.version = 0;
+		keyCB.retain = NULL;
+		valueCB.version = 0;
+		valueCB.retain = NULL;
+		result = (NSDictionary *)CFDictionaryCreate(kCFAllocatorDefault, (const void **)keys, (const void **)values, count, &keyCB, &valueCB);
+#endif
+	}
+	@finally
+	{
 		free(keys);
 		free(values);
 		if (tempObjects)  [objects release];
-		[localException raise];
-	NS_ENDHANDLER
-	
-#if !OOLITE_MAC_OS_X
-	// Make NSArray of results.
-	result = [[NSDictionary alloc] initWithObjects:values forKeys:keys count:count];
-	
-	// Release objects.
-	for (i = 0; i < count; i++)
-	{
-		[keys[i] release];
-		[values[i] release];
 	}
-#else
-	// Use CF to avoid redundant retain and release.
-	CFDictionaryKeyCallBacks keyCB = kCFTypeDictionaryKeyCallBacks;
-	CFDictionaryValueCallBacks valueCB = kCFTypeDictionaryValueCallBacks;
-	keyCB.version = 0;
-	keyCB.retain = NULL;
-	valueCB.version = 0;
-	valueCB.retain = NULL;
-	result = (NSDictionary *)CFDictionaryCreate(kCFAllocatorDefault, (const void **)keys, (const void **)values, count, &keyCB, &valueCB);
-#endif
-	
-	free(keys);
-	free(values);
-	if (tempObjects)  [objects release];
 	
 	// Collections are not reused because comparing them is arbitrarily slow.
 	return result;

@@ -322,7 +322,8 @@ void OOLogWithFunctionFileAndLineAndArguments(NSString *messageClass, const char
 	
 	pool = [[NSAutoreleasePool alloc] init];
 	
-	NS_DURING
+	@try
+	{
 		// Do argument substitution
 		formattedMessage = [[[NSString alloc] initWithFormat:format arguments:arguments] autorelease];
 		
@@ -381,9 +382,11 @@ void OOLogWithFunctionFileAndLineAndArguments(NSString *messageClass, const char
 		}
 		
 		OOLogOutputHandlerPrint(formattedMessage, messageClass);
-	NS_HANDLER
+	}
+	@catch (NSException *localException)
+	{
 		OOLogInternal(OOLOG_EXCEPTION_IN_LOG, @"***** Exception thrown during logging: %@ : %@", [localException name], [localException reason]);
-	NS_ENDHANDLER
+	}
 	
 	[pool release];
 }
@@ -544,7 +547,8 @@ static void OOLogInternal_(const char *function, NSString *format, ...)
 	
 	pool = [[NSAutoreleasePool alloc] init];
 	
-	NS_DURING
+	@try
+	{
 		va_start(args, format);
 		formattedMessage = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 		va_end(args);
@@ -559,9 +563,11 @@ static void OOLogInternal_(const char *function, NSString *format, ...)
 		{
 			fprintf(stderr, "%s\n", [formattedMessage UTF8String]);
 		}
-	NS_HANDLER
+	}
+	@catch (NSException *localException)
+	{
 		fprintf(stderr, "***** Exception in OOLogInternal_(): %s : %s", [[localException name] UTF8String], [[localException reason] UTF8String]);
-	NS_ENDHANDLER
+	}
 	
 	[pool release];
 }

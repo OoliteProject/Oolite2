@@ -259,7 +259,8 @@ static BOOL					sHaveSetUp = NO;
 
 - (void)performAsyncTask
 {
-	NS_DURING
+	@try
+	{
 		OOLog(@"texture.load.asyncLoad", @"Loading texture %@", [_path lastPathComponent]);
 		
 		[self loadTexture];
@@ -276,7 +277,9 @@ static BOOL					sHaveSetUp = NO;
 		
 		OOLog(@"texture.load.asyncLoad.done", @"Loading complete.");
 		[_completionSignal signal];
-	NS_HANDLER
+	}
+	@catch (NSException *localException)
+	{
 		OOLog(@"texture.load.asyncLoad.exception", @"***** Exception loading texture %@: %@ (%@).", _path, [localException name], [localException reason]);
 		
 		// Be sure to signal load failure
@@ -285,7 +288,7 @@ static BOOL					sHaveSetUp = NO;
 			free(_data);
 			_data = NULL;
 		}
-	NS_ENDHANDLER
+	}
 }
 
 

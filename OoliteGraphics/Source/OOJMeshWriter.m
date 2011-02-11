@@ -156,7 +156,6 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 #if 0
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	NSString *key = nil;
-#endif
 	
 #if ANNOTATE
 	[result appendString:@"/*\n\t"];
@@ -171,6 +170,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 		[result appendFormat:@"\t\t%@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
 	}
 	[result appendString:@"*/\n\n"];
+#endif
 #endif
 	
 	

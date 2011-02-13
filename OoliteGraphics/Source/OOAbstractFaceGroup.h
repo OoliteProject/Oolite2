@@ -31,7 +31,6 @@
 
 #import <OoliteBase/OoliteBase.h>
 #import "OOAbstractFace.h"
-#import "OOBoundingBox.h"
 
 @class OOMaterialSpecification, OOIndexArray;
 

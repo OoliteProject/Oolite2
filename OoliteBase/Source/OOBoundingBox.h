@@ -4,7 +4,7 @@ OOBoundingBox.h
 
 
 Oolite
-Copyright (C) 2004-2010 Giles C Williams and contributors
+Copyright (C) 2004-2011 Giles C Williams and contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,8 +23,6 @@ MA 02110-1301, USA.
 
 */
 
-#include <OoliteBase/OOMaths.h>
-
 
 typedef struct OOBoundingBox
 {
@@ -38,14 +36,14 @@ extern const OOBoundingBox kOOZeroBoundingBox;		/* (0, 0, 0), (0, 0, 0) */
 
 /* Extend bounding box to contain specified point. */
 OOINLINE void OOBoundingBoxAddVector(OOBoundingBox *box, Vector vec)  NONNULL_FUNC;
-OOINLINE void OOBoundingBoxAddXYZ(OOBoundingBox *box, GLfloat x, GLfloat y, GLfloat z)  NONNULL_FUNC;
+OOINLINE void OOBoundingBoxAddXYZ(OOBoundingBox *box, OOScalar x, OOScalar y, OOScalar z)  NONNULL_FUNC;
 
 OOINLINE void OOBoundingBoxMerge(OOBoundingBox *box, OOBoundingBox other)  NONNULL_FUNC;
 
 /* Reset bounding box to a zero-sized box surrounding specified vector. */
 OOINLINE void OOBoundingBoxResetToVector(OOBoundingBox *box, Vector vec)  ALWAYS_INLINE_FUNC NONNULL_FUNC;
 
-OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, GLfloat *xSize, GLfloat *ySize, GLfloat *zSize)  ALWAYS_INLINE_FUNC;
+OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, OOScalar *xSize, OOScalar *ySize, OOScalar *zSize)  ALWAYS_INLINE_FUNC;
 
 
 
@@ -63,7 +61,7 @@ OOINLINE void OOBoundingBoxAddVector(OOBoundingBox *box, Vector vec)
 }
 
 
-OOINLINE void OOBoundingBoxAddXYZ(OOBoundingBox *box, GLfloat x, GLfloat y, GLfloat z)
+OOINLINE void OOBoundingBoxAddXYZ(OOBoundingBox *box, OOScalar x, OOScalar y, OOScalar z)
 {
 	assert(box != NULL);
 	box->min.x = fminf(box->min.x, x);
@@ -90,7 +88,7 @@ OOINLINE void OOBoundingBoxResetToVector(OOBoundingBox *box, Vector vec)
 }
 
 
-OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, GLfloat *xSize, GLfloat *ySize, GLfloat *zSize)
+OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, OOScalar *xSize, OOScalar *ySize, OOScalar *zSize)
 {
 	if (xSize != NULL)  *xSize = bb.max.x - bb.min.y;
 	if (ySize != NULL)  *ySize = bb.max.y - bb.min.y;

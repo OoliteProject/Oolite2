@@ -31,7 +31,6 @@
 #import "OOAbstractFaceGroup.h"
 #import "OOMaterialSpecification.h"
 #import "OORenderMesh.h"
-#import "OOBoundingBox.h"
 
 
 @interface OOAbstractMesh: NSObject <NSFastEnumeration, NSCopying>

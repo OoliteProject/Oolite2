@@ -107,6 +107,7 @@ typedef float OOScalar;
 #include "OOVector.h"
 #include "OOQuaternion.h"
 #include "OOMatrix.h"
+#include "OOBoundingBox.h"
 
 
 #ifdef __cplusplus

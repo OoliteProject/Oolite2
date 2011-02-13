@@ -10,8 +10,6 @@
 		1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A062E9911B2F64E00727C1D /* OODATWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062E9A11B2F64E00727C1D /* OODATWriter.m */; };
 		1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A35D711C2F7570086265F /* OoliteBase.framework */; };
-		1A5838521205C21800118F45 /* OOBoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A5838501205C21800118F45 /* OOBoundingBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A5838531205C21800118F45 /* OOBoundingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5838511205C21800118F45 /* OOBoundingBox.m */; };
 		1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64DCA011B111EC001D8850 /* OOMeshWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */; };
 		1A663E3F11F25C2D0049AE20 /* OOShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -149,8 +147,6 @@
 		1A062E9911B2F64E00727C1D /* OODATWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATWriter.h; sourceTree = "<group>"; };
 		1A062E9A11B2F64E00727C1D /* OODATWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATWriter.m; sourceTree = "<group>"; };
 		1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
-		1A5838501205C21800118F45 /* OOBoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBoundingBox.h; sourceTree = "<group>"; };
-		1A5838511205C21800118F45 /* OOBoundingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBoundingBox.m; sourceTree = "<group>"; };
 		1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshWriter.h; sourceTree = "<group>"; };
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
 		1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShaderProgram.h; sourceTree = "<group>"; };
@@ -390,8 +386,6 @@
 				1A7D35B711B138A100857CEF /* OOIndexArray.m */,
 				1AABAAA411B9C7ED003487D5 /* OOColor.h */,
 				1AABAAA511B9C7ED003487D5 /* OOColor.m */,
-				1A5838501205C21800118F45 /* OOBoundingBox.h */,
-				1A5838511205C21800118F45 /* OOBoundingBox.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -527,7 +521,6 @@
 				1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */,
 				1A988AAF11F30C6B00C7CF6B /* OOOpenGLUtilities.h in Headers */,
 				1A8A296E11F3A95400775894 /* OOAbstractMesh+Winding.h in Headers */,
-				1A5838521205C21800118F45 /* OOBoundingBox.h in Headers */,
 				1AD8418B1229211E00FC382A /* OOPNGTextureLoader.h in Headers */,
 				1AD8418D1229211E00FC382A /* OOTexture.h in Headers */,
 				1AD8418F1229211E00FC382A /* OOTextureInternal.h in Headers */,
@@ -693,7 +686,6 @@
 				1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */,
 				1A988AB011F30C6B00C7CF6B /* OOOpenGLUtilities.m in Sources */,
 				1A8A296F11F3A95400775894 /* OOAbstractMesh+Winding.m in Sources */,
-				1A5838531205C21800118F45 /* OOBoundingBox.m in Sources */,
 				1AD8418C1229211E00FC382A /* OOPNGTextureLoader.m in Sources */,
 				1AD8418E1229211E00FC382A /* OOTexture.m in Sources */,
 				1AD841911229211E00FC382A /* OOTextureLoader.m in Sources */,

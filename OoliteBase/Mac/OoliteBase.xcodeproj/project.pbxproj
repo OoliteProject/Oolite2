@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A1B995D13088B5F0078322D /* OOBoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1B995B13088B5F0078322D /* OOBoundingBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A1B995E13088B5F0078322D /* OOBoundingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B995C13088B5F0078322D /* OOBoundingBox.m */; };
 		1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */; };
 		1A60EDE811B6FD8600224F2D /* OODeepCopy.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A60EDE611B6FD8500224F2D /* OODeepCopy.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -61,6 +63,8 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A1B995B13088B5F0078322D /* OOBoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBoundingBox.h; sourceTree = "<group>"; };
+		1A1B995C13088B5F0078322D /* OOBoundingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBoundingBox.m; sourceTree = "<group>"; };
 		1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIsNumberLiteral.h; sourceTree = "<group>"; };
 		1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIsNumberLiteral.m; sourceTree = "<group>"; };
 		1A60EDE611B6FD8500224F2D /* OODeepCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODeepCopy.h; sourceTree = "<group>"; };
@@ -198,6 +202,8 @@
 				1A713FC511B5652E009A9197 /* OOQuaternion.m */,
 				1A713FE111B565D1009A9197 /* OORandom.h */,
 				1A713FE011B565D1009A9197 /* OORandom.c */,
+				1A1B995B13088B5F0078322D /* OOBoundingBox.h */,
+				1A1B995C13088B5F0078322D /* OOBoundingBox.m */,
 			);
 			name = Maths;
 			path = ../Source;
@@ -265,6 +271,7 @@
 				1AE9F1B11221B15B007A4B97 /* JAValueToString.h in Headers */,
 				1AD841D2122921DD00FC382A /* OOCPUInfo.h in Headers */,
 				1AD8429C122922BD00FC382A /* OOWeakReference.h in Headers */,
+				1A1B995D13088B5F0078322D /* OOBoundingBox.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +376,7 @@
 				1AE9F1B21221B15B007A4B97 /* JAValueToString.m in Sources */,
 				1AD841D3122921DD00FC382A /* OOCPUInfo.m in Sources */,
 				1AD8429D122922BD00FC382A /* OOWeakReference.m in Sources */,
+				1A1B995E13088B5F0078322D /* OOBoundingBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

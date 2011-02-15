@@ -187,6 +187,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "OpenCTM" */;
 			buildPhases = (
+				1A0017CC130B2E2900135BD6 /* Update Code */,
 				D2AAC07A0554694100DB518D /* Headers */,
 				D2AAC07B0554694100DB518D /* Sources */,
 				D2AAC07C0554694100DB518D /* Frameworks */,
@@ -227,6 +228,26 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A0017CC130B2E2900135BD6 /* Update Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../Dependencies/OpenCTM.url",
+			);
+			name = "Update Code";
+			outputPaths = (
+				"$(SRCROOT)/../Dependencies/OpenCTM/current.url",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPTDIR=\"$SRCROOT/../../../Scripts\"\ncd $SRCROOT\n\n\"$SCRIPTDIR/update-library.sh\" ../Dependencies OpenCTM tbz\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AAC07B0554694100DB518D /* Sources */ = {

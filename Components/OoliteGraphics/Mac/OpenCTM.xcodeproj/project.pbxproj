@@ -283,7 +283,7 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "OpenCTM-for-oolite";
-				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
+				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
 				SYMROOT = ../../../build;
 			};
 			name = Debug;
@@ -296,7 +296,7 @@
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
-				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
+				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
 				SYMROOT = ../../../build;
 			};
 			name = Release;

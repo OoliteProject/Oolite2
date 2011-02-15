@@ -137,7 +137,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AD843B21229314400FC382A /* libpng.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13 /* libpng */;
+			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13;
 			remoteInfo = libpng;
 		};
 /* End PBXContainerItemProxy section */
@@ -724,13 +724,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEP_HEADER_PATH = "$(OBJROOT)/$(CONFIGURATION)/include/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_GC = supported;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
@@ -740,8 +740,8 @@
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(OBJROOT)/$(CONFIGURATION)/png/",
-					"$(OBJROOT)/$(CONFIGURATION)/OpenCTM/",
+					"$(DEP_HEADER_PATH)/png/",
+					"$(DEP_HEADER_PATH)/OpenCTM/",
 				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
@@ -766,12 +766,12 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEP_HEADER_PATH = "$(OBJROOT)/$(CONFIGURATION)/include/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_GC = supported;
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -780,8 +780,8 @@
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(OBJROOT)/$(CONFIGURATION)/png/",
-					"$(OBJROOT)/$(CONFIGURATION)/OpenCTM/",
+					"$(DEP_HEADER_PATH)/png/",
+					"$(DEP_HEADER_PATH)/OpenCTM/",
 				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
@@ -791,7 +791,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				SYMROOT = ../../build;
+				SYMROOT = ../../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",

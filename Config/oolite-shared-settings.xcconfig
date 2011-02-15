@@ -1,7 +1,10 @@
+#include "oolite-version.inc"
+
 WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces
 
-ARCHS									= ppc i386 x86_64
-SDKROOT									= macosx10.5
-MACOSX_DEPLOYMENT_TARGET				= 10.5
+ARCHS									= i386 x86_64
+VALID_ARCHS								= i386 x86_64
+SDKROOT									= macosx10.6
+MACOSX_DEPLOYMENT_TARGET				= 10.6
 
 GCC_VERSION								= com.apple.compilers.llvm.clang.1_0

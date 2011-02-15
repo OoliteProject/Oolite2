@@ -94,7 +94,7 @@
 				1AD8439B1229310900FC382A /* pngwutil.c */,
 			);
 			name = Source;
-			path = ../Deps/libpng;
+			path = ../Dependencies/libpng;
 			sourceTree = "<group>";
 		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {

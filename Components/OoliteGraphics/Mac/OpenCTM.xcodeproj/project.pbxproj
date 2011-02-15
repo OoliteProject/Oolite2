@@ -134,7 +134,7 @@
 				1ACBD00E11EE5BDE0067E95D /* liblzma */,
 			);
 			name = OpenCTM;
-			path = ../Deps/OpenCTM;
+			path = ../Dependencies/OpenCTM;
 			sourceTree = "<group>";
 		};
 		1ACBD00E11EE5BDE0067E95D /* liblzma */ = {

@@ -1,5 +1,7 @@
 /*	pngusr.h: customise libpng build */
 
+#if OOLITE_LEAN
+
 /* We only want to read PNGs */
 #define PNG_NO_WRITE_SUPPORTED
 
@@ -43,3 +45,5 @@
 
 /* tRNS chunk support has a	vulnerability prior to libpng 1.2.18, and we don't need it anyway. */
 #define PNG_NO_READ_tRNS
+
+#endif

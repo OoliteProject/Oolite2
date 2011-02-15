@@ -7,51 +7,55 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1AD8439C1229310900FC382A /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8438D1229310900FC382A /* png.c */; };
-		1AD8439D1229310900FC382A /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8438E1229310900FC382A /* pngerror.c */; };
-		1AD8439E1229310900FC382A /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8438F1229310900FC382A /* pngget.c */; };
-		1AD8439F1229310900FC382A /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843901229310900FC382A /* pngmem.c */; };
-		1AD843A01229310900FC382A /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843911229310900FC382A /* pngpread.c */; };
-		1AD843A11229310900FC382A /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843921229310900FC382A /* pngread.c */; };
-		1AD843A21229310900FC382A /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843931229310900FC382A /* pngrio.c */; };
-		1AD843A31229310900FC382A /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843941229310900FC382A /* pngrtran.c */; };
-		1AD843A41229310900FC382A /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843951229310900FC382A /* pngrutil.c */; };
-		1AD843A51229310900FC382A /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843961229310900FC382A /* pngset.c */; };
-		1AD843A61229310900FC382A /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843971229310900FC382A /* pngtrans.c */; };
-		1AD843A71229310900FC382A /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843981229310900FC382A /* pngwio.c */; };
-		1AD843A81229310900FC382A /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD843991229310900FC382A /* pngwrite.c */; };
-		1AD843A91229310900FC382A /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8439A1229310900FC382A /* pngwtran.c */; };
-		1AD843AA1229310900FC382A /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AD8439B1229310900FC382A /* pngwutil.c */; };
-		1AD843AC1229311700FC382A /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD8438B122930D900FC382A /* png.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AD843AD1229311900FC382A /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD8438C122930D900FC382A /* pngconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AD843AE1229311B00FC382A /* pngusr.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD84386122930BD00FC382A /* pngusr.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A78B59E12D74BE900D42EE7 /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A78B58A12D74BE900D42EE7 /* png.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A78B59F12D74BE900D42EE7 /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A78B58B12D74BE900D42EE7 /* pngconf.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A78B5A012D74BE900D42EE7 /* pngpriv.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A78B58C12D74BE900D42EE7 /* pngpriv.h */; };
+		1A78B5A212D74BE900D42EE7 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B58E12D74BE900D42EE7 /* png.c */; };
+		1A78B5A312D74BE900D42EE7 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B58F12D74BE900D42EE7 /* pngerror.c */; };
+		1A78B5A412D74BE900D42EE7 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59012D74BE900D42EE7 /* pngget.c */; };
+		1A78B5A512D74BE900D42EE7 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59112D74BE900D42EE7 /* pngmem.c */; };
+		1A78B5A612D74BE900D42EE7 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59212D74BE900D42EE7 /* pngpread.c */; };
+		1A78B5A712D74BE900D42EE7 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59312D74BE900D42EE7 /* pngread.c */; };
+		1A78B5A812D74BE900D42EE7 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59412D74BE900D42EE7 /* pngrio.c */; };
+		1A78B5A912D74BE900D42EE7 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59512D74BE900D42EE7 /* pngrtran.c */; };
+		1A78B5AA12D74BE900D42EE7 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59612D74BE900D42EE7 /* pngrutil.c */; };
+		1A78B5AB12D74BE900D42EE7 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59712D74BE900D42EE7 /* pngset.c */; };
+		1A78B5AD12D74BE900D42EE7 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59912D74BE900D42EE7 /* pngtrans.c */; };
+		1A78B5AE12D74BE900D42EE7 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59A12D74BE900D42EE7 /* pngwio.c */; };
+		1A78B5AF12D74BE900D42EE7 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59B12D74BE900D42EE7 /* pngwrite.c */; };
+		1A78B5B012D74BE900D42EE7 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59C12D74BE900D42EE7 /* pngwtran.c */; };
+		1A78B5B112D74BE900D42EE7 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A78B59D12D74BE900D42EE7 /* pngwutil.c */; };
+		1A78B5B412D74C5600D42EE7 /* pngusr.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A78B5B312D74C5600D42EE7 /* pngusr.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1A55BB17130B215C006C38DE /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
-		1AD84386122930BD00FC382A /* pngusr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pngusr.h; path = ../Source/pngusr.h; sourceTree = SOURCE_ROOT; };
-		1AD8438B122930D900FC382A /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
-		1AD8438C122930D900FC382A /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
-		1AD8438D1229310900FC382A /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
-		1AD8438E1229310900FC382A /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
-		1AD8438F1229310900FC382A /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
-		1AD843901229310900FC382A /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
-		1AD843911229310900FC382A /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
-		1AD843921229310900FC382A /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
-		1AD843931229310900FC382A /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
-		1AD843941229310900FC382A /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
-		1AD843951229310900FC382A /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
-		1AD843961229310900FC382A /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
-		1AD843971229310900FC382A /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
-		1AD843981229310900FC382A /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
-		1AD843991229310900FC382A /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
-		1AD8439A1229310900FC382A /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
-		1AD8439B1229310900FC382A /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
-		D2AAC046055464E500DB518D /* libpng-for-oolite-graphics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libpng-for-oolite-graphics.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A71E6F30BCE340C00CD5C13 /* libpng-for-oolite-graphics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libpng-for-oolite-graphics.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A78B58A12D74BE900D42EE7 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
+		1A78B58B12D74BE900D42EE7 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
+		1A78B58C12D74BE900D42EE7 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
+		1A78B58D12D74BE900D42EE7 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = example.c; sourceTree = "<group>"; };
+		1A78B58E12D74BE900D42EE7 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
+		1A78B58F12D74BE900D42EE7 /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
+		1A78B59012D74BE900D42EE7 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
+		1A78B59112D74BE900D42EE7 /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
+		1A78B59212D74BE900D42EE7 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		1A78B59312D74BE900D42EE7 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
+		1A78B59412D74BE900D42EE7 /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
+		1A78B59512D74BE900D42EE7 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
+		1A78B59612D74BE900D42EE7 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
+		1A78B59712D74BE900D42EE7 /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
+		1A78B59812D74BE900D42EE7 /* pngtest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtest.c; sourceTree = "<group>"; };
+		1A78B59912D74BE900D42EE7 /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
+		1A78B59A12D74BE900D42EE7 /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
+		1A78B59B12D74BE900D42EE7 /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
+		1A78B59C12D74BE900D42EE7 /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
+		1A78B59D12D74BE900D42EE7 /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
+		1A78B5B312D74C5600D42EE7 /* pngusr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngusr.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D289987405E68DCB004EDB86 /* Frameworks */ = {
+		1A71E6F10BCE340C00CD5C13 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -61,89 +65,97 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08FB7794FE84155DC02AAC07 /* libpng */ = {
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A55BB17130B215C006C38DE /* oolite-shared-settings.xcconfig */,
-				1AD84386122930BD00FC382A /* pngusr.h */,
-				08FB7795FE84155DC02AAC07 /* Source */,
-				1AB674ADFE9D54B511CA2CBB /* Products */,
+				1A71E6F30BCE340C00CD5C13 /* libpng-for-oolite-graphics.a */,
 			);
-			name = libpng;
+			name = Products;
 			sourceTree = "<group>";
 		};
-		08FB7795FE84155DC02AAC07 /* Source */ = {
+		1A78B58512D74BAD00D42EE7 /* libpng */ = {
 			isa = PBXGroup;
 			children = (
-				1AD8438B122930D900FC382A /* png.h */,
-				1AD8438C122930D900FC382A /* pngconf.h */,
-				1AD8438D1229310900FC382A /* png.c */,
-				1AD8438E1229310900FC382A /* pngerror.c */,
-				1AD8438F1229310900FC382A /* pngget.c */,
-				1AD843901229310900FC382A /* pngmem.c */,
-				1AD843911229310900FC382A /* pngpread.c */,
-				1AD843921229310900FC382A /* pngread.c */,
-				1AD843931229310900FC382A /* pngrio.c */,
-				1AD843941229310900FC382A /* pngrtran.c */,
-				1AD843951229310900FC382A /* pngrutil.c */,
-				1AD843961229310900FC382A /* pngset.c */,
-				1AD843971229310900FC382A /* pngtrans.c */,
-				1AD843981229310900FC382A /* pngwio.c */,
-				1AD843991229310900FC382A /* pngwrite.c */,
-				1AD8439A1229310900FC382A /* pngwtran.c */,
-				1AD8439B1229310900FC382A /* pngwutil.c */,
+				1A78B58A12D74BE900D42EE7 /* png.h */,
+				1A78B58B12D74BE900D42EE7 /* pngconf.h */,
+				1A78B58C12D74BE900D42EE7 /* pngpriv.h */,
+				1A78B58D12D74BE900D42EE7 /* example.c */,
+				1A78B58E12D74BE900D42EE7 /* png.c */,
+				1A78B58F12D74BE900D42EE7 /* pngerror.c */,
+				1A78B59012D74BE900D42EE7 /* pngget.c */,
+				1A78B59112D74BE900D42EE7 /* pngmem.c */,
+				1A78B59212D74BE900D42EE7 /* pngpread.c */,
+				1A78B59312D74BE900D42EE7 /* pngread.c */,
+				1A78B59412D74BE900D42EE7 /* pngrio.c */,
+				1A78B59512D74BE900D42EE7 /* pngrtran.c */,
+				1A78B59612D74BE900D42EE7 /* pngrutil.c */,
+				1A78B59712D74BE900D42EE7 /* pngset.c */,
+				1A78B59812D74BE900D42EE7 /* pngtest.c */,
+				1A78B59912D74BE900D42EE7 /* pngtrans.c */,
+				1A78B59A12D74BE900D42EE7 /* pngwio.c */,
+				1A78B59B12D74BE900D42EE7 /* pngwrite.c */,
+				1A78B59C12D74BE900D42EE7 /* pngwtran.c */,
+				1A78B59D12D74BE900D42EE7 /* pngwutil.c */,
 			);
-			name = Source;
+			name = libpng;
 			path = ../Dependencies/libpng;
 			sourceTree = "<group>";
 		};
-		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+		29B97314FDCFA39411CA2CEA /* Oolite_GUSTO */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC046055464E500DB518D /* libpng-for-oolite-graphics.a */,
+				1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */,
+				1A78B5B312D74C5600D42EE7 /* pngusr.h */,
+				1A78B58512D74BAD00D42EE7 /* libpng */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
-			name = Products;
+			name = Oolite_GUSTO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		D2AAC043055464E500DB518D /* Headers */ = {
+		1A71E6EF0BCE340C00CD5C13 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AD843AC1229311700FC382A /* png.h in Headers */,
-				1AD843AD1229311900FC382A /* pngconf.h in Headers */,
-				1AD843AE1229311B00FC382A /* pngusr.h in Headers */,
+				1A78B59E12D74BE900D42EE7 /* png.h in Headers */,
+				1A78B59F12D74BE900D42EE7 /* pngconf.h in Headers */,
+				1A78B5A012D74BE900D42EE7 /* pngpriv.h in Headers */,
+				1A78B5B412D74C5600D42EE7 /* pngusr.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D2AAC045055464E500DB518D /* libpng */ = {
+		1A71E6F20BCE340C00CD5C13 /* libpng */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "libpng" */;
+			buildConfigurationList = 1A71E6FC0BCE345800CD5C13 /* Build configuration list for PBXNativeTarget "libpng" */;
 			buildPhases = (
-				D2AAC043055464E500DB518D /* Headers */,
-				D2AAC044055464E500DB518D /* Sources */,
-				D289987405E68DCB004EDB86 /* Frameworks */,
+				1AA0D03212CAB13100BB883D /* Update Code */,
+				1A71E6EF0BCE340C00CD5C13 /* Headers */,
+				1A71E6F00BCE340C00CD5C13 /* Sources */,
+				1A71E6F10BCE340C00CD5C13 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = libpng;
-			productName = libpng;
-			productReference = D2AAC046055464E500DB518D /* libpng-for-oolite-graphics.a */;
+			productName = "libpng-custom";
+			productReference = 1A71E6F30BCE340C00CD5C13 /* libpng-for-oolite-graphics.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		08FB7793FE84155DC02AAC07 /* Project object */ = {
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "libpng" */;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 08B31CB008FE63D70038D42F /* Build configuration list for PBXProject "libpng" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -153,116 +165,146 @@
 				French,
 				German,
 			);
-			mainGroup = 08FB7794FE84155DC02AAC07 /* libpng */;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* Oolite_GUSTO */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D2AAC045055464E500DB518D /* libpng */,
+				1A71E6F20BCE340C00CD5C13 /* libpng */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1AA0D03212CAB13100BB883D /* Update Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../../URLs/libpng.url",
+			);
+			name = "Update Code";
+			outputPaths = (
+				"$(SRCROOT)/../../Cross-platform-deps/libpng/current.url",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPTDIR=\"$SRCROOT/../../../Scripts\"\ncd $SRCROOT\n\n\"$SCRIPTDIR/update-library.sh\" ../Dependencies libpng tgz\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		D2AAC044055464E500DB518D /* Sources */ = {
+		1A71E6F00BCE340C00CD5C13 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AD8439C1229310900FC382A /* png.c in Sources */,
-				1AD8439D1229310900FC382A /* pngerror.c in Sources */,
-				1AD8439E1229310900FC382A /* pngget.c in Sources */,
-				1AD8439F1229310900FC382A /* pngmem.c in Sources */,
-				1AD843A01229310900FC382A /* pngpread.c in Sources */,
-				1AD843A11229310900FC382A /* pngread.c in Sources */,
-				1AD843A21229310900FC382A /* pngrio.c in Sources */,
-				1AD843A31229310900FC382A /* pngrtran.c in Sources */,
-				1AD843A41229310900FC382A /* pngrutil.c in Sources */,
-				1AD843A51229310900FC382A /* pngset.c in Sources */,
-				1AD843A61229310900FC382A /* pngtrans.c in Sources */,
-				1AD843A71229310900FC382A /* pngwio.c in Sources */,
-				1AD843A81229310900FC382A /* pngwrite.c in Sources */,
-				1AD843A91229310900FC382A /* pngwtran.c in Sources */,
-				1AD843AA1229310900FC382A /* pngwutil.c in Sources */,
+				1A78B5A212D74BE900D42EE7 /* png.c in Sources */,
+				1A78B5A312D74BE900D42EE7 /* pngerror.c in Sources */,
+				1A78B5A412D74BE900D42EE7 /* pngget.c in Sources */,
+				1A78B5A512D74BE900D42EE7 /* pngmem.c in Sources */,
+				1A78B5A612D74BE900D42EE7 /* pngpread.c in Sources */,
+				1A78B5A712D74BE900D42EE7 /* pngread.c in Sources */,
+				1A78B5A812D74BE900D42EE7 /* pngrio.c in Sources */,
+				1A78B5A912D74BE900D42EE7 /* pngrtran.c in Sources */,
+				1A78B5AA12D74BE900D42EE7 /* pngrutil.c in Sources */,
+				1A78B5AB12D74BE900D42EE7 /* pngset.c in Sources */,
+				1A78B5AD12D74BE900D42EE7 /* pngtrans.c in Sources */,
+				1A78B5AE12D74BE900D42EE7 /* pngwio.c in Sources */,
+				1A78B5AF12D74BE900D42EE7 /* pngwrite.c in Sources */,
+				1A78B5B012D74BE900D42EE7 /* pngwtran.c in Sources */,
+				1A78B5B112D74BE900D42EE7 /* pngwutil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB91EC08733DB70010E9CD /* Debug */ = {
+		08B31CB108FE63D70038D42F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
+				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DLOADSAVEGUI";
+			};
+			name = Debug;
+		};
+		08B31CB208FE63D70038D42F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
+				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
+				OTHER_CFLAGS = "-DLOADSAVEGUI";
+			};
+			name = Release;
+		};
+		1A71E6FD0BCE345800CD5C13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = PNG_USER_CONFIG;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
 				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
-				PUBLIC_HEADERS_FOLDER_PATH = png;
+				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
 				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
-		1DEB91ED08733DB70010E9CD /* Release */ = {
+		1A71E6FE0BCE345800CD5C13 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = PNG_USER_CONFIG;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
 				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
-				PUBLIC_HEADERS_FOLDER_PATH = png;
-				SYMROOT = ../../build;
-			};
-			name = Release;
-		};
-		1DEB91F008733DB70010E9CD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A55BB17130B215C006C38DE /* oolite-shared-settings.xcconfig */;
-			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
-			};
-			name = Debug;
-		};
-		1DEB91F108733DB70010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A55BB17130B215C006C38DE /* oolite-shared-settings.xcconfig */;
-			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
+				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
+				SDKROOT_i386 = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SYMROOT = ../../../build;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "libpng" */ = {
+		08B31CB008FE63D70038D42F /* Build configuration list for PBXProject "libpng" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91EC08733DB70010E9CD /* Debug */,
-				1DEB91ED08733DB70010E9CD /* Release */,
+				08B31CB108FE63D70038D42F /* Debug */,
+				08B31CB208FE63D70038D42F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "libpng" */ = {
+		1A71E6FC0BCE345800CD5C13 /* Build configuration list for PBXNativeTarget "libpng" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91F008733DB70010E9CD /* Debug */,
-				1DEB91F108733DB70010E9CD /* Release */,
+				1A71E6FD0BCE345800CD5C13 /* Debug */,
+				1A71E6FE0BCE345800CD5C13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
 }

@@ -73,28 +73,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OoliteBase.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = OoliteBase;
 		};
 		1A55BB93130B2289006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OoliteGraphics.framework */;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 		1A55BB95130B2292006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OoliteBase */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = OoliteBase;
 		};
 		1A55BB97130B2292006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
 		};
 /* End PBXContainerItemProxy section */

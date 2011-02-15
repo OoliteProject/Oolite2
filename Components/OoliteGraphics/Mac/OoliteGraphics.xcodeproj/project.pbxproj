@@ -137,7 +137,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AD843B21229314400FC382A /* libpng.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13 /* libpng */;
 			remoteInfo = libpng;
 		};
 /* End PBXContainerItemProxy section */

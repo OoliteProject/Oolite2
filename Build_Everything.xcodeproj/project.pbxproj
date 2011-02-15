@@ -13,8 +13,10 @@
 			buildPhases = (
 			);
 			dependencies = (
-				1A1A37FD11C2F9ED0086265F /* PBXTargetDependency */,
-				1A50F56211B6DBA8005D584E /* PBXTargetDependency */,
+				1A55BD38130B24EE006C38DE /* PBXTargetDependency */,
+				1A55BD3A130B24EE006C38DE /* PBXTargetDependency */,
+				1A55BD36130B24EE006C38DE /* PBXTargetDependency */,
+				1A55BD3C130B24EE006C38DE /* PBXTargetDependency */,
 				1A4587F611F89656000CBCF0 /* PBXTargetDependency */,
 			);
 			name = "Build Everything";
@@ -23,13 +25,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXContainerItemProxy section */
-		1A1A37EE11C2F9C30086265F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
-			remoteInfo = oobasicconverter;
-		};
 		1A1A37F411C2F9D10086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */;
@@ -43,13 +38,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
 			remoteInfo = OoliteGraphics;
-		};
-		1A1A37FC11C2F9ED0086265F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
-			remoteInfo = oobasicconverter;
 		};
 		1A4587F311F8964F000CBCF0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,40 +53,60 @@
 			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
 			remoteInfo = DryDock2;
 		};
-		1A50F55F11B6DB9D005D584E /* PBXContainerItemProxy */ = {
+		1A55BD27130B24D4006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E /* oobasicconverter */;
+			remoteInfo = oobasicconverter;
+		};
+		1A55BD33130B24E1006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E /* oomergemesh */;
 			remoteInfo = oomergemesh;
 		};
-		1A50F56111B6DBA8005D584E /* PBXContainerItemProxy */ = {
+		1A55BD35130B24EE006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E /* oobasicconverter */;
+			remoteInfo = oobasicconverter;
+		};
+		1A55BD37130B24EE006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OoliteBase */;
+			remoteInfo = OoliteBase;
+		};
+		1A55BD39130B24EE006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
+			remoteInfo = OoliteGraphics;
+		};
+		1A55BD3B130B24EE006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E /* oomergemesh */;
 			remoteInfo = oomergemesh;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oobasicconverter.xcodeproj; path = tests/oobasicconverter/oobasicconverter.xcodeproj; sourceTree = "<group>"; };
+		1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oobasicconverter.xcodeproj; path = oobasicconverter/Mac/oobasicconverter.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
 		1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DryDock2.xcodeproj; path = DryDock2/DryDock2.xcodeproj; sourceTree = "<group>"; };
-		1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oomergemesh.xcodeproj; path = tests/oomergemesh/oomergemesh.xcodeproj; sourceTree = "<group>"; };
+		1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oomergemesh.xcodeproj; path = oomergemesh/Mac/oomergemesh.xcodeproj; sourceTree = "<group>"; };
 		1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "Config/oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		1A1A37E711C2F9C30086265F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1A1A37EF11C2F9C30086265F /* oobasicconverter */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1A1A37F111C2F9D10086265F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -123,21 +131,29 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A50F55711B6DB9D005D584E /* Products */ = {
+		1A55BD24130B24D4006C38DE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A50F56011B6DB9D005D584E /* oomergemesh */,
+				1A55BD28130B24D4006C38DE /* oobasicconverter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A60ECF611B6DF7D00224F2D /* Frameworks */ = {
+		1A55BD30130B24E1006C38DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A55BD34130B24E1006C38DE /* oomergemesh */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A60ECF611B6DF7D00224F2D /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */,
 				1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */,
 			);
-			name = Frameworks;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		1A60ECF711B6DF8200224F2D /* Tools */ = {
@@ -147,14 +163,14 @@
 				1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */,
 				1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */,
 			);
-			name = Tools;
+			path = Tools;
 			sourceTree = "<group>";
 		};
 		1AE4E99111B6DAF600A85342 = {
 			isa = PBXGroup;
 			children = (
 				1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */,
-				1A60ECF611B6DF7D00224F2D /* Frameworks */,
+				1A60ECF611B6DF7D00224F2D /* Components */,
 				1A60ECF711B6DF8200224F2D /* Tools */,
 			);
 			sourceTree = "<group>";
@@ -185,7 +201,7 @@
 					ProjectRef = 1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */;
 				},
 				{
-					ProductGroup = 1A1A37E711C2F9C30086265F /* Products */;
+					ProductGroup = 1A55BD24130B24D4006C38DE /* Products */;
 					ProjectRef = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
 				},
 				{
@@ -197,7 +213,7 @@
 					ProjectRef = 1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */;
 				},
 				{
-					ProductGroup = 1A50F55711B6DB9D005D584E /* Products */;
+					ProductGroup = 1A55BD30130B24E1006C38DE /* Products */;
 					ProjectRef = 1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */;
 				},
 			);
@@ -209,13 +225,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1A1A37EF11C2F9C30086265F /* oobasicconverter */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = oobasicconverter;
-			remoteRef = 1A1A37EE11C2F9C30086265F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1A1A37F511C2F9D10086265F /* OoliteBase.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -237,30 +246,47 @@
 			remoteRef = 1A4587F311F8964F000CBCF0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1A50F56011B6DB9D005D584E /* oomergemesh */ = {
+		1A55BD28130B24D4006C38DE /* oobasicconverter */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = oobasicconverter;
+			remoteRef = 1A55BD27130B24D4006C38DE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A55BD34130B24E1006C38DE /* oomergemesh */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
 			path = oomergemesh;
-			remoteRef = 1A50F55F11B6DB9D005D584E /* PBXContainerItemProxy */;
+			remoteRef = 1A55BD33130B24E1006C38DE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
-		1A1A37FD11C2F9ED0086265F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = oobasicconverter;
-			targetProxy = 1A1A37FC11C2F9ED0086265F /* PBXContainerItemProxy */;
-		};
 		1A4587F611F89656000CBCF0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = DryDock2;
 			targetProxy = 1A4587F511F89656000CBCF0 /* PBXContainerItemProxy */;
 		};
-		1A50F56211B6DBA8005D584E /* PBXTargetDependency */ = {
+		1A55BD36130B24EE006C38DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = oobasicconverter;
+			targetProxy = 1A55BD35130B24EE006C38DE /* PBXContainerItemProxy */;
+		};
+		1A55BD38130B24EE006C38DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteBase;
+			targetProxy = 1A55BD37130B24EE006C38DE /* PBXContainerItemProxy */;
+		};
+		1A55BD3A130B24EE006C38DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteGraphics;
+			targetProxy = 1A55BD39130B24EE006C38DE /* PBXContainerItemProxy */;
+		};
+		1A55BD3C130B24EE006C38DE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = oomergemesh;
-			targetProxy = 1A50F56111B6DBA8005D584E /* PBXContainerItemProxy */;
+			targetProxy = 1A55BD3B130B24EE006C38DE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

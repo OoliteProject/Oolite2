@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -42,6 +42,10 @@
 		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; };
 		1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */; };
 		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
+		1A55BBBA130B229B006C38DE /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB82130B227B006C38DE /* OoliteBase.framework */; };
+		1A55BBBB130B229D006C38DE /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB94130B2289006C38DE /* OoliteGraphics.framework */; };
+		1A55BBBC130B22AC006C38DE /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB82130B227B006C38DE /* OoliteBase.framework */; };
+		1A55BBBD130B22AF006C38DE /* OoliteGraphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB94130B2289006C38DE /* OoliteGraphics.framework */; };
 		1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */; };
 		1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */; };
 		1A6B97D511F5DC2600B2E78A /* ShadedWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */; };
@@ -53,10 +57,6 @@
 		1A8A287B11F393C400775894 /* MAFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287211F393C300775894 /* MAFuture.m */; };
 		1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287511F393C300775894 /* MAMethodSignatureCache.m */; };
 		1A8A287D11F393C400775894 /* MAProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287711F393C300775894 /* MAProxy.m */; };
-		1ABAC28011C393FD005301BA /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27F11C393FB005301BA /* OoliteBase.framework */; };
-		1ABAC28111C393FF005301BA /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27911C393F5005301BA /* OoliteGraphics.framework */; };
-		1ABAC28211C3940C005301BA /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27F11C393FB005301BA /* OoliteBase.framework */; };
-		1ABAC28311C3940C005301BA /* OoliteGraphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABAC27911C393F5005301BA /* OoliteGraphics.framework */; };
 		1ADB31FE122AF87B00F890B8 /* Placeholder Texture.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */; };
 		1ADB321C122AF99D00F890B8 /* DDApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */; };
 		1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* DDDocument.xib */; };
@@ -69,25 +69,32 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1ABAC27811C393F5005301BA /* PBXContainerItemProxy */ = {
+		1A55BB81130B227B006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+			containerPortal = 1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
-			remoteInfo = OoliteGraphics;
-		};
-		1ABAC27E11C393FB005301BA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OoliteBase.framework */;
 			remoteInfo = OoliteBase;
 		};
-		1ABAC28411C39415005301BA /* PBXContainerItemProxy */ = {
+		1A55BB93130B2289006C38DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+			containerPortal = 1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC /* OoliteGraphics.framework */;
+			remoteInfo = OoliteGraphics;
+		};
+		1A55BB95130B2292006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OoliteBase */;
+			remoteInfo = OoliteBase;
+		};
+		1A55BB97130B2292006C38DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC /* OoliteGraphics */;
 			remoteInfo = OoliteGraphics;
 		};
 /* End PBXContainerItemProxy section */
@@ -99,8 +106,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1ABAC28211C3940C005301BA /* OoliteBase.framework in Copy Frameworks */,
-				1ABAC28311C3940C005301BA /* OoliteGraphics.framework in Copy Frameworks */,
+				1A55BBBC130B22AC006C38DE /* OoliteBase.framework in Copy Frameworks */,
+				1A55BBBD130B22AF006C38DE /* OoliteGraphics.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,7 +117,7 @@
 /* Begin PBXFileReference section */
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A17D10111C1838100F96041 /* JASceneGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JASceneGraphView.h; sourceTree = "<group>"; };
 		1A17D10211C1838100F96041 /* JASceneGraphView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = JASceneGraphView.mm; sourceTree = "<group>"; };
 		1A17D10711C1838100F96041 /* SGLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGLight.h; sourceTree = "<group>"; };
@@ -180,6 +187,8 @@
 		1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CarbonFSRefCreation.m"; sourceTree = "<group>"; };
 		1A4CC2D411F4E58700D7144C /* DDSceneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSceneView.h; sourceTree = "<group>"; };
 		1A4CC2D511F4E58700D7144C /* DDSceneView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDSceneView.mm; sourceTree = "<group>"; };
+		1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
+		1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
 		1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.fs; sourceTree = "<group>"; };
 		1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.vs; sourceTree = "<group>"; };
 		1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = ShadedWireframeShader.vs; sourceTree = "<group>"; };
@@ -198,8 +207,6 @@
 		1A8A287611F393C300775894 /* MAProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAProxy.h; sourceTree = "<group>"; };
 		1A8A287711F393C300775894 /* MAProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAProxy.m; sourceTree = "<group>"; };
 		1A8A287811F393C300775894 /* tester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tester.m; sourceTree = "<group>"; };
-		1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
-		1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Placeholder Texture.png"; sourceTree = "<group>"; };
 		1ADB321A122AF99D00F890B8 /* DDApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDApplicationDelegate.h; sourceTree = "<group>"; };
 		1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDApplicationDelegate.m; sourceTree = "<group>"; };
@@ -222,8 +229,8 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				1A17D17211C184F200F96041 /* OpenGL.framework in Frameworks */,
 				1A17D19211C1854A00F96041 /* Accelerate.framework in Frameworks */,
-				1ABAC28011C393FD005301BA /* OoliteBase.framework in Frameworks */,
-				1ABAC28111C393FF005301BA /* OoliteGraphics.framework in Frameworks */,
+				1A55BBBA130B229B006C38DE /* OoliteBase.framework in Frameworks */,
+				1A55BBBB130B229D006C38DE /* OoliteGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +422,32 @@
 			path = IconFamily;
 			sourceTree = "<group>";
 		};
+		1A55BB77130B2265006C38DE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */,
+				1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */,
+			);
+			name = Components;
+			path = ../../Components;
+			sourceTree = "<group>";
+		};
+		1A55BB7B130B227A006C38DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A55BB82130B227B006C38DE /* OoliteBase.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A55BB84130B2289006C38DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A55BB94130B2289006C38DE /* OoliteGraphics.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1A7392BA11C3CE5C002F405C /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -445,22 +478,6 @@
 				1A8A287811F393C300775894 /* tester.m */,
 			);
 			path = MAFuture;
-			sourceTree = "<group>";
-		};
-		1ABAC26E11C393F5005301BA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1ABAC27911C393F5005301BA /* OoliteGraphics.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		1ABAC27B11C393FB005301BA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1ABAC27F11C393FB005301BA /* OoliteBase.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		2A37F4AAFDCFA73011CA2CEA /* DryDock2 */ = {
@@ -519,11 +536,10 @@
 		2A37F4C3FDCFA73011CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A55BB77130B2265006C38DE /* Components */,
 				1A17D19111C1854A00F96041 /* Accelerate.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 				1A17D17111C184F200F96041 /* OpenGL.framework */,
-				1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */,
-				1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -543,7 +559,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				1ABAC28511C39415005301BA /* PBXTargetDependency */,
+				1A55BB96130B2292006C38DE /* PBXTargetDependency */,
+				1A55BB98130B2292006C38DE /* PBXTargetDependency */,
 			);
 			name = DryDock2;
 			productInstallPath = "$(HOME)/Applications";
@@ -557,7 +574,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -570,12 +587,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1ABAC27B11C393FB005301BA /* Products */;
-					ProjectRef = 1ABAC27A11C393FB005301BA /* OoliteBase.xcodeproj */;
+					ProductGroup = 1A55BB7B130B227A006C38DE /* Products */;
+					ProjectRef = 1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */;
 				},
 				{
-					ProductGroup = 1ABAC26E11C393F5005301BA /* Products */;
-					ProjectRef = 1ABAC26D11C393F5005301BA /* OoliteGraphics.xcodeproj */;
+					ProductGroup = 1A55BB84130B2289006C38DE /* Products */;
+					ProjectRef = 1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -586,18 +603,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1ABAC27911C393F5005301BA /* OoliteGraphics.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OoliteGraphics.framework;
-			remoteRef = 1ABAC27811C393F5005301BA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1ABAC27F11C393FB005301BA /* OoliteBase.framework */ = {
+		1A55BB82130B227B006C38DE /* OoliteBase.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = OoliteBase.framework;
-			remoteRef = 1ABAC27E11C393FB005301BA /* PBXContainerItemProxy */;
+			remoteRef = 1A55BB81130B227B006C38DE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A55BB94130B2289006C38DE /* OoliteGraphics.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteGraphics.framework;
+			remoteRef = 1A55BB93130B2289006C38DE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -675,10 +692,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1ABAC28511C39415005301BA /* PBXTargetDependency */ = {
+		1A55BB96130B2292006C38DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteBase;
+			targetProxy = 1A55BB95130B2292006C38DE /* PBXContainerItemProxy */;
+		};
+		1A55BB98130B2292006C38DE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OoliteGraphics;
-			targetProxy = 1ABAC28411C39415005301BA /* PBXContainerItemProxy */;
+			targetProxy = 1A55BB97130B2292006C38DE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -746,7 +768,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
 				SDKROOT = macosx10.6;
-				SYMROOT = ../build;
+				SYMROOT = ../../build;
 			};
 			name = Debug;
 		};
@@ -767,7 +789,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
 				SDKROOT = macosx10.6;
-				SYMROOT = ../build;
+				SYMROOT = ../../build;
 			};
 			name = Release;
 		};

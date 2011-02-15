@@ -43,7 +43,7 @@
 		1ACBCF2111EE46DC0067E95D /* openctm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctm.h; path = lib/openctm.h; sourceTree = "<group>"; };
 		1ACBCF2211EE46DC0067E95D /* openctmpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctmpp.h; path = lib/openctmpp.h; sourceTree = "<group>"; };
 		1ACBCF2311EE46DC0067E95D /* stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stream.c; path = lib/stream.c; sourceTree = "<group>"; };
-		1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1ACBD00F11EE5BDE0067E95D /* Alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Alloc.c; sourceTree = "<group>"; };
 		1ACBD01011EE5BDE0067E95D /* Alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alloc.h; sourceTree = "<group>"; };
 		1ACBD01111EE5BDE0067E95D /* LzFind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzFind.c; sourceTree = "<group>"; };
@@ -210,7 +210,14 @@
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* OpenCTM */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -256,7 +263,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
-				SYMROOT = ../../build;
+				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
@@ -269,7 +276,7 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = OpenCTM;
-				SYMROOT = ../../build;
+				SYMROOT = ../../../build;
 			};
 			name = Release;
 		};
@@ -277,14 +284,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
 			};
 			name = Debug;
 		};
@@ -292,12 +297,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
 			};
 			name = Release;
 		};

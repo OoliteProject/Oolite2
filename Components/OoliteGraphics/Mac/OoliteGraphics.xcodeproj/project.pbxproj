@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -165,8 +165,7 @@
 		1A7D37C711B16C1E00857CEF /* OOOBJReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJReader.h; sourceTree = "<group>"; };
 		1A7D37C811B16C1E00857CEF /* OOOBJReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJReader.m; sourceTree = "<group>"; };
 		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
-		1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
-		1A878BE711B58492001BB304 /* oomesh-specification.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "oomesh-specification.txt"; path = "../../Documentation/oomesh-specification.txt"; sourceTree = SOURCE_ROOT; };
+		1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A8A296C11F3A95400775894 /* OOAbstractMesh+Winding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOAbstractMesh+Winding.h"; sourceTree = "<group>"; };
 		1A8A296D11F3A95400775894 /* OOAbstractMesh+Winding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOAbstractMesh+Winding.m"; sourceTree = "<group>"; };
 		1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroup.h; sourceTree = "<group>"; };
@@ -265,7 +264,6 @@
 		0867D691FE84028FC02AAC07 /* oomesh */ = {
 			isa = PBXGroup;
 			children = (
-				1A878BE711B58492001BB304 /* oomesh-specification.txt */,
 				1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */,
 				1A713DDD11B55E96009A9197 /* OoliteGraphics.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,
@@ -571,7 +569,7 @@
 				BuildIndependentTargetsInParallel = YES;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OoliteGraphics" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -757,7 +755,7 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				SYMROOT = ../../build;
+				SYMROOT = ../../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",

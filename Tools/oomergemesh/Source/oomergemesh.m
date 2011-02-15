@@ -21,7 +21,7 @@ int main (int argc, const char * argv[])
 	NSMutableArray *meshes = [NSMutableArray arrayWithCapacity:argc - 1];
 	OOSimpleProblemReportManager *issues = nil;
 	
-	unsigned i;
+	int i;
 	for (i = 1; i < argc; i++)
 	{
 		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];

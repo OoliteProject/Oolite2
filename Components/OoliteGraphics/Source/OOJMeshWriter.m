@@ -31,10 +31,11 @@
 #import "OOAbstractMesh.h"
 
 
-/*	If set to 1, information about the mesh structure will be added in
-	comments.
-*/
-#define ANNOTATE			(!defined(NDEBUG))
+enum
+{
+	// Interval between index comments in annotation mode.
+	kAnnGroupRate = 20
+};
 
 
 /*	Quote a key if the kOOJMeshWriteJSONCompatible is set, return it unmodified
@@ -274,14 +275,17 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 			
 			// If annotating, comment vertex use count for position array.
 			BOOL annNoteUseCounts = NO;
-			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey])  annNoteUseCounts = YES;
+			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey] && annFaceCount * 3 > vertexCount) 
+			{
+				annNoteUseCounts = YES;
+			}
 			
 			for (NSUInteger vertexIter = 0; vertexIter < vertexCount; vertexIter++)
 			{
 				vertex = [vertices objectAtIndex:vertexIter];
 				[result appendString:@"\t\t\t\t"];
 				
-				if (annotate && (vertexIter % 20) == 0)
+				if (annotate && (vertexIter % kAnnGroupRate) == 0 && vertexIter != 0)
 				{
 					[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)vertexIter];
 				}
@@ -349,7 +353,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 			
 			[result appendString:@"\t\t\t\t"];
 			
-			if (annotate && (faceIter % 20) == 0)
+			if (annotate && (faceIter % kAnnGroupRate) == 0 && faceIter != 0)
 			{
 				[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)faceIter];
 			}

@@ -321,6 +321,7 @@ enum
 	kCharTab			= 0x09,
 	kCharLF				= 0x0A,
 	kCharCR				= 0x0D,
+	kCharAsterisk		= 0x2A,	// *
 	kCharPlus			= 0x2B,	// +
 	kCharComma			= 0x2C,	// ,
 	kCharMinus			= 0x2D,	// -
@@ -448,7 +449,7 @@ OOINLINE BOOL CommentStarts(OOJMeshLexerState *state)
 {
 	return (state->cursor + 1) < state->end &&
 			state->cursor[0] == kCharForwardSlash &&
-			state->cursor[1] == kCharForwardSlash;
+			(state->cursor[1] == kCharForwardSlash || state->cursor[1] == kCharAsterisk);
 }
 
 
@@ -474,9 +475,44 @@ OOINLINE BOOL ConsumeWhitespaceAndComments(OOJMeshLexerState *state)
 		{
 			return YES;
 		}
+		else if (state->cursor[1] == kCharForwardSlash)
+		{
+			// Single-line comment.
+			while (!IsCursorAtNewline(state))
+			{
+				state->cursor++;
+				EOF_BREAK();
+			}
+		}
 		else
 		{
-			while (!IsCursorAtNewline(state))  state->cursor++;
+			// Block comment.
+			assert(state->cursor[1] == kCharAsterisk);
+			
+			state->cursor += 2;
+			
+			for (;;)
+			{
+				if (EXPECT_NOT(state->cursor + 1 == state->end))  return NO;
+				
+				if (state->cursor[0] == kCharAsterisk)
+				{
+					if (state->cursor[1] == kCharForwardSlash)
+					{
+						state->cursor += 2;
+						break;
+					}
+				}
+				else if (IsCursorAtNewline(state))
+				{
+					if (state->cursor[0] == kCharCR && state->cursor + 1 < state->end && state->cursor[1] == kCharLF)
+					{
+						state->cursor++;
+					}
+					state->lineNumber++;
+				}
+				state->cursor++;
+			}
 		}
 	}
 }

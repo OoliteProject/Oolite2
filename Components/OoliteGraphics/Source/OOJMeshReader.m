@@ -431,7 +431,7 @@ typedef enum
 - (BOOL) priv_completeGroupWithDictionary:(NSMutableDictionary *)dictionary data:(id)data name:(NSString *)name
 {
 	// Groups must have materials.
-	NSString *materialKey = [dictionary oo_stringForKey:@"material"];
+	NSString *materialKey = [dictionary oo_stringForKey:kMaterialKey];
 	if (materialKey == nil)
 	{
 		[self priv_reportStructuralError:@"Mesh hroup \"%@\" does not specify a material", name];

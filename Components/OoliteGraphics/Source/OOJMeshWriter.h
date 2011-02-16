@@ -40,13 +40,20 @@ enum
 		If this flag is set, informative comments are added. This is disabled
 		if kOOJMeshWriteJSONCompatible is set.
 	*/
-	kOOJMeshWriteWithAnnotations		= 0x00000001UL,
+	kOOJMeshWriteWithAnnotations			= 0x00000001UL,
+	
+	/*	kOOJMeshWriteWithExtendedAnnotations
+		If this flag is set (along with kOOJMeshWriteWithAnnotations),
+		additional comments are added - currently, a use count for each verte
+		in the position attribute.
+	*/
+	kOOJMeshWriteWithExtendedAnnotations	= 0x00000002UL,
 	
 	/*	kOOJMeshWriteJSONCompatible
 		If this flag is set, no comments are written (overriding the
 		kOOJMeshWriteWithAnnotations flag) and all keys are quoted.
 	*/
-	kOOJMeshWriteJSONCompatible			= 0x00000002UL
+	kOOJMeshWriteJSONCompatible				= 0x00000004UL
 };
 
 

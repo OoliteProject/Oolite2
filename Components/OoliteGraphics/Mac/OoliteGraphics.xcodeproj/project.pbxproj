@@ -95,6 +95,7 @@
 		1AF429BB11A98B4D008E883C /* OOTextureSpecification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF429B911A98B4D008E883C /* OOTextureSpecification.m */; };
 		1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */; };
+		1AFDDFCD130C49170075DD39 /* OOJMeshDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFDDFCC130C49170075DD39 /* OOJMeshDefinitions.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -234,6 +235,7 @@
 		1AF429B911A98B4D008E883C /* OOTextureSpecification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTextureSpecification.m; sourceTree = "<group>"; };
 		1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
 		1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
+		1AFDDFCC130C49170075DD39 /* OOJMeshDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOJMeshDefinitions.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -337,6 +339,7 @@
 		1A7D37C011B16BE000857CEF /* Readers */ = {
 			isa = PBXGroup;
 			children = (
+				1AFDDFCC130C49170075DD39 /* OOJMeshDefinitions.h */,
 				1A7D37DB11B16EC000857CEF /* OOMeshReading.h */,
 				1AB369ED11F20E90006E68A3 /* OOMeshReading.m */,
 				1AEA235C11A72E0B00B361DC /* OODATReader.h */,
@@ -532,6 +535,7 @@
 				1ADF40F212F5EAA300F7CF71 /* OOJMeshReader.h in Headers */,
 				1ADF410C12F5F0AA00F7CF71 /* OOJMeshLexer.h in Headers */,
 				1AD736F712F78002008CCC38 /* OOJMeshWriter.h in Headers */,
+				1AFDDFCD130C49170075DD39 /* OOJMeshDefinitions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

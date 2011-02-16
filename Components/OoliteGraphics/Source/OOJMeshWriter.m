@@ -26,6 +26,7 @@
 #if !OOLITE_LEAN
 
 #import "OOJMeshWriter.h"
+#import "OOJMeshDefinitions.h"
 #import <OoliteBase/OOConfGenerationInternal.h>
 #import "OOAbstractMesh.h"
 
@@ -69,6 +70,9 @@ static NSString *Key(NSString *key, OOJMeshWriteOptions options)
 }
 
 
+static NSString *FloatString(float number);
+
+
 BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, OOJMeshWriteOptions options, id <OOProblemReporting> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -108,6 +112,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 		confOptions |= kOOConfGenerationJSONCompatible;
 	}
 	BOOL						annotate = options & kOOJMeshWriteWithAnnotations;
+	BOOL						annotateExtended = annotate && (options & kOOJMeshWriteWithExtendedAnnotations);
 	
 	//	Generate list of unique vertex indices (pointer uniquing only).
 	NSMutableArray				*vertices = [NSMutableArray array];
@@ -121,7 +126,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 	
 	//	Unique vertices across groups, and count ’em.
 	NSMutableArray *annVertexUseCounts = nil;
-	if (annotate)  annVertexUseCounts = [NSMutableArray array];
+	if (annotateExtended)  annVertexUseCounts = [NSMutableArray array];
 	
 	foreach (faceGroup, mesh)
 	{
@@ -140,9 +145,9 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 					[indices setObject:index forKey:vertex];
 					[vertices addObject:vertex];
 					
-					if (annotate)  [annVertexUseCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
+					if (annotateExtended)  [annVertexUseCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
 				}
-				else if (annotate)
+				else if (annotateExtended)
 				{
 					NSUInteger indexVal = [index unsignedIntegerValue];
 					NSUInteger useCount = [annVertexUseCounts oo_unsignedIntegerAtIndex:indexVal];
@@ -189,9 +194,10 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 		vertexSchema = mutableSchema;
 	}
 	
+	// Write header comment.
+	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 	if (annotate)
 	{
-		NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
 		NSString *key = nil;
 		
 		[result appendString:@"/*\n\t"];
@@ -209,17 +215,17 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 	}
 	
 	
-	[result appendFormat:@"{\n\t%@: %lu,\n", SimpleKey(@"vertexCount", options), (unsigned long)vertexCount];
+	[result appendFormat:@"{\n\t%@: %lu,\n", SimpleKey(kVertexCountKey, options), (unsigned long)vertexCount];
 	
 	NSString *description = [mesh modelDescription];
 	if (description != nil)
 	{
-		[result appendFormat:@"\t\"description\": \"%@\",\n", [description oo_escapedForJavaScriptLiteral]];
+		[result appendFormat:@"\t%@: \"%@\",\n", SimpleKey(kMeshDescriptionKey, options), [description oo_escapedForJavaScriptLiteral]];
 	}
 	
 	// Write materials.
 	NSError *error = nil;
-	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(@"materials", options)];
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kMaterialsSectionKey, options)];
 	NSArray *sortedMaterialKeys = [[materials allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 	NSUInteger materialIter, materialCount = [sortedMaterialKeys count];
 	for (materialIter = 0; materialIter < materialCount; materialIter++)
@@ -240,12 +246,71 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 			return nil;
 		}
 		
-		if (materialIter + 1 < materialCount)
-		{
-			[result appendString:@","];
-		}
+		if (materialIter + 1 < materialCount)  [result appendString:@","];
 		[result appendString:@"\n\t"];
 	}
+	[result appendString:@"},\n\t\n"];
+	
+	// Write vertex attributes.
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kAttributesSectionKey, options)];
+	if (vertexCount > 0)
+	{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		
+		NSUInteger attributeIter, attributeCount = [attributeKeys count];
+		for (attributeIter = 0; attributeIter < attributeCount; attributeIter++)
+		{
+			NSString *attributeKey = [attributeKeys objectAtIndex:attributeIter];
+			NSUInteger elemIter, size = [vertexSchema oo_unsignedIntegerForKey:attributeKey];
+			
+			/*
+					<attributeKey>:
+					{
+						size: <size>
+						data:
+						[
+			*/
+			[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@:\n\t\t\t[\n", Key(attributeKey, options), Key(kSizeKey, options), (unsigned long long)size, Key(kDataKey, options)];
+			
+			// If annotating, comment vertex use count for position array.
+			NSUInteger annVIdx = NSNotFound;
+			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey])  annVIdx = 0;
+			
+			for (NSUInteger vertexIter = 0; vertexIter < vertexCount; vertexIter++)
+			{
+				vertex = [vertices objectAtIndex:vertexIter];
+				[result appendString:@"\t\t\t\t"];
+				
+				OOFloatArray *attr = [vertex attributeForKey:attributeKey];
+				for (elemIter = 0; elemIter < size; elemIter++)
+				{
+					[result appendString:FloatString([attr floatAtIndex:elemIter])];
+					
+					if (elemIter + 1 < size)
+					{
+						[result appendString:@",\t"];
+					}
+					else
+					{
+						if (vertexIter + 1 < vertexCount)  [result appendString:@","];
+						if (annVIdx == NSNotFound)  [result appendString:@"\n"];
+						else
+						{
+							[result appendFormat:@"\t// Uses: %@\n", [annVertexUseCounts objectAtIndex:annVIdx++]];
+						}
+					}
+				}
+			}
+			
+			[result appendString:@"\t\t\t]\n\t\t}"];
+			
+			if (attributeIter + 1 < attributeCount)  [result appendString:@","];
+			[result appendString:@"\n"];
+		}
+		
+		[pool drain];
+	}
+	[result appendString:@"\t},\n\t\n"];
 	
 	[result appendString:@"}\n"];
 	
@@ -253,6 +318,25 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 	[pool drain];
 	
 	return [data autorelease];
+}
+
+
+static NSString *FloatString(float number)
+{
+	NSString *result = $sprintf(@"%.3f", number);
+	
+	//	This is teh nasty.
+	while ([result hasSuffix:@"0"])
+	{
+		result = [result substringToIndex:[result length] - 1];
+	}
+	if ([result hasSuffix:@"."])
+	{
+		result = [result substringToIndex:[result length] - 1];
+	}
+	if ([result length] == 0)  result = @"0";
+	
+	return result;
 }
 
 #endif

@@ -26,20 +26,12 @@
 
 #import "OOJMeshReader.h"
 #import "OOJMeshLexer.h"
-#import "OOIndexArray.h"
+#import "OOJMeshDefinitions.h"
 
+#import "OOIndexArray.h"
 #import "OORenderMesh.h"
 #import "OOMaterialSpecification.h"
 #import "OOAbstractMesh.h"
-
-
-#define kVertexCountKey			@"vertexCount"
-#define kMaterialsSectionKey	@"materials"
-#define kAttributesSectionKey	@"attributes"
-#define kGroupsSectionKey		@"groups"
-#define kSizeKey				@"size"
-#define kFaceCountKey			@"faceCount"
-#define kMeshDescriptionKey		@"description"
 
 
 enum
@@ -558,7 +550,7 @@ typedef enum
 					// Root dictionary has funky requirements.
 					OK = [self priv_readRootValueForKey:keyValue];
 				}
-				else  if (dataHandlerSEL != NULL && [@"data" isEqualToString:keyValue])
+				else  if (dataHandlerSEL != NULL && [kDataKey isEqualToString:keyValue])
 				{
 					// Data sections for attributes and groups.
 					if (data != nil)

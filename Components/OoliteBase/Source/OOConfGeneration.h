@@ -16,6 +16,8 @@ OOConf format is similar to JSON, but with the following changes:
 * JavaScript-style comments (both types) are allowed. Note that JavaScript,
   and hence OOConf, does not share the C++/C99 misfeature that a backslash at
   the end of a single-line comment wraps it to the next line.
+* The character escape codes \' and \v are permitted. They aren’t produced by
+  the generator, though.
 
 The following relationships hold:
 * Every valid OOConf file is a valid JavaScript file that does nothing.

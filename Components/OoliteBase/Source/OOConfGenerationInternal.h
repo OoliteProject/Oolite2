@@ -3,7 +3,7 @@
 OOConfGenerationInternal.h
 By Jens Ayton
 
-Internals of OOConfGeneration. (This is public because the OOMesh exporter
+Internals of OOConfGeneration. (This is public because the OOConf exporter
 needs direct access.)
 
 

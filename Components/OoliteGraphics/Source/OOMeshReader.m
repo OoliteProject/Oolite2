@@ -25,7 +25,7 @@
 
 
 #import "OOMeshReader.h"
-#import "OOMeshLexer.h"
+#import <OoliteBase/OOConfLexer.h>
 #import "OOMeshDefinitions.h"
 
 #import "OOIndexArray.h"
@@ -88,7 +88,7 @@ typedef enum
 	with one comma in. A terminator consists of an optional separator of either
 	form, followed by the specified terminator token.
 */
-//- (ConsumeSeparatorOrTerminatorResult) priv_consumeSeparatorOrTerminator:(OOMeshTokenType)terminator;
+//- (ConsumeSeparatorOrTerminatorResult) priv_consumeSeparatorOrTerminator:(OOConfTokenType)terminator;
 
 @end
 
@@ -106,7 +106,7 @@ typedef enum
 		
 		_vertexCount = NSNotFound;
 		
-		_lexer = [[OOMeshLexer alloc] initWithPath:_path issues:_issues];
+		_lexer = [[OOConfLexer alloc] initWithPath:_path issues:_issues];
 		if (_lexer == nil)  DESTROY(self);
 	}
 	
@@ -148,7 +148,7 @@ typedef enum
 	if (OK)
 	{
 		[_lexer advance];
-		if (![_lexer getToken:kOOMeshTokenEOF])
+		if (![_lexer getToken:kOOConfTokenEOF])
 		{
 			OOReportWarning(_issues, @"There is unknown data after the end of the file, which will be ignored.");
 		}
@@ -314,8 +314,8 @@ typedef enum
 	}
 	NSAssert(_vertexCount != NSNotFound, @"Vertex count should have been validated already");
 	
-	OOMeshLexer *lexer = _lexer;
-	if (![lexer getToken:kOOMeshTokenOpenBracket])
+	OOConfLexer *lexer = _lexer;
+	if (![lexer getToken:kOOConfTokenOpenBracket])
 	{
 		[self priv_reportBasicParseError:@"["];
 		return nil;
@@ -341,7 +341,7 @@ typedef enum
 		
 		if (++i == count)  break;
 		
-		if (EXPECT_NOT(![lexer consumeToken:kOOMeshTokenComma]))
+		if (EXPECT_NOT(![lexer consumeToken:kOOConfTokenComma]))
 		{
 			[self priv_reportBasicParseError:@"\",\""];
 			return nil;
@@ -349,7 +349,7 @@ typedef enum
 		[lexer advance];
 	}
 	
-	if (![lexer consumeToken:kOOMeshTokenCloseBracket])
+	if (![lexer consumeToken:kOOConfTokenCloseBracket])
 	{
 		[self priv_reportBasicParseError:@"\"]\""];
 		return nil;
@@ -376,8 +376,8 @@ typedef enum
 	}
 	NSAssert(_vertexCount != NSNotFound, @"Vertex count should have been validated already.");
 	
-	OOMeshLexer *lexer = _lexer;
-	if (![lexer getToken:kOOMeshTokenOpenBracket])
+	OOConfLexer *lexer = _lexer;
+	if (![lexer getToken:kOOConfTokenOpenBracket])
 	{
 		[self priv_reportBasicParseError:@"["];
 		return nil;
@@ -410,7 +410,7 @@ typedef enum
 		
 		if (++i == count)  break;
 		
-		if (EXPECT_NOT(![lexer consumeToken:kOOMeshTokenComma]))
+		if (EXPECT_NOT(![lexer consumeToken:kOOConfTokenComma]))
 		{
 			[self priv_reportBasicParseError:@"\",\""];
 			return nil;
@@ -418,7 +418,7 @@ typedef enum
 		[lexer advance];
 	}
 	
-	if (![lexer consumeToken:kOOMeshTokenCloseBracket])
+	if (![lexer consumeToken:kOOConfTokenCloseBracket])
 	{
 		[self priv_reportBasicParseError:@"\"]\""];
 		return nil;
@@ -506,7 +506,7 @@ typedef enum
 	
 	
 	// Be a dictionary, or else.
-	if (![_lexer getToken:kOOMeshTokenOpenBrace])
+	if (![_lexer getToken:kOOConfTokenOpenBrace])
 	{
 		[self priv_reportBasicParseError:@"\"{\""];
 		return NO;
@@ -514,7 +514,7 @@ typedef enum
 	[_lexer advance];
 	
 	BOOL OK = YES;
-	BOOL stop = [_lexer currentTokenType] == kOOMeshTokenCloseBrace;
+	BOOL stop = [_lexer currentTokenType] == kOOConfTokenCloseBrace;
 	
 	// For each pair...
 	while (OK && !stop)
@@ -522,15 +522,15 @@ typedef enum
 		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
 		
 		// We should be at a key or the closing brace.
-		OOMeshTokenType token = [_lexer currentTokenType];
-		if (token == kOOMeshTokenKeyword || token == kOOMeshTokenString)
+		OOConfTokenType token = [_lexer currentTokenType];
+		if (token == kOOConfTokenKeyword || token == kOOConfTokenString)
 		{
 			// Read the key.
 			NSString *keyValue = [_lexer currentTokenString];
 			[_lexer advance];
 			
 			// Skip the colon.
-			if (![_lexer getToken:kOOMeshTokenColon])
+			if (![_lexer getToken:kOOConfTokenColon])
 			{
 				[self priv_reportBasicParseError:@"\":\""];
 				OK = NO;
@@ -589,11 +589,11 @@ typedef enum
 			{
 				token = [_lexer currentTokenType];
 				
-				if (token == kOOMeshTokenComma)
+				if (token == kOOConfTokenComma)
 				{
 					[_lexer advance];
 				}
-				else if (token == kOOMeshTokenCloseBrace)
+				else if (token == kOOConfTokenCloseBrace)
 				{
 					stop = YES;
 				}
@@ -716,7 +716,7 @@ typedef enum
 	if (outArray != NULL)  result = [NSMutableArray array];
 	
 	// Ensure that we're dealing with an array.
-	if (![_lexer getToken:kOOMeshTokenOpenBracket])
+	if (![_lexer getToken:kOOConfTokenOpenBracket])
 	{
 		[self priv_reportBasicParseError:@"\"[\""];
 		return NO;
@@ -724,14 +724,14 @@ typedef enum
 	[_lexer advance];
 	
 	BOOL				OK = YES;
-	BOOL				stop = [_lexer currentTokenType] == kOOMeshTokenCloseBracket;
+	BOOL				stop = [_lexer currentTokenType] == kOOConfTokenCloseBracket;
 	
 	while (OK && !stop)
 	{
 		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
 		
-		OOMeshTokenType token = [_lexer currentTokenType];
-		if (token == kOOMeshTokenCloseBrace)
+		OOConfTokenType token = [_lexer currentTokenType];
+		if (token == kOOConfTokenCloseBrace)
 		{
 			stop = YES;
 		}
@@ -760,11 +760,11 @@ typedef enum
 			{
 				token = [_lexer currentTokenType];
 				
-				if (token == kOOMeshTokenComma)
+				if (token == kOOConfTokenComma)
 				{
 					[_lexer advance];
 				}
-				else if (token == kOOMeshTokenCloseBracket)
+				else if (token == kOOConfTokenCloseBracket)
 				{
 					stop = YES;
 				}
@@ -792,11 +792,11 @@ typedef enum
 	switch ([_lexer currentTokenType])
 	{
 			
-		case kOOMeshTokenString:
+		case kOOConfTokenString:
 			OK = [_lexer getString:&result];
 			break;
 			
-		case kOOMeshTokenNatural:
+		case kOOConfTokenNatural:
 		{
 			uint64_t natural;
 			OK = [_lexer getNatural:&natural];
@@ -804,7 +804,7 @@ typedef enum
 			break;
 		}
 			
-		case kOOMeshTokenReal:
+		case kOOConfTokenReal:
 		{
 			double value;
 			OK = [_lexer getDouble:&value];
@@ -812,19 +812,19 @@ typedef enum
 			break;
 		}
 			
-		case kOOMeshTokenOpenBrace:
+		case kOOConfTokenOpenBrace:
 			return [self priv_readDictionary:outProperty ofType:kDictTypeGeneral withKey:nil];
 			/*	Don't break for validation because readDictionary: can parse a
 				dictionary without generating a value if outProperty is NULL.
 			*/
 			
-		case kOOMeshTokenOpenBracket:
+		case kOOConfTokenOpenBracket:
 			return [self priv_readArray:outProperty];
 			/*	Don't break for validation because readDictionary: can parse a
 				dictionary without generating a value if outProperty is NULL.
 			*/
 			
-		case kOOMeshTokenKeyword:
+		case kOOConfTokenKeyword:
 		{
 			NSString *stringValue = [_lexer currentTokenString];
 			

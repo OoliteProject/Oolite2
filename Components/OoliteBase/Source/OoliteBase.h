@@ -25,7 +25,8 @@ extern "C" {
 #import <OoliteBase/NSThreadOOExtensions.h>
 	
 #import <OoliteBase/OOProblemReporting.h>
-
+	
+#import <OoliteBase/OOConfParsing.h>
 #import <OoliteBase/OOConfGeneration.h>
 
 #ifdef __cplusplus

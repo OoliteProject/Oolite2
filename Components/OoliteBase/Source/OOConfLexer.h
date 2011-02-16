@@ -1,7 +1,7 @@
 /*
-	OOMeshLexer.h
+	OOConfLexer.h
 	
-	Token scanner for OOMesh files.
+	Token scanner for OOConf files.
 	
 	
 	Copyright © 2010-2011 Jens Ayton
@@ -31,39 +31,39 @@
 
 
 
-typedef enum OOMeshTokenType
+typedef enum OOConfTokenType
 {
 	// Text types
-	kOOMeshTokenKeyword,			// Unquoted string.
-	kOOMeshTokenString,
-	kOOMeshTokenStringWithEscapes,	// Internal use only.
+	kOOConfTokenKeyword,			// Unquoted string.
+	kOOConfTokenString,
+	kOOConfTokenStringWithEscapes,	// Internal use only.
 	
 	// Number types
-	kOOMeshTokenNatural,			// natural = digit , { digit }
-	kOOMeshTokenReal,				// real = { "-" | "+" } , natural  ,{ "." natural }
+	kOOConfTokenNatural,			// natural = digit , { digit }
+	kOOConfTokenReal,				// real = { "-" | "+" } , natural  ,{ "." natural }
 	
 	// Punctuation types
-	kOOMeshTokenColon,				// colon = ":"
-	kOOMeshTokenComma,				// comma = ","
-	kOOMeshTokenOpenBrace,			// open brace = "{"
-	kOOMeshTokenCloseBrace,			// close brace = "}"
-	kOOMeshTokenOpenBracket,		// open bracket = "["
-	kOOMeshTokenCloseBracket,		// close bracket = "]"
+	kOOConfTokenColon,				// colon = ":"
+	kOOConfTokenComma,				// comma = ","
+	kOOConfTokenOpenBrace,			// open brace = "{"
+	kOOConfTokenCloseBrace,			// close brace = "}"
+	kOOConfTokenOpenBracket,		// open bracket = "["
+	kOOConfTokenCloseBracket,		// close bracket = "]"
 	
-	kOOMeshTokenEOF,
+	kOOConfTokenEOF,
 	
 	// Must be last
-	kOOMeshTokenInvalid
-} OOMeshTokenType;
+	kOOConfTokenInvalid
+} OOConfTokenType;
 
 
-@interface OOMeshLexer: NSObject
+@interface OOConfLexer: NSObject
 {
 @private
-	id <OOProblemReporting>	_issues;
-	struct OOMeshLexerState
+	id <OOProblemReporting>			_issues;
+	struct OOConfLexerState
 	{
-		OOMeshTokenType				tokenType;
+		OOConfTokenType				tokenType;
 		const uint8_t				*cursor;
 		const uint8_t				*end;
 		size_t						tokenLength;
@@ -79,7 +79,7 @@ typedef enum OOMeshTokenType
 
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
-- (OOMeshTokenType) currentTokenType;
+- (OOConfTokenType) currentTokenType;
 - (NSString *) currentTokenString;		// Unquoted and de-escaped string for string tokens, literal text for others.
 - (NSString *) currentTokenDescription;	// Human-readable description, localized if appropriate.
 
@@ -91,10 +91,10 @@ typedef enum OOMeshTokenType
 - (BOOL) getFloat:(float *)outFloat;
 - (BOOL) getString:(NSString **)outString;
 - (BOOL) getKeywordOrString:(NSString **)outString;
-- (BOOL) getToken:(OOMeshTokenType)type;
+- (BOOL) getToken:(OOConfTokenType)type;
 
 // "Consume" methods advance to the next token, and in some cases further.
 
-- (BOOL) consumeToken:(OOMeshTokenType)type;
+- (BOOL) consumeToken:(OOConfTokenType)type;
 
 @end

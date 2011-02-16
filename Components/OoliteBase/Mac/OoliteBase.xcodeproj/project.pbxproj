@@ -31,6 +31,11 @@
 		1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71414611B5678C009A9197 /* OOCollectionExtractors.m */; };
 		1A71416011B56810009A9197 /* OOBaseStringParsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A71415E11B56810009A9197 /* OOBaseStringParsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71415F11B56810009A9197 /* OOBaseStringParsing.m */; };
+		1A748B5A130C8FF4004BF8B9 /* OOConfParsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A748B57130C8FF4004BF8B9 /* OOConfParsing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A748B5B130C8FF4004BF8B9 /* OOConfParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A748B58130C8FF4004BF8B9 /* OOConfParsing.m */; };
+		1A748B5C130C8FF4004BF8B9 /* OOConfParsingInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A748B59130C8FF4004BF8B9 /* OOConfParsingInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A748BEB130C9084004BF8B9 /* OOConfLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A748BE9130C9084004BF8B9 /* OOConfLexer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A748BEC130C9084004BF8B9 /* OOConfLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A748BEA130C9084004BF8B9 /* OOConfLexer.m */; };
 		1A878B5F11B57749001BB304 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		1A878B6511B57766001BB304 /* NSObjectOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A878B6611B57766001BB304 /* NSObjectOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */; };
@@ -92,6 +97,11 @@
 		1A71415E11B56810009A9197 /* OOBaseStringParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBaseStringParsing.h; sourceTree = "<group>"; };
 		1A71415F11B56810009A9197 /* OOBaseStringParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBaseStringParsing.m; sourceTree = "<group>"; };
 		1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A748B57130C8FF4004BF8B9 /* OOConfParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfParsing.h; sourceTree = "<group>"; };
+		1A748B58130C8FF4004BF8B9 /* OOConfParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOConfParsing.m; sourceTree = "<group>"; };
+		1A748B59130C8FF4004BF8B9 /* OOConfParsingInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfParsingInternal.h; sourceTree = "<group>"; };
+		1A748BE9130C9084004BF8B9 /* OOConfLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfLexer.h; sourceTree = "<group>"; };
+		1A748BEA130C9084004BF8B9 /* OOConfLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOConfLexer.m; sourceTree = "<group>"; };
 		1A878B6311B57766001BB304 /* NSObjectOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSObjectOOExtensions.h; sourceTree = "<group>"; };
 		1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSObjectOOExtensions.m; sourceTree = "<group>"; };
 		1A878B6711B57778001BB304 /* NSStringOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringOOExtensions.h; sourceTree = "<group>"; };
@@ -235,6 +245,11 @@
 				1AFDDD49130BEE500075DD39 /* OOConfGeneration.h */,
 				1AFDDF76130C31170075DD39 /* OOConfGenerationInternal.h */,
 				1AFDDD4A130BEE500075DD39 /* OOConfGeneration.m */,
+				1A748B57130C8FF4004BF8B9 /* OOConfParsing.h */,
+				1A748B59130C8FF4004BF8B9 /* OOConfParsingInternal.h */,
+				1A748B58130C8FF4004BF8B9 /* OOConfParsing.m */,
+				1A748BE9130C9084004BF8B9 /* OOConfLexer.h */,
+				1A748BEA130C9084004BF8B9 /* OOConfLexer.m */,
 			);
 			name = OOConf;
 			path = ../Source;
@@ -292,6 +307,9 @@
 				1A1B995D13088B5F0078322D /* OOBoundingBox.h in Headers */,
 				1AFDDD4B130BEE500075DD39 /* OOConfGeneration.h in Headers */,
 				1AFDDF77130C31170075DD39 /* OOConfGenerationInternal.h in Headers */,
+				1A748B5A130C8FF4004BF8B9 /* OOConfParsing.h in Headers */,
+				1A748B5C130C8FF4004BF8B9 /* OOConfParsingInternal.h in Headers */,
+				1A748BEB130C9084004BF8B9 /* OOConfLexer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +416,8 @@
 				1AD8429D122922BD00FC382A /* OOWeakReference.m in Sources */,
 				1A1B995E13088B5F0078322D /* OOBoundingBox.m in Sources */,
 				1AFDDD4C130BEE500075DD39 /* OOConfGeneration.m in Sources */,
+				1A748B5B130C8FF4004BF8B9 /* OOConfParsing.m in Sources */,
+				1A748BEC130C9084004BF8B9 /* OOConfLexer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

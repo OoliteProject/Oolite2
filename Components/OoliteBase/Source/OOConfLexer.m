@@ -1,5 +1,5 @@
 /*
-	OOMeshLexer.m
+	OOConfLexer.m
 	
 	
 	Copyright © 2010-2011 Jens Ayton
@@ -23,17 +23,21 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "OOMeshLexer.h"
+#import "OOConfLexer.h"
+#import "OOCocoa.h"
+#import "OOFunctionAttributes.h"
+#import "OOProblemReporting.h"
+#import "MYCollectionUtilities.h"
 
 
-@interface OOMeshLexer (Private)
+@interface OOConfLexer (Private)
 
 - (NSString *) decodeEscapedString;
 
 @end
 
 
-@implementation OOMeshLexer
+@implementation OOConfLexer
 
 - (id) initWithURL:(NSURL *)inURL issues:(id <OOProblemReporting>)issues
 {
@@ -50,7 +54,7 @@
 	}
 	else
 	{
-		[NSException raise:NSInvalidArgumentException format:@"OOMeshLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
+		[NSException raise:NSInvalidArgumentException format:@"OOConfLexer does not support non-file URLs such as %@", [inURL absoluteURL]];
 	}
 	
 	return nil;
@@ -76,7 +80,7 @@
 		_issues = [issues retain];
 		_data = [inData retain];
 		
-		_state.tokenType = kOOMeshTokenInvalid;
+		_state.tokenType = kOOConfTokenInvalid;
 		_state.cursor = [inData bytes];
 		_state.end = _state.cursor + [inData length];
 		_state.tokenLength = 0;
@@ -103,10 +107,10 @@
 }
 
 
-- (OOMeshTokenType) currentTokenType
+- (OOConfTokenType) currentTokenType
 {
-	if (_state.tokenType != kOOMeshTokenStringWithEscapes)  return _state.tokenType;
-	else  return kOOMeshTokenString;
+	if (_state.tokenType != kOOConfTokenStringWithEscapes)  return _state.tokenType;
+	else  return kOOConfTokenString;
 }
 
 
@@ -114,13 +118,13 @@
 {
 	if (_tokenString == nil)
 	{
-		if (_state.tokenType == kOOMeshTokenString)
+		if (_state.tokenType == kOOConfTokenString)
 		{
 			_tokenString = [[NSString alloc] initWithBytes:_state.cursor + 1
 													length:_state.tokenLength - 2
 												  encoding:NSUTF8StringEncoding];
 		}
-		else if (_state.tokenType == kOOMeshTokenStringWithEscapes)
+		else if (_state.tokenType == kOOConfTokenStringWithEscapes)
 		{
 			_tokenString = [[self decodeEscapedString] copy];
 		}
@@ -141,34 +145,34 @@
 {
 	switch (_state.tokenType)
 	{
-		case kOOMeshTokenKeyword:
+		case kOOConfTokenKeyword:
 		{
 			NSString *format = OOLocalizeProblemString(_issues, @"\"%@\"");
 			return $sprintf(format, [self currentTokenString]);
 		}
 			
-		case kOOMeshTokenString:
-		case kOOMeshTokenStringWithEscapes:
+		case kOOConfTokenString:
+		case kOOConfTokenStringWithEscapes:
 			return OOLocalizeProblemString(_issues, @"string");
 			
-		case kOOMeshTokenNatural:
+		case kOOConfTokenNatural:
 			return OOLocalizeProblemString(_issues, @"integer");
 			
-		case kOOMeshTokenReal:
+		case kOOConfTokenReal:
 			return OOLocalizeProblemString(_issues, @"number");
 			
-		case kOOMeshTokenColon:
-		case kOOMeshTokenComma:
-		case kOOMeshTokenOpenBrace:
-		case kOOMeshTokenCloseBrace:
-		case kOOMeshTokenOpenBracket:
-		case kOOMeshTokenCloseBracket:
+		case kOOConfTokenColon:
+		case kOOConfTokenComma:
+		case kOOConfTokenOpenBrace:
+		case kOOConfTokenCloseBrace:
+		case kOOConfTokenOpenBracket:
+		case kOOConfTokenCloseBracket:
 			return [self currentTokenString];
 			
-		case kOOMeshTokenEOF:
+		case kOOConfTokenEOF:
 			return OOLocalizeProblemString(_issues, @"end of file");
 			
-		case kOOMeshTokenInvalid:
+		case kOOConfTokenInvalid:
 			break;
 	}
 	return OOLocalizeProblemString(_issues, @"invalid token");
@@ -179,7 +183,7 @@
 {
 	NSParameterAssert(outNatural != NULL);
 	
-	if (_state.tokenType == kOOMeshTokenNatural)
+	if (_state.tokenType == kOOConfTokenNatural)
 	{
 		uint64_t result = 0;
 		const uint8_t *str = _state.cursor;
@@ -213,7 +217,7 @@
 {
 	NSParameterAssert(outDouble != NULL);
 	
-	if (_state.tokenType == kOOMeshTokenNatural || _state.tokenType == kOOMeshTokenReal)
+	if (_state.tokenType == kOOConfTokenNatural || _state.tokenType == kOOConfTokenReal)
 	{
 		//	Make null-terminated copy of token on stack and strtod() it.
 		char buffer[_state.tokenLength + 1];
@@ -232,7 +236,7 @@
 {
 	NSParameterAssert(outFloat != NULL);
 	
-	if (_state.tokenType == kOOMeshTokenNatural || _state.tokenType == kOOMeshTokenReal)
+	if (_state.tokenType == kOOConfTokenNatural || _state.tokenType == kOOConfTokenReal)
 	{
 		//	Make null-terminated copy of token on stack and strtof() it.
 		char buffer[_state.tokenLength + 1];
@@ -251,8 +255,8 @@
 {
 	NSParameterAssert(outString != NULL);
 	
-	if (_state.tokenType == kOOMeshTokenString ||
-		_state.tokenType == kOOMeshTokenStringWithEscapes)
+	if (_state.tokenType == kOOConfTokenString ||
+		_state.tokenType == kOOConfTokenStringWithEscapes)
 	{
 		*outString = [self currentTokenString];
 		return YES;
@@ -266,9 +270,9 @@
 {
 	NSParameterAssert(outString != NULL);
 	
-	if (_state.tokenType == kOOMeshTokenKeyword ||
-		_state.tokenType == kOOMeshTokenString ||
-		_state.tokenType == kOOMeshTokenStringWithEscapes)
+	if (_state.tokenType == kOOConfTokenKeyword ||
+		_state.tokenType == kOOConfTokenString ||
+		_state.tokenType == kOOConfTokenStringWithEscapes)
 	{
 		*outString = [self currentTokenString];
 		return YES;
@@ -278,36 +282,36 @@
 }
 
 
-- (BOOL) getToken:(OOMeshTokenType)type
+- (BOOL) getToken:(OOConfTokenType)type
 {
 	return _state.tokenType == type;
 }
 
 
-- (BOOL) consumeToken:(OOMeshTokenType)type
+- (BOOL) consumeToken:(OOConfTokenType)type
 {
 	return [self advance] && _state.tokenType == type;
 }
 
 
 //	Tokenizer core.
-typedef struct OOMeshLexerState OOMeshLexerState;
+typedef struct OOConfLexerState OOConfLexerState;
 
 OOINLINE BOOL IsDigit(uint8_t c)  INLINE_CONST_FUNC;
 OOINLINE BOOL IsSign(uint8_t c)  INLINE_CONST_FUNC;
 OOINLINE BOOL IsDigitOrSign(uint8_t c)  INLINE_CONST_FUNC;
 OOINLINE BOOL IsWhitespace(uint8_t c)  INLINE_CONST_FUNC;
-static BOOL IsAtNewline(OOMeshLexerState *state, const uint8_t *where);
-OOINLINE BOOL IsCursorAtNewline(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
+static BOOL IsAtNewline(OOConfLexerState *state, const uint8_t *where);
+OOINLINE BOOL IsCursorAtNewline(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
 
-OOINLINE BOOL ConsumeWhitespaceAndComments(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ConsumeWhitespaceAndComments(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
 
-OOINLINE BOOL ScanBase(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ScanBase(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
 
-OOINLINE BOOL ScanNumber(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
-OOINLINE BOOL ScanKeyword(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
-OOINLINE BOOL ScanString(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
-OOINLINE BOOL ScanOneCharToken(OOMeshLexerState *state, OOMeshTokenType type)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ScanNumber(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ScanKeyword(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ScanString(OOConfLexerState *state)  ALWAYS_INLINE_FUNC;
+OOINLINE BOOL ScanOneCharToken(OOConfLexerState *state, OOConfTokenType type)  ALWAYS_INLINE_FUNC;
 
 
 /*
@@ -407,7 +411,7 @@ OOINLINE BOOL IsKeywordChar(uint8_t c)
 }
 
 
-static BOOL IsAtNewline(OOMeshLexerState *state, const uint8_t *where)
+static BOOL IsAtNewline(OOConfLexerState *state, const uint8_t *where)
 {
 	/*	Matches any of the following:
 		U+000A LF
@@ -439,13 +443,13 @@ static BOOL IsAtNewline(OOMeshLexerState *state, const uint8_t *where)
 }
 
 
-OOINLINE BOOL IsCursorAtNewline(OOMeshLexerState *state)
+OOINLINE BOOL IsCursorAtNewline(OOConfLexerState *state)
 {
 	return IsAtNewline(state, state->cursor);
 }
 
 
-OOINLINE BOOL CommentStarts(OOMeshLexerState *state)
+OOINLINE BOOL CommentStarts(OOConfLexerState *state)
 {
 	return (state->cursor + 1) < state->end &&
 			state->cursor[0] == kCharForwardSlash &&
@@ -455,7 +459,7 @@ OOINLINE BOOL CommentStarts(OOMeshLexerState *state)
 
 #define EOF_BREAK()  do { if (EXPECT_NOT(state->cursor == state->end))  return NO; } while (0)
 
-OOINLINE BOOL ConsumeWhitespaceAndComments(OOMeshLexerState *state)
+OOINLINE BOOL ConsumeWhitespaceAndComments(OOConfLexerState *state)
 {
 	for (;;)
 	{
@@ -524,7 +528,7 @@ OOINLINE BOOL ConsumeWhitespaceAndComments(OOMeshLexerState *state)
 	
 	They are force-inlined because they are each only called at one point.
 */
-OOINLINE BOOL ScanNumber(OOMeshLexerState *state)
+OOINLINE BOOL ScanNumber(OOConfLexerState *state)
 {
 	NSCParameterAssert(state->cursor < state->end && IsDigitOrSign(*state->cursor));
 	
@@ -570,8 +574,8 @@ OOINLINE BOOL ScanNumber(OOMeshLexerState *state)
 	state->tokenLength = loc - state->cursor;
 	if (!lastIsDot)
 	{
-		if (seenDot || negative)  state->tokenType = kOOMeshTokenReal;
-		else  state->tokenType = kOOMeshTokenNatural;
+		if (seenDot || negative)  state->tokenType = kOOConfTokenReal;
+		else  state->tokenType = kOOConfTokenNatural;
 		
 		return YES;
 	}
@@ -580,7 +584,7 @@ OOINLINE BOOL ScanNumber(OOMeshLexerState *state)
 }
 
 
-OOINLINE BOOL ScanKeyword(OOMeshLexerState *state)
+OOINLINE BOOL ScanKeyword(OOConfLexerState *state)
 {
 	NSCParameterAssert(state->cursor < state->end && IsKeywordInitial(*state->cursor));
 	
@@ -593,13 +597,13 @@ OOINLINE BOOL ScanKeyword(OOMeshLexerState *state)
 		length++;
 	} while (IsKeywordChar(start[length]) && length < remaining);
 	
-	state->tokenType = kOOMeshTokenKeyword;
+	state->tokenType = kOOConfTokenKeyword;
 	state->tokenLength = length;
 	return YES;
 }
 
 
-OOINLINE BOOL ScanString(OOMeshLexerState *state)
+OOINLINE BOOL ScanString(OOConfLexerState *state)
 {
 	NSCParameterAssert(state->cursor < state->end && *state->cursor == kCharQuote);
 	
@@ -637,7 +641,7 @@ OOINLINE BOOL ScanString(OOMeshLexerState *state)
 	
 	state->tokenLength = state->cursor - start + 1;
 	state->cursor = start;
-	state->tokenType = escapes ? kOOMeshTokenStringWithEscapes : kOOMeshTokenString;
+	state->tokenType = escapes ? kOOConfTokenStringWithEscapes : kOOConfTokenString;
 	return YES;
 	
 UNEXPECTED_EOF:
@@ -647,7 +651,7 @@ UNEXPECTED_EOF:
 }
 
 
-OOINLINE BOOL ScanOneCharToken(OOMeshLexerState *state, OOMeshTokenType type)
+OOINLINE BOOL ScanOneCharToken(OOConfLexerState *state, OOConfTokenType type)
 {
 	NSCParameterAssert(state->cursor < state->end);
 	
@@ -657,18 +661,18 @@ OOINLINE BOOL ScanOneCharToken(OOMeshLexerState *state, OOMeshTokenType type)
 }
 
 
-OOINLINE BOOL ScanBase(OOMeshLexerState *state)
+OOINLINE BOOL ScanBase(OOConfLexerState *state)
 {
 	// Skip to end of current token.
 	state->cursor += state->tokenLength;
-	state->tokenType = kOOMeshTokenInvalid;
+	state->tokenType = kOOConfTokenInvalid;
 	state->tokenLength = 0;
-	NSCAssert(state->cursor <= state->end, @"OOMesh lexer passed end of buffer");
+	NSCAssert(state->cursor <= state->end, @"OOConf lexer passed end of buffer");
 	
 	// Find beginning of next token.
 	if (EXPECT_NOT(!ConsumeWhitespaceAndComments(state)))
 	{
-		state->tokenType = kOOMeshTokenEOF;
+		state->tokenType = kOOConfTokenEOF;
 		return YES;
 	}
 	
@@ -680,12 +684,12 @@ OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 	// Handle single-character tokens.
 	switch (c)
 	{
-		case kCharColon:  return ScanOneCharToken(state, kOOMeshTokenColon);
-		case kCharComma:  return ScanOneCharToken(state, kOOMeshTokenComma);
-		case kCharOpenBrace:  return ScanOneCharToken(state, kOOMeshTokenOpenBrace);
-		case kCharCloseBrace:  return ScanOneCharToken(state, kOOMeshTokenCloseBrace);
-		case kCharOpenBracket:  return ScanOneCharToken(state, kOOMeshTokenOpenBracket);
-		case kCharCloseBracket:  return ScanOneCharToken(state, kOOMeshTokenCloseBracket);
+		case kCharColon:  return ScanOneCharToken(state, kOOConfTokenColon);
+		case kCharComma:  return ScanOneCharToken(state, kOOConfTokenComma);
+		case kCharOpenBrace:  return ScanOneCharToken(state, kOOConfTokenOpenBrace);
+		case kCharCloseBrace:  return ScanOneCharToken(state, kOOConfTokenCloseBrace);
+		case kCharOpenBracket:  return ScanOneCharToken(state, kOOConfTokenOpenBracket);
+		case kCharCloseBracket:  return ScanOneCharToken(state, kOOConfTokenCloseBracket);
 	}
 	
 	return NO;

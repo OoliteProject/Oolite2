@@ -17,8 +17,6 @@
 		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */; };
-		1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */; settings = {ATTRIBUTES = (); }; };
-		1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
@@ -148,8 +146,6 @@
 		1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMacroOpenGL.h; sourceTree = "<group>"; };
 		1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOpenGLExtensionManager.h; sourceTree = "<group>"; };
 		1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOpenGLExtensionManager.m; sourceTree = "<group>"; };
-		1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshLexer.h; sourceTree = "<group>"; };
-		1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshLexer.m; sourceTree = "<group>"; };
 		1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteGraphics-Info.plist"; sourceTree = "<group>"; };
 		1A713DDD11B55E96009A9197 /* OoliteGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteGraphics.h; path = ../Source/OoliteGraphics.h; sourceTree = SOURCE_ROOT; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
@@ -333,8 +329,6 @@
 				1AEA232F11A728C100B361DC /* OODATLexer.m */,
 				1AB7398D11B10EC800575507 /* OOMeshReader.h */,
 				1AB7398E11B10EC800575507 /* OOMeshReader.m */,
-				1A6D8C8511AF3D2000D3E7D1 /* OOMeshLexer.h */,
-				1A6D8C8611AF3D2000D3E7D1 /* OOMeshLexer.m */,
 				1A7D37C711B16C1E00857CEF /* OOOBJReader.h */,
 				1A7D37C811B16C1E00857CEF /* OOOBJReader.m */,
 				1A7D37C311B16C1500857CEF /* OOOBJLexer.h */,
@@ -479,7 +473,6 @@
 				1AF4293411A9897D008E883C /* OOMaterialSpecification.h in Headers */,
 				1AF429BA11A98B4D008E883C /* OOTextureSpecification.h in Headers */,
 				1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */,
-				1A6D8C8711AF3D2000D3E7D1 /* OOMeshLexer.h in Headers */,
 				1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */,
 				1AB7398F11B10EC800575507 /* OOMeshReader.h in Headers */,
 				1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */,
@@ -645,7 +638,6 @@
 				1AF4293511A9897D008E883C /* OOMaterialSpecification.m in Sources */,
 				1AF429BB11A98B4D008E883C /* OOTextureSpecification.m in Sources */,
 				1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */,
-				1A6D8C8811AF3D2000D3E7D1 /* OOMeshLexer.m in Sources */,
 				1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */,
 				1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */,
 				1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */,

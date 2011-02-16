@@ -32,3 +32,4 @@
 #define kDataKey				@"data"
 #define kFaceCountKey			@"faceCount"
 #define kMeshDescriptionKey		@"description"
+#define kMaterialKey			@"material"

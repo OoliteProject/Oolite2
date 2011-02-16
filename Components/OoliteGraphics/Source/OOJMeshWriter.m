@@ -255,11 +255,11 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kAttributesSectionKey, options)];
 	if (vertexCount > 0)
 	{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
-		
 		NSUInteger attributeIter, attributeCount = [attributeKeys count];
 		for (attributeIter = 0; attributeIter < attributeCount; attributeIter++)
 		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
 			NSString *attributeKey = [attributeKeys objectAtIndex:attributeIter];
 			NSUInteger elemIter, size = [vertexSchema oo_unsignedIntegerForKey:attributeKey];
 			
@@ -270,11 +270,11 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 						data:
 						[
 			*/
-			[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@:\n\t\t\t[\n", Key(attributeKey, options), Key(kSizeKey, options), (unsigned long long)size, Key(kDataKey, options)];
+			[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@:\n\t\t\t[\n", Key(attributeKey, options), Key(kSizeKey, options), (unsigned long)size, Key(kDataKey, options)];
 			
 			// If annotating, comment vertex use count for position array.
-			NSUInteger annVIdx = NSNotFound;
-			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey])  annVIdx = 0;
+			BOOL annNoteUseCounts = NO;
+			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey])  annNoteUseCounts = YES;
 			
 			for (NSUInteger vertexIter = 0; vertexIter < vertexCount; vertexIter++)
 			{
@@ -283,7 +283,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 				
 				if (annotate && (vertexIter % 20) == 0)
 				{
-					[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (long)vertexIter];
+					[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)vertexIter];
 				}
 				
 				OOFloatArray *attr = [vertex attributeForKey:attributeKey];
@@ -298,10 +298,10 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 					else
 					{
 						if (vertexIter + 1 < vertexCount)  [result appendString:@","];
-						if (annVIdx == NSNotFound)  [result appendString:@"\n"];
+						if (!annNoteUseCounts)  [result appendString:@"\n"];
 						else
 						{
-							[result appendFormat:@"\t// Uses: %@\n", [annVertexUseCounts objectAtIndex:annVIdx++]];
+							[result appendFormat:@"\t// Uses: %@\n", [annVertexUseCounts objectAtIndex:vertexIter]];
 						}
 					}
 				}
@@ -311,13 +311,68 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 			
 			if (attributeIter + 1 < attributeCount)  [result appendString:@","];
 			[result appendString:@"\n"];
+			
+			[pool drain];
 		}
-		
-		[pool drain];
 	}
 	[result appendString:@"\t},\n\t\n"];
 	
-	[result appendString:@"}\n"];
+	// Write groups.
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kGroupsSectionKey, options)];
+	NSUInteger groupIter, groupCount = [mesh faceGroupCount];
+	for (groupIter = 0; groupIter < groupCount; groupIter++)
+	{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		faceGroup = [mesh faceGroupAtIndex:groupIter];
+		
+		NSString *material = [[faceGroup material] materialKey];
+		NSString *name = [faceGroup name];
+		if (name == nil)  name = material;
+		
+		NSUInteger faceIter, faceCount = [faceGroup faceCount];
+		
+		/*
+			<name>:
+			{
+				faceCount: <faceCount>,
+				material: <material>,
+				data:
+				[
+		*/
+		[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@: \"%@\",\n\t\t\t%@:\n\t\t\t[\n", Key(name, options), SimpleKey(kFaceCountKey, options), (unsigned long)faceCount, SimpleKey(kMaterialKey, options), [material oo_escapedForJavaScriptLiteral], SimpleKey(kDataKey, options)];
+		
+		for (faceIter = 0; faceIter < faceCount; faceIter++)
+		{
+			OOAbstractFace *face = [faceGroup faceAtIndex:faceIter];
+			OOAbstractVertex *vertices[3];
+			[face getVertices:vertices];
+			
+			[result appendString:@"\t\t\t\t"];
+			
+			if (annotate && (faceIter % 20) == 0)
+			{
+				[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)faceIter];
+			}
+			
+			for (NSUInteger vertexIter = 0; vertexIter < 3; vertexIter++)
+			{
+				NSUInteger index = [indices oo_unsignedIntegerForKey:vertices[vertexIter]];
+				[result appendFormat:@"%lu", (unsigned long)index];
+				
+				if (vertexIter < 2)  [result appendString:@", "];
+				else if (faceIter + 1 < faceCount)  [result appendString:@",\n"];
+				else  [result appendString:@"\n"];
+			}
+		}
+		
+		[result appendString:@"\t\t\t]\n\t\t}"];
+		if (groupIter + 1 < groupCount)  [result appendString:@","];
+		[result appendString:@"\n"];
+		
+		[pool drain];
+	}
+	
+	[result appendString:@"\t}\n}\n"];
 	
 	NSData *data = [[result dataUsingEncoding:NSUTF8StringEncoding] retain];
 	[pool drain];

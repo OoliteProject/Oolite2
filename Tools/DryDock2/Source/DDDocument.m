@@ -105,7 +105,12 @@
 	DDMesh *mesh = [[DDMesh alloc] initWithReader:reader issues:issues];
 	if (mesh != nil)  [self addMesh:mesh];
 	
-    return [issues showReportApplicationModal] && mesh != nil;
+	BOOL success = [issues showReportApplicationModal] && mesh != nil;
+	if (!success && outError != NULL)
+	{
+		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
+	}
+	return success;
 }
 
 

@@ -4,7 +4,7 @@
 	Parser for Oolite 2.x oomesh files.
 	
 	
-	Copyright © 2010 Jens Ayton.
+	Copyright © 2011 Jens Ayton.
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -36,7 +36,7 @@
 @private
 	id <OOProblemReporting>			_issues;
 	NSString						*_path;
-	OOMeshLexer						*_lexer;
+	OOMeshLexer					*_lexer;
 	
 	OORenderMesh					*_renderMesh;
 	
@@ -50,7 +50,6 @@
 	NSMutableArray					*_groupMaterials;
 	
 	// ivars used only during parsing.
-	NSMutableSet					*_unknownSectionTypes;
 	NSMutableDictionary				*_materialsByName;
 }
 

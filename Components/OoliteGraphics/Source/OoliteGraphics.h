@@ -18,8 +18,8 @@ extern "C" {
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"
 
-#import "OOJMeshReader.h"
-#import "OOJMeshWriter.h"
+#import "OOMeshReader.h"
+#import "OOMeshWriter.h"
 
 #import "OOCTMReader.h"
 

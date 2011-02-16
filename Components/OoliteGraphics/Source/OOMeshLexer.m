@@ -2,7 +2,7 @@
 	OOMeshLexer.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010-2011 Jens Ayton
 
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -157,9 +157,6 @@
 		case kOOMeshTokenReal:
 			return OOLocalizeProblemString(_issues, @"number");
 			
-		case kOOMeshTokenNewline:
-			return OOLocalizeProblemString(_issues, @"end of line");
-			
 		case kOOMeshTokenColon:
 		case kOOMeshTokenComma:
 		case kOOMeshTokenOpenBrace:
@@ -212,9 +209,9 @@
 }
 
 
-- (BOOL) getReal:(float *)outReal
+- (BOOL) getDouble:(double *)outDouble
 {
-	NSParameterAssert(outReal != NULL);
+	NSParameterAssert(outDouble != NULL);
 	
 	if (_state.tokenType == kOOMeshTokenNatural || _state.tokenType == kOOMeshTokenReal)
 	{
@@ -223,7 +220,26 @@
 		memcpy(buffer, _state.cursor, _state.tokenLength);
 		buffer[_state.tokenLength] = '\0';
 		
-		*outReal = strtod(buffer, NULL);
+		*outDouble = strtod(buffer, NULL);
+		return YES;
+	}
+	
+	return NO;
+}
+
+
+- (BOOL) getFloat:(float *)outFloat
+{
+	NSParameterAssert(outFloat != NULL);
+	
+	if (_state.tokenType == kOOMeshTokenNatural || _state.tokenType == kOOMeshTokenReal)
+	{
+		//	Make null-terminated copy of token on stack and strtof() it.
+		char buffer[_state.tokenLength + 1];
+		memcpy(buffer, _state.cursor, _state.tokenLength);
+		buffer[_state.tokenLength] = '\0';
+		
+		*outFloat = strtof(buffer, NULL);
 		return YES;
 	}
 	
@@ -268,77 +284,9 @@
 }
 
 
-- (BOOL) consumeNatural:(uint64_t *)outNatural
-{
-	return [self advance] && [self getNatural:outNatural];
-}
-
-
-- (BOOL) consumeReal:(float *)outReal
-{
-	return [self advance] && [self getReal:outReal];
-}
-
-
-- (BOOL) consumeString:(NSString **)outString
-{
-	return [self advance] && [self getString:outString];
-}
-
-
-- (BOOL) consumeKeywordOrString:(NSString **)outString
-{
-	return [self advance] && [self getKeywordOrString:outString];
-}
-
-
 - (BOOL) consumeToken:(OOMeshTokenType)type
 {
 	return [self advance] && _state.tokenType == type;
-}
-
-
-- (BOOL) consumeOptionalNewlines
-{
-	do
-	{
-		if (EXPECT_NOT(![self advance]))  return NO;
-	} while (_state.tokenType == kOOMeshTokenNewline);
-	
-	return YES;
-}
-
-
-- (BOOL) consumeCommaOrNewlines
-{
-	BOOL seenComma = NO;
-	BOOL seenAnything = NO;
-	
-	for (;;)
-	{
-		[self advance];
-		OOMeshTokenType token = _state.tokenType;
-		if (token == kOOMeshTokenComma)
-		{
-			if (!seenComma)
-			{
-				seenComma = YES;
-			}
-			else
-			{
-				// Multiple commas.
-				return NO;
-			}
-
-		}
-		else if (token != kOOMeshTokenNewline)
-		{
-			// End; must have seen at least one comma or newline.
-			return seenAnything;
-		}
-		
-		seenAnything = YES;
-	}
 }
 
 
@@ -360,7 +308,6 @@ OOINLINE BOOL ScanNumber(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
 OOINLINE BOOL ScanKeyword(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
 OOINLINE BOOL ScanString(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
 OOINLINE BOOL ScanOneCharToken(OOMeshLexerState *state, OOMeshTokenType type)  ALWAYS_INLINE_FUNC;
-OOINLINE BOOL ScanNewline(OOMeshLexerState *state)  ALWAYS_INLINE_FUNC;
 
 
 /*
@@ -374,6 +321,7 @@ enum
 	kCharTab			= 0x09,
 	kCharLF				= 0x0A,
 	kCharCR				= 0x0D,
+	kCharAsterisk		= 0x2A,	// *
 	kCharPlus			= 0x2B,	// +
 	kCharComma			= 0x2C,	// ,
 	kCharMinus			= 0x2D,	// -
@@ -501,7 +449,7 @@ OOINLINE BOOL CommentStarts(OOMeshLexerState *state)
 {
 	return (state->cursor + 1) < state->end &&
 			state->cursor[0] == kCharForwardSlash &&
-			state->cursor[1] == kCharForwardSlash;
+			(state->cursor[1] == kCharForwardSlash || state->cursor[1] == kCharAsterisk);
 }
 
 
@@ -514,14 +462,57 @@ OOINLINE BOOL ConsumeWhitespaceAndComments(OOMeshLexerState *state)
 		EOF_BREAK();
 		
 		if (IsWhitespace(*state->cursor))  state->cursor++;
+		else if (IsCursorAtNewline(state))
+		{
+			if (state->cursor[0] == kCharCR && state->cursor + 1 < state->end && state->cursor[1] == kCharLF)
+			{
+				state->cursor++;
+			}
+			state->cursor++;
+			state->lineNumber++;
+		}
 		else if (!CommentStarts(state))
 		{
 			return YES;
 		}
+		else if (state->cursor[1] == kCharForwardSlash)
+		{
+			// Single-line comment.
+			while (!IsCursorAtNewline(state))
+			{
+				state->cursor++;
+				EOF_BREAK();
+			}
+		}
 		else
 		{
-			while (!IsCursorAtNewline(state))  state->cursor++;
-			// Stops at the newline, which may be semantically significant.
+			// Block comment.
+			assert(state->cursor[1] == kCharAsterisk);
+			
+			state->cursor += 2;
+			
+			for (;;)
+			{
+				if (EXPECT_NOT(state->cursor + 1 == state->end))  return NO;
+				
+				if (state->cursor[0] == kCharAsterisk)
+				{
+					if (state->cursor[1] == kCharForwardSlash)
+					{
+						state->cursor += 2;
+						break;
+					}
+				}
+				else if (IsCursorAtNewline(state))
+				{
+					if (state->cursor[0] == kCharCR && state->cursor + 1 < state->end && state->cursor[1] == kCharLF)
+					{
+						state->cursor++;
+					}
+					state->lineNumber++;
+				}
+				state->cursor++;
+			}
 		}
 	}
 }
@@ -666,26 +657,6 @@ OOINLINE BOOL ScanOneCharToken(OOMeshLexerState *state, OOMeshTokenType type)
 }
 
 
-OOINLINE BOOL ScanNewline(OOMeshLexerState *state)
-{
-	NSCParameterAssert(IsCursorAtNewline(state));
-	
-	if (state->cursor + 1 < state->end && state->cursor[1] == kCharLF)
-	{
-		// Handle CRLF to avoid counting twice.
-		state->tokenLength = 2;
-	}
-	else
-	{
-		state->tokenLength = 1;
-	}
-	
-	state->lineNumber++;
-	state->tokenType = kOOMeshTokenNewline;
-	return YES;
-}
-
-
 OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 {
 	// Skip to end of current token.
@@ -694,15 +665,12 @@ OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 	state->tokenLength = 0;
 	NSCAssert(state->cursor <= state->end, @"OOMesh lexer passed end of buffer");
 	
-	if (state->cursor != state->end) {} else
+	// Find beginning of next token.
+	if (EXPECT_NOT(!ConsumeWhitespaceAndComments(state)))
 	{
 		state->tokenType = kOOMeshTokenEOF;
 		return YES;
 	}
-	
-	// Find beginning of next token.
-	if (EXPECT_NOT(!ConsumeWhitespaceAndComments(state)))  return NO;
-	EOF_BREAK();
 	
 	uint8_t c = *state->cursor;
 	if (IsDigitOrSign(c))  return ScanNumber(state);
@@ -719,8 +687,6 @@ OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 		case kCharOpenBracket:  return ScanOneCharToken(state, kOOMeshTokenOpenBracket);
 		case kCharCloseBracket:  return ScanOneCharToken(state, kOOMeshTokenCloseBracket);
 	}
-	
-	if (IsCursorAtNewline(state))  return ScanNewline(state);
 	
 	return NO;
 }
@@ -803,7 +769,7 @@ OOINLINE BOOL ScanBase(OOMeshLexerState *state)
 			else if (IsAtNewline(&_state, buffer + idx))
 			{
 				// Backslash-newline is simply skipped.
-				if (idx + 1 < size && buffer[idx] == kCharCR && buffer[idx + 1] == kCharLF)
+				if (buffer[idx] == kCharCR && idx + 1 < size && buffer[idx] == kCharCR && buffer[idx + 1] == kCharLF)
 				{
 					idx++;
 				}

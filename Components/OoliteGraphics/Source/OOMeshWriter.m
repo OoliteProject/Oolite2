@@ -1,71 +1,87 @@
 /*
-	OOMeshWriter.h
-	
-	
-	Copyright © 2010 Jens Ayton.
-	
-	Permission is hereby granted, free of charge, to any person obtaining a
-	copy of this software and associated documentation files (the “Software”),
-	to deal in the Software without restriction, including without limitation
-	the rights to use, copy, modify, merge, publish, distribute, sublicense,
-	and/or sell copies of the Software, and to permit persons to whom the
-	Software is furnished to do so, subject to the following conditions:
-	
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-	
-	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-	DEALINGS IN THE SOFTWARE.
-*/
+ OOMeshWriter.h
+ 
+ 
+ Copyright © 2010 Jens Ayton.
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a
+ copy of this software and associated documentation files (the “Software”),
+ to deal in the Software without restriction, including without limitation
+ the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ and/or sell copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+ */
 
 #if !OOLITE_LEAN
 
 #import "OOMeshWriter.h"
-
+#import "OOMeshDefinitions.h"
+#import <OoliteBase/OOConfGenerationInternal.h>
 #import "OOAbstractMesh.h"
 
 
-/*	If set to 1, information about the mesh structure will be added in
-	comments.
+enum
+{
+	// Interval between index comments in annotation mode.
+	kAnnGroupRate = 20
+};
+
+
+/*	Quote a key if the kOOMeshWriteJSONCompatible is set, return it unmodified
+	otherwise.
 */
-#define ANNOTATE			1
+static NSString *SimpleKey(NSString *key, OOMeshWriteOptions options)
+{
+	if (!(options & kOOMeshWriteJSONCompatible))
+	{
+#ifndef NDEBUG
+		NSCParameterAssert([key oo_isValidUnquotedOOConfKey]);
+#endif
+		return key;
+	}
+	else
+	{
+		return $sprintf(@"\"%@\"", [key oo_escapedForJavaScriptLiteral]);
+	}
+}
 
 
-/*
-	OOWriteToOOMesh
-	Property for writing to OOMesh files. This is implemented for the property
-	list types that are supported in meshes: NSString, NSNumber, NSArray and
-	NSDictionary.
-	
-	The entire file is actually a plist in this format, but most of the contents
-	are written using specialized code for efficiency and stylistic cleanness
-	(e.g. writing the data entries of attributes and groups in an appropriate
-	number of columns).
-*/
-@protocol OOWriteToOOMesh
-
-- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText indentLevel:(NSUInteger)indentLevel afterPunctuation:(BOOL)afterPunct;
-
-@end
+//	Quote a key if necessary.
+static NSString *Key(NSString *key, OOMeshWriteOptions options)
+{
+	if (!(options & kOOMeshWriteJSONCompatible) && [key oo_isValidUnquotedOOConfKey])
+	{
+		return key;
+	}
+	else
+	{
+		return $sprintf(@"\"%@\"", [key oo_escapedForJavaScriptLiteral]);
+	}
+}
 
 
-static NSString *EscapeString(NSString *string);
 static NSString *FloatString(float number);
 
 
-BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues)
+BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, OOMeshWriteOptions options, id <OOProblemReporting> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
 	NSError *error = nil;
 	NSString *name = [path lastPathComponent];
 	
-	NSData *data = OOMeshDataFromMesh(mesh, issues);
+	NSData *data = OOMeshDataFromMesh(mesh, options, issues);
 	OK = (data != nil);
 	
 	if (OK)
@@ -82,27 +98,37 @@ BOOL OOWriteOOMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting>
 }
 
 
-NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
+NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, OOMeshWriteOptions options, id <OOProblemReporting> issues)
 {
 	if (mesh == nil)  return nil;
 	
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSMutableString *result = [NSMutableString string];
+	NSAutoreleasePool			*pool = [NSAutoreleasePool new];
+	NSMutableString				*result = [NSMutableString string];
+	OOConfGenerationOptions		confOptions = 0;
+	
+	if (options & kOOMeshWriteJSONCompatible)
+	{
+		// Comments are not permitted in JSON.
+		options &= ~kOOMeshWriteWithAnnotations;
+		confOptions |= kOOConfGenerationJSONCompatible;
+	}
+	BOOL						annotate = options & kOOMeshWriteWithAnnotations;
+	BOOL						annotateExtended = annotate && (options & kOOMeshWriteWithExtendedAnnotations);
 	
 	//	Generate list of unique vertex indices (pointer uniquing only).
-	NSMutableArray *vertices = [NSMutableArray array];
-	NSMutableDictionary *indices = [NSMutableDictionary dictionary];
-	NSUInteger vertexCount = 0;
+	NSMutableArray				*vertices = [NSMutableArray array];
+	NSMutableDictionary			*indices = [NSMutableDictionary dictionary];
+	NSUInteger					vertexCount = 0;
 	
-	OOAbstractFaceGroup *faceGroup = nil;
-	OOAbstractFace *face = nil;
-	OOAbstractVertex *vertex = nil;
-	OOMaterialSpecification *material = nil;
+	OOAbstractFaceGroup			*faceGroup = nil;
+	OOAbstractFace				*face = nil;
+	OOAbstractVertex			*vertex = nil;
+	OOMaterialSpecification		*material = nil;
 	
-	//	Unique vertices across groups, and count 'em.
-#if ANNOTATE
-	NSMutableArray *useCounts = [NSMutableArray array];
-#endif
+	//	Unique vertices across groups, and count ’em.
+	NSMutableArray *annVertexUseCounts = nil;
+	if (annotateExtended)  annVertexUseCounts = [NSMutableArray array];
+	
 	foreach (faceGroup, mesh)
 	{
 		foreach (face, faceGroup)
@@ -119,20 +145,16 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 					index = [NSNumber numberWithUnsignedInteger:vertexCount++];
 					[indices setObject:index forKey:vertex];
 					[vertices addObject:vertex];
-#if ANNOTATE
-					[useCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
-#endif
+					
+					if (annotateExtended)  [annVertexUseCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
 				}
-				else
+				else if (annotateExtended)
 				{
-#if ANNOTATE
 					NSUInteger indexVal = [index unsignedIntegerValue];
-					NSUInteger useCount = [useCounts oo_unsignedIntegerAtIndex:indexVal];
+					NSUInteger useCount = [annVertexUseCounts oo_unsignedIntegerAtIndex:indexVal];
 					useCount++;
-					[useCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
-#endif
+					[annVertexUseCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
 				}
-				
 			}
 			
 			[pool drain];
@@ -140,11 +162,9 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 	}
 	
 	//	Unique materials by name.
-	NSMutableDictionary *materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
-	OOMaterialSpecification *anonMaterial = nil;
-#if ANNOTATE
-	NSUInteger faceCount = 0;
-#endif
+	NSMutableDictionary			*materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
+	OOMaterialSpecification		*anonMaterial = nil;
+	NSUInteger					annFaceCount = 0;
 	
 	foreach (faceGroup, mesh)
 	{
@@ -162,218 +182,206 @@ NSData *OOMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
 		
 		[materials setObject:material forKey:[material materialKey]];
 		
-#if ANNOTATE
-		faceCount += [faceGroup faceCount];
-#endif
+		if (annotate)  annFaceCount += [faceGroup faceCount];
 	}
 	
-	
-	//	Write header.
-	NSString *name = [mesh name];
-	if (name == nil)  name = @"<unnamed>";
-	[result appendFormat:@"oomesh \"%@\":\n{\n\tvertexCount: %lu", EscapeString(name), (unsigned long)vertexCount];
-#if ANNOTATE
-	[result appendFormat:@"\t// Average %g uses per vertex.", (float)(faceCount * 3) / (float)vertexCount];
-#endif
-	[result appendString:@"\n"];
-	
-	NSString *modelDesc = [mesh modelDescription];
-	if (modelDesc != nil)
-	{
-		[result appendFormat:@"\tdescription: \"%@\"\n", EscapeString(modelDesc)];
-	}
 	
 	NSDictionary *vertexSchema = [mesh vertexSchemaIgnoringTemporary];
 	if ([vertexSchema objectForKey:kOOSmoothGroupAttributeKey] != nil)
 	{
+		// Smooth groups must be baked into geometry - although they should be marked temorary anyway, surely?
 		NSMutableDictionary *mutableSchema = [NSMutableDictionary dictionaryWithDictionary:vertexSchema];
 		[mutableSchema removeObjectForKey:kOOSmoothGroupAttributeKey];
 		vertexSchema = mutableSchema;
 	}
+	
+	// Write header comment.
 	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
-	NSString *key = nil;
-	
-#if ANNOTATE
-	[result appendString:@"\t\n\t// Vertex schema:\n"];
-	foreach (key, attributeKeys)
+	if (annotate)
 	{
-		[result appendFormat:@"\t//   %@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
-	}
-	[result appendFormat:@"\t//\n\t// %lu triangle%@ in %lu group%@.\n\t\n", (unsigned long)faceCount, faceCount == 1 ? @"" : @"s", (unsigned long)[mesh faceGroupCount], [mesh faceGroupCount] == 1 ? @"" : @"s"];
-#endif
-	
-	
-	//	Write materials.
-	NSArray *sortedMaterialKeys = [[materials allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-	NSString *materialKey = nil;
-	foreach (materialKey, sortedMaterialKeys)
-	{
-		[result appendFormat:@"\t\n\tmaterial \"%@\":", EscapeString(materialKey)];
+		NSString *key = nil;
 		
-		id materialProperties = [[materials objectForKey:materialKey] ja_propertyListRepresentation];
-		if (materialProperties == nil)  materialProperties = [NSDictionary dictionary];
+		[result appendString:@"/*\n\t"];
+		NSString *name = [mesh name];
+		if (name != nil)  [result appendFormat:@"%@\n\t\n\t", name];
+		[result appendFormat:@"%lu vertices\n\t%u triangles in %u groups using %u materials\n\t%g uses per vertex (average)\n\t\n",
+							 vertexCount, annFaceCount, [mesh faceGroupCount], [materials count], (annFaceCount * 3.0) / vertexCount];
 		
-		[materialProperties oo_writeToOOMesh:result
-								  indentLevel:1
-							 afterPunctuation:YES];
-		
-		[result appendString:@"\n"];
-	}
-	
-	
-	//	Write vertex attributes.
-	if (vertexCount > 0)
-	{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
-		
+		[result appendString:@"\tVertex schema:\n"];
 		foreach (key, attributeKeys)
 		{
-			NSUInteger i, count = [vertexSchema oo_unsignedIntegerForKey:key];
+			[result appendFormat:@"\t\t%@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
+		}
+		[result appendString:@"*/\n\n"];
+	}
+	
+	
+	[result appendFormat:@"{\n\t%@: %lu,\n", SimpleKey(kVertexCountKey, options), (unsigned long)vertexCount];
+	
+	NSString *description = [mesh modelDescription];
+	if (description != nil)
+	{
+		[result appendFormat:@"\t%@: \"%@\",\n", SimpleKey(kMeshDescriptionKey, options), [description oo_escapedForJavaScriptLiteral]];
+	}
+	
+	// Write materials.
+	NSError *error = nil;
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kMaterialsSectionKey, options)];
+	NSArray *sortedMaterialKeys = [[materials allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	NSUInteger materialIter, materialCount = [sortedMaterialKeys count];
+	for (materialIter = 0; materialIter < materialCount; materialIter++)
+	{
+		NSString *materialKey = [sortedMaterialKeys objectAtIndex:materialIter];
+		[result appendFormat:@"\t\t%@:", Key(materialKey, options)];
+		
+		OOMaterialSpecification *material = [materials objectForKey:materialKey];
+		id materialProperties = [material ja_propertyListRepresentation];
+		if (materialProperties == nil)  materialProperties = [NSDictionary dictionary];
+		
+		if (![materialProperties appendOOConfToString:result
+										  withOptions:confOptions | kOOConfGenerationAfterPunctuation
+										  indentLevel:2
+												error:&error])
+		{
+			OOReportNSError(issues, $sprintf(OOLocalizeProblemString(issues, @"Material \"%@\" could not be written."), [material materialKey]), error);
+			return nil;
+		}
+		
+		if (materialIter + 1 < materialCount)  [result appendString:@","];
+		[result appendString:@"\n\t"];
+	}
+	[result appendString:@"},\n\t\n"];
+	
+	// Write vertex attributes.
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kAttributesSectionKey, options)];
+	if (vertexCount > 0)
+	{
+		NSUInteger attributeIter, attributeCount = [attributeKeys count];
+		for (attributeIter = 0; attributeIter < attributeCount; attributeIter++)
+		{
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
 			
-			[result appendFormat:@"\t\n\tattribute \"%@\":\n\t{\n\t\tsize: %lu\n\t\tdata:\n\t\t[\n", EscapeString(key), (unsigned long)count];
+			NSString *attributeKey = [attributeKeys objectAtIndex:attributeIter];
+			NSUInteger elemIter, size = [vertexSchema oo_unsignedIntegerForKey:attributeKey];
 			
-#if ANNOTATE
-			NSUInteger vIdx = [key isEqualToString:kOOPositionAttributeKey] ? 0 : NSNotFound;
-#endif
-			
-			foreach (vertex, vertices)
-			{
-				[result appendString:@"\t\t\t"];
-				
-				OOFloatArray *attr = [vertex attributeForKey:key];
-				for (i = 0; i < count; i++)
-				{
-					[result appendString:FloatString([attr floatAtIndex:i])];
-					
-#if ANNOTATE
-					if (vIdx != NSNotFound && i == count - 1)
+			/*
+					<attributeKey>:
 					{
-						[result appendFormat:@"\t// Uses: %@", [useCounts objectAtIndex:vIdx++]];
-					}
-#endif
+						size: <size>
+						data:
+						[
+			*/
+			[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@:\n\t\t\t[\n", Key(attributeKey, options), Key(kSizeKey, options), (unsigned long)size, Key(kDataKey, options)];
+			
+			// If annotating, comment vertex use count for position array.
+			BOOL annNoteUseCounts = NO;
+			if (annotateExtended && [attributeKey isEqualToString:kOOPositionAttributeKey] && annFaceCount * 3 > vertexCount) 
+			{
+				annNoteUseCounts = YES;
+			}
+			
+			for (NSUInteger vertexIter = 0; vertexIter < vertexCount; vertexIter++)
+			{
+				vertex = [vertices objectAtIndex:vertexIter];
+				[result appendString:@"\t\t\t\t"];
+				
+				if (annotate && (vertexIter % kAnnGroupRate) == 0 && vertexIter != 0)
+				{
+					[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)vertexIter];
+				}
+				
+				OOFloatArray *attr = [vertex attributeForKey:attributeKey];
+				for (elemIter = 0; elemIter < size; elemIter++)
+				{
+					[result appendString:FloatString([attr floatAtIndex:elemIter])];
 					
-					[result appendString:(i == count - 1) ? @"\n" : @",\t"];
+					if (elemIter + 1 < size)
+					{
+						[result appendString:@",\t"];
+					}
+					else
+					{
+						if (vertexIter + 1 < vertexCount)  [result appendString:@","];
+						if (!annNoteUseCounts)  [result appendString:@"\n"];
+						else
+						{
+							[result appendFormat:@"\t// Uses: %@\n", [annVertexUseCounts objectAtIndex:vertexIter]];
+						}
+					}
 				}
 			}
 			
-			[result appendString:@"\t\t]\n\t}\n"];
+			[result appendString:@"\t\t\t]\n\t\t}"];
+			
+			if (attributeIter + 1 < attributeCount)  [result appendString:@","];
+			[result appendString:@"\n"];
+			
+			[pool drain];
 		}
-		
-		[pool drain];
 	}
+	[result appendString:@"\t},\n\t\n"];
 	
-	
-	//	Write groups.
-	foreach (faceGroup, mesh)
+	// Write groups.
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(kGroupsSectionKey, options)];
+	NSUInteger groupIter, groupCount = [mesh faceGroupCount];
+	for (groupIter = 0; groupIter < groupCount; groupIter++)
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		faceGroup = [mesh faceGroupAtIndex:groupIter];
 		
-		NSString *materialKey = [[faceGroup material] materialKey];
-		if (materialKey == nil)  materialKey = @"<unnamed>";
+		NSString *material = [[faceGroup material] materialKey];
 		NSString *name = [faceGroup name];
-		if (name == nil)  name = materialKey;
-		if (name == nil)  name = @"<unnamed>";
+		if (name == nil)  name = material;
 		
-		[result appendFormat:@"\t\n\tgroup \"%@\":\n\t{\n\t\tfaceCount: %lu\n\t\tmaterial: \"%@\"\n\t\tdata:\n\t\t[\n", EscapeString(name), [faceGroup faceCount], EscapeString(materialKey)];
+		NSUInteger faceIter, faceCount = [faceGroup faceCount];
 		
-		foreach (face, faceGroup)
-		{
-			[result appendString:@"\t\t\t"];
-			
-			for (NSUInteger vIter = 0; vIter < 3; vIter++)
+		/*
+			<name>:
 			{
-				vertex = [face vertexAtIndex:vIter];
-				NSUInteger index = [indices oo_unsignedIntegerForKey:vertex];
+				faceCount: <faceCount>,
+				material: <material>,
+				data:
+				[
+		*/
+		[result appendFormat:@"\t\t%@:\n\t\t{\n\t\t\t%@: %lu,\n\t\t\t%@: \"%@\",\n\t\t\t%@:\n\t\t\t[\n", Key(name, options), SimpleKey(kFaceCountKey, options), (unsigned long)faceCount, SimpleKey(kMaterialKey, options), [material oo_escapedForJavaScriptLiteral], SimpleKey(kDataKey, options)];
+		
+		for (faceIter = 0; faceIter < faceCount; faceIter++)
+		{
+			OOAbstractFace *face = [faceGroup faceAtIndex:faceIter];
+			OOAbstractVertex *vertices[3];
+			[face getVertices:vertices];
+			
+			[result appendString:@"\t\t\t\t"];
+			
+			if (annotate && (faceIter % kAnnGroupRate) == 0 && faceIter != 0)
+			{
+				[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (unsigned long)faceIter];
+			}
+			
+			for (NSUInteger vertexIter = 0; vertexIter < 3; vertexIter++)
+			{
+				NSUInteger index = [indices oo_unsignedIntegerForKey:vertices[vertexIter]];
+				[result appendFormat:@"%lu", (unsigned long)index];
 				
-				[result appendFormat:@"%lu%@", (unsigned long)index, (vIter == 2) ? @"\n" : @", "];
+				if (vertexIter < 2)  [result appendString:@", "];
+				else if (faceIter + 1 < faceCount)  [result appendString:@",\n"];
+				else  [result appendString:@"\n"];
 			}
 		}
 		
-		[result appendString:@"\t\t]\n\t}\n"];
+		[result appendString:@"\t\t\t]\n\t\t}"];
+		if (groupIter + 1 < groupCount)  [result appendString:@","];
+		[result appendString:@"\n"];
 		
 		[pool drain];
 	}
 	
-	[result appendString:@"}\n"];
+	[result appendString:@"\t}\n}\n"];
 	
 	NSData *data = [[result dataUsingEncoding:NSUTF8StringEncoding] retain];
 	[pool drain];
 	
 	return [data autorelease];
-}
-
-
-static NSString *EscapeString(NSString *string)
-{
-	if (EXPECT_NOT(string == nil))  return nil;
-	static NSCharacterSet *charSet = nil;
-	
-	if (charSet == nil)
-	{
-		charSet = [[NSCharacterSet characterSetWithCharactersInString:@"\\\b\f\n\r\t\v\'\""] retain];
-	}
-	
-	NSMutableString *result = [NSMutableString stringWithCapacity:[string length]];
-	NSScanner *scanner = [NSScanner scannerWithString:string];
-	
-	for (;;)
-	{
-		NSString *substr = nil;
-		if (![scanner scanUpToCharactersFromSet:charSet intoString:&substr])  break;
-		[result appendString:substr];
-		
-		if (![scanner scanCharactersFromSet:charSet intoString:&substr])  break;
-		
-		NSUInteger i, length = [substr length];
-		for (i = 0; i < length; i++)
-		{
-			unichar c = [substr characterAtIndex:i];
-			switch (c)
-			{
-				case '\\':
-					[result appendString:@"\\\\"];
-					break;
-					
-				case '\b':
-					[result appendString:@"\\b"];
-					break;
-					
-				case '\f':
-					[result appendString:@"\\f"];
-					break;
-					
-				case '\n':
-					[result appendString:@"\\n"];
-					break;
-					
-				case '\r':
-					[result appendString:@"\\r"];
-					break;
-					
-				case '\t':
-					[result appendString:@"\\t"];
-					break;
-					
-				case '\v':
-					[result appendString:@"\\v"];
-					break;
-					
-				case '\'':
-					[result appendString:@"\\\'"];
-					break;
-					
-				case '\"':
-					[result appendString:@"\\\""];
-					break;
-					
-				default:
-					substr = [NSString stringWithCharacters:&c length:1];
-					[NSException raise:NSInternalInconsistencyException format:@"EscapeString() bug: character \'%c\' (U+%.4X) matched by escape charset, but not switch statement.", substr, c];
-			}
-		}
-	}
-	
-	return result;
 }
 
 
@@ -395,287 +403,4 @@ static NSString *FloatString(float number)
 	return result;
 }
 
-
-@interface NSString (OOWriteToOOMesh) <OOWriteToOOMesh>
-@end
-
-@interface NSNumber (OOWriteToOOMesh) <OOWriteToOOMesh>
-@end
-
-@interface NSArray (OOWriteToOOMesh) <OOWriteToOOMesh>
-@end
-
-@interface NSDictionary (OOWriteToOOMesh) <OOWriteToOOMesh>
-@end
-
-
-@implementation NSString (OOWriteToOOMesh)
-
-- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(NSUInteger)indentLevel
-		  afterPunctuation:(BOOL)afterPunct
-{
-	if (afterPunct)  [oomeshText appendString:@" "];
-	[oomeshText appendFormat:@"\"%@\"", EscapeString(self)];
-}
-
-
-static BOOL IsValidInitialDictChar(unichar c)
-{
-	return isalpha(c) || c == '_';
-}
-
-
-static BOOL IsValidDictChar(unichar c)
-{
-	return IsValidInitialDictChar(c) || isdigit(c) || c == '.' || c == '-';
-}
-
-
-- (BOOL) oo_isValidOOMeshDictKey
-{
-	NSUInteger i, length = [self length];
-	if (length == 0 || length > 60)  return NO;
-	
-	unichar c = [self characterAtIndex:0];
-	if (!IsValidInitialDictChar(c))  return NO;
-	
-	for (i = 1; i < length; i++)
-	{
-		if (!IsValidDictChar([self characterAtIndex:i]))  return NO;
-	}
-	
-	return YES;
-}
-
-@end
-
-
-@implementation NSNumber (OOWriteToOOMesh)
-
-- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(NSUInteger)indentLevel
-		  afterPunctuation:(BOOL)afterPunct
-{
-	if (afterPunct)  [oomeshText appendString:@" "];
-	if ([self oo_isFloatingPointNumber])
-	{
-		[oomeshText appendString:FloatString([self floatValue])];
-	}
-	else
-	{
-		[oomeshText appendFormat:@"%lli", [self longLongValue]];
-	}
-}
-
-@end
-
-
-enum
-{
-	kMaxSimpleCount = 4,
-	kMaxSimpleLength = 60
-};
-
-
-@implementation NSArray (OOWriteToOOMesh)
-
-- (BOOL) oo_isSimpleOOMeshArray
-{
-	/*	A "simple" array is one that can be written on a single line
-		without looking terrible. Here we use an element count limit and
-		an approximate overall length, allowing only strings and numbers.
-	*/
-	if ([self count] > kMaxSimpleCount)  return NO;
-	
-	NSUInteger totalLength = 0;
-	
-	id object = nil;
-	foreach (object, self)
-	{
-		totalLength += 4;		// Punctuation overhead.
-		
-		if ([object isKindOfClass:[NSNumber class]])
-		{
-			totalLength += 5;	// ish.
-		}
-		else if ([object isKindOfClass:[NSString class]])
-		{
-			totalLength += [object length];
-		}
-		else
-		{
-			// Not string or number
-			return NO;
-		}
-		
-		if (totalLength > kMaxSimpleLength)  return NO;
-	}
-	
-	return YES;
-}
-
-
-- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(NSUInteger)indentLevel
-		  afterPunctuation:(BOOL)afterPunct
-{
-	if ([self count] == 0)
-	{
-		if (afterPunct)  [oomeshText appendString:@" "];
-		[oomeshText appendString:@"[]"];
-	}
-	else
-	{
-		BOOL simple = [self oo_isSimpleOOMeshArray] && indentLevel > 1, first = YES;
-		
-		NSString *indent1 = OOTabString(indentLevel);
-		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", OOTabString(indentLevel + 1));
-		
-		if (afterPunct)
-		{
-			if (simple) [oomeshText appendString:@" ["];
-			else  [oomeshText appendFormat:@"\n%@[", indent1];
-		}
-		else
-		{
-			[oomeshText appendString:@"["];
-		}
-		
-		id object = nil;
-		foreach (object, self)
-		{
-			if (simple)
-			{
-				if (!first)  [oomeshText appendString:@","];
-				first = NO;
-			}
-			[oomeshText appendString:indent2];
-			
-			[object oo_writeToOOMesh:oomeshText
-						  indentLevel:indentLevel + 1
-					 afterPunctuation:NO];
-		}
-		
-		if (simple)
-		{
-			[oomeshText appendString:@" ]"];
-		}
-		else
-		{
-			[oomeshText appendFormat:@"\n%@]", indent1];
-		}
-	}
-}
-
-@end
-
-
-@implementation NSDictionary (OOWriteToOOMesh)
-
-- (BOOL) oo_isSimpleOOMeshDictionary
-{
-	/*	A "simple" dictionary is one that can be written on a single line
-		without looking terrible. Here we use an element count limit and
-		an approximate overall length, allowing only strings and numbers.
-	*/
-	if ([self count] > kMaxSimpleCount)  return NO;
-	
-	NSUInteger totalLength = 0;
-	
-	id key = nil;
-	foreachkey (key, self)
-	{
-		totalLength += 4;		// Punctuation overhead.
-		totalLength += [key length];
-		if (totalLength > kMaxSimpleLength)  return NO;
-		
-		id object = [self objectForKey:key];
-		if ([object isKindOfClass:[NSNumber class]])
-		{
-			totalLength += 5;	// ish.
-		}
-		else if ([object isKindOfClass:[NSString class]])
-		{
-			totalLength += [object length];
-		}
-		else
-		{
-			// Not string or number
-			return NO;
-		}
-		
-		if (totalLength > kMaxSimpleLength)  return NO;
-	}
-	
-	return YES;
-}
-
-
-- (void) oo_writeToOOMesh:(NSMutableString *)oomeshText
-			   indentLevel:(NSUInteger)indentLevel
-		  afterPunctuation:(BOOL)afterPunct
-{
-	if ([self count] == 0)
-	{
-		if (afterPunct)  [oomeshText appendString:@" "];
-		[oomeshText appendString:@"{}"];
-	}
-	else
-	{
-		BOOL simple = [self oo_isSimpleOOMeshDictionary] && indentLevel > 1, first = YES;
-		
-		NSString *indent1 = OOTabString(indentLevel);
-		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", OOTabString(indentLevel + 1));
-		
-		if (afterPunct)
-		{
-			if (simple) [oomeshText appendString:@" {"];
-			else  [oomeshText appendFormat:@"\n%@{", indent1];
-		}
-		else
-		{
-			[oomeshText appendString:@"{"];
-		}
-
-		
-		id key = nil;
-		NSArray *sortedKeys = [[self allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-		foreach (key, sortedKeys)
-		{
-			if (simple)
-			{
-				if (!first)  [oomeshText appendString:@","];
-				first = NO;
-			}
-			[oomeshText appendString:indent2];
-			
-			if ([key oo_isValidOOMeshDictKey])
-			{
-				[oomeshText appendString:key];
-			}
-			else
-			{
-				[oomeshText appendFormat:@"\"%@\"", EscapeString(key)];
-			}
-			[oomeshText appendString:@":"];
-			
-			[[self objectForKey:key] oo_writeToOOMesh:oomeshText
-										   indentLevel:indentLevel + 1
-									  afterPunctuation:YES];
-		}
-		
-		if (simple)
-		{
-			[oomeshText appendString:@" }"];
-		}
-		else
-		{
-			[oomeshText appendFormat:@"\n%@}", indent1];
-		}
-	}
-}
-
-@end
-
-#endif	// OOLITE_LEAN
+#endif

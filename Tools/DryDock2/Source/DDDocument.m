@@ -63,11 +63,7 @@
 	
 	if ([typeName isEqualToString:@"org.oolite.oomesh"])
 	{
-		data = OOMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
-	}
-	else if ([typeName isEqualToString:@"org.oolite.oojmesh"])
-	{
-		data = OOJMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], kOOJMeshWriteWithAnnotations | kOOJMeshWriteWithExtendedAnnotations | kOOJMeshWriteJSONCompatible, issues);
+		data = OOMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], kOOMeshWriteWithAnnotations | kOOMeshWriteWithExtendedAnnotations | kOOMeshWriteJSONCompatible, issues);
 	}
 	else if ([typeName isEqualToString:@"org.aegidian.oolite.mesh"])
 	{

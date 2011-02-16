@@ -1,10 +1,10 @@
 /*
 	OOMeshLexer.h
 	
-	Token scanner for oomesh files.
+	Token scanner for OOMesh files.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010-2011 Jens Ayton
 
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -34,15 +34,13 @@
 typedef enum OOMeshTokenType
 {
 	// Text types
-	kOOMeshTokenKeyword,
+	kOOMeshTokenKeyword,			// Unquoted string.
 	kOOMeshTokenString,
 	kOOMeshTokenStringWithEscapes,	// Internal use only.
 	
 	// Number types
 	kOOMeshTokenNatural,			// natural = digit , { digit }
 	kOOMeshTokenReal,				// real = { "-" | "+" } , natural  ,{ "." natural }
-	
-	kOOMeshTokenNewline,
 	
 	// Punctuation types
 	kOOMeshTokenColon,				// colon = ":"
@@ -89,20 +87,14 @@ typedef enum OOMeshTokenType
 
 // "Get" methods interpret the current token without advancing.
 - (BOOL) getNatural:(uint64_t *)outNatural;
-- (BOOL) getReal:(float *)outReal;
+- (BOOL) getDouble:(double *)outDouble;
+- (BOOL) getFloat:(float *)outFloat;
 - (BOOL) getString:(NSString **)outString;
 - (BOOL) getKeywordOrString:(NSString **)outString;
 - (BOOL) getToken:(OOMeshTokenType)type;
 
 // "Consume" methods advance to the next token, and in some cases further.
-- (BOOL) consumeNatural:(uint64_t *)outNatural;
-- (BOOL) consumeReal:(float *)outReal;
-- (BOOL) consumeString:(NSString **)outString;
-- (BOOL) consumeKeywordOrString:(NSString **)outString;
 
 - (BOOL) consumeToken:(OOMeshTokenType)type;
-- (BOOL) consumeOptionalNewlines;
-// comma or newline = comma | newlines { comma { newlines }}
-- (BOOL) consumeCommaOrNewlines;
 
 @end

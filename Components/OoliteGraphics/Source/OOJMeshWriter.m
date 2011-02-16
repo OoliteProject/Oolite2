@@ -26,6 +26,7 @@
 #if !OOLITE_LEAN
 
 #import "OOJMeshWriter.h"
+#import <OoliteBase/OOConfGenerationInternal.h>
 #import "OOAbstractMesh.h"
 
 
@@ -35,14 +36,47 @@
 #define ANNOTATE			(!defined(NDEBUG))
 
 
-BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues)
+/*	Quote a key if the kOOJMeshWriteJSONCompatible is set, return it unmodified
+	otherwise.
+*/
+static NSString *SimpleKey(NSString *key, OOJMeshWriteOptions options)
+{
+	if (!(options & kOOJMeshWriteJSONCompatible))
+	{
+#ifndef NDEBUG
+		NSCParameterAssert([key oo_isValidUnquotedOOConfKey]);
+#endif
+		return key;
+	}
+	else
+	{
+		return $sprintf(@"\"%@\"", [key oo_escapedForJavaScriptLiteral]);
+	}
+}
+
+
+//	Quote a key if necessary.
+static NSString *Key(NSString *key, OOJMeshWriteOptions options)
+{
+	if (!(options & kOOJMeshWriteJSONCompatible) && [key oo_isValidUnquotedOOConfKey])
+	{
+		return key;
+	}
+	else
+	{
+		return $sprintf(@"\"%@\"", [key oo_escapedForJavaScriptLiteral]);
+	}
+}
+
+
+BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, OOJMeshWriteOptions options, id <OOProblemReporting> issues)
 {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	BOOL OK = YES;
 	NSError *error = nil;
 	NSString *name = [path lastPathComponent];
 	
-	NSData *data = OOJMeshDataFromMesh(mesh, issues);
+	NSData *data = OOJMeshDataFromMesh(mesh, options, issues);
 	OK = (data != nil);
 	
 	if (OK)
@@ -59,27 +93,36 @@ BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting
 }
 
 
-NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues)
+NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, id <OOProblemReporting> issues)
 {
 	if (mesh == nil)  return nil;
 	
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSMutableString *result = [NSMutableString string];
+	NSAutoreleasePool			*pool = [NSAutoreleasePool new];
+	NSMutableString				*result = [NSMutableString string];
+	OOConfGenerationOptions		confOptions = 0;
+	
+	if (options & kOOJMeshWriteJSONCompatible)
+	{
+		// Comments are not permitted in JSON.
+		options &= ~kOOJMeshWriteWithAnnotations;
+		confOptions |= kOOConfGenerationJSONCompatible;
+	}
+	BOOL						annotate = options & kOOJMeshWriteWithAnnotations;
 	
 	//	Generate list of unique vertex indices (pointer uniquing only).
-	NSMutableArray *vertices = [NSMutableArray array];
-	NSMutableDictionary *indices = [NSMutableDictionary dictionary];
-	NSUInteger vertexCount = 0;
+	NSMutableArray				*vertices = [NSMutableArray array];
+	NSMutableDictionary			*indices = [NSMutableDictionary dictionary];
+	NSUInteger					vertexCount = 0;
 	
-	OOAbstractFaceGroup *faceGroup = nil;
-	OOAbstractFace *face = nil;
-	OOAbstractVertex *vertex = nil;
-	OOMaterialSpecification *material = nil;
+	OOAbstractFaceGroup			*faceGroup = nil;
+	OOAbstractFace				*face = nil;
+	OOAbstractVertex			*vertex = nil;
+	OOMaterialSpecification		*material = nil;
 	
-	//	Unique vertices across groups, and count 'em.
-#if ANNOTATE
-	NSMutableArray *useCounts = [NSMutableArray array];
-#endif
+	//	Unique vertices across groups, and count ’em.
+	NSMutableArray *annVertexUseCounts = nil;
+	if (annotate)  annVertexUseCounts = [NSMutableArray array];
+	
 	foreach (faceGroup, mesh)
 	{
 		foreach (face, faceGroup)
@@ -96,20 +139,16 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 					index = [NSNumber numberWithUnsignedInteger:vertexCount++];
 					[indices setObject:index forKey:vertex];
 					[vertices addObject:vertex];
-#if ANNOTATE
-					[useCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
-#endif
+					
+					if (annotate)  [annVertexUseCounts addObject:[NSNumber numberWithUnsignedInteger:1]];
 				}
-				else
+				else if (annotate)
 				{
-#if ANNOTATE
 					NSUInteger indexVal = [index unsignedIntegerValue];
-					NSUInteger useCount = [useCounts oo_unsignedIntegerAtIndex:indexVal];
+					NSUInteger useCount = [annVertexUseCounts oo_unsignedIntegerAtIndex:indexVal];
 					useCount++;
-					[useCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
-#endif
+					[annVertexUseCounts replaceObjectAtIndex:indexVal withObject:[NSNumber numberWithUnsignedInteger:useCount]];
 				}
-				
 			}
 			
 			[pool drain];
@@ -117,11 +156,9 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 	}
 	
 	//	Unique materials by name.
-	NSMutableDictionary *materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
-	OOMaterialSpecification *anonMaterial = nil;
-#if ANNOTATE
-	NSUInteger faceCount = 0;
-#endif
+	NSMutableDictionary			*materials = [NSMutableDictionary dictionaryWithCapacity:[mesh faceGroupCount]];
+	OOMaterialSpecification		*anonMaterial = nil;
+	NSUInteger					annFaceCount = 0;
 	
 	foreach (faceGroup, mesh)
 	{
@@ -139,9 +176,7 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 		
 		[materials setObject:material forKey:[material materialKey]];
 		
-#if ANNOTATE
-		faceCount += [faceGroup faceCount];
-#endif
+		if (annotate)  annFaceCount += [faceGroup faceCount];
 	}
 	
 	
@@ -153,28 +188,28 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 		[mutableSchema removeObjectForKey:kOOSmoothGroupAttributeKey];
 		vertexSchema = mutableSchema;
 	}
-#if 0
-	NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
-	NSString *key = nil;
 	
-#if ANNOTATE
-	[result appendString:@"/*\n\t"];
-	NSString *name = [mesh name];
-	if (name != nil)  [result appendFormat:@"%@\n\t\n\t", name];
-	[result appendFormat:@"%lu vertices\n\t%u triangles in %u groups using %u materials\n\t%g uses per vertex (average)\n\t\n",
-						 vertexCount, faceCount, [mesh faceGroupCount], [materials count], (faceCount * 3.0) / vertexCount];
-	
-	[result appendString:@"\tVertex schema:\n"];
-	foreach (key, attributeKeys)
+	if (annotate)
 	{
-		[result appendFormat:@"\t\t%@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
+		NSArray *attributeKeys = [[vertexSchema allKeys] sortedArrayUsingSelector:@selector(oo_compareByVertexAttributeOrder:)];
+		NSString *key = nil;
+		
+		[result appendString:@"/*\n\t"];
+		NSString *name = [mesh name];
+		if (name != nil)  [result appendFormat:@"%@\n\t\n\t", name];
+		[result appendFormat:@"%lu vertices\n\t%u triangles in %u groups using %u materials\n\t%g uses per vertex (average)\n\t\n",
+							 vertexCount, annFaceCount, [mesh faceGroupCount], [materials count], (annFaceCount * 3.0) / vertexCount];
+		
+		[result appendString:@"\tVertex schema:\n"];
+		foreach (key, attributeKeys)
+		{
+			[result appendFormat:@"\t\t%@: %lu\n", key, (unsigned long)[vertexSchema oo_unsignedIntegerForKey:key]];
+		}
+		[result appendString:@"*/\n\n"];
 	}
-	[result appendString:@"*/\n\n"];
-#endif
-#endif
 	
 	
-	[result appendFormat:@"{\n\t\"vertexCount\": %lu,\n", (unsigned long)vertexCount];
+	[result appendFormat:@"{\n\t%@: %lu,\n", SimpleKey(@"vertexCount", options), (unsigned long)vertexCount];
 	
 	NSString *description = [mesh modelDescription];
 	if (description != nil)
@@ -182,24 +217,33 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues
 		[result appendFormat:@"\t\"description\": \"%@\",\n", [description oo_escapedForJavaScriptLiteral]];
 	}
 	
-	
 	// Write materials.
-	[result appendString:@"\"materials\":\n{\n"];
+	NSError *error = nil;
+	[result appendFormat:@"\t%@:\n\t{\n", SimpleKey(@"materials", options)];
 	NSArray *sortedMaterialKeys = [[materials allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-	NSString *materialKey = nil;
-	foreach (materialKey, sortedMaterialKeys)
+	NSUInteger materialIter, materialCount = [sortedMaterialKeys count];
+	for (materialIter = 0; materialIter < materialCount; materialIter++)
 	{
-		[result appendFormat:@"\t\"%@\":\n\t", [materialKey oo_escapedForJavaScriptLiteral]];
+		NSString *materialKey = [sortedMaterialKeys objectAtIndex:materialIter];
+		[result appendFormat:@"\t\t%@:", Key(materialKey, options)];
 		
-		id materialProperties = [[materials objectForKey:materialKey] ja_propertyListRepresentation];
+		OOMaterialSpecification *material = [materials objectForKey:materialKey];
+		id materialProperties = [material ja_propertyListRepresentation];
 		if (materialProperties == nil)  materialProperties = [NSDictionary dictionary];
 		
-		/*
-		[materialProperties oo_writeToOOJMesh:result
-								  indentLevel:2
-							 afterPunctuation:YES];
-		*/
+		if (![materialProperties appendOOConfToString:result
+										  withOptions:confOptions | kOOConfGenerationAfterPunctuation
+										  indentLevel:2
+												error:&error])
+		{
+			OOReportNSError(issues, $sprintf(OOLocalizeProblemString(issues, @"Material \"%@\" could not be written."), [material materialKey]), error);
+			return nil;
+		}
 		
+		if (materialIter + 1 < materialCount)
+		{
+			[result appendString:@","];
+		}
 		[result appendString:@"\n\t"];
 	}
 	

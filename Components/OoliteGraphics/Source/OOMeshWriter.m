@@ -396,36 +396,6 @@ static NSString *FloatString(float number)
 }
 
 
-static NSString *IndentTabs(NSUInteger count)
-{
-	NSString * const staticTabs[] =
-	{
-		@"",
-		@"\t",
-		@"\t\t",
-		@"\t\t\t",
-		@"\t\t\t\t",
-		@"\t\t\t\t\t",
-		@"\t\t\t\t\t\t",
-		@"\t\t\t\t\t\t\t"
-	};
-	
-	if (count < sizeof staticTabs / sizeof *staticTabs)
-	{
-		return staticTabs[count];
-	}
-	else
-	{
-		NSMutableString *result = [NSMutableString stringWithCapacity:count];
-		for (NSUInteger i = 0; i < count; i++)
-		{
-			[result appendString:@"\t"];
-		}
-		return result;
-	}
-}
-
-
 @interface NSString (OOWriteToOOMesh) <OOWriteToOOMesh>
 @end
 
@@ -559,8 +529,8 @@ enum
 	{
 		BOOL simple = [self oo_isSimpleOOMeshArray] && indentLevel > 1, first = YES;
 		
-		NSString *indent1 = IndentTabs(indentLevel);
-		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", IndentTabs(indentLevel + 1));
+		NSString *indent1 = OOTabString(indentLevel);
+		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", OOTabString(indentLevel + 1));
 		
 		if (afterPunct)
 		{
@@ -655,8 +625,8 @@ enum
 	{
 		BOOL simple = [self oo_isSimpleOOMeshDictionary] && indentLevel > 1, first = YES;
 		
-		NSString *indent1 = IndentTabs(indentLevel);
-		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", IndentTabs(indentLevel + 1));
+		NSString *indent1 = OOTabString(indentLevel);
+		NSString *indent2 = simple ? @" " : $sprintf(@"\n%@", OOTabString(indentLevel + 1));
 		
 		if (afterPunct)
 		{

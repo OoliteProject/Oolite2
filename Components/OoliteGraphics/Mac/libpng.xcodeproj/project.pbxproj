@@ -277,7 +277,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
-				SDKROOT_i386 = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				SYMROOT = ../../../build;
 				ZERO_LINK = NO;
 			};

@@ -26,6 +26,7 @@ extern "C" {
 	
 #import <OoliteBase/OOProblemReporting.h>
 
+#import <OoliteBase/OOConfGeneration.h>
 
 #ifdef __cplusplus
 }

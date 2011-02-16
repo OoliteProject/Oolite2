@@ -101,7 +101,7 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Oolite 2 Mesh</string>
+			<string>Oolite 2 Mesh [OLD]</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.oolite.oomesh</string>
 			<key>UTTypeTagSpecification</key>

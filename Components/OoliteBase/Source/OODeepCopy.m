@@ -41,7 +41,7 @@ id OODeepCopy(id object)
 	
 	object = [object ooDeepCopyWithSharedObjects:objects];
 	
-	[pool release];
+	[pool drain];
 	
 	return object;
 }

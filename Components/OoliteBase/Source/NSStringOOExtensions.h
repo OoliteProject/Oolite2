@@ -65,10 +65,10 @@ MA 02110-1301, USA.
 /*	-oo_escapedForJavaScriptLiteral
 	
 	Add escape codes for string so that it's a valid JavaScript literal (if
-	you put "" or '' around it). Also valid for GraphViz and, of course, JSON.
+	you put double quotes around it). Also valid for GraphViz and JSON.
 	
-	This is here rather than in JavaScript support because it's used by
-	OoliteGraphics.
+	IMPORTANT: in order to be compatible with JSON, this does not encode ' as
+	\', so the resulting string *must* be quoted with double quotes.
 */
 - (NSString *) oo_escapedForJavaScriptLiteral;
 
@@ -84,3 +84,10 @@ MA 02110-1301, USA.
 - (void) oo_deleteCharacterAtIndex:(unsigned long)index;
 
 @end
+
+
+/*	OOTabString(count)
+	
+	Return a string of <count> tabs.
+*/
+NSString *OOTabString(NSUInteger count);

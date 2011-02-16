@@ -34,4 +34,13 @@ SOFTWARE.
 
 - (BOOL) oo_isFloatingPointNumber;	// True if it represents a float or double.
 
+- (BOOL) oo_isBoolean;
+
+/*
+	In GNUstep, boolean-valued NSNumbers are not distinct from integer 0 and 1.
+	This is a problem for things like accurate in-memory representation of
+	JSON/OOConf data. To work around it, we implement our own boolean values.
+*/
++ (NSNumber *) oo_numberWithBool:(BOOL)boolValue;
+
 @end

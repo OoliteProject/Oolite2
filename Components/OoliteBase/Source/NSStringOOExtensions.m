@@ -190,6 +190,11 @@ MA 02110-1301, USA.
 				[result appendString:@"\\t"];
 				break;
 				
+#if 0
+
+			IMPORTANT: these are deliberately excluded because they aren not
+			permitted in JSON.
+				
 			case '\v':
 				[result appendString:@"\\v"];
 				break;
@@ -197,6 +202,7 @@ MA 02110-1301, USA.
 			case '\'':
 				[result appendString:@"\\\'"];
 				break;
+#endif
 				
 			case '\"':
 				[result appendString:@"\\\""];
@@ -244,3 +250,32 @@ MA 02110-1301, USA.
 }
 
 @end
+
+
+NSString *OOTabString(NSUInteger count)
+{
+	NSString * const staticTabs[] =
+	{
+		@"",
+		@"\t",
+		@"\t\t",
+		@"\t\t\t",
+		@"\t\t\t\t",
+		@"\t\t\t\t\t",			// 5
+		@"\t\t\t\t\t\t",
+		@"\t\t\t\t\t\t\t",
+		@"\t\t\t\t\t\t\t\t",
+		@"\t\t\t\t\t\t\t\t\t",
+		@"\t\t\t\t\t\t\t\t\t\t"	// 10
+	};
+	enum { kStaticTabCount = sizeof staticTabs / sizeof *staticTabs };
+	
+	if (count < kStaticTabCount)
+	{
+		return staticTabs[count];
+	}
+	else
+	{
+		return [staticTabs[kStaticTabCount - 1] stringByAppendingString:OOTabString(count - kStaticTabCount - 1)];
+	}
+}

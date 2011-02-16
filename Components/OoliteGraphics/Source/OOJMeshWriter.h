@@ -33,7 +33,24 @@
 @class OOAbstractMesh;
 
 
-NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, id <OOProblemReporting> issues);
-BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, id <OOProblemReporting> issues);
+typedef NSUInteger OOJMeshWriteOptions;
+enum
+{
+	/*	kOOJMeshWriteWithAnnotations
+		If this flag is set, informative comments are added. This is disabled
+		if kOOJMeshWriteJSONCompatible is set.
+	*/
+	kOOJMeshWriteWithAnnotations		= 0x00000001UL,
+	
+	/*	kOOJMeshWriteJSONCompatible
+		If this flag is set, no comments are written (overriding the
+		kOOJMeshWriteWithAnnotations flag) and all keys are quoted.
+	*/
+	kOOJMeshWriteJSONCompatible			= 0x00000002UL
+};
+
+
+NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, id <OOProblemReporting> issues);
+BOOL OOWriteOOJMesh(OOAbstractMesh *mesh, NSString *path, OOJMeshWriteOptions options, id <OOProblemReporting> issues);
 
 #endif	// OOLITE_LEAN

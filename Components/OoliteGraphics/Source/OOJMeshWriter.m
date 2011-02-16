@@ -281,6 +281,11 @@ NSData *OOJMeshDataFromMesh(OOAbstractMesh *mesh, OOJMeshWriteOptions options, i
 				vertex = [vertices objectAtIndex:vertexIter];
 				[result appendString:@"\t\t\t\t"];
 				
+				if (annotate && (vertexIter % 20) == 0)
+				{
+					[result appendFormat:@"\n\t\t\t\t// %lu:\n\t\t\t\t", (long)vertexIter];
+				}
+				
 				OOFloatArray *attr = [vertex attributeForKey:attributeKey];
 				for (elemIter = 0; elemIter < size; elemIter++)
 				{

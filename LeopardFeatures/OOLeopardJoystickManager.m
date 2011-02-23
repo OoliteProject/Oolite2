@@ -25,8 +25,10 @@ MA 02110-1301, USA.
 
 #import "OOLeopardJoystickManager.h"
 #import "OOLogging.h"
+#import "OOCollectionExtractors.h"
 
 
+#if OLD_MATCHING
 static NSMutableDictionary *DeviceMatchingDictionary(UInt32 inUsagePage, UInt32 inUsage)
 {
 	// create a dictionary to add usage page/usages to
@@ -35,6 +37,7 @@ static NSMutableDictionary *DeviceMatchingDictionary(UInt32 inUsagePage, UInt32 
 			[NSNumber numberWithUnsignedInt:inUsage], @kIOHIDDeviceUsageKey,
 			nil];
 }
+#endif
 
 
 @interface OOLeopardJoystickManager ()
@@ -68,8 +71,12 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 		}
 		
 		hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);         
+#if OLD_MATCHING
 		NSDictionary *matchingCFDictRef = DeviceMatchingDictionary(kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
 		IOHIDManagerSetDeviceMatching(hidManager, (CFDictionaryRef)matchingCFDictRef);
+#else
+		IOHIDManagerSetDeviceMatching(hidManager, NULL);
+#endif
 		
 		IOHIDManagerRegisterDeviceMatchingCallback(hidManager, HandleDeviceMatchingCallback, self);
 		IOHIDManagerRegisterDeviceRemovalCallback(hidManager, HandleDeviceRemovalCallback, self);
@@ -100,6 +107,33 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 - (OOUInteger) joystickCount
 {
 	return CFArrayGetCount(devices);
+}
+
+
+- (void) handleDeviceAttach:(IOHIDDeviceRef)device
+{
+	NSArray *usagePairs = (NSArray *)IOHIDDeviceGetProperty(device, CFSTR(kIOHIDDeviceUsagePairsKey));
+	
+	for (NSDictionary *pair in usagePairs)
+	{
+		if ([pair oo_unsignedIntForKey:@kIOHIDDeviceUsagePageKey] == kHIDPage_GenericDesktop)
+		{
+			unsigned usage = [pair oo_unsignedIntForKey:@kIOHIDDeviceUsageKey];
+			if (usage == kHIDUsage_GD_Joystick || usage == kHIDUsage_GD_GamePad)
+			{
+				[self handleJoystickAttach:device];
+				return;
+			}
+		}
+	}
+	
+	if (OOLogWillDisplayMessagesInClass(@"joystick.reject"))
+	{
+		NSString *product = (NSString *)IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
+		unsigned usagePage = [(NSNumber *)IOHIDDeviceGetProperty(device, CFSTR(kIOHIDPrimaryUsagePageKey)) unsignedIntValue];
+		unsigned usage = [(NSNumber *)IOHIDDeviceGetProperty(device, CFSTR(kIOHIDPrimaryUsageKey)) unsignedIntValue];
+		OOLog(@"joystick.reject", @"Ignoring HID device: %@ (primary usage %u:%u)", product, usagePage, usage);
+	}
 }
 
 
@@ -301,7 +335,11 @@ static uint8_t MapHatValue(CFIndex value, CFIndex max)
 //Thunking to Objective-C
 static void HandleDeviceMatchingCallback(void * inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef  inIOHIDDeviceRef)
 {
+#if OLD_MATCHING
 	[(OOLeopardJoystickManager *)inContext handleJoystickAttach:inIOHIDDeviceRef];
+#else
+	[(OOLeopardJoystickManager *)inContext handleDeviceAttach:inIOHIDDeviceRef];
+#endif
 }
 
 

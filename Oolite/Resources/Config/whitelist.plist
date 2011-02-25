@@ -1,0 +1,439 @@
+/*	Methods that may be used from old-style script actions or conditions.
+	
+	This plist cannot be extended or overriden by OXPs.
+	
+	action_methods				Commands permitted in world scripts.
+	ai_methods					Commands permitted in AIs.
+	ai_and_action_methods		Commands permitted in world scripts and AIs.
+	query_methods				Values that may be queried in script conditions.
+	action_method_aliases		Mappings from script commands (left) to internal names (right).
+	ai_method_aliases			Mappings from AI commands (left) to internal names (right).
+	query_method_aliases		Mappings from script queries (left) to internal names (right).
+	shader_*_binding_methods	Values that may be queried through shader bindings.
+	
+	Most Other types of legacy script - ship actions, character scripts,
+	scriptActionOnTarget: - can use both action_methods and ai_methods. The exception is
+	systeminfo scripts, which can't use ai_methods as they aren't run with a ship target.
+*/
+
+{
+	action_methods =
+	(
+		// PlayerEntityLegacyScriptEngine.m
+		"setMissionDescription:",
+		"clearMissionDescription",
+		"clearMissionDescriptionForMission:",
+		"setLegalStatus:",
+		"commsMessage:",
+		"commsMessageByUnpiloted:",
+		"consoleMessage3s:",
+		"consoleMessage6s:",
+		"awardCredits:",
+		"awardShipKills:",
+		"awardEquipment:",
+		"removeEquipment:",
+		"setPlanetinfo:",
+		"setSpecificPlanetInfo:",
+		"awardCargo:",
+		"removeAllCargo",
+		"useSpecialCargo:",
+		"testForEquipment:",
+		"awardFuel:",
+		"messageShipAIs:",
+		"ejectItem:",
+		"addShips:",
+		"addSystemShips:",
+		"addShipsAt:",
+		"addShipsAtPrecisely:",
+		"addShipsWithinRadius:",
+		"spawnShip:",
+		"set:",
+		"reset:",
+		"increment:",
+		"decrement:",
+		"add:",
+		"subtract:",
+		"checkForShips:",
+		"resetScriptTimer",
+		"addMissionText:",
+		"addLiteralMissionText:",
+		"setMissionChoices:",
+		"resetMissionChoice",
+		"clearMissionScreen",
+		"addMissionDestination:",
+		"removeMissionDestination:",
+		"showShipModel:",
+		"setMissionMusic:",
+		"setMissionImage:",
+		"setFuelLeak:",
+		"setSunNovaIn:",
+		"launchFromStation",
+		"blowUpStation",
+		"sendAllShipsAway",
+		"addPlanet:",
+		"addMoon:",
+		"debugOn",
+		"debugOff",
+		"debugMessage:",
+		"playSound:",
+		"setGuiToMissionScreen",
+	//	"setBackgroundFromDescriptionsKey:",	// Is this ever used from a script? It seems a bad match for future plans of mine. -- Ahruman
+		"setGalacticHyperspaceBehaviourTo:",
+		"setGalacticHyperspaceFixedCoordsTo:",
+	);
+	
+	ai_methods =
+	(
+		// Implicitly includes ai_and_action_methods
+		"pauseAI:",
+		"randomPauseAI:",
+		"setDestinationToCurrentLocation",
+		"setDesiredRangeTo:",
+		"setDesiredRangeForWaypoint",
+		"performFlyToRangeFromDestination",
+		"setSpeedTo:",
+		"setSpeedFactorTo:",
+		"performIdle",
+		"setSpeedToCruiseSpeed",
+		"performStop",
+		"performHold",
+		"setTargetToPrimaryAggressor",
+		"performAttack",
+		"scanForNearestMerchantman",
+		"scanForRandomMerchantman",
+		"scanForLoot",
+		"scanForRandomLoot",
+		"setTargetToFoundTarget",
+		"checkForFullHold",
+		"performCollect",
+		"performIntercept",
+		"performFlee",
+		"getWitchspaceEntryCoordinates",
+		"setDestinationFromCoordinates",
+		"setCoordinatesFromPosition",
+		"performFaceDestination",
+		"performTumble",
+		"fightOrFleeMissile",
+		"setCourseToPlanet",
+		"setTakeOffFromPlanet",
+		"landOnPlanet",
+		"checkTargetLegalStatus",
+		"checkOwnLegalStatus",
+		"setDestinationToTarget",
+		"setDestinationWithinTarget",
+		"checkCourseToDestination",
+		"scanForOffenders",
+		"setCourseToWitchpoint",
+		"setDestinationToWitchpoint",
+		"setDestinationToStationBeacon",
+		"performHyperSpaceExit",
+		"performHyperSpaceExitWithoutReplacing",
+		"wormholeEscorts",
+		"wormholeGroup",
+		"wormholeEntireGroup",
+		"commsMessage:",
+		"commsMessageByUnpiloted:",
+		"broadcastDistressMessage",
+		"ejectCargo",
+		"scanForThargoid",
+		"scanForNonThargoid",
+		"becomeUncontrolledThargon",
+		"checkDistanceTravelled",
+		"scanForHostiles",
+		"fightOrFleeHostiles",
+		"suggestEscort",
+		"escortCheckMother",
+		"performEscort",
+		"updateEscortFormation",
+		"checkGroupOddsVersusTarget",
+		"groupAttackTarget",
+		"scanForFormationLeader",
+		"messageMother:",
+		"messageSelf:",
+		"setPlanetPatrolCoordinates",
+		"setSunSkimStartCoordinates",
+		"setSunSkimEndCoordinates",
+		"setSunSkimExitCoordinates",
+		"patrolReportIn",
+		"checkForMotherStation",
+		"sendTargetCommsMessage:",
+		"markTargetForFines",
+		"markTargetForOffence:",
+		"scanForRocks",
+		"performMining",
+		"setDestinationToDockingAbort",
+		"requestNewTarget",
+		"rollD:",
+		"scanForNearestShipWithPrimaryRole:",
+		"scanForNearestShipHavingRole:",
+		"scanForNearestShipWithAnyPrimaryRole:",
+		"scanForNearestShipHavingAnyRole:",
+		"scanForNearestShipWithScanClass:",
+		"scanForNearestShipWithoutPrimaryRole:",
+		"scanForNearestShipNotHavingRole:",
+		"scanForNearestShipWithoutAnyPrimaryRole:",
+		"scanForNearestShipNotHavingAnyRole:",
+		"scanForNearestShipWithoutScanClass:",
+		"scanForNearestShipMatchingPredicate:",
+		"setCoordinates:",
+		"checkForNormalSpace",
+		"requestDockingCoordinates",
+		"recallDockingInstructions",
+		"enterPlayerWormhole",
+		"enterTargetWormhole",
+		"scriptActionOnTarget:",
+		"safeScriptActionOnTarget:",
+		"sendScriptMessage:",
+		"targetFirstBeaconWithCode:",
+		"targetNextBeaconWithCode:",
+		"setRacepointsFromTarget",
+		"performFlyRacepoints",
+		"debugDumpPendingMessages",
+		"dropMessages:",
+		"exitAIWithMessage:",
+		"ai_throwSparks",			// Don't use, use throwSparks instead
+		"checkAegis",
+		"checkEnergy",
+		"setThrustFactorTo:",
+		"setStateTo:",
+		"debugMessage:",
+		"disengageAutopilot",		// Only useful for player root AI
+		"thargonCheckMother",
+				
+		// StationEntity.m/stubs in ShipEntityAI.m
+		"increaseAlertLevel",
+		"decreaseAlertLevel",
+		"launchPolice",
+		"launchDefenseShip",
+		"launchScavenger",
+		"launchMiner",
+		"launchPirateShip",
+		"launchShuttle",
+		"launchTrader",
+		"launchEscort",
+		"launchPatrol",
+		"launchShipWithRole:",
+		"launchIndependentShip:",	// Don't use, use launchIndependentShipWithRole: instead
+		"abortAllDockings",
+		"setPrimaryRole:",
+		
+		// ShipEntity.m
+		"fireECM",
+		"becomeExplosion",
+		"becomeEnergyBlast",
+		"abortDocking",
+		"deployEscorts",
+		"dockEscorts",
+		"setTargetToNearestStation",
+		"setTargetToNearestFriendlyStation",
+		"setTargetToSystemStation",
+		"setUpEscorts",
+		"fireMissile"
+	);
+	
+	ai_and_action_methods =
+	(
+		// ShipEntity.m
+		"dealEnergyDamageWithinDesiredRange",
+		"dumpCargo",
+		"switchLightsOn",
+		"switchLightsOff",
+		"doNothing",
+		"spawn:",
+		"addFuel:",
+		
+		// ShipEntityAI.m
+		"setAITo:",
+		"switchAITo:",
+		
+		// PlayerEntityLegacyScriptEngine.m
+		"targetNearestHostile"
+	);
+	
+	query_methods =
+	(
+		"status_string",
+		"gui_screen_string",
+		"galaxy_number",
+		"planet_number",
+		"score_number",
+		"credits_number",
+		"scriptTimer_number",
+		"shipsFound_number",
+		"commanderLegalStatus_number",
+		"commanderLegalStatus_string",
+		"d100_number",
+		"pseudoFixedD100_number",
+		"d256_number",
+		"pseudoFixedD256_number",
+		"clock_number",
+		"clock_secs_number",
+		"clock_mins_number",
+		"clock_hours_number",
+		"clock_days_number",
+		"fuelLevel_number",
+		"dockedAtMainStation_bool",
+		"foundEquipment_bool",
+		"sunWillGoNova_bool",
+		"sunGoneNova_bool",
+		"missionChoice_string",
+		"dockedTechLevel_number",
+		"dockedStationName_string",
+		"systemGovernment_string",
+		"systemGovernment_number",
+		"systemEconomy_string",
+		"systemEconomy_number",
+		"systemTechLevel_number",
+		"systemPopulation_number",
+		"systemProductivity_number",
+		"commanderName_string",
+		"commanderRank_string",
+		"commanderShip_string",
+		"commanderShipDisplayName_string",
+		"fuelLeakRate_number"		
+	);
+	
+	hud_dial_methods =
+	(
+		"drawTrumbles:",
+		"drawTargetReticle:",
+		"drawScanner:",
+		"drawScannerZoomIndicator:",
+		"drawStickSensitivityIndicator:",
+		"drawCompass:",
+		"drawAegis:",
+		"drawScoopStatus:",
+		"drawSpeedBar:",
+		"drawRollBar:",
+		"drawPitchBar:",
+		"drawYawBar:",
+		"drawEnergyGauge:",
+		"drawSpeedBar:",
+		"drawForwardShieldBar:",
+		"drawAftShieldBar:",
+		"drawYellowSurround:",
+		"drawGreenSurround:",
+		"drawFuelBar:",
+		"drawCabinTempBar:",
+		"drawWeaponTempBar:",
+		"drawAltitudeBar:",
+		"drawMissileDisplay:",
+		"drawStatusLight:",
+		"drawClock:",
+		"drawWeaponsOfflineText:",
+		"drawFPSInfoCounter:"
+	);
+	
+	shader_entity_binding_methods =
+	(
+		"position",
+		"orientation",
+		"relativePosition",
+		"viewpointOffset",
+		"collisionRadius",
+		"mass",
+		"energy",
+		"maxEnergy",
+		"universalTime",
+		"spawnTime",
+		"timeElapsedSinceSpawn",
+		"throwingSparks",
+		
+		// Renamed, previously player-only properties for 1.74
+		"clock",				// Was clock_number or clock_secs_number; supersedes clock_mins_number, clock_hours_number, clock_days_number
+		"pseudoFixedD100",		// Was pseudoFixedD100_number
+		"pseudoFixedD256",		// Was pseudoFixedD256_number
+		"systemGovernment",		// Was systemGovernment_number
+		"systemEconomy",		// Was systemEconomy_number
+		"systemTechLevel",		// Was systemTechLevel_number
+		"systemPopulation",		// Was systemPopulation_number
+		"systemProductivity"	// Was systemProductivity_number
+	);
+	
+	shader_ship_binding_methods =
+	(
+		"isBeacon",
+		"isFrangible",
+		"isCloaked",
+		"isJammingScanning",
+		"hasMilitaryScannerFilter",
+		"messageTime",
+		"escortCount",
+		"hasHostileTarget",
+		"weaponRange",
+		"scannerRange",
+		"withinStationAegis",
+		"fuel",
+		"flightPitch",
+		"flightRoll",
+		"flightYaw",
+		"flightSpeed",
+		"maxFlightSpeed",
+		"speedFactor",
+		"damage",
+		"laserHeatLevel",
+		"hullHeatLevel",
+		"entityPersonality",
+		"entityPersonalityInt",
+		"numberOfScannedShips",
+		"destination",
+		"rangeToDestination",
+		"rangeToPrimaryTarget",
+		"laserColor",
+		"isHulk",
+		"lightsActive",
+		
+		// Renamed, previously player-only properties for 1.74
+		"legalStatus",			// Was commanderLegalStatus_number
+		"fuel",					// Was fuelLevel_number
+		"velocity",				// Was velocityVector
+		"missileCapacity",		// Was dialMaxMissiles
+		
+		// New in 1.74
+		"missileCount"
+	);
+	
+	shader_player_ship_binding_methods =
+	(
+		"fuelLeakRate",			// Was fuelLeakRate_number
+		"massLocked",
+		"atHyperspeed",
+		"dialForwardShield",
+		"dialAftShield",
+		"dialMissileStatus",
+		"dialFuelScoopStatus",
+		"compassMode",
+		"dialIdentEngaged",
+		"alertCondition",
+		"trumbleCount"
+	);
+	
+	action_method_aliases =
+	{
+		"setGuiToStatusScreen" = "doNothing";
+		"initialiseTurret" = "doNothing";
+	};
+	
+	query_method_aliases =
+	{
+		"fuel_leak_rate_number" = "fuelLeakRate_number";
+		"fuel_level_number" = "fuelLevel_number";
+		"legalStatus_number" = "commanderLegalStatus_number";
+	};
+	
+	ai_method_aliases =
+	{
+		"scanForNearestShipWithRole:" = "scanForNearestShipWithPrimaryRole:";
+		"launchDefenceShip"= "launchDefenseShip";
+		"setTargetToStation" = "setTargetToNearestStation";
+		"performDocking" = "doNothing";
+		"exitAI" = ("exitAIWithMessage:", "RESTARTED");
+		"throwSparks" = "ai_throwSparks";
+		"setStateMachine:" = "setAITo:";
+		"launchTrader" = ("launchIndependentShip:", "trader");
+		"launchIndependentShipWithRole:" = "launchIndependentShip:";
+		"scanForNearestMerchantmen" = "scanForNearestMerchantman";
+		"scanForRandomMerchantmen" = "scanForRandomMerchantman";
+		"setUpEscorts" = "doNothing";
+	};
+}

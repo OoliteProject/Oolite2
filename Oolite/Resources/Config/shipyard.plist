@@ -1,0 +1,399 @@
+{
+	"adder-player" =
+	{
+		chance = 0.25;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_SHIELD_BOOSTER"
+		);
+		price = 65000;
+		"standard_equipment" =
+		{
+			extras =
+			(
+				"EQ_HEAT_SHIELD"
+			);
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 1;
+		};
+		techlevel = 4;
+		"weapon_facings" = 1;
+	};
+	"anaconda-player" =
+	{
+		chance = 0.125;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 650000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 3;
+		};
+		techlevel = 8;
+		"weapon_facings" = 15;
+	};
+	"asp-player" =
+	{
+		chance = 0.5;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_NAVAL_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 375000;
+		"standard_equipment" =
+		{
+			extras =
+			(
+                "EQ_SCANNER_SHOW_MISSILE_TARGET",
+                "EQ_MULTI_TARGET"
+			);
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 1;
+		};
+		techlevel = 10;
+		"weapon_facings" = 3;
+	};
+	"boa-player" =
+	{
+		chance = 0.375;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 450000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 3;
+		};
+		techlevel = 6;
+		"weapon_facings" = 15;
+	};
+	"boa-mk2-player" =
+	{
+		chance = 0.325;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_NAVAL_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 495000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_BEAM_LASER";
+			missiles = 5;
+		};
+		techlevel = 7;
+		"weapon_facings" = 15;
+	};
+	"cobra3-player" =
+	{
+		chance = 0.5;
+		"optional_equipment" =
+		(
+            "EQ_CARGO_BAY",
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_NAVAL_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 150000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 3;
+		};
+		techlevel = 6;
+		"weapon_facings" = 15;
+	};
+	"cobramk1-player" =
+	{
+		chance = 0.375;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 100000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 1;
+		};
+		techlevel = 4;
+		"weapon_facings" = 3;
+	};
+	"ferdelance-player" =
+	{
+		chance = 0.25;
+		"optional_equipment" =
+		(
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_GAL_DRIVE",
+			"EQ_NAVAL_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 485000;
+		"standard_equipment" =
+		{
+			extras =
+			(
+				"EQ_PASSENGER_BERTH",
+				"EQ_PASSENGER_BERTH",
+				"EQ_FUEL_SCOOPS",
+				"EQ_ECM",
+				"EQ_ESCAPE_POD",
+				"EQ_ADVANCED_COMPASS",
+				"EQ_SCANNER_SHOW_MISSILE_TARGET",
+				"EQ_FUEL_INJECTION",
+				"EQ_MULTI_TARGET",
+				"EQ_DOCK_COMP",
+				"EQ_SHIELD_BOOSTER"
+			);
+			"forward_weapon_type" = "EQ_WEAPON_BEAM_LASER";
+			missiles = 3;
+		};
+		techlevel = 8;
+		"weapon_facings" = 15;
+	};
+	"moray-player" =
+	{
+		chance = 0.375;
+		"optional_equipment" =
+		(
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_NAVAL_SHIELD_BOOSTER"
+		);
+		price = 125000;
+		"standard_equipment" =
+		{
+			extras =
+			(
+				"EQ_HEAT_SHIELD"
+			);
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 2;
+		};
+		techlevel = 5;
+		"weapon_facings" = 15;
+	};
+	"morayMED-player" =
+	{
+		chance = 0.275;
+		"optional_equipment" =
+		(
+            "EQ_CARGO_BAY",
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_ADVANCED_COMPASS",
+			"EQ_SHIELD_BOOSTER"
+		);
+		price = 145000;
+		"standard_equipment" =
+		{
+			extras =
+			(
+				"EQ_HEAT_SHIELD"
+			);
+			"forward_weapon_type" = "EQ_WEAPON_NONE";
+			missiles = 0;
+		};
+		techlevel = 6;
+		"weapon_facings" = 1;
+	};
+	"python-player" =
+	{
+		chance = 0.5;
+		"optional_equipment" =
+		(
+            "EQ_CARGO_BAY",
+			"EQ_ECM",
+			"EQ_FUEL_SCOOPS",
+			"EQ_PASSENGER_BERTH",
+			"EQ_ESCAPE_POD",
+			"EQ_ENERGY_BOMB",
+			"EQ_ENERGY_UNIT",
+			"EQ_NAVAL_ENERGY_UNIT",
+			"EQ_DOCK_COMP",
+			"EQ_WEAPON_PULSE_LASER",
+			"EQ_WEAPON_BEAM_LASER",
+			"EQ_WEAPON_MINING_LASER",
+			"EQ_WEAPON_MILITARY_LASER",
+			"EQ_FUEL_INJECTION",
+			"EQ_SCANNER_SHOW_MISSILE_TARGET",
+			"EQ_MULTI_TARGET",
+			"EQ_GAL_DRIVE",
+			"EQ_SHIELD_BOOSTER",
+			"EQ_HEAT_SHIELD"
+		);
+		price = 200000;
+		"standard_equipment" =
+		{
+			extras = "";
+			"forward_weapon_type" = "EQ_WEAPON_PULSE_LASER";
+			missiles = 1;
+		};
+		techlevel = 4;
+		"weapon_facings" = 15;
+	};
+}

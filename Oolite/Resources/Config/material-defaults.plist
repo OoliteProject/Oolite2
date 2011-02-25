@@ -1,0 +1,27 @@
+/*	Settings for shader system.
+	
+	While it is possible to override this in the usual fashion, it would not
+	be a very good idea.
+*/
+
+{
+	// Macros prepended to shader source code for ship entities.
+	"ship-prefix-macros" =
+	{
+		IS_OOLITE = 1;
+		OO_USER_DEFINED_BINDINGS = 1;
+		OO_TANGENT_ATTR = 1;
+	};
+
+
+	// Material definition used for DAT files with no TEXTURES section (which specifies material names and texture co-ordinates).
+	"no-textures-material" =
+	{
+		diffuse_map = "";
+		diffuse_color = (0, 0, 0.4);
+		ambient_color = (0, 0, 0.4);
+		emission_color = (0.4, 0.1, 0.1);
+		specular_color = (0.1, 1.0, 0.1);
+		shininess = 4;
+	};
+}

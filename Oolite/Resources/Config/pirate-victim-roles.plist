@@ -1,0 +1,28 @@
+/*	List of roles pirates will attack.
+	
+	Ships whose primary role is among those listed can be located with the AI
+	methods scanForNearestMerchantman and scanForRandomMerchantman. They can
+	also be identified with the JavaScript property isPirateVictim.
+*/
+
+(
+	"player",
+	"trader",
+	"shuttle",
+	
+	// Known trader-like roles from pre-1.70 plug-ins
+	"delta",
+	"gemini",
+	"starseeker",
+	"liner",
+	"strelka",
+	"trident",
+	"coachwhip",
+	"coral",
+	"moraytransport",
+	"woma",
+	"fueltransport",
+	"att1",
+	"impfreighter",
+	"imptanker"
+)

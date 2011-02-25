@@ -1,0 +1,135 @@
+/*
+	Per-GPU type settings.
+	
+	Supported settings:
+		default_shader_level	Shader level used if user hasn't made a choice.
+								Default: "SHADERS_FULL". Possible values:
+								"SHADERS_OFF", "SHADERS_SIMPLE", "SHADERS_FULL".
+		maximum_shader_level	Maximum permitted shader level. Same values as
+								above. Default: "SHADERS_FULL". If set to
+								"SHADERS_OFF", shaders are treated as not
+								available.
+		smooth_points			Enable or disable use of point smoothing.
+								Default: true.
+		smooth_lines			Enable or disable use of line smoothing.
+								Default: true.
+		use_dust_shader			Enable or disable use of vertex shader for
+								dust effect. (This is inefficent on systems
+								where vertex shaders are run on the CPU.)
+								Default: true.
+		texture_units			Number of texture units available to fixed-
+								function multitexturing. Default (and maximum):
+								defined by OpenGL implementation. Can be
+								queried in debug console as:
+								console.glFixedFunctionTextureUnitCount
+								Oolite currently won't use more than two
+								texture units.
+		texture_image_units		Number of texture samplers usable in fragment
+								shaders. Default (and maximum): defined by
+								OpenGL implementation. Can be
+								queried in debug console as:
+								console.glFragmentShaderTextureUnitCount
+	
+	Other keys:
+		match					Defines the conditions in which the settings
+								dictionary is used; see "Matching dictionaries"
+								below.
+		precedence				Affects the order in which settings
+								dictionaries are considered. Higher precedence
+								dictionaries are considered before lower ones.
+								The default precedence is 1.
+	
+	Matching dictionaries:
+		"match" dictionaries contain regular expressions tested against any of
+		"vendor", "renderer", "version" and "extensions". These are displayed
+		near the top of the log by default. Note that "version" here refers to
+		the full version string (shown in parentheses). The "extension" string
+		used for matches is space-separated (no commas as in the log), and
+		extension strings may occur in any order.
+		Multiple regexps may be specified as an array, in which case all must
+		match.
+		Any backslashes in regexps must be escaped (i.e., doubled).
+*/
+{
+	"NVIDIA GeForce FX family" =
+	{
+		match =
+		{
+			vendor = "NVIDIA";
+			//	"GeForce 5###" or "NV3#MAP".
+			renderer = "GeForce.*\\b5\\d{3}(?!\\d)|NV3\\dMAP";
+		};
+		default_shader_level = "SHADERS_SIMPLE";
+		
+		// FIXME: dust apparently invisible with shaders on Mac OS X 10.4.11 if smooth_points. Other systems?
+	};
+	
+	"Intel GMA 900/950 family" =
+	{
+		match =
+		{
+			vendor = "Tungsten|Intel";
+			/*	"GMA<anything>9##" (or 8##) but not 9###. N.b. the Tunsgten
+				Mesa drivers use the chipset number (which may start with 8)
+				rather than the graphics engine number.
+			*/
+			renderer = "(Intel|GMA).*\\b[89]\\d{2}(?!\\d)";
+		};
+		maximum_shader_level = "SHADERS_SIMPLE";
+		default_shader_level = "SHADERS_SIMPLE";
+		smooth_points = false;		// Point smoothing is not supported in hardware.
+		use_dust_shader = false;	// Vertex shaders are emulated on CPU.
+	};
+	
+	"ATI R300 family" =
+	{
+		match =
+		{
+			vendor = "AT[Ii]";
+			renderer = "/\\bR(V?3|[CSV]4)\\d\\d(?!\\d)/";
+		};
+		maximum_shader_level = "SHADERS_SIMPLE";
+		default_shader_level = "SHADERS_SIMPLE";
+	};
+	
+	"ATI R300 family (X/Mesa)" =
+	{
+		match =
+		{
+			vendor = "DRI R300 Project";
+			renderer = "Mesa DRI R300 \\(R(V?3|[CSV]4)";
+		};
+		maximum_shader_level = "SHADERS_SIMPLE";
+		default_shader_level = "SHADERS_SIMPLE";
+		// Anti-aliased lines are done in software.
+		// Assuming same for anti-aliased points.
+		smooth_points = false; 
+		smooth_lines = false;
+	};
+	
+	"ATI R300 family (X/Gallium3D)" =
+	{
+		match =
+		{
+			vendor = "X\\.Org R300 Project";
+			renderer = "Gallium .* on R(V?3|[CSV]4)";
+		};
+		maximum_shader_level = "SHADERS_SIMPLE";
+		default_shader_level = "SHADERS_SIMPLE";
+		// Anti-aliased lines & points are not implemented.
+		// (Correct as of commit df3590f.)
+		smooth_points = false; 
+		smooth_lines = false;
+	};
+	
+	"VirtualBox" =
+	{
+		match =
+		{
+			vendor = "Humper";
+			renderer = "Chromium";
+			version = "Chromium 1\\.9$";
+		};
+		maximum_shader_level = "SHADERS_OFF";
+	};
+}

@@ -367,8 +367,8 @@
 		1A43CC0E13060FDA00BB8FB3 /* VirtualRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VirtualRingBuffer.h; sourceTree = "<group>"; };
 		1A43CC0F13060FDA00BB8FB3 /* VirtualRingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VirtualRingBuffer.m; sourceTree = "<group>"; };
 		1A43CC451306115B00BB8FB3 /* Ogg.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Ogg.xcodeproj; path = ../../OggVorbis/Ogg.xcodeproj; sourceTree = SOURCE_ROOT; };
-		1A9C62E41305FD6500B30EFD /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Oolite-Info.plist"; path = "Resources/Oolite-Info.plist"; sourceTree = "<group>"; };
+		1A9C62E41305FD6500B30EFD /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Oolite-Info.plist"; sourceTree = "<group>"; };
 		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-document.icns"; path = "Resources/oolite-document.icns"; sourceTree = "<group>"; };
 		1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-expansion-document.icns"; path = "Resources/oolite-expansion-document.icns"; sourceTree = "<group>"; };
 		1A9C62EF1305FE2100B30EFD /* oolite-icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-icon.icns"; path = "Resources/oolite-icon.icns"; sourceTree = "<group>"; };
@@ -830,6 +830,7 @@
 				1A9C63991306009100B30EFD /* splash.png */,
 			);
 			name = "Application Resources";
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		29B97323FDCFA39411CA2CEA /* Frameworks and Libraries */ = {
@@ -1127,7 +1128,7 @@
 		1A9C62E31305FD6500B30EFD /* MainMenu.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1A9C62E41305FD6500B30EFD /* en */,
+				1A9C62E41305FD6500B30EFD /* MainMenu.nib */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";

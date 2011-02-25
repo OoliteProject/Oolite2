@@ -88,7 +88,7 @@ MA 02110-1301, USA.
 
 #define kOOLogUnconvertedNSLog @"unclassified.ShipEntity"
 
-#define USEMASC 1
+#define USEMASC 0
 
 
 extern NSString * const kOOLogSyntaxAddShips;

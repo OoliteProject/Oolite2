@@ -545,7 +545,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1F2E5E13184E4D00D06C6C /* libpng.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1A71E6F30BCE340C00CD5C13 /* libpng-for-oolite-graphics.a */;
+			remoteGlobalIDString = 1A71E6F30BCE340C00CD5C13;
 			remoteInfo = libpng;
 		};
 /* End PBXContainerItemProxy section */

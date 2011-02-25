@@ -25,7 +25,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
+#import "OOCocoa.h"
 
 @protocol OOProblemReporting;
 

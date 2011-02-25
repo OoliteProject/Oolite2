@@ -30,7 +30,7 @@ int main (int argc, const char * argv[])
 	
 	path = [[[path stringByDeletingPathExtension] stringByAppendingString:@"-dump"] stringByAppendingPathExtension:@"oomesh"];
 	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:path forReading:NO] autorelease];
-	OOWriteOOMesh(mesh, path, issues);
+	OOWriteOOMesh(mesh, path, kOOMeshWriteWithAnnotations, issues);
 	
     [pool drain];
     return 0;

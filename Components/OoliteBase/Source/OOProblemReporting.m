@@ -26,6 +26,10 @@
 #import "OOProblemReporting.h"
 #import "OOCocoa.h"
 #import "OOLogging.h"
+#import "MYCollectionUtilities.h"
+
+
+NSString * const kOOErrorConvertingProblemReporterDomain = @"org.oolite OOErrorConvertingProblemReporter domain";
 
 
 void OOReportIssueWithArgs(id <OOProblemReporting> probMgr, OOProblemReportType type, NSString *formatKey, va_list args)
@@ -96,7 +100,7 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 	
 	context = OOLocalizeProblemString(probMgr, context);
 	if (desc == nil)  desc = context;
-	else  desc = [NSString stringWithFormat:@"%@ %@", context, desc];
+	else if (context != nil)  desc = [NSString stringWithFormat:@"%@ %@", context, desc];
 	
 	[probMgr addProblemOfType:kOOProblemTypeError message:desc];
 }
@@ -134,6 +138,8 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 }
 
 
+// MARK: <OOProblemReporting>
+
 - (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
 {
 	if (_contextString != nil)
@@ -167,6 +173,84 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 	if (_hadContextString)  OOLogIndent();
 	OOLog(messageClass, @"%@", message);
 	if (_hadContextString)  OOLogOutdent();
+}
+
+
+- (NSString *) localizedProblemStringForKey:(NSString *)string
+{
+	return string;
+}
+
+@end
+
+
+@implementation OOErrorConvertingProblemReporter
+
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		[self setDomain:kOOErrorConvertingProblemReporterDomain];
+		[self setCode:1];
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_error autorelease];
+	_error = nil;
+	[_domain autorelease];
+	_domain = nil;
+	
+	[super dealloc];
+}
+
+
+- (NSError *) error
+{
+	return _error;
+}
+
+
+- (NSString *) domain
+{
+	return _domain;
+}
+
+
+- (void) setDomain:(NSString *)value
+{
+	[_domain autorelease];
+	_domain = [value retain];
+}
+
+
+- (NSInteger) code
+{
+	return _code;
+}
+
+
+- (void) setCode:(NSInteger)value
+{
+	_code = value;
+}
+
+
+// MARK: <OOProblemReporting>
+
+- (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
+{
+	if (_error == nil && type == kOOProblemTypeError)
+	{
+		_error = [NSError errorWithDomain:[self domain]
+									 code:[self code]
+								 userInfo:$dict(NSLocalizedFailureReasonErrorKey, message)];
+		[_error retain];
+	}
 }
 
 

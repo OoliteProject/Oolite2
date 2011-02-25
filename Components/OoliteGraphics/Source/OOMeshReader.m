@@ -83,13 +83,6 @@ typedef enum
 - (BOOL) priv_readArray:(NSArray **)outArray;
 - (BOOL) priv_readProperty:(id *)outProperty;
 
-/*	Advance when reading a dictionary or array.
-	A separator consists of at least one newline, or zero or more newlines
-	with one comma in. A terminator consists of an optional separator of either
-	form, followed by the specified terminator token.
-*/
-//- (ConsumeSeparatorOrTerminatorResult) priv_consumeSeparatorOrTerminator:(OOConfTokenType)terminator;
-
 @end
 
 

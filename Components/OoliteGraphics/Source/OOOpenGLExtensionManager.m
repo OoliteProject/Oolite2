@@ -265,27 +265,6 @@ static NSArray *ArrayOfExtensions(NSString *extensionString)
 	return _useLineSmoothing;
 }
 
-@end
-
-
-static unsigned IntegerFromString(const GLubyte **ioString)
-{
-	if (EXPECT_NOT(ioString == NULL))  return 0;
-	
-	unsigned		result = 0;
-	const GLubyte	*curr = *ioString;
-	
-	while ('0' <= *curr && *curr <= '9')
-	{
-		result = result * 10 + *curr++ - '0';
-	}
-	
-	*ioString = curr;
-	return result;
-}
-
-
-@implementation OOOpenGLExtensionManager (OOPrivate)
 
 #if 0
 
@@ -441,3 +420,20 @@ static void OOBadOpenGLExtensionUsed(void)
 }
 
 #endif
+
+
+static unsigned IntegerFromString(const GLubyte **ioString)
+{
+	if (EXPECT_NOT(ioString == NULL))  return 0;
+	
+	unsigned		result = 0;
+	const GLubyte	*curr = *ioString;
+	
+	while ('0' <= *curr && *curr <= '9')
+	{
+		result = result * 10 + *curr++ - '0';
+	}
+	
+	*ioString = curr;
+	return result;
+}

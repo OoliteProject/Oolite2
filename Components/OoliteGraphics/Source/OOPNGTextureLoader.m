@@ -71,10 +71,6 @@ static void PNGRead(png_structp png, png_bytep bytes, png_size_t size);
 	[super dealloc];
 }
 
-@end
-
-
-@implementation OOPNGTextureLoader (OOPrivate)
 
 - (void)doLoadTexture
 {

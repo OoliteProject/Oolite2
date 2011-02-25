@@ -18,6 +18,8 @@ OOConf format is similar to JSON, but with the following changes:
   the end of a single-line comment wraps it to the next line.
 * The character escape codes \' and \v are permitted. They aren’t produced by
   the generator, though.
+* The root object in an OOConf file must be a dictionary. (JSON also allows
+  arrays at root.)
 
 The following relationships hold:
 * Every valid OOConf file is a valid JavaScript file that does nothing.
@@ -52,13 +54,17 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import "OOProblemReporting.h"
 
 
 @interface NSObject (OOConfParsing)
 
-+ (id) objectFromOOConfString:(NSString *)ooConfString error:(NSError *)error;
-+ (id) objectFromOOConfData:(NSData *)ooConfData error:(NSError *)error;
-+ (id) objectWithContentsOfOOConfURL:(NSURL *)url error:(NSError *)error;
++ (id) objectFromOOConfString:(NSString *)ooConfString error:(NSError **)outError;
++ (id) objectFromOOConfData:(NSData *)ooConfData error:(NSError **)outError;
++ (id) objectWithContentsOfOOConfURL:(NSURL *)url error:(NSError **)outError;
+
++ (id) objectFromOOConfString:(NSString *)ooConfString problemReporter:(id<OOProblemReporting>)problemReporter;
++ (id) objectFromOOConfData:(NSData *)ooConfData problemReporter:(id<OOProblemReporting>)problemReporter;
++ (id) objectWithContentsOfOOConfURL:(NSURL *)url problemReporter:(id<OOProblemReporting>)problemReporter;
 
 @end

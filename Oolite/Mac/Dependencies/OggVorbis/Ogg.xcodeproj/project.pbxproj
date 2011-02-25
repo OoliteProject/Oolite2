@@ -1,0 +1,279 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AE344C812CB6E6900FD8C62 /* ogg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE344C612CB6E6900FD8C62 /* ogg.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE344C912CB6E6900FD8C62 /* os_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE344C712CB6E6900FD8C62 /* os_types.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AE344CD12CB6EA500FD8C62 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AE344CB12CB6EA500FD8C62 /* bitwise.c */; };
+		1AE344CE12CB6EA500FD8C62 /* framing.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AE344CC12CB6EA500FD8C62 /* framing.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1ADE32A40975807900961AE2 /* libogg_for_oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libogg_for_oolite.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE344C612CB6E6900FD8C62 /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
+		1AE344C712CB6E6900FD8C62 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
+		1AE344CB12CB6EA500FD8C62 /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
+		1AE344CC12CB6EA500FD8C62 /* framing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = framing.c; sourceTree = "<group>"; };
+		1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1ADE32A20975807900961AE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DDFF38A45A11DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1ADE32A40975807900961AE2 /* libogg_for_oolite.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* Ogg */ = {
+			isa = PBXGroup;
+			children = (
+				1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */,
+				730F235F09181A3E00AB638C /* Headers */,
+				08FB77ACFE841707C02AAC07 /* Source */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DDFF38A45A11DB9C8B /* Products */,
+			);
+			name = Ogg;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77ACFE841707C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1AE344CB12CB6EA500FD8C62 /* bitwise.c */,
+				1AE344CC12CB6EA500FD8C62 /* framing.c */,
+			);
+			name = Source;
+			path = libogg/src;
+			sourceTree = "<group>";
+		};
+		730F235F09181A3E00AB638C /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				1AE344C612CB6E6900FD8C62 /* ogg.h */,
+				1AE344C712CB6E6900FD8C62 /* os_types.h */,
+			);
+			name = Headers;
+			path = libogg/include/ogg;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1ADE32A00975807900961AE2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE344C812CB6E6900FD8C62 /* ogg.h in Headers */,
+				1AE344C912CB6E6900FD8C62 /* os_types.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1ADE32A30975807900961AE2 /* LibOgg */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1ADE32B7097580C800961AE2 /* Build configuration list for PBXNativeTarget "LibOgg" */;
+			buildPhases = (
+				1AE344FA12CB711800FD8C62 /* Update Code */,
+				1ADE32A00975807900961AE2 /* Headers */,
+				1ADE32A10975807900961AE2 /* Sources */,
+				1ADE32A20975807900961AE2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LibOgg;
+			productName = LibOgg;
+			productReference = 1ADE32A40975807900961AE2 /* libogg_for_oolite.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 730F235809181A3A00AB638C /* Build configuration list for PBXProject "Ogg" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* Ogg */;
+			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1ADE32A30975807900961AE2 /* LibOgg */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1AE344FA12CB711800FD8C62 /* Update Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update Code";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT\"\n./update-library.sh libogg tgz\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1ADE32A10975807900961AE2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE344CD12CB6EA500FD8C62 /* bitwise.c in Sources */,
+				1AE344CE12CB6EA500FD8C62 /* framing.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1ADE32B9097580C800961AE2 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
+				INSTALL_PATH = /usr/local/lib;
+				LLVM_LTO = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = ogg_for_oolite;
+				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		1AE344EE12CB70B800FD8C62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
+				SYMROOT = ../../../../build;
+			};
+			name = Debug;
+		};
+		1AE344EF12CB70B800FD8C62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
+				INSTALL_PATH = /usr/local/lib;
+				LLVM_LTO = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = ogg_for_oolite;
+				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		1AE344F012CB70BF00FD8C62 /* TestRelease */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
+				SYMROOT = ../../../../build;
+			};
+			name = TestRelease;
+		};
+		1AE344F112CB70BF00FD8C62 /* TestRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
+				INSTALL_PATH = /usr/local/lib;
+				LLVM_LTO = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = ogg_for_oolite;
+				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
+				ZERO_LINK = NO;
+			};
+			name = TestRelease;
+		};
+		730F235A09181A3A00AB638C /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
+				SYMROOT = ../../../../build;
+			};
+			name = Deployment;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1ADE32B7097580C800961AE2 /* Build configuration list for PBXNativeTarget "LibOgg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1ADE32B9097580C800961AE2 /* Deployment */,
+				1AE344EF12CB70B800FD8C62 /* Debug */,
+				1AE344F112CB70BF00FD8C62 /* TestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+		730F235809181A3A00AB638C /* Build configuration list for PBXProject "Ogg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				730F235A09181A3A00AB638C /* Deployment */,
+				1AE344EE12CB70B800FD8C62 /* Debug */,
+				1AE344F012CB70BF00FD8C62 /* TestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Deployment;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

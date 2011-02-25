@@ -1,0 +1,340 @@
+/*
+	oolite-default-shader.fragment
+	Default fragment shader for Oolite ships.
+	
+	This is similar to normal ship shaders, but has special controlling
+	macros (like OOSTD_DIFFUSE_MAP, OOSTD_SPECULAR etc.) which are specific
+	to the default shader.
+	
+	A note on the structure of this file: the GLSL implementation on Mac OS X
+	10.4.x can't handle shaders with nested #if/#ifdefs on some systems. I
+	haven't explored this in detail, but it seems to be PowerPC-specific.
+	Avoiding such nesting while dealing with several controlling macros leads
+	to this rather messy code structure.
+	This bug is fixed in Mac OS X 10.5.
+	
+	
+	Copyright © 2007–2010 Jens Ayton
+	
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+	
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+	
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+*/
+
+
+#ifndef OOSTD_DIFFUSE_MAP
+#define OOSTD_DIFFUSE_MAP 0
+#endif
+
+
+#ifndef OOSTD_DIFFUSE_MAP_IS_CUBE_MAP
+#define OOSTD_DIFFUSE_MAP_IS_CUBE_MAP 0
+#endif
+
+#ifndef OOSTD_SPECULAR
+#define OOSTD_SPECULAR 0
+#undef OOSTD_SPECULAR_MAP
+#endif
+
+#ifndef OOSTD_SPECULAR_MAP
+#define OOSTD_SPECULAR_MAP 0
+#endif
+
+#ifndef OOSTD_NORMAL_MAP
+#define OOSTD_NORMAL_MAP 0
+#endif
+
+#ifndef OOSTD_NORMAL_AND_PARALLAX_MAP
+#define OOSTD_NORMAL_AND_PARALLAX_MAP 0
+#endif
+
+#ifndef OOSTD_EMISSION
+#define OOSTD_EMISSION 0
+#endif
+
+#ifndef OOSTD_EMISSION_MAP
+#define OOSTD_EMISSION_MAP 0
+#endif
+
+#ifndef OOSTD_ILLUMINATION_MAP
+#define OOSTD_ILLUMINATION_MAP 0
+#endif
+
+#ifndef OOSTD_EMISSION_AND_ILLUMINATION_MAP
+#define OOSTD_EMISSION_AND_ILLUMINATION_MAP 0
+#endif
+
+
+#if OOSTD_EMISSION_AND_ILLUMINATION_MAP && !OOSTD_EMISSION_MAP
+#undef OOSTD_EMISSION_MAP
+#define OOSTD_EMISSION_MAP 1
+#endif
+#if OOSTD_EMISSION_AND_ILLUMINATION_MAP && OOSTD_ILLUMINATION_MAP
+#undef OOSTD_EMISSION_AND_ILLUMINATION_MAP
+#define OOSTD_EMISSION_AND_ILLUMINATION_MAP 0
+#endif
+#if OOSTD_NORMAL_AND_PARALLAX_MAP && !OOSTD_NORMAL_MAP
+#undef OOSTD_NORMAL_AND_PARALLAX_MAP
+#define OOSTD_NORMAL_AND_PARALLAX_MAP 0
+#endif
+
+
+#if OOSTD_SPECULAR || OOSTD_NORMAL_AND_PARALLAX_MAP
+#define NEED_EYE_VECTOR 1
+#else
+#define NEED_EYE_VECTOR 0
+#endif
+
+#if OOSTD_EMISSION_AND_ILLUMINATION_MAP || OOSTD_ILLUMINATION_MAP
+#define HAVE_ILLUMINATION 1
+#else
+#define HAVE_ILLUMINATION 0
+#endif
+
+
+#if NEED_EYE_VECTOR
+varying vec3			vEyeVector;
+#endif
+
+varying vec2			vTexCoord;
+
+varying vec3			vLight1Vector;
+
+#if OOSTD_DIFFUSE_MAP && !OOSTD_DIFFUSE_MAP_IS_CUBE_MAP
+uniform sampler2D		uDiffuseMap;
+#elif OOSTD_DIFFUSE_MAP && OOSTD_DIFFUSE_MAP_IS_CUBE_MAP
+uniform samplerCube		uDiffuseMap;
+varying vec3			vCubeTexCoords;
+#endif
+
+
+#if OOSTD_SPECULAR_MAP
+uniform sampler2D		uSpecularMap;
+#endif
+
+#if OOSTD_NORMAL_MAP
+uniform sampler2D		uNormalMap;
+#endif
+
+#if OOSTD_EMISSION_MAP
+uniform sampler2D		uEmissionMap;
+#endif
+
+#if OOSTD_ILLUMINATION_MAP
+uniform sampler2D		uIlluminationMap;
+#endif
+
+#if OOSTD_NORMAL_AND_PARALLAX_MAP
+uniform float			uParallaxScale;
+uniform float			uParallaxBias;
+#endif
+
+
+vec4 CalcDiffuseLight(in vec3 lightVector, in vec3 normal, in vec4 lightColor)
+{
+#if OOSTD_NORMAL_MAP
+	float intensity = dot(normal, lightVector);
+#else
+	// dot(v, (0,0,1)) is v.x*0 + v.y*0 + v.z*1 = v.z
+	float intensity = lightVector.z;
+#endif
+	intensity = max(intensity, 0.0);
+	return lightColor * intensity;
+}
+
+
+vec4 CalcSpecularLight(in vec3 lightVector, in vec3 eyeVector, in float exponent, in vec3 normal, in vec4 lightColor)
+{
+#if OOSTD_NORMAL_MAP
+	vec3 reflection = -reflect(lightVector, normal);
+#else
+	/*	reflect(I, N) is defined as I - 2 * dot(N, I) * N
+		If N is (0,0,1), this becomes (I.x,I.y,-I.z).
+		Note that we want it negated as per above.
+	*/
+	vec3 reflection = vec3(-lightVector.x, -lightVector.y, lightVector.z);
+#endif
+	float intensity = dot(reflection, eyeVector);
+	intensity = pow(max(intensity, 0.0), exponent);
+	return lightColor * intensity;
+}
+
+
+#ifndef OO_REDUCED_COMPLEXITY
+uniform float			uHullHeatLevel;
+uniform float			uTime;
+
+
+// Irregular flickering function.
+float Pulse(in float value, in float timeScale)
+{
+	float t = uTime * timeScale;   
+	
+	float s0 = t;
+	s0 -= floor(s0);
+	float sum = abs( s0 - 0.5);
+	
+	float s1 = t * 0.7 - 0.05;
+	s1 -= floor(s1);
+	sum += abs(s1 - 0.5) - 0.25;
+	
+	float s2 = t * 1.3 - 0.3;
+	s2 -= floor(s2);
+	sum += abs(s2 - 0.5) - 0.25;
+	
+	float s3 = t * 5.09 - 0.6;
+	s3 -= floor(s3);
+	sum += abs(s3 - 0.5) - 0.25;
+	
+	return (sum * 0.1 + 0.9) * value;
+}
+
+
+// Colour ramp from black through reddish brown/dark orange to yellow-white.
+vec4 TemperatureGlow(in float level)
+{
+	vec4 result = vec4(0);
+	
+	result.r = level;
+	result.g = level * level * level;
+	result.b = max(level - 0.7, 0.0) * 2.0;
+	result.a = 1.0;
+	
+	return result;	
+}
+#endif
+
+
+void main(void)
+{
+	vec4 totalColor = vec4(0);
+	
+	// Get eye vector
+#if NEED_EYE_VECTOR
+	vec3 eyeVector = normalize(vEyeVector);
+#endif
+	
+	// Get texture coords, using parallax mapping if appropriate
+#if OOSTD_NORMAL_AND_PARALLAX_MAP
+	float parallax = texture2D(uNormalMap, vTexCoord).a;
+	parallax = parallax * uParallaxScale + uParallaxBias;
+	vec2 texCoord = vTexCoord - parallax * eyeVector.xy * vec2(-1.0, 1.0);
+#else
+	#define texCoord vTexCoord
+#endif
+	
+	// Get normal
+#if OOSTD_NORMAL_MAP
+	vec3 normal = normalize(texture2D(uNormalMap, texCoord).rgb - 0.5);
+#else
+	const vec3 normal = vec3(0.0, 0.0, 1.0);
+#endif
+	
+	// Get light vectors
+	vec3 lightVector = normalize(vLight1Vector);
+	
+	// Get ambient colour
+	vec4 ambientLight = gl_LightModel.ambient;
+	
+	// Get emission colour
+#if OOSTD_EMISSION || OOSTD_EMISSION_MAP
+	vec4 emissionColor = vec4(1.0);
+#endif
+#if OOSTD_EMISSION
+	emissionColor *= gl_FrontMaterial.emission;
+#endif
+#if OOSTD_EMISSION_MAP
+	vec4 emissionMapColor = texture2D(uEmissionMap, texCoord);
+	emissionColor *= emissionMapColor;
+#endif
+#if OOSTD_EMISSION || OOSTD_EMISSION_MAP
+	emissionColor.a = 1.0;
+	totalColor += emissionColor;
+#endif
+	
+	// Get illumination colour
+#if OOSTD_EMISSION_AND_ILLUMINATION_MAP
+	// Use alpha channel of emission map as white illumination
+	vec4 illuminationMapLight = vec4(emissionMapColor.aaa, 1.0);
+#elif OOSTD_ILLUMINATION_MAP
+	vec4 illuminationMapLight = texture2D(uIlluminationMap, texCoord);
+#endif
+#ifdef OOSTD_ILLUMINATION_COLOR
+	// OOSTD_ILLUMINATION_COLOR, if defined, is a vec4() declaration.
+	illuminationMapLight *= OOSTD_ILLUMINATION_COLOR;
+#endif
+	
+	vec4 diffuseLight = vec4(0);
+	diffuseLight += CalcDiffuseLight(lightVector, normal, gl_LightSource[1].diffuse);
+	
+#if HAVE_ILLUMINATION
+	diffuseLight += illuminationMapLight;
+#endif
+	
+	// Get specular parameters
+#if OOSTD_SPECULAR_MAP
+	vec4 specularMapColor = texture2D(uSpecularMap, texCoord);
+	float specularExponentLevel = pow(specularMapColor.a, 2.0) + 0.001;
+	specularMapColor.a = 1.0;
+	#define APPLY_MAPPED_EXPONENT exponent = (exponent - 1.0) * specularExponentLevel + 1.0
+#else
+	#define APPLY_MAPPED_EXPONENT exponent += 0.001
+#endif
+	
+	// Calculate specular light
+#if OOSTD_SPECULAR
+	vec4 specularLight = vec4(0);
+	float exponent = gl_FrontMaterial.shininess;
+	APPLY_MAPPED_EXPONENT;
+	specularLight += CalcSpecularLight(lightVector, eyeVector, exponent, normal, gl_LightSource[1].specular);
+	specularLight.a = 1.0;
+#endif
+	
+	vec4 ambientColor = gl_FrontMaterial.ambient;
+	vec4 diffuseColor = gl_FrontMaterial.diffuse;
+#if OOSTD_SPECULAR
+	vec4 specularColor = gl_FrontMaterial.specular;
+#endif
+#if OOSTD_SPECULAR_MAP
+	specularColor *= specularMapColor;
+#endif
+
+#if OOSTD_DIFFUSE_MAP && !OOSTD_DIFFUSE_MAP_IS_CUBE_MAP
+	vec4 diffuseMapColor = texture2D(uDiffuseMap, texCoord);
+#elif OOSTD_DIFFUSE_MAP && OOSTD_DIFFUSE_MAP_IS_CUBE_MAP
+	vec4 diffuseMapColor = textureCube(uDiffuseMap, vCubeTexCoords);
+#endif
+#if OOSTD_DIFFUSE_MAP
+	diffuseMapColor.a = 1.0;
+	diffuseColor *= diffuseMapColor;
+	ambientColor *= diffuseMapColor;
+#endif
+	
+	totalColor += ambientColor * ambientLight + diffuseColor * diffuseLight;
+#if OOSTD_SPECULAR
+	totalColor += specularColor * specularLight;
+#endif
+	
+#ifndef OO_REDUCED_COMPLEXITY
+	// Heat glow
+	float hullHeat = max(uHullHeatLevel - 0.5, 0.0) * 2.0;
+	hullHeat = Pulse(hullHeat * hullHeat, 0.1);
+	totalColor += TemperatureGlow(hullHeat);
+#endif
+	
+	gl_FragColor = totalColor;
+}

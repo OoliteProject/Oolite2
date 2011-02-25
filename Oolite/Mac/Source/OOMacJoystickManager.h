@@ -1,6 +1,6 @@
 /*
 
-OOLeopardJoystickManager.h
+OOMacJoystickManager.h
 By Alex Smith and Jens Ayton
 
 Oolite
@@ -37,7 +37,7 @@ enum
 };
 
 
-@interface OOLeopardJoystickManager: OOJoystickManager
+@interface OOMacJoystickManager: OOJoystickManager
 {
 @private
 	IOHIDManagerRef			hidManager;

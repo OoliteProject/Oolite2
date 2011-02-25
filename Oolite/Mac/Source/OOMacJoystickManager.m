@@ -1,6 +1,6 @@
 /*
 
-OOLeopardJoystickManager.m
+OOMacJoystickManager.m
 By Alex Smith and Jens Ayton
 
 Oolite
@@ -23,24 +23,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOLeopardJoystickManager.h"
-#import "OOLogging.h"
-#import "OOCollectionExtractors.h"
+#import "OOMacJoystickManager.h"
 
 
-#if OLD_MATCHING
-static NSMutableDictionary *DeviceMatchingDictionary(UInt32 inUsagePage, UInt32 inUsage)
-{
-	// create a dictionary to add usage page/usages to
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithUnsignedInt:inUsagePage], @kIOHIDDeviceUsagePageKey,
-			[NSNumber numberWithUnsignedInt:inUsage], @kIOHIDDeviceUsageKey,
-			nil];
-}
-#endif
-
-
-@interface OOLeopardJoystickManager ()
+@interface OOMacJoystickManager ()
 
 - (void) handleInputEvent:(IOHIDValueRef)value;
 - (void) handleJoystickAttach:(IOHIDDeviceRef)device;
@@ -54,7 +40,7 @@ static void HandleInputValueCallback(void * inContext, IOReturn inResult, void* 
 static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef  inIOHIDDeviceRef);
 
 
-@implementation OOLeopardJoystickManager
+@implementation OOMacJoystickManager
 
 - (id) init
 {
@@ -70,13 +56,8 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 			gammaTable[i] = (int) y;
 		}
 		
-		hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);         
-#if OLD_MATCHING
-		NSDictionary *matchingCFDictRef = DeviceMatchingDictionary(kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
-		IOHIDManagerSetDeviceMatching(hidManager, (CFDictionaryRef)matchingCFDictRef);
-#else
+		hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
 		IOHIDManagerSetDeviceMatching(hidManager, NULL);
-#endif
 		
 		IOHIDManagerRegisterDeviceMatchingCallback(hidManager, HandleDeviceMatchingCallback, self);
 		IOHIDManagerRegisterDeviceRemovalCallback(hidManager, HandleDeviceRemovalCallback, self);
@@ -335,23 +316,19 @@ static uint8_t MapHatValue(CFIndex value, CFIndex max)
 //Thunking to Objective-C
 static void HandleDeviceMatchingCallback(void * inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef  inIOHIDDeviceRef)
 {
-#if OLD_MATCHING
-	[(OOLeopardJoystickManager *)inContext handleJoystickAttach:inIOHIDDeviceRef];
-#else
-	[(OOLeopardJoystickManager *)inContext handleDeviceAttach:inIOHIDDeviceRef];
-#endif
+	[(OOMacJoystickManager *)inContext handleDeviceAttach:inIOHIDDeviceRef];
 }
 
 
 
 static void HandleInputValueCallback(void * inContext, IOReturn inResult, void* inSender, IOHIDValueRef  inIOHIDValueRef)
 {
-	[(OOLeopardJoystickManager *)inContext handleInputEvent:inIOHIDValueRef];
+	[(OOMacJoystickManager *)inContext handleInputEvent:inIOHIDValueRef];
 }
 
 
 
 static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, void* inSender, IOHIDDeviceRef  inIOHIDDeviceRef)
 {
-	[(OOLeopardJoystickManager *)inContext handleDeviceRemoval:inIOHIDDeviceRef];
+	[(OOMacJoystickManager *)inContext handleDeviceRemoval:inIOHIDDeviceRef];
 }

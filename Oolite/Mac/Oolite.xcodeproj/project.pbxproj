@@ -369,11 +369,11 @@
 		1A43CC451306115B00BB8FB3 /* Ogg.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Ogg.xcodeproj; path = ../../OggVorbis/Ogg.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A9C62E41305FD6500B30EFD /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Oolite-Info.plist"; sourceTree = "<group>"; };
-		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-document.icns"; path = "Resources/oolite-document.icns"; sourceTree = "<group>"; };
-		1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-expansion-document.icns"; path = "Resources/oolite-expansion-document.icns"; sourceTree = "<group>"; };
-		1A9C62EF1305FE2100B30EFD /* oolite-icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "oolite-icon.icns"; path = "Resources/oolite-icon.icns"; sourceTree = "<group>"; };
-		1A9C62F41305FE4000B30EFD /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1A9C63991306009100B30EFD /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = Resources/splash.png; sourceTree = "<group>"; };
+		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-document.icns"; sourceTree = "<group>"; };
+		1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-expansion-document.icns"; sourceTree = "<group>"; };
+		1A9C62EF1305FE2100B30EFD /* oolite-icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-icon.icns"; sourceTree = "<group>"; };
+		1A9C62F41305FE4000B30EFD /* InfoPlist.strings */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = InfoPlist.strings; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1A9C63991306009100B30EFD /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		1A9C639C130600BC00B30EFD /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1A9C63A2130600FA00B30EFD /* OolitePrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OolitePrefix.pch; sourceTree = "<group>"; };
 		1A9C63AC1306018C00B30EFD /* OoliteApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OoliteApp.h; sourceTree = "<group>"; };
@@ -1136,7 +1136,7 @@
 		1A9C62F31305FE4000B30EFD /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1A9C62F41305FE4000B30EFD /* en */,
+				1A9C62F41305FE4000B30EFD /* InfoPlist.strings */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

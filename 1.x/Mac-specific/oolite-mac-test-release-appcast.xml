@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+	<channel>
+		<docs>http://www.rssboard.org/rss-specification</docs>
+		
+		<title>Oolite test release updates</title>
+		<description>Most recent test releases of Oolite.</description>
+		<link>http://www.oolite.org/</link>
+		<language>en</language>
+		<webMaster>ahruman@oolite.org</webMaster>
+		
+		<item>
+			<title>Version 1.74.2</title>
+			<guid isPermaLink="false">org.aegidian.oolite updatefeed-testrelease 1.74.2</guid>
+			<pubDate>Tue, 25 Jan 2011 22:40:00 +0100</pubDate>
+			
+			<description><![CDATA[
+Changes between Oolite 1.74.1 and Oolite 1.74.2:
+<ul><li>Stopped player from selecting invalid jump destination during jump countdown.</li>
+<li>Fixed docking permissions inconsistencies: all hostile stations now refuse docking permissions.</li>
+<li>Switching to custom views now allowed in a consistent way.</li>
+<li>Weapon repeat rate is now per-weapon.</li>
+<li>Current zoom level is now preserved when switching HUDs.</li>
+<li>Exhaust plume now resets after hyperspace jumps/scripted teleporting/auto-docking.</li>
+<li>Fixed overlapping system confusion when loading games and searching for systems.</li>
+<li>All automatically generated sun skimmers should now be adequately shielded.</li>
+<li>Fixed occasional “bleached”-looking planets on system info screen.</li>
+<li>Fixed wrong distance showing on the short range chart when switching back from the long range chart.</li>
+<li>SystemInfo.systemsInRange() can now be called on a specific SystemInfo object, instead of always applying to the current system.</li>
+<li>New JavaScript event: shipAttackedOther() (inverse of <code>shipBeingAttacked()</code>, called immediately after <code>shipBeingAttacked()</code>).</li>
+<li>If a script removes a piece of equipment in the equipmentDamaged() event handler, no “equipment damaged” message is generated.</li>
+<li>Ship.removeEquipment() now works on damaged equipment.</li>
+<li>Fixed substitution priority for <code>expandDescription()</code> and code>expandMissionText()</code>, the local override dictionary now takes precedence over everything else.</li>
+<li>New shipinfo key: <code>station_roll</code>.</li>
+<li>Fixed some cases where AIs could break group handling.</li>
+<li>Shader errors detected in the link phase (generally, problems involving state shared between the vertex and fragment shader) are now reported properly.</li></ul>
+			]]></description>
+			
+			<enclosure	url="http://download.berlios.de/oolite-linux/oolite-1.74.2-test-mac-full.zip"
+						length="22785837"
+						type="application/octet-stream"
+						sparkle:version="1.74.2"
+						sparkle:dsaSignature="MCwCFBeZ5O5PjHYLKCq4KQxrPChnu1TsAhQlBeBISJ4xI+ivSf7+K0ZKkUtOkA=="
+					/>
+			<sparkle:minimumSystemVersion>10.4</sparkle:minimumSystemVersion>
+		</item>
+	</channel>
+</rss>

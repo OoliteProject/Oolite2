@@ -1,0 +1,13 @@
+{
+    ratings = (
+        {en = Harmless; }, 
+        {en = "Mostly Harmless"; }, 
+        {en = Poor; }, 
+        {en = Average; }, 
+        {en = "Above Average"; }, 
+        {en = Competent; }, 
+        {en = Dangerous; }, 
+        {en = Deadly; }, 
+        {en = Elite; }
+    ); 
+}

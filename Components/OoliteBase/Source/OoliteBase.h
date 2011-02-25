@@ -11,7 +11,10 @@ extern "C" {
 #import "OOAsyncQueue.h"
 #import "OOPriorityQueue.h"
 #import "OOProbabilitySet.h"
-	
+
+#import "OOExcludeObjectEnumerator.h"
+#import "OOFilteringEnumerator.h"
+
 #import "OOMaths.h"
 	
 #import "OOBaseStringParsing.h"

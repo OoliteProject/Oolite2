@@ -8,3 +8,5 @@ SDKROOT									= macosx10.6
 MACOSX_DEPLOYMENT_TARGET				= 10.6
 
 GCC_VERSION								= com.apple.compilers.llvm.clang.1_0
+
+OOLITE_OPTION_MACROS					= OOLITE_MAC_OS_X=1

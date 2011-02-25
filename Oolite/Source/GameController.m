@@ -34,6 +34,7 @@ MA 02110-1301, USA.
 #import "OOJSFrameCallbacks.h"
 #import "OOOpenGLExtensionManager.h"
 #import "NSFileManagerOOExtensions.h"
+#import "OoliteLogOutputHandler.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.GameController"
 
@@ -1076,7 +1077,7 @@ static void RemovePreference(NSString *key)
 }
 
 
-- (void) debugLogProgress:(NSString *)format arguments:(va_list)arguments;
+- (void) debugLogProgress:(NSString *)format arguments:(va_list)arguments
 {
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:arguments] autorelease];
 	[self logProgress:message];
@@ -1085,7 +1086,7 @@ static void RemovePreference(NSString *key)
 
 static NSMutableArray *sMessageStack;
 
-- (void) debugPushProgressMessage:(NSString *)format, ...;
+- (void) debugPushProgressMessage:(NSString *)format, ...
 {
 	if ([self debugMessageTrackingIsOn])
 	{

@@ -28,7 +28,6 @@ SOFTWARE.
 
 #import "OoliteLogOutputHandler.h"
 #import "ResourceManager.h"
-#import "OOLogHeader.h"
 
 
 #define kShowFunctionPrefKey		@"logging-show-function"
@@ -77,7 +76,10 @@ static inline id CacheValue(BOOL inValue)
 
 + (id) sharedLogOutputHandler
 {
-	if (sSingleton == nil)  sSingleton = [[OoliteLogOutputHandler alloc] init];
+	if (sSingleton == nil)
+	{
+		sSingleton = [[OoliteLogOutputHandler alloc] init];
+	}
 	return sSingleton;
 }
 
@@ -97,8 +99,6 @@ static inline id CacheValue(BOOL inValue)
 		[self loadExplicitSettings];
 		
 		OOLogOutputHandlerInit();
-		
-		OOPrintLogHeader();
 	}
 	
 	return self;
@@ -287,12 +287,10 @@ static inline id CacheValue(BOOL inValue)
 
 - (void) loadExplicitSettingsFromDictionary:(NSDictionary *)dictionary
 {
-	id					key = nil;
-	id					value = nil;
-	
+	id key = nil;
 	foreachkey (key, dictionary)
 	{
-		value = [dictionary objectForKey:key];
+		id value = [dictionary objectForKey:key];
 		
 		/*	Supported values:
 			"yes", "true" or "on" -> kTrueToken
@@ -348,7 +346,7 @@ static inline id CacheValue(BOOL inValue)
 */
 - (id) resolveDisplaySettingForMessageClass:(NSString *)messageClass
 {
-	if (messageClass == nil)  return _default;
+	if (EXPECT_NOT(messageClass == nil))  return _default;
 	
 	id value = [_explicitSettings objectForKey:messageClass];
 	

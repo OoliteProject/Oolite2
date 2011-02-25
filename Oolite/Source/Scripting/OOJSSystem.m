@@ -37,7 +37,6 @@
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
 #import "OOEntityFilterPredicate.h"
-#import "OOFilteringEnumerator.h"
 
 
 static JSObject *sSystemPrototype;

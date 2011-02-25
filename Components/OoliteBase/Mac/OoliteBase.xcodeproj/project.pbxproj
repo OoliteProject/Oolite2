@@ -21,6 +21,10 @@
 		1A1F2BD9131839D500D06C6C /* OOPListParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2BD7131839D500D06C6C /* OOPListParsing.m */; };
 		1A1F2C4813183C3E00D06C6C /* OOPriorityQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1F2C4613183C3E00D06C6C /* OOPriorityQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A1F2C4913183C3E00D06C6C /* OOPriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2C4713183C3E00D06C6C /* OOPriorityQueue.m */; };
+		1A1F319613185F3D00D06C6C /* OOFilteringEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1F319413185F3D00D06C6C /* OOFilteringEnumerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A1F319713185F3D00D06C6C /* OOFilteringEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F319513185F3D00D06C6C /* OOFilteringEnumerator.m */; };
+		1A1F31A913185FE500D06C6C /* OOExcludeObjectEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1F31A713185FE500D06C6C /* OOExcludeObjectEnumerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A1F31AA13185FE500D06C6C /* OOExcludeObjectEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F31A813185FE500D06C6C /* OOExcludeObjectEnumerator.m */; };
 		1A458BC811F909BD000CBCF0 /* OOIsNumberLiteral.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */; };
 		1A60EDE811B6FD8600224F2D /* OODeepCopy.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A60EDE611B6FD8500224F2D /* OODeepCopy.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -96,6 +100,10 @@
 		1A1F2BD7131839D500D06C6C /* OOPListParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPListParsing.m; sourceTree = "<group>"; };
 		1A1F2C4613183C3E00D06C6C /* OOPriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPriorityQueue.h; sourceTree = "<group>"; };
 		1A1F2C4713183C3E00D06C6C /* OOPriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPriorityQueue.m; sourceTree = "<group>"; };
+		1A1F319413185F3D00D06C6C /* OOFilteringEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFilteringEnumerator.h; sourceTree = "<group>"; };
+		1A1F319513185F3D00D06C6C /* OOFilteringEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFilteringEnumerator.m; sourceTree = "<group>"; };
+		1A1F31A713185FE500D06C6C /* OOExcludeObjectEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOExcludeObjectEnumerator.h; sourceTree = "<group>"; };
+		1A1F31A813185FE500D06C6C /* OOExcludeObjectEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOExcludeObjectEnumerator.m; sourceTree = "<group>"; };
 		1A458BC611F909BD000CBCF0 /* OOIsNumberLiteral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIsNumberLiteral.h; sourceTree = "<group>"; };
 		1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIsNumberLiteral.m; sourceTree = "<group>"; };
 		1A60EDE611B6FD8500224F2D /* OODeepCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODeepCopy.h; sourceTree = "<group>"; };
@@ -219,6 +227,10 @@
 				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
 				1A1F29F713182B5D00D06C6C /* NSScannerOOExtensions.h */,
 				1A1F29F813182B5D00D06C6C /* NSScannerOOExtensions.m */,
+				1A1F31A713185FE500D06C6C /* OOExcludeObjectEnumerator.h */,
+				1A1F31A813185FE500D06C6C /* OOExcludeObjectEnumerator.m */,
+				1A1F319413185F3D00D06C6C /* OOFilteringEnumerator.h */,
+				1A1F319513185F3D00D06C6C /* OOFilteringEnumerator.m */,
 				1A1F2BD6131839D500D06C6C /* OOPListParsing.h */,
 				1A1F2BD7131839D500D06C6C /* OOPListParsing.m */,
 				1A1F2C4613183C3E00D06C6C /* OOPriorityQueue.h */,
@@ -348,6 +360,8 @@
 				1A1F2BB21318389000D06C6C /* OOSimpleMethodType.h in Headers */,
 				1A1F2BD8131839D500D06C6C /* OOPListParsing.h in Headers */,
 				1A1F2C4813183C3E00D06C6C /* OOPriorityQueue.h in Headers */,
+				1A1F319613185F3D00D06C6C /* OOFilteringEnumerator.h in Headers */,
+				1A1F31A913185FE500D06C6C /* OOExcludeObjectEnumerator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +476,8 @@
 				1A1F2BB31318389000D06C6C /* OOSimpleMethodType.m in Sources */,
 				1A1F2BD9131839D500D06C6C /* OOPListParsing.m in Sources */,
 				1A1F2C4913183C3E00D06C6C /* OOPriorityQueue.m in Sources */,
+				1A1F319713185F3D00D06C6C /* OOFilteringEnumerator.m in Sources */,
+				1A1F31AA13185FE500D06C6C /* OOExcludeObjectEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

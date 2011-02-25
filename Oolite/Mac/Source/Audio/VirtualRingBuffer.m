@@ -22,6 +22,7 @@
 
 
 #define kOOLogUnconvertedNSLog @"unclassified.VirtualRingBuffer"
+#undef DEBUG
 
 
 @implementation VirtualRingBuffer
@@ -233,7 +234,7 @@ void *allocateVirtualBuffer(OOUInteger bufferLength)
     }
     if (realAddress != originalAddress) {
 #if DEBUG
-        NSLog(@"allocateVirtualBuffer: vm_allocate 2nd time didn't return same address (%p vs %p)", originalAddress, realAddress);
+        NSLog(@"allocateVirtualBuffer: vm_allocate 2nd time didn't return same address (%p vs %p)", (void *)originalAddress, (void *)realAddress);
 #endif
         goto errorReturn;
     }
@@ -255,7 +256,7 @@ void *allocateVirtualBuffer(OOUInteger bufferLength)
     }
     if (memoryEntryLength != bufferLength) {
 #if DEBUG
-        NSLog(@"mach_make_memory_entry: size changed (from %0x to %0x)", bufferLength, memoryEntryLength);
+        NSLog(@"mach_make_memory_entry: size changed (from %0lx to %0lx)", (long)bufferLength, (long)memoryEntryLength);
 #endif
         goto errorReturn;
     }
@@ -274,7 +275,7 @@ void *allocateVirtualBuffer(OOUInteger bufferLength)
     }
     if (virtualAddress != realAddress + bufferLength) {
 #if DEBUG
-        NSLog(@"vm_map: didn't return correct address (%p vs %p)", realAddress + bufferLength, virtualAddress);
+        NSLog(@"vm_map: didn't return correct address (%p vs %p)", (void *)(realAddress + bufferLength), (void *)virtualAddress);
 #endif
         goto errorReturn;
     }

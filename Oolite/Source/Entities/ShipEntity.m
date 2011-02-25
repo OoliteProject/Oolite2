@@ -36,10 +36,8 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
-#import "OOFilteringEnumerator.h"
 #import "OORoleSet.h"
 #import "OOShipGroup.h"
-#import "OOExcludeObjectEnumerator.h"
 
 #import "OOCharacter.h"
 #import "AI.h"

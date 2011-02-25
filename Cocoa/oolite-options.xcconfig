@@ -1,0 +1,6 @@
+#include "oolite-version.xcconfig"
+#include "oolite-targets.xcconfig"
+#include "oolite-snapshot.xcconfig"
+
+
+OOLITE_OPTION_MACROS				= OOLITE_MAC_OS_X=1

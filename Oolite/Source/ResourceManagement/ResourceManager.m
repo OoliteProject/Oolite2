@@ -31,7 +31,6 @@ MA 02110-1301, USA.
 #import "OoliteLogOutputHandler.h"
 
 #import "OOJSScript.h"
-#import "OOPListScript.h"
 
 
 static NSString * const kOOLogCacheUpToDate				= @"dataCache.upToDate";

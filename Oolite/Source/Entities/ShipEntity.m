@@ -5262,29 +5262,16 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 
 - (void) setShipScript:(NSString *)script_name
 {
-	NSMutableDictionary		*properties = nil;
-	NSArray					*actions = nil;
-	
-	properties = [NSMutableDictionary dictionary];
-	[properties setObject:self forKey:@"ship"];
-	
 	[script autorelease];
-	script = [OOScript jsScriptFromFileNamed:script_name properties:properties];
 	
+	NSDictionary *properties = [NSDictionary dictionaryWithObject:self forKey:@"ship"];
+	
+	script = [OOScript jsScriptFromFileNamed:script_name properties:properties];
 	if (script == nil)
 	{
-		actions = [shipinfoDictionary oo_arrayForKey:@"launch_actions"];
-		if (actions)  [properties setObject:actions forKey:@"legacy_launchActions"];	
-		actions = [shipinfoDictionary oo_arrayForKey:@"script_actions"];
-		if (actions)  [properties setObject:actions forKey:@"legacy_scriptActions"];
-		actions = [shipinfoDictionary oo_arrayForKey:@"death_actions"];
-		if (actions)  [properties setObject:actions forKey:@"legacy_deathActions"];
-		actions = [shipinfoDictionary oo_arrayForKey:@"setup_actions"];
-		if (actions)  [properties setObject:actions forKey:@"legacy_setupActions"];
-		
-		script = [OOScript jsScriptFromFileNamed:@"oolite-default-ship-script.js"
-									  properties:properties];
+		script = [OOScript jsScriptFromFileNamed:@"oolite-default-ship-script.js" properties:properties];
 	}
+	
 	[script retain];
 }
 

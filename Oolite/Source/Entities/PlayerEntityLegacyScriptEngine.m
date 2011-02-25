@@ -321,69 +321,8 @@ OOINLINE OOEntityStatus RecursiveRemapStatus(OOEntityStatus status)
 }
 
 
-static BOOL sRunningScript = NO;
-
-
 - (void) checkScript
 {
-	BOOL						wasRunningScript = sRunningScript;
-	OOEntityStatus				status, restoreStatus;
-	
-	[self setScriptTarget:self];
-	
-	OOLogPushIndent();
-	OOLog(@"script.trace.runWorld", @"----- Running world script with state %@", [self status_string]);
-	OOLogIndentIf(@"script.trace.runWorld");
-	
-	/*	World scripts can potentially be invoked recursively, through
-		scriptActionOnTarget: and possibly other mechanisms. This is bad, but
-		that's the way it is. Legacy world scripts rely on only seeing certain
-		player statuses once per "event". To ensure this, we must lie about
-		the player's status when invoked recursively.
-		
-		Of course, there are also methods in the game that rely on status not
-		lying. However, I don't believe any that rely on these particular
-		statuses can be legitimately invoked by scripts. The alternative would
-		be to track the "status-as-seen-by-scripts" separately from the "real"
-		status, which'd risk synchronization problems.
-		
-		In summary, scriptActionOnTarget: is bad, and calling it from scripts
-		rather than AIs is very bad.
-		-- Ahruman, 20080302
-		
-		Addendum: scriptActionOnTarget: is currently not in the whitelist for
-		script methods. Let's hope this doesn't turn out to be a problem.
-		-- Ahruman, 20090208
-	*/
-	status = [self status];
-	restoreStatus = status;
-	NS_DURING
-		if (sRunningScript)
-		{
-			status = RecursiveRemapStatus(status);
-			[self setStatus:status];
-			if (RecursiveRemapStatus(status) != restoreStatus)
-			{
-				OOLog(@"script.trace.runWorld.recurse.lying", @"----- Running world script recursively and temporarily changing player status from %@ to %@.", OOStringFromEntityStatus(restoreStatus), OOStringFromEntityStatus(status));
-			}
-			else
-			{
-				OOLog(@"script.trace.runWorld.recurse", @"----- Running world script recursively.", OOStringFromEntityStatus(restoreStatus), OOStringFromEntityStatus(status));
-			}
-		}
-		sRunningScript = YES;
-		
-		// After all that, actually running the scripts is trivial.
-		[[worldScripts allValues] makeObjectsPerformSelector:@selector(runWithTarget:) withObject:self];
-	NS_HANDLER
-		OOLog(kOOLogException, @"***** Exception running world scripts: %@ : %@", [localException name], [localException reason]);
-	NS_ENDHANDLER
-	
-	// Restore anti-recursion measures.
-	sRunningScript = wasRunningScript;
-	if (status != restoreStatus)  [self setStatus:restoreStatus];
-	
-	OOLogPopIndent();
 }
 
 

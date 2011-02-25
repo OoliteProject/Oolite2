@@ -302,7 +302,6 @@ static JSFunctionSpec sShipMethods[] =
 	{ "remove",					ShipRemove,					0 },
 	{ "removeEquipment",		ShipRemoveEquipment,		1 },
 	{ "restoreSubEntities",		ShipRestoreSubEntities,		0 },
-	{ "__runLegacyScriptActions", ShipRunLegacyScriptActions,	2 },	// Deliberately not documented
 	{ "selectNewMissile",		ShipSelectNewMissile,		0 },
 	{ "sendAIMessage",			ShipSendAIMessage,			1 },
 	{ "setAI",					ShipSetAI,					1 },
@@ -1310,44 +1309,6 @@ static JSBool ShipRemove(JSContext *context, uintN argc, jsval *vp)
 		[thisEnt removeScript];
 	}
 	return RemoveOrExplodeShip(context, argc, vp, NO);
-	
-	OOJS_NATIVE_EXIT
-}
-
-
-// __runLegacyScriptActions(target : Ship, actions : Array)
-static JSBool ShipRunLegacyScriptActions(JSContext *context, uintN argc, jsval *vp)
-{
-	OOJS_NATIVE_ENTER(context)
-	
-	ShipEntity				*thisEnt = nil;
-	PlayerEntity			*player = nil;
-	ShipEntity				*target = nil;
-	NSArray					*actions = nil;
-	
-	player = OOPlayerForScripting();
-	GET_THIS_SHIP(thisEnt);
-	
-	if (argc > 1)  actions = OOJSNativeObjectFromJSValue(context, OOJS_ARGV[1]);
-	if (EXPECT_NOT(argc != 2 ||
-				   !JSVAL_IS_OBJECT(OOJS_ARGV[0]) ||
-				   !JSShipGetShipEntity(context, JSVAL_TO_OBJECT(OOJS_ARGV[0]), &target) ||
-				   ![actions isKindOfClass:[NSArray class]]))
-	{
-		OOJSReportBadArguments(context, @"Ship", @"__runLegacyScriptActions", argc, OOJS_ARGV, nil, @"target and array of actions");
-		return NO;
-	}
-	
-	if (target != nil)	// Not stale reference
-	{
-		[player setScriptTarget:thisEnt];
-		[player runUnsanitizedScriptActions:actions
-						  allowingAIMethods:YES
-							withContextName:[NSString stringWithFormat:@"<ship \"%@\" legacy actions>", [thisEnt name]]
-								  forTarget:target];
-	}
-	
-	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
 }

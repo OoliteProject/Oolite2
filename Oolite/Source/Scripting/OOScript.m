@@ -24,7 +24,6 @@ MA 02110-1301, USA.
 
 #import "OOScript.h"
 #import "OOJSScript.h"
-#import "OOPListScript.h"
 #import "Universe.h"
 #import "OOJavaScriptEngine.h"
 #import "ResourceManager.h"
@@ -32,7 +31,6 @@ MA 02110-1301, USA.
 
 static NSString * const kOOLogScriptSubclassResponsibility	= @"general.error.subclassResponsibility.OOScript";
 static NSString * const kOOLogLoadScriptJavaScript			= @"script.load.javaScript";
-static NSString * const kOOLogLoadScriptPList				= @"script.load.pList";
 static NSString * const kOOLogLoadScriptOK					= @"script.load.parseOK";
 static NSString * const kOOLogLoadScriptParseError			= @"script.load.parseError";
 static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
@@ -63,16 +61,12 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 		}
 	}
 	
-	// Second, try to load a JavaScript.
+	// Second, try to load a JavaScript script.js.
 	if (result == nil)
 	{
 		filePath = [path stringByAppendingPathComponent:@"script.js"];
 		if ([fmgr fileExistsAtPath:filePath]) foundScript = YES;
-		else
-		{
-			filePath = [path stringByAppendingPathComponent:@"script.es"];
-			if ([fmgr fileExistsAtPath:filePath]) foundScript = YES;
-		}
+		
 		if (foundScript)
 		{
 			OOLog(kOOLogLoadScriptJavaScript, @"Trying to load JavaScript script %@", filePath);
@@ -90,23 +84,7 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 		}
 	}
 	
-	// Third, try to load a plist script.
-	if (result == nil)
-	{
-		filePath = [path stringByAppendingPathComponent:@"script.plist"];
-		if ([fmgr fileExistsAtPath:filePath])
-		{
-			foundScript = YES;
-			OOLog(kOOLogLoadScriptPList, @"Trying to load property list script %@", filePath);
-			OOLogIndentIf(kOOLogLoadScriptPList);
-			
-			result = [OOPListScript scriptsInPListFile:filePath];
-			if (result != nil)  OOLog(kOOLogLoadScriptOK, @"Successfully loaded property list script %@", filePath);
-			else  OOLog(kOOLogLoadScriptParseError, @"*** Failed to load property list script %@", filePath);
-			
-			OOLogOutdentIf(kOOLogLoadScriptPList);
-		}
-	}
+	// There is no third.
 	
 	if (result == nil && foundScript)
 	{
@@ -164,16 +142,12 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 	
 	NSString *extension = [[filePath pathExtension] lowercaseString];
 	
-	if ([extension isEqualToString:@"js"] || [extension isEqualToString:@"es"])
+	if ([extension isEqualToString:@"js"])
 	{
 		NSArray		*result = nil;
 		OOScript	*script = [OOJSScript scriptWithPath:filePath properties:nil];
 		if (script != nil) result = [NSArray arrayWithObject:script];
 		return result;
-	}
-	else if ([extension isEqualToString:@"plist"])
-	{
-		return [OOPListScript scriptsInPListFile:filePath];
 	}
 	
 	OOLog(@"script.load.badName", @"***** Don't know how to load a script from %@.", filePath);
@@ -189,7 +163,7 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 	if ([fileName length] == 0)  return nil;
 	
 	extension = [[fileName pathExtension] lowercaseString];
-	if ([extension isEqualToString:@"js"] || [extension isEqualToString:@"es"])
+	if ([extension isEqualToString:@"js"])
 	{
 		path = [ResourceManager pathForFileNamed:fileName inFolder:@"Scripts"];
 		if (path == nil)
@@ -198,11 +172,6 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 			return nil;
 		}
 		return [OOJSScript scriptWithPath:path properties:properties];
-	}
-	else if ([extension isEqualToString:@"plist"])
-	{
-		OOLog(@"script.load.badName", @"***** Can't load script named %@ - legacy scripts are not supported in this context.", fileName);
-		return nil;
 	}
 	
 	OOLog(@"script.load.badName", @"***** Don't know how to load a script from %@.", fileName);

@@ -25,7 +25,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
+#import "OOCocoa.h"
 #import <stdarg.h>
 
 
@@ -80,3 +80,32 @@ NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *str
 - (id) initWithMeshFilePath:(NSString *)path forReading:(BOOL)forReading;
 
 @end
+
+
+/*	Implementation of OOProblemReporting that converts the first reported
+	kOOProblemTypeError problem into an NSError.
+*/
+@interface OOErrorConvertingProblemReporter: NSObject <OOProblemReporting>
+{
+@private
+	NSError					*_error;
+	NSString				*_domain;
+	NSInteger				_code;
+}
+
+- (NSError *) error;
+
+/*	Optionally set error domain and code; defaults are
+	kOOErrorConvertingProblemReporterDomain and 1. These will only be effective
+	if no error has been reported yet.
+*/
+- (NSString *) domain;
+- (void) setDomain:(NSString *)value;
+
+- (NSInteger) code;
+- (void) setCode:(NSInteger)value;
+
+@end
+
+
+extern NSString * const kOOErrorConvertingProblemReporterDomain;

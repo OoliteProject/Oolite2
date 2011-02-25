@@ -47,7 +47,7 @@ int main (int argc, const char * argv[])
 	}
 	
 	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:@"merged-mesh.oomesh" forReading:NO] autorelease];
-	OOWriteOOMesh(mergedMesh, @"merged-mesh.oomesh", issues);
+	OOWriteOOMesh(mergedMesh, @"merged-mesh.oomesh", kOOMeshWriteWithAnnotations, issues);
 	
 	issues = [[[OOSimpleProblemReportManager alloc] initWithMeshFilePath:@"merged-mesh.dat" forReading:NO] autorelease];
 	OOWriteDAT(mergedMesh, @"merged-mesh.dat", issues);

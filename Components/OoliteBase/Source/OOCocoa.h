@@ -393,3 +393,14 @@ enum {
 #ifndef OO_DEBUG
 #define OO_DEBUG 0
 #endif
+
+
+/*	Private methods are declared in categories called OOPrivate. In Mac OS X,
+	this is defined as an empty macro, turning the categories into class
+	continuations for better error checking. This may work with some compilers
+	on other platforms, but I don’t know which.
+	-- Ahruman 2011-02-17
+*/
+#if OOLITE_MAC_OS_X
+#define OOPrivate
+#endif

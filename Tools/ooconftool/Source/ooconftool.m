@@ -32,6 +32,13 @@ static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format
 static id Load(NSString *inFile, Format inFormat);
 static id Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact) __attribute__((noreturn));
 
+/*	Convert number literal strings to number objects.
+	
+	This is used for OpenStep format property lists, since they don't have a
+	native distinction between strings and numbers.
+ */
+static id StringsToNumbers(id object);
+
 static void Print(NSString *format, ...);
 static void Printv(NSString *format, va_list inArgs);
 static void EPrint(NSString *format, ...) __attribute__((unused));
@@ -191,11 +198,18 @@ static id Load(NSString *inFile, Format inFormat)
 	{
 		NSString *errDesc = nil;
 		// This method is discouraged in Mac OS X and will probably be deprecated in 10.7, but the replacement isn't in GNUstep 1.20.1.
-		id result = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:&errDesc];
+		NSPropertyListFormat format;
+		id result = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListMutableContainers format:&format errorDescription:&errDesc];
 		if (result == nil)
 		{
 			Fail(@"Input file could not be interpreted as a property list file. %@", errDesc);
 		}
+		
+		if (format == NSPropertyListOpenStepFormat)
+		{
+			result = StringsToNumbers(result);
+		}
+		
 		return result;
 	}
 	else if (inFormat == kFormatOOConf || inFormat == kFormatJSON)
@@ -241,6 +255,48 @@ static id Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact)
 	}
 	
 	exit(EXIT_SUCCESS);
+}
+
+
+static id StringsToNumbers(id object)
+{
+	if ([object isKindOfClass:[NSDictionary class]])
+	{
+		NSArray *keys = [object allKeys];
+		id key = nil;
+		foreach (key, keys)
+		{
+			id oldValue = [object objectForKey:key];
+			id newValue = StringsToNumbers(oldValue);
+			if (newValue != oldValue)  [object setObject:newValue forKey:key];
+		}
+	}
+	else if ([object isKindOfClass:[NSArray class]])
+	{
+		NSUInteger i, count = [object count];
+		for (i = 0; i < count; i++)
+		{
+			id oldValue = [object objectAtIndex:i];
+			id newValue = StringsToNumbers(oldValue);
+			if (newValue != oldValue)  [object replaceObjectAtIndex:i withObject:newValue];
+		}
+	}
+	else if ([object isKindOfClass:[NSString class]])
+	{
+		if (OOIsNumberLiteral(object, NO))
+		{
+			if ([object rangeOfString:@"."].location == NSNotFound)
+			{
+				object = [NSNumber numberWithLongLong:[object longLongValue]];
+			}
+			else
+			{
+				object = [NSNumber numberWithDouble:[object doubleValue]];
+			}
+
+		}
+	}
+	return object;
 }
 
 

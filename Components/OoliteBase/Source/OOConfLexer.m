@@ -24,7 +24,6 @@
 */
 
 #import "OOConfLexer.h"
-#import "OOCocoa.h"
 #import "OOFunctionAttributes.h"
 #import "OOProblemReporting.h"
 #import "MYCollectionUtilities.h"
@@ -85,6 +84,15 @@
 		_state.end = _state.cursor + [inData length];
 		_state.tokenLength = 0;
 		_state.lineNumber = 1;
+		
+		// Skip UTF-8 BOM if present.
+		if (_state.cursor + 3 <= _state.end &&
+			_state.cursor[0] == 0xEF &&
+			_state.cursor[0] == 0xBB &&
+			_state.cursor[0] == 0xBF)
+		{
+			_state.cursor += 3;
+		}
 	}
 	
 	return self;

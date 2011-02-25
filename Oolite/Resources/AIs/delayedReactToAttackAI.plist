@@ -1,0 +1,12 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("randomPauseAI: 0.7 2.5");
+		UPDATE = ("setStateTo: REACT");
+	};
+	REACT =
+	{
+		ENTER = (fightOrFleeMissile, setTargetToPrimaryAggressor, "setAITo: interceptAI.plist");
+		UPDATE = (exitAI);
+	};
+}

@@ -1,0 +1,72 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("setSpeedFactorTo: 0.1", "setStateTo: LOOK_FOR_SPLINTERS");
+	};
+	"LOOK_FOR_ROCKS" =
+	{
+		ENTER = (performIdle);
+		"TARGET_FOUND" = (setTargetToFoundTarget, "setStateTo: BREAK_ROCKS");
+		"NOTHING_FOUND" = ("setStateTo: DOCK_WITH_STATION");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		UPDATE = (scanForRocks, "pauseAI: 10.0");
+	};
+	"BREAK_ROCKS" =
+	{
+		ENTER = (performMining);
+		"TARGET_DESTROYED" = ("setStateTo: LOOK_FOR_SPLINTERS");
+		"TARGET_LOST" = ("setStateTo: LOOK_FOR_SPLINTERS");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+	};
+	"LOOK_FOR_SPLINTERS" =
+	{
+		ENTER = (performIdle, checkForFullHold);
+		"TARGET_FOUND" = (setTargetToFoundTarget, "setStateTo: COLLECT_STUFF");
+		"NOTHING_FOUND" = ("setStateTo: LOOK_FOR_ROCKS");
+		"HOLD_FULL" = ("setStateTo: DOCK_WITH_STATION");
+		"NO_CARGO_BAY" = ("setStateTo: DOCK_WITH_STATION"); 
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		UPDATE = (scanForRandomLoot, "pauseAI: 8.0");
+	};
+	"COLLECT_STUFF" =
+	{
+		ENTER = (performCollect);
+		FRUSTRATED = ("setStateTo: LOOK_FOR_SPLINTERS");
+		"CARGO_SCOOPED" = ("setStateTo: LOOK_FOR_SPLINTERS");
+		"HOLD_FULL" = ("setStateTo: DOCK_WITH_STATION");
+		"TARGET_LOST" = ("setStateTo: LOOK_FOR_SPLINTERS");
+		"COLLISION" = ("setStateTo: LOOK_FOR_SPLINTERS");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+	};
+	"DOCK_WITH_STATION" =
+	{
+		ENTER = (setTargetToStation, "setDesiredRangeTo: 5000.0", performIntercept);
+		"DESIRED_RANGE_ACHIEVED" = ("setAITo: dockingAI.plist");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		"TARGET_LOST" = ("setStateTo: GO_TO_STATION");
+	};
+    "GO_TO_STATION" = 
+	{
+		ENTER = (setTargetToNearestStation, "setDesiredRangeTo: 5000.0", setDestinationToTarget, checkCourseToDestination);
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = ("setAITo: gotoWaypointAI.plist");
+		"DESIRED_RANGE_ACHIEVED" = ("setAITo: dockingAI.plist");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget, broadcastDistressMessage, "setStateTo: FLEE");
+		UPDATE = (setTargetToNearestStation, "setDesiredRangeTo: 5000.0", setDestinationToTarget,
+					checkCourseToDestination, "pauseAI: 10.0");
+	}; 
+	FLEE =
+	{
+		ENTER = ("setDesiredRangeTo: 25600", performFlee);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		"REACHED_SAFETY" = ("setSpeedTo: 0.0", performIdle);
+		"ENERGY_FULL" = (performIdle, "setStateTo: LOOK_FOR_SPLINTERS");
+		"TARGET_LOST" = (performIdle, "setStateTo: LOOK_FOR_SPLINTERS");
+	};
+}

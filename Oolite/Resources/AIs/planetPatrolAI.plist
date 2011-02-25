@@ -1,0 +1,36 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("setStateTo: NEXT_COORDS");
+	};
+	"NEXT_COORDS" =
+	{
+		"APPROACH_COORDINATES" = ("setStateTo: GO_TO_COORDS");
+		UPDATE = (setPlanetPatrolCoordinates);
+	};
+	"GO_TO_COORDS" =
+	{
+		ENTER =
+		(
+			patrolReportIn,
+			"setSpeedFactorTo: 0.0",
+			setDestinationFromCoordinates,
+			checkCourseToDestination
+		);
+		"WAYPOINT_SET" = ("setAITo: gotoWaypointAI.plist");
+		"COURSE_OK" = ("setSpeedFactorTo: 0.5", performFlyToRangeFromDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: NEXT_COORDS", "pauseAI: 0.0");
+		"FRUSTRATED" = ("setStateTo: NEXT_COORDS");
+		"TARGET_FOUND" = (setTargetToFoundTarget, checkTargetLegalStatus);
+		"TARGET_MINOR_OFFENDER" = (markTargetForFines);
+		"TARGET_MARKED" = ("sendTargetCommsMessage: [police-warning]");
+		"TARGET_OFFENDER" = ("sendTargetCommsMessage: [police-attack-warning]", "setAITo: interceptAI.plist", groupAttackTarget);
+		"TARGET_FUGITIVE" = ("setAITo: interceptAI.plist", groupAttackTarget);
+		ATTACKED = (setTargetToPrimaryAggressor, "setAITo: interceptAI.plist");
+		"INCOMING_MISSILE" = (setTargetToFoundTarget, "markTargetForOffence: 15",
+					"setAITo: delayedReactToAttackAI.plist");
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7",
+					"sendTargetCommsMessage: [police-attack-warning]", "setAITo: interceptAI.plist");
+		UPDATE = (setDestinationFromCoordinates, checkCourseToDestination, scanForOffenders, "pauseAI: 7.5");
+	};
+}

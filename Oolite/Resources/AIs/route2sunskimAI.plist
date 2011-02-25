@@ -1,0 +1,48 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("setStateTo: LOOK_FOR_SUN");
+	};
+	"LOOK_FOR_SUN" =
+	{
+		ENTER = (setSunSkimStartCoordinates);
+		"WAIT_FOR_SUN" = (setSunSkimStartCoordinates);
+		"APPROACH_COORDINATES" = ("setStateTo: HEAD_FOR_SUN");
+        "EXITED WITCHSPACE" = ("switchAITo: route1traderAI.plist"); 
+		UPDATE = ("pauseAI: 10");
+	};
+	"HEAD_FOR_SUN" =
+	{
+		ENTER = ("setDesiredRangeTo: 50000", "pauseAI: 0");
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = ("setAITo: gotoWaypointAI.plist");
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: GO_TO_SKIM");
+		ATTACKED = ("setAITo: traderInterceptAI.plist", fightOrFleeHostiles);
+		"INCOMING_MISSILE" = ("setAITo: traderInterceptAI.plist", "setStateTo: INCOMING_MISSILE", "randomPauseAI: 0.5 2.0");
+        "EXITED WITCHSPACE" = ("switchAITo: route1traderAI.plist"); 
+		"RESTARTED" = ("setStateTo: LOOK_FOR_SUN");
+		UPDATE = (setDestinationFromCoordinates, checkCourseToDestination, "pauseAI: 15");
+	};
+	"GO_TO_SKIM" =
+	{
+		ENTER = (setSunSkimStartCoordinates, setDestinationFromCoordinates, "setDesiredRangeTo: 100", "setSpeedFactorTo: 1.0", performFlyToRangeFromDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: SKIM_SUN");
+	};
+	"SKIM_SUN" =
+	 {
+		ENTER = (setSunSkimEndCoordinates, setDestinationFromCoordinates, "setDesiredRangeTo: 50", "setSpeedFactorTo: 2.0", performFlyToRangeFromDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: LEAVE_SUN");
+	};
+	"LEAVE_SUN" =
+	{
+		ENTER = (setSunSkimExitCoordinates, setDestinationFromCoordinates, "setDesiredRangeTo: 250", "setSpeedFactorTo: 2.0", performFlyToRangeFromDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("addFuel: 70", "setStateTo: EXIT_SYSTEM");
+	};
+	"EXIT_SYSTEM" =
+	{
+		UPDATE = (performHyperSpaceExit);
+		"WITCHSPACE OKAY" = (wormholeEscorts);
+		"WITCHSPACE BLOCKED" = (setTargetToFoundTarget, setDestinationWithinTarget, "setDesiredRangeTo: 10000.0", performFlyToRangeFromDestination);
+		"WITCHSPACE UNAVAILABLE" = ("setAITo: route1traderAI.plist");
+	};
+}

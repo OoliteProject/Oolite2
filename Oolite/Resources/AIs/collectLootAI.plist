@@ -1,0 +1,16 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("setStateTo: LOOT");
+	};
+	LOOT =
+	{
+		ENTER = (performCollect);
+		ATTACKED = ("exitAIWithMessage: ATTACKED");
+		"COLLISION" = (exitAI);
+		"CARGO_SCOOPED" = ("exitAIWithMessage: CARGO_SCOOPED");
+		"HOLD_FULL" = ("exitAIWithMessage: HOLD_FULL");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "exitAIWithMessage: INCOMING_MISSILE");
+		"TARGET_LOST" = (exitAI);
+	};
+}

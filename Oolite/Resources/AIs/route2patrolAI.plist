@@ -1,0 +1,92 @@
+{
+	GLOBAL =
+	{
+		ENTER = (switchLightsOff, "setStateTo: HEAD_FOR_SUN");
+	};
+	"HEAD_FOR_PLANET" =
+	{
+		ENTER = (setCourseToPlanet, "setDesiredRangeTo: 50000.0", checkCourseToDestination);
+		RESTARTED = ("setStateTo: INBOUND_LOOT");
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = ("setStateTo: GO_TO_WAYPOINT_PLANET");
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: HEAD_FOR_SUN");
+		"AEGIS_CLOSE_TO_MAIN_PLANET" = ("setStateTo: HEAD_FOR_SUN");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+		"TARGET_FOUND" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+		UPDATE = (scanForOffenders, checkCourseToDestination, "pauseAI: 10.0");
+	};
+	"GO_TO_WAYPOINT_PLANET" =
+	{
+		ENTER = (setDesiredRangeForWaypoint, checkCourseToDestination);
+		RESTARTED = ("setStateTo: INBOUND_LOOT");
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = (setDesiredRangeForWaypoint, checkCourseToDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: HEAD_FOR_PLANET");
+		"AEGIS_CLOSE_TO_MAIN_PLANET" = ("setStateTo: HEAD_FOR_SUN");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+	};
+	"HEAD_FOR_SUN" =
+	{
+		ENTER = (setSunSkimStartCoordinates);
+		RESTARTED = ("setStateTo: OUTBOUND_LOOT");
+		"WAIT_FOR_SUN" = ("pauseAI: 10.0", setSunSkimStartCoordinates);
+		"APPROACH_COORDINATES" = (setDestinationFromCoordinates, "setDesiredRangeTo: 25000", checkCourseToDestination);
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = ("setStateTo: GO_TO_WAYPOINT_SUN");
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: HEAD_FOR_PLANET");
+		"CLOSE_TO_SUN" = ("setStateTo: HEAD_FOR_PLANET");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+		"TARGET_FOUND" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+		UPDATE = (scanForOffenders, checkCourseToDestination, "pauseAI: 10.0");
+	};
+	"GO_TO_WAYPOINT_SUN" =
+	{
+		ENTER = (setDesiredRangeForWaypoint, checkCourseToDestination);
+		RESTARTED = ("setStateTo: OUTBOUND_LOOT");
+		"COURSE_OK" = (setSpeedToCruiseSpeed, performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = (setDesiredRangeForWaypoint, checkCourseToDestination);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: HEAD_FOR_SUN");
+		"CLOSE_TO_SUN" = ("setStateTo: HEAD_FOR_PLANET");
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+	};
+	"OUTBOUND_LOOT" =
+	{
+		ENTER = ("setSpeedTo: 0.0", performIdle);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+		"TARGET_FOUND" = (setTargetToFoundTarget, "setAITo: collectLootAI.plist");
+		"NOTHING_FOUND" = (checkAegis, "setStateTo: HEAD_FOR_SUN");
+		UPDATE = (scanForLoot, "pauseAI: 10.0");
+	};
+	"INBOUND_LOOT" =
+	{
+		ENTER = ("setSpeedTo: 0.0", performIdle);
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		ATTACKED = (setTargetToPrimaryAggressor, groupAttackTarget);
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, deployEscorts, groupAttackTarget);
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "markTargetForOffence: 7", deployEscorts, groupAttackTarget);
+		"INCOMING_MISSILE" = (fightOrFleeMissile, setTargetToPrimaryAggressor, deployEscorts, groupAttackTarget);
+		"TARGET_FOUND" = (setTargetToFoundTarget, "setAITo: collectLootAI.plist");
+		"NOTHING_FOUND" = (checkAegis, "setStateTo: HEAD_FOR_PLANET");
+		UPDATE = (scanForLoot, "pauseAI: 10.0");
+	};
+}

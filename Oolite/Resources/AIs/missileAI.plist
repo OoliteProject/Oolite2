@@ -1,0 +1,28 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("pauseAI: 0.5", "setSpeedFactorTo: 1.0");
+		ECM = ("setStateTo: EXPLODE");
+		"TARGET_LOST" = ("setStateTo: EXPLODE");
+		UPDATE = ("setStateTo: ATTACK_SHIP");
+	};
+	"ATTACK_SHIP" =
+	{
+		ENTER = ("setDesiredRangeTo: 25.0", performIntercept);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: DETONATE");
+		"TARGET_DESTROYED" = ("setStateTo: EXPLODE");
+		"TARGET_LOST" = ("setStateTo: EXPLODE");
+		ECM = ("setStateTo: EXPLODE");
+		"GONE_BEYOND_RANGE" = ("setStateTo: EXPLODE");
+		UPDATE = ("setDesiredRangeTo: 30000.0", checkDistanceTravelled, "setDesiredRangeTo: 25.0", "pauseAI: 5.0");
+	};
+	DETONATE =
+	{
+		ENTER = ("setDesiredRangeTo: 250.0", dealEnergyDamageWithinDesiredRange, becomeExplosion);
+	};
+	EXPLODE =
+	{
+		ENTER = ("randomPauseAI: 0.25 0.75");
+		UPDATE = (becomeExplosion);
+	};
+}

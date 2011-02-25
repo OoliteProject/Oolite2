@@ -1,0 +1,89 @@
+{
+	GLOBAL =
+	{
+		ENTER = ("setStateTo: BEGIN_BUSINESS");
+	};
+	"FLYING_ESCORT" =
+	{
+		ENTER = (performEscort);
+		RESTARTED = ("setStateTo: NEXT_TARGET");
+		"GROUP_ATTACK_TARGET" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		ESCORTING = ("setDesiredRangeTo: 0.0", performEscort);
+		"INCOMING_MISSILE" = ("messageMother: INCOMING_MISSILE");
+		"ATTACKED" = ("messageMother: ATTACKED", "messageMother: ESCORT_ATTACKED");
+		"NOT_ESCORTING" = ("setStateTo: LOOK_FOR_BUSINESS");
+		"TARGET_LOST" = ("setStateTo: LOOK_FOR_BUSINESS");
+		"TARGET_DESTROYED" = ("setStateTo: LOOK_FOR_BUSINESS");
+		"ENTER WORMHOLE" = ("setStateTo: ENTER_WORMHOLE");
+		UPDATE = (escortCheckMother, "pauseAI: 15");
+	};
+	"BEGIN_BUSINESS" =
+	{
+		"LAUNCHED OKAY" = ("setStateTo: CLEAR_STATION");
+		ATTACKED = (setTargetToPrimaryAggressor, "setAITo: interceptAI.plist");
+		ESCORTING = ("setDesiredRangeTo: 0.0", "setStateTo: FLYING_ESCORT");
+		"NOT_ESCORTING" = ("setStateTo: LOOK_FOR_BUSINESS");
+		UPDATE = (escortCheckMother, "pauseAI: 7.5");
+	};
+	"ENTER_WORMHOLE" =
+	 {
+		ENTER =
+		(
+			setDestinationToTarget,
+			"setDesiredRangeTo: 1.0",
+			"setSpeedFactorTo: 1.0",
+			performFlyToRangeFromDestination
+		);
+		"PLAYER WITCHSPACE" = (enterTargetWormhole);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: LOOK_FOR_BUSINESS");
+	};
+	"CLEAR_STATION" = {
+		ENTER = (
+			getWitchspaceEntryCoordinates, 
+			setDestinationFromCoordinates, 
+			"setDesiredRangeTo: 5000.0", 
+			"setSpeedFactorTo: 0.50", 
+			performFlyToRangeFromDestination,
+			escortCheckMother
+		);
+		"DESIRED_RANGE_ACHIEVED" = ("setStateTo: LOOK_FOR_BUSINESS");
+		"TARGET_FOUND" = (setTargetToFoundTarget, suggestEscort, "pauseAI: 1.0");
+  		ESCORTING = ("setDesiredRangeTo: 0.0", "setStateTo: FLYING_ESCORT");
+		"NOT_ESCORTING" = (scanForFormationLeader);
+		"NOTHING_FOUND" = ("setSpeedFactorTo: 0.50", performFlyToRangeFromDestination);
+		UPDATE = ("pauseAI: 15.0");
+	};
+	"LOOK_FOR_BUSINESS" =
+	{
+		ENTER = (scanForFormationLeader);
+		RESTARTED = ("setStateTo: BEGIN_BUSINESS");
+		"LAUNCHED OKAY" = ("setStateTo: CLEAR_STATION");
+		ATTACKED = (setTargetToPrimaryAggressor, "setAITo: interceptAI.plist");
+		ESCORTING = ("setDesiredRangeTo: 0.0", "setStateTo: FLYING_ESCORT");
+		"NOT_ESCORTING" = ("rollD: 10");
+		"ROLL_1" = ("setStateTo: CHOOSE_NEW_CAREER");
+		"TARGET_FOUND" = (setTargetToFoundTarget, suggestEscort);
+		"NOTHING_FOUND" = ("setStateTo: CHOOSE_NEW_CAREER");
+		"FRUSTRATED" = ("setStateTo: CHOOSE_NEW_CAREER");
+		UPDATE = ("pauseAI: 7.5", scanForFormationLeader);
+	};
+    "NEXT_TARGET" = {
+		ENTER = (requestNewTarget); 
+		RESTARTED = (requestNewTarget); 
+		"NOTHING_FOUND" = (switchLightsOff, "setStateTo: FLYING_ESCORT"); 
+		"TARGET_FOUND" = (setTargetToFoundTarget, "setAITo: interceptAI.plist"); 
+		"MOTHER_LOST" = (switchLightsOff, "setStateTo: BEGIN_BUSINESS"); 
+		"INCOMING_MISSILE" = ("messageMother: INCOMING_MISSILE");
+    }; 
+    "CHOOSE_NEW_CAREER" = {
+		ENTER = (checkOwnLegalStatus); 
+		"SELF_CLEAN" = ("switchAITo: route1patrolAI.plist");
+		"SELF_MINOR_OFFENDER" = (checkForFullHold);
+		"SELF_OFFENDER" = (checkForFullHold);
+		"SELF_FUGITIVE" = ("switchAITo: pirateAI.plist");
+		"SELF_THARGOID" = ("switchAITo: thargoidAI.plist");
+		"NO_CARGO_BAY" = ("switchAITo: route1patrolAI.plist");
+		"HOLD_FULL" = ("switchAITo: route1traderAI.plist");
+		"HOLD_NOT_FULL" = ("switchAITo: pirateAI.plist");
+    }; 
+}

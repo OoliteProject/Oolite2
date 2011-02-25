@@ -1,0 +1,65 @@
+{
+	GLOBAL =
+	{
+		ENTER = (switchLightsOn, "setStateTo: ATTACK_SHIP");
+	};
+	"ATTACK_SHIP" =
+	{
+		ENTER = (performAttack);
+        ATTACKED = (setTargetToPrimaryAggressor, "setStateTo: ATTACK_SHIP"); 
+		"ENERGY_LOW" = ("setStateTo: FLEE");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		"TARGET_DESTROYED" = ("setStateTo: DOCK_WITH_STATION");
+		"TARGET_LOST" = ("setStateTo: CLEAR_STATION"); 
+	};
+	"CLEAR_STATION" =
+	{
+		ENTER = 
+		(
+			getWitchspaceEntryCoordinates, setDestinationFromCoordinates,
+			"setDesiredRangeTo: 100.0", "setSpeedFactorTo: 0.75",
+			performFlyToRangeFromDestination, "pauseAI: 5"
+		);
+		ATTACKED = (switchLightsOn, setTargetToFoundTarget, "setStateTo: ATTACK_SHIP");
+		"GROUP_ATTACK_TARGET" = (switchLightsOn, setTargetToFoundTarget, "setStateTo: ATTACK_SHIP");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		UPDATE = ("setStateTo: DOCK_WITH_STATION", "pauseAI: 5.0");
+	};
+	"DOCK_WITH_STATION" =
+	{
+		ENTER = 
+		(
+			switchLightsOff,
+			setTargetToStation,
+			"setDesiredRangeTo: 5000.0",
+			setDestinationToTarget,
+			checkCourseToDestination
+		);
+		"COURSE_OK" = ("setSpeedFactorTo: 0.35", performFlyToRangeFromDestination);
+		"WAYPOINT_SET" = ("setAITo: gotoWaypointAI.plist");
+		"ACCEPT_DISTRESS_CALL" = (setTargetToFoundTarget, "setAITo: interceptAI.plist");
+		"OFFENCE_COMMITTED" = (setTargetToFoundTarget, "sendTargetCommsMessage: [police-attack-warning]", 
+								"markTargetForOffence: 7", "setAITo: interceptAI.plist");
+		ATTACKED = (switchLightsOn, setTargetToFoundTarget, "setStateTo: ATTACK_SHIP");
+		"GROUP_ATTACK_TARGET" = (switchLightsOn, setTargetToFoundTarget, "setStateTo: ATTACK_SHIP");
+		"DESIRED_RANGE_ACHIEVED" = ("setAITo: dockingAI.plist");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+		UPDATE = 
+		(
+			setTargetToStation,
+			"setDesiredRangeTo: 5000.0",
+			setDestinationToTarget,
+			checkCourseToDestination,
+			"pauseAI: 10.0"
+		);
+	};
+	FLEE =
+	{
+		ENTER = ("setDesiredRangeTo: 25600", performFlee);
+		"ENERGY_FULL" = ("setStateTo: ATTACK_SHIP");
+		"TARGET_LOST" = ("setStateTo: DOCK_WITH_STATION");
+		"TARGET_DESTROYED" = ("setStateTo: DOCK_WITH_STATION");
+		"REACHED_SAFETY" = ("pauseAI: 10.0", "setStateTo: DOCK_WITH_STATION");
+		"INCOMING_MISSILE" = (fightOrFleeMissile, "setStateTo: FLEE");
+	};
+}

@@ -1,6 +1,6 @@
 /*
 
-OOShaderUniformMethodType.m
+OOSimpleMethodType.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -45,12 +45,9 @@ SOFTWARE.
 	supports binding to methods with no parameters, so this is not a problem.
 */
 
-#import "OOShaderUniformMethodType.h"
-
-#if OO_SHADERS || !defined(NDEBUG)
-
-
+#import "OOSimpleMethodType.h"
 #import "OOMaths.h"
+
 
 static BOOL				sInited = NO;
 static const char		*sTemplates[kOOShaderUniformTypeCount];
@@ -290,5 +287,3 @@ double OOCallFloatMethod(id object, SEL selector, IMP method, OOShaderUniformTyp
 			return 0;
 	}
 }
-
-#endif	// OO_SHADERS

@@ -1,4 +1,4 @@
-#import "OOFunctionAttributes.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 // Utilities for working with NSPoints as 2D vectors.

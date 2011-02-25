@@ -25,7 +25,6 @@ MA 02110-1301, USA.
 #import "PlayerEntityScriptMethods.h"
 
 #import "Universe.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 
 
@@ -70,7 +69,7 @@ MA 02110-1301, USA.
 
 - (void)setFuelLeakRate:(float)value
 {
-	fuel_leak_rate = OOMax_f(value, 0.0f);
+	fuel_leak_rate = fmaxf(value, 0.0f);
 }
 
 

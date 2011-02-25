@@ -28,7 +28,6 @@ SOFTWARE.
 #import "OOProbabilisticTextureManager.h"
 #import "ResourceManager.h"
 #import "OOTexture.h"
-#import "OOCollectionExtractors.h"
 
 
 @implementation OOProbabilisticTextureManager

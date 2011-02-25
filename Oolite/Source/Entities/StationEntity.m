@@ -24,7 +24,6 @@ MA 02110-1301, USA.
 
 #import "StationEntity.h"
 #import "ShipEntityAI.h"
-#import "OOCollectionExtractors.h"
 #import "OOStringParsing.h"
 
 #import "Universe.h"
@@ -42,6 +41,7 @@ MA 02110-1301, USA.
 #import "OOJSScript.h"
 #import "OODebugGLDrawing.h"
 #import "OODebugFlags.h"
+#import "OOGeometryGLHelpers.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.StationEntity"
 
@@ -369,7 +369,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		return instructions(universalID, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
 	}
 
-	BoundingBox bb = [ship boundingBox];
+	OOBoundingBox bb = [ship boundingBox];
 	if ((port_dimensions.x < (bb.max.x - bb.min.x) || port_dimensions.y < (bb.max.y - bb.min.y)) && 
 		(port_dimensions.y < (bb.max.x - bb.min.x) || port_dimensions.x < (bb.max.y - bb.min.y)))
 	{
@@ -703,7 +703,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 }
 
 
-- (Vector) portUpVectorForShipsBoundingBox:(BoundingBox) bb
+- (Vector) portUpVectorForShipsBoundingBox:(OOBoundingBox) bb
 {
 	BOOL twist = ((port_dimensions.x < port_dimensions.y) ^ (bb.max.x - bb.min.x < bb.max.y - bb.min.y));
 
@@ -802,7 +802,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	max_defense_ships = [dict oo_unsignedIntForKey:@"max_defense_ships" defaultValue:3];
 	max_police = [dict oo_unsignedIntForKey:@"max_police" defaultValue:STATION_MAX_POLICE];
 	equipmentPriceFactor = [dict oo_nonNegativeFloatForKey:@"equipment_price_factor" defaultValue:1.0];
-	equipmentPriceFactor = OOMax_f(equipmentPriceFactor, 0.5f);
+	equipmentPriceFactor = fmaxf(equipmentPriceFactor, 0.5f);
 	hasNPCTraffic = [dict oo_fuzzyBooleanForKey:@"has_npc_traffic" defaultValue:YES];
 	hasPatrolShips = [dict oo_fuzzyBooleanForKey:@"has_patrol_ships" defaultValue:NO];
 	suppress_arrival_reports = [dict oo_boolForKey:@"suppress_arrival_reports" defaultValue:NO];
@@ -859,7 +859,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	port_position = dock_pos;
 	port_orientation = dock_q;
 
-	BoundingBox bb = [port_model boundingBox];
+	OOBoundingBox bb = [port_model boundingBox];
 	port_dimensions = make_vector(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
 
 	Vector vk = vector_forward_from_quaternion(dock_q);
@@ -895,8 +895,8 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	
 	Vector port_pos = [self getPortPosition];
 	
-	BoundingBox shipbb = [ship boundingBox];
-	BoundingBox arbb = [ship findBoundingBoxRelativeToPosition: port_pos InVectors: vi : vj : vk];
+	OOBoundingBox shipbb = [ship boundingBox];
+	OOBoundingBox arbb = [ship findBoundingBoxRelativeToPosition: port_pos InVectors: vi : vj : vk];
 	
 	// port dimensions..
 	GLfloat ww = port_dimensions.x;
@@ -925,7 +925,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		
 		OOLog(@"docking.debug", @"Normalised port dimensions are %g x %g x %g.  Player bounding box is at %@-%@ -- %s (%X), range: %g",
 			ww * 2.0, hh * 2.0, dd,
-			VectorDescription(arbb.min), VectorDescription(arbb.max),
+			OOVectorDescription(arbb.min), OOVectorDescription(arbb.max),
 			inLane ? "in lane" : "out of lane", laneFlags,
 			range);
 	}
@@ -1289,7 +1289,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 {
 	if (![ship isShip])  return;
 	
-	BoundingBox bb = [ship boundingBox];
+	OOBoundingBox bb = [ship boundingBox];
 	if ((port_dimensions.x < (bb.max.x - bb.min.x) || port_dimensions.y < (bb.max.y - bb.min.y)) && 
 		(port_dimensions.y < (bb.max.x - bb.min.x) || port_dimensions.x < (bb.max.y - bb.min.y)) && ![ship isPlayer])
 	{

@@ -25,13 +25,13 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
-
-#import "OOMaths.h"
+#import <OoliteBase/OoliteBase.h>
+#import "OOTriangle.h"
 
 @class ShipEntity, Octree;
 
-@interface Geometry : NSObject
+
+@interface Geometry: NSObject
 {
 	// a geometry essentially consists of a whole bunch of Triangles.
 	// Note: simply making these unsigned will break octree generation. If trying it, don't forget to flush the cache. -- Ahruman 20081101

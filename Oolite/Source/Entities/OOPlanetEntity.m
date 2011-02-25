@@ -36,10 +36,8 @@ MA 02110-1301, USA.
 #import "ShipEntityAI.h"
 #import "OOCharacter.h"
 
-#import "OOMaths.h"
 #import "ResourceManager.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 
 #import "OOPlanetTextureGenerator.h"
 #import "OOSingleTextureMaterial.h"
@@ -329,7 +327,7 @@ static OOColor *ColorWithHSBColor(Vector c)
 
 - (NSString*) descriptionComponents
 {
-	return [NSString stringWithFormat:@"position: %@ radius: %g m", VectorDescription([self position]), [self radius]];
+	return [NSString stringWithFormat:@"position: %@ radius: %g m", OOVectorDescription([self position]), [self radius]];
 }
 
 

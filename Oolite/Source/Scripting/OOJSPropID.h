@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import <jsapi.h>
-#import "OOFunctionAttributes.h"
+#import <OoliteBase/OoliteBase.h>
 
 /*
 	OOJSID(const char * [literal])

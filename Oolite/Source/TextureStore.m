@@ -25,16 +25,13 @@ MA 02110-1301, USA.
 #import "TextureStore.h"
 #if !NEW_PLANETS
 
-#import "OOMaths.h"
-
 #ifndef NDEBUG
 #import "Universe.h"
 #import "MyOpenGLView.h"
-#else
-#import "OOColor.h"
 #endif
 
-#import "OOCollectionExtractors.h"
+#import "OOColor.h"
+
 
 #define DEBUG_DUMP			(	0	&& !defined(NDEBUG))
 

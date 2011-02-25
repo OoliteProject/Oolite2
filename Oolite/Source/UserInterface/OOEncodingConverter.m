@@ -28,8 +28,6 @@ SOFTWARE.
 
 #import "OOEncodingConverter.h"
 #import "OOCache.h"
-#import "OOCollectionExtractors.h"
-#import "OOLogging.h"
 
 
 /*	Using compatibility mapping - converting strings to Unicode form KC - would

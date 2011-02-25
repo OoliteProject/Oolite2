@@ -28,7 +28,7 @@ SOFTWARE.
 
 */
 
-#import "OOMaths.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOColor.h"
 
 
@@ -50,9 +50,9 @@ typedef struct
 OODebugWFState OODebugBeginWireframe(BOOL ignoreZ);
 void OODebugEndWireframe(OODebugWFState state);
 
-OOINLINE void OODebugDrawBoundingBox(BoundingBox box);
+OOINLINE void OODebugDrawBoundingBox(OOBoundingBox box);
 OOINLINE void OODebugDrawBoundingBoxBetween(Vector min, Vector max);
-OOINLINE void OODebugDrawColoredBoundingBox(BoundingBox box, OOColor *color);
+OOINLINE void OODebugDrawColoredBoundingBox(OOBoundingBox box, OOColor *color);
 void OODebugDrawColoredBoundingBoxBetween(Vector min, Vector max, OOColor *color);
 
 // Normals are drawn as cyan lines
@@ -84,13 +84,13 @@ OOINLINE void OODebugDrawBoundingBoxBetween(Vector min, Vector max)
 }
 
 
-OOINLINE void OODebugDrawBoundingBox(BoundingBox box)
+OOINLINE void OODebugDrawBoundingBox(OOBoundingBox box)
 {
 	OODebugDrawBoundingBoxBetween(box.min, box.max);
 }
 
 
-OOINLINE void OODebugDrawColoredBoundingBox(BoundingBox box, OOColor *color)
+OOINLINE void OODebugDrawColoredBoundingBox(OOBoundingBox box, OOColor *color)
 {
 	OODebugDrawColoredBoundingBoxBetween(box.min, box.max, color);
 }

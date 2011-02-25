@@ -27,7 +27,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OODebuggerInterface.h"
 
 @class OODebugMonitor;
@@ -58,3 +58,13 @@ typedef enum
 				  port:(uint16_t)port;		// Pass 0 for default port
 
 @end
+
+
+#if OOLITE_MAC_OS_X
+/*
+	In Mac OS X 10.6, but not GNUstep 1.20.1, NSStreamDelegate is a formal
+	protocol.
+*/
+@interface OODebugTCPConsoleClient (NSStreamDelegate) <NSStreamDelegate>
+@end
+#endif

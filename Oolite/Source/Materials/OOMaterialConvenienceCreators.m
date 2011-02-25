@@ -32,7 +32,6 @@ SOFTWARE.
 #import "OOShaderMaterial.h"
 #import "OOSingleTextureMaterial.h"
 #import "OOMultiTextureMaterial.h"
-#import "OOCollectionExtractors.h"
 #import "Universe.h"
 #import "OOCacheManager.h"
 #import "OOTexture.h"

@@ -26,11 +26,6 @@ SOFTWARE.
 
 
 #import "OOTextureScaling.h"
-#import "OOFunctionAttributes.h"
-#import <stdlib.h>
-#import "OOLogging.h"
-#import "OOMaths.h"
-#import "OOCPUInfo.h"
 
 
 #define DUMP_MIP_MAPS	0

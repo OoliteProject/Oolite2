@@ -28,17 +28,14 @@ MA 02110-1301, USA.
 #import "ShipEntityAI.h"
 #import "ShipEntityScriptMethods.h"
 
-#import "OOMaths.h"
 #import "Universe.h"
 #import "OOShaderMaterial.h"
 #import "OOOpenGLExtensionManager.h"
 
 #import "ResourceManager.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
-#import "NSScannerOOExtensions.h"
 #import "OOFilteringEnumerator.h"
 #import "OORoleSet.h"
 #import "OOShipGroup.h"
@@ -57,6 +54,7 @@ MA 02110-1301, USA.
 #import "Octree.h"
 #import "OOColor.h"
 #import "OOPolygonSprite.h"
+#import "OOGeometryGLHelpers.h"
 
 #import "OOParticleSystem.h"
 #import "StationEntity.h"
@@ -269,7 +267,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	max_missiles = [shipDict oo_intForKey:@"max_missiles" defaultValue:missiles];
 	if (max_missiles > SHIPENTITY_MAX_MISSILES) max_missiles = SHIPENTITY_MAX_MISSILES;
 	if (missiles > max_missiles) missiles = max_missiles;
-	missile_load_time = OOMax_d(0.0, [shipDict oo_doubleForKey:@"missile_load_time" defaultValue:0.0]); // no negative load times
+	missile_load_time = fmax(0.0, [shipDict oo_doubleForKey:@"missile_load_time" defaultValue:0.0]); // no negative load times
 	missile_launch_time = [UNIVERSE getTime] + missile_load_time;
 	
 	// upgrades:
@@ -846,7 +844,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 		if ([self behaviour] == BEHAVIOUR_TRACK_AS_TURRET)  subtype = @"(turret)";
 		else  subtype = @"(subentity)";
 		
-		return [NSString stringWithFormat:@"\"%@\" position: %@ %@", [self name], VectorDescription([self position]), subtype];
+		return [NSString stringWithFormat:@"\"%@\" position: %@ %@", [self name], OOVectorDescription([self position]), subtype];
 	}
 }
 
@@ -993,7 +991,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (BoundingBox)findBoundingBoxRelativeToPosition:(Vector)opv InVectors:(Vector) _i :(Vector) _j :(Vector) _k
+- (OOBoundingBox)findBoundingBoxRelativeToPosition:(Vector)opv InVectors:(Vector) _i :(Vector) _j :(Vector) _k
 {
 	return [[self mesh] findBoundingBoxRelativeToPosition:opv
 													basis:_i :_j :_k
@@ -1573,7 +1571,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (BoundingBox)findSubentityBoundingBox
+- (OOBoundingBox)findSubentityBoundingBox
 {
 	return [[self mesh] findSubentityBoundingBoxWithPosition:position rotMatrix:rotMatrix];
 }
@@ -2103,9 +2101,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		[se update:delta_t];
 		if ([se isShip])
 		{
-			BoundingBox sebb = [se findSubentityBoundingBox];
-			bounding_box_add_vector(&totalBoundingBox, sebb.max);
-			bounding_box_add_vector(&totalBoundingBox, sebb.min);
+			OOBoundingBox sebb = [se findSubentityBoundingBox];
+			OOBoundingBoxAddVector(&totalBoundingBox, sebb.max);
+			OOBoundingBoxAddVector(&totalBoundingBox, sebb.min);
 		}
 	}
 }
@@ -3256,7 +3254,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		
 	if (range < slow_down_range)
 	{
-		desired_speed = OOMax_d(target_speed, 0.4 * maxFlightSpeed);
+		desired_speed = fmax(target_speed, 0.4 * maxFlightSpeed);
 		
 		// avoid head-on collision
 		if ((range < 0.5 * distance)&&(behaviour == BEHAVIOUR_ATTACK_FLY_TO_TARGET_SIX))
@@ -3272,7 +3270,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
  	{
 		behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET;
 		frustration = 0.0;
-		desired_speed = OOMax_d(target_speed, 0.4 * maxFlightSpeed);   // within the weapon's range don't use afterburner
+		desired_speed = fmax(target_speed, 0.4 * maxFlightSpeed);   // within the weapon's range don't use afterburner
 	}
 
 	// target-six
@@ -3419,7 +3417,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	double slow_down_range = weaponRange * COMBAT_WEAPON_RANGE_FACTOR * ((isUsingAfterburner)? 3.0 * [self afterburnerFactor] : 1.0);
 	double target_speed = [target speed];
 	if (range <= slow_down_range)
-		desired_speed = OOMax_d(target_speed, 0.25 * maxFlightSpeed);   // within the weapon's range match speed
+		desired_speed = fmax(target_speed, 0.25 * maxFlightSpeed);   // within the weapon's range match speed
 	else
 		desired_speed = max_available_speed; // use afterburner to approach
 
@@ -6228,7 +6226,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Vector i = vector_right_from_quaternion(q);
 	Vector j = vector_up_from_quaternion(q);
 	Vector k = vector_forward_from_quaternion(q);
-	BoundingBox arbb = [ship findBoundingBoxRelativeToPosition: make_vector(0,0,0) InVectors: i : j : k];
+	OOBoundingBox arbb = [ship findBoundingBoxRelativeToPosition: make_vector(0,0,0) InVectors: i : j : k];
 	Vector result = kZeroVector;
 	switch ([padAlign characterAtIndex:0])
 	{
@@ -7818,7 +7816,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if (start.x == 0.0f && start.y == 0.0f && start.z <= 0.0f) // The kZeroVector as start is illegal also.
 	{
-		OOLog(@"ship.missileLaunch.invalidPosition", @"***** ERROR: The missile_launch_position defines a position %@ behind the %@. In future versions such missiles may explode on launch because they have to travel through the ship.", VectorDescription(start), self);
+		OOLog(@"ship.missileLaunch.invalidPosition", @"***** ERROR: The missile_launch_position defines a position %@ behind the %@. In future versions such missiles may explode on launch because they have to travel through the ship.", OOVectorDescription(start), self);
 		start.x = 0.0f;
 		start.y = boundingBox.min.y - 4.0f;
 		start.z = boundingBox.max.z + 1.0f;
@@ -7955,7 +7953,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) setMissileLoadTime:(OOTimeDelta)newMissileLoadTime
 {
-	missile_load_time = OOMax_d(0.0, newMissileLoadTime);
+	missile_load_time = fmax(0.0, newMissileLoadTime);
 }
 
 
@@ -9690,7 +9688,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 }
 
 
-- (BoundingBox) findBoundingBoxRelativeTo:(Entity *)other InVectors:(Vector) _i :(Vector) _j :(Vector) _k
+- (OOBoundingBox) findBoundingBoxRelativeTo:(Entity *)other InVectors:(Vector) _i :(Vector) _j :(Vector) _k
 {
 	Vector  opv = other ? other->position : position;
 	return [self findBoundingBoxRelativeToPosition:opv InVectors:_i :_j :_k];
@@ -9891,8 +9889,8 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	OOLog(@"dumpState.shipEntity", @"Subentity count: %u", [self subEntityCount]);
 	OOLog(@"dumpState.shipEntity", @"Behaviour: %@", OOStringFromBehaviour(behaviour));
 	if (primaryTarget != NO_TARGET)  OOLog(@"dumpState.shipEntity", @"Target: %@", [self primaryTarget]);
-	OOLog(@"dumpState.shipEntity", @"Destination: %@", VectorDescription(destination));
-	OOLog(@"dumpState.shipEntity", @"Other destination: %@", VectorDescription(coordinates));
+	OOLog(@"dumpState.shipEntity", @"Destination: %@", OOVectorDescription(destination));
+	OOLog(@"dumpState.shipEntity", @"Other destination: %@", OOVectorDescription(coordinates));
 	OOLog(@"dumpState.shipEntity", @"Waypoint count: %u", number_of_navpoints);
 	OOLog(@"dumpState.shipEntity", @"Desired speed: %g", desired_speed);
 	OOLog(@"dumpState.shipEntity", @"Thrust: %g", thrust);
@@ -9926,7 +9924,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		NS_ENDHANDLER
 		OOLogPopIndent();
 	}
-	OOLog(@"dumpState.shipEntity", @"Jink position: %@", VectorDescription(jink));
+	OOLog(@"dumpState.shipEntity", @"Jink position: %@", OOVectorDescription(jink));
 	OOLog(@"dumpState.shipEntity", @"Frustration: %g", frustration);
 	OOLog(@"dumpState.shipEntity", @"Success factor: %g", success_factor);
 	OOLog(@"dumpState.shipEntity", @"Shots fired: %u", shot_counter);

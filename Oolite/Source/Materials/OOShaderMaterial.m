@@ -32,15 +32,11 @@ SOFTWARE.
 
 #import "ResourceManager.h"
 #import "OOShaderUniform.h"
-#import "OOFunctionAttributes.h"
-#import "OOCollectionExtractors.h"
 #import "OOShaderProgram.h"
 #import "OOTexture.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
 #import "Universe.h"
-#import "OOIsNumberLiteral.h"
-#import "OOLogging.h"
 #import "OODebugFlags.h"
 
 
@@ -668,10 +664,6 @@ static NSString *MacrosToString(NSDictionary *macros);
 }
 #endif
 
-@end
-
-
-@implementation OOShaderMaterial (OOPrivate)
 
 - (NSArray *) loadTexturesFromArray:(NSArray *)textureSpecs unitCount:(GLuint)max
 {

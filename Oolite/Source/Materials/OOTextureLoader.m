@@ -27,19 +27,12 @@ SOFTWARE.
 
 #import "OOPNGTextureLoader.h"
 #import "OOTextureLoader.h"
-#import "OOFunctionAttributes.h"
-#import "OOCollectionExtractors.h"
-#import "OOMaths.h"
 #import "Universe.h"
 #import "OOTextureScaling.h"
 #import "OOPixMapChannelOperations.h"
-#import "OOConvertCubeMapToLatLong.h"
 #import <stdlib.h>
 #import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
-
-
-#define DUMP_CONVERTED_CUBE_MAPS	0
 
 
 static unsigned				sGLMaxSize;
@@ -132,9 +125,7 @@ static BOOL					sHaveSetUp = NO;
 	_generateMipMaps = (options & kOOTextureMinFilterMask) == kOOTextureMinFilterMipMap;
 	_avoidShrinking = (options & kOOTextureNoShrink) != 0;
 	_noScalingWhatsoever = (options & kOOTextureNeverScale) != 0;
-#if OO_TEXTURE_CUBE_MAP
 	_allowCubeMap = (options & kOOTextureAllowCubeMap) != 0;
-#endif
 	
 	if (options & kOOTextureExtractChannelMask)
 	{
@@ -381,31 +372,12 @@ static BOOL					sHaveSetUp = NO;
 	
 	[self getDesiredWidth:&desiredWidth andHeight:&desiredHeight];
 	
-	if (_isCubeMap && !OOCubeMapsAvailable())
-	{
-		OOPixMapToRGBA(&pixMap);
-		desiredHeight = MIN(desiredWidth * 2, 512U);
-		if (sReducedDetail && desiredHeight > 256)  desiredHeight /= 2;
-		desiredWidth = desiredHeight * 2;
-		
-		OOPixMap converted = OOConvertCubeMapToLatLong(pixMap, desiredHeight, _generateMipMaps);
-		OOFreePixMap(&pixMap);
-		pixMap = converted;
-		_isCubeMap = NO;
-		
-#if DUMP_CONVERTED_CUBE_MAPS
-		OODumpPixMap(pixMap, [NSString stringWithFormat:@"converted cube map %@", [[_path lastPathComponent] stringByDeletingPathExtension]]);
-#endif
-	}
-	
 	// Rescale if needed.
 	rescale = (_width != desiredWidth || _height != desiredHeight);
 	if (rescale)
 	{
 		BOOL leaveSpaceForMipMaps = _generateMipMaps;
-#if OO_TEXTURE_CUBE_MAP
 		if (_isCubeMap)  leaveSpaceForMipMaps = NO;
-#endif
 		
 		OOLog(@"texture.load.rescale", @"Rescaling texture \"%@\" from %u x %u to %u x %u.", [_path lastPathComponent], pixMap.width, pixMap.height, desiredWidth, desiredHeight);
 		
@@ -418,7 +390,6 @@ static BOOL					sHaveSetUp = NO;
 		_rowBytes = pixMap.rowBytes;
 	}
 	
-#if OO_TEXTURE_CUBE_MAP
 	if (_isCubeMap)
 	{
 		if (_generateMipMaps)
@@ -427,7 +398,6 @@ static BOOL					sHaveSetUp = NO;
 		}
 		return;
 	}
-#endif
 	
 	// Generate mip maps if needed.
 	if (_generateMipMaps)

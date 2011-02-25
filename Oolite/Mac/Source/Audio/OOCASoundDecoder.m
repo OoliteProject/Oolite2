@@ -31,7 +31,6 @@ SOFTWARE.
 #import "OOCASoundDecoder.h"
 #import <stdio.h>
 #import <vorbis/vorbisfile.h>
-#import "OOLogging.h"
 
 
 enum
@@ -164,7 +163,7 @@ static void MixDown(float *inChan1, float *inChan2, float *outMix, size_t inCoun
 		
 		if (nil != inPath)
 		{
-			file = fopen([inPath UTF8String], "rb");
+			file = fopen([inPath UTF8String], "r");
 			if (NULL != file) 
 			{
 				err = ov_open(file, &_vf, NULL, 0);

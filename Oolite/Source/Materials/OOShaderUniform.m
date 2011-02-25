@@ -31,11 +31,9 @@ SOFTWARE.
 #if OO_SHADERS
 
 #import "OOShaderProgram.h"
-#import "OOFunctionAttributes.h"
 #import <string.h>
-#import "OOMaths.h"
 #import "OOOpenGLExtensionManager.h"
-#import "OOShaderUniformMethodType.h"
+#import "OOGeometryGLHelpers.h"
 
 
 OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
@@ -249,7 +247,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 			case kOOShaderUniformTypeVector:
 				{
 					Vector v = { value.constVector[0], value.constVector[1], value.constVector[2] };
-					valueDesc = VectorDescription(v);
+					valueDesc = OOVectorDescription(v);
 				}
 				break;
 				
@@ -405,10 +403,6 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 	if (!OK)  OOLog(@"shader.uniform.bind.failed", @"Shader could not bind uniform \"%@\" to -[%@ %@] (%@).", name, [target class], NSStringFromSelector(value.binding.selector), methodProblem);
 }
 
-@end
-
-
-@implementation OOShaderUniform (OOPrivate)
 
 // Designated initializer.
 - (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram

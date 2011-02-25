@@ -23,10 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "Geometry.h"
-
-#import "OOMaths.h"
 #import "Octree.h"
-#import "OOLogging.h"
 
 
 @implementation Geometry

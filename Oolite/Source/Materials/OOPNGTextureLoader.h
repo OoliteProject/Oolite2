@@ -27,7 +27,7 @@ SOFTWARE.
 
 */
 
-#import "png.h"
+#import <png.h>
 #import "OOTextureLoader.h"
 
 

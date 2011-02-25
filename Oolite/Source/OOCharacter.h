@@ -24,9 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
 #import "OOTypes.h"
-#import "legacy_random.h"
 #import "OOJSPropID.h"
 
 #ifdef OO_BRAIN_AI

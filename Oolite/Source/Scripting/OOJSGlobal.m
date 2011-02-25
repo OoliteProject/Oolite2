@@ -31,7 +31,6 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
-#import "OOCollectionExtractors.h"
 #import "OOTexture.h"
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"

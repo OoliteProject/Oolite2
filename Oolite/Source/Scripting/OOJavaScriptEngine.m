@@ -27,14 +27,10 @@ MA 02110-1301, USA.
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSScript.h"
 
-#import "OOCollectionExtractors.h"
 #import "Universe.h"
 #import "OOPlanetEntity.h"
-#import "NSStringOOExtensions.h"
-#import "OOWeakReference.h"
 #import "EntityOOJavaScriptExtensions.h"
 #import "ResourceManager.h"
-#import "NSNumberOOExtensions.h"
 #import "OOConstToJSString.h"
 
 #import "OOJSGlobal.h"
@@ -65,7 +61,6 @@ MA 02110-1301, USA.
 #import "OOJSFont.h"
 
 #import "OOProfilingStopwatch.h"
-#import "OOLoggingExtended.h"
 
 #import <stdlib.h>
 
@@ -170,7 +165,7 @@ static void ReportJSError(JSContext *context, const char *message, JSErrorReport
 	messageText = [NSString stringWithUTF8String:message];
 	
 	// Get offending line, if present, and trim trailing line breaks
-	lineBuf = [NSString stringWithUTF16String:report->uclinebuf];
+	lineBuf = [NSString oo_stringWithUTF16String:report->uclinebuf];
 	while ([lineBuf hasSuffix:@"\n"] || [lineBuf hasSuffix:@"\r"])  lineBuf = [lineBuf substringToIndex:[lineBuf length] - 1];
 	
 	// Get string for error number, for useful log message classes

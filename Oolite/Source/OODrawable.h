@@ -27,10 +27,8 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOOpenGL.h"
-#import "OOMaths.h"
-#import "OOWeakReference.h"
 
 @class Geometry;
 
@@ -46,7 +44,7 @@ SOFTWARE.
 - (GLfloat)maxDrawDistance;
 - (Geometry *)geometry;
 
-- (BoundingBox)boundingBox;
+- (OOBoundingBox)boundingBox;
 
 // Passed to all materials.
 - (void)setBindingTarget:(id<OOWeakReferenceSupport>)target;

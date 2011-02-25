@@ -31,45 +31,13 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
-#import "OOOpenGL.h"
-#import "OOFunctionAttributes.h"
 #import "OOTypes.h"
+#import "OOOpenGL.h"
 
 
-#ifndef OO_SHADERS
-#ifdef NO_SHADERS
-#define	OO_SHADERS		0
-#else
-#define	OO_SHADERS		1
-#endif
-#endif
-
-
-#if OO_SHADERS
-
-// Certain extensions are required for shader support.
-#ifndef GL_ARB_multitexture
-#warning NO_SHADERS not defined and GL_ARB_multitexture not defined; if possible, use a newer version of glext.h.
-#endif
-
-#ifndef GL_ARB_shader_objects
-#warning NO_SHADERS not defined and GL_ARB_shader_objects not defined; if possible, use a newer version of glext.h.
-#endif
-
-#ifndef GL_ARB_shading_language_100
-#warning NO_SHADERS not defined and GL_ARB_shading_language_100 not defined; if possible, use a newer version of glext.h.
-#endif
-
-#ifndef GL_ARB_fragment_shader
-#warning NO_SHADERS not defined and GL_ARB_fragment_shader not defined; if possible, use a newer version of glext.h.
-#endif
-
-#ifndef GL_ARB_vertex_shader
-#warning NO_SHADERS not defined and GL_ARB_vertex_shader not defined; if possible, use a newer version of glext.h.
-#endif
-
-#endif //OO_SHADERS
+// Core in 2.0.
+#define OO_SHADERS				1
+#define OO_MULTITEXTURE			1
 
 
 #if GL_ARB_vertex_buffer_object
@@ -85,26 +53,6 @@ SOFTWARE.
 #else
 #define OO_USE_VBO				0
 #warning Building without frame buffer object support, are your OpenGL headers up to date?
-#endif
-
-
-/*	Multitexturing requires GL_ARB_multitexture, but we only have use for it
-	if GL_ARB_texture_env_combine is available, and GL_ARB_texture_env_combine
-	requires GL_ARB_multitexture. Both GL_ARB_multitexture and
-	GL_ARB_texture_env_combine were promoted to core in OpenGL 1.3.
-*/
-#if GL_ARB_texture_env_combine
-#define OO_MULTITEXTURE			1
-#else
-#warning Building without texture combiner support, are your OpenGL headers up to date?
-#define OO_MULTITEXTURE			0
-#endif
-
-#if defined(GL_ARB_texture_cube_map) || defined(GL_VERSION_1_3)
-#define OO_TEXTURE_CUBE_MAP		1
-#else
-#warning Building without cube map support, are your OpenGL headers up to date?
-#define OO_TEXTURE_CUBE_MAP		0
 #endif
 
 
@@ -129,22 +77,18 @@ SOFTWARE.
 	BOOL					useLineSmoothing;
 	BOOL					useDustShader;
 	
-#if OO_SHADERS
 	BOOL					shadersAvailable;
 	OOShaderSetting			defaultShaderSetting;
 	OOShaderSetting			maximumShaderSetting;
 	GLint					textureImageUnitCount;
-#endif
 #if OO_USE_VBO
 	BOOL					vboSupported;
 #endif
 #if OO_USE_FBO
 	BOOL					fboSupported;
 #endif
-#if OO_MULTITEXTURE
 	BOOL					textureCombinersSupported;
 	GLint					textureUnitCount;
-#endif
 }
 
 + (id)sharedManager;

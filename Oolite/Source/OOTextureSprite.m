@@ -24,7 +24,6 @@ MA 02110-1301, USA.
 
 #import "OOTextureSprite.h"
 #import "OOTexture.h"
-#import "OOMaths.h"
 
 
 @implementation OOTextureSprite

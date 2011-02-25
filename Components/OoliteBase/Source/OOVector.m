@@ -112,3 +112,13 @@ Vector2D clean_vector2D(Vector2D v)
 	if (v.y == -0.0f)  v.y = 0.0f;
 	return v;
 }
+
+
+Vector OORandomPositionInBoundingBox(OOBoundingBox bb)
+{
+	Vector result;
+	result.x = bb.min.x + randf() * (bb.max.x - bb.min.x);
+	result.y = bb.min.y + randf() * (bb.max.y - bb.min.y);
+	result.z = bb.min.z + randf() * (bb.max.z - bb.min.z);
+	return result;
+}

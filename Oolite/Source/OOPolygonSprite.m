@@ -40,9 +40,7 @@ SOFTWARE.
 */
 
 #import "OOPolygonSprite.h"
-#import "OOCollectionExtractors.h"
 #import "OOMacroOpenGL.h"
-#import "OOMaths.h"
 #import "OOPointMaths.h"
 #import "OOGraphicsResetManager.h"
 
@@ -789,7 +787,6 @@ static void APIENTRY ErrorCallback(GLenum error, void *polygonData)
 
 #ifndef NDEBUG
 #import "ResourceManager.h"
-#import "legacy_random.h"
 
 static void SVGDumpBegin(TessPolygonData *data)
 {

@@ -32,7 +32,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 @protocol OOGraphicsResetClient

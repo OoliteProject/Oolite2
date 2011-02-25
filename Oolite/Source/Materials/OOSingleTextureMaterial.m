@@ -27,8 +27,6 @@ SOFTWARE.
 
 #import "OOSingleTextureMaterial.h"
 #import "OOTexture.h"
-#import "OOCollectionExtractors.h"
-#import "OOFunctionAttributes.h"
 
 
 @implementation OOSingleTextureMaterial

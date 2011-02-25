@@ -31,7 +31,6 @@ SOFTWARE.
 #import <mach/mach.h>
 #import <pthread.h>
 #import </usr/include/libkern/OSAtomic.h>
-#import "NSThreadOOExtensions.h"
 
 
 static NSString * const kOOLogSoundNULLError			= @"sound.render.undexpectedNull";
@@ -272,7 +271,7 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 - (id)initWithID:(uint32_t)inID auGraph:(AUGraph)inGraph
 {
 	OSStatus					err = noErr;
-	ComponentDescription		desc;
+	AudioComponentDescription	desc;
 	AURenderCallbackStruct		input;
 	
 	assert(sReaperRunning);
@@ -292,8 +291,8 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 		desc.componentManufacturer = kAudioUnitManufacturer_Apple;
 		desc.componentFlags = 0;
 		desc.componentFlagsMask = 0;
-		if (!err) err = OOAUGraphAddNode(_subGraph, &desc, &_node);
-		if (!err) err = OOAUGraphNodeInfo(_subGraph, _node, NULL, &_au);
+		if (!err) err = AUGraphAddNode(_subGraph, &desc, &_node);
+		if (!err) err = AUGraphNodeInfo(_subGraph, _node, NULL, &_au);
 		
 		// Set render callback
 		input.inputProc = ChannelRenderProc;

@@ -26,19 +26,386 @@ SOFTWARE.
 
 */
 
+#import "OoliteLogOutputHandler.h"
+#import "ResourceManager.h"
+#import "OOLogHeader.h"
+
+
+#define kShowFunctionPrefKey		@"logging-show-function"
+#define kShowFileAndLinePrefKey		@"logging-show-file-and-line"
+#define kShowTimeStampPrefKey		@"logging-show-time"
+#define kShowMessageClassPrefKey	@"logging-show-class"
+
+
+static void OOLogOutputHandlerInit(void);
+static void OOLogOutputHandlerClose(void);
+static void OOLogOutputHandlerPrint(NSString *string);
+
+// This will attempt to ensure the containing directory exists. If it fails, it will return nil.
+static NSString *OOLogHandlerGetLogPath(void);
+
+
+static OoliteLogOutputHandler	*sSingleton;
+
+
+// These specific values are used for true, false and inherit in the cache and explicitSettings dictionaries so we can use pointer comparison.
+static NSString * const			kTrueToken = @"on";
+static NSString * const			kFalseToken = @"off";
+static NSString * const			kInheritToken = @"inherit";
+
+
+@interface OoliteLogOutputHandler (OOPrivate)
+
+- (void) loadExplicitSettings;
+- (void) loadExplicitSettingsFromDictionary:(NSDictionary *)dictionary;
+
+- (id) resolveDisplaySettingForMessageClass:(NSString *)messageClass;
+- (id) resolveMetaClassReference:(NSString *)metaClass withSeenMetaClasses:(NSMutableSet *)ioSeenMetaClasses;
+
+@end
+
+
+// Given a boolean, return the appropriate value for the cache dictionary.
+static inline id CacheValue(BOOL inValue) __attribute__((pure));
+static inline id CacheValue(BOOL inValue)
+{
+	return inValue ? kTrueToken : kFalseToken;
+}
+
+
+@implementation OoliteLogOutputHandler
+
++ (id) sharedLogOutputHandler
+{
+	if (sSingleton == nil)  sSingleton = [[OoliteLogOutputHandler alloc] init];
+	return sSingleton;
+}
+
+
+- (id) init
+{
+	NSAssert(sSingleton == nil, @"Only one OoliteLogOutputHandler may exist at a time.");
+	self = [super init];
+	
+	if (self != nil)
+	{
+		_lock = [[NSLock alloc] init];
+		_explicitSettings = [[NSMutableDictionary alloc] init];
+		_derivedSettings = [[NSMutableDictionary alloc] init];
+		_default = kTrueToken;
+		
+		[self loadExplicitSettings];
+		
+		OOLogOutputHandlerInit();
+		
+		OOPrintLogHeader();
+	}
+	
+	return self;
+}
+
+
+- (id) retain
+{
+	return self;
+}
+
+
+- (void) release
+{
+	
+}
+
+
+- (id) autorelease
+{
+	return self;
+}
+
+
+- (NSUInteger) retainCount
+{
+	return UINT_MAX;
+}
+
+
+/*	Main interface.
+	The method may not be dynamically altered: the logging system will IMP
+	cache it.
+	This method may be called on any thread.
+	
+	Note: the message class will have been integrated into the message if
+	-showMessageClass returns YES. It is included in case additional filtering
+	is desired.
+*/
+- (void) printLogMessage:(NSString *)message ofClass:(NSString *)mclass
+{
+	OOLogOutputHandlerPrint(message);
+}
+
+/*	Used to determine which messages to show.
+	This is called very often, from any thread, and is IMP cached.
+*/
+- (BOOL) shouldShowMessageInClass:(NSString *)messageClass
+{
+	if (EXPECT_NOT(_overrideInEffect))  return _overrideValue;
+	
+	[_lock lock];
+	
+	// Look for cached value.
+	id value = [_derivedSettings objectForKey:messageClass];
+	if (EXPECT_NOT(value == nil))
+	{
+		@try
+		{
+			// No cached value.
+			value = [self resolveDisplaySettingForMessageClass:messageClass];
+			
+			if (value != nil)
+			{
+				[_derivedSettings setObject:value forKey:messageClass];
+			}
+		}
+		@finally
+		{
+			[_lock unlock];
+		}
+	}
+	else
+	{
+		[_lock unlock];
+	}
+	
+	return value == kTrueToken;
+}
+
+
+- (void) setShouldShowMessage:(BOOL)flag inClass:(NSString *)messageClass
+{
+}
+
+
+- (BOOL) showFunction
+{
+	return [[NSUserDefaults standardUserDefaults] oo_boolForKey:kShowFunctionPrefKey defaultValue:NO];
+}
+
+
+- (void) setShowFunction:(BOOL)flag
+{
+	[[NSUserDefaults standardUserDefaults] setBool:!!flag forKey:kShowFunctionPrefKey];
+}
+
+
+- (BOOL) showFileAndLine
+{
+	return [[NSUserDefaults standardUserDefaults] oo_boolForKey:kShowFileAndLinePrefKey defaultValue:NO];
+}
+
+
+- (void) setShowFileAndLine:(BOOL)flag
+{
+	[[NSUserDefaults standardUserDefaults] setBool:!!flag forKey:kShowFileAndLinePrefKey];
+}
+
+
+- (BOOL) showMessageClass
+{
+	return [[NSUserDefaults standardUserDefaults] oo_boolForKey:kShowMessageClassPrefKey defaultValue:YES];
+}
+
+
+- (void) setShowMessageClass:(BOOL)flag
+{
+	[[NSUserDefaults standardUserDefaults] setBool:!!flag forKey:kShowMessageClassPrefKey];
+}
+
+
+- (BOOL) showTimeStamp
+{
+	return [[NSUserDefaults standardUserDefaults] oo_boolForKey:kShowTimeStampPrefKey defaultValue:YES];
+}
+
+
+- (void) setShowTimeStamp:(BOOL)flag
+{
+	[[NSUserDefaults standardUserDefaults] setBool:!!flag forKey:kShowTimeStampPrefKey];
+}
+
+
+- (void) loadExplicitSettings
+{
+	NSEnumerator		*rootEnum = nil;
+	NSString			*basePath = nil;
+	NSString			*configPath = nil;
+	NSDictionary		*dict = nil;
+	id					value = nil;
+	
+	rootEnum = [[ResourceManager rootPaths] objectEnumerator];
+	while ((basePath = [rootEnum nextObject]))
+	{
+		configPath = [[basePath stringByAppendingPathComponent:@"Config"]
+					  stringByAppendingPathComponent:@"logcontrol.plist"];
+		dict = OODictionaryFromFile(configPath);
+		if (dict == nil)
+		{
+			configPath = [basePath stringByAppendingPathComponent:@"logcontrol.plist"];
+			dict = OODictionaryFromFile(configPath);
+		}
+		if (dict != nil)
+		{
+			[self loadExplicitSettingsFromDictionary:dict];
+		}
+	}
+	
+	// Get _default and _override value
+	value = [_explicitSettings objectForKey:@"_default"];
+	if (value != nil)
+	{
+		if (value == kTrueToken || value == kFalseToken)  _default = value;
+		[_explicitSettings removeObjectForKey:@"_default"];
+	}
+	
+	value = [_explicitSettings objectForKey:@"_override"];
+	if (value != nil)
+	{
+		if (value == kTrueToken)
+		{
+			_overrideInEffect = YES;
+			_overrideValue = YES;
+		}
+		else if (value == kFalseToken)
+		{
+			_overrideInEffect = YES;
+			_overrideValue = NO;
+		}
+		
+		[_explicitSettings removeObjectForKey:@"_override"];
+	}
+}
+
+
+- (void) loadExplicitSettingsFromDictionary:(NSDictionary *)dictionary
+{
+	id					key = nil;
+	id					value = nil;
+	
+	foreachkey (key, dictionary)
+	{
+		value = [dictionary objectForKey:key];
+		
+		/*	Supported values:
+			"yes", "true" or "on" -> kTrueToken
+			"no", "false" or "off" -> kFalseToken
+			"inherit" or "inherited" -> nil
+			NSNumber -> kTrueToken or kFalseToken
+			"$metaclass" -> "$metaclass"
+		*/
+		if ([value isKindOfClass:[NSString class]])
+		{
+			if (NSOrderedSame == [value caseInsensitiveCompare:@"yes"] ||
+				NSOrderedSame == [value caseInsensitiveCompare:@"true"] ||
+				NSOrderedSame == [value caseInsensitiveCompare:@"on"])
+			{
+				value = kTrueToken;
+			}
+			else if (NSOrderedSame == [value caseInsensitiveCompare:@"no"] ||
+				NSOrderedSame == [value caseInsensitiveCompare:@"false"] ||
+				NSOrderedSame == [value caseInsensitiveCompare:@"off"])
+			{
+				value = kFalseToken;
+			}
+			else if (NSOrderedSame == [value caseInsensitiveCompare:@"inherit"] ||
+				NSOrderedSame == [value caseInsensitiveCompare:@"inherited"])
+			{
+				value = nil;
+				[_explicitSettings removeObjectForKey:key];
+			}
+			else if (![value hasPrefix:@"$"])
+			{
+				value = nil;
+			}
+		}
+		else if ([value respondsToSelector:@selector(boolValue)])
+		{
+			value = CacheValue([value boolValue]);
+		}
+		else
+		{
+			value = nil;
+		}
+		
+		if (value != nil)
+		{
+			[_explicitSettings setObject:value forKey:key];
+		}
+	}
+}
+
+
+/*	Look up setting for a message class in explicit settings, resolving
+	inheritance and metaclasses.
+*/
+- (id) resolveDisplaySettingForMessageClass:(NSString *)messageClass
+{
+	if (messageClass == nil)  return _default;
+	
+	id value = [_explicitSettings objectForKey:messageClass];
+	
+	// Simple case: explicit setting for this value.
+	if (value == kTrueToken || value == kFalseToken)
+	{
+		return value;
+	}
+	
+	// Simplish case: use inherited value.
+	if (value == nil || value == kInheritToken)
+	{
+		return [self resolveDisplaySettingForMessageClass:OOLogGetParentMessageClass(messageClass)];
+	}
+	
+	// Less simple case: should be a metaclass.
+	NSMutableSet *seenMetaClasses = [NSMutableSet set];
+	return [self resolveMetaClassReference:value withSeenMetaClasses:seenMetaClasses];
+}
+
+
+/*	Resolve a metaclass reference, recursively if necessary. The
+	ioSeenMetaClasses dictionary is used to avoid loops.
+*/
+- (id) resolveMetaClassReference:(NSString *)metaClass withSeenMetaClasses:(NSMutableSet *)ioSeenMetaClasses
+{
+	// All values should have been checked at load time, but what the hey.
+	if (![metaClass isKindOfClass:[NSString class]] || ![metaClass hasPrefix:@"$"])
+	{
+		return _default;
+	}
+	
+	if ([ioSeenMetaClasses containsObject:metaClass])
+	{
+		// Avoid infinite recusion.
+		return _default;
+	}
+	
+	[ioSeenMetaClasses addObject:metaClass];
+	
+	id value = [_explicitSettings objectForKey:metaClass];
+	
+	if (value == kTrueToken || value == kFalseToken)  return value;
+	if (value == nil)
+	{
+		return _default;
+	}
+	
+	// If we get here, it should be a recursive metaclass reference.
+	return [self resolveMetaClassReference:value withSeenMetaClasses:ioSeenMetaClasses];
+}
+
+@end
+
 
 #define OOLOG_POISON_NSLOG 0
 #define DLOPEN_NO_WARN
-
-#import "OOLogOutputHandler.h"
-#import "OOLogging.h"
-#import "OOAsyncQueue.h"
-#import <stdlib.h>
-#import <stdio.h>
-#import "NSThreadOOExtensions.h"
-
-
-#undef NSLog		// We need to be able to call the real NSLog.
 
 
 #if OOLITE_MAC_OS_X
@@ -182,15 +549,6 @@ void OOLogOutputHandlerClose(void)
 	}
 }
 
-void OOLogOutputHandlerStartLoggingToStdout()
-{
-	sWriteToStdout = true;
-}
-void OOLogOutputHandlerStopLoggingToStdout()
-{
-	sWriteToStdout = false;
-}
-
 void OOLogOutputHandlerPrint(NSString *string)
 {
 	if (sInited && sLogger != nil && !sWriteToStdout)  [sLogger asyncLogMessage:string];
@@ -219,16 +577,6 @@ void OOLogOutputHandlerPrint(NSString *string)
 NSString *OOLogHandlerGetLogPath(void)
 {
 	return [OOLogHandlerGetLogBasePath() stringByAppendingPathComponent:sLogFileName];	
-}
-
-
-void OOLogOutputHandlerChangeLogFile(NSString *newLogName)
-{
-	if (![sLogFileName isEqual:newLogName])
-	{
-		sLogFileName = [newLogName copy];
-		[sLogger changeFile];
-	}
 }
 
 

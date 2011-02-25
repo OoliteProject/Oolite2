@@ -26,7 +26,6 @@ MA 02110-1301, USA.
 
 #import "Universe.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOJSScript.h"
 
 #ifdef OO_BRAIN_AI

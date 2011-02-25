@@ -1,13 +1,14 @@
 /*
 
-JAPersistentFileReference.h
+OOAsyncQueue.h
+By Jens Ayton
 
-Store file references in a property list format. For file URLs, uses bookmark
-data (when available) and aliases to track files even if they're moved or
-renamed.
+OOAsyncQueue is used to pass messages (in the form of arbitrary objects)
+between threads. It is many-to-many capable, i.e. it is safe to send messages
+from any number of threads and to read messages from any number of threads.
 
 
-Copyright (C) 2010-2011 Jens Ayton
+Copyright (C) 2007-2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,18 +33,25 @@ SOFTWARE.
 #import <Foundation/Foundation.h>
 
 
-enum
+@interface OOAsyncQueue: NSObject
 {
-	kJAPersistentFileReferenceWithoutUI				= 0x00000001UL,	// Avoid user interaction.
-	kJAPersistentFileReferenceWithoutMounting		= 0x00000002UL,	// Avoid mounting volumes.
-	kJAPersistentFileReferenceReturnReferenceURL	= 0x00000004UL	// Return a file reference URL if possible.
-};
+	NSConditionLock				*_lock;
+	struct OOAsyncQueueElement	*_head,
+								*_tail,
+								*_pool;
+	NSUInteger					_elemCount,
+								_poolCount;
+}
 
-typedef uint32_t JAPersistentFileReferenceResolveFlags;
+- (BOOL)enqueue:(id) object;	// Returns NO on failure, or if object is nil.
 
+- (id) dequeue;					// Blocks until the queue is non-empty.
+- (id) tryDequeue;				// Returns nil if empty.
 
-NSDictionary *JAPersistentFileReferenceFromURL(NSURL *url);
-NSURL *JAURLFromPersistentFileReference(NSDictionary *fileRef, JAPersistentFileReferenceResolveFlags flags, BOOL *isStale);
+// Due to the asynchronous nature of the queue, these values are immediately out of date.
+- (BOOL) empty;
+- (NSUInteger) count;
 
-NSDictionary *JAPersistentFileReferenceFromPath(NSString *path);
-NSString *JAPathFromPersistentFileReference(NSDictionary *fileRef, JAPersistentFileReferenceResolveFlags flags, BOOL *isStale);
+- (void) emptyQueue;			// Releases all elements.
+
+@end

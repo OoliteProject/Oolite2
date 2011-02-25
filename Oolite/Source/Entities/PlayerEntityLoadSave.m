@@ -27,21 +27,18 @@
 #import "PlayerEntityControls.h"
 #import "PlayerEntitySound.h"
 
-#import "NSFileManagerOOExtensions.h"
 #import "GameController.h"
 #import "PlayerEntityControls.h"
 #import "OOXMLExtensions.h"
 #import "OOSound.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"
-#import "OOPListParsing.h"
 #import "StationEntity.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOShipRegistry.h"
 #import "OOTexture.h"
-#import "NSStringOOExtensions.h"
 #import "OOJavaScriptEngine.h"
+#import "NSFileManagerOOExtensions.h"
 
 
 // Set to 1 to use custom load/save dialogs in windowed mode on Macs in debug builds. No effect on other platforms.
@@ -752,7 +749,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 	int row=STARTROW;
 	
 	// cdrArray defined in PlayerEntity.h
-	NSArray *cdrArray=[cdrFileManager commanderContentsOfPath: directory];
+	NSArray *cdrArray = [cdrFileManager commanderContentsOfPath:directory];
 	
 	// get commander details so a brief rundown of the commander's details may
 	// be displayed.

@@ -27,7 +27,6 @@ SOFTWARE.
 
 #import "OOMaterialSpecifier.h"
 #import "OOColor.h"
-#import "OOCollectionExtractors.h"
 #import "OOTexture.h"
 #import "Universe.h"
 

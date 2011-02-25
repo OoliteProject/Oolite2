@@ -31,7 +31,6 @@ OUT OF OR
 */
 
 #import "OOSoundSource.h"
-#import "OOMaths.h"
 
 @class OOSound, OOSoundChannel, OOSoundReferencePoint;
 

@@ -85,4 +85,16 @@ SOFTWARE.
 	
 }
 
+
+- (BOOL) showTimeStamp
+{
+	return NO;
+}
+
+
+- (void) setShowTimeStamp:(BOOL)flag
+{
+	
+}
+
 @end

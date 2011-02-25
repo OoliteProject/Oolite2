@@ -25,10 +25,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
-#import "OOWeakReference.h"
 #import "OOTypes.h"
-#import "OOMaths.h"
 
 
 #ifndef NEW_PLANETS

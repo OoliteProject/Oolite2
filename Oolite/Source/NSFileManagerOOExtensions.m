@@ -28,7 +28,6 @@ MA 02110-1301, USA.
 
 #include <stdlib.h>
 #import "ResourceManager.h"
-#import "OOPListParsing.h"
 #import "GameController.h"
 #import "NSFileManagerOOExtensions.h"
 

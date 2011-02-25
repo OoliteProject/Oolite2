@@ -45,6 +45,10 @@ OOINLINE void OOBoundingBoxResetToVector(OOBoundingBox *box, Vector vec)  ALWAYS
 
 OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, OOScalar *xSize, OOScalar *ySize, OOScalar *zSize)  ALWAYS_INLINE_FUNC;
 
+OOINLINE Vector OOBoundingBoxCenter(OOBoundingBox bb) INLINE_CONST_FUNC;
+
+Vector OORandomPositionInBoundingBox(OOBoundingBox bb);
+
 
 
 /*** Only inline definitions beyond this point ***/
@@ -93,4 +97,10 @@ OOINLINE void OOBoundingBoxGetDimensions(OOBoundingBox bb, OOScalar *xSize, OOSc
 	if (xSize != NULL)  *xSize = bb.max.x - bb.min.y;
 	if (ySize != NULL)  *ySize = bb.max.y - bb.min.y;
 	if (zSize != NULL)  *zSize = bb.max.z - bb.min.z;
+}
+
+
+OOINLINE Vector OOBoundingBoxCenter(OOBoundingBox bb)
+{
+	return vector_multiply_scalar(vector_add(bb.min, bb.max), 0.5f);
 }

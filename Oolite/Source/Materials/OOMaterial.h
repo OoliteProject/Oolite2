@@ -35,7 +35,6 @@ SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import "OOOpenGL.h"
-#import "OOWeakReference.h"
 #import "OOOpenGLExtensionManager.h"
 
 

@@ -23,14 +23,9 @@ MA 02110-1301, USA.
 */
 
 #import "OOStringParsing.h"
-#import "OOLogging.h"
-#import "NSScannerOOExtensions.h"
-#import "legacy_random.h"
 #import "Universe.h"
 #import "PlayerEntity.h"
 #import "PlayerEntityLegacyScriptEngine.h"
-#import "OOFunctionAttributes.h"
-#import "OOCollectionExtractors.h"
 #import "ResourceManager.h"
 
 #import "OOJavaScriptEngine.h"

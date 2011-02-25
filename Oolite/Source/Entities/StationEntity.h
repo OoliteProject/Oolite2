@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 #import "ShipEntity.h"
 #import "Universe.h"
-#import "legacy_random.h"
+
 
 typedef enum
 {
@@ -141,7 +141,7 @@ typedef enum
 - (void) addShipToShipsOnApproach:(ShipEntity *) ship;
 
 - (Vector) portUpVector;
-- (Vector) portUpVectorForShipsBoundingBox:(BoundingBox) bb;
+- (Vector) portUpVectorForShipsBoundingBox:(OOBoundingBox)bb;
 
 - (BOOL) shipIsInDockingCorridor:(ShipEntity*) ship;
 

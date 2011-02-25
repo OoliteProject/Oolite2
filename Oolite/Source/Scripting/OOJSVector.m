@@ -599,7 +599,7 @@ static JSBool VectorToString(JSContext *context, uintN argc, jsval *vp)
 	
 	if (EXPECT_NOT(!GetThisVector(context, OOJS_THIS, &thisv, @"toString"))) return NO;
 	
-	OOJS_RETURN_OBJECT(VectorDescription(thisv));
+	OOJS_RETURN_OBJECT(OOVectorDescription(thisv));
 	
 	OOJS_NATIVE_EXIT
 }

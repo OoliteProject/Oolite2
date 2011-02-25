@@ -24,12 +24,8 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOOpenGL.h"
-#import "legacy_random.h"
-#import "OOMaths.h"
-#import "OOColor.h"
-#import "OOWeakReference.h"
 #import "OOTypes.h"
 #import "OOSound.h"
 #import "OOJSPropID.h"
@@ -41,7 +37,7 @@ MA 02110-1301, USA.
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
 		Entity, ShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
-		PlayerEntity, OORoleSet;
+		PlayerEntity, OORoleSet, OOColor;
 
 
 typedef BOOL (*EntityFilterPredicate)(Entity *entity, void *parameter);
@@ -343,7 +339,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (BOOL) addShips:(int) howMany withRole:(NSString *) desc atPosition:(Vector) pos withCoordinateSystem:(NSString *) system;
 - (BOOL) addShips:(int) howMany withRole:(NSString *) desc nearPosition:(Vector) pos withCoordinateSystem:(NSString *) system;
 - (BOOL) addShips:(int) howMany withRole:(NSString *) desc nearPosition:(Vector) pos withCoordinateSystem:(NSString *) system withinRadius:(GLfloat) radius;
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc intoBoundingBox:(BoundingBox) bbox;
+- (BOOL) addShips:(int) howMany withRole:(NSString *) desc intoBoundingBox:(OOBoundingBox) bbox;
 - (BOOL) spawnShip:(NSString *) shipdesc;
 - (void) witchspaceShipWithPrimaryRole:(NSString *)role;
 - (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(Entity *) entity;

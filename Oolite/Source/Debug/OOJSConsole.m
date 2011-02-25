@@ -37,7 +37,6 @@ SOFTWARE.
 #import "OOJSVector.h"
 #import "OOJSEntity.h"
 #import "OOJSCall.h"
-#import "OOLoggingExtended.h"
 #import "OOConstToString.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OODebugFlags.h"

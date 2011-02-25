@@ -43,8 +43,7 @@
 // It will also work in one thread, of course (although I don't know why you'd bother).
 // However, if you have multiple reader or writer threads, all bets are off!
 
-#import "OOCocoa.h"
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 
 
 @interface VirtualRingBuffer : NSObject

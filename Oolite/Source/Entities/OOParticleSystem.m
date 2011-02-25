@@ -29,6 +29,8 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 #import "OOLightParticleEntity.h"
 #import "OOMacroOpenGL.h"
+#import "OOColor.h"
+#import "OOGeometryGLHelpers.h"
 
 
 //	Testing toy: cause particle systems to stop after half a second.

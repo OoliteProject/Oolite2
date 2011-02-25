@@ -37,8 +37,6 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOTexture.h"
-#import "OOCollectionExtractors.h"
-#import "OOLoggingExtended.h"
 #import "OOSound.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"

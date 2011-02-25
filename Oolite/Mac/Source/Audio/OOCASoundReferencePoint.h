@@ -30,8 +30,7 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
-#import "OOMaths.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 @interface OOSoundReferencePoint: NSObject

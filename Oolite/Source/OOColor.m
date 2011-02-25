@@ -23,8 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "OOColor.h"
-#import "OOCollectionExtractors.h"
-#import "OOMaths.h"
 
 
 @implementation OOColor

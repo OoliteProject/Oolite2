@@ -31,7 +31,6 @@ MA 02110-1301, USA.
 #import "ResourceManager.h"
 #import "GuiDisplayGen.h"
 #import <Carbon/Carbon.h>
-#import "NSFileManagerOOExtensions.h"
 #import "OOGraphicsResetManager.h"
 #import "PlayerEntity.h"
 

@@ -1,14 +1,21 @@
 /*
 
-OOAsyncQueue.h
+OOLogOutputHandler.h
 By Jens Ayton
 
-OOAsyncQueue is used to pass messages (in the form of arbitrary objects)
-between threads. It is many-to-many capable, i.e. it is safe to send messages
-from any number of threads and to read messages from any number of threads.
+Output handler for OOLogging.
+
+This does two things:
+1. It writes log output to ~/Logs/Oolite/Latest.log under Mac OS X or
+   ~/.Oolite/Logs/Latest.log under Linux, handling thread serialization.
+2. It installs a filter to capture NSLogs and convert them to OOLogs. This is
+   different to the macro in OOLogging.h, which acts at compile time; the
+   filter catches logging in included frameworks.
+
+OOLogOutputHandlerPrint() is thread-safe. Other functions are not.
 
 
-Copyright (C) 2007-2011 Jens Ayton
+Copyright (C) 2007-2011 Jens Ayton and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,28 +37,24 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 
 
-@interface OOAsyncQueue: NSObject
+@interface OoliteLogOutputHandler: OOLogOutputHandler
 {
-	NSConditionLock				*_lock;
-	struct OOAsyncQueueElement	*_head,
-								*_tail,
-								*_pool;
-	unsigned					_elemCount,
-								_poolCount;
+@private
+	NSLock					*_lock;
+	NSMutableDictionary		*_explicitSettings;
+	NSMutableDictionary		*_derivedSettings;
+	
+	NSString				*_default;
+	BOOL					_overrideInEffect;
+	BOOL					_overrideValue;
 }
 
-- (BOOL)enqueue:(id)object;	// Returns NO on failure, or if object is nil.
-
-- (id)dequeue;			// Blocks until the queue is non-empty.
-- (id)tryDequeue;		// Returns nil if empty.
-
-// Due to the asynchronous nature of the queue, these values are immediately out of date.
-- (BOOL)empty;
-- (unsigned)count;
-
-- (void)emptyQueue;		// Releases all elements.
++ (id) sharedLogOutputHandler;
 
 @end
+
+
+NSString *OOLogHandlerGetLogBasePath(void);

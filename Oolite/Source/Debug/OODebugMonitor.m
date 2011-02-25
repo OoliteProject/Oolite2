@@ -31,20 +31,17 @@ SOFTWARE.
 
 
 #import "OODebugMonitor.h"
-#import "OOCollectionExtractors.h"
-#import "OOLoggingExtended.h"
 #import "ResourceManager.h"
-#import "NSStringOOExtensions.h"
 
 #import "OOJSConsole.h"
 #import "OOJSScript.h"
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSSpecialFunctions.h"
 
-#import "NSObjectOOExtensions.h"
 #import "OOTexture.h"
 #import "OOConcreteTexture.h"
 #import "OODrawable.h"
+#import "OOColor.h"
 
 
 static OODebugMonitor *sSingleton = nil;
@@ -748,7 +745,7 @@ typedef struct
 	
 	if (filePath == nil)  return nil;
 	
-	contents = [NSString stringWithContentsOfUnicodeFile:filePath];
+	contents = [NSString oo_stringWithContentsOfUnicodeFile:filePath];
 	if (contents == nil)  return nil;
 	
 	/*	Extract lines from file.

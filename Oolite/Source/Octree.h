@@ -24,9 +24,8 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
 #import "OOOpenGL.h"
-#import "OOMaths.h"
+#import "OOTriangle.h"
 
 #define	OCTREE_MIN_RADIUS	1.0
 

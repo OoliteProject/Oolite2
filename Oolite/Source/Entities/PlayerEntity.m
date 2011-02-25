@@ -38,7 +38,6 @@ MA 02110-1301, USA.
 #import "OOQuiriumCascadeEntity.h"
 #import "OOMesh.h"
 
-#import "OOMaths.h"
 #import "GameController.h"
 #import "ResourceManager.h"
 #import "Universe.h"
@@ -52,8 +51,6 @@ MA 02110-1301, USA.
 #import "Octree.h"
 #import "OOCacheManager.h"
 #import "OOStringParsing.h"
-#import "OOPListParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOTexture.h"
 #import "OORoleSet.h"
@@ -63,8 +60,6 @@ MA 02110-1301, USA.
 #import "OOEntityFilterPredicate.h"
 #import "OOShipRegistry.h"
 #import "OOEquipmentType.h"
-#import "OOCamera.h"
-#import "NSFileManagerOOExtensions.h"
 
 #import "OOJSScript.h"
 #import "OOScriptTimer.h"
@@ -103,7 +98,6 @@ static GLfloat		sBaseMass = 0.0;
 
 @interface PlayerEntity (OOPrivate)
 
-- (void) setExtraEquipmentFromFlags;
 - (void) doTradeIn:(OOCreditsQuantity)tradeInValue forPriceFactor:(double)priceFactor;
 
 // Subs of update:
@@ -4144,7 +4138,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	[UNIVERSE setBlockJSPlayerShipProps:YES]; 	// no player.ship properties while inside the pod!
 	ship_clock_adjust += 43200 + 5400 * (ranrot_rand() & 127);	// add up to 8 days until rescue!
 	dockingClearanceStatus = DOCKING_CLEARANCE_STATUS_NOT_REQUIRED;
-	flightSpeed = OOMax_f(flightSpeed, 50.0f);
+	flightSpeed = fmaxf(flightSpeed, 50.0f);
 	
 	doppelganger = [self createDoppelganger];
 	if (doppelganger)

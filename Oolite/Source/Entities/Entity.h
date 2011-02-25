@@ -24,12 +24,9 @@ MA 02110-1301, USA.
 
 */
 
-
-#import "OOCocoa.h"
-#import "OOMaths.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOCacheManager.h"
 #import "OOTypes.h"
-#import "OOWeakReference.h"
 
 @class Universe, Geometry, CollisionRegion, ShipEntity;
 
@@ -137,7 +134,7 @@ enum OOScanClass
 	GLfloat					energy;
 	GLfloat					maxEnergy;
 	
-	BoundingBox				boundingBox;
+	OOBoundingBox			boundingBox;
 	GLfloat					mass;
 	
 	NSMutableArray			*collidingEntities;
@@ -198,7 +195,7 @@ enum OOScanClass
 - (double) zeroDistance;
 - (NSComparisonResult) compareZeroDistance:(Entity *)otherEntity;
 
-- (BoundingBox) boundingBox;
+- (OOBoundingBox) boundingBox;
 
 - (GLfloat) mass;
 

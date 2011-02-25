@@ -31,7 +31,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import	<jsapi.h>
 
 @class OOJSFunction, OOJSValue;

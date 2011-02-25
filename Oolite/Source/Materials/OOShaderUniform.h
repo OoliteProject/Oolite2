@@ -31,9 +31,6 @@ SOFTWARE.
 
 #if OO_SHADERS
 
-
-#import "OOMaths.h"
-
 @class OOColor;
 
 

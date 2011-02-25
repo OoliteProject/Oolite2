@@ -35,8 +35,6 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
-#import "OOWeakReference.h"
 #import "OODebuggerInterface.h"
 
 @class OOJSScript;

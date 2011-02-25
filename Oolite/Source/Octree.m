@@ -23,13 +23,12 @@ MA 02110-1301, USA.
 */
 
 #import "Octree.h"
-#import "OOMaths.h"
 #import "Entity.h"
 #import "OOOpenGL.h"
 #import "OODebugGLDrawing.h"
 #import "OOMacroOpenGL.h"
 #import "OODebugFlags.h"
-#import "NSObjectOOExtensions.h"
+#import "OOVoxel.h"
 
 
 #ifndef NDEBUG

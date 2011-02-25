@@ -26,9 +26,6 @@ SOFTWARE.
 */
 
 #import "OOPNGTextureLoader.h"
-#import "OOFunctionAttributes.h"
-#import "OOLogging.h"
-#import "OOCPUInfo.h"
 
 
 void png_error(png_structp, png_const_charp) NO_RETURN_FUNC;
@@ -74,10 +71,6 @@ static void PNGRead(png_structp png, png_bytep bytes, png_size_t size);
 	[super dealloc];
 }
 
-@end
-
-
-@implementation OOPNGTextureLoader (OOPrivate)
 
 - (void)doLoadTexture
 {

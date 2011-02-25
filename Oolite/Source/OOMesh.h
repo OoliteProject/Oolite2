@@ -36,7 +36,6 @@ MA 02110-1301, USA.
 
 #import "OODrawable.h"
 #import "OOOpenGL.h"
-#import "OOWeakReference.h"
 #import "OOOpenGLExtensionManager.h"
 
 @class OOMaterial, Octree;
@@ -114,7 +113,7 @@ typedef struct
 	
 	GLfloat					collisionRadius;
 	GLfloat					maxDrawDistance;
-	BoundingBox				boundingBox;
+	OOBoundingBox			boundingBox;
 	
 	Octree					*octree;
 	
@@ -159,11 +158,11 @@ shaderBindingTarget:(id<OOWeakReferenceSupport>)object;
 - (Octree *)octree;
 
 // This needs a better name.
-- (BoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv
-											basis:(Vector)ri :(Vector)rj :(Vector)rk
-									 selfPosition:(Vector)position
-										selfBasis:(Vector)si :(Vector)sj :(Vector)sk;
-- (BoundingBox)findSubentityBoundingBoxWithPosition:(Vector)position rotMatrix:(OOMatrix)rotMatrix;
+- (OOBoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv
+											  basis:(Vector)ri :(Vector)rj :(Vector)rk
+									   selfPosition:(Vector)position
+										  selfBasis:(Vector)si :(Vector)sj :(Vector)sk;
+- (OOBoundingBox)findSubentityBoundingBoxWithPosition:(Vector)position rotMatrix:(OOMatrix)rotMatrix;
 
 - (OOMesh *)meshRescaledBy:(GLfloat)scaleFactor;
 

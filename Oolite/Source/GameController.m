@@ -30,14 +30,10 @@ MA 02110-1301, USA.
 #import "OOOpenGL.h"
 #import "PlayerEntityLoadSave.h"
 #import <stdlib.h>
-#import "OOCollectionExtractors.h"
-#import "OOOXPVerifier.h"
-#import "OOLoggingExtended.h"
-#import "NSFileManagerOOExtensions.h"
-#import "OOLogOutputHandler.h"
 #import "OODebugFlags.h"
 #import "OOJSFrameCallbacks.h"
 #import "OOOpenGLExtensionManager.h"
+#import "NSFileManagerOOExtensions.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.GameController"
 
@@ -206,23 +202,7 @@ static GameController *sSharedController = nil;
 	pool = [[NSAutoreleasePool alloc] init];
 	
 	NS_DURING
-		// if not verifying oxps, ensure that gameView is drawn to using beginSplashScreen
-		// OpenGL is initialised and that allows textures to initialise too.
-
-#if OO_OXP_VERIFIER_ENABLED
-
-		if ([OOOXPVerifier runVerificationIfRequested])
-		{
-			[self exitAppWithContext:@"OXP verifier run"];
-		}
-		else 
-		{
-			[self beginSplashScreen];
-		}
-		
-#else
 		[self beginSplashScreen];
-#endif
 		
 #if OOLITE_MAC_OS_X
 	LoadSystemSpecificBundles();

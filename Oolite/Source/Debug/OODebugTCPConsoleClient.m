@@ -33,8 +33,6 @@ SOFTWARE.
 #import "OODebugTCPConsoleClient.h"
 #import "OODebugTCPConsoleProtocol.h"
 #import "OODebugMonitor.h"
-#import "OOFunctionAttributes.h"
-#import "OOLogging.h"
 #import <stdint.h>
 
 #if OOLITE_WINDOWS
@@ -43,7 +41,6 @@ SOFTWARE.
 #import <arpa/inet.h>	// For htonl
 #endif
 
-#import "OOCollectionExtractors.h"
 #import "OOTCPStreamDecoder.h"
 
 
@@ -313,10 +310,6 @@ noteChangedConfigrationValue:(in id)newValue
 	}
 }
 
-@end
-
-
-@implementation OODebugTCPConsoleClient (OOPrivate)
 
 - (void) closeConnection
 {

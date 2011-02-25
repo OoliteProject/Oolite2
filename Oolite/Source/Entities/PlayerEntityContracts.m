@@ -35,10 +35,8 @@ MA 02110-1301, USA.
 #import "StationEntity.h"
 #import "GuiDisplayGen.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "MyOpenGLView.h"
-#import "NSStringOOExtensions.h"
 #import "OOShipRegistry.h"
 #import "OOEquipmentType.h"
 #import "OOTexture.h"
@@ -194,7 +192,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 				}
 				credits += 10 * fee;
 				
-				[result appendFormatLine:DESC(@"passenger-delivered-okay-@-@-@"), passenger_name, OOIntCredits(fee), passenger_dest_name];
+				[result oo_appendFormatLine:DESC(@"passenger-delivered-okay-@-@-@"), passenger_name, OOIntCredits(fee), passenger_dest_name];
 				
 				[passengers removeObjectAtIndex:i--];
 				[self increasePassengerReputation];
@@ -207,7 +205,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 					fee /= 2;
 				credits += 10 * fee;
 				
-				[result appendFormatLine:DESC(@"passenger-delivered-late-@-@-@"), passenger_name, OOIntCredits(fee), passenger_dest_name];
+				[result oo_appendFormatLine:DESC(@"passenger-delivered-late-@-@-@"), passenger_name, OOIntCredits(fee), passenger_dest_name];
 				
 				[passengers removeObjectAtIndex:i--];
 			}
@@ -217,7 +215,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			if (dest_eta < 0)
 			{
 				// we've run out of time!
-				[result appendFormatLine:DESC(@"passenger-failed-@"), passenger_name];
+				[result oo_appendFormatLine:DESC(@"passenger-failed-@"), passenger_name];
 				
 				[passengers removeObjectAtIndex:i--];
 				[self decreasePassengerReputation];
@@ -263,7 +261,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 					// pay the premium and fee
 					credits += fee + premium;
 					
-					[result appendFormatLine:DESC(@"cargo-delivered-okay-@-@"), contract_cargo_desc, OOCredits(fee + premium)];
+					[result oo_appendFormatLine:DESC(@"cargo-delivered-okay-@-@"), contract_cargo_desc, OOCredits(fee + premium)];
 					
 					[contracts removeObjectAtIndex:i--];
 					// repute++
@@ -288,14 +286,14 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 						int payment = percent_delivered * (fee + premium) / 100.0;
 						credits += payment;
 						
-						[result appendFormatLine:DESC(@"cargo-delivered-short-@-@-d"), contract_cargo_desc, OOCredits(payment), shortfall];
+						[result oo_appendFormatLine:DESC(@"cargo-delivered-short-@-@-d"), contract_cargo_desc, OOCredits(payment), shortfall];
 						
 						[contracts removeObjectAtIndex:i--];
 						// repute unchanged
 					}
 					else
 					{
-						[result appendFormatLine:DESC(@"cargo-refused-short-%@"), contract_cargo_desc];
+						[result oo_appendFormatLine:DESC(@"cargo-refused-short-%@"), contract_cargo_desc];
 						// The player has still time to buy the missing goods elsewhere and fulfil the contract.
 					}
 				}
@@ -303,7 +301,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			else
 			{
 				// but we're late!
-				[result appendFormatLine:DESC(@"cargo-delivered-late-@"), contract_cargo_desc];
+				[result oo_appendFormatLine:DESC(@"cargo-delivered-late-@"), contract_cargo_desc];
 
 				[contracts removeObjectAtIndex:i--];
 				// repute--
@@ -315,7 +313,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			if (dest_eta < 0)
 			{
 				// we've run out of time!
-				[result appendFormatLine:DESC(@"cargo-failed-@"), contract_cargo_desc];
+				[result oo_appendFormatLine:DESC(@"cargo-failed-@"), contract_cargo_desc];
 				
 				[contracts removeObjectAtIndex:i--];
 				// repute--
@@ -365,14 +363,14 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	else
 	{
 		// Should have a trailing \n
-		[result deleteCharacterAtIndex:[result length] - 1];
+		[result oo_deleteCharacterAtIndex:[result length] - 1];
 	}
 	
 	return result;
 }
 
 
-- (void) addMessageToReport:(NSString*) report
+- (void) addMessageToReport:(NSString *)report
 {
 	if ([report length] != 0)
 	{
@@ -1552,7 +1550,7 @@ static NSMutableDictionary* currentShipyard = nil;
 }
 
 
-- (OOInteger) missingSubEntitiesAdjustment;
+- (OOInteger) missingSubEntitiesAdjustment
 {
 	// each missing subentity depreciates the ship by 5%, up to a maximum of 35% depreciation.
 	int percent = 5 * ([self maxShipSubEntities] - [[[self shipSubEntityEnumerator] allObjects] count]);

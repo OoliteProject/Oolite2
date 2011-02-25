@@ -37,8 +37,6 @@ SOFTWARE.
 #import "OOCASoundDecoder.h"
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioToolbox.h>
-#import "NSThreadOOExtensions.h"
-#import "OOCollectionExtractors.h"
 
 
 #define KEY_VOLUME_CONTROL			@"volume_control"

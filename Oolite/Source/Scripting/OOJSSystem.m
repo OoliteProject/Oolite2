@@ -34,7 +34,6 @@
 #import "PlayerEntityScriptMethods.h"
 #import "OOJSSystemInfo.h"
 
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
 #import "OOEntityFilterPredicate.h"

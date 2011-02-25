@@ -23,10 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "OOCacheManager.h"
-#import "OOPListParsing.h"
-#import "OODeepCopy.h"
-#import "OOCollectionExtractors.h"
-#import "OOJavaScriptEngine.h"
 
 
 #define WRITE_ASYNC				1
@@ -73,7 +69,7 @@ static NSString * const kCacheKeyCaches						= @"caches";
 enum
 {
 	kEndianTagValue			= 0x0123456789ABCDEFULL,
-	kFormatVersionValue		= 200
+	kFormatVersionValue		= 0
 };
 
 
@@ -592,10 +588,12 @@ static OOCacheManager *sSingleton = nil;
 	}
 	if (!exists)
 	{
+		NSError *error = nil;
+		
 		if (!inCreate) return NO;
-		if (![fmgr createDirectoryAtPath:inPath attributes:nil])
+		if (![fmgr createDirectoryAtPath:inPath withIntermediateDirectories:YES attributes:nil error:&error])
 		{
-			OOLog(kOOLogDataCacheBuildPathError, @"Could not create folder %@.", inPath);
+			OOLog(kOOLogDataCacheBuildPathError, @"Could not create folder %@ - %@.", inPath, error);
 			return NO;
 		}
 	}

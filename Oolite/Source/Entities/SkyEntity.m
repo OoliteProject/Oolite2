@@ -27,12 +27,10 @@ MA 02110-1301, USA.
 #import "OOSkyDrawable.h"
 #import "PlayerEntity.h"
 
-#import "OOMaths.h"
 #import "Universe.h"
 #import "MyOpenGLView.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOMaterial.h"
 
 
@@ -204,10 +202,6 @@ MA 02110-1301, USA.
 }
 #endif
 
-@end
-
-
-@implementation SkyEntity (OOPrivate)
 
 - (void)readColor1:(OOColor **)ioColor1 andColor2:(OOColor **)ioColor2 fromDictionary:(NSDictionary *)dictionary
 {

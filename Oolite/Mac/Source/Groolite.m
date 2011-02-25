@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "Groolite.h"
-#import <Growl/Growl.h>
 #import "GameController.h"
 #import "GuiDisplayGen.h"
 #import "Universe.h"
@@ -33,6 +32,19 @@ static NSString * const kOOLogGrooliteError	= @"growl.error";
 static NSString * const kOOLogGrooliteDebug	= @"growl.debug";
 
 // #define GROOLITE_DEBUG
+
+
+/*
+	String constants from Growl.framework.
+	Since we rely on these being constant and we don’t use any other part of
+	the framework, these are copied rather than bringing in the whole framework.
+*/
+#define XSTR(str) (@str)
+#define GROWL_NOTIFICATION_PRIORITY		XSTR("NotificationPriority")
+#define GROWL_NOTIFICATION_TITLE		XSTR("NotificationTitle")
+#define GROWL_NOTIFICATION_DESCRIPTION 	XSTR("NotificationDescription")
+#define GROWL_APP_NAME					XSTR("ApplicationName")
+#define GROWL_IS_READY					XSTR("Lend Me Some Sugar; I Am Your Neighbor!")
 
 
 @protocol GrowlNotificationObserver

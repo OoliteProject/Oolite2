@@ -30,7 +30,11 @@ MA 02110-1301, USA.
 #endif
 
 
+#import <stdlib.h>
+#import <stdint.h>
 #import <math.h>
+#import <stdarg.h>
+#import <limits.h>
 #import <Foundation/Foundation.h>
 
 #ifdef GNUSTEP

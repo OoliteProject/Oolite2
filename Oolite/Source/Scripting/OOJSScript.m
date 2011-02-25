@@ -31,10 +31,8 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "OOJSEngineTimeManagement.h"
 
-#import "OOLogging.h"
 #import "OOConstToString.h"
 #import "Entity.h"
-#import "NSStringOOExtensions.h"
 #import "EntityOOJavaScriptExtensions.h"
 #import "OOConstToJSString.h"
 
@@ -524,12 +522,6 @@ static JSFunctionSpec sScriptMethods[] =
 	free(element);
 }
 
-@end
-
-
-@implementation OOJSScript (OOPrivate)
-
-
 
 /*	Generate default name for script which doesn't set its name property when
 	first run.
@@ -635,8 +627,8 @@ static JSScript *LoadScriptWithName(JSContext *context, NSString *path, JSObject
 	
 	if (script == NULL)
 	{
-		fileContents = [NSString stringWithContentsOfUnicodeFile:path];
-		if (fileContents != nil)  data = [fileContents utf16DataWithBOM:NO];
+		fileContents = [NSString oo_stringWithContentsOfUnicodeFile:path];
+		if (fileContents != nil)  data = [fileContents oo_utf16DataWithBOM:NO];
 		if (data == nil)  *outErrorMessage = @"could not load file";
 		else
 		{

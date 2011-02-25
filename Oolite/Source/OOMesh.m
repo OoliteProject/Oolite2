@@ -43,7 +43,6 @@ MA 02110-1301, USA.
 #import "Octree.h"
 #import "OOMaterialConvenienceCreators.h"
 #import "OOBasicMaterial.h"
-#import "OOCollectionExtractors.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOGraphicsResetManager.h"
 #import "OODebugGLDrawing.h"
@@ -51,7 +50,6 @@ MA 02110-1301, USA.
 #import "OOMacroOpenGL.h"
 #import "OOProfilingStopwatch.h"
 #import "OODebugFlags.h"
-#import "NSObjectOOExtensions.h"
 
 #import "OOJavaScriptEngine.h"
 
@@ -624,7 +622,7 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 	unsigned			result = kBaseOctreeDepth;
 	GLfloat				xs, ys, zs, t, size;
 	
-	bounding_box_get_dimensions(boundingBox, &xs, &ys, &zs);
+	OOBoundingBoxGetDimensions(boundingBox, &xs, &ys, &zs);
 	// Shuffle dimensions around so zs is smallest
 	if (xs < zs)  { t = zs; zs = xs; xs = t; }
 	if (ys < zs)  { t = zs; zs = ys; ys = t; }
@@ -667,13 +665,13 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 }
 
 
-- (BoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv
-											basis:(Vector)ri :(Vector)rj :(Vector)rk
-									 selfPosition:(Vector)position
-										selfBasis:(Vector)si :(Vector)sj :(Vector)sk
+- (OOBoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv
+											  basis:(Vector)ri :(Vector)rj :(Vector)rk
+									   selfPosition:(Vector)position
+										  selfBasis:(Vector)si :(Vector)sj :(Vector)sk
 {
-	BoundingBox	result;
-	Vector		pv, rv;
+	OOBoundingBox	result;
+	Vector			pv, rv;
 	
 	// FIXME: rewrite with matrices
 	Vector rpos = vector_subtract(position, opv);	// model origin relative to opv
@@ -684,7 +682,7 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 	
 	if (EXPECT_NOT(vertexCount < 1))
 	{
-		bounding_box_reset_to_vector(&result, rv);
+		OOBoundingBoxResetToVector(&result, rv);
 	}
 	else
 	{
@@ -694,7 +692,7 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 		rv.x = dot_product(ri, pv);
 		rv.y = dot_product(rj, pv);
 		rv.z = dot_product(rk, pv);	// _vertices[0] position rel to opv in ijk
-		bounding_box_reset_to_vector(&result, rv);
+		OOBoundingBoxResetToVector(&result, rv);
 	}
 	
 	OOMeshVertexCount i;
@@ -706,29 +704,29 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 		rv.x = dot_product(ri, pv);
 		rv.y = dot_product(rj, pv);
 		rv.z = dot_product(rk, pv);
-		bounding_box_add_vector(&result, rv);
+		OOBoundingBoxAddVector(&result, rv);
 	}
 
 	return result;
 }
 
 
-- (BoundingBox)findSubentityBoundingBoxWithPosition:(Vector)position rotMatrix:(OOMatrix)rotMatrix
+- (OOBoundingBox)findSubentityBoundingBoxWithPosition:(Vector)position rotMatrix:(OOMatrix)rotMatrix
 {
 	// HACK! Should work out what the various bounding box things do and make it neat and consistent.
 	// FIXME: this is a bottleneck.
 	
-	BoundingBox		result;
+	OOBoundingBox		result;
 	Vector			v;
 	
 	v = vector_add(position, OOVectorMultiplyMatrix(_vertices[0], rotMatrix));
-	bounding_box_reset_to_vector(&result,v);
+	OOBoundingBoxResetToVector(&result,v);
 	
 	OOMeshVertexCount i;
 	for (i = 1; i < vertexCount; i++)
 	{
 		v = vector_add(position, OOVectorMultiplyMatrix(_vertices[i], rotMatrix));
-		bounding_box_add_vector(&result,v);
+		OOBoundingBoxAddVector(&result,v);
 	}
 	
 	return result;
@@ -1928,14 +1926,14 @@ static float FaceAreaCorrect(GLuint *vertIndices, Vector *vertices)
 	GLfloat				result;
 	
 	result = 0.0f;
-	if (vertexCount)  bounding_box_reset_to_vector(&boundingBox, _vertices[0]);
-	else  bounding_box_reset(&boundingBox);
+	if (vertexCount)  OOBoundingBoxResetToVector(&boundingBox, _vertices[0]);
+	else  boundingBox = kOOZeroBoundingBox;
 
 	for (i = 0; i < vertexCount; i++)
 	{
 		d_squared = magnitude2(_vertices[i]);
 		if (d_squared > result)  result = d_squared;
-		bounding_box_add_vector(&boundingBox, _vertices[i]);
+		OOBoundingBoxAddVector(&boundingBox, _vertices[i]);
 	}
 
 	length_longest_axis = boundingBox.max.x - boundingBox.min.x;
@@ -1984,7 +1982,7 @@ static float FaceAreaCorrect(GLuint *vertIndices, Vector *vertices)
 }
 
 
-- (BoundingBox)boundingBox
+- (OOBoundingBox)boundingBox
 {
 	return boundingBox;
 }

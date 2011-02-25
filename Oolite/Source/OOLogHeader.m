@@ -26,9 +26,6 @@ SOFTWARE.
 */
 
 #import "OOLogHeader.h"
-#import "OOCPUInfo.h"
-#import "OOLogging.h"
-#import "OOOXPVerifier.h"
 #import "Universe.h"
 #import "OOStellarBody.h"
 #import "OOJavaScriptEngine.h"
@@ -128,10 +125,6 @@ void OOPrintLogHeader(void)
 			// Under Mac OS X, Debug.oxp adds more than console support.
 			@"Debug plug-in support",
 		#endif
-	#endif
-	
-	#if OO_OXP_VERIFIER_ENABLED
-		@"OXP verifier",
 	#endif
 	
 	#if OO_LOCALIZATION_TOOLS

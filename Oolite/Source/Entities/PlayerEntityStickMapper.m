@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "PlayerEntityControls.h"
 #import "OOJoystickManager.h"
 #import "OOTexture.h"
-#import "OOCollectionExtractors.h"
+#import "OOColor.h"
 
 
 @implementation PlayerEntity (StickMapper)

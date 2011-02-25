@@ -24,8 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
-#import <stdint.h>
+#import <OoliteBase/OoliteBase.h>
 
 
 void OOCPUInfoInit(void);

@@ -26,10 +26,7 @@ SOFTWARE.
 */
 
 #import "OOAsyncWorkManager.h"
-#import "OOAsyncQueue.h"
 #import "OOCPUInfo.h"
-#import "OOCollectionExtractors.h"
-#import "NSThreadOOExtensions.h"
 #import "OONSOperation.h"
 
 #define USE_PTHREAD_ONCE (!OOLITE_WINDOWS)

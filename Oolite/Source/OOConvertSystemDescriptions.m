@@ -33,7 +33,6 @@ SOFTWARE.
 
 #import "OOConvertSystemDescriptions.h"
 #import "OldSchoolPropertyListWriting.h"
-#import "OOCollectionExtractors.h"
 #import "ResourceManager.h"
 
 static NSMutableDictionary *InitKeyToIndexDict(NSDictionary *dict, NSMutableSet **outUsedIndices);

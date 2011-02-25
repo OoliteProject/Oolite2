@@ -34,7 +34,6 @@ SOFTWARE.
 #import "OOGraphicsResetManager.h"
 #import "Universe.h"
 #import "OOMacroOpenGL.h"
-#import "NSObjectOOExtensions.h"
 
 
 #define SKY_ELEMENT_SCALE_FACTOR		(BILLBOARD_DEPTH / 500.0f)
@@ -276,8 +275,6 @@ static OOColor *SaturatedColorInRange(OOColor *color1, OOColor *color2);
 }
 #endif
 
-@end
-
 
 #if DEBUG_COLORS
 static OOColor *DebugColor(Vector orientation)
@@ -287,8 +284,6 @@ static OOColor *DebugColor(Vector orientation)
 }
 #endif
 
-
-@implementation OOSkyDrawable (OOPrivate)
 
 - (void)setUpStarsWithColor1:(OOColor *)color1 color2:(OOColor *)color2
 {

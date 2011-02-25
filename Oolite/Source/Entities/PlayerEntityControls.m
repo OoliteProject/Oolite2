@@ -40,12 +40,10 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OOSound.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "ResourceManager.h"
 #import "HeadUpDisplay.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
-#import "OOLoggingExtended.h"
 #import "OOMusicController.h"
 #import "OOTexture.h"
 #import "OODebugFlags.h"
@@ -1343,8 +1341,8 @@ static NSTimeInterval	time_last_frame;
 				if (!leftRightKeyPressed)
 				{
 					float newTimeAccelerationFactor = [gameView isDown:gvArrowKeyLeft] ? 
-							OOMax_f([UNIVERSE timeAccelerationFactor] / 2.0f, TIME_ACCELERATION_FACTOR_MIN) :
-							OOMin_f([UNIVERSE timeAccelerationFactor] * 2.0f, TIME_ACCELERATION_FACTOR_MAX);
+							fmaxf([UNIVERSE timeAccelerationFactor] / 2.0f, TIME_ACCELERATION_FACTOR_MIN) :
+							fminf([UNIVERSE timeAccelerationFactor] * 2.0f, TIME_ACCELERATION_FACTOR_MAX);
 					[UNIVERSE setTimeAccelerationFactor:newTimeAccelerationFactor];
 				}
 				leftRightKeyPressed = YES;

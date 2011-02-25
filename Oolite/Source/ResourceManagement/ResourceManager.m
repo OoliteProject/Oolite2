@@ -23,22 +23,15 @@ MA 02110-1301, USA.
 */
 
 #import "ResourceManager.h"
-#import "NSScannerOOExtensions.h"
-#import "NSMutableDictionaryOOExtensions.h"
-#import "NSStringOOExtensions.h"
 #import "OOSound.h"
 #import "OOCacheManager.h"
 #import "Universe.h"
 #import "OOStringParsing.h"
-#import "OOPListParsing.h"
 #import "MyOpenGLView.h"
-#import "OOCollectionExtractors.h"
-#import "OOLogOutputHandler.h"
+#import "OoliteLogOutputHandler.h"
 
 #import "OOJSScript.h"
 #import "OOPListScript.h"
-
-#define kOOLogUnconvertedNSLog @"unclassified.ResourceManager"
 
 
 static NSString * const kOOLogCacheUpToDate				= @"dataCache.upToDate";
@@ -889,7 +882,7 @@ static NSMutableDictionary *sStringCache;
 	}
 	
 	path = [self pathForFileNamed:fileName inFolder:folderName cache:useCache];
-	if (path != nil)  result = [NSString stringWithContentsOfUnicodeFile:path];
+	if (path != nil)  result = [NSString oo_stringWithContentsOfUnicodeFile:path];
 	
 	if (result != nil && useCache)
 	{

@@ -3,31 +3,39 @@ extern "C" {
 #endif
 
 
-#import <OoliteBase/OOCocoa.h>
-#import <OoliteBase/OOFunctionAttributes.h>
-#import <OoliteBase/OOGarbageCollectionSupport.h>
-#import <OoliteBase/MYCollectionUtilities.h>
-#import <OoliteBase/OOLogging.h>
-
-#import <OoliteBase/OOMaths.h>
-
-#import <OoliteBase/OOBaseStringParsing.h>
-#import <OoliteBase/OOCollectionExtractors.h>
-#import <OoliteBase/OODeepCopy.h>
-#import <OoliteBase/OOIsNumberLiteral.h>
-#import <OoliteBase/OOCPUInfo.h>
-#import <OoliteBase/OOWeakReference.h>
-
-#import <OoliteBase/NSObjectOOExtensions.h>
-#import <OoliteBase/NSDictionaryOOExtensions.h>
-#import <OoliteBase/NSNumberOOExtensions.h>
-#import <OoliteBase/NSStringOOExtensions.h>
-#import <OoliteBase/NSThreadOOExtensions.h>
+#import "OOCocoa.h"
+#import "OOFunctionAttributes.h"
+#import "OOGarbageCollectionSupport.h"
+#import "MYCollectionUtilities.h"
+#import "OOLogging.h"
+#import "OOAsyncQueue.h"
+#import "OOPriorityQueue.h"
+#import "OOProbabilitySet.h"
 	
-#import <OoliteBase/OOProblemReporting.h>
+#import "OOMaths.h"
 	
-#import <OoliteBase/OOConfParsing.h>
-#import <OoliteBase/OOConfGeneration.h>
+#import "OOBaseStringParsing.h"
+#import "OOCollectionExtractors.h"
+#import "OODeepCopy.h"
+#import "OOIsNumberLiteral.h"
+#import "OOCPUInfo.h"
+#import "OOWeakReference.h"
+	
+#import "NSObjectOOExtensions.h"
+#import "NSDictionaryOOExtensions.h"
+#import "NSNumberOOExtensions.h"
+#import "NSStringOOExtensions.h"
+#import "NSScannerOOExtensions.h"
+#import "NSThreadOOExtensions.h"
+	
+#import "OOProblemReporting.h"
+	
+#import "OOPListParsing.h"
+#import "OOConfParsing.h"
+#import "OOConfGeneration.h"
+	
+#import "OOSimpleMethodType.h"
+
 
 #ifdef __cplusplus
 }

@@ -25,9 +25,7 @@ MA 02110-1301, USA.
 #import "AI.h"
 #import "ResourceManager.h"
 #import "OOStringParsing.h"
-#import "OOWeakReference.h"
 #import "OOCacheManager.h"
-#import "OOCollectionExtractors.h"
 
 #import "ShipEntity.h"
 
@@ -702,8 +700,6 @@ static AIStackElement *sStack;
 	OOLog(@"dumpState.ai", @"Next think interval: %g", thinkTimeInterval);
 }
 
-@end
-
 
 /*	This is an attempt to fix the bugs referred to above regarding calls from
 	__NSFireDelayedPerform with a corrupt self. I'm not certain whether this
@@ -711,8 +707,6 @@ static AIStackElement *sStack;
 	+deferredCallTrampolineWithInfo:.
 	-- Ahruman 20070706
 */
-@implementation AI (OOPrivate)
-
 - (void)performDeferredCall:(SEL)selector withObject:(id)object afterDelay:(NSTimeInterval)delay
 {
 	OOAIDeferredCallTrampolineInfo	infoStruct;

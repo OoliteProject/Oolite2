@@ -28,8 +28,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
-#import <stdarg.h>
+#import "OOLogOutputHandler.h"
 
 
 #ifndef OOLOG_FUNCTION_NAME
@@ -118,6 +117,37 @@ void OOLogGenericSubclassResponsibilityForFunction(const char *function);
 #else
 #define OOExtraLog(...)  do {} while (0)
 #endif
+
+
+void OOLogSetDisplayMessagesInClass(NSString *messageClass, BOOL flag);
+NSString *OOLogGetParentMessageClass(NSString *messageClass);
+
+
+/*	OOLoggingInit() must be called before any logging. If logHandler is nil,
+	the default handler will be used.
+*/
+void OOLoggingInit(OOLogOutputHandler *logHandler);
+void OOLoggingTerminate(void);
+
+
+void OOLogInsertMarker(void);
+
+
+// Get/set display settings.
+BOOL OOLogShowFunction(void);
+void OOLogSetShowFunction(BOOL flag);
+BOOL OOLogShowFileAndLine(void);
+void OOLogSetShowFileAndLine(BOOL flag);
+BOOL OOLogShowMessageClass(void);
+void OOLogSetShowMessageClass(BOOL flag);
+BOOL OOLogShowTime(void);
+void OOLogSetShowTime(BOOL flag);
+
+// Change message class visibility without saving to user defaults.
+void OOLogSetShowMessageClassTemporary(BOOL flag);
+
+// Utility function to strip path components from __FILE__ strings.
+NSString *OOLogAbbreviatedFileName(const char *name);
 
 
 // *** Predefined message classes.

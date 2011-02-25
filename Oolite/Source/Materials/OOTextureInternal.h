@@ -69,12 +69,8 @@ typedef struct OOTextureInfo
 {
 	GLfloat					anisotropyScale;
 	unsigned				anisotropyAvailable: 1,
-							clampToEdgeAvailable: 1,
 							clientStorageAvailable: 1,
-							textureLODBiasAvailable: 1,
-							rectangleTextureAvailable: 1,
-							cubeMapAvailable: 1,
-							textureMaxLevelAvailable: 1;
+							rectangleTextureAvailable: 1;
 } OOTextureInfo;
 
 extern OOTextureInfo gOOTextureInfo;
@@ -84,15 +80,6 @@ extern OOTextureInfo gOOTextureInfo;
 #warning GL_EXT_texture_filter_anisotropic unavailble -- are you using an up-to-date glext.h?
 #endif
 
-#ifndef GL_CLAMP_TO_EDGE
-#ifdef GL_SGIS_texture_edge_clamp
-#define GL_CLAMP_TO_EDGE GL_CLAMP_TO_EDGE_SGIS
-#else
-#warning GL_CLAMP_TO_EDGE (OpenGL 1.2) and GL_SGIS_texture_edge_clamp are unavailable -- are you using an up-to-date gl.h?
-#define GL_CLAMP_TO_EDGE GL_CLAMP
-#endif
-#endif
-
 #if defined(GL_APPLE_client_storage) && !OOTEXTURE_RELOADABLE
 #define OO_GL_CLIENT_STORAGE	(1)
 #define EnableClientStorage()	OOGL(glPixelStorei(GL_UNPACK_CLIENT_STORAGE_APPLE, GL_TRUE))
@@ -100,21 +87,3 @@ extern OOTextureInfo gOOTextureInfo;
 #define OO_GL_CLIENT_STORAGE	(0)
 #define EnableClientStorage()	do {} while (0)
 #endif
-
-
-#ifndef GL_TEXTURE_MAX_LEVEL
-#ifdef GL_TEXTURE_MAX_LEVEL_SGIS
-#define GL_TEXTURE_MAX_LEVEL	GL_TEXTURE_MAX_LEVEL_SGIS
-#else
-#define GL_TEXTURE_MAX_LEVEL	0x813D
-#endif
-#endif
-
-
-#if OO_TEXTURE_CUBE_MAP
-#ifndef GL_TEXTURE_CUBE_MAP
-#define GL_TEXTURE_CUBE_MAP				GL_TEXTURE_CUBE_MAP_ARB
-#define GL_TEXTURE_CUBE_MAP_POSITIVE_X	GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB
-#endif
-#endif
-

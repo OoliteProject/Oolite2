@@ -46,7 +46,7 @@
 /*	Memory management attributes for garbage-collected Objective-C. Currently
 	only used in Mac-only tools.
 */
-#if OOLITE_LEOPARD
+#if OOLITE_MAC_OS_X
 
 #define OO_STRONG	__strong
 #define OO_WEAK		__weak

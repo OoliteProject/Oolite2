@@ -35,7 +35,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 @interface OOProbabilitySet: NSObject <NSCopying, NSMutableCopying>

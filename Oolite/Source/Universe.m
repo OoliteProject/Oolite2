@@ -35,7 +35,6 @@ MA 02110-1301, USA.
 #import "OOColor.h"
 #import "OOCacheManager.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOCPUInfo.h"
@@ -52,8 +51,8 @@ MA 02110-1301, USA.
 
 #import "OOCharacter.h"
 #import "OOShipRegistry.h"
-#import "OOProbabilitySet.h"
 #import "OOEquipmentType.h"
+#import "OOGeometryGLHelpers.h"
 
 #import "PlayerEntity.h"
 #import "PlayerEntityContracts.h"
@@ -73,7 +72,6 @@ MA 02110-1301, USA.
 #import "OOMusicController.h"
 #import "OOAsyncWorkManager.h"
 #import "OODebugFlags.h"
-#import "OOLoggingExtended.h"
 #import "OOJSEngineTimeManagement.h"
 #import "OOJoystickManager.h"
 #import "OOScriptTimer.h"
@@ -1661,9 +1659,9 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 		rfactor = SCANNER_MAX_RANGE;
 	if (rfactor < 1000)
 		rfactor = 1000;
-	BoundingBox	launch_bbox;
-	bounding_box_reset_to_vector(&launch_bbox, make_vector(launchPos.x - rfactor, launchPos.y - rfactor, launchPos.z - rfactor));
-	bounding_box_add_xyz(&launch_bbox, launchPos.x + rfactor, launchPos.y + rfactor, launchPos.z + rfactor);
+	OOBoundingBox	launch_bbox;
+	OOBoundingBoxResetToVector(&launch_bbox, make_vector(launchPos.x - rfactor, launchPos.y - rfactor, launchPos.z - rfactor));
+	OOBoundingBoxAddXYZ(&launch_bbox, launchPos.x + rfactor, launchPos.y + rfactor, launchPos.z + rfactor);
 	
 	return [self addShips: howMany withRole: desc intoBoundingBox: launch_bbox];
 }
@@ -1677,15 +1675,15 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	GLfloat rfactor = radius;
 	if (rfactor < 1000)
 		rfactor = 1000;
-	BoundingBox	launch_bbox;
-	bounding_box_reset_to_vector(&launch_bbox, make_vector(launchPos.x - rfactor, launchPos.y - rfactor, launchPos.z - rfactor));
-	bounding_box_add_xyz(&launch_bbox, launchPos.x + rfactor, launchPos.y + rfactor, launchPos.z + rfactor);
+	OOBoundingBox	launch_bbox;
+	OOBoundingBoxResetToVector(&launch_bbox, make_vector(launchPos.x - rfactor, launchPos.y - rfactor, launchPos.z - rfactor));
+	OOBoundingBoxAddXYZ(&launch_bbox, launchPos.x + rfactor, launchPos.y + rfactor, launchPos.z + rfactor);
 	
 	return [self addShips: howMany withRole: desc intoBoundingBox: launch_bbox];
 }
 
 
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc intoBoundingBox:(BoundingBox) bbox
+- (BOOL) addShips:(int) howMany withRole:(NSString *) desc intoBoundingBox:(OOBoundingBox) bbox
 {
 	if (howMany < 1)
 		return YES;
@@ -1698,8 +1696,8 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 		GLfloat lx = bbox.max.x - bbox.min.x;
 		GLfloat ly = bbox.max.y - bbox.min.y;
 		GLfloat lz = bbox.max.z - bbox.min.z;
-		BoundingBox bbox0 = bbox;
-		BoundingBox bbox1 = bbox;
+		OOBoundingBox bbox0 = bbox;
+		OOBoundingBox bbox1 = bbox;
 		if ((lx > lz)&&(lx > ly))	// longest dimension is x
 		{
 			bbox0.min.x += 0.5 * lx;
@@ -4139,7 +4137,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	if (parent)
 	{
 		// we're a subentity!
-		BoundingBox bbox = [srcEntity boundingBox];
+		OOBoundingBox bbox = [srcEntity boundingBox];
 		Vector midfrontplane = make_vector(0.5 * (bbox.max.x + bbox.min.x), 0.5 * (bbox.max.y + bbox.min.y), bbox.max.z);
 		p0 = [srcEntity absolutePositionForSubentityOffset:midfrontplane];
 		q1 = [parent orientation];
@@ -7227,7 +7225,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 		NSDictionary	*ship_info = [registry shipyardInfoForKey:ship_key];
 		OOTechLevelID	ship_techlevel = [ship_info oo_intForKey:KEY_TECHLEVEL];
 		
-		double chance = 1.0 - pow(1.0 - [ship_info oo_doubleForKey:KEY_CHANCE], OOMax_f(1, techlevel - ship_techlevel));
+		double chance = 1.0 - pow(1.0 - [ship_info oo_doubleForKey:KEY_CHANCE], fmaxf(1, techlevel - ship_techlevel));
 		
 		// seed random number generator
 		int super_rand1 = ship_seed.a * 0x10000 + ship_seed.c * 0x100 + ship_seed.e;

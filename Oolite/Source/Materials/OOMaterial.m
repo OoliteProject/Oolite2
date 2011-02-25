@@ -26,8 +26,6 @@ SOFTWARE.
 */
 
 #import "OOMaterial.h"
-#import "OOFunctionAttributes.h"
-#import "OOLogging.h"
 
 
 static OOMaterial *sActiveMaterial = nil;

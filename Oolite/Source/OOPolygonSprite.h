@@ -29,7 +29,7 @@ SOFTWARE.
 */
 
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOOpenGL.h"
 #import "OOOpenGLExtensionManager.h"
 

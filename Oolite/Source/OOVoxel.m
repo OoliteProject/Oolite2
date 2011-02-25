@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "OOMaths.h"
+#import "OOVoxel.h"
 
 
 // routines concerning octree voxels

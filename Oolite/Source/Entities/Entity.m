@@ -27,7 +27,6 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 #import "OOPlanetEntity.h"
 
-#import "OOMaths.h"
 #import "Geometry.h"
 #import "Universe.h"
 #import "GameController.h"
@@ -36,9 +35,7 @@ MA 02110-1301, USA.
 
 #import "CollisionRegion.h"
 
-#import "NSScannerOOExtensions.h"
 #import "OODebugFlags.h"
-#import "NSObjectOOExtensions.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.Entity"
 
@@ -112,7 +109,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 
 - (NSString *)descriptionComponents
 {
-	return [NSString stringWithFormat:@"position: %@ scanClass: %@ status: %@", VectorDescription([self position]), OOStringFromScanClass([self scanClass]), OOStringFromEntityStatus([self status])];
+	return [NSString stringWithFormat:@"position: %@ scanClass: %@ status: %@", OOVectorDescription([self position]), OOStringFromScanClass([self scanClass]), OOStringFromEntityStatus([self status])];
 }
 
 
@@ -627,7 +624,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (BoundingBox) boundingBox
+- (OOBoundingBox) boundingBox
 {
 	return boundingBox;
 }
@@ -929,7 +926,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 	OOLog(@"dumpState.entity", @"Universal ID: %u", universalID);
 	OOLog(@"dumpState.entity", @"Scan class: %@", OOStringFromScanClass(scanClass));
 	OOLog(@"dumpState.entity", @"Status: %@", OOStringFromEntityStatus([self status]));
-	OOLog(@"dumpState.entity", @"Position: %@", VectorDescription(position));
+	OOLog(@"dumpState.entity", @"Position: %@", OOVectorDescription(position));
 	OOLog(@"dumpState.entity", @"Orientation: %@", QuaternionDescription(orientation));
 	OOLog(@"dumpState.entity", @"Distance travelled: %g", distanceTravelled);
 	OOLog(@"dumpState.entity", @"Energy: %g of %g", energy, maxEnergy);

@@ -48,7 +48,7 @@ sets that will then be immutablized.
 #import "OOProbabilitySet.h"
 #import "OOFunctionAttributes.h"
 #import "OOCollectionExtractors.h"
-#import "legacy_random.h"
+#import "OOGarbageCollectionSupport.h"
 
 
 static NSString * const	kObjectsKey = @"objects";
@@ -513,8 +513,8 @@ static OOEmptyProbabilitySet *sOOEmptyProbabilitySetSingleton = nil;
 	if ((self = [super initPriv]))
 	{
 		// Allocate arrays
-		_objects = malloc(sizeof *objects * count);
-		_cumulativeWeights = malloc(sizeof *_cumulativeWeights * count);
+		_objects = OOAllocScanned(sizeof *objects * count);
+		_cumulativeWeights = OOAllocScanned(sizeof *_cumulativeWeights * count);
 		if (_objects == NULL || _cumulativeWeights == NULL)
 		{
 			[self release];
@@ -546,7 +546,7 @@ static OOEmptyProbabilitySet *sOOEmptyProbabilitySetSingleton = nil;
 		{
 			[_objects[i] release];
 		}
-		free(_objects);
+		OOFreeScanned(_objects);
 		_objects = NULL;
 	}
 	
@@ -557,6 +557,17 @@ static OOEmptyProbabilitySet *sOOEmptyProbabilitySetSingleton = nil;
 	}
 	
 	[super dealloc];
+}
+
+
+- (void) finalize
+{
+	OOFreeScanned(_objects);
+	_objects = NULL;
+	free(_cumulativeWeights);
+	_cumulativeWeights = NULL;
+	
+	[super finalize];
 }
 
 

@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 
-#import "OOLoggingExtended.h"
+#import "OOLogging.h"
 #import "OOFunctionAttributes.h"
 #import "NSThreadOOExtensions.h"
 #import "OOLogOutputHandler.h"
@@ -87,6 +87,7 @@ static THREAD_LOCAL OOLogIndentStackElement
 static BOOL							sShowFunction = NO;
 static BOOL							sShowFileAndLine = NO;
 static BOOL							sShowClass = YES;
+static BOOL							sShowTime = YES;
 
 
 // To avoid recursion/self-dependencies, OOLog gets its own logging function.
@@ -361,6 +362,11 @@ void OOLogWithFunctionFileAndLineAndArguments(NSString *messageClass, const char
 			}
 		}
 		
+		if (sShowTime)
+		{
+			formattedMessage = [NSString stringWithFormat:@"%@ %@", [[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S.%F" timeZone:nil locale:nil], formattedMessage];
+		}
+		
 		// Apply indentation
 		indentLevel = GetIndentLevel();
 		if (indentLevel != 0)
@@ -464,6 +470,26 @@ void OOLogSetShowMessageClass(BOOL flag)
 }
 
 
+BOOL OOLogShowTime(void)
+{
+	return sShowTime;
+}
+
+
+void OOLogSetShowTime(BOOL flag)
+{
+	CheckInited();
+	
+	flag = !!flag;
+	
+	if (flag != sShowTime)
+	{
+		sShowTime = flag;
+		[sHandler setShowTimeStamp:flag];
+	}
+}
+
+
 void OOLogSetShowMessageClassTemporary(BOOL flag)
 {
 	sShowClass = !!flag;
@@ -473,6 +499,8 @@ void OOLogSetShowMessageClassTemporary(BOOL flag)
 void OOLoggingInit(OOLogOutputHandler *logHandler)
 {
 	if (sHandler != nil)  return;
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	if (logHandler != nil)  sHandler = [logHandler retain];
 	else  sHandler = [[OOLogOutputHandler alloc] init];
 	
@@ -496,6 +524,9 @@ void OOLoggingInit(OOLogOutputHandler *logHandler)
 	sShowFunction = [sHandler showFunction];
 	sShowFileAndLine = [sHandler showFileAndLine];
 	sShowClass = [sHandler showMessageClass];
+	sShowTime = [sHandler showTimeStamp];
+	
+	[pool drain];
 }
 
 

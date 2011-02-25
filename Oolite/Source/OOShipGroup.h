@@ -24,8 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
-#import "OOWeakReference.h"
+#import <OoliteBase/OoliteBase.h>
 
 @class ShipEntity;
 

@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "CollisionRegion.h"
-#import "OOMaths.h"
 #import "Universe.h"
 #import "Entity.h"
 #import "ShipEntity.h"

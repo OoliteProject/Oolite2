@@ -24,10 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-
-#ifndef INCLUDED_OOMATHS_h
-	#error Do not include OOTriangle.h directly; include OOMaths.h.
-#else
+#import <OoliteBase/OoliteBase.h>
 
 
 typedef struct
@@ -76,6 +73,3 @@ OOINLINE Vector resolveVectorInIJK(Vector v0, Triangle ijk)
 	result.z = dot_product(v0, ijk.v[2]);
 	return result;
 }
-
-
-#endif	/* INCLUDED_OOMATHS_h */

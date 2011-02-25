@@ -28,8 +28,6 @@ SOFTWARE.
 */
 
 #import "OOBasicMaterial.h"
-#import "OOWeakReference.h"
-#import "OOMaths.h"
 
 
 #if OO_SHADERS

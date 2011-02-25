@@ -30,7 +30,6 @@ MA 02110-1301, USA.
 */
 
 #import <Cocoa/Cocoa.h>
-#import <Growl/Growl.h>
 
 @class GameController;
 

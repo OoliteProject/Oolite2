@@ -29,6 +29,8 @@ SOFTWARE.
 
 */
 
+#import <OoliteBase/OoliteBase.h>
+
 
 @class OODebugMonitor;
 

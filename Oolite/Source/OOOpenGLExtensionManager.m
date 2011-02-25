@@ -26,26 +26,17 @@ SOFTWARE.
 */
 
 #import "OOOpenGLExtensionManager.h"
-#import "OOLogging.h"
-#import "OOFunctionAttributes.h"
-#import <stdlib.h>
-#import "NSThreadOOExtensions.h"
 
 #import "ResourceManager.h"
-#import "OOCollectionExtractors.h"
 #import "OORegExpMatcher.h"
 #import "OOConstToString.h"
 
 
-/*	OpenGL version required, currently 1.1 or later (basic stuff like
-	glBindTexture(), glDrawArrays()). We probably have implicit requirements
-	for later versions, but I don't feel like auditing.
-	-- Ahruman
-*/
+//	OpenGL version required, currently 2.0 or later.
 enum
 {
-	kMinMajorVersion				= 1,
-	kMinMinorVersion				= 1
+	kMinMajorVersion				= 2,
+	kMinMinorVersion				= 0
 };
 
 
@@ -54,8 +45,6 @@ enum
 	(required for Windows only).
 */
 static void OOBadOpenGLExtensionUsed(void) GCC_ATTR((noreturn, used));
-
-#if OO_SHADERS
 
 PFNGLUSEPROGRAMOBJECTARBPROC			glUseProgramObjectARB			= (PFNGLUSEPROGRAMOBJECTARBPROC)&OOBadOpenGLExtensionUsed;
 PFNGLGETUNIFORMLOCATIONARBPROC			glGetUniformLocationARB			= (PFNGLGETUNIFORMLOCATIONARBPROC)&OOBadOpenGLExtensionUsed;
@@ -77,16 +66,9 @@ PFNGLBINDATTRIBLOCATIONARBPROC			glBindAttribLocationARB			= (PFNGLBINDATTRIBLOC
 PFNGLENABLEVERTEXATTRIBARRAYARBPROC		glEnableVertexAttribArrayARB	= (PFNGLENABLEVERTEXATTRIBARRAYARBPROC)&OOBadOpenGLExtensionUsed;
 PFNGLVERTEXATTRIBPOINTERARBPROC			glVertexAttribPointerARB		= (PFNGLVERTEXATTRIBPOINTERARBPROC)&OOBadOpenGLExtensionUsed;
 PFNGLDISABLEVERTEXATTRIBARRAYARBPROC	glDisableVertexAttribArrayARB	= (PFNGLDISABLEVERTEXATTRIBARRAYARBPROC)&OOBadOpenGLExtensionUsed;
-PFNGLVALIDATEPROGRAMARBPROC			glValidateProgramARB			= (PFNGLVALIDATEPROGRAMARBPROC)&OOBadOpenGLExtensionUsed;
-#endif
-
-#if OO_SHADERS || OO_MULTITEXTURE
+PFNGLVALIDATEPROGRAMARBPROC				glValidateProgramARB			= (PFNGLVALIDATEPROGRAMARBPROC)&OOBadOpenGLExtensionUsed;
 PFNGLACTIVETEXTUREARBPROC				glActiveTextureARB				= (PFNGLACTIVETEXTUREARBPROC)&OOBadOpenGLExtensionUsed;
-#endif
-
-#if OO_MULTITEXTURE
 PFNGLCLIENTACTIVETEXTUREARBPROC			glClientActiveTextureARB		= (PFNGLCLIENTACTIVETEXTUREARBPROC)&OOBadOpenGLExtensionUsed;
-#endif
 
 #if OO_USE_VBO
 PFNGLGENBUFFERSARBPROC					glGenBuffersARB					= (PFNGLGENBUFFERSARBPROC)&OOBadOpenGLExtensionUsed;
@@ -122,9 +104,7 @@ static unsigned IntegerFromString(const GLubyte **ioString);
 
 @interface OOOpenGLExtensionManager (OOPrivate)
 
-#if OO_SHADERS
 - (void)checkShadersSupported;
-#endif
 
 #if OO_USE_VBO
 - (void)checkVBOSupported;
@@ -134,9 +114,7 @@ static unsigned IntegerFromString(const GLubyte **ioString);
 - (void)checkFBOSupported;
 #endif
 
-#if GL_ARB_texture_env_combine
 - (void)checkTextureCombinersSupported;
-#endif
 
 - (NSDictionary *) lookUpPerGPUSettingsWithVersionString:(NSString *)version extensionsString:(NSString *)extensionsStr;
 
@@ -464,8 +442,6 @@ static NSArray *ArrayOfExtensions(NSString *extensionString)
 	return useDustShader;
 }
 
-@end
-
 
 static unsigned IntegerFromString(const GLubyte **ioString)
 {
@@ -483,11 +459,6 @@ static unsigned IntegerFromString(const GLubyte **ioString)
 	return result;
 }
 
-
-@implementation OOOpenGLExtensionManager (OOPrivate)
-
-
-#if OO_SHADERS
 
 - (void)checkShadersSupported
 {
@@ -542,7 +513,6 @@ static unsigned IntegerFromString(const GLubyte **ioString)
 	
 	shadersAvailable = YES;
 }
-#endif
 
 
 #if OO_USE_VBO
@@ -597,7 +567,6 @@ static unsigned IntegerFromString(const GLubyte **ioString)
 #endif
 
 
-#if OO_MULTITEXTURE
 - (void)checkTextureCombinersSupported
 {
 	textureCombinersSupported = [self haveExtension:@"GL_ARB_texture_env_combine"];
@@ -619,7 +588,6 @@ static unsigned IntegerFromString(const GLubyte **ioString)
 	}
 
 }
-#endif
 
 
 // regexps may be a single string or an array of strings (in which case results are ANDed).

@@ -29,10 +29,8 @@ MA 02110-1301, USA.
 #if !NEW_PLANETS
 
 #import "Entity.h"
-#import "legacy_random.h"
-#import "OOColor.h"
 
-@class OOTexture;
+@class OOTexture, OOColor;
 
 
 #define MAX_TRI_INDICES			3*(20+80+320+1280+5120+20480)

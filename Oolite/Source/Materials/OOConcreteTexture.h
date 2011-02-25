@@ -46,9 +46,7 @@ SOFTWARE.
 #if GL_EXT_texture_rectangle
 							_isRectTexture: 1,
 #endif
-#if OO_TEXTURE_CUBE_MAP
 							_isCubeMap: 1,
-#endif
 							_valid: 1;
 	uint8_t					_mipLevels;
 	
@@ -63,9 +61,8 @@ SOFTWARE.
 	
 	OOTextureDataFormat		_format;
 	uint32_t				_options;
-#if GL_EXT_texture_lod_bias
 	GLfloat					_lodBias;
-#endif
+	
 #if GL_EXT_texture_filter_anisotropic
 	float					_anisotropy;
 #endif

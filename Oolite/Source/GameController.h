@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 #define MODE_WINDOWED			100
 #define MODE_FULL_SCREEN		200

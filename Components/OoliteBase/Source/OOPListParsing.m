@@ -25,7 +25,6 @@ MA 02110-1301, USA.
 
 #import "OOPListParsing.h"
 #import "OOLogging.h"
-#import "OOStringParsing.h"
 #import <ctype.h>
 #import <string.h>
 

@@ -28,7 +28,6 @@ MA 02110-1301, USA.
 
 #import "OOShipRegistry.h"
 #import "OORoleSet.h"
-#import "OOCollectionExtractors.h"
 #import "OOConstToString.h"
 #import "OOShipGroup.h"
 #import "OOEquipmentType.h"

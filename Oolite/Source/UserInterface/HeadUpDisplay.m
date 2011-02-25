@@ -36,13 +36,13 @@ MA 02110-1301, USA.
 #import "OOTexture.h"
 #import "OOTextureSprite.h"
 #import "OOPolygonSprite.h"
-#import "OOCollectionExtractors.h"
 #import "OOEncodingConverter.h"
 #import "OOCrosshairs.h"
 #import "OOConstToString.h"
 #import "OOStringParsing.h"
 #import "OOJoystickManager.h"
 #import "OOJavaScriptEngine.h"
+#import "OOGeometryGLHelpers.h"
 
 
 #define kOOLogUnconvertedNSLog @"unclassified.HeadUpDisplay"
@@ -823,7 +823,7 @@ static BOOL hostiles;
 					if (ship->collision_radius * upscale > 4.5)
 					{
 						Vector bounds[6];
-						BoundingBox bb = ship->totalBoundingBox;
+						OOBoundingBox bb = ship->totalBoundingBox;
 						bounds[0] = ship->v_forward;	scale_vector(&bounds[0], bb.max.z);
 						bounds[1] = ship->v_forward;	scale_vector(&bounds[1], bb.min.z);
 						bounds[2] = ship->v_right;		scale_vector(&bounds[2], bb.max.x);

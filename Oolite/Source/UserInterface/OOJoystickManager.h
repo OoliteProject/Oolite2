@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 // Enums are used here rather than a more complex ObjC object because

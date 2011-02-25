@@ -27,7 +27,6 @@ SOFTWARE.
 
 #import "OOEquipmentType.h"
 #import "Universe.h"
-#import "OOCollectionExtractors.h"
 #import "OOLegacyScriptWhitelist.h"
 
 

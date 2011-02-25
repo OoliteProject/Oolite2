@@ -12,7 +12,7 @@ This file is hereby placed in the public domain.
 
 */
 
-#import "OOErrorDescription.h"
+#import "OOMacErrorDescription.h"
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <Carbon/Carbon.h>

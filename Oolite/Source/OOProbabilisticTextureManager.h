@@ -31,7 +31,6 @@ SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import "OOTexture.h"
-#import "OOMaths.h"
 
 
 @interface OOProbabilisticTextureManager: NSObject

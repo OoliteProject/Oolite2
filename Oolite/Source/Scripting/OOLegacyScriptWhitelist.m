@@ -26,10 +26,7 @@ MA 02110-1301, USA.
 #import "OOLegacyScriptWhitelist.h"
 #import "OOStringParsing.h"
 #import	"ResourceManager.h"
-#import "OOCollectionExtractors.h"
 #import "PlayerEntityLegacyScriptEngine.h"
-#import "NSDictionaryOOExtensions.h"
-#import "OODeepCopy.h"
 
 
 #define OUTPUT_PLIST_PATHS	0		// If nonzero, error locators are formatted for script-patches.plist.

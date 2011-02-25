@@ -32,7 +32,7 @@ SOFTWARE.
 
 */
 
-#import <Cocoa/Cocoa.h>
+#import "OOCocoa.h"
 
 
 @interface OOLogOutputHandler: NSObject
@@ -67,5 +67,8 @@ SOFTWARE.
 
 - (BOOL) showMessageClass;
 - (void) setShowMessageClass:(BOOL)flag;
+
+- (BOOL) showTimeStamp;
+- (void) setShowTimeStamp:(BOOL)flag;
 
 @end

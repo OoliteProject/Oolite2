@@ -24,9 +24,8 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 #import <jsapi.h>
-#import "OOMaths.h"
 
 
 void InitOOJSQuaternion(JSContext *context, JSObject *global);

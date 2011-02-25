@@ -28,8 +28,6 @@ SOFTWARE.
 #import "OORoleSet.h"
 
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
-#import "OOLogging.h"
 
 
 @interface OORoleSet (OOPrivate)
@@ -256,10 +254,6 @@ SOFTWARE.
 	return [[[[self class] alloc] initWithRolesAndProbabilities:dict] autorelease];
 }
 
-@end
-
-
-@implementation OORoleSet (OOPrivate)
 
 - (id)initWithRolesAndProbabilities:(NSDictionary *)dict
 {

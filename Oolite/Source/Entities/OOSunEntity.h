@@ -24,12 +24,10 @@ MA 02110-1301, USA.
 
 */
 
-
 #import "OOPlanetEntity.h"
-
 #import "Entity.h"
-#import "legacy_random.h"
-#import "OOColor.h"
+
+@class OOColor;
 
 
 #define SUN_CORONA_SAMPLES		729			// Samples at half-degree intervals, with a bit of overlap.
@@ -60,9 +58,9 @@ MA 02110-1301, USA.
 	float					corona_blending;
 }
 
-- (id) initSunWithColor:(OOColor*)sun_color andDictionary:(NSDictionary*) dict;
-- (BOOL) setSunColor:(OOColor*)sun_color;
-- (BOOL) changeSunProperty:(NSString *)key withDictionary:(NSDictionary*) dict;
+- (id) initSunWithColor:(OOColor *)sun_color andDictionary:(NSDictionary *)dict;
+- (BOOL) setSunColor:(OOColor *)sun_color;
+- (BOOL) changeSunProperty:(NSString *)key withDictionary:(NSDictionary *)dict;
 
 - (OOStellarBodyType) planetType;
 

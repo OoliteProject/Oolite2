@@ -78,8 +78,13 @@ OOINLINE void FreeElement(OOAsyncQueueElement *element)
 
 @implementation OOAsyncQueue
 
-- (id)init
+- (id) init
 {
+#if OOLITE_MAC_OS_X
+	// The way we use memory is deeply GC-unfriendly at the moment.
+	NSAssert([NSGarbageCollector defaultCollector] == nil, @"OOAsyncQueue is currently incompatible with the garbage collector.");
+#endif
+	
 	self = [super init];
 	if (self != nil)
 	{
@@ -96,7 +101,7 @@ OOINLINE void FreeElement(OOAsyncQueueElement *element)
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
 	OOAsyncQueueElement		*element = NULL;
 	
@@ -123,14 +128,14 @@ OOINLINE void FreeElement(OOAsyncQueueElement *element)
 }
 
 
-- (NSString *)description
+- (NSString *) description
 {
 	// Don't bother locking, the value would be out of date immediately anyway.
 	return [NSString stringWithFormat:@"<%@ %p>{%u elements}", [self class], self, _elemCount];
 }
 
 
-- (BOOL)enqueue:(id)object
+- (BOOL) enqueue:(id)object
 {
 	OOAsyncQueueElement		*element = NULL;
 	BOOL					success = NO;
@@ -183,33 +188,33 @@ FAIL:
 }
 
 
-- (id)dequeue
+- (id) dequeue
 {
 	[_lock lockWhenCondition:kConditionQueuedData];
 	return [self doDequeAndUnlockWithAcquiredLock];
 }
 
 
-- (id)tryDequeue
+- (id) tryDequeue
 {
 	if (![_lock tryLockWhenCondition:kConditionQueuedData])  return NO;
 	return [self doDequeAndUnlockWithAcquiredLock];
 }
 
 
-- (BOOL)empty
+- (BOOL) empty
 {
 	return _head != NULL;
 }
 
 
-- (unsigned)count
+- (NSUInteger) count
 {
 	return _elemCount;
 }
 
 
-- (void)emptyQueue
+- (void) emptyQueue
 {
 	[_lock lock];
 	[self doEmptyQueueWithAcquiredLock];
@@ -218,12 +223,8 @@ FAIL:
 	[_lock unlockWithCondition:kConditionNoData];
 }
 
-@end
 
-
-@implementation OOAsyncQueue (OOPrivate)
-
-- (void)doEmptyQueueWithAcquiredLock
+- (void) doEmptyQueueWithAcquiredLock
 {
 	OOAsyncQueueElement		*element = NULL;
 	
@@ -246,7 +247,7 @@ FAIL:
 }
 
 
-- (id)doDequeAndUnlockWithAcquiredLock
+- (id) doDequeAndUnlockWithAcquiredLock
 {
 	OOAsyncQueueElement		*element = NULL;
 	id						result;
@@ -281,7 +282,7 @@ FAIL:
 }
 
 
-- (void)recycleElementWithAcquiredLock:(OOAsyncQueueElement *)element
+- (void) recycleElementWithAcquiredLock:(OOAsyncQueueElement *)element
 {
 	if (_poolCount < kMaxPoolElements)
 	{

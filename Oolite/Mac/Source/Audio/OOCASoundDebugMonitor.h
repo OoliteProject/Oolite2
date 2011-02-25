@@ -28,8 +28,7 @@ SOFTWARE.
 
 */
 
-//#import "OOCASoundInternal.h"
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 #ifndef NDEBUG
 

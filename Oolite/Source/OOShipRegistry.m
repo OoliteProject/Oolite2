@@ -28,15 +28,11 @@ SOFTWARE.
 #import "OOShipRegistry.h"
 #import "OOCacheManager.h"
 #import "ResourceManager.h"
-#import "OOCollectionExtractors.h"
-#import "NSDictionaryOOExtensions.h"
-#import "OOProbabilitySet.h"
 #import "OORoleSet.h"
 #import "OOStringParsing.h"
 #import "OOMesh.h"
 #import "GameController.h"
 #import "OOLegacyScriptWhitelist.h"
-#import "OODeepCopy.h"
 
 
 #define PRELOAD 0

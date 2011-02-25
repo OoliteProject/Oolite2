@@ -25,8 +25,6 @@ MA 02110-1301, USA.
 */
 
 #import "OOJoystickManager.h"
-#import "OOLogging.h"
-#import "OOCollectionExtractors.h"
 
 
 #define kOOLogUnconvertedNSLog @"unclassified.JoystickHandler"

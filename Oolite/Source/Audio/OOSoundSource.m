@@ -26,7 +26,6 @@ SOFTWARE.
 */
 
 #import "OOSoundInternal.h"
-#import "OOLogging.h"
 
 
 @implementation OOSoundSource

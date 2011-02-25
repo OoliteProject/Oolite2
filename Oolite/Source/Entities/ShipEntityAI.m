@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "ShipEntityAI.h"
-#import "OOMaths.h"
 #import "Universe.h"
 #import "AI.h"
 
@@ -40,7 +39,6 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOEntityFilterPredicate.h"
 #import "OOConstToString.h"
-#import "OOCollectionExtractors.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.ShipEntityAI"
 
@@ -401,7 +399,7 @@ MA 02110-1301, USA.
 
 - (void) setDesiredRangeForWaypoint
 {
-	desired_range = OOMax_d(maxFlightSpeed / max_flight_pitch / 6, 50.0); // some ships need a longer range to reach a waypoint.
+	desired_range = fmax(maxFlightSpeed / max_flight_pitch / 6, 50.0); // some ships need a longer range to reach a waypoint.
 }
 
 - (void) performFlyToRangeFromDestination

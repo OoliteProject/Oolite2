@@ -51,7 +51,7 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 @interface OOFilteringEnumerator: NSEnumerator

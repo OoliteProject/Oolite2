@@ -39,8 +39,8 @@ MA 02110-1301, USA.
 #import "OOShipGroup.h"
 #import "OOEquipmentType.h"
 #import "ResourceManager.h"
-#import "OOCollectionExtractors.h"
 #import "OOMesh.h"
+#import "OOColor.h"
 
 
 static JSObject *sShipPrototype;
@@ -782,7 +782,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, j
 		case kShip_temperature:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				fValue = OOMax_d(fValue, 0.0);
+				fValue = fmax(fValue, 0.0);
 				[entity setTemperature:fValue * SHIP_MAX_CABIN_TEMP];
 				return YES;
 			}
@@ -791,7 +791,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, j
 		case kShip_heatInsulation:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				fValue = OOMax_d(fValue, 0.125);
+				fValue = fmax(fValue, 0.125);
 				[entity setHeatInsulation:fValue];
 				return YES;
 			}

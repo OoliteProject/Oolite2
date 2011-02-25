@@ -26,7 +26,6 @@ MA 02110-1301, USA.
 
 #import "OOStringParsing.h"
 #import "ResourceManager.h"
-#import "OOCollectionExtractors.h"
 
 
 // Generate and track unique identifiers for state-handler pairs.

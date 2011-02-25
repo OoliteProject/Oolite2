@@ -25,8 +25,7 @@ MA 02110-1301, USA.
 
 */
 
-#include "OOFunctionAttributes.h"
-#include "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 typedef enum

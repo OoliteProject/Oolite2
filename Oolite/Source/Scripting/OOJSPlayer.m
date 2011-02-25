@@ -35,8 +35,6 @@ MA 02110-1301, USA.
 #import "PlayerEntityLegacyScriptEngine.h"
 
 #import "OOConstToString.h"
-#import "OOFunctionAttributes.h"
-#import "OOCollectionExtractors.h"
 #import "OOStringParsing.h"
 
 

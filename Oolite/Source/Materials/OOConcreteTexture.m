@@ -29,12 +29,10 @@
 
 #import "OOTextureLoader.h"
 
-#import "OOCollectionExtractors.h"
 #import "Universe.h"
 #import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
-#import "OOCPUInfo.h"
 #import "OOPixMap.h"
 
 #ifndef NDEBUG
@@ -56,9 +54,7 @@
 - (void)setUpTexture;
 - (void)uploadTexture;
 - (void)uploadTextureDataWithMipMap:(BOOL)mipMap format:(OOTextureDataFormat)format;
-#if OO_TEXTURE_CUBE_MAP
 - (void) uploadTextureCubeMapDataWithMipMap:(BOOL)mipMap format:(OOTextureDataFormat)format;
-#endif
 
 - (GLenum) glTextureTarget;
 
@@ -95,9 +91,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #if GL_EXT_texture_filter_anisotropic
 	_anisotropy = OOClamp_0_1_f(anisotropy) * gOOTextureInfo.anisotropyScale;
 #endif
-#if GL_EXT_texture_lod_bias
 	_lodBias = lodBias;
-#endif
 	
 #ifndef NDEBUG
 	if ([loader isKindOfClass:[OOTextureGenerator class]])
@@ -251,10 +245,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	if (EXPECT_NOT(!_loaded))  [self setUpTexture];
 	else if (EXPECT_NOT(!_uploaded))  [self uploadTexture];
 	else  OOGL(glBindTexture([self glTextureTarget], _textureName));
-	
-#if GL_EXT_texture_lod_bias
-	if (gOOTextureInfo.textureLODBiasAvailable)  OOGL(glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, _lodBias));
-#endif
+	OOGL(glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, _lodBias));
 }
 
 
@@ -329,7 +320,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 			
 			glGetTexImage(GL_TEXTURE_2D, 0, format, type, px.pixels);
 		}
-#if OO_TEXTURE_CUBE_MAP
 		else
 		{
 			px = OOAllocatePixMap(_width, _width * 6, _format, 0, 0);
@@ -343,7 +333,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 				pixels += OOPixMapBytesPerPixelForFormat(_format) * _width * _width;
 			}
 		}
-#endif
 	}
 #endif
 	
@@ -363,11 +352,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (BOOL) isCubeMap
 {
-#if OO_TEXTURE_CUBE_MAP
 	return _isCubeMap;
-#else
-	return NO;
-#endif
 }
 
 
@@ -428,12 +413,10 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		_width = pm.width;
 		_height = pm.height;
 		
-#if OO_TEXTURE_CUBE_MAP
-		if (_options & kOOTextureAllowCubeMap && _height == _width * 6 && gOOTextureInfo.cubeMapAvailable)
+		if (_options & kOOTextureAllowCubeMap && _height == _width * 6)
 		{
 			_isCubeMap = YES;
 		}
-#endif
 		
 #if !defined(NDEBUG) && OOTEXTURE_RELOADABLE
 		if (_trace)
@@ -475,17 +458,14 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		OOGL(glBindTexture(texTarget, _textureName));
 		
 		// Select wrap mode
-		GLint clampMode = gOOTextureInfo.clampToEdgeAvailable ? GL_CLAMP_TO_EDGE : GL_CLAMP;
-		GLint wrapS = (_options & kOOTextureRepeatS) ? GL_REPEAT : clampMode;
-		GLint wrapT = (_options & kOOTextureRepeatT) ? GL_REPEAT : clampMode;
+		GLint wrapS = (_options & kOOTextureRepeatS) ? GL_REPEAT : GL_CLAMP_TO_EDGE;
+		GLint wrapT = (_options & kOOTextureRepeatT) ? GL_REPEAT : GL_CLAMP_TO_EDGE;
 		
-#if OO_TEXTURE_CUBE_MAP
 		if (texTarget == GL_TEXTURE_CUBE_MAP)
 		{
-			wrapS = wrapT = clampMode;
-			OOGL(glTexParameteri(texTarget, GL_TEXTURE_WRAP_R, clampMode));
+			wrapS = wrapT = GL_CLAMP_TO_EDGE;
+			OOGL(glTexParameteri(texTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
 		}
-#endif
 		
 		OOGL(glTexParameteri(texTarget, GL_TEXTURE_WRAP_S, wrapS));
 		OOGL(glTexParameteri(texTarget, GL_TEXTURE_WRAP_T, wrapT));
@@ -521,13 +501,11 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 			[self uploadTextureDataWithMipMap:mipMap format:_format];
 			OOLog(@"texture.upload", @"Uploaded texture %u (%ux%u pixels, %@)", _textureName, _width, _height, _key);
 		}
-#if OO_TEXTURE_CUBE_MAP
 		else if (texTarget == GL_TEXTURE_CUBE_MAP)
 		{
 			[self uploadTextureCubeMapDataWithMipMap:mipMap format:_format];
 			OOLog(@"texture.upload", @"Uploaded cube map texture %u (%ux%ux6 pixels, %@)", _textureName, _width, _width, _key);
 		}
-#endif
 		else
 		{
 			[NSException raise:NSInternalInconsistencyException format:@"Unhandled texture target 0x%X.", texTarget];
@@ -575,7 +553,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 }
 
 
-#if OO_TEXTURE_CUBE_MAP
 - (void) uploadTextureCubeMapDataWithMipMap:(BOOL)mipMap format:(OOTextureDataFormat)format
 {
 	OO_ENTER_OPENGL();
@@ -609,19 +586,11 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		}
 	}
 }
-#endif
 
 
 - (GLenum) glTextureTarget
 {
-	GLenum texTarget = GL_TEXTURE_2D;
-#if OO_TEXTURE_CUBE_MAP
-	if (_isCubeMap)
-	{
-		texTarget = GL_TEXTURE_CUBE_MAP;
-	}
-#endif
-	return texTarget;
+	return _isCubeMap ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
 }
 
 

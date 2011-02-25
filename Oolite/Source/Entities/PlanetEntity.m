@@ -32,7 +32,6 @@ MA 02110-1301, USA.
 #import "AI.h"
 #import "TextureStore.h"
 #import "OOTexture.h"
-#import "OOTextureInternal.h"	// For GL_TEXTURE_CUBE_MAP -- need to clean this up.
 #import "OOPixMapTextureLoader.h"
 #import "MyOpenGLView.h"
 #import "ShipEntityAI.h"
@@ -40,9 +39,9 @@ MA 02110-1301, USA.
 #import "OOCharacter.h"
 #import "OOStringParsing.h"
 #import "PlayerEntity.h"
-#import "OOCollectionExtractors.h"
 #import "OODebugFlags.h"
 #import "OOGraphicsResetManager.h"
+#import "OOGeometryGLHelpers.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.PlanetEntity"
 
@@ -81,8 +80,6 @@ static GLfloat	texture_uv_array[MAX_PLANET_VERTICES * 2];
 
 - (id) initAsAtmosphereForPlanet:(PlanetEntity *)planet dictionary:(NSDictionary *)dict;
 - (void) setTextureColorForPlanet:(BOOL)isMain inSystem:(BOOL)isLocal;
-
-- (id) initMiniatureFromPlanet:(PlanetEntity*) planet withAlpha:(float) alpha;
 
 - (void) loadTexture:(NSDictionary *)configuration;
 - (OOTexture *) planetTextureWithInfo:(NSDictionary *)info;
@@ -609,7 +606,7 @@ static const BaseFace kTexturedFaces[][3] =
 		default:
 			typeString = @"UNKNOWN";
 	}
-	return [NSString stringWithFormat:@"ID: %u position: %@ type: %@ radius: %.3fkm", [self universalID], VectorDescription([self position]), typeString, 0.001 * [self radius]];
+	return [NSString stringWithFormat:@"ID: %u position: %@ type: %@ radius: %.3fkm", [self universalID], OOVectorDescription([self position]), typeString, 0.001 * [self radius]];
 }
 
 
@@ -834,10 +831,8 @@ static const BaseFace kTexturedFaces[][3] =
 				{
 					if ([_texture isCubeMap])
 					{
-#if OO_TEXTURE_CUBE_MAP
 						OOGL(glDisable(GL_TEXTURE_2D));
 						OOGL(glEnable(GL_TEXTURE_CUBE_MAP));
-#endif
 					}
 					else
 					{
@@ -910,12 +905,10 @@ static const BaseFace kTexturedFaces[][3] =
 					}
 				}
 				
-#if OO_TEXTURE_CUBE_MAP
 				if ([_texture isCubeMap])
 				{
 					OOGL(glDisable(GL_TEXTURE_CUBE_MAP));
 				}
-#endif
 				
 				if (atmosphere)
 				{

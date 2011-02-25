@@ -27,8 +27,6 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "PlayerEntity.h"
 #import "OOColor.h"
-#import "OOCollectionExtractors.h"
-#import "NSDictionaryOOExtensions.h"
 
 
 @interface OOFlasherEntity (Internal)

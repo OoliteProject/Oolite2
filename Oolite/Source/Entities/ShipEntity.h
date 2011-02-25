@@ -28,6 +28,7 @@ MA 02110-1301, USA.
 #import "OOEntityWithDrawable.h"
 #import "OOPlanetEntity.h"
 #import "OOJSPropID.h"
+#import "OOTriangle.h"
 
 @class	OOColor, StationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript,
 		OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
@@ -180,7 +181,7 @@ typedef enum
 	GLfloat					desired_speed;				// speed at which to travel
 	OOBehaviour				behaviour;					// ship's behavioural state
 	
-	BoundingBox				totalBoundingBox;			// records ship configuration
+	OOBoundingBox			totalBoundingBox;			// records ship configuration
 	
 @protected
 	//set-up
@@ -459,7 +460,7 @@ typedef enum
 - (GLfloat)doesHitLine:(Vector) v0: (Vector) v1 :(ShipEntity**) hitEntity;
 - (GLfloat)doesHitLine:(Vector) v0: (Vector) v1 withPosition:(Vector) o andIJK:(Vector) i :(Vector) j :(Vector) k;	// for subentities
 
-- (BoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv InVectors:(Vector) _i :(Vector) _j :(Vector) _k;
+- (OOBoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv InVectors:(Vector) _i :(Vector) _j :(Vector) _k;
 
 - (Vector)absoluteTractorPosition;
 
@@ -776,7 +777,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) collectBountyFor:(ShipEntity *)other;
 
-- (BoundingBox) findSubentityBoundingBox;
+- (OOBoundingBox) findSubentityBoundingBox;
 
 - (Triangle) absoluteIJKForSubentity;
 

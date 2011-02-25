@@ -24,8 +24,6 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
-#import "OOWeakReference.h"
 #import "OOTypes.h"
 
 #define AI_THINK_INTERVAL					0.125

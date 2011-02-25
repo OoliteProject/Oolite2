@@ -24,7 +24,6 @@ MA 02110-1301, USA.
 
 #import "DustEntity.h"
 
-#import "OOMaths.h"
 #import "Universe.h"
 #import "MyOpenGLView.h"
 #import "OOGraphicsResetManager.h"

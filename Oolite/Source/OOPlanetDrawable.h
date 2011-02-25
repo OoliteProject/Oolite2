@@ -25,7 +25,6 @@ MA 02110-1301, USA.
 */
 
 #import "OODrawable.h"
-#import "OOMaths.h"
 
 @class OOMaterial;
 

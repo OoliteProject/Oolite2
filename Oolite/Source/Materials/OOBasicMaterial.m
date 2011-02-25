@@ -26,8 +26,6 @@ SOFTWARE.
 */
 
 #import "OOBasicMaterial.h"
-#import "OOCollectionExtractors.h"
-#import "OOFunctionAttributes.h"
 #import "Universe.h"
 #import "OOMaterialSpecifier.h"
 #import "OOTexture.h"

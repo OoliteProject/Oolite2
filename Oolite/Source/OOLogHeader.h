@@ -29,7 +29,4 @@ SOFTWARE.
 */
 
 
-#import "OOCocoa.h"
-
-
 void OOPrintLogHeader(void);

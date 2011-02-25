@@ -23,11 +23,9 @@ MA 02110-1301, USA.
 */
 
 #import "OOPListScript.h"
-#import "OOPListParsing.h"
 #import "PlayerEntityLegacyScriptEngine.h"
 #import "OOLegacyScriptWhitelist.h"
 #import "OOCacheManager.h"
-#import "OOCollectionExtractors.h"
 
 
 static NSString * const kMDKeyName			= @"name";

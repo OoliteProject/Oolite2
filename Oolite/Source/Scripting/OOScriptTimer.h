@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 #import "OOTypes.h"
 
 

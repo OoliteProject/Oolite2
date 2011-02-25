@@ -35,7 +35,6 @@ MA 02110-1301, USA.
 #import "OORoleSet.h"
 #import "OOShipRegistry.h"
 #import "OOStringParsing.h"
-#import "OOCollectionExtractors.h"
 
 // Hidden interface
 @interface WormholeEntity (Private)

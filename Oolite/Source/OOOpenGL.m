@@ -23,10 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOOpenGL.h"
-#import "OOLogging.h"
-#import "OOMaths.h"
 #import "OOMacroOpenGL.h"
-#import "OOFunctionAttributes.h"
 #import "OOOpenGLExtensionManager.h"
 
 

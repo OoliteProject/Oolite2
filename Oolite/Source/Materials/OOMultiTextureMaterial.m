@@ -30,7 +30,6 @@ SOFTWARE.
 #import "OOOpenGLExtensionManager.h"
 #import "OOTexture.h"
 #import "OOMacroOpenGL.h"
-#import "NSDictionaryOOExtensions.h"
 #import "OOMaterialSpecifier.h"
 
 #if OO_MULTITEXTURE

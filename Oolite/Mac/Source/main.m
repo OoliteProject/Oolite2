@@ -1,5 +1,5 @@
-#import "OOCocoa.h"
-#import "OOLoggingExtended.h"
+#import <OoliteBase/OoliteBase.h>
+#import "OoliteLogOutputHandler.h"
 
 
 #ifndef NDEBUG
@@ -9,7 +9,6 @@ uint32_t gDebugFlags = 0;
 
 int main(int argc, const char *argv[])
 {
-	OOLoggingInit();
+	OOLoggingInit([OoliteLogOutputHandler sharedLogOutputHandler]);
 	return NSApplicationMain(argc, argv);
 }
-

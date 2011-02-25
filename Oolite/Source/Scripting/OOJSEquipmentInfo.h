@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 */
 
 #import <jsapi.h>
-#import "OOCocoa.h"
+#import <OoliteBase/OoliteBase.h>
 
 @class OOEquipmentType;
 

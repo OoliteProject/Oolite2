@@ -35,7 +35,6 @@ SOFTWARE.
 
 #import "OOOpenGL.h"
 #import "OOPixMap.h"
-#import "OOWeakReference.h"
 
 @class OOTextureLoader, OOTextureGenerator;
 
@@ -273,9 +272,6 @@ NSDictionary *OOTextureSpecFromObject(id object, NSString *defaultName);
 
 
 uint8_t OOTextureComponentsForFormat(OOTextureDataFormat format);
-
-
-BOOL OOCubeMapsAvailable(void);
 
 
 /*	OOInterpretTextureSpecifier()

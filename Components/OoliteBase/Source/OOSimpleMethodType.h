@@ -1,9 +1,9 @@
 /*
 
-OOShaderUniformMethodType.h
+OOSimpleMethodType.h
 
 Type code declarations and OpenStep implementation agnostic method type
-matching for uniform bindings.
+matching for a selection of simple method types.
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -27,10 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-
-#import "OOOpenGLExtensionManager.h"
-
-#if OO_SHADERS || !defined(NDEBUG)
 
 #import "OOMaths.h"
 
@@ -83,5 +79,3 @@ typedef Vector (*VectorReturnMsgSend)(id, SEL);
 typedef Quaternion (*QuaternionReturnMsgSend)(id, SEL);
 typedef OOMatrix (*MatrixReturnMsgSend)(id, SEL);
 typedef NSPoint (*PointReturnMsgSend)(id, SEL);
-
-#endif	// OO_SHADERS

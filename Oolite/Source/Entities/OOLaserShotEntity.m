@@ -47,7 +47,7 @@ MA 02110-1301, USA.
 - (id) initLaserFromShip:(ShipEntity *)srcEntity view:(OOViewID)view offset:(Vector)offset
 {
 	ShipEntity			*ship = [srcEntity rootShipEntity];
-	BoundingBox 		bbox = [srcEntity boundingBox];
+	OOBoundingBox 		bbox = [srcEntity boundingBox];
 	
 	if (!(self = [super init]))  return nil;
 	

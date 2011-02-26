@@ -40,7 +40,6 @@ MA 02110-1301, USA.
 
 #if OOLITE_MAC_OS_X
 #import "JAPersistentFileReference.h"
-#import <Sparkle/Sparkle.h>
 #import "OoliteApp.h"
 #import "OOMacJoystickManager.h"
 
@@ -1417,9 +1416,10 @@ static NSMutableArray *sMessageStack;
 
 static void SetUpSparkle(void)
 {
+#if 0	// Sparkle currently disabled.
 #define FEED_URL_BASE			"http://www.oolite.org/updates/"
-#define TEST_RELEASE_FEED_NAME	"oolite-mac-test-release-appcast.xml"
-#define DEPLOYMENT_FEED_NAME	"oolite-mac-appcast.xml"
+#define TEST_RELEASE_FEED_NAME	"oolite2-mac-test-release-appcast.xml"
+#define DEPLOYMENT_FEED_NAME	"oolite2-mac-appcast.xml"
 
 #define TEST_RELEASE_FEED_URL	(@ FEED_URL_BASE TEST_RELEASE_FEED_NAME)
 #define DEPLOYMENT_FEED_URL		(@ FEED_URL_BASE DEPLOYMENT_FEED_NAME)
@@ -1436,6 +1436,7 @@ static void SetUpSparkle(void)
 	
 	SUUpdater *updater = [SUUpdater sharedUpdater];
 	[updater setFeedURL:[NSURL URLWithString:useTestReleases ? TEST_RELEASE_FEED_URL : DEPLOYMENT_FEED_URL]];
+#endif
 }
 
 #endif

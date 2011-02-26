@@ -443,6 +443,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A18D776131939020096D960 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A1F2E5E13184E4D00D06C6C /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13 /* libpng */;
+			remoteInfo = libpng;
+		};
 		1A1F24811317C5B700D06C6C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AF5F63D1305FC5200CB691A /* OoliteBase.xcodeproj */;
@@ -2545,6 +2552,7 @@
 				1A1F25C71317C83C00D06C6C /* PBXTargetDependency */,
 				1A1F25C91317C83C00D06C6C /* PBXTargetDependency */,
 				1A1F25CB1317C83C00D06C6C /* PBXTargetDependency */,
+				1A18D777131939020096D960 /* PBXTargetDependency */,
 			);
 			name = Oolite;
 			productInstallPath = "$(HOME)/Applications";
@@ -2868,6 +2876,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1A18D777131939020096D960 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libpng;
+			targetProxy = 1A18D776131939020096D960 /* PBXContainerItemProxy */;
+		};
 		1A1F25C11317C83C00D06C6C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OoliteBase;
@@ -2922,8 +2935,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../;
 				PREBINDING = NO;
-				SYMROOT = ../../build;
 			};
 			name = EndUser;
 		};
@@ -3008,8 +3021,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../;
 				PREBINDING = NO;
-				SYMROOT = ../../build;
 			};
 			name = Debug;
 		};
@@ -3020,8 +3033,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../;
 				PREBINDING = NO;
-				SYMROOT = ../../build;
 			};
 			name = Developer;
 		};

@@ -19,6 +19,7 @@
 				1A55BD36130B24EE006C38DE /* PBXTargetDependency */,
 				1A55BD3C130B24EE006C38DE /* PBXTargetDependency */,
 				1A4587F611F89656000CBCF0 /* PBXTargetDependency */,
+				1A18D85613193A1B0096D960 /* PBXTargetDependency */,
 			);
 			name = "Build Everything";
 			productName = "Build Everything";
@@ -26,6 +27,20 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXContainerItemProxy section */
+		1A18D85313193A130096D960 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A18D84B13193A130096D960 /* ooconftool.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E /* ooconftool */;
+			remoteInfo = ooconftool;
+		};
+		1A18D85513193A1B0096D960 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A18D84B13193A130096D960 /* ooconftool.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E /* ooconftool */;
+			remoteInfo = ooconftool;
+		};
 		1A1A37F411C2F9D10086265F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */;
@@ -44,14 +59,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1F25F31317C87200D06C6C /* Oolite.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D1107320486CEB800E47090 /* Oolite.app */;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
 			remoteInfo = Oolite;
 		};
 		1A1F25F91317C87900D06C6C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1F25F31317C87200D06C6C /* Oolite.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D1107260486CEB800E47090 /* Oolite */;
+			remoteGlobalIDString = 8D1107260486CEB800E47090;
 			remoteInfo = Oolite;
 		};
 		1A4587F311F8964F000CBCF0 /* PBXContainerItemProxy */ = {
@@ -113,6 +128,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A18D84B13193A130096D960 /* ooconftool.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ooconftool.xcodeproj; path = ooconftool/Mac/ooconftool.xcodeproj; sourceTree = "<group>"; };
 		1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oobasicconverter.xcodeproj; path = oobasicconverter/Mac/oobasicconverter.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
@@ -123,6 +139,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		1A18D84C13193A130096D960 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A18D85413193A130096D960 /* ooconftool */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1A1A37F111C2F9D10086265F /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +207,7 @@
 		1A60ECF711B6DF8200224F2D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1A18D84B13193A130096D960 /* ooconftool.xcodeproj */,
 				1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */,
 				1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */,
 				1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */,
@@ -230,6 +255,10 @@
 					ProjectRef = 1A1A37E611C2F9C30086265F /* oobasicconverter.xcodeproj */;
 				},
 				{
+					ProductGroup = 1A18D84C13193A130096D960 /* Products */;
+					ProjectRef = 1A18D84B13193A130096D960 /* ooconftool.xcodeproj */;
+				},
+				{
 					ProductGroup = 1A1F25F41317C87200D06C6C /* Products */;
 					ProjectRef = 1A1F25F31317C87200D06C6C /* Oolite.xcodeproj */;
 				},
@@ -254,6 +283,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1A18D85413193A130096D960 /* ooconftool */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = ooconftool;
+			remoteRef = 1A18D85313193A130096D960 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1A1A37F511C2F9D10086265F /* OoliteBase.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -299,6 +335,11 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
+		1A18D85613193A1B0096D960 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ooconftool;
+			targetProxy = 1A18D85513193A1B0096D960 /* PBXContainerItemProxy */;
+		};
 		1A1F25FA1317C87900D06C6C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Oolite;
@@ -352,6 +393,7 @@
 			baseConfigurationReference = 1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				OOLITE_ROOT = .;
 			};
 			name = Debug;
 		};
@@ -360,6 +402,7 @@
 			baseConfigurationReference = 1A50F56511B6DBBF005D584E /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				OOLITE_ROOT = .;
 			};
 			name = Release;
 		};

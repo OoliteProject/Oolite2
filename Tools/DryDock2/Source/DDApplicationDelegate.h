@@ -8,7 +8,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <OoliteBase/OoliteBase.h>
-#import <OoliteBase/OOLoggingExtended.h>
 
 
 @interface DDApplicationDelegate: OOLogOutputHandler <NSApplicationDelegate>

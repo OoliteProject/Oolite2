@@ -228,6 +228,7 @@
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
 				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../../;
 				OTHER_CFLAGS = "-DLOADSAVEGUI";
 			};
 			name = Debug;
@@ -238,6 +239,7 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
 				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
+				OOLITE_ROOT = ../../../;
 				OTHER_CFLAGS = "-DLOADSAVEGUI";
 			};
 			name = Release;
@@ -259,7 +261,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
-				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
@@ -277,7 +278,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
-				SYMROOT = ../../../build;
 				ZERO_LINK = NO;
 			};
 			name = Release;

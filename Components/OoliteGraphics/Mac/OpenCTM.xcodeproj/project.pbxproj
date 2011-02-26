@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -210,7 +210,7 @@
 				BuildIndependentTargetsInParallel = YES;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -284,7 +284,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
-				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
@@ -297,7 +296,6 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
-				SYMROOT = ../../../build;
 			};
 			name = Release;
 		};
@@ -310,6 +308,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Debug;
@@ -321,6 +320,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Release;

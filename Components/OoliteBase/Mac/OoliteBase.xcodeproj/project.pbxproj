@@ -393,6 +393,9 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "the Oolite team";
+			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OoliteBase" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -500,7 +503,6 @@
 				INFOPLIST_FILE = "OoliteBase-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				PRODUCT_NAME = OoliteBase;
-				SYMROOT = ../../../build;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -518,7 +520,6 @@
 				INFOPLIST_FILE = "OoliteBase-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				PRODUCT_NAME = OoliteBase;
-				SYMROOT = ../../../build;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -532,6 +533,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Debug;
@@ -543,6 +545,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Release;

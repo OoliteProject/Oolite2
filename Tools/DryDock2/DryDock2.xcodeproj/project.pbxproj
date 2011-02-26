@@ -573,6 +573,9 @@
 /* Begin PBXProject section */
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "the Oolite team";
+			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -767,8 +770,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
-				SDKROOT = macosx10.6;
-				SYMROOT = ../../build;
 			};
 			name = Debug;
 		};
@@ -788,8 +789,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
-				SDKROOT = macosx10.6;
-				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
@@ -802,8 +801,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
@@ -814,8 +813,8 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};

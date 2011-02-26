@@ -159,6 +159,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "oomergemesh" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -244,7 +245,6 @@
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
 				PRODUCT_NAME = oomergemesh;
-				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
@@ -258,7 +258,6 @@
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
 				PRODUCT_NAME = oomergemesh;
-				SYMROOT = ../../../build;
 			};
 			name = Release;
 		};
@@ -271,6 +270,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Debug;
@@ -282,6 +282,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
 			name = Release;

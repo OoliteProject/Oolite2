@@ -719,7 +719,6 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				SYMROOT = ../../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -759,7 +758,6 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				SYMROOT = ../../../build;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -773,12 +771,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
+				OOLITE_ROOT = ../../../;
 			};
 			name = Debug;
 		};
@@ -786,10 +783,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
+				OOLITE_ROOT = ../../../;
 			};
 			name = Release;
 		};

@@ -613,7 +613,7 @@ static OOCacheManager *sSingleton = nil;
 	NSString			*cachePath = nil;
 	
 	/*	Construct the path for the cache file, which is:
-			~/Library/Caches/org.aegidian.oolite/Data Cache.plist
+			~/Library/Caches/org.oolite/Data Cache.plist
 		In addition to generally being the right place to put caches,
 		~/Library/Caches has the particular advantage of not being indexed by
 		Spotlight or, in future, backed up by Time Machine.
@@ -621,7 +621,7 @@ static OOCacheManager *sSingleton = nil;
 	cachePath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	cachePath = [cachePath stringByAppendingPathComponent:@"Caches"];
 	if (![self directoryExists:cachePath create:inCreate]) return nil;
-	cachePath = [cachePath stringByAppendingPathComponent:@"org.aegidian.oolite"];
+	cachePath = [cachePath stringByAppendingPathComponent:@"org.oolite"];
 	if (![self directoryExists:cachePath create:inCreate]) return nil;
 	cachePath = [cachePath stringByAppendingPathComponent:@"Data Cache.plist"];
 	return cachePath;

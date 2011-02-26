@@ -50,7 +50,7 @@
 	<key>CFBundleIconFile</key>
 	<string>oolite-icon</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.aegidian.oolite</string>
+	<string>org.oolite</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

@@ -83,8 +83,8 @@ static unsigned				sErrorHandlerStackSkip = 0;
 JSContext					*gOOJSMainThreadContext = NULL;
 
 
-NSString * const kOOJavaScriptEngineWillResetNotification = @"org.aegidian.oolite OOJavaScriptEngine will reset";
-NSString * const kOOJavaScriptEngineDidResetNotification = @"org.aegidian.oolite OOJavaScriptEngine did reset";
+NSString * const kOOJavaScriptEngineWillResetNotification = @"org.oolite OOJavaScriptEngine will reset";
+NSString * const kOOJavaScriptEngineDidResetNotification = @"org.oolite OOJavaScriptEngine did reset";
 
 
 #if OOJSENGINE_MONITOR_SUPPORT

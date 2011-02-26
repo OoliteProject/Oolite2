@@ -31,8 +31,8 @@ MA 02110-1301, USA.
 #define MODE_FULL_SCREEN		200
 
 #define DISPLAY_MIN_COLOURS		32
-#define DISPLAY_MIN_WIDTH		640
-#define DISPLAY_MIN_HEIGHT		480
+#define DISPLAY_MIN_WIDTH		800
+#define DISPLAY_MIN_HEIGHT		600
 
 #ifndef GNUSTEP
 /*	OS X apps are permitted to assume 800x600 screens. Under OS X, we always

@@ -208,7 +208,7 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 	reticleTargetSensitive = [hudinfo oo_boolForKey:@"reticle_target_sensitive" defaultValue:NO];
 	propertiesReticleTargetSensitive = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 										[NSNumber numberWithBool:YES], @"isAccurate", 
-										[NSNumber numberWithDouble:[UNIVERSE getTime]], @"timeLastAccuracyProbabilityCalculation", 
+										[NSNumber numberWithDouble:[UNIVERSE gameTime]], @"timeLastAccuracyProbabilityCalculation", 
 										nil];
 
 	cloakIndicatorOnStatusLight = [hudinfo oo_boolForKey:@"cloak_indicator_on_status_light" defaultValue:YES];
@@ -654,7 +654,7 @@ static BOOL hostiles;
 	
 	Vector			relativePosition;
 	OOMatrix		rotMatrix;
-	int				flash = ((int)([UNIVERSE getTime] * 4))&1;
+	int				flash = ((int)([UNIVERSE gameTime] * 4))&1;
 	
 	Universe		*uni			= UNIVERSE;
 	PlayerEntity	*player = PLAYER;
@@ -1614,7 +1614,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 	alpha *= [info oo_nonNegativeFloatForKey:ALPHA_KEY defaultValue:1.0f];
 	
 	double temp = [player hullHeatLevel];
-	int flash = (int)([UNIVERSE getTime] * 4);
+	int flash = (int)([UNIVERSE gameTime] * 4);
 	flash &= 1;
 	// draw ship_temperature bar (only need to call GLColor() once!)
 	if (temp > .80)
@@ -1686,7 +1686,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 	alpha *= [info oo_nonNegativeFloatForKey:ALPHA_KEY defaultValue:1.0f];
 	
 	GLfloat alt = [player dialAltitude];
-	int flash = (int)([UNIVERSE getTime] * 4);
+	int flash = (int)([UNIVERSE gameTime] * 4);
 	flash &= 1;
 	
 	// draw altitude bar (evaluating the least amount of ifs per go)
@@ -1929,7 +1929,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 	
 	GLfloat status_color[4] = { 0.25, 0.25, 0.25, 1.0};
 	int alertCondition = [player alertCondition];
-	double flash_alpha = 0.333 * (2.0 + sin([UNIVERSE getTime] * 2.5 * alertCondition));
+	double flash_alpha = 0.333 * (2.0 + sin([UNIVERSE gameTime] * 2.5 * alertCondition));
 	
 	switch(alertCondition)
 	{
@@ -2161,7 +2161,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 	GLfloat	s2c[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	GLfloat	s3c[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	int scoop_status = [player dialFuelScoopStatus];
-	double t = [UNIVERSE getTime];
+	double t = [UNIVERSE gameTime];
 	GLfloat a1 = alpha * 0.5f * (1.0f + sin(t * 8.0f));
 	GLfloat a2 = alpha * 0.5f * (1.0f + sin(t * 8.0f - 1.0f));
 	GLfloat a3 = alpha * 0.5f * (1.0f + sin(t * 8.0f - 2.0f));
@@ -2579,7 +2579,7 @@ static void hudDrawReticleOnTarget(Entity* target, PlayerEntity* player1, GLfloa
 			if (range > MAX_ACCURACY_RANGE)   
 			{
 				// Every one second re-evaluate accuracy
-				if ([UNIVERSE getTime] > [propertiesReticleTargetSensitive oo_doubleForKey:@"timeLastAccuracyProbabilityCalculation"] + 1) 
+				if ([UNIVERSE gameTime] > [propertiesReticleTargetSensitive oo_doubleForKey:@"timeLastAccuracyProbabilityCalculation"] + 1) 
 				{
 					probabilityAccuracy = 1-(range-MAX_ACCURACY_RANGE)*ACCURACY_PROBABILITY_DECREASE_FACTOR; 
 					// Make sure probability does not go below a minimum
@@ -2587,7 +2587,7 @@ static void hudDrawReticleOnTarget(Entity* target, PlayerEntity* player1, GLfloa
 					[propertiesReticleTargetSensitive setObject:[NSNumber numberWithBool:((randf() < probabilityAccuracy) ? YES : NO)] forKey:@"isAccurate"];
 			
 					// Store the time the last accuracy probability has been performed
-					[propertiesReticleTargetSensitive setObject:[NSNumber numberWithDouble:[UNIVERSE getTime]] forKey:@"timeLastAccuracyProbabilityCalculation"];
+					[propertiesReticleTargetSensitive setObject:[NSNumber numberWithDouble:[UNIVERSE gameTime]] forKey:@"timeLastAccuracyProbabilityCalculation"];
 				}			
 				if ([propertiesReticleTargetSensitive oo_boolForKey:@"isAccurate"])
 				{

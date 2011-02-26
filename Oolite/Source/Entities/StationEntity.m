@@ -239,9 +239,9 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	
 	if ([shipsOnApproach count] == 0)
 	{
-		if (last_launch_time < [UNIVERSE getTime])
+		if (last_launch_time < [UNIVERSE gameTime])
 		{
-			last_launch_time = [UNIVERSE getTime];
+			last_launch_time = [UNIVERSE gameTime];
 		}
 		approach_spacing = 0.0;
 	}
@@ -292,7 +292,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	[shipsOnHold removeAllObjects];
 	
 	[shipAI message:@"DOCKING_COMPLETE"];
-	last_launch_time = [UNIVERSE getTime];
+	last_launch_time = [UNIVERSE gameTime];
 	approach_spacing = 0.0;
 }
 
@@ -819,7 +819,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	
 	interstellarUndockingAllowed = [dict oo_boolForKey:@"interstellar_undocking" defaultValue:NO];
 	
-	double unitime = [UNIVERSE getTime];
+	double unitime = [UNIVERSE gameTime];
 
 	if ([self isRotatingStation] && [self hasNPCTraffic])
 	{
@@ -958,7 +958,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 			GLfloat correction_factor = -arbb.min.z / (arbb.max.z - arbb.min.z);	// proportion of ship inside
 		
 			// damage the ship according to velocity - don't send collision messages to AIs to avoid problems.
-			[ship takeScrapeDamage: 5 * [UNIVERSE getTimeDelta]*[ship flightSpeed] from:self];
+			[ship takeScrapeDamage: 5 * [UNIVERSE timeDelta]*[ship flightSpeed] from:self];
 			[self doScriptEvent:OOJSID("shipCollided") withArgument:ship]; // no COLLISION message to station AI, carriers would move away!
 			[ship doScriptEvent:OOJSID("shipCollided") withArgument:self]; // no COLLISION message to ship AI, dockingAI.plist would abort.
 			
@@ -1024,7 +1024,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	if (!UNIVERSE)
 		return NO;
 	
-	double unitime = [UNIVERSE getTime];
+	double unitime = [UNIVERSE gameTime];
 	
 	if (unitime < last_launch_time + STATION_DELAY_BETWEEN_LAUNCHES)	// leave sufficient pause between launches
 		return NO;
@@ -1153,7 +1153,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	BOOL isRockHermit = (scanClass == CLASS_ROCK);
 	BOOL isMainStation = (self == [UNIVERSE station]);
 	
-	double unitime = [UNIVERSE getTime];
+	double unitime = [UNIVERSE gameTime];
 	
 	[super update:delta_t];
 	
@@ -1335,7 +1335,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	[UNIVERSE addEntity:ship];
 	[ship setStatus: STATUS_LAUNCHING];
 	[ship setDesiredSpeed:launchSpeed]; // must be set after initialising the AI to correct any speed set by AI
-	last_launch_time = [UNIVERSE getTime];
+	last_launch_time = [UNIVERSE gameTime];
 	double delay = (port_corridor + 2 * port_dimensions.z)/launchSpeed; // pause until 2 portlengths outside of the station.
 	[ship setLaunchDelay:delay];
 	[[ship getAI] setNextThinkTime:last_launch_time + delay]; // pause while launching
@@ -1352,7 +1352,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	if (ship == nil)  return;	
 	
 	// set last launch time to avoid clashes with outgoing ships
-	last_launch_time = [UNIVERSE getTime];
+	last_launch_time = [UNIVERSE gameTime];
 	[self addShipToStationCount: ship];
 	
 	OOUniversalID	ship_id = [ship universalID];
@@ -2081,14 +2081,14 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 
 - (void) acceptPatrolReportFrom:(ShipEntity*) patrol_ship
 {
-	last_patrol_report_time = [UNIVERSE getTime];
+	last_patrol_report_time = [UNIVERSE gameTime];
 }
 
 
 - (NSString *) acceptDockingClearanceRequestFrom:(ShipEntity *)other
 {
 	NSString	*result = nil;
-	double		timeNow = [UNIVERSE getTime];
+	double		timeNow = [UNIVERSE gameTime];
 	PlayerEntity	*player = PLAYER;
 	
 	[UNIVERSE clearPreviousMessage];

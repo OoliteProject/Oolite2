@@ -244,12 +244,6 @@ MA 02110-1301, USA.
 }
 
 
-- (OOTimeDelta) scriptTimer
-{
-	return script_time;
-}
-
-
 - (unsigned) systemPseudoRandom100
 {
 	seed_RNG_only_for_planet_description(system_seed);

@@ -321,11 +321,6 @@ OOINLINE OOEntityStatus RecursiveRemapStatus(OOEntityStatus status)
 }
 
 
-- (void) checkScript
-{
-}
-
-
 - (void)runScriptActions:(NSArray *)actions withContextName:(NSString *)contextName forTarget:(ShipEntity *)target
 {
 	NSAutoreleasePool		*pool = nil;
@@ -857,7 +852,7 @@ OOINLINE OOEntityStatus RecursiveRemapStatus(OOEntityStatus status)
 
 - (NSNumber *) scriptTimer_number
 {
-	return [NSNumber numberWithDouble:[self scriptTimer]];
+	return [NSNumber numberWithDouble:0];
 }
 
 
@@ -1801,9 +1796,7 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (void) resetScriptTimer
 {
-	script_time = 0.0;
-	script_time_check = SCRIPT_TIMER_INTERVAL;
-	script_time_interval = SCRIPT_TIMER_INTERVAL;
+	
 }
 
 
@@ -2109,7 +2102,7 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 				[se1AI setStateMachine:@"exitingTraderAI.plist"];	// lets them return to their previous state after the jump
 				[se1AI setState:@"EXIT_SYSTEM"];
 				// The following should prevent all ships leaving at once (freezes oolite on slower machines)
-				[se1AI setNextThinkTime:[UNIVERSE getTime] + 3 + (ranrot_rand() & 15)];
+				[se1AI setNextThinkTime:[UNIVERSE gameTime] + 3 + (ranrot_rand() & 15)];
 				[se1 setPrimaryRole:@"none"];	// prevents new ship from appearing at witchpoint when this one leaves!
 			}
 		}

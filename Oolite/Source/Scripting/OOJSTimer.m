@@ -55,7 +55,7 @@ static JSClass sTimerClass;
 			function:(jsval)function
 				this:(JSObject *)jsThis
 {
-	self = [super initWithNextTime:[UNIVERSE getTime] + delay interval:interval];
+	self = [super initWithNextTime:[UNIVERSE gameTime] + delay interval:interval];
 	if (self != nil)
 	{
 		NSAssert(OOJSValueIsFunction(context, function), @"Attempt to init OOJSTimer with a function that isn't.");

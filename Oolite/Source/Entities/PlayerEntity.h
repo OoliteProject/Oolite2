@@ -37,8 +37,6 @@ MA 02110-1301, USA.
 @class OOJoystickManager, OOTexture, OOCamera;
 
 
-#define SCRIPT_TIMER_INTERVAL			10.0
-
 #define GUI_ROW_INIT(GUI) /*int n_rows = [(GUI) rows]*/
 #define GUI_FIRST_ROW(GROUP) ((GUI_DEFAULT_ROWS - GUI_ROW_##GROUP##OPTIONS_END_OF_LIST) / 2)
 // reposition menu
@@ -275,10 +273,7 @@ typedef enum
 	NSMutableDictionary		*shipyard_record;
 	
 	NSMutableArray			*missionDestinations;
-
-	double					script_time;
-	double					script_time_check;
-	double					script_time_interval;
+	
 	NSString				*lastTextKey;
 	
 	double					ship_clock;

@@ -111,11 +111,9 @@ static unsigned			searchStringLength;
 static double			timeLastKeyPress;
 static OOGUIRow			oldSelection;
 static int				saved_view_direction;
-static double			saved_script_time;
 static int				saved_gui_screen;
 static int 				pressedArrow = 0;
-static BOOL			mouse_x_axis_map_to_yaw = NO;
-static NSTimeInterval	time_last_frame;
+static BOOL				mouse_x_axis_map_to_yaw = NO;
 
 
 @interface PlayerEntity (OOControlsPrivate)
@@ -326,10 +324,11 @@ static NSTimeInterval	time_last_frame;
 	BOOL			arrow_up = [gameView isDown:gvArrowKeyUp];
 	BOOL			arrow_down = [gameView isDown:gvArrowKeyDown];
 	BOOL			mouse_click = [gameView isDown:gvMouseLeftButton];
+	OOTimeAbsolute	time = [UNIVERSE realTime];
 	
 	if (arrow_down)
 	{
-		if ((!upDownKeyPressed) || (script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if ((!upDownKeyPressed) || (time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 		{
 			if ([gui setNextRow: +1])
 			{
@@ -343,13 +342,13 @@ static NSTimeInterval	time_last_frame;
 			if (result && [gui selectableRange].length > 1)  [self playMenuNavigationDown];
 			else  [self playMenuNavigationNot];
 			
-			timeLastKeyPress = script_time;
+			timeLastKeyPress = time;
 		}
 	}
 	
 	if (arrow_up)
 	{
-		if ((!upDownKeyPressed) || (script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if ((!upDownKeyPressed) || (time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 		{
 			if ([gui setNextRow: -1])
 			{
@@ -363,7 +362,7 @@ static NSTimeInterval	time_last_frame;
 			if (result && [gui selectableRange].length > 1)  [self playMenuNavigationUp];
 			else  [self playMenuNavigationNot];
 
-			timeLastKeyPress = script_time;
+			timeLastKeyPress = time;
 		}
 	}
 	
@@ -1243,7 +1242,7 @@ static NSTimeInterval	time_last_frame;
 				
 			}
 			
-	#ifndef NDEBUG
+#ifndef NDEBUG
 			exceptionContext = @"dump target state";
 			if ([gameView isDown:key_dump_target_state])
 			{
@@ -1256,7 +1255,7 @@ static NSTimeInterval	time_last_frame;
 				}
 			}
 			else  dump_target_state_pressed = NO;
-	#endif
+#endif
 			
 			//  text displays
 			exceptionContext = @"pollGuiScreenControls";
@@ -1278,21 +1277,7 @@ static NSTimeInterval	time_last_frame;
 			{
 				if ([UNIVERSE pauseMessageVisible]) [[UNIVERSE messageGUI] leaveLastLine];
 				else [[UNIVERSE messageGUI] clear];
-				NSTimeInterval	time_this_frame = [NSDate timeIntervalSinceReferenceDate];
-				OOTimeDelta		time_delta;
-				if (![[GameController sharedController] isGamePaused])
-				{
-					time_delta = time_this_frame - time_last_frame;
-					time_last_frame = time_this_frame;
-					time_delta = OOClamp_0_max_d(time_delta, MINIMUM_GAME_TICK);
-				}
-				else
-				{
-					time_delta = 0.0;
-				}
-				
-				script_time += time_delta;
-				[self pollGuiArrowKeyControls:time_delta];
+				[self pollGuiArrowKeyControls:delta_t];
 			}
 			
 			exceptionContext = @"debug keys";
@@ -1368,7 +1353,6 @@ static NSTimeInterval	time_last_frame;
 			{
 				if (paused)
 				{
-					script_time = saved_script_time;
 					// Reset to correct GUI screen, if we are unpausing from one.
 					// Don't set gui_screen here, use setGuis - they also switch backgrounds.
 					// No gui switching events will be triggered while still paused.
@@ -1407,7 +1391,6 @@ static NSTimeInterval	time_last_frame;
 				else
 				{
 					saved_view_direction = [UNIVERSE viewDirection];
-					saved_script_time = script_time;
 					saved_gui_screen = gui_screen;
 					[UNIVERSE pauseGame];	// pause handler
 				}
@@ -1433,6 +1416,8 @@ static NSTimeInterval	time_last_frame;
 	NSString		*commanderFile;
 	GameController  *controller = [UNIVERSE gameController];
 	GuiDisplayGen	*gui = [UNIVERSE gui];
+	OOTimeAbsolute	time = [UNIVERSE realTime];
+	
 	GUI_ROW_INIT(gui);
 	
 	// deal with string inputs as necessary
@@ -1830,7 +1815,7 @@ static NSTimeInterval	time_last_frame;
 			
 			if ([gameView isDown:gvArrowKeyLeft])
 			{
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:GUI_ROW_EQUIPMENT_START] hasPrefix:@"More:"])
 					{
@@ -1838,12 +1823,12 @@ static NSTimeInterval	time_last_frame;
 						[gui setSelectedRow:GUI_ROW_EQUIPMENT_START];
 						[self buySelectedItem];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			if ([gameView isDown:gvArrowKeyRight])
 			{
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:GUI_ROW_EQUIPMENT_START + GUI_MAX_ROWS_EQUIPMENT - 1] hasPrefix:@"More:"])
 					{
@@ -1851,7 +1836,7 @@ static NSTimeInterval	time_last_frame;
 						[gui setSelectedRow:GUI_ROW_EQUIPMENT_START + GUI_MAX_ROWS_EQUIPMENT - 1];
 						[self buySelectedItem];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			leftRightKeyPressed = [gameView isDown:gvArrowKeyRight]|[gameView isDown:gvArrowKeyLeft];
@@ -2028,7 +2013,7 @@ static NSTimeInterval	time_last_frame;
 			if ([gameView isDown:gvArrowKeyLeft])
 			{
 
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:STATUS_EQUIPMENT_FIRST_ROW] isEqual:GUI_KEY_OK])
 					{
@@ -2037,13 +2022,13 @@ static NSTimeInterval	time_last_frame;
 						[gui setStatusPage:-1];
 						[self setGuiToStatusScreen];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			if ([gameView isDown:gvArrowKeyRight])
 			{
 
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:STATUS_EQUIPMENT_FIRST_ROW + STATUS_EQUIPMENT_MAX_ROWS] isEqual:GUI_KEY_OK])
 					{
@@ -2052,7 +2037,7 @@ static NSTimeInterval	time_last_frame;
 						[gui setStatusPage:+1];
 						[self setGuiToStatusScreen];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			leftRightKeyPressed = [gameView isDown:gvArrowKeyRight]|[gameView isDown:gvArrowKeyLeft];
@@ -2086,7 +2071,7 @@ static NSTimeInterval	time_last_frame;
 			
 			if ([gameView isDown:gvArrowKeyLeft])
 			{
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:GUI_ROW_SHIPYARD_START] hasPrefix:@"More:"])
 					{
@@ -2094,12 +2079,12 @@ static NSTimeInterval	time_last_frame;
 						[gui setSelectedRow:GUI_ROW_SHIPYARD_START];
 						[self buySelectedShip];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			if ([gameView isDown:gvArrowKeyRight])
 			{
-				if ((!leftRightKeyPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+				if ((!leftRightKeyPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 				{
 					if ([[gui keyForRow:GUI_ROW_SHIPYARD_START + MAX_ROWS_SHIPS_FOR_SALE - 1] hasPrefix:@"More:"])
 					{
@@ -2107,7 +2092,7 @@ static NSTimeInterval	time_last_frame;
 						[gui setSelectedRow:GUI_ROW_SHIPYARD_START + MAX_ROWS_SHIPS_FOR_SALE - 1];
 						[self buySelectedShip];
 					}
-					timeLastKeyPress = script_time;
+					timeLastKeyPress = time;
 				}
 			}
 			leftRightKeyPressed = [gameView isDown:gvArrowKeyRight]|[gameView isDown:gvArrowKeyLeft];
@@ -2185,6 +2170,8 @@ static NSTimeInterval	time_last_frame;
 	NSArray				*modes = [controller displayModes];
 	MyOpenGLView		*gameView = [UNIVERSE gameView];
 	GuiDisplayGen		*gui = [UNIVERSE gui];
+	OOTimeAbsolute		time = [UNIVERSE realTime];
+	
 	GUI_ROW_INIT(gui);
 	
 	[self handleGUIUpDownArrowKeys];
@@ -2262,7 +2249,7 @@ static NSTimeInterval	time_last_frame;
 	{
 		if ([gameView isDown:gvArrowKeyRight] || [gameView isDown:gvArrowKeyLeft])
 		{
-			if (!leftRightKeyPressed && script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
+			if (!leftRightKeyPressed && time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
 			{
 				[self playChangedOption];
 				if ([gameView isDown:gvArrowKeyRight])
@@ -2288,7 +2275,7 @@ static NSTimeInterval	time_last_frame;
 	{
 		if ([gameView isDown:gvArrowKeyRight] || [gameView isDown:gvArrowKeyLeft])
 		{
-			if (!leftRightKeyPressed && script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
+			if (!leftRightKeyPressed && time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
 			{
 				[self playChangedOption];
 				BOOL m = [gameView isDown:gvArrowKeyRight];
@@ -2359,7 +2346,7 @@ static NSTimeInterval	time_last_frame;
 		&&(([gameView isDown:gvArrowKeyRight])||([gameView isDown:gvArrowKeyLeft]))
 		&&[OOSound respondsToSelector:@selector(masterVolume)])
 	{
-		if ((!volumeControlPressed)||(script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if ((!volumeControlPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 		{
 			BOOL rightKeyDown = [gameView isDown:gvArrowKeyRight];
 			BOOL leftKeyDown = [gameView isDown:gvArrowKeyLeft];
@@ -2380,7 +2367,7 @@ static NSTimeInterval	time_last_frame;
 			}
 			else
 				[gui setText:DESC(@"gameoptions-sound-volume-mute")	forRow:GUI_ROW(GAME,VOLUME)  align:GUI_ALIGN_CENTER];
-			timeLastKeyPress = script_time;
+			timeLastKeyPress = time;
 		}
 		volumeControlPressed = YES;
 	}
@@ -2390,7 +2377,7 @@ static NSTimeInterval	time_last_frame;
 #if OOLITE_MAC_OS_X
 	if ((guiSelectedRow == GUI_ROW(GAME,GROWL))&&([gameView isDown:gvArrowKeyRight]||[gameView isDown:gvArrowKeyLeft]))
 	{
-		if ([Groolite isEnabled] && (!leftRightKeyPressed || script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if ([Groolite isEnabled] && (!leftRightKeyPressed || time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 		{
 			NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
 			BOOL rightKeyDown = [gameView isDown:gvArrowKeyRight];
@@ -2416,7 +2403,7 @@ static NSTimeInterval	time_last_frame;
 				[self playChangedOption];
 				[prefs setInteger:growl_min_priority forKey:@"groolite-min-priority"];
 			}
-			timeLastKeyPress = script_time;
+			timeLastKeyPress = time;
 		}
 		leftRightKeyPressed = YES;
 	}
@@ -2466,7 +2453,7 @@ static NSTimeInterval	time_last_frame;
 	
 	if (guiSelectedRow == GUI_ROW(GAME,SHADEREFFECTS) && ([gameView isDown:gvArrowKeyRight] || [gameView isDown:gvArrowKeyLeft]))
 	{
-		if (!shaderSelectKeyPressed || (script_time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if (!shaderSelectKeyPressed || (time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
 		{
 			int direction = ([gameView isDown:gvArrowKeyRight]) ? 1 : -1;
 			OOShaderSetting shaderEffects = [UNIVERSE shaderEffectsLevel] + direction;
@@ -2476,7 +2463,7 @@ static NSTimeInterval	time_last_frame;
 			[gui setText:[NSString stringWithFormat:DESC(@"gameoptions-shaderfx-@"), OODisplayStringFromShaderSetting(shaderEffects)]
 				  forRow:GUI_ROW(GAME,SHADEREFFECTS)
 				   align:GUI_ALIGN_CENTER];
-			timeLastKeyPress = script_time;
+			timeLastKeyPress = time;
 		}
 		shaderSelectKeyPressed = YES;
 	}
@@ -2868,8 +2855,9 @@ static NSTimeInterval	time_last_frame;
 				[self setGuiToManifestScreen];
 			}
 			else
+			{
 				[self setGuiToStatusScreen];
-			[self checkScript];
+			}
 		}
 	}
 	else
@@ -3066,7 +3054,6 @@ static BOOL toggling_music;
 			{
 				if ([gameController isGamePaused])
 				{
-					script_time = saved_script_time;
 					[gameView allowStringInput:NO];
 					[UNIVERSE setDisplayCursor:NO];
 					if ([UNIVERSE pauseMessageVisible])
@@ -3078,9 +3065,7 @@ static BOOL toggling_music;
 				}
 				else
 				{
-					saved_script_time = script_time;
 					[[UNIVERSE messageGUI] clear];
-					
 					[UNIVERSE pauseGame];	// 'paused' handler
 				}
 			}
@@ -3228,8 +3213,6 @@ static BOOL toggling_music;
 						[self playDismissedMissionScreen];
 						
 						[self handleMissionCallback];
-						
-						[self checkScript];
 					}
 					selectPressed = YES;
 				}

@@ -297,6 +297,8 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	BOOL					_pauseMessage;
 	BOOL					_autoCommLog;
 	BOOL					_permanentCommLog;
+	
+	OOTimeAbsolute			_realTime;
 }
 
 - (id)initWithGameView:(MyOpenGLView *)gameView;
@@ -336,10 +338,10 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (Vector) legacyPositionFrom:(Vector) pos asCoordinateSystem:(NSString *) system;
 - (Vector) coordinatesFromCoordinateSystemString:(NSString *) system_x_y_z;
 - (BOOL) addShipWithRole:(NSString *) desc nearPosition:(Vector) pos withCoordinateSystem:(NSString *) system;
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc atPosition:(Vector) pos withCoordinateSystem:(NSString *) system;
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc nearPosition:(Vector) pos withCoordinateSystem:(NSString *) system;
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc nearPosition:(Vector) pos withCoordinateSystem:(NSString *) system withinRadius:(GLfloat) radius;
-- (BOOL) addShips:(int) howMany withRole:(NSString *) desc intoBoundingBox:(OOBoundingBox) bbox;
+- (BOOL) addShips:(int)howMany withRole:(NSString *)desc atPosition:(Vector)pos withCoordinateSystem:(NSString *)system;
+- (BOOL) addShips:(int)howMany withRole:(NSString *)desc nearPosition:(Vector)pos withCoordinateSystem:(NSString *)system;
+- (BOOL) addShips:(int)howMany withRole:(NSString *)desc nearPosition:(Vector)pos withCoordinateSystem:(NSString *)system withinRadius:(GLfloat)radius;
+- (BOOL) addShips:(int)howMany withRole:(NSString *)desc intoBoundingBox:(OOBoundingBox)bbox;
 - (BOOL) spawnShip:(NSString *) shipdesc;
 - (void) witchspaceShipWithPrimaryRole:(NSString *)role;
 - (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(Entity *) entity;
@@ -475,8 +477,9 @@ typedef uint8_t		OOEconomyID;		// 0..7
 				   relativeToEntity:(Entity *)entity;
 
 
-- (OOTimeAbsolute) getTime;
-- (OOTimeDelta) getTimeDelta;
+- (OOTimeAbsolute) gameTime;	// "Game real time" clock.
+- (OOTimeAbsolute) realTime;	// Actual real time clock (for UI).
+- (OOTimeDelta) timeDelta;
 
 - (void) findCollisionsAndShadows;
 - (NSString*) collisionDescription;

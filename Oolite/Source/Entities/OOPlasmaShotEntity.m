@@ -68,7 +68,7 @@ MA 02110-1301, USA.
 
 - (BOOL) canCollide
 {
-	return [UNIVERSE getTime] > [self spawnTime] + kPlasmaShotActivationDelay;
+	return [UNIVERSE gameTime] > [self spawnTime] + kPlasmaShotActivationDelay;
 }
 
 

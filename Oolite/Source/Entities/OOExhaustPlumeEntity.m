@@ -89,8 +89,8 @@ MA 02110-1301, USA.
 	ShipEntity  *ship = [self owner];
 	if (EXPECT_NOT(ship == nil || ([ship isPlayer] && [ship suppressFlightNotifications]))) return;
 
-	OOTimeAbsolute now = [UNIVERSE getTime];
-	if ([UNIVERSE getTime] > _trackTime + kTimeStep)
+	OOTimeAbsolute now = [UNIVERSE gameTime];
+	if ([UNIVERSE gameTime] > _trackTime + kTimeStep)
 	{
 		[self saveToLastFrame];
 		_trackTime = now;
@@ -104,7 +104,7 @@ MA 02110-1301, USA.
 	
 	Frame zero =
 	{
-		.timeframe = [UNIVERSE getTime],
+		.timeframe = [UNIVERSE gameTime],
 		.orientation = shipQrotation,
 		.k = vector_forward_from_quaternion(shipQrotation)
 	};
@@ -333,7 +333,7 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 	
 	// Absolute position of self
 	Vector framePos = OOVectorMultiplyMatrix([self position], [ship drawTransformationMatrix]);
-	Frame frame = { [UNIVERSE getTime], framePos, [ship normalOrientation], [ship upVector] };
+	Frame frame = { [UNIVERSE gameTime], framePos, [ship normalOrientation], [ship upVector] };
 	
 	_track[_nextFrame] = frame;
 	_nextFrame = (_nextFrame + 1) % kExhaustFrameCount;

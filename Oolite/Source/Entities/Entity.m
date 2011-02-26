@@ -77,7 +77,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 	scanClass = CLASS_NOT_SET;
 	[self setStatus:STATUS_COCKPIT_DISPLAY];
 	
-	spawnTime = [UNIVERSE getTime];
+	spawnTime = [UNIVERSE gameTime];
 	
 	isSunlit = YES;
 	
@@ -959,7 +959,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 // For shader bindings.
 - (GLfloat)universalTime
 {
-	return [UNIVERSE getTime];
+	return [UNIVERSE gameTime];
 }
 
 
@@ -971,7 +971,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 
 - (GLfloat)timeElapsedSinceSpawn
 {
-	return [UNIVERSE getTime] - spawnTime;
+	return [UNIVERSE gameTime] - spawnTime;
 }
 
 

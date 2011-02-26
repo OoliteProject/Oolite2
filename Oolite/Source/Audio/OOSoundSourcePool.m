@@ -108,7 +108,7 @@ typedef struct OOSoundSourcePoolElement
 	OOSound					*sound = NULL;
 	
 	// Convert expiry time to absolute
-	now = [UNIVERSE getTime];
+	now = [UNIVERSE gameTime];
 	absExpiryTime = expiryTime + now;
 	
 	// Avoid repeats if required
@@ -169,7 +169,7 @@ typedef struct OOSoundSourcePoolElement
 {
 	uint8_t					curr, count, expiredLower = kNoSlot, unexpiredLower = kNoSlot, expiredEqual = kNoSlot;
 	PoolElement				*element = NULL;
-	OOTimeAbsolute			now = [UNIVERSE getTime];
+	OOTimeAbsolute			now = [UNIVERSE gameTime];
 	
 #define NEXT(x) (((x) + 1) % _count)
 	

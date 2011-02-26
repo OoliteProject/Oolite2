@@ -54,8 +54,6 @@ MA 02110-1301, USA.
 - (void) setMissionChoice:(NSString *)newChoice;
 - (void) setMissionChoice:(NSString *)newChoice withEvent:(BOOL) withEvent;
 
-- (OOTimeDelta) scriptTimer;
-
 - (unsigned) systemPseudoRandom100;
 - (unsigned) systemPseudoRandom256;
 - (double) systemPseudoRandomFloat;

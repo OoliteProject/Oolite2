@@ -935,6 +935,7 @@
 	"unknown-ship-@"				= "Unknown Ship '%@'.";
 
 	// Intro1 screen
+	"oolite-title"					= "Oolite 2 early development";
 	"game-copyright"				= "by Giles Williams and contributors © 2003–2011";
 	"theme-music-credit"			= "Oolite Theme Music by NoSleep © 2004";
 	"load-previous-commander"		= "Load Previous Commander (Y/N)?";

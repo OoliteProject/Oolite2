@@ -70,8 +70,7 @@ enum
 	kClock_hoursComponent,		// hour component of game clock time (rounded down), int, read-only
 	kClock_daysComponent,		// day component of game clock time (rounded down), int, read-only
 	kClock_clockString,			// game clock time as display string, string, read-only
-	kClock_isAdjusting,			// clock is adjusting, boolean, read-only
-	kClock_legacy_scriptTimer	// legacy scriptTimer_number, double, read-only
+	kClock_isAdjusting			// clock is adjusting, boolean, read-only
 };
 
 
@@ -89,7 +88,6 @@ static JSPropertySpec sClockProperties[] =
 	{ "daysComponent",			kClock_daysComponent,		OOJS_PROP_READONLY_CB },
 	{ "clockString",			kClock_clockString,			OOJS_PROP_READONLY_CB },
 	{ "isAdjusting",			kClock_isAdjusting,			OOJS_PROP_READONLY_CB },
-	{ "legacy_scriptTimer",		kClock_legacy_scriptTimer,	OOJS_PROP_READONLY_CB },
 	{ 0 }
 };
 
@@ -125,7 +123,7 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 	switch (JSID_TO_INT(propID))
 	{
 		case kClock_absoluteSeconds:
-			return JS_NewNumberValue(context, [UNIVERSE getTime], value);
+			return JS_NewNumberValue(context, [UNIVERSE gameTime], value);
 			
 		case kClock_seconds:
 			return JS_NewNumberValue(context, clockTime, value);
@@ -161,9 +159,6 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 		case kClock_isAdjusting:
 			*value = OOJSValueFromBOOL([player clockAdjusting]);
 			return YES;
-			
-		case kClock_legacy_scriptTimer:
-			return JS_NewNumberValue(context, [player scriptTimer], value);
 			
 		default:
 			OOJSReportBadPropertySelector(context, this, propID, sClockProperties);

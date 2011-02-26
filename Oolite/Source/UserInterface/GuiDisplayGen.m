@@ -1089,7 +1089,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 		
 		if (fade_sign)
 		{
-			fade_alpha += (float)(fade_sign * [UNIVERSE getTimeDelta]);
+			fade_alpha += (float)(fade_sign * [UNIVERSE timeDelta]);
 			if (fade_alpha < 0.05f)	// done fading out
 			{
 				fade_alpha = 0.0f;
@@ -1144,7 +1144,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 {
 	NSSize		strsize;
 	unsigned	i;
-	OOTimeDelta	delta_t = [UNIVERSE getTimeDelta];
+	OOTimeDelta	delta_t = [UNIVERSE timeDelta];
 	NSSize		characterSize = pixel_text_size;
 	NSSize		titleCharacterSize = pixel_title_size;
 	
@@ -1253,7 +1253,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 					NSPoint cu = NSMakePoint(x + rowPosition[i].x + tr.size.width + 0.2f * characterSize.width, y + rowPosition[i].y);
 					tr.origin = cu;
 					tr.size.width = 0.5f * characterSize.width;
-					GLfloat g_alpha = 0.5f * (1.0f + (float)sin(6 * [UNIVERSE getTime]));
+					GLfloat g_alpha = 0.5f * (1.0f + (float)sin(6 * [UNIVERSE gameTime]));
 					OOGL(glColor4f(1.0f, 0.0f, 0.0f, row_alpha * g_alpha));	// red
 					OOGLBEGIN(GL_QUADS);
 						glVertex3f(tr.origin.x,					tr.origin.y,					z);

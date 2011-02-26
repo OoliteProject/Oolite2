@@ -4619,13 +4619,19 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 }
 
 
-- (OOTimeAbsolute) getTime
+- (OOTimeAbsolute) gameTime
 {
 	return universal_time;
 }
 
 
-- (OOTimeDelta) getTimeDelta
+- (OOTimeAbsolute) realTime
+{
+	return _realTime;
+}
+
+
+- (OOTimeDelta) timeDelta
 {
 	return time_delta;
 }
@@ -4993,12 +4999,14 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 - (void) showCommsLog:(OOTimeDelta)how_long
 {
 	[comm_log_gui setAlpha:1.0];
-	if (![self permanentCommLog]) [comm_log_gui fadeOutFromTime:[self getTime] overDuration:how_long];
+	if (![self permanentCommLog]) [comm_log_gui fadeOutFromTime:[self gameTime] overDuration:how_long];
 }
 
 
 - (void) update:(OOTimeDelta)inDeltaT
 {
+	_realTime += inDeltaT;
+	
 	volatile OOTimeDelta delta_t = inDeltaT * [self timeAccelerationFactor];
 	
 	if (!no_update)

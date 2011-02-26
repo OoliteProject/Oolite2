@@ -685,7 +685,7 @@ static const BaseFace kTexturedFaces[][3] =
 			}
 		case STELLAR_TYPE_MOON:
 			{
-				double ugt = [UNIVERSE getTime];
+				double ugt = [UNIVERSE gameTime];
 
 				if ((shuttles_on_ground > 0)&&(ugt > last_launch_time + shuttle_launch_interval))
 				{

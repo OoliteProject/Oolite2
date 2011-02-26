@@ -342,7 +342,7 @@ MA 02110-1301, USA.
 
 - (void) pauseAI:(NSString *)intervalString
 {
-	[shipAI setNextThinkTime:[UNIVERSE getTime] + [intervalString doubleValue]];
+	[shipAI setNextThinkTime:[UNIVERSE gameTime] + [intervalString doubleValue]];
 }
 
 
@@ -360,7 +360,7 @@ MA 02110-1301, USA.
 	start = [tokens oo_doubleAtIndex:0];
 	end   = [tokens oo_doubleAtIndex:1];
 	
-	[shipAI setNextThinkTime:[UNIVERSE getTime] + (start + (end - start)*randf())];
+	[shipAI setNextThinkTime:[UNIVERSE gameTime] + (start + (end - start)*randf())];
 }
 
 
@@ -2257,7 +2257,6 @@ static WormholeEntity *whole = nil;
 						  allowingAIMethods:YES
 							withContextName:[NSString stringWithFormat:@"<AI \"%@\" state %@ - scriptActionOnTarget:>", [[self getAI] name], [[self getAI] state]]
 								  forTarget:targEnt];
-		[player checkScript];	// react immediately to any changes this makes
 		[player setScriptTarget:oldTarget];
 	}
 }

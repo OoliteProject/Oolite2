@@ -105,7 +105,6 @@ static GLfloat		sBaseMass = 0.0;
 - (void) updateAlertCondition;
 - (void) updateFuelScoops:(OOTimeDelta)delta_t;
 - (void) updateClocks:(OOTimeDelta)delta_t;
-- (void) checkScriptsIfAppropriate;
 - (void) updateTrumbles:(OOTimeDelta)delta_t;
 - (void) performAutopilotUpdates:(OOTimeDelta)delta_t;
 - (void) performInFlightUpdates:(OOTimeDelta)delta_t;
@@ -1142,10 +1141,6 @@ static GLfloat		sBaseMass = 0.0;
 	[self setMissionBackgroundDescriptor:nil];
 	[self setEquipScreenBackgroundDescriptor:nil];
 	
-	script_time = 0.0;
-	script_time_check = SCRIPT_TIMER_INTERVAL;
-	script_time_interval = SCRIPT_TIMER_INTERVAL;
-	
 	NSCalendarDate *nowDate = [NSCalendarDate calendarDate];
 	ship_clock = PLAYER_SHIP_CLOCK_START;
 	ship_clock += [nowDate hourOfDay] * 3600.0;
@@ -1509,8 +1504,6 @@ static GLfloat		sBaseMass = 0.0;
 	// scripting
 	UPDATE_STAGE(@"updateTimers");
 	[OOScriptTimer updateTimers];
-	UPDATE_STAGE(@"checkScriptsIfAppropriate");
-	[self checkScriptsIfAppropriate];
 
 	// deal with collisions
 	UPDATE_STAGE(@"manageCollisions");
@@ -1675,7 +1668,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			ecm_in_operation = NO;
 			[UNIVERSE addMessage:DESC(@"ecm-out-of-juice") forCount:3.0];
 		}
-		if ([UNIVERSE getTime] > ecm_start_time + ECM_DURATION)
+		if ([UNIVERSE gameTime] > ecm_start_time + ECM_DURATION)
 		{
 			ecm_in_operation = NO;
 		}
@@ -2104,7 +2097,6 @@ static bool minShieldLevelPercentageInitialised = false;
 {
 	// shot time updates are still needed here for STATUS_DEAD!
 	shot_time += delta_t;
-	script_time += delta_t;
 	ship_clock += delta_t;
 	if (ship_clock_adjust > 0.0)				// adjust for coming out of warp (add LY * LY hrs)
 	{
@@ -2147,50 +2139,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		}
 		[UNIVERSE resetFramesDoneThisUpdate];	// Reset frame counter
 	}
-}
-
-
-- (void) checkScriptsIfAppropriate
-{
-	if (script_time <= script_time_check)  return;
-	
-	if ([self status] != STATUS_IN_FLIGHT)
-	{
-		switch (gui_screen)
-		{
-			// Screens where no world script tickles are performed
-			case GUI_SCREEN_MAIN:
-			case GUI_SCREEN_INTRO1:
-			case GUI_SCREEN_INTRO2:
-			case GUI_SCREEN_MARKET:
-			case GUI_SCREEN_OPTIONS:
-			case GUI_SCREEN_GAMEOPTIONS:
-			case GUI_SCREEN_LOAD:
-			case GUI_SCREEN_SAVE:
-			case GUI_SCREEN_SAVE_OVERWRITE:
-			case GUI_SCREEN_STICKMAPPER:
-			case GUI_SCREEN_MISSION:
-			case GUI_SCREEN_REPORT:
-				return;
-				break;
-			
-			// Screens from which it's safe to jump to the mission screen
-			case GUI_SCREEN_CONTRACTS:
-			case GUI_SCREEN_EQUIP_SHIP:
-			case GUI_SCREEN_LONG_RANGE_CHART:
-			case GUI_SCREEN_MANIFEST:
-			case GUI_SCREEN_SHIPYARD:
-			case GUI_SCREEN_SHORT_RANGE_CHART:
-			case GUI_SCREEN_STATUS:
-			case GUI_SCREEN_SYSTEM_DATA:
-				// Test passed, we can run scripts. Nothing to do here.
-				break;
-		}
-	}
-	
-	// Test either passed or never ran, run scripts.
-	[self checkScript];
-	script_time_check += script_time_interval;
 }
 
 
@@ -2278,7 +2226,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	}
 	[myAI clearAllData];
 	[myAI setState:@"GLOBAL"];
-	[myAI setNextThinkTime:[UNIVERSE getTime] + 2];
+	[myAI setNextThinkTime:[UNIVERSE gameTime] + 2];
 	[myAI setOwner:self];
 }
 
@@ -2396,10 +2344,6 @@ static bool minShieldLevelPercentageInitialised = false;
 	if ([UNIVERSE breakPatternOver])
 	{
 		[self resetExhaustPlumes];
-		// time to check the script!
-		[self checkScript];
-		// next check in 10s
-		[self resetScriptTimer];	// reset the in-system timer
 		
 		// announce arrival
 		if ([UNIVERSE planet])
@@ -2430,10 +2374,6 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	if ([UNIVERSE breakPatternOver])
 	{
-		// time to check the legacy scripts!
-		[self checkScript];
-		// next check in 10s
-		
 		[self setStatus:STATUS_IN_FLIGHT];
 
 		[self setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_NONE];
@@ -3680,7 +3620,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	if ([super fireECM])
 	{
 		ecm_in_operation = YES;
-		ecm_start_time = [UNIVERSE getTime];
+		ecm_start_time = [UNIVERSE gameTime];
 		return YES;
 	}
 	else
@@ -4579,9 +4519,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		
 	// apply any pending fines. (No need to check gui_screen as fines is no longer an on-screen message).
 	if (being_fined && ![[UNIVERSE sun] willGoNova] && ![dockedStation suppressArrivalReports]) [self getFined];
-
-	// it's time to check the script - can trigger legacy missions
-	if (gui_screen != GUI_SCREEN_MISSION)  [self checkScript]; // a scripted pilot could have created a mission screen.
 	
 	[self doScriptEvent:OOJSID("shipDockedWithStation") withArgument:dockedStation];
 
@@ -5449,7 +5386,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		[gui setBackgroundTextureKey:sunGoneNova ? @"system_data_nova" : @"system_data"];
 		
 		[self noteGUIDidChangeFrom:oldScreen to:gui_screen];
-		[self checkScript];	// Still needed by some OXPs?
 	}
 }
 
@@ -6014,7 +5950,7 @@ static NSString *last_outfitting_key=nil;
 		// reduce the minimum techlevel occasionally as a bonus..
 		if (![UNIVERSE strict] && techlevel < minTechLevel && techlevel + 3 > minTechLevel)
 		{
-			unsigned day = i * 13 + (unsigned)floor([UNIVERSE getTime] / 86400.0);
+			unsigned day = i * 13 + (unsigned)floor([UNIVERSE gameTime] / 86400.0);
 			unsigned char dayRnd = (day & 0xff) ^ system_seed.a;
 			OOTechLevelID originalMinTechLevel = minTechLevel;
 			
@@ -6323,7 +6259,7 @@ static NSString *last_outfitting_key=nil;
 		[[OOCacheManager sharedCache] flush];	// At first startup, a lot of stuff is cached
 	}
 	[gui clear];
-	[gui setTitle:@"Oolite"];
+	[gui setTitle:DESC(@"oolite-title")];
 	
 	if (justCobra)
 	{
@@ -8331,9 +8267,6 @@ else _dockTarget = NO_TARGET;
 	
 	[super dumpSelfState];
 	
-	OOLog(@"dumpState.playerEntity", @"Script time: %g", script_time);
-	OOLog(@"dumpState.playerEntity", @"Script time check: %g", script_time_check);
-	OOLog(@"dumpState.playerEntity", @"Script time interval: %g", script_time_interval);
 	OOLog(@"dumpState.playerEntity", @"Roll/pitch/yaw delta: %g, %g, %g", roll_delta, pitch_delta, yaw_delta);
 	OOLog(@"dumpState.playerEntity", @"Shield: %g fore, %g aft", forward_shield, aft_shield);
 	OOLog(@"dumpState.playerEntity", @"Alert level: %u, flags: %#x", alertFlags, alertCondition);

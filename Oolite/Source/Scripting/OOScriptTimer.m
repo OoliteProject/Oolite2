@@ -45,7 +45,7 @@ static NSMutableArray	*sDeferredTimers;
 	{
 		if (interval <= 0.0)  interval = -1.0;
 		
-		now = [UNIVERSE getTime];
+		now = [UNIVERSE gameTime];
 		if (nextTime < 0.0)  nextTime = now + interval;
 		if (nextTime < now && interval < 0)
 		{
@@ -66,7 +66,7 @@ static NSMutableArray	*sDeferredTimers;
 	// Sets nextTime to current time + delay.
 - (id) initOneShotTimerWithDelay:(OOTimeDelta)delay
 {
-	return [self initWithNextTime:[UNIVERSE getTime] + delay interval:-1.0];
+	return [self initWithNextTime:[UNIVERSE gameTime] + delay interval:-1.0];
 }
 
 
@@ -164,7 +164,7 @@ static NSMutableArray	*sDeferredTimers;
 	
 	sUpdating = YES;
 	
-	now = [UNIVERSE getTime];
+	now = [UNIVERSE gameTime];
 	for (;;)
 	{
 		timer = [sTimers peekAtNextObject];
@@ -212,7 +212,7 @@ static NSMutableArray	*sDeferredTimers;
 	OOTimeAbsolute		now;
 	double				scaled;
 	
-	now = [UNIVERSE getTime];
+	now = [UNIVERSE gameTime];
 	if (_nextTime < now || (_nextTime == now && _interval >= 0.0))
 	{
 		if (_interval <= 0.0)  return NO;	// One-shot timer which has expired

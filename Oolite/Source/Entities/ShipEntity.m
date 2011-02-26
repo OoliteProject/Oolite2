@@ -266,7 +266,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if (max_missiles > SHIPENTITY_MAX_MISSILES) max_missiles = SHIPENTITY_MAX_MISSILES;
 	if (missiles > max_missiles) missiles = max_missiles;
 	missile_load_time = fmax(0.0, [shipDict oo_doubleForKey:@"missile_load_time" defaultValue:0.0]); // no negative load times
-	missile_launch_time = [UNIVERSE getTime] + missile_load_time;
+	missile_launch_time = [UNIVERSE gameTime] + missile_load_time;
 	
 	// upgrades:
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_ecm"])  [self addEquipmentItem:@"EQ_ECM"];
@@ -1878,7 +1878,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	//
 	if ([self status] == STATUS_LAUNCHING)
 	{
-		if ([UNIVERSE getTime] > launch_time + launch_delay)		// move for while before thinking
+		if ([UNIVERSE gameTime] > launch_time + launch_delay)		// move for while before thinking
 		{
 			StationEntity *stationLaunchedFrom = [UNIVERSE nearestEntityMatchingPredicate:IsStationPredicate parameter:NULL relativeToEntity:self];
 			[self setStatus:STATUS_IN_FLIGHT];
@@ -5207,7 +5207,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	[super setStatus:stat];
 	if (stat == STATUS_LAUNCHING)
 	{
-		launch_time = [UNIVERSE getTime];
+		launch_time = [UNIVERSE gameTime];
 	}
 }
 
@@ -5838,7 +5838,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 			[UNIVERSE addEntity:[OOFlashEffectEntity explosionFlashFromEntity:self]];
 
 			BOOL add_more_explosion = (UNIVERSE->n_entities < 0.95 * UNIVERSE_MAX_ENTITIES) &&
-									  ([UNIVERSE getTimeDelta] < 0.125);	  // FPS > 8
+									  ([UNIVERSE timeDelta] < 0.125);	  // FPS > 8
 			 
 			// quick - check if UNIVERSE is nearing limit for entities - if it is don't add to it!
 			if (add_more_explosion)
@@ -7790,7 +7790,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Vector			vel;
 	Vector			start, v_eject;
 	
-	if ([UNIVERSE getTime] < missile_launch_time) return nil;
+	if ([UNIVERSE gameTime] < missile_launch_time) return nil;
 
 	// default launching position
 	start.x = 0.0f;						// in the middle
@@ -7895,7 +7895,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	[missile setSpeed:150.0f];
 	[missile setDistanceTravelled:0.0f];
 	[missile resetShotTime];
-	missile_launch_time = [UNIVERSE getTime] + missile_load_time; // set minimum launchtime for the next missile.
+	missile_launch_time = [UNIVERSE gameTime] + missile_load_time; // set minimum launchtime for the next missile.
 	
 	[UNIVERSE addEntity:missile];	// STATUS_IN_FLIGHT, AI state GLOBAL
 	[missile release]; //release
@@ -8079,7 +8079,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	ShipEntity				*jetto = nil;
 	
-	if (([cargo count] > 0)&&([UNIVERSE getTime] - cargo_dump_time > 0.5))  // space them 0.5s or 10m apart
+	if (([cargo count] > 0)&&([UNIVERSE gameTime] - cargo_dump_time > 0.5))  // space them 0.5s or 10m apart
 	{
 		jetto = [[[cargo objectAtIndex:0] retain] autorelease];
 		if (jetto != nil)
@@ -8175,7 +8175,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		[jettoAI exitStateMachineWithMessage:nil]; // exit nullAI.
 	}
 	
-	cargo_dump_time = [UNIVERSE getTime];
+	cargo_dump_time = [UNIVERSE gameTime];
 	return result;
 }
 
@@ -8357,7 +8357,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if (!selfDestroyed && !otherDestroyed)
 	{
-		float t = 10.0 * [UNIVERSE getTimeDelta];	// 10 ticks
+		float t = 10.0 * [UNIVERSE timeDelta];	// 10 ticks
 		
 		Vector pos1a = vector_add([self position], vector_multiply_scalar(loc, t * v1a));
 		[self setPosition:pos1a];

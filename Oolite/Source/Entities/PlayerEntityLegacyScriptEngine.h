@@ -56,8 +56,6 @@ typedef enum
 
 @interface PlayerEntity (Scripting)
 
-- (void) checkScript DEPRECATED_FUNC;
-
 - (void) setScriptTarget:(ShipEntity *)ship DEPRECATED_FUNC;
 - (ShipEntity*) scriptTarget DEPRECATED_FUNC;
 
@@ -196,7 +194,6 @@ typedef enum
 - (void) subtract:(NSString *)missionVariableString_value;
 
 - (void) checkForShips: (NSString *)roleString;
-- (void) resetScriptTimer;
 - (void) addMissionText: (NSString *)textKey;
 - (void) addLiteralMissionText: (NSString *)text;
 

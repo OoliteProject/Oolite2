@@ -724,7 +724,7 @@ typedef enum
 		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
 		
 		OOConfTokenType token = [_lexer currentTokenType];
-		if (token == kOOConfTokenCloseBrace)
+		if (token == kOOConfTokenCloseBracket)
 		{
 			stop = YES;
 		}

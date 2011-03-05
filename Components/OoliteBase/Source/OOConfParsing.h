@@ -18,8 +18,7 @@ OOConf format is similar to JSON, but with the following changes:
   the end of a single-line comment wraps it to the next line.
 * The character escape codes \' and \v are permitted. They aren’t produced by
   the generator, though.
-* The root object in an OOConf file must be a dictionary. (JSON also allows
-  arrays at root.)
+* The root object in an OOConf may be of any type.
 
 The following relationships hold:
 * Every valid OOConf file is a valid JavaScript file that does nothing.

@@ -29,6 +29,11 @@ SOFTWARE.
 #import "OOConfParsingInternal.h"
 #import "OOProblemReporting.h"
 #import "OOConfLexer.h"
+#import "MYCollectionUtilities.h"
+#import "OOFunctionAttributes.h"
+
+
+typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *outObject);
 
 
 @interface OOConfParser (OOPrivate)
@@ -36,6 +41,12 @@ SOFTWARE.
 // Parser acts as its own delegate for standard parsing and NULL parsing.
 - (BOOL) priv_plistBuilderHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject;
 - (BOOL) priv_nullActionHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject;
+
+- (BOOL) priv_parseDictionaryWithAction:(SEL)action result:(id *)result;
+- (BOOL) priv_parseArrayWithAction:(SEL)action result:(id *)result;
+
+- (void) priv_reportParseError:(NSString *)format, ...;
+- (void) priv_reportBasicParseError:(NSString *)string;
 
 @end
 
@@ -58,9 +69,11 @@ SOFTWARE.
 	{
 		problemReporter = [[OOErrorConvertingProblemReporter alloc] init];
 		parser = [[OOConfParser alloc] initWithData:ooConfData problemReporter:problemReporter];
-		id result = [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)];
+		id result = nil;
+		BOOL OK = [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
+										   result:&result];
 		
-		if (parser == nil && outError != NULL)
+		if (!OK && outError != NULL)
 		{
 			*outError = [problemReporter error];
 		}
@@ -94,7 +107,10 @@ SOFTWARE.
 	@try
 	{
 		[parser setDelegate:parser];
-		return [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)];
+		id result = nil;
+		BOOL OK = [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
+										   result:&result];
+		return OK ? result : nil;
 	}
 	@finally
 	{
@@ -169,39 +185,303 @@ SOFTWARE.
 }
 
 
-- (id) parseWithDelegateAction:(SEL)action
+- (BOOL) parseWithDelegateAction:(SEL)action result:(id *)result
 {
-	/*	Rather than handling NULL action as a special case in actual parsing,
-		replace it with a delegate and action that does nothing.
-	*/
+	id sink = nil;
+	if (result == NULL)  result = &sink;
+	
 	if (action == NULL)
 	{
+		/*	Rather than handling NULL action as a special case in actual parsing,
+			replace it with a delegate and action that does nothing.
+		*/
 		id delegate = _delegate;
 		_delegate = self;
-		id result = [self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)];
+		BOOL OK = [self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)
+										 result:result];
 		_delegate = delegate;
-		return result;
+		return OK;
 	}
 	
+//	[_lexer advance];
+	
+	BOOL OK;
+	switch ([_lexer currentTokenType])
+	{
+		case kOOConfTokenString:
+			return [_lexer getString:result];
+			
+		case kOOConfTokenNatural:
+		{
+			uint64_t natural;
+			OK = [_lexer getNatural:&natural];
+			if (OK)  *result = [NSNumber numberWithUnsignedLongLong:natural];
+			return OK;
+		}
+			
+		case kOOConfTokenReal:
+		{
+			double value;
+			OK = [_lexer getDouble:&value];
+			if (OK)  *result = [NSNumber numberWithDouble:value];
+			return OK;
+		}
+			
+		case kOOConfTokenOpenBrace:
+			return [self priv_parseDictionaryWithAction:action result:result];
+			
+		case kOOConfTokenOpenBracket:
+			return [self priv_parseArrayWithAction:action result:result];
+			
+		case kOOConfTokenKeyword:
+		{
+			NSString *stringValue = [_lexer currentTokenString];
+			
+			if ([@"true" isEqualToString:stringValue])  *result = $true;
+			else if ([@"false" isEqualToString:stringValue])  *result = $false;
+			else if ([@"null" isEqualToString:stringValue])  *result = $null;
+			else
+			{
+				break;
+			}
+			return YES;
+		}
+			
+		default:
+			break;
+	}
+	
+	[self priv_reportBasicParseError:@"value"];
+	return NO;
+}
+
+
+- (BOOL) priv_parseDictionaryWithAction:(SEL)actionSEL result:(id *)result
+{
+	ParseActionIMP actionIMP = (ParseActionIMP)[_delegate methodForSelector:actionSEL];
+	NSAssert(actionIMP != NULL, @"OOConfParser delegate actions must be implemented.");
+	
+	// Be a dictionary, or else.
+	if (![_lexer getToken:kOOConfTokenOpenBrace])
+	{
+		[self priv_reportBasicParseError:@"\"{\""];
+		return NO;
+	}
 	[_lexer advance];
 	
+	BOOL OK = YES;
+	BOOL stop = [_lexer currentTokenType] == kOOConfTokenCloseBrace;
 	
+	// Give action opportunity to set up.
+	*result = nil;
+	OK = actionIMP(_delegate, actionSEL, nil, NO, result);
 	
-	return nil;
+	// For each pair...
+	while (OK && !stop)
+	{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		
+		// We should be at a key or the closing brace.
+		OOConfTokenType token = [_lexer currentTokenType];
+		if (token == kOOConfTokenString || (token == kOOConfTokenKeyword && !_strictJSON))
+		{
+			// Read a key.
+			NSString *keyValue = [_lexer currentTokenString];
+			[_lexer advance];
+			
+			// Skip the colon.
+			if (![_lexer getToken:kOOConfTokenColon])
+			{
+				[self priv_reportBasicParseError:@"\":\""];
+				OK = NO;
+			}
+			if (OK)
+			{
+				[_lexer advance];
+				OK = actionIMP(_delegate, actionSEL, keyValue, NO, result);
+			}
+		}
+		
+		if (OK)
+		{
+			// We now expect a comma or closing brace.
+			if (![_lexer advance])
+			{
+				OK = NO;
+				[self priv_reportBasicParseError:@"\",\" or \"}\""];
+			}
+			else
+			{
+				token = [_lexer currentTokenType];
+				
+				if (token == kOOConfTokenComma)
+				{
+					[_lexer advance];
+				}
+				else if (token == kOOConfTokenCloseBrace)
+				{
+					stop = YES;
+				}
+				else
+				{
+					OK = NO;
+					[self priv_reportBasicParseError:@"\",\" or \"}\""];
+				}
+			}
+		}
+		
+		[pool drain];
+	}
+	
+	if (OK)
+	{
+		// Give action an opportunity to finish up.
+		OK = actionIMP(_delegate, actionSEL, nil, NO, result);
+	}
+	
+	return OK;
 }
 
 
-- (BOOL) priv_plistBuilderHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject
+- (BOOL) priv_parseArrayWithAction:(SEL)actionSEL result:(id *)result
 {
-	*outObject = [self parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)];
-	return *outObject != nil;
+	ParseActionIMP actionIMP = (ParseActionIMP)[_delegate methodForSelector:actionSEL];
+	NSAssert(actionIMP != NULL, @"OOConfParser delegate actions must be implemented.");
+	
+	// Be an array, or else.
+	if (![_lexer getToken:kOOConfTokenOpenBracket])
+	{
+		[self priv_reportBasicParseError:@"\"[\""];
+		return NO;
+	}
+	[_lexer advance];
+	
+	BOOL OK = YES;
+	BOOL stop = [_lexer currentTokenType] == kOOConfTokenCloseBrace;
+	
+	// Give action opportunity to set up.
+	*result = nil;
+	OK = actionIMP(_delegate, actionSEL, kOOConfParsingArraySetupToken, YES, result);
+	
+	uintptr_t index = 0;
+	
+	// For each pair...
+	while (OK && !stop)
+	{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		
+		OK = actionIMP(_delegate, actionSEL, (void *)index, YES, result);
+		index++;
+		
+		if (OK)
+		{
+			// We now expect a comma or closing bracket.
+			if (![_lexer advance])
+			{
+				OK = NO;
+				[self priv_reportBasicParseError:@"\",\" or \"]\""];
+			}
+			else
+			{
+				OOConfTokenType token = [_lexer currentTokenType];
+				
+				if (token == kOOConfTokenComma)
+				{
+					[_lexer advance];
+				}
+				else if (token == kOOConfTokenCloseBracket)
+				{
+					stop = YES;
+				}
+				else
+				{
+					OK = NO;
+					[self priv_reportBasicParseError:@"\",\" or \"]\""];
+				}
+			}
+		}
+		
+		[pool drain];
+	}
+	
+	if (OK)
+	{
+		// Give action an opportunity to finish up.
+		OK = actionIMP(_delegate, actionSEL, kOOConfParsingArraySetupToken, YES, result);
+	}
+	
+	return OK;
 }
 
 
-- (BOOL) priv_nullActionHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject
+- (void) priv_reportParseError:(NSString *)format, ...
 {
-	[self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)];
-	return YES;
+	NSString *base = OOLocalizeProblemString(_issues, @"Parse error on line %u: %@.");
+	format = OOLocalizeProblemString(_issues, format);
+	
+	va_list args;
+	va_start(args, format);
+	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+	va_end(args);
+	
+	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	[_issues addProblemOfType:kOOProblemTypeError message:message];
+}
+
+
+
+- (void) priv_reportBasicParseError:(NSString *)expected
+{
+	NSString *key = [@"expected-" stringByAppendingString:expected];
+	NSString *localized = OOLocalizeProblemString(_issues, key);
+	if (localized == key)  localized = expected;
+	
+	[self priv_reportParseError:@"expected %@, got %@", localized, [_lexer currentTokenDescription]];
+}
+
+
+- (BOOL) priv_plistBuilderHandleElement:(void *)key isArray:(BOOL)isArray producingObject:(id *)outObject
+{
+	if (isArray)
+	{
+		if (key == kOOConfParsingArraySetupToken)
+		{
+			if (*outObject == nil)  *outObject = [NSMutableArray array];
+			return YES;
+		}
+	}
+	else
+	{
+		if (key == NULL)
+		{
+			if (*outObject == nil)  *outObject = [NSMutableDictionary dictionary];
+			return YES;
+		}
+	}
+	
+	id value = nil;
+	BOOL OK = [self parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
+								  result:&value];
+	if (EXPECT_NOT(!OK))  return NO;
+	
+	if (isArray)
+	{
+		[*outObject addObject:value];
+	}
+	else
+	{
+		[*outObject setObject:value forKey:key];
+	}
+	
+	return OK;
+}
+
+
+- (BOOL) priv_nullActionHandleElement:(void *)key isArray:(BOOL)isArray producingObject:(id *)outObject
+{
+	return [self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)
+								  result:NULL];
+
 }
 
 @end

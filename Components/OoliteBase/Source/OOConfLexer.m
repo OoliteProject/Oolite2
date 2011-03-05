@@ -93,6 +93,9 @@
 		{
 			_state.cursor += 3;
 		}
+		
+		// Move to first token.
+		[self advance];
 	}
 	
 	return self;
@@ -709,7 +712,7 @@ OOINLINE BOOL ScanBase(OOConfLexerState *state)
 	DESTROY(_tokenString);
 	BOOL result = ScanBase(&_state);
 	
-#if 0
+#if o
 	if (result)  NSLog(@"TOKEN: %@", [self currentTokenDescription]);
 #endif
 	

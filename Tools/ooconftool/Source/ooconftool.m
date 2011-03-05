@@ -212,9 +212,33 @@ static id Load(NSString *inFile, Format inFormat)
 		
 		return result;
 	}
-	else if (inFormat == kFormatOOConf || inFormat == kFormatJSON)
+	else if (inFormat == kFormatOOConf)
 	{
-		Fail(@"Reading of %@ files is not yet supported.", FormatName(inFormat));
+		OOSimpleProblemReportManager *issues = [[OOSimpleProblemReportManager alloc] initWithContextString:$sprintf(@"Loading %@:", inFile) messageClassPrefix:@""];
+		
+		id result = [NSObject objectWithContentsOfOOConfURL:[NSURL fileURLWithPath:inFile] problemReporter:issues];
+		if (result == nil)  exit(EXIT_FAILURE);
+		
+		[issues release];
+		
+		return result;
+	}
+	else if (inFormat == kFormatJSON)
+	{
+		NSString *string = [NSString oo_stringWithContentsOfUnicodeFile:inFile];
+		if (string == nil)
+		{
+			Fail(@"Could not read input file.");
+		}
+		
+		OOSimpleProblemReportManager *issues = [[OOSimpleProblemReportManager alloc] initWithContextString:$sprintf(@"Loading %@:", inFile) messageClassPrefix:@""];
+		
+		id result = [NSObject objectFromOOConfString:string problemReporter:issues];
+		if (result == nil)  exit(EXIT_FAILURE);
+		
+		[issues release];
+		
+		return result;
 	}
 	else
 	{
@@ -303,7 +327,7 @@ static id StringsToNumbers(id object)
 static void PrintUsageAndExit(const char *inCall)
 {
 	Print(@"Usage: %s [--plist|--bplist|--ooconf|--json] inputfile outputfile\n"
-		  "%s --help", inCall, inCall);
+		  "%s --help\n", inCall, inCall);
 	
 	exit(EXIT_SUCCESS);
 }
@@ -361,6 +385,7 @@ static void Fail(NSString *format, ...)
 	va_start(args, format);
 	EPrintv(format, args);
 	va_end(args);
+	EPrint(@"\n");
 	
 	exit(EXIT_FAILURE);
 }

@@ -41,6 +41,7 @@ SOFTWARE.
 	id <OOProblemReporting>		_issues;
 	OOConfLexer					*_lexer;
 	id							_delegate;
+	BOOL						_strictJSON;	// Experimental
 }
 
 - (id) initWithData:(NSData *)url problemReporter:(id <OOProblemReporting>)issues;
@@ -63,10 +64,22 @@ SOFTWARE.
 	
 	If isArray is true, key is an NSUInteger (not an NSNumber *!). If isArray
 	is false, we're dealing with a dictionary and key is an NSString *.
+	
+	Before and after parsing a dictionary, the action is called once with a nil
+	key. Before and after parsing an array, it is called with an index of -1.
+	In the before case, *outObject will be nil, and the action should use this
+	opportunity to initialize *outObject. In the after case, *outObject will
+	be unmodified. (The “after” call will not happen if parsing failed.)
+	
+	Because of autorelease pools used during parsing, it is unsafe to set up
+	*outObject lazily in the obvious way.
 */
 - (id) delegate;
 - (void) setDelegate:(id)delegate;
 
-- (id) parseWithDelegateAction:(SEL)action;
+- (BOOL) parseWithDelegateAction:(SEL)action result:(id *)result;
 
 @end
+
+
+#define kOOConfParsingArraySetupToken ((void *)(intptr_t)-1)

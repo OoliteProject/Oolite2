@@ -447,7 +447,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1F2E5E13184E4D00D06C6C /* libpng.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13 /* libpng */;
+			remoteGlobalIDString = 1A71E6F20BCE340C00CD5C13;
 			remoteInfo = libpng;
 		};
 		1A1F24811317C5B700D06C6C /* PBXContainerItemProxy */ = {
@@ -1100,11 +1100,11 @@
 		1A1F270B1317CACF00D06C6C /* oolite-thargoid-plans-mission.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "oolite-thargoid-plans-mission.js"; sourceTree = "<group>"; };
 		1A1F270C1317CACF00D06C6C /* oolite-thargoid-warship.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "oolite-thargoid-warship.js"; sourceTree = "<group>"; };
 		1A1F270D1317CACF00D06C6C /* oolite-trumbles-mission.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "oolite-trumbles-mission.js"; sourceTree = "<group>"; };
-		1A1F270F1317CACF00D06C6C /* oolite-default-shader.fragment */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.vert; path = "oolite-default-shader.fragment"; sourceTree = "<group>"; };
-		1A1F27101317CACF00D06C6C /* oolite-dust.fragment */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.vert; path = "oolite-dust.fragment"; sourceTree = "<group>"; };
-		1A1F27111317CACF00D06C6C /* oolite-dust.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.frag; path = "oolite-dust.vertex"; sourceTree = "<group>"; };
-		1A1F27121317CACF00D06C6C /* oolite-standard-vertex.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.frag; path = "oolite-standard-vertex.vertex"; sourceTree = "<group>"; };
-		1A1F27131317CACF00D06C6C /* oolite-tangent-space-vertex.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.frag; path = "oolite-tangent-space-vertex.vertex"; sourceTree = "<group>"; };
+		1A1F270F1317CACF00D06C6C /* oolite-default-shader.fragment */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-default-shader.fragment"; sourceTree = "<group>"; };
+		1A1F27101317CACF00D06C6C /* oolite-dust.fragment */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-dust.fragment"; sourceTree = "<group>"; };
+		1A1F27111317CACF00D06C6C /* oolite-dust.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-dust.vertex"; sourceTree = "<group>"; };
+		1A1F27121317CACF00D06C6C /* oolite-standard-vertex.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-standard-vertex.vertex"; sourceTree = "<group>"; };
+		1A1F27131317CACF00D06C6C /* oolite-tangent-space-vertex.vertex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-tangent-space-vertex.vertex"; sourceTree = "<group>"; };
 		1A1F27B61317CBC500D06C6C /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceManager.h; sourceTree = "<group>"; };
 		1A1F27B71317CBC500D06C6C /* ResourceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceManager.m; sourceTree = "<group>"; };
 		1A1F27B91317CCAE00D06C6C /* MyOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenGLView.h; sourceTree = "<group>"; };

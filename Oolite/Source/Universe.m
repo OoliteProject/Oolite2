@@ -4140,8 +4140,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 		OOBoundingBox bbox = [srcEntity boundingBox];
 		Vector midfrontplane = make_vector(0.5 * (bbox.max.x + bbox.min.x), 0.5 * (bbox.max.y + bbox.min.y), bbox.max.z);
 		p0 = [srcEntity absolutePositionForSubentityOffset:midfrontplane];
-		q1 = [parent orientation];
-		if ([parent isPlayer])  q1.w = -q1.w;
+		q1 = [parent normalOrientation];
 	}
 	
 	double			nearest = [srcEntity weaponRange];

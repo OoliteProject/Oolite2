@@ -43,7 +43,7 @@ static JSObject		*sPlayerObject;
 
 
 static JSBool PlayerGetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
-static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
+static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID, JSBool strict, jsval *value);
 
 static JSBool PlayerCommsMessage(JSContext *context, uintN argc, jsval *vp);
 static JSBool PlayerConsoleMessage(JSContext *context, uintN argc, jsval *vp);
@@ -255,7 +255,7 @@ static JSBool PlayerGetProperty(JSContext *context, JSObject *this, jsid propID,
 }
 
 
-static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value)
+static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID, JSBool strict, jsval *value)
 {
 	if (!JSID_IS_INT(propID))  return YES;
 	

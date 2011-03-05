@@ -53,7 +53,7 @@ static JSBool SystemAddShipsOrGroupToRoute(JSContext *context, uintN argc, jsval
 
 
 static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
-static JSBool SystemSetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
+static JSBool SystemSetProperty(JSContext *context, JSObject *this, jsid propID, JSBool strict, jsval *value);
 
 static JSBool SystemToString(JSContext *context, uintN argc, jsval *vp);
 static JSBool SystemAddPlanet(JSContext *context, uintN argc, jsval *vp);
@@ -332,7 +332,7 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 }
 
 
-static JSBool SystemSetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value)
+static JSBool SystemSetProperty(JSContext *context, JSObject *this, jsid propID, JSBool strict, jsval *value)
 {
 	if (!JSID_IS_INT(propID))  return YES;
 	

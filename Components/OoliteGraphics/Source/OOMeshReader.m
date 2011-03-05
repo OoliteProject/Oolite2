@@ -25,7 +25,8 @@
 
 
 #import "OOMeshReader.h"
-#import <OoliteBase/OOConfLexer.h>
+#import <OoliteBase/OoliteBase.h>
+#import <OoliteBase/OOConfParsingInternal.h>
 #import "OOMeshDefinitions.h"
 
 #import "OOIndexArray.h"
@@ -45,7 +46,7 @@ enum
 	kMaximumFaceCount			= 500000000,
 };
 
-
+#if OLD
 /*
 	For the purposes of mesh parsing, JSON objects/dictionaries come in a few
 	flavours. For efficient parsing, we need to know which type we're in.
@@ -69,19 +70,30 @@ typedef enum
 	kDictTypeGroup,
 	kDictTypeGeneral
 } DictionaryType;
+#endif
 
 
-@interface OOMeshReader (Private)
+@interface OOMeshReader (OOPrivate)
 
 - (void) priv_reportParseError:(NSString *)format, ...;
 - (void) priv_reportStructuralError:(NSString *)format, ...;
 - (void) priv_reportBasicParseError:(NSString *)expected;
 - (void) priv_reportMallocFailure;
 
-- (BOOL) priv_readDictionary:(NSDictionary **)outDictionary ofType:(DictionaryType)type withKey:(NSString *)key;
+- (BOOL) priv_rootParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
 - (BOOL) priv_readRootValueForKey:(NSString *)key;
-- (BOOL) priv_readArray:(NSArray **)outArray;
-- (BOOL) priv_readProperty:(id *)outProperty;
+
+- (BOOL) priv_materialsDictionaryParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (BOOL)priv_readMaterialDictionaryNamed:(NSString *)name;
+
+- (BOOL) priv_attributesDictionaryParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (BOOL) priv_attributeParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (OOFloatArray *) priv_readAttributeDataWithDictionary:(NSMutableDictionary *)dictionary;
+
+- (BOOL) priv_groupsDictionaryParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (BOOL) priv_groupParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (OOIndexArray *) priv_readGroupDataWithDictionary:(NSMutableDictionary *)dictionary;
+- (BOOL) priv_finishGroupWithDictionary:(NSMutableDictionary *)dictionary;
 
 @end
 
@@ -100,7 +112,8 @@ typedef enum
 		_vertexCount = NSNotFound;
 		
 		_lexer = [[OOConfLexer alloc] initWithPath:_path issues:_issues];
-		if (_lexer == nil)  DESTROY(self);
+		_parser = [[OOConfParser alloc] initWithLexer:_lexer];
+		if (_parser == nil)  DESTROY(self);
 	}
 	
 	return self;
@@ -112,6 +125,7 @@ typedef enum
 	DESTROY(_issues);
 	DESTROY(_path);
 	DESTROY(_lexer);
+	DESTROY(_parser);
 	DESTROY(_renderMesh);
 	
 	DESTROY(_meshName);
@@ -125,7 +139,7 @@ typedef enum
 
 - (void) parse
 {
-	if (_lexer == nil)  return;	// Parsed already or initialization failed.
+	if (_parser == nil)  return;	// Parsed already or initialization failed.
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	
@@ -135,8 +149,8 @@ typedef enum
 	
 	_vertexCount = NSNotFound;
 	
-	[_lexer advance];
-	BOOL OK = [self priv_readDictionary:NULL ofType:kDictTypeRoot withKey:nil];
+	[_parser setDelegate:self];
+	BOOL OK = [_parser parseWithDelegateAction:@selector(priv_rootParseEvent:key:object:) result:NULL];
 	
 	if (OK)
 	{
@@ -148,6 +162,7 @@ typedef enum
 	}
 	
 	DESTROY(_lexer);
+	DESTROY(_parser);
 	_materialsByName = nil;
 	
 	[pool drain];
@@ -232,10 +247,6 @@ typedef enum
 	}
 }
 
-@end
-
-
-@implementation OOMeshReader (Private)
 
 - (void) priv_reportParseError:(NSString *)format, ...
 {
@@ -247,7 +258,7 @@ typedef enum
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	message = [NSString stringWithFormat:base, [[_parser lexer] lineNumber], message];
 	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
@@ -262,7 +273,7 @@ typedef enum
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	message = [NSString stringWithFormat:base, [_lexer lineNumber], message];
+	message = [NSString stringWithFormat:base, [[_parser lexer] lineNumber], message];
 	[_issues addProblemOfType:kOOProblemTypeError message:message];
 }
 
@@ -273,7 +284,7 @@ typedef enum
 	NSString *localized = OOLocalizeProblemString(_issues, key);
 	if (localized == key)  localized = expected;
 	
-	[self priv_reportParseError:@"expected %@, got %@", localized, [_lexer currentTokenDescription]];
+	[self priv_reportParseError:@"expected %@, got %@", localized, [[_parser lexer] currentTokenDescription]];
 }
 
 
@@ -283,10 +294,172 @@ typedef enum
 }
 
 
-- (BOOL) priv_completeMaterialWithDictionary:(NSMutableDictionary *)dictionary data:(id)data name:(NSString *)name
+- (BOOL) priv_rootParseEvent:(OOConfParserActionEventType)event
+						 key:(void *)key
+					  object:(id *)object
 {
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			[self priv_reportStructuralError:@"the root element must be a dictionary"];
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+		case kOOConfDictionaryEnd:
+		case kOOConfDictionaryFailed:
+			// Ignore these events.
+			return YES;
+			
+		case kOOConfDictionaryElement:
+			return [self priv_readRootValueForKey:key];
+	}
+	
+	return NO;
+}
+
+
+- (BOOL) priv_readRootValueForKey:(NSString *)key
+{
+	if ([kVertexCountKey isEqualToString:key])
+	{
+		if (_vertexCount != NSNotFound)
+		{
+			[self priv_reportStructuralError:@"vertexCount appears more than once"];
+			return NO;
+		}
+		
+		uint64_t natural;
+		if (![_lexer getNatural:&natural])
+		{
+			[self priv_reportStructuralError:@"vertexCount must be an integer"];
+			return NO;
+		}
+		
+		if (natural >= kMaximumVertexCount)
+		{
+			[self priv_reportStructuralError:@"vertexCount may not be more than %u", kMaximumVertexCount];
+			return NO;
+		}
+		
+		_vertexCount = natural;
+		return YES;
+	}
+	else if ([kMaterialsSectionKey isEqualToString:key])
+	{
+		if ([_lexer currentTokenType] != kOOConfTokenOpenBrace)
+		{
+			[self priv_reportStructuralError:@"%@ must be a dictionary", key];
+			return NO;
+		}
+		
+		/*	_materialsByName is created here instead of at the beginning of
+			-parse so that we use it to check whether we've seen the materials
+			section yet (below):
+		*/
+		
+		_materialsByName = [NSMutableDictionary dictionary];
+		return [_parser parseWithDelegateAction:@selector(priv_materialsDictionaryParseEvent:key:object:) result:NULL];
+	}
+	else if ([kAttributesSectionKey isEqualToString:key])
+	{
+		if ([_lexer currentTokenType] != kOOConfTokenOpenBrace)
+		{
+			[self priv_reportStructuralError:@"%@ must be a dictionary", key];
+			return NO;
+		}
+		
+		//	"attributes" must appear after "vertexCount".
+		if (_vertexCount == NSNotFound)
+		{
+			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kVertexCountKey];
+			return NO;
+		}
+		
+		return [_parser parseWithDelegateAction:@selector(priv_attributesDictionaryParseEvent:key:object:) result:NULL];
+	}
+	else if ([kGroupsSectionKey isEqualToString:key])
+	{
+		if ([_lexer currentTokenType] != kOOConfTokenOpenBrace)
+		{
+			[self priv_reportStructuralError:@"%@ must be a dictionary", key];
+			return NO;
+		}
+		
+		//	"groups" must appear after "vertexCount" and "materials".
+		if (_vertexCount == NSNotFound)
+		{
+			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kVertexCountKey];
+			return NO;
+		}
+		if (_materialsByName == nil)
+		{
+			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kMaterialsSectionKey];
+			return NO;
+		}
+		
+		return [_parser parseWithDelegateAction:@selector(priv_groupsDictionaryParseEvent:key:object:) result:NULL];
+	}
+	else if ([kMeshDescriptionKey isEqualToString:key])
+	{
+		id property = [_parser parseAsPropertyList];
+		if (property == nil)  return NO;
+		
+		if ([property isKindOfClass:[NSString class]])
+		{
+			DESTROY(_meshDescription);
+			_meshDescription = [property retain];
+		}
+		else
+		{
+			OOReportWarning(_issues, @"Ignoring \"description\" value because it isn't a string.");
+		}
+		return YES;
+	}
+	else
+	{
+		//	Unknown root-level property; permit for future expansion.
+		return [_parser parseWithDelegateAction:NULL result:NULL];
+	}
+}
+
+
+- (BOOL) priv_materialsDictionaryParseEvent:(OOConfParserActionEventType)event
+										key:(void *)key
+									 object:(id *)object
+{
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			// Should have been checked already.
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+		case kOOConfDictionaryEnd:
+		case kOOConfDictionaryFailed:
+			// Ignore these events.
+			return YES;
+			
+		case kOOConfDictionaryElement:
+			return [self priv_readMaterialDictionaryNamed:key];
+	}
+	
+	return NO;
+}
+
+
+- (BOOL)priv_readMaterialDictionaryNamed:(NSString *)name
+{
+	id propertyList = [_parser parseAsPropertyList];
+	if (propertyList == nil)  return NO;
+	
 	OOMaterialSpecification *material = [[OOMaterialSpecification alloc] initWithMaterialKey:name
-																  propertyListRepresentation:dictionary
+																  propertyListRepresentation:propertyList
 																					  issues:_issues];
 	if (material == nil)  return NO;
 	
@@ -297,12 +470,97 @@ typedef enum
 }
 
 
-- (id) priv_readAttributeDataWithDictionary:(NSMutableDictionary *)dictionary name:(NSString *)name
+- (BOOL) priv_attributesDictionaryParseEvent:(OOConfParserActionEventType)event
+										 key:(void *)key
+									  object:(id *)object
+{
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			// Should have been checked already.
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+		case kOOConfDictionaryEnd:
+		case kOOConfDictionaryFailed:
+			// Ignore these events.
+			return YES;
+			
+		case kOOConfDictionaryElement:
+			_currentElementName = key;
+			BOOL result = [_parser parseWithDelegateAction:@selector(priv_attributeParseEvent:key:object:) result:object];
+			_currentElementName = nil;
+			return result;
+	}
+	
+	return NO;
+}
+
+
+- (BOOL) priv_attributeParseEvent:(OOConfParserActionEventType)event
+							  key:(void *)key
+						   object:(id *)object
+{
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			// Should have been checked already.
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+			*object = [NSMutableDictionary dictionary];
+			return YES;
+			
+		case kOOConfDictionaryEnd:
+		{
+			OOFloatArray *attributeData = [*object objectForKey:kDataKey];
+			if (attributeData == nil)
+			{
+				[self priv_reportStructuralError:@"Attribute \"%@\" has no vertex data", _currentElementName];
+				return NO;
+			}
+			
+			[_attributeArrays setObject:attributeData forKey:_currentElementName];
+			[*object removeAllObjects];
+			return YES;
+		}
+			
+		case kOOConfDictionaryFailed:
+			return YES;
+			
+		case kOOConfDictionaryElement:
+		{
+			id value = nil;
+			if ([kDataKey isEqualToString:key])
+			{
+				value = [self priv_readAttributeDataWithDictionary:*object];
+			}
+			else
+			{
+				value = [_parser parseAsPropertyList];
+			}
+			if (value == nil)  return NO;
+			[*object setObject:value forKey:key];
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+
+- (OOFloatArray *) priv_readAttributeDataWithDictionary:(NSMutableDictionary *)dictionary
 {
 	OOUInteger size = [dictionary oo_unsignedIntegerForKey:kSizeKey];
 	if (size < 1 || 4 < size)
 	{
-		[self priv_reportStructuralError:@"attribute \"%@\" does not specify a valid size (must be 1 to 4)"];
+		[self priv_reportStructuralError:@"attribute \"%@@\" does not specify a valid size (must be 1 to 4)", _currentElementName];
 		return nil;
 	}
 	NSAssert(_vertexCount != NSNotFound, @"Vertex count should have been validated already");
@@ -349,22 +607,92 @@ typedef enum
 	}
 	
 	return [OOFloatArray arrayWithFloatsNoCopy:buffer count:count freeWhenDone:YES];
+	
 }
 
 
-- (BOOL) priv_completeAttributeWithDictionary:(NSMutableDictionary *)dictionary data:(id)data name:(NSString *)name
+- (BOOL) priv_groupsDictionaryParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object
 {
-	[_attributeArrays setObject:data forKey:name];
-	return YES;
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			// Should have been checked already.
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+		case kOOConfDictionaryEnd:
+		case kOOConfDictionaryFailed:
+			// Ignore these events.
+			return YES;
+			
+		case kOOConfDictionaryElement:
+			_currentElementName = key;
+			BOOL result = [_parser parseWithDelegateAction:@selector(priv_groupParseEvent:key:object:) result:object];
+			_currentElementName = nil;
+			return result;
+	}
+	
+	return NO;
 }
 
 
-- (id) priv_readGroupDataWithDictionary:(NSMutableDictionary *)dictionary name:(NSString *)name
+- (BOOL) priv_groupParseEvent:(OOConfParserActionEventType)event
+						  key:(void *)key
+					   object:(id *)object
+{
+	switch (event)
+	{
+		case kOOConfArrayBegin:
+		case kOOConfArrayElement:
+		case kOOConfArrayEnd:
+		case kOOConfArrayFailed:
+			// Should have been checked already.
+			return NO;
+			
+		case kOOConfDictionaryBegin:
+			*object = [NSMutableDictionary dictionary];
+			return YES;
+			
+		case kOOConfDictionaryEnd:
+		{
+			BOOL OK = [self priv_finishGroupWithDictionary:*object];
+			[*object removeAllObjects];
+			return OK;
+		}
+			
+		case kOOConfDictionaryFailed:
+			return YES;
+			
+		case kOOConfDictionaryElement:
+		{
+			id value = nil;
+			if ([kDataKey isEqualToString:key])
+			{
+				value = [self priv_readGroupDataWithDictionary:*object];
+			}
+			else
+			{
+				value = [_parser parseAsPropertyList];
+			}
+			if (value == nil)  return NO;
+			[*object setObject:value forKey:key];
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+
+- (OOIndexArray *) priv_readGroupDataWithDictionary:(NSMutableDictionary *)dictionary
 {
 	OOUInteger size = [dictionary oo_unsignedIntegerForKey:kFaceCountKey];
 	if (size < 1 || kMaximumFaceCount < size)
 	{
-		[self priv_reportStructuralError:@"group \"%@\" does not specify a valid size (must be 1 to %u)", kMaximumFaceCount];
+		[self priv_reportStructuralError:@"group \"%@\" does not specify a valid size (must be 1 to %u)", _currentElementName, kMaximumFaceCount];
 		return nil;
 	}
 	NSAssert(_vertexCount != NSNotFound, @"Vertex count should have been validated already.");
@@ -421,19 +749,26 @@ typedef enum
 }
 
 
-- (BOOL) priv_completeGroupWithDictionary:(NSMutableDictionary *)dictionary data:(id)data name:(NSString *)name
+- (BOOL) priv_finishGroupWithDictionary:(NSMutableDictionary *)dictionary
 {
 	// Groups must have materials.
 	NSString *materialKey = [dictionary oo_stringForKey:kMaterialKey];
 	if (materialKey == nil)
 	{
-		[self priv_reportStructuralError:@"Mesh hroup \"%@\" does not specify a material", name];
+		[self priv_reportStructuralError:@"Mesh group \"%@\" does not specify a material", _currentElementName];
 		return NO;
 	}
 	OOMaterialSpecification *materialSpec = [_materialsByName objectForKey:materialKey];
 	if (materialSpec == nil)
 	{
-		[self priv_reportStructuralError:@"Mesh group \"%@\" specifies undefined material \"%@\"", name, materialKey];
+		[self priv_reportStructuralError:@"Mesh group \"%@\" specifies undefined material \"%@\"", _currentElementName, materialKey];
+		return NO;
+	}
+	
+	OOIndexArray *data = [dictionary objectForKey:kDataKey];
+	if (data == nil)
+	{
+		[self priv_reportStructuralError:@"Mesh group \"%@\" has no vertex index data", _currentElementName];
 		return NO;
 	}
 	
@@ -441,412 +776,6 @@ typedef enum
 	[_groupMaterials addObject:materialSpec];
 	
 	return YES;
-}
-
-
-- (BOOL) priv_readDictionary:(NSDictionary **)outDictionary ofType:(DictionaryType)type withKey:(NSString *)parentKey
-{
-	NSMutableDictionary *dictionary = nil;
-	BOOL				isGroup = NO;
-	DictionaryType		subType = kDictTypeGeneral;
-	SEL					dataHandlerSEL = NULL;
-	SEL					completionHandlerSEL = NULL;
-	id					data = nil;
-	NSString			*entryType = nil;	// For section entries, the name of the section; used for error reporting.
-	
-	// Set up DictionaryType-dependent parsing parameters.
-	switch (type)
-	{
-		case kDictTypeMaterialsSection:
-			isGroup = YES;
-			subType = kDictTypeMaterial;
-			break;
-			
-		case kDictTypeMaterial:
-			entryType = kMaterialsSectionKey;
-			completionHandlerSEL = @selector(priv_completeMaterialWithDictionary:data:name:);
-			break;
-			
-		case kDictTypeAttributesSection:
-			isGroup = YES;
-			subType = kDictTypeAttribute;
-			break;
-			
-		case kDictTypeAttribute:
-			entryType = kAttributesSectionKey;
-			dataHandlerSEL = @selector(priv_readAttributeDataWithDictionary:name:);
-			completionHandlerSEL = @selector(priv_completeAttributeWithDictionary:data:name:);
-			break;
-			
-		case kDictTypeGroupsSection:
-			isGroup = YES;
-			subType = kDictTypeGroup;
-			break;
-			
-		case kDictTypeGroup:
-			entryType = kGroupsSectionKey;
-			dataHandlerSEL = @selector(priv_readGroupDataWithDictionary:name:);
-			completionHandlerSEL = @selector(priv_completeGroupWithDictionary:data:name:);
-			break;
-		
-		case kDictTypeGeneral:
-		case kDictTypeRoot:
-			break;
-	}
-	
-	// Create result dictionary, if there's a consumer for it.
-	if (outDictionary != NULL || completionHandlerSEL != NULL)  dictionary = [NSMutableDictionary dictionary];
-	
-	
-	// Be a dictionary, or else.
-	if (![_lexer getToken:kOOConfTokenOpenBrace])
-	{
-		[self priv_reportBasicParseError:@"\"{\""];
-		return NO;
-	}
-	[_lexer advance];
-	
-	BOOL OK = YES;
-	BOOL stop = [_lexer currentTokenType] == kOOConfTokenCloseBrace;
-	
-	// For each pair...
-	while (OK && !stop)
-	{
-		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
-		
-		// We should be at a key or the closing brace.
-		OOConfTokenType token = [_lexer currentTokenType];
-		if (token == kOOConfTokenKeyword || token == kOOConfTokenString)
-		{
-			// Read the key.
-			NSString *keyValue = [_lexer currentTokenString];
-			[_lexer advance];
-			
-			// Skip the colon.
-			if (![_lexer getToken:kOOConfTokenColon])
-			{
-				[self priv_reportBasicParseError:@"\":\""];
-				OK = NO;
-			}
-			if (OK)
-			{
-				[_lexer advance];
-				
-				// Handle the various special cases.
-				if (isGroup)
-				{
-					// Groups can only contain dictionaries.
-					OK = [self priv_readDictionary:NULL ofType:subType withKey:keyValue];
-				}
-				else if (type == kDictTypeRoot)
-				{
-					// Root dictionary has funky requirements.
-					OK = [self priv_readRootValueForKey:keyValue];
-				}
-				else  if (dataHandlerSEL != NULL && [kDataKey isEqualToString:keyValue])
-				{
-					// Data sections for attributes and groups.
-					if (data != nil)
-					{
-						[self priv_reportStructuralError:@"\"data\" occurred twice in %@ entry \"%@\"", entryType, parentKey];
-						OK = NO;
-					}
-					else
-					{
-						data = [self performSelector:dataHandlerSEL withObject:dictionary withObject:parentKey];
-						OK = (data != nil);
-					}
-				}
-				else
-				{
-					// The general case: read a dictionary key.
-					id value = nil;
-					OK = [self priv_readProperty:&value];
-					if (OK)
-					{
-						[dictionary setObject:value forKey:keyValue];
-					}
-				}
-			}
-		}
-		
-		if (OK)
-		{
-			// We now expect a comma or closing brace.
-			if (![_lexer advance])
-			{
-				OK = NO;
-				[self priv_reportBasicParseError:@"\",\" or \"}\""];
-			}
-			else
-			{
-				token = [_lexer currentTokenType];
-				
-				if (token == kOOConfTokenComma)
-				{
-					[_lexer advance];
-				}
-				else if (token == kOOConfTokenCloseBrace)
-				{
-					stop = YES;
-				}
-				else
-				{
-					OK = NO;
-					[self priv_reportBasicParseError:@"\",\" or \"}\""];
-				}
-			}
-		}
-		
-		[innerPool drain];
-	}
-	
-	if (OK)
-	{
-		if (completionHandlerSEL != NULL)
-		{
-			typedef BOOL(*CompletionIMP)(id self, SEL _cmd, NSMutableDictionary *dictionary, id data, NSString *name);
-			CompletionIMP completionHandler = (CompletionIMP)[self methodForSelector:completionHandlerSEL];
-			NSAssert(completionHandler != NULL, @"Wonky completion handler.");
-			OK = completionHandler(self, completionHandlerSEL, dictionary, data, parentKey);
-		}
-		if (OK && outDictionary != NULL)  *outDictionary = dictionary;
-	}
-	
-	return OK;
-}
-
-
-- (BOOL) priv_readRootValueForKey:(NSString *)key
-{
-	if ([kVertexCountKey isEqualToString:key])
-	{
-		if (_vertexCount != NSNotFound)
-		{
-			[self priv_reportStructuralError:@"vertexCount appears more than once"];
-		}
-		
-		uint64_t natural;
-		if (![_lexer getNatural:&natural])
-		{
-			[self priv_reportStructuralError:@"vertexCount must be an integer"];
-			return NO;
-		}
-		
-		if (natural >= kMaximumVertexCount)
-		{
-			[self priv_reportStructuralError:@"vertexCount may not be more than %u", kMaximumVertexCount];
-			return NO;
-		}
-		
-		_vertexCount = natural;
-		return YES;
-	}
-	else if ([kMaterialsSectionKey isEqualToString:key])
-	{
-		/*	_materialsByName is created here instead of at the beginning of
-			-parse so that we use it to check whether we've seen the materials
-			section yet (below):
-		*/
-		_materialsByName = [NSMutableDictionary dictionary];
-		return [self priv_readDictionary:NULL ofType:kDictTypeMaterialsSection withKey:key];
-	}
-	else if ([kAttributesSectionKey isEqualToString:key])
-	{
-		//	"attributes" must appear after "vertexCount".
-		if (_vertexCount == NSNotFound)
-		{
-			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kVertexCountKey];
-			return NO;
-		}
-		
-		return [self priv_readDictionary:NULL ofType:kDictTypeAttributesSection withKey:key];
-	}
-	else if ([kGroupsSectionKey isEqualToString:key])
-	{
-		//	"groups" must appear after "vertexCount" and "materials".
-		if (_vertexCount == NSNotFound)
-		{
-			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kVertexCountKey];
-			return NO;
-		}
-		if (_materialsByName == nil)
-		{
-			[self priv_reportStructuralError:@"The %@ section must appear after %@", key, kMaterialsSectionKey];
-			return NO;
-		}
-		
-		return [self priv_readDictionary:NULL ofType:kDictTypeGroupsSection withKey:key];
-	}
-	else if ([kMeshDescriptionKey isEqualToString:key])
-	{
-		id property = nil;
-		if (![self priv_readProperty:&property])  return NO;
-		
-		if ([property isKindOfClass:[NSString class]])
-		{
-			DESTROY(_meshDescription);
-			_meshDescription = [property retain];
-		}
-		else
-		{
-			OOReportWarning(_issues, @"Ignoring \"description\" value because it isn't a string.");
-		}
-		return YES;
-	}
-	else
-	{
-		//	Unknown root-level property; permit for future expansion.
-		return [self priv_readProperty:NULL];
-	}
-}
-
-
-- (BOOL) priv_readArray:(NSArray **)outArray
-{
-	NSMutableArray		*result = nil;
-	
-	if (outArray != NULL)  result = [NSMutableArray array];
-	
-	// Ensure that we're dealing with an array.
-	if (![_lexer getToken:kOOConfTokenOpenBracket])
-	{
-		[self priv_reportBasicParseError:@"\"[\""];
-		return NO;
-	}
-	[_lexer advance];
-	
-	BOOL				OK = YES;
-	BOOL				stop = [_lexer currentTokenType] == kOOConfTokenCloseBracket;
-	
-	while (OK && !stop)
-	{
-		NSAutoreleasePool *innerPool = [NSAutoreleasePool new];
-		
-		OOConfTokenType token = [_lexer currentTokenType];
-		if (token == kOOConfTokenCloseBracket)
-		{
-			stop = YES;
-		}
-		else
-		{
-			id propertyValue = nil;
-			id *propertyPtr = NULL;
-			if (outArray != NULL)  propertyPtr = &propertyValue;
-			
-			OK = [self priv_readProperty:propertyPtr];
-			if (OK)
-			{
-				[result addObject:propertyValue];
-			}
-		}
-		
-		if (OK)
-		{
-			// We now expect a comma or closing bracket.
-			if (![_lexer advance])
-			{
-				OK = NO;
-				[self priv_reportBasicParseError:@"\",\" or \"]\""];
-			}
-			else
-			{
-				token = [_lexer currentTokenType];
-				
-				if (token == kOOConfTokenComma)
-				{
-					[_lexer advance];
-				}
-				else if (token == kOOConfTokenCloseBracket)
-				{
-					stop = YES;
-				}
-				else
-				{
-					OK = NO;
-					[self priv_reportBasicParseError:@"\",\" or \"]\""];
-				}
-			}
-		}
-		
-		[innerPool drain];
-	}
-	
-	if (OK && outArray != NULL)  *outArray = result;
-	return OK;
-}
-
-
-- (BOOL) priv_readProperty:(id *)outProperty
-{
-	id					result = nil;
-	BOOL				OK = NO;
-	
-	switch ([_lexer currentTokenType])
-	{
-			
-		case kOOConfTokenString:
-			OK = [_lexer getString:&result];
-			break;
-			
-		case kOOConfTokenNatural:
-		{
-			uint64_t natural;
-			OK = [_lexer getNatural:&natural];
-			if (OK)  result = [NSNumber numberWithUnsignedLongLong:natural];
-			break;
-		}
-			
-		case kOOConfTokenReal:
-		{
-			double value;
-			OK = [_lexer getDouble:&value];
-			if (OK)  result = [NSNumber numberWithDouble:value];
-			break;
-		}
-			
-		case kOOConfTokenOpenBrace:
-			return [self priv_readDictionary:outProperty ofType:kDictTypeGeneral withKey:nil];
-			/*	Don't break for validation because readDictionary: can parse a
-				dictionary without generating a value if outProperty is NULL.
-			*/
-			
-		case kOOConfTokenOpenBracket:
-			return [self priv_readArray:outProperty];
-			/*	Don't break for validation because readDictionary: can parse a
-				dictionary without generating a value if outProperty is NULL.
-			*/
-			
-		case kOOConfTokenKeyword:
-		{
-			NSString *stringValue = [_lexer currentTokenString];
-			
-			OK = YES;
-			if ([@"true" isEqualToString:stringValue])  result = $true;
-			else if ([@"false" isEqualToString:stringValue])  result = $false;
-			else if ([@"null" isEqualToString:stringValue])  result = $null;
-			else
-			{
-				[self priv_reportBasicParseError:@"value"];
-				OK = NO;
-			}
-			
-			break;
-		}
-			
-		default:
-			[self priv_reportBasicParseError:@"value"];
-			OK = NO;
-	}
-	
-	if (OK && result == nil)
-	{
-		[self priv_reportParseError:@"internal error: property parser reported success but produced no value"];
-		OK = NO;
-	}
-	
-	if (outProperty != NULL)  *outProperty = result;
-	return OK;
 }
 
 @end

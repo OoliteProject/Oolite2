@@ -28,7 +28,7 @@
 
 #import "OOMeshReading.h"
 
-@class OOAbstractVertex, OOConfLexer;
+@class OOAbstractVertex, OOConfLexer, OOConfParser;
 
 
 @interface OOMeshReader: NSObject <OOMeshReading>
@@ -37,11 +37,14 @@
 	id <OOProblemReporting>			_issues;
 	NSString						*_path;
 	OOConfLexer						*_lexer;
+	OOConfParser					*_parser;
 	
 	OORenderMesh					*_renderMesh;
 	
 	NSString						*_meshName;
 	NSString						*_meshDescription;
+	
+	NSString						*_currentElementName;
 	
 	NSUInteger						_vertexCount;
 	NSMutableDictionary				*_attributeArrays;

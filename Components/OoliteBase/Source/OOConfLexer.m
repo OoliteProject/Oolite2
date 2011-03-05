@@ -102,6 +102,12 @@
 }
 
 
+- (id <OOProblemReporting>) problemReporter
+{
+	return [[_issues retain] autorelease];
+}
+
+
 - (void) dealloc
 {
 	DESTROY(_issues);

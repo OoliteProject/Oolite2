@@ -77,6 +77,8 @@ typedef enum OOConfTokenType
 - (id) initWithPath:(NSString *)inPath issues:(id <OOProblemReporting>)issues;
 - (id) initWithData:(NSData *)inData issues:(id <OOProblemReporting>)issues;
 
+- (id <OOProblemReporting>) problemReporter;
+
 - (NSInteger) lineNumber;	// Signed to avoid silly conflict warnings with NSXMLParser.
 
 - (OOConfTokenType) currentTokenType;

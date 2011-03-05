@@ -30,9 +30,23 @@ SOFTWARE.
 */
 
 #import "OOConfParsing.h"
+#import "OOConfLexer.h"
 
 @protocol OOProblemReporting;
 @class OOConfLexer;
+
+
+typedef enum
+{
+	kOOConfArrayBegin,
+	kOOConfArrayElement,
+	kOOConfArrayEnd,
+	kOOConfArrayFailed,
+	kOOConfDictionaryBegin,
+	kOOConfDictionaryElement,
+	kOOConfDictionaryEnd,
+	kOOConfDictionaryFailed
+} OOConfParserActionEventType;
 
 
 @interface OOConfParser: NSObject
@@ -44,42 +58,50 @@ SOFTWARE.
 	BOOL						_strictJSON;	// Experimental
 }
 
+- (id) initWithLexer:(OOConfLexer *)lexer;
 - (id) initWithData:(NSData *)url problemReporter:(id <OOProblemReporting>)issues;
 
-- (id<OOProblemReporting>) problemReporter;
+- (id <OOProblemReporting>) problemReporter;
 - (OOConfLexer *) lexer;
 
 /*	OOConfParser has specialized delegate behaviour.
 	The delegate is expected to remain the same object throughout parsing.
 	However, different delegate actions may be called in different contexts.
 	When a delegate action is called, it must either call
-	-parseWithDelegateAction: recursively, consume the next object in the token
-	stream in some other way, or return NO to indicate failure. (A failing
-	action should also report an error to the problem report manager.) A NULL
-	action may be passed to -parseWithDelegateAction in order to skip over an
-	object.
+	-parseWithDelegateAction:result; recursively, consume the next object in
+	the token stream in some other way, or return NO to indicate failure. (A
+	failing action should also report an error to the problem report manager.)
+	A NULL action may be passed to -parseWithDelegateAction in order to skip
+	over an object.
 	
 	The signature for delegate actions is:
-	- (BOOL) handleElement:(void *)key isArray:(BOOL)isArray producingObject:(id *)outObject;
+	- (BOOL) parseEvent:(OOConfParserActionEventType) key:(void *)key object:(id *)object;
 	
-	If isArray is true, key is an NSUInteger (not an NSNumber *!). If isArray
-	is false, we're dealing with a dictionary and key is an NSString *.
+	The delegate action is invoked for each element of a dictionary or array.
+	It is ignored for non-collection types.
 	
-	Before and after parsing a dictionary, the action is called once with a nil
-	key. Before and after parsing an array, it is called with an index of -1.
-	In the before case, *outObject will be nil, and the action should use this
-	opportunity to initialize *outObject. In the after case, *outObject will
-	be unmodified. (The “after” call will not happen if parsing failed.)
+	For each collection, there are four event types: Begin, Element, End, and
+	Failed. Begin is sent once, then Element for each element of the collection,
+	then End if successful; Failed is sent once if parsing fails in any way.
 	
-	Because of autorelease pools used during parsing, it is unsafe to set up
-	*outObject lazily in the obvious way.
+	For kOOConfArrayElement events, the key parameter is an integer (cast it to
+	uintptr_t). For kOOConfDictionaryElement, it’s an NSString *. For other
+	event types, it’s NULL.
+	
+	The return value is ignored for Failed events. For other event types, return
+	YES to continue parsing and NO to indicate failure.
 */
 - (id) delegate;
 - (void) setDelegate:(id)delegate;
 
 - (BOOL) parseWithDelegateAction:(SEL)action result:(id *)result;
 
+/*	parseAsPropertyList
+	Parse the next value as a property list. This is similar to the high-level
+	parser interface, except it doesn’t report extra tokens after the parsed
+	object, so it can be used to parse subtrees.
+	Failure is indicated by returning nil.
+*/
+- (id) parseAsPropertyList;
+
 @end
-
-
-#define kOOConfParsingArraySetupToken ((void *)(intptr_t)-1)

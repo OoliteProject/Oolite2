@@ -28,19 +28,18 @@ SOFTWARE.
 
 #import "OOConfParsingInternal.h"
 #import "OOProblemReporting.h"
-#import "OOConfLexer.h"
 #import "MYCollectionUtilities.h"
 #import "OOFunctionAttributes.h"
 
 
-typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *outObject);
+typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, OOConfParserActionEventType eventType, void *key, id *outObject);
 
 
 @interface OOConfParser (OOPrivate)
 
 // Parser acts as its own delegate for standard parsing and NULL parsing.
-- (BOOL) priv_plistBuilderHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject;
-- (BOOL) priv_nullActionHandleElement:(void *)element isArray:(BOOL)isArray producingObject:(id *)outObject;
+- (BOOL) priv_plistBuilderParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
+- (BOOL) priv_nullParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object;
 
 - (BOOL) priv_parseDictionaryWithAction:(SEL)action result:(id *)result;
 - (BOOL) priv_parseArrayWithAction:(SEL)action result:(id *)result;
@@ -49,6 +48,10 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 - (void) priv_reportBasicParseError:(NSString *)string;
 
 @end
+
+
+#define PLIST_BUILDER_SEL	@selector(priv_plistBuilderParseEvent:key:object:)
+#define DO_NOTHING_SEL		@selector(priv_nullParseEvent:key:object:)
 
 
 @implementation NSObject (OOConfParsing)
@@ -69,14 +72,13 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	{
 		problemReporter = [[OOErrorConvertingProblemReporter alloc] init];
 		parser = [[OOConfParser alloc] initWithData:ooConfData problemReporter:problemReporter];
-		id result = nil;
-		BOOL OK = [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
-										   result:&result];
+		id result = [parser parseAsPropertyList];
 		
-		if (!OK && outError != NULL)
+		if (result == nil && outError != NULL)
 		{
 			*outError = [problemReporter error];
 		}
+		
 		return result;
 	}
 	@finally
@@ -107,10 +109,12 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	@try
 	{
 		[parser setDelegate:parser];
-		id result = nil;
-		BOOL OK = [parser parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
-										   result:&result];
-		return OK ? result : nil;
+		id result = [parser parseAsPropertyList];
+		if ([[parser lexer] currentTokenType] != kOOConfTokenEOF)
+		{
+			OOReportWarning(problemReporter, @"Ignoring additional tokens beyond end of data (line %lu).", [[parser lexer] lineNumber]);
+		}
+		return result;
 	}
 	@finally
 	{
@@ -136,19 +140,27 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 
 @implementation OOConfParser
 
-- (id) initWithData:(NSData *)data problemReporter:(id <OOProblemReporting>)issues
+- (id) initWithLexer:(OOConfLexer *)lexer
 {
+	if (lexer == nil)
+	{
+		[self release];
+		return nil;
+	}
+	
 	if ((self = [super init]))
 	{
-		_issues = [issues retain];
-		_lexer = [[OOConfLexer alloc] initWithData:data issues:issues];
-		if (_lexer == nil)
-		{
-			DESTROY(self);
-		}
+		_lexer = [lexer retain];
+		_issues = [lexer problemReporter];
 	}
 	
 	return self;
+}
+
+
+- (id) initWithData:(NSData *)data problemReporter:(id <OOProblemReporting>)issues
+{
+	return [self initWithLexer:[[[OOConfLexer alloc] initWithData:data issues:issues] autorelease]];
 }
 
 
@@ -197,7 +209,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 		*/
 		id delegate = _delegate;
 		_delegate = self;
-		BOOL OK = [self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)
+		BOOL OK = [self parseWithDelegateAction:DO_NOTHING_SEL
 										 result:result];
 		_delegate = delegate;
 		return OK;
@@ -256,6 +268,21 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 }
 
 
+- (id) parseAsPropertyList
+{
+	id delegate = _delegate;
+	_delegate = self;
+	
+	id result = nil;
+	BOOL OK = [self parseWithDelegateAction:PLIST_BUILDER_SEL result:&result];
+	if (!OK)  result = nil;
+	
+	_delegate = delegate;
+	
+	return result;
+}
+
+
 - (BOOL) priv_parseDictionaryWithAction:(SEL)actionSEL result:(id *)result
 {
 	ParseActionIMP actionIMP = (ParseActionIMP)[_delegate methodForSelector:actionSEL];
@@ -274,7 +301,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	
 	// Give action opportunity to set up.
 	*result = nil;
-	OK = actionIMP(_delegate, actionSEL, nil, NO, result);
+	OK = actionIMP(_delegate, actionSEL, kOOConfDictionaryBegin, nil, result);
 	
 	// For each pair...
 	while (OK && !stop)
@@ -298,7 +325,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 			if (OK)
 			{
 				[_lexer advance];
-				OK = actionIMP(_delegate, actionSEL, keyValue, NO, result);
+				OK = actionIMP(_delegate, actionSEL, kOOConfDictionaryElement, keyValue, result);
 			}
 		}
 		
@@ -336,7 +363,11 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	if (OK)
 	{
 		// Give action an opportunity to finish up.
-		OK = actionIMP(_delegate, actionSEL, nil, NO, result);
+		OK = actionIMP(_delegate, actionSEL, kOOConfDictionaryEnd, nil, result);
+	}
+	else
+	{
+		actionIMP(_delegate, actionSEL, kOOConfDictionaryFailed, nil, result);
 	}
 	
 	return OK;
@@ -361,7 +392,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	
 	// Give action opportunity to set up.
 	*result = nil;
-	OK = actionIMP(_delegate, actionSEL, kOOConfParsingArraySetupToken, YES, result);
+	OK = actionIMP(_delegate, actionSEL, kOOConfArrayBegin, 0, result);
 	
 	uintptr_t index = 0;
 	
@@ -370,7 +401,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	{
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
-		OK = actionIMP(_delegate, actionSEL, (void *)index, YES, result);
+		OK = actionIMP(_delegate, actionSEL, kOOConfArrayElement, (void *)index, result);
 		index++;
 		
 		if (OK)
@@ -407,8 +438,13 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 	if (OK)
 	{
 		// Give action an opportunity to finish up.
-		OK = actionIMP(_delegate, actionSEL, kOOConfParsingArraySetupToken, YES, result);
+		OK = actionIMP(_delegate, actionSEL, kOOConfArrayEnd, 0, result);
 	}
+	else
+	{
+		actionIMP(_delegate, actionSEL, kOOConfArrayFailed, 0, result);
+	}
+
 	
 	return OK;
 }
@@ -440,48 +476,66 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, void *key, BOOL isArray, id *o
 }
 
 
-- (BOOL) priv_plistBuilderHandleElement:(void *)key isArray:(BOOL)isArray producingObject:(id *)outObject
+- (BOOL) priv_plistBuilderParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object
 {
-	if (isArray)
+	switch (event)
 	{
-		if (key == kOOConfParsingArraySetupToken)
+		case kOOConfArrayBegin:
+			*object = [NSMutableArray array];
+			return *object != nil;
+			
+		case kOOConfDictionaryBegin:
+			*object = [NSMutableDictionary dictionary];
+			return *object != nil;
+			
+		case kOOConfArrayElement:
+		case kOOConfDictionaryElement:
 		{
-			if (*outObject == nil)  *outObject = [NSMutableArray array];
+			id value = nil;
+			BOOL OK = [self parseWithDelegateAction:PLIST_BUILDER_SEL
+											 result:&value];
+			if (EXPECT_NOT(!OK))  return NO;
+			if (event == kOOConfArrayElement)
+			{
+				[(NSMutableArray *)*object addObject:value];
+			}
+			else
+			{
+				[(NSMutableDictionary *)*object setObject:value forKey:key];
+			}
 			return YES;
 		}
-	}
-	else
-	{
-		if (key == NULL)
-		{
-			if (*outObject == nil)  *outObject = [NSMutableDictionary dictionary];
+			
+		case kOOConfArrayEnd:
+		case kOOConfDictionaryEnd:
+		case kOOConfArrayFailed:
+		case kOOConfDictionaryFailed:
 			return YES;
-		}
 	}
 	
-	id value = nil;
-	BOOL OK = [self parseWithDelegateAction:@selector(priv_plistBuilderHandleElement:isArray:producingObject:)
-								  result:&value];
-	if (EXPECT_NOT(!OK))  return NO;
-	
-	if (isArray)
-	{
-		[*outObject addObject:value];
-	}
-	else
-	{
-		[*outObject setObject:value forKey:key];
-	}
-	
-	return OK;
+	return NO;
 }
 
 
-- (BOOL) priv_nullActionHandleElement:(void *)key isArray:(BOOL)isArray producingObject:(id *)outObject
+- (BOOL) priv_nullParseEvent:(OOConfParserActionEventType)event key:(void *)key object:(id *)object
 {
-	return [self parseWithDelegateAction:@selector(priv_nullActionHandleElement:isArray:producingObject:)
-								  result:NULL];
-
+	switch (event)
+	{
+		case kOOConfArrayElement:
+		case kOOConfDictionaryElement:
+			return [self parseWithDelegateAction:DO_NOTHING_SEL
+										  result:object];
+			
+		case kOOConfArrayBegin:
+		case kOOConfDictionaryBegin:
+		case kOOConfArrayEnd:
+		case kOOConfDictionaryEnd:
+		case kOOConfArrayFailed:
+		case kOOConfDictionaryFailed:
+			return YES;
+	}
+	
+	return NO;
 }
 
 @end

@@ -49,13 +49,6 @@
 }
 
 
-- (void) windowControllerDidLoadNib:(NSWindowController *) aController
-{
-	NSLog(@"%s called", __FUNCTION__);
-    [super windowControllerDidLoadNib:aController];
-}
-
-
 - (BOOL) writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
 	DDProblemReportManager *issues = [[DDProblemReportManager alloc] initWithContext:kDDPRContextSave fileURL:absoluteURL];

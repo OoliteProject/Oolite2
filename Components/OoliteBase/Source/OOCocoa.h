@@ -30,11 +30,16 @@ MA 02110-1301, USA.
 #endif
 
 
-#import <stdlib.h>
-#import <stdint.h>
-#import <math.h>
-#import <stdarg.h>
-#import <limits.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
+#include <stdarg.h>
+#include <limits.h>
+#include <stdint.h>
+#include <limits.h>
+
+# if __OBJC__
+
 #import <Foundation/Foundation.h>
 
 #ifdef GNUSTEP
@@ -99,8 +104,6 @@ MA 02110-1301, USA.
 
 
 #if OOLITE_GNUSTEP && !defined(OOLITE_SDL_MAC)
-#include <stdint.h>
-#include <limits.h> // to get UINT_MAX
 
 
 #define OOLITE_SDL				1
@@ -408,3 +411,6 @@ enum {
 #if OOLITE_MAC_OS_X
 #define OOPrivate
 #endif
+
+
+#endif	// __OBJC__

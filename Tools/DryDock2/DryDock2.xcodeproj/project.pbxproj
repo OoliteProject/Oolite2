@@ -48,6 +48,7 @@
 		1A55BBBD130B22AF006C38DE /* OoliteGraphics.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB94130B2289006C38DE /* OoliteGraphics.framework */; };
 		1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */; };
 		1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */; };
+		1A649F451323B87900C2FDDB /* oolite-enduser-configuration.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1A649F441323B87900C2FDDB /* oolite-enduser-configuration.xcconfig */; };
 		1A6B97D511F5DC2600B2E78A /* ShadedWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */; };
 		1A6B97D911F5DC7B00B2E78A /* ShadedWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */; };
 		1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392B811C3CE5B002F405C /* PreviewShader.vs */; };
@@ -191,6 +192,10 @@
 		1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
 		1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.fs; sourceTree = "<group>"; };
 		1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.vs; sourceTree = "<group>"; };
+		1A649F171323B33A00C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-debug-configuration.xcconfig"; path = "../../Config/oolite-debug-configuration.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A649F411323B80F00C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-developer-configuration.xcconfig"; path = "../../Config/oolite-developer-configuration.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A649F441323B87900C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-enduser-configuration.xcconfig"; path = "../../Config/oolite-enduser-configuration.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1A649FCE1323BE6B00C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = "oolite-version.inc"; path = "../../Config/oolite-version.inc"; sourceTree = SOURCE_ROOT; };
 		1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = ShadedWireframeShader.vs; sourceTree = "<group>"; };
 		1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = ShadedWireframeShader.fs; sourceTree = "<group>"; };
 		1A7392B811C3CE5B002F405C /* PreviewShader.vs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = PreviewShader.vs; sourceTree = "<group>"; };
@@ -448,6 +453,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A649F181323B33F00C2FDDB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A649F171323B33A00C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A649F411323B80F00C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A649F441323B87900C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */,
+				1A649FCE1323BE6B00C2FDDB /* oolite-version.inc */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 		1A7392BA11C3CE5C002F405C /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,7 +500,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* DryDock2 */ = {
 			isa = PBXGroup;
 			children = (
-				1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */,
+				1A649F181323B33F00C2FDDB /* Config */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				1A2F870811F7480100435A2E /* Libraries */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
@@ -642,6 +659,7 @@
 				1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */,
 				1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */,
 				1ADB31FE122AF87B00F890B8 /* Placeholder Texture.png in Resources */,
+				1A649F451323B87900C2FDDB /* oolite-enduser-configuration.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -754,69 +772,42 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_GC = required;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/DryDock2_Prefix.pch;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/DryDock2-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
 			};
 			name = Debug;
 		};
-		C05733C908A9546B00998B17 /* Release */ = {
+		C05733C908A9546B00998B17 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_GC = required;
-				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Source/DryDock2_Prefix.pch;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "Resources/DryDock2-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Dry Dock for Oolite";
 			};
-			name = Release;
+			name = Developer;
 		};
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F171323B33A00C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				OOLITE_ROOT = ../../;
-				PREBINDING = NO;
 			};
 			name = Debug;
 		};
-		C05733CD08A9546B00998B17 /* Release */ = {
+		C05733CD08A9546B00998B17 /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A17CF2A11C16BB200F96041 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F411323B80F00C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				OOLITE_ROOT = ../../;
-				PREBINDING = NO;
 			};
-			name = Release;
+			name = Developer;
 		};
 /* End XCBuildConfiguration section */
 
@@ -825,19 +816,19 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C05733C808A9546B00998B17 /* Debug */,
-				C05733C908A9546B00998B17 /* Release */,
+				C05733C908A9546B00998B17 /* Developer */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 		C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C05733CC08A9546B00998B17 /* Debug */,
-				C05733CD08A9546B00998B17 /* Release */,
+				C05733CD08A9546B00998B17 /* Developer */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 /* End XCConfigurationList section */
 	};

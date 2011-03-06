@@ -27,6 +27,8 @@
 
 #import "OOAbstractMesh.h"
 
+#if !OOLITE_LEAN
+
 
 @interface OOAbstractMesh (Winding)
 
@@ -40,3 +42,5 @@
 - (BOOL) reverseWinding;
 
 @end
+
+#endif	// !OOLITE_LEAN

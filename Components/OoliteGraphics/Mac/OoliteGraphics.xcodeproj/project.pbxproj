@@ -139,6 +139,11 @@
 		1A062E9911B2F64E00727C1D /* OODATWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATWriter.h; sourceTree = "<group>"; };
 		1A062E9A11B2F64E00727C1D /* OODATWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATWriter.m; sourceTree = "<group>"; };
 		1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F751323BADA00C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F761323BADA00C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F771323BADA00C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A649F781323BADA00C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshWriter.h; sourceTree = "<group>"; };
 		1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMeshWriter.m; sourceTree = "<group>"; };
 		1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShaderProgram.h; sourceTree = "<group>"; };
@@ -155,7 +160,6 @@
 		1A7D37C711B16C1E00857CEF /* OOOBJReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJReader.h; sourceTree = "<group>"; };
 		1A7D37C811B16C1E00857CEF /* OOOBJReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJReader.m; sourceTree = "<group>"; };
 		1A7D37DB11B16EC000857CEF /* OOMeshReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMeshReading.h; sourceTree = "<group>"; };
-		1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A8A296C11F3A95400775894 /* OOAbstractMesh+Winding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOAbstractMesh+Winding.h"; sourceTree = "<group>"; };
 		1A8A296D11F3A95400775894 /* OOAbstractMesh+Winding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOAbstractMesh+Winding.m"; sourceTree = "<group>"; };
 		1A8F1BD911A882FC00C94CB0 /* OOAbstractFaceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAbstractFaceGroup.h; sourceTree = "<group>"; };
@@ -248,7 +252,7 @@
 		0867D691FE84028FC02AAC07 /* oomesh */ = {
 			isa = PBXGroup;
 			children = (
-				1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */,
+				1A649F731323BADA00C2FDDB /* Config */,
 				1A713DDD11B55E96009A9197 /* OoliteGraphics.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,
 				1A864C8D11A5EC26008CDC78 /* Dependencies */,
@@ -293,6 +297,19 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		1A649F731323BADA00C2FDDB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A649F751323BADA00C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A649F761323BADA00C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A649F771323BADA00C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A649F781323BADA00C2FDDB /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
 		};
 		1A7D37BF11B16BD700857CEF /* Abstract */ = {
 			isa = PBXGroup;
@@ -688,106 +705,90 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1AEA251411A73A9300B361DC /* Debug */ = {
+		1A649F7E1323BB1D00C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A649F761323BADA00C2FDDB /* oolite-enduser-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = EndUser;
+		};
+		1A649F7F1323BB1D00C2FDDB /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEP_HEADER_PATH = "$(OBJROOT)/$(CONFIGURATION)/include/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_GC = supported;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
+				HEADER_SEARCH_PATHS = (
+					"$(DEP_HEADER_PATH)/png/",
+					"$(DEP_HEADER_PATH)/OpenCTM/",
+				);
+				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
+				INSTALL_PATH = "@rpath/";
+				PRODUCT_NAME = OoliteGraphics;
+			};
+			name = EndUser;
+		};
+		1AEA251411A73A9300B361DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"OO_CHECK_GL_HEAVY=1",
-					"OO_DEBUG=1",
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(DEP_HEADER_PATH)/png/",
 					"$(DEP_HEADER_PATH)/OpenCTM/",
 				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-				);
-				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-					"-Wno-missing-braces",
-				);
 			};
 			name = Debug;
 		};
-		1AEA251511A73A9300B361DC /* Release */ = {
+		1AEA251511A73A9300B361DC /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEP_HEADER_PATH = "$(OBJROOT)/$(CONFIGURATION)/include/";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"NDEBUG=1",
-					"NS_BLOCK_ASSERTIONS=1",
-				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(DEP_HEADER_PATH)/png/",
 					"$(DEP_HEADER_PATH)/OpenCTM/",
 				);
 				INFOPLIST_FILE = "OoliteGraphics-Info.plist";
 				INSTALL_PATH = "@rpath/";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-				);
-				PREBINDING = NO;
 				PRODUCT_NAME = OoliteGraphics;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-					"-Wno-missing-braces",
-				);
 			};
-			name = Release;
+			name = Developer;
 		};
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				OOLITE_ROOT = ../../../;
 			};
 			name = Debug;
 		};
-		1DEB922408733DC00010E9CD /* Release */ = {
+		1DEB922408733DC00010E9CD /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A878AA111B5727E001BB304 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F751323BADA00C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				OOLITE_ROOT = ../../../;
 			};
-			name = Release;
+			name = Developer;
 		};
 /* End XCBuildConfiguration section */
 
@@ -796,19 +797,21 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1AEA251411A73A9300B361DC /* Debug */,
-				1AEA251511A73A9300B361DC /* Release */,
+				1AEA251511A73A9300B361DC /* Developer */,
+				1A649F7F1323BB1D00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OoliteGraphics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
-				1DEB922408733DC00010E9CD /* Release */,
+				1DEB922408733DC00010E9CD /* Developer */,
+				1A649F7E1323BB1D00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 /* End XCConfigurationList section */
 	};

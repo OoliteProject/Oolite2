@@ -108,6 +108,11 @@
 		1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOIsNumberLiteral.m; sourceTree = "<group>"; };
 		1A60EDE611B6FD8500224F2D /* OODeepCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODeepCopy.h; sourceTree = "<group>"; };
 		1A60EDE711B6FD8500224F2D /* OODeepCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODeepCopy.m; sourceTree = "<group>"; };
+		1A649F501323B8E900C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F511323B8E900C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F521323B8E900C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F531323B8E900C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A649F541323B8E900C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteBase-Info.plist"; sourceTree = "<group>"; };
 		1A713F9511B56397009A9197 /* OoliteBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteBase.h; path = ../Source/OoliteBase.h; sourceTree = SOURCE_ROOT; };
 		1A713FA811B56436009A9197 /* OOCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCocoa.h; sourceTree = "<group>"; };
@@ -127,7 +132,6 @@
 		1A71414611B5678C009A9197 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
 		1A71415E11B56810009A9197 /* OOBaseStringParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBaseStringParsing.h; sourceTree = "<group>"; };
 		1A71415F11B56810009A9197 /* OOBaseStringParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBaseStringParsing.m; sourceTree = "<group>"; };
-		1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A748B57130C8FF4004BF8B9 /* OOConfParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfParsing.h; sourceTree = "<group>"; };
 		1A748B58130C8FF4004BF8B9 /* OOConfParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOConfParsing.m; sourceTree = "<group>"; };
 		1A748B59130C8FF4004BF8B9 /* OOConfParsingInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfParsingInternal.h; sourceTree = "<group>"; };
@@ -188,7 +192,7 @@
 		0867D691FE84028FC02AAC07 /* OOBase */ = {
 			isa = PBXGroup;
 			children = (
-				1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */,
+				1A649F4F1323B8E900C2FDDB /* Config */,
 				1A713F9511B56397009A9197 /* OoliteBase.h */,
 				1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */,
 				32C88DFF0371C24200C91783 /* Basest */,
@@ -251,6 +255,19 @@
 			name = Utilities;
 			path = ../Source;
 			sourceTree = "<group>";
+		};
+		1A649F4F1323B8E900C2FDDB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A649F501323B8E900C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A649F511323B8E900C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A649F521323B8E900C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A649F531323B8E900C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A649F541323B8E900C2FDDB /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
 		};
 		1A713FB811B564E5009A9197 /* Maths */ = {
 			isa = PBXGroup;
@@ -487,19 +504,39 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		1A649F551323B8FA00C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A649F521323B8E900C2FDDB /* oolite-enduser-configuration.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OOLITE_ROOT = ../../../;
+				PREBINDING = NO;
+			};
+			name = EndUser;
+		};
+		1A649F561323B8FA00C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_GC = supported;
+				INFOPLIST_FILE = "OoliteBase-Info.plist";
+				INSTALL_PATH = "@rpath/";
+				PRODUCT_NAME = OoliteBase;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = EndUser;
+		};
 		1DEB91AE08733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_GC = supported;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = "OoliteBase-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				PRODUCT_NAME = OoliteBase;
@@ -507,40 +544,31 @@
 			};
 			name = Debug;
 		};
-		1DEB91AF08733DA50010E9CD /* Release */ = {
+		1DEB91AF08733DA50010E9CD /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_GC = supported;
-				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = "OoliteBase-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				PRODUCT_NAME = OoliteBase;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Release;
+			name = Developer;
 		};
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F501323B8E900C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				OOLITE_ROOT = ../../../;
-				PREBINDING = NO;
 			};
 			name = Debug;
 		};
-		1DEB91B308733DA50010E9CD /* Release */ = {
+		1DEB91B308733DA50010E9CD /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A71431511B56EB7009A9197 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F511323B8E900C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -548,7 +576,7 @@
 				OOLITE_ROOT = ../../../;
 				PREBINDING = NO;
 			};
-			name = Release;
+			name = Developer;
 		};
 /* End XCBuildConfiguration section */
 
@@ -557,19 +585,21 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Debug */,
-				1DEB91AF08733DA50010E9CD /* Release */,
+				1DEB91AF08733DA50010E9CD /* Developer */,
+				1A649F561323B8FA00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OoliteBase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,
-				1DEB91B308733DA50010E9CD /* Release */,
+				1DEB91B308733DA50010E9CD /* Developer */,
+				1A649F551323B8FA00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 /* End XCConfigurationList section */
 	};

@@ -26,6 +26,8 @@
 #import "OOAbstractMesh+Winding.h"
 #import "OOAbstractFaceGroupInternal.h"
 
+#if !OOLITE_LEAN
+
 
 @implementation OOAbstractMesh (Winding)
 
@@ -77,3 +79,5 @@
 }
 
 @end
+
+#endif	// !OOLITE_LEAN

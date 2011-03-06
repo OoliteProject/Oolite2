@@ -28,13 +28,14 @@
 		1ACBD02711EE5BDE0067E95D /* LzmaLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01911EE5BDE0067E95D /* LzmaLib.h */; };
 		1ACBD02811EE5BDE0067E95D /* NameMangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01A11EE5BDE0067E95D /* NameMangle.h */; };
 		1ACBD02911EE5BDE0067E95D /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ACBD01C11EE5BDE0067E95D /* Types.h */; };
-		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1A649F9F1323BD2800C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649FA01323BD2800C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649FA11323BD2800C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649FA21323BD2800C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A649FA31323BD2800C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1ACBCF1C11EE46DC0067E95D /* compressMG1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressMG1.c; path = lib/compressMG1.c; sourceTree = "<group>"; };
 		1ACBCF1D11EE46DC0067E95D /* compressMG2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressMG2.c; path = lib/compressMG2.c; sourceTree = "<group>"; };
 		1ACBCF1E11EE46DC0067E95D /* compressRAW.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = compressRAW.c; path = lib/compressRAW.c; sourceTree = "<group>"; };
@@ -43,7 +44,6 @@
 		1ACBCF2111EE46DC0067E95D /* openctm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctm.h; path = lib/openctm.h; sourceTree = "<group>"; };
 		1ACBCF2211EE46DC0067E95D /* openctmpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = openctmpp.h; path = lib/openctmpp.h; sourceTree = "<group>"; };
 		1ACBCF2311EE46DC0067E95D /* stream.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stream.c; path = lib/stream.c; sourceTree = "<group>"; };
-		1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1ACBD00F11EE5BDE0067E95D /* Alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Alloc.c; sourceTree = "<group>"; };
 		1ACBD01011EE5BDE0067E95D /* Alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alloc.h; sourceTree = "<group>"; };
 		1ACBD01111EE5BDE0067E95D /* LzFind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LzFind.c; sourceTree = "<group>"; };
@@ -59,7 +59,6 @@
 		1ACBD01B11EE5BDE0067E95D /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		1ACBD01C11EE5BDE0067E95D /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libOpenCTM-for-oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libOpenCTM-for-oolite.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +66,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,40 +83,25 @@
 		0867D691FE84028FC02AAC07 /* OpenCTM */ = {
 			isa = PBXGroup;
 			children = (
-				1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */,
+				1A649F9E1323BD2800C2FDDB /* Config */,
 				1ACBCF1B11EE46C00067E95D /* OpenCTM */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = OpenCTM;
 			sourceTree = "<group>";
 		};
-		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+		1A649F9E1323BD2800C2FDDB /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				1A649F9F1323BD2800C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A649FA01323BD2800C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A649FA11323BD2800C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A649FA21323BD2800C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A649FA31323BD2800C2FDDB /* oolite-version.inc */,
 			);
-			name = "External Frameworks and Libraries";
-			sourceTree = "<group>";
-		};
-		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
-				D2F7E8BE07B2D77200F64583 /* CoreData.framework */,
-				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
 		};
 		1ACBCF1B11EE46C00067E95D /* OpenCTM */ = {
 			isa = PBXGroup;
@@ -270,60 +253,57 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		1A649FA41323BD3600C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A649FA01323BD2800C2FDDB /* oolite-developer-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = EndUser;
+		};
+		1A649FA51323BD3600C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
+				PRODUCT_NAME = "OpenCTM-for-oolite";
+				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
+			};
+			name = EndUser;
+		};
 		1DEB921F08733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
 			};
 			name = Debug;
 		};
-		1DEB922008733DC00010E9CD /* Release */ = {
+		1DEB922008733DC00010E9CD /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
 			};
-			name = Release;
+			name = Developer;
 		};
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F9F1323BD2800C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				OOLITE_ROOT = ../../../;
-				PREBINDING = NO;
 			};
 			name = Debug;
 		};
-		1DEB922408733DC00010E9CD /* Release */ = {
+		1DEB922408733DC00010E9CD /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1ACBCF3F11EE47740067E95D /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649FA01323BD2800C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
 				OOLITE_ROOT = ../../../;
-				PREBINDING = NO;
 			};
-			name = Release;
+			name = Developer;
 		};
 /* End XCBuildConfiguration section */
 
@@ -332,19 +312,21 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
-				1DEB922008733DC00010E9CD /* Release */,
+				1DEB922008733DC00010E9CD /* Developer */,
+				1A649FA51323BD3600C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
-				1DEB922408733DC00010E9CD /* Release */,
+				1DEB922408733DC00010E9CD /* Developer */,
+				1A649FA41323BD3600C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 /* End XCConfigurationList section */
 	};

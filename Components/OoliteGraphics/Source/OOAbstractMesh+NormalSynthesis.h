@@ -31,6 +31,8 @@
 
 #import "OOAbstractMesh.h"
 
+#if !OOLITE_LEAN
+
 
 @interface OOAbstractMesh (NormalSynthesis)
 
@@ -45,3 +47,5 @@
 - (BOOL) synthesizeNormalsSmoothly:(BOOL)smooth replacingExisting:(BOOL)replace;
 
 @end
+
+#endif	// !OOLITE_LEAN

@@ -14,12 +14,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A64A0DF1323C68300C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A64A0E01323C68300C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A64A0E11323C68300C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A64A0E21323C68300C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A64A0E31323C68300C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1ADE32A40975807900961AE2 /* libogg_for_oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libogg_for_oolite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE344C612CB6E6900FD8C62 /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; };
 		1AE344C712CB6E6900FD8C62 /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; };
 		1AE344CB12CB6EA500FD8C62 /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; };
 		1AE344CC12CB6EA500FD8C62 /* framing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = framing.c; sourceTree = "<group>"; };
-		1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +48,7 @@
 		0867D691FE84028FC02AAC07 /* Ogg */ = {
 			isa = PBXGroup;
 			children = (
-				1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */,
+				1A64A0DE1323C68300C2FDDB /* Config */,
 				730F235F09181A3E00AB638C /* Headers */,
 				08FB77ACFE841707C02AAC07 /* Source */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
@@ -69,6 +73,19 @@
 			name = Source;
 			path = libogg/src;
 			sourceTree = "<group>";
+		};
+		1A64A0DE1323C68300C2FDDB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A64A0DF1323C68300C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A64A0E01323C68300C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A64A0E11323C68300C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A64A0E21323C68300C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A64A0E31323C68300C2FDDB /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../../Config;
+			sourceTree = SOURCE_ROOT;
 		};
 		730F235F09181A3E00AB638C /* Headers */ = {
 			isa = PBXGroup;
@@ -169,86 +186,68 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1ADE32B9097580C800961AE2 /* Deployment */ = {
+		1ADE32B9097580C800961AE2 /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
-				INSTALL_PATH = /usr/local/lib;
-				LLVM_LTO = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = ogg_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
-				ZERO_LINK = NO;
 			};
-			name = Deployment;
+			name = EndUser;
 		};
 		1AE344EE12CB70B800FD8C62 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A64A0DF1323C68300C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
-				SYMROOT = ../../../../build;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__MACOSX__,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
+				OOLITE_ROOT = ../../../../;
 			};
 			name = Debug;
 		};
 		1AE344EF12CB70B800FD8C62 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
-				INSTALL_PATH = /usr/local/lib;
-				LLVM_LTO = YES;
-				PREBINDING = NO;
 				PRODUCT_NAME = ogg_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
-				ZERO_LINK = NO;
 			};
 			name = Debug;
 		};
-		1AE344F012CB70BF00FD8C62 /* TestRelease */ = {
+		1AE344F012CB70BF00FD8C62 /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A64A0E01323C68300C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
-				SYMROOT = ../../../../build;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__MACOSX__,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
+				OOLITE_ROOT = ../../../../;
 			};
-			name = TestRelease;
+			name = Developer;
 		};
-		1AE344F112CB70BF00FD8C62 /* TestRelease */ = {
+		1AE344F112CB70BF00FD8C62 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				HEADER_SEARCH_PATHS = "../../Cross-platform-deps/libogg/include";
-				INSTALL_PATH = /usr/local/lib;
-				LLVM_LTO = NO;
-				PREBINDING = NO;
 				PRODUCT_NAME = ogg_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/ogg;
-				ZERO_LINK = NO;
 			};
-			name = TestRelease;
+			name = Developer;
 		};
-		730F235A09181A3A00AB638C /* Deployment */ = {
+		730F235A09181A3A00AB638C /* EndUser */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1AF2EABF1306130C008ECA54 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A64A0E11323C68300C2FDDB /* oolite-enduser-configuration.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = __MACOSX__;
-				SYMROOT = ../../../../build;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__MACOSX__,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
+				OOLITE_ROOT = ../../../../;
 			};
-			name = Deployment;
+			name = EndUser;
 		};
 /* End XCBuildConfiguration section */
 
@@ -256,22 +255,22 @@
 		1ADE32B7097580C800961AE2 /* Build configuration list for PBXNativeTarget "LibOgg" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1ADE32B9097580C800961AE2 /* Deployment */,
 				1AE344EF12CB70B800FD8C62 /* Debug */,
-				1AE344F112CB70BF00FD8C62 /* TestRelease */,
+				1AE344F112CB70BF00FD8C62 /* Developer */,
+				1ADE32B9097580C800961AE2 /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = EndUser;
 		};
 		730F235809181A3A00AB638C /* Build configuration list for PBXProject "Ogg" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				730F235A09181A3A00AB638C /* Deployment */,
 				1AE344EE12CB70B800FD8C62 /* Debug */,
-				1AE344F012CB70BF00FD8C62 /* TestRelease */,
+				1AE344F012CB70BF00FD8C62 /* Developer */,
+				730F235A09181A3A00AB638C /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Deployment;
+			defaultConfigurationName = EndUser;
 		};
 /* End XCConfigurationList section */
 	};

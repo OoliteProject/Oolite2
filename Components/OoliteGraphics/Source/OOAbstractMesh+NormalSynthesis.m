@@ -25,6 +25,8 @@
 #import "OOAbstractMesh+NormalSynthesis.h"
 #import "OOAbstractFaceGroupInternal.h"
 
+#if !OOLITE_LEAN
+
 
 @interface OOAbstractFaceGroup (NormalSynthesisPrivate)
 
@@ -417,3 +419,5 @@ OOINLINE NSMutableArray *ApplyFlatNormals(NSArray *faces, Vector *faceNormals, B
 }
 
 @end
+
+#endif	// !OOLITE_LEAN

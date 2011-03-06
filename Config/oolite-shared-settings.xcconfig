@@ -5,7 +5,8 @@
 // NOTE: because Xcode's handling of SYMROOT tries to be clever, you must build to a path without spaces.
 SYMROOT									= $(OOLITE_ROOT)/build
 
-WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces
+DEP_HEADER_PATH							= $(SYMROOT)/$(CONFIGURATION)/include/
+
 
 ARCHS									= i386 x86_64
 VALID_ARCHS								= i386 x86_64
@@ -15,4 +16,11 @@ GCC_C_LANGUAGE_STANDARD					= gnu99
 
 GCC_VERSION								= com.apple.compilers.llvm.clang.1_0
 
-OOLITE_OPTION_MACROS					= OOLITE_MAC_OS_X=1
+ALWAYS_SEARCH_USER_PATHS				= NO
+
+
+WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces -Wreturn-type -Wunused-variable
+GCC_TREAT_WARNINGS_AS_ERRORS			= YES
+
+
+GCC_PREPROCESSOR_DEFINITIONS_SHARED		= OOLITE_MAC_OS_X=1 OOLITE_VERSION="\"$OOLITE_VERSION\""

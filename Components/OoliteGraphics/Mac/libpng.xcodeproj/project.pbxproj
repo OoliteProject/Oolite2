@@ -29,8 +29,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A649F911323BCDF00C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F921323BCDF00C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F931323BCDF00C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A649F941323BCDF00C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A649F951323BCDF00C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A71E6F30BCE340C00CD5C13 /* libpng-for-oolite-graphics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libpng-for-oolite-graphics.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A78B58A12D74BE900D42EE7 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
 		1A78B58B12D74BE900D42EE7 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
 		1A78B58C12D74BE900D42EE7 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
@@ -73,6 +77,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A649F901323BCDF00C2FDDB /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A649F911323BCDF00C2FDDB /* oolite-debug-configuration.xcconfig */,
+				1A649F921323BCDF00C2FDDB /* oolite-developer-configuration.xcconfig */,
+				1A649F931323BCDF00C2FDDB /* oolite-enduser-configuration.xcconfig */,
+				1A649F941323BCDF00C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A649F951323BCDF00C2FDDB /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
+		};
 		1A78B58512D74BAD00D42EE7 /* libpng */ = {
 			isa = PBXGroup;
 			children = (
@@ -104,7 +121,7 @@
 		29B97314FDCFA39411CA2CEA /* Oolite_GUSTO */ = {
 			isa = PBXGroup;
 			children = (
-				1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */,
+				1A649F901323BCDF00C2FDDB /* Config */,
 				1A78B5B312D74C5600D42EE7 /* pngusr.h */,
 				1A78B58512D74BAD00D42EE7 /* libpng */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -222,65 +239,70 @@
 /* Begin XCBuildConfiguration section */
 		08B31CB108FE63D70038D42F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F911323BCDF00C2FDDB /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
-				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
-				ONLY_ACTIVE_ARCH = YES;
 				OOLITE_ROOT = ../../../;
-				OTHER_CFLAGS = "-DLOADSAVEGUI";
 			};
 			name = Debug;
 		};
-		08B31CB208FE63D70038D42F /* Release */ = {
+		08B31CB208FE63D70038D42F /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A78B4F412D74B8100D42EE7 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A649F921323BCDF00C2FDDB /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_1)";
-				HEADER_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Cocoa-deps/Ogg Vorbis\"";
 				OOLITE_ROOT = ../../../;
-				OTHER_CFLAGS = "-DLOADSAVEGUI";
 			};
-			name = Release;
+			name = Developer;
+		};
+		1A649F8D1323BCCA00C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A649F931323BCDF00C2FDDB /* oolite-enduser-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = EndUser;
+		};
+		1A649F8E1323BCCA00C2FDDB /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					PNG_USER_CONFIG,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = "png-for-oolite-graphics";
+				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
+			};
+			name = EndUser;
 		};
 		1A71E6FD0BCE345800CD5C13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = PNG_USER_CONFIG;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					PNG_USER_CONFIG,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
-				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
 			};
 			name = Debug;
 		};
-		1A71E6FE0BCE345800CD5C13 /* Release */ = {
+		1A71E6FE0BCE345800CD5C13 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = PNG_USER_CONFIG;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					PNG_USER_CONFIG,
+					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
+				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
-				INSTALL_PATH = /usr/local/lib;
 				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
-				ZERO_LINK = NO;
 			};
-			name = Release;
+			name = Developer;
 		};
 /* End XCBuildConfiguration section */
 
@@ -289,19 +311,21 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08B31CB108FE63D70038D42F /* Debug */,
-				08B31CB208FE63D70038D42F /* Release */,
+				08B31CB208FE63D70038D42F /* Developer */,
+				1A649F8D1323BCCA00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 		1A71E6FC0BCE345800CD5C13 /* Build configuration list for PBXNativeTarget "libpng" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1A71E6FD0BCE345800CD5C13 /* Debug */,
-				1A71E6FE0BCE345800CD5C13 /* Release */,
+				1A71E6FE0BCE345800CD5C13 /* Developer */,
+				1A649F8E1323BCCA00C2FDDB /* EndUser */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Developer;
 		};
 /* End XCConfigurationList section */
 	};

@@ -110,9 +110,15 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, OOConfParserActionEventType ev
 	{
 		[parser setDelegate:parser];
 		id result = [parser parseAsPropertyList];
-		if (result != nil && [[parser lexer] currentTokenType] != kOOConfTokenEOF)
+		
+		if (result != nil)
 		{
-			OOReportWarning(problemReporter, @"Ignoring additional tokens beyond end of data (line %lu).", [[parser lexer] lineNumber]);
+			OOConfLexer *lexer = [parser lexer];
+			[lexer advance];
+			if ([lexer currentTokenType] != kOOConfTokenEOF)
+			{
+				OOReportWarning(problemReporter, @"Ignoring additional tokens beyond end of data (line %lu).", [[parser lexer] lineNumber]);
+			}
 		}
 		return result;
 	}

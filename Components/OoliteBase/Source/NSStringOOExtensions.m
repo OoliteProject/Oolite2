@@ -276,6 +276,6 @@ NSString *OOTabString(NSUInteger count)
 	}
 	else
 	{
-		return [staticTabs[kStaticTabCount - 1] stringByAppendingString:OOTabString(count - kStaticTabCount - 1)];
+		return [staticTabs[kStaticTabCount - 1] stringByAppendingString:OOTabString(count - (kStaticTabCount - 1))];
 	}
 }

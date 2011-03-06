@@ -553,11 +553,17 @@ OOINLINE BOOL ScanNumber(OOConfLexerState *state)
 	size_t remaining = state->end - loc;
 	BOOL negative = NO;
 	BOOL seenDot = NO;
-	BOOL lastIsDot = NO;
+	BOOL seenE = NO;
+	BOOL lastIsNonTerminator = NO;	// Marks . or E, which can’t end a number.
+	BOOL isNatural = YES;
 	
 	if (IsSign(*loc))
 	{
-		if (*loc == kCharMinus)  negative = YES;
+		if (*loc == kCharMinus)
+		{
+			negative = YES;
+			isNatural = NO;
+		}
 		loc++;
 		remaining--;
 		if (remaining == 0)
@@ -571,28 +577,42 @@ OOINLINE BOOL ScanNumber(OOConfLexerState *state)
 	{
 		if (IsDigit(*loc))
 		{
-			lastIsDot = NO;
+			lastIsNonTerminator = NO;
+		}
+		else if (*loc == kCharDot)
+		{
+			if (EXPECT_NOT(seenDot))  return NO;
+			seenDot = YES;
+			lastIsNonTerminator = YES;
+			isNatural = NO;
+		}
+		else if (*loc == 'E' || *loc == 'e')
+		{
+			if (EXPECT_NOT(seenE) || remaining == 0)  return NO;
+			seenE = YES;
+			lastIsNonTerminator = YES;
+			isNatural = NO;
+			
+			// An E may be followed by a sign.
+			if (loc[1] == '+' || loc[1] == '-')
+			{
+				loc++;
+				remaining--;
+			}
 		}
 		else
 		{
-			if (seenDot || *loc != kCharDot)
-			{
-				break;
-			}
-			else
-			{
-				seenDot = YES;
-				lastIsDot = YES;
-			}
+			break;
 		}
 		loc++;
 	}  while(--remaining);
 	
 	state->tokenLength = loc - state->cursor;
-	if (!lastIsDot)
+	
+	if (EXPECT(!lastIsNonTerminator))
 	{
-		if (seenDot || negative)  state->tokenType = kOOConfTokenReal;
-		else  state->tokenType = kOOConfTokenNatural;
+		if (isNatural)  state->tokenType = kOOConfTokenNatural;
+		else  state->tokenType = kOOConfTokenReal;
 		
 		return YES;
 	}

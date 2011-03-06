@@ -53,7 +53,8 @@ void SGVector2Randomize(SGVector2 *vector)
 
 CFStringRef SGVector2CopyDescription(SGVector2Param v)
 {
-	return CFStringCreateWithFormat(kCFAllocatorDefault, NULL, CFSTR("{%g, %g}"), v.x, v.y);
+	return (CFStringRef)[[NSString alloc]
+						 initWithFormat:@"{%g, %g}", v.x, v.y];
 }
 
 
@@ -77,7 +78,8 @@ void SGVector3Randomize(SGVector3 *vector)
 
 CFStringRef SGVector3CopyDescription(SGVector3Param v)
 {
-	return CFStringCreateWithFormat(kCFAllocatorDefault, NULL, CFSTR("{%g, %g, %g}"), v.x, v.y, v.z);
+	return (CFStringRef)[[NSString alloc]
+						 initWithFormat:@"{%g, %g, %g}", v.x, v.y, v.z];
 }
 
 

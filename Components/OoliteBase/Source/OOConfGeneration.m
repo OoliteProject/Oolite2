@@ -32,9 +32,6 @@ SOFTWARE.
 #import "NSNumberOOExtensions.h"
 #import "MYCollectionUtilities.h"
 
-
-NSString * const kOOConfGenerationErrorDomain = @"org.oolite OOConfGeneration error domain";
-
 static NSError *OOConfGenerationError(NSInteger code, NSString *format, ...);
 
 
@@ -528,5 +525,5 @@ static NSError *OOConfGenerationError(NSInteger code, NSString *format, ...)
 	NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 	va_end(args);
 	
-	return [NSError errorWithDomain:kOOConfGenerationErrorDomain code:code userInfo:$dict(NSLocalizedFailureReasonErrorKey, message)];
+	return [NSError errorWithDomain:kOoliteBaseErrorDomain code:code userInfo:$dict(NSLocalizedFailureReasonErrorKey, message)];
 }

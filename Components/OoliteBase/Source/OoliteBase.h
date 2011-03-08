@@ -4,6 +4,7 @@ extern "C" {
 
 #import "OOCocoa.h"
 #import "OOFunctionAttributes.h"
+#import "OOBaseErrors.h"
 	
 #include "OOMaths.h"
 
@@ -26,6 +27,7 @@ extern "C" {
 #import "OOWeakReference.h"
 
 #import "NSObjectOOExtensions.h"
+#import "NSDataOOExtensions.h"
 #import "NSDictionaryOOExtensions.h"
 #import "NSNumberOOExtensions.h"
 #import "NSStringOOExtensions.h"

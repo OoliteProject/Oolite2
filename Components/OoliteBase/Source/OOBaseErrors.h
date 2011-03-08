@@ -1,11 +1,11 @@
 /*
 
-OOCocoa.m
+OOBaseErrors.h
 
-Runtime-like methods.
+Error codes for OoliteBase framework.
 
 
-Copyright © 2008 Jens Ayton
+Copyright © 2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
@@ -30,58 +30,17 @@ SOFTWARE.
 #import "OOCocoa.h"
 
 
-NSString * const kOoliteBaseErrorDomain = @"org.oolite.framework.oolitebase error domain";
+extern NSString * const kOoliteBaseErrorDomain;
 
-
-@implementation NSObject (OODescriptionComponents)
-
-- (NSString *)descriptionComponents
+enum
 {
-	return nil;
-}
-
-
-- (NSString *)description
-{
-	NSString				*components = nil;
+	kOOBaseNoError,
 	
-	components = [self descriptionComponents];
-	if (components != nil)
-	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
-	}
-}
-
-
-- (NSString *) shortDescription
-{
-	NSString				*components = nil;
+	// Error reading file.
+	kOOBaseReadError,
 	
-	components = [self shortDescriptionComponents];
-	if (components != nil)
-	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
-	}
-}
-
-
-- (NSString *) shortDescriptionComponents
-{
-	return nil;
-}
-
-@end
-
-
-NSString *OoliteBaseVersion(void)
-{
-	return @OOLITE_VERSION;
-}
+	// OOConfGeneration errors.
+	kOOConfGenerationErrorUnknownError,
+	kOOConfGenerationErrorInvalidValue,
+	kOOConfGenerationErrorInvalidKey
+};

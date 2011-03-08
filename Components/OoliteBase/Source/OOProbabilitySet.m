@@ -46,6 +46,7 @@ sets that will then be immutablized.
 */
 
 #import "OOProbabilitySet.h"
+#import "OOLogging.h"
 #import "OOFunctionAttributes.h"
 #import "OOCollectionExtractors.h"
 #import "OOGarbageCollectionSupport.h"

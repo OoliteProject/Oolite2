@@ -28,7 +28,7 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import "OOBaseErrors.h"
 
 
 typedef NSUInteger OOConfGenerationOptions;
@@ -88,14 +88,3 @@ enum
 - (BOOL) writeOOConfDataWithOptions:(OOConfGenerationOptions)options toURL:(NSURL *)url error:(NSError **)outError;
 
 @end
-
-
-extern NSString * const kOOConfGenerationErrorDomain;
-
-enum
-{
-	kOOConfGenerationErrorNone,
-	kOOConfGenerationErrorUnknownError,
-	kOOConfGenerationErrorInvalidValue,
-	kOOConfGenerationErrorInvalidKey
-};

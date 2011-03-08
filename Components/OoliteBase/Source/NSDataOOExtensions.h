@@ -1,11 +1,11 @@
 /*
 
-OOCocoa.m
+NSDataOOExtensions.h
 
-Runtime-like methods.
+Extensions to NSData.
 
 
-Copyright © 2008 Jens Ayton
+Copyright © 2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
@@ -30,58 +30,15 @@ SOFTWARE.
 #import "OOCocoa.h"
 
 
-NSString * const kOoliteBaseErrorDomain = @"org.oolite.framework.oolitebase error domain";
+@interface NSData (OOExtensions)
 
-
-@implementation NSObject (OODescriptionComponents)
-
-- (NSString *)descriptionComponents
-{
-	return nil;
-}
-
-
-- (NSString *)description
-{
-	NSString				*components = nil;
+/*	oo_dataWithContentsOfURL:options:error:
 	
-	components = [self descriptionComponents];
-	if (components != nil)
-	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
-	}
-}
-
-
-- (NSString *) shortDescription
-{
-	NSString				*components = nil;
-	
-	components = [self shortDescriptionComponents];
-	if (components != nil)
-	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
-	}
-}
-
-
-- (NSString *) shortDescriptionComponents
-{
-	return nil;
-}
+	Equivalent to Cocoa’s +dataWithContentsOfURL:options:error: method, which
+	is not supported in GNUstep-base as of 1.20.1.
+	The only defined option is NSDataReadingMapped.
+	-- Ahruman 2011-03-08
+*/
++ (id) oo_dataWithContentsOfURL:(NSURL *)url options:(NSUInteger)readOptionsMask error:(NSError **)errorPtr;
 
 @end
-
-
-NSString *OoliteBaseVersion(void)
-{
-	return @OOLITE_VERSION;
-}

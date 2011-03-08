@@ -41,7 +41,6 @@
 		1A713FCE11B5652E009A9197 /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FC511B5652E009A9197 /* OOQuaternion.m */; };
 		1A713FCF11B5652E009A9197 /* OOVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FC611B5652E009A9197 /* OOVector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FD011B5652E009A9197 /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FC711B5652E009A9197 /* OOVector.m */; };
-		1A713FE211B565D1009A9197 /* OORandom.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FE011B565D1009A9197 /* OORandom.c */; };
 		1A713FE311B565D1009A9197 /* OORandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FE111B565D1009A9197 /* OORandom.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71414711B5678C009A9197 /* OOCollectionExtractors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A71414511B5678C009A9197 /* OOCollectionExtractors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71414611B5678C009A9197 /* OOCollectionExtractors.m */; };
@@ -65,6 +64,10 @@
 		1A878B7E11B577E8001BB304 /* NSDictionaryOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */; };
 		1A878B9E11B57B04001BB304 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A878B9C11B57B04001BB304 /* MYCollectionUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A878B9F11B57B04001BB304 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */; };
+		1A990D211326D95500F4A2A7 /* OORandom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A990D201326D95500F4A2A7 /* OORandom.m */; };
+		1A990D3E1326DCF400F4A2A7 /* OOBaseErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A990D3C1326DCF400F4A2A7 /* OOBaseErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A990DCE1326DE0200F4A2A7 /* NSDataOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A990DCC1326DE0200F4A2A7 /* NSDataOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A990DCF1326DE0200F4A2A7 /* NSDataOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A990DCD1326DE0200F4A2A7 /* NSDataOOExtensions.m */; };
 		1ABAC2DF11C39AE3005301BA /* OOGarbageCollectionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1ABAC2E011C39AE3005301BA /* OOGarbageCollectionSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */; };
 		1AD841D2122921DD00FC382A /* OOCPUInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD841D0122921DD00FC382A /* OOCPUInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -126,7 +129,6 @@
 		1A713FC511B5652E009A9197 /* OOQuaternion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOQuaternion.m; sourceTree = "<group>"; };
 		1A713FC611B5652E009A9197 /* OOVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVector.h; sourceTree = "<group>"; };
 		1A713FC711B5652E009A9197 /* OOVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOVector.m; sourceTree = "<group>"; };
-		1A713FE011B565D1009A9197 /* OORandom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OORandom.c; sourceTree = "<group>"; };
 		1A713FE111B565D1009A9197 /* OORandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OORandom.h; sourceTree = "<group>"; };
 		1A71414511B5678C009A9197 /* OOCollectionExtractors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCollectionExtractors.h; sourceTree = "<group>"; };
 		1A71414611B5678C009A9197 /* OOCollectionExtractors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCollectionExtractors.m; sourceTree = "<group>"; };
@@ -149,6 +151,11 @@
 		1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionaryOOExtensions.m; sourceTree = "<group>"; };
 		1A878B9C11B57B04001BB304 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionUtilities.h; sourceTree = "<group>"; };
 		1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = "<group>"; };
+		1A990D001326D61900F4A2A7 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile; path = ../GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1A990D201326D95500F4A2A7 /* OORandom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OORandom.m; sourceTree = "<group>"; };
+		1A990D3C1326DCF400F4A2A7 /* OOBaseErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBaseErrors.h; sourceTree = "<group>"; };
+		1A990DCC1326DE0200F4A2A7 /* NSDataOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataOOExtensions.h; sourceTree = "<group>"; };
+		1A990DCD1326DE0200F4A2A7 /* NSDataOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataOOExtensions.m; sourceTree = "<group>"; };
 		1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGarbageCollectionSupport.h; sourceTree = "<group>"; };
 		1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGarbageCollectionSupport.m; sourceTree = "<group>"; };
 		1AD841D0122921DD00FC382A /* OOCPUInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCPUInfo.h; sourceTree = "<group>"; };
@@ -192,10 +199,11 @@
 		0867D691FE84028FC02AAC07 /* OOBase */ = {
 			isa = PBXGroup;
 			children = (
+				1A990D001326D61900F4A2A7 /* GNUmakefile */,
 				1A649F4F1323B8E900C2FDDB /* Config */,
 				1A713F9511B56397009A9197 /* OoliteBase.h */,
 				1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */,
-				32C88DFF0371C24200C91783 /* Basest */,
+				32C88DFF0371C24200C91783 /* Core */,
 				1AED64FB11B5A83800811A44 /* Logging */,
 				1A713FB811B564E5009A9197 /* Maths */,
 				1AFDDD48130BEE410075DD39 /* OOConf */,
@@ -227,6 +235,8 @@
 				1A878B6E11B57793001BB304 /* NSNumberOOExtensions.m */,
 				1A878B7211B577AE001BB304 /* NSThreadOOExtensions.h */,
 				1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */,
+				1A990DCC1326DE0200F4A2A7 /* NSDataOOExtensions.h */,
+				1A990DCD1326DE0200F4A2A7 /* NSDataOOExtensions.m */,
 				1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */,
 				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
 				1A1F29F713182B5D00D06C6C /* NSScannerOOExtensions.h */,
@@ -281,7 +291,7 @@
 				1A713FC411B5652E009A9197 /* OOQuaternion.h */,
 				1A713FC511B5652E009A9197 /* OOQuaternion.m */,
 				1A713FE111B565D1009A9197 /* OORandom.h */,
-				1A713FE011B565D1009A9197 /* OORandom.c */,
+				1A990D201326D95500F4A2A7 /* OORandom.m */,
 				1A1B995B13088B5F0078322D /* OOBoundingBox.h */,
 				1A1B995C13088B5F0078322D /* OOBoundingBox.m */,
 			);
@@ -317,7 +327,7 @@
 			path = ../Source;
 			sourceTree = "<group>";
 		};
-		32C88DFF0371C24200C91783 /* Basest */ = {
+		32C88DFF0371C24200C91783 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				1A713FA811B56436009A9197 /* OOCocoa.h */,
@@ -327,8 +337,9 @@
 				1A878B9D11B57B04001BB304 /* MYCollectionUtilities.m */,
 				1ABAC2DD11C39AE3005301BA /* OOGarbageCollectionSupport.h */,
 				1ABAC2DE11C39AE3005301BA /* OOGarbageCollectionSupport.m */,
+				1A990D3C1326DCF400F4A2A7 /* OOBaseErrors.h */,
 			);
-			name = Basest;
+			name = Core;
 			path = ../Source;
 			sourceTree = "<group>";
 		};
@@ -379,6 +390,8 @@
 				1A1F2C4813183C3E00D06C6C /* OOPriorityQueue.h in Headers */,
 				1A1F319613185F3D00D06C6C /* OOFilteringEnumerator.h in Headers */,
 				1A1F31A913185FE500D06C6C /* OOExcludeObjectEnumerator.h in Headers */,
+				1A990D3E1326DCF400F4A2A7 /* OOBaseErrors.h in Headers */,
+				1A990DCE1326DE0200F4A2A7 /* NSDataOOExtensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,7 +481,6 @@
 				1A713FCC11B5652E009A9197 /* OOMatrix.m in Sources */,
 				1A713FCE11B5652E009A9197 /* OOQuaternion.m in Sources */,
 				1A713FD011B5652E009A9197 /* OOVector.m in Sources */,
-				1A713FE211B565D1009A9197 /* OORandom.c in Sources */,
 				1A71414811B5678C009A9197 /* OOCollectionExtractors.m in Sources */,
 				1A71416111B56810009A9197 /* OOBaseStringParsing.m in Sources */,
 				1A878B6611B57766001BB304 /* NSObjectOOExtensions.m in Sources */,
@@ -498,6 +510,8 @@
 				1A1F2C4913183C3E00D06C6C /* OOPriorityQueue.m in Sources */,
 				1A1F319713185F3D00D06C6C /* OOFilteringEnumerator.m in Sources */,
 				1A1F31AA13185FE500D06C6C /* OOExcludeObjectEnumerator.m in Sources */,
+				1A990D211326D95500F4A2A7 /* OORandom.m in Sources */,
+				1A990DCF1326DE0200F4A2A7 /* NSDataOOExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

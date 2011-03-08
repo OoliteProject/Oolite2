@@ -1,11 +1,9 @@
 /*
 
-OOCocoa.m
-
-Runtime-like methods.
+NSDataOOExtensions.m
 
 
-Copyright © 2008 Jens Ayton
+Copyright © 2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
@@ -27,61 +25,35 @@ SOFTWARE.
 
 */
 
-#import "OOCocoa.h"
+#import "NSDataOOExtensions.h"
+#import "MYCollectionUtilities.h"
+#import "OOBaseErrors.h"
 
 
-NSString * const kOoliteBaseErrorDomain = @"org.oolite.framework.oolitebase error domain";
+@implementation NSData (OOExtensions)
 
-
-@implementation NSObject (OODescriptionComponents)
-
-- (NSString *)descriptionComponents
++ (id) oo_dataWithContentsOfURL:(NSURL *)url options:(NSUInteger)readOptionsMask error:(NSError **)errorPtr
 {
-	return nil;
-}
-
-
-- (NSString *)description
-{
-	NSString				*components = nil;
-	
-	components = [self descriptionComponents];
-	if (components != nil)
+#if OOLITE_MAC_OS_X
+	return [self dataWithContentsOfURL:url options:readOptionsMask error:errorPtr];
+#else
+	NSData *result = nil;
+	if ((readOptionsMask & NSDataReadingMapped) && [url isFileURL])
 	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
+		result = [self dataWithContentsOfMappedFile:[url path]];
 	}
 	else
 	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
+		result = [self dataWithContentsOfURL:url];
 	}
-}
-
-
-- (NSString *) shortDescription
-{
-	NSString				*components = nil;
 	
-	components = [self shortDescriptionComponents];
-	if (components != nil)
+	if (result == nil && errorPtr != NULL)
 	{
-		return [NSString stringWithFormat:@"<%@ %p>{%@}", [self class], self, components];
+		*errorPtr = [NSError errorWithDomain:kOoliteBaseErrorDomain code:kOOBaseReadError userInfo:$dict(NSLocalizedFailureReasonErrorKey, $sprintf(@"Could not read file %@", [url path]))];
 	}
-	else
-	{
-		return [NSString stringWithFormat:@"<%@ %p>", [self class], self];
-	}
-}
-
-
-- (NSString *) shortDescriptionComponents
-{
-	return nil;
+	
+	return result;
+#endif
 }
 
 @end
-
-
-NSString *OoliteBaseVersion(void)
-{
-	return @OOLITE_VERSION;
-}

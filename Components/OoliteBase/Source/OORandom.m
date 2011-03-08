@@ -1,6 +1,6 @@
 /*
 
-OORandom.c
+OORandom.m
 
 
 Oolite

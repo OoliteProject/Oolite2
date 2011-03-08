@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
+#import "OOCocoa.h"
 
 
 @interface OOExcludeObjectEnumerator: NSEnumerator

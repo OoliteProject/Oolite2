@@ -38,7 +38,7 @@ SOFTWARE.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
+#import "OOCocoa.h"
 
 
 @interface OOPriorityQueue: NSObject <NSCopying>

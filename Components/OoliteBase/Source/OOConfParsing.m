@@ -30,6 +30,7 @@ SOFTWARE.
 #import "OOProblemReporting.h"
 #import "MYCollectionUtilities.h"
 #import "OOFunctionAttributes.h"
+#import "NSDataOOExtensions.h"
 
 
 typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, OOConfParserActionEventType eventType, void *key, id *outObject);
@@ -91,7 +92,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, OOConfParserActionEventType ev
 
 + (id) objectWithContentsOfOOConfURL:(NSURL *)url error:(NSError **)outError
 {
-	NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMapped error:outError];
+	NSData *data = [NSData oo_dataWithContentsOfURL:url options:NSDataReadingMapped error:outError];
 	if (data != nil)  return [self objectFromOOConfData:data error:outError];
 	else  return nil;
 }
@@ -132,7 +133,7 @@ typedef BOOL (*ParseActionIMP)(id self, SEL _cmd, OOConfParserActionEventType ev
 + (id) objectWithContentsOfOOConfURL:(NSURL *)url problemReporter:(id<OOProblemReporting>)problemReporter
 {
 	NSError *error = nil;
-	NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMapped error:&error];
+	NSData *data = [NSData oo_dataWithContentsOfURL:url options:NSDataReadingMapped error:&error];
 	if (data != nil)  return [self objectFromOOConfData:data problemReporter:problemReporter];
 	else
 	{

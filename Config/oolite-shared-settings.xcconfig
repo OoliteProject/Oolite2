@@ -5,7 +5,9 @@
 // NOTE: because Xcode's handling of SYMROOT tries to be clever, you must build to a path without spaces.
 SYMROOT									= $(OOLITE_ROOT)/build
 
-DEP_HEADER_PATH							= $(SYMROOT)/$(CONFIGURATION)/include/
+CONFIG_SYM_ROOT							= $(SYMROOT)/$(CONFIGURATION)/
+DEP_HEADER_PATH							= $(CONFIG_SYM_ROOT)/include/
+OBJROOT									= $(SYMROOT)/objects
 
 
 ARCHS									= i386 x86_64

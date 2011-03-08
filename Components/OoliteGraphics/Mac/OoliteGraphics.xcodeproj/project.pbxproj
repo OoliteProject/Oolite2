@@ -721,7 +721,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
+				GCC_PREFIX_HEADER = "$(CONFIG_SYM_ROOT)/OoliteBase.framework/Headers/OoliteBase.h";
 				HEADER_SEARCH_PATHS = (
 					"$(DEP_HEADER_PATH)/png/",
 					"$(DEP_HEADER_PATH)/OpenCTM/",
@@ -740,7 +740,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
+				GCC_PREFIX_HEADER = "$(CONFIG_SYM_ROOT)/OoliteBase.framework/Headers/OoliteBase.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"OO_CHECK_GL_HEAVY=1",
 					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
@@ -763,7 +763,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(OBJROOT)/$(CONFIGURATION)/OoliteBase.framework/Headers/OoliteBase.h";
+				GCC_PREFIX_HEADER = "$(CONFIG_SYM_ROOT)/OoliteBase.framework/Headers/OoliteBase.h";
 				HEADER_SEARCH_PATHS = (
 					"$(DEP_HEADER_PATH)/png/",
 					"$(DEP_HEADER_PATH)/OpenCTM/",

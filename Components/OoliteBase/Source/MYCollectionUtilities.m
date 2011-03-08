@@ -60,9 +60,9 @@ NSMutableDictionary* OOMYMDictOf(const struct _dictpair* pairs, size_t count)
 }
 
 
-NSArray* $apply( NSArray *src, SEL selector, id defaultValue )
+NSArray* $apply(NSArray *src, SEL selector, id defaultValue)
 {
-    NSMutableArray *dst = [NSMutableArray arrayWithCapacity: src.count];
+    NSMutableArray *dst = [NSMutableArray arrayWithCapacity:[src count]];
 	id obj;
     foreach(obj, src)
 	{
@@ -72,9 +72,9 @@ NSArray* $apply( NSArray *src, SEL selector, id defaultValue )
     return dst;
 }
 
-NSArray* $applyKeyPath( NSArray *src, NSString *keyPath, id defaultValue )
+NSArray* $applyKeyPath(NSArray *src, NSString *keyPath, id defaultValue)
 {
-    NSMutableArray *dst = [NSMutableArray arrayWithCapacity: src.count];
+    NSMutableArray *dst = [NSMutableArray arrayWithCapacity: [src count]];
 	id obj;
     foreach(obj, src)
 	{

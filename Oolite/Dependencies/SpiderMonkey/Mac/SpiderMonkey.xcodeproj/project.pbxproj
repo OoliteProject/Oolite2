@@ -194,7 +194,6 @@
 		1AD05E3612CD18B100704F1D /* testDefineGetterSetterNonEnumerable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1712CD18B100704F1D /* testDefineGetterSetterNonEnumerable.cpp */; };
 		1AD05E3712CD18B100704F1D /* testDefineProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1812CD18B100704F1D /* testDefineProperty.cpp */; };
 		1AD05E3812CD18B100704F1D /* testExtendedEq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1912CD18B100704F1D /* testExtendedEq.cpp */; };
-		1AD05E3912CD18B100704F1D /* testFuncCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1A12CD18B100704F1D /* testFuncCallback.cpp */; };
 		1AD05E3A12CD18B100704F1D /* testGCChunkAlloc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1B12CD18B100704F1D /* testGCChunkAlloc.cpp */; };
 		1AD05E3B12CD18B100704F1D /* testGetPropertyDefault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1C12CD18B100704F1D /* testGetPropertyDefault.cpp */; };
 		1AD05E3C12CD18B100704F1D /* testIntString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AD05E1D12CD18B100704F1D /* testIntString.cpp */; };
@@ -428,8 +427,12 @@
 		1A27961E12CCB84900C9E94D /* FastArithmeticShim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FastArithmeticShim.cpp; sourceTree = "<group>"; };
 		1A27965912CCC15C00C9E94D /* ImmutableSyncShim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImmutableSyncShim.cpp; sourceTree = "<group>"; };
 		1A27967E12CCC55B00C9E94D /* PolyICShim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolyICShim.cpp; sourceTree = "<group>"; };
-		1A43CAA113060A3300BB8FB3 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "oolite-shared-settings.xcconfig"; path = "../../../../Config/oolite-shared-settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 		1A63DE9012CA9C5C00508CDB /* jsclone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsclone.cpp; sourceTree = "<group>"; };
+		1A990C611326D28A00F4A2A7 /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A990C621326D28A00F4A2A7 /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A990C631326D28A00F4A2A7 /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A990C641326D28A00F4A2A7 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A990C651326D28A00F4A2A7 /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1AB25AA612CA1B6E00C67F42 /* jsapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsapi.cpp; sourceTree = "<group>"; };
 		1AB25AB612CA1C1D00C67F42 /* js-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "js-config.h"; sourceTree = "<group>"; };
 		1AB25AB712CA1C1D00C67F42 /* jsautocfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsautocfg.h; sourceTree = "<group>"; };
@@ -878,7 +881,7 @@
 		08FB7794FE84155DC02AAC07 /* libjs */ = {
 			isa = PBXGroup;
 			children = (
-				1A43CAA113060A3300BB8FB3 /* oolite-shared-settings.xcconfig */,
+				1A990C601326D28A00F4A2A7 /* Config */,
 				1AC16B5E12F0905D00907218 /* autogen */,
 				1AEA214D12CBBBD600EC0F43 /* Oolite-specific hacks */,
 				1AB25A7712CA178000C67F42 /* js */,
@@ -1011,6 +1014,19 @@
 			);
 			path = ConditionalShims;
 			sourceTree = "<group>";
+		};
+		1A990C601326D28A00F4A2A7 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A990C611326D28A00F4A2A7 /* oolite-debug-configuration.xcconfig */,
+				1A990C621326D28A00F4A2A7 /* oolite-developer-configuration.xcconfig */,
+				1A990C631326D28A00F4A2A7 /* oolite-enduser-configuration.xcconfig */,
+				1A990C641326D28A00F4A2A7 /* oolite-shared-settings.xcconfig */,
+				1A990C651326D28A00F4A2A7 /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../../Config;
+			sourceTree = SOURCE_ROOT;
 		};
 		1AB25A7712CA178000C67F42 /* js */ = {
 			isa = PBXGroup;
@@ -2015,7 +2031,6 @@
 				1AD05E3612CD18B100704F1D /* testDefineGetterSetterNonEnumerable.cpp in Sources */,
 				1AD05E3712CD18B100704F1D /* testDefineProperty.cpp in Sources */,
 				1AD05E3812CD18B100704F1D /* testExtendedEq.cpp in Sources */,
-				1AD05E3912CD18B100704F1D /* testFuncCallback.cpp in Sources */,
 				1AD05E3A12CD18B100704F1D /* testGCChunkAlloc.cpp in Sources */,
 				1AD05E3B12CD18B100704F1D /* testGetPropertyDefault.cpp in Sources */,
 				1AD05E3C12CD18B100704F1D /* testIntString.cpp in Sources */,
@@ -2188,7 +2203,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "Update Code";
-				SYMROOT = ../../../build;
 			};
 			name = Debug;
 		};
@@ -2196,7 +2210,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "Update Code";
-				SYMROOT = ../../../build;
 			};
 			name = EndUser;
 		};
@@ -2204,38 +2217,27 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "Update Code";
-				SYMROOT = ../../../build;
 			};
 			name = Developer;
 		};
 		1AB25A6D12CA13A000C67F42 /* Developer */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A43CAA113060A3300BB8FB3 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A990C621326D28A00F4A2A7 /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
-				SYMROOT = ../../../../build;
+				OOLITE_ROOT = ../../../../;
 			};
 			name = Developer;
 		};
 		1AB25A6E12CA13A000C67F42 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_CW_ASM_SYNTAX = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = "js-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
 				HEADER_SEARCH_PATHS = (
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
 				);
-				INSTALL_PATH = /usr/local/lib;
 				JS_SRC_PATH = "$(MOZILLA_PATH)/js/src";
 				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				OTHER_CFLAGS = "-Wno-invalid-offsetof";
@@ -2249,13 +2251,6 @@
 		1AB25AC712CA1CB100C67F42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "pr-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					"DARWIN=1",
@@ -2263,10 +2258,8 @@
 					"_PR_GLOBAL_THREADS_ONLY=1",
 					"DEBUG=1",
 				);
-				GCC_VERSION = 4.0;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../mozilla/nsprpub/pr/include/";
-				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = nspr4_for_oolite;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/../mozilla/nsprpub/pr/src $(SRCROOT)/../mozilla/nsprpub/pr/include/private/";
 			};
@@ -2275,21 +2268,14 @@
 		1AB25AC812CA1CB100C67F42 /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = "pr-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					"DARWIN=1",
 					"MDCPUCFG=\"<md/_darwin.cfg>\"",
 					"_PR_GLOBAL_THREADS_ONLY=1",
 				);
-				GCC_VERSION = 4.0;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../mozilla/nsprpub/pr/include/";
-				INFOPLIST_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = nspr4_for_oolite;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/../mozilla/nsprpub/pr/src $(SRCROOT)/../mozilla/nsprpub/pr/include/private/";
 			};
@@ -2298,20 +2284,14 @@
 		1AB25AC912CA1CB100C67F42 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = "pr-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					"DARWIN=1",
 					"MDCPUCFG=\"<md/_darwin.cfg>\"",
 					"_PR_GLOBAL_THREADS_ONLY=1",
 				);
-				GCC_VERSION = 4.0;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../mozilla/nsprpub/pr/include/";
-				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = nspr4_for_oolite;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/../mozilla/nsprpub/pr/src $(SRCROOT)/../mozilla/nsprpub/pr/include/private/";
 			};
@@ -2320,14 +2300,6 @@
 		1AC16B5B12F0905200907218 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jsoplengen;
 			};
 			name = Debug;
@@ -2335,26 +2307,13 @@
 		1AC16B5C12F0905200907218 /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jsoplengen;
-				ZERO_LINK = NO;
 			};
 			name = EndUser;
 		};
 		1AC16B5D12F0905200907218 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jsoplengen;
 			};
 			name = Developer;
@@ -2362,14 +2321,6 @@
 		1AC16CBC12F0943F00907218 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jskwgen;
 			};
 			name = Debug;
@@ -2377,26 +2328,13 @@
 		1AC16CBD12F0943F00907218 /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jskwgen;
-				ZERO_LINK = NO;
 			};
 			name = EndUser;
 		};
 		1AC16CBE12F0943F00907218 /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				INSTALL_PATH = /usr/local/bin;
-				PREBINDING = NO;
 				PRODUCT_NAME = jskwgen;
 			};
 			name = Developer;
@@ -2404,81 +2342,44 @@
 		1AD05E0A12CD189100704F1D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"",
 					DEBUG,
+					"MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = "$(SYMROOT)";
-				MOZILLA_PATH = "$(SRCROOT)/../../Cross-platform-deps/mozilla/";
-				PREBINDING = NO;
+				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				PRODUCT_NAME = "jsapi-tests";
 				USER_HEADER_SEARCH_PATHS = "$(MOZILLA_PATH)/nsprpub/pr/include/";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
 		1AD05E0B12CD189100704F1D /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = "$(SYMROOT)";
-				MOZILLA_PATH = "$(SRCROOT)/../../Cross-platform-deps/mozilla/";
-				PREBINDING = NO;
+				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				PRODUCT_NAME = "jsapi-tests";
 				USER_HEADER_SEARCH_PATHS = "$(MOZILLA_PATH)/nsprpub/pr/include/";
-				ZERO_LINK = NO;
+				WARNING_CFLAGS = "";
 			};
 			name = EndUser;
 		};
 		1AD05E0C12CD189100704F1D /* Developer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
-				INSTALL_PATH = /usr/local/bin;
-				LIBRARY_SEARCH_PATHS = "$(SYMROOT)";
-				MOZILLA_PATH = "$(SRCROOT)/../../Cross-platform-deps/mozilla/";
-				PREBINDING = NO;
+				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				PRODUCT_NAME = "jsapi-tests";
 				USER_HEADER_SEARCH_PATHS = "$(MOZILLA_PATH)/nsprpub/pr/include/";
+				WARNING_CFLAGS = "";
 			};
 			name = Developer;
 		};
 		1DEB91EC08733DB70010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_CW_ASM_SYNTAX = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "js-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2488,7 +2389,6 @@
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
 				);
-				INSTALL_PATH = /usr/local/lib;
 				JS_SRC_PATH = "$(MOZILLA_PATH)/js/src";
 				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				OTHER_CFLAGS = "-Wno-invalid-offsetof";
@@ -2502,12 +2402,7 @@
 		1DEB91ED08733DB70010E9CD /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_CW_ASM_SYNTAX = YES;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREFIX_HEADER = "js-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "NDEBUG=1";
@@ -2515,7 +2410,6 @@
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
 				);
-				INSTALL_PATH = /usr/local/lib;
 				JS_SRC_PATH = "$(MOZILLA_PATH)/js/src";
 				MOZILLA_PATH = "$(SRCROOT)/../mozilla/";
 				OTHER_CFLAGS = "-Wno-invalid-offsetof";
@@ -2528,27 +2422,17 @@
 		};
 		1DEB91F008733DB70010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A43CAA113060A3300BB8FB3 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A990C611326D28A00F4A2A7 /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
-				SYMROOT = ../../../../build;
+				OOLITE_ROOT = ../../../../;
 			};
 			name = Debug;
 		};
 		1DEB91F108733DB70010E9CD /* EndUser */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A43CAA113060A3300BB8FB3 /* oolite-shared-settings.xcconfig */;
+			baseConfigurationReference = 1A990C631326D28A00F4A2A7 /* oolite-enduser-configuration.xcconfig */;
 			buildSettings = {
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				PREBINDING = NO;
-				SYMROOT = ../../../../build;
+				OOLITE_ROOT = ../../../../;
 			};
 			name = EndUser;
 		};

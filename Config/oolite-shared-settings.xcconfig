@@ -3,7 +3,7 @@
 // Output directory. Each project defines OOLITE_ROOT to the repository root.
 // To do an out-of-repo build, change this to $(OOLITE_ROOT)/../build or similar, or an absolute path.
 // NOTE: because Xcode's handling of SYMROOT tries to be clever, you must build to a path without spaces.
-SYMROOT									= $(OOLITE_ROOT)/build
+SYMROOT									= $(OOLITE_ROOT)/build/Mac/
 
 CONFIG_SYM_ROOT							= $(SYMROOT)/$(CONFIGURATION)/
 DEP_HEADER_PATH							= $(CONFIG_SYM_ROOT)/include/

@@ -135,7 +135,7 @@ MA 02110-1301, USA.
 
 typedef int32_t CGMouseDelta;
 
-#import "Comparison.h"
+//#import "Comparison.h"
 
 /* Define AppKit constants for events */
 enum {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A7401B0132409B100FC1845 /* OldSchoolPropertyListWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7401AF132409B100FC1845 /* OldSchoolPropertyListWriting.m */; };
 		1AFDDED0130C1B600075DD39 /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFDDECF130C1B5D0075DD39 /* OoliteBase.framework */; };
 		8DD76F9A0486AA7600D96B5E /* ooconftool.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* ooconftool.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
@@ -49,6 +50,8 @@
 		1A649FFD1323C29D00C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649FFE1323C29D00C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 		1A649FFF1323C29D00C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A7401AE132409B100FC1845 /* OldSchoolPropertyListWriting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OldSchoolPropertyListWriting.h; sourceTree = "<group>"; };
+		1A7401AF132409B100FC1845 /* OldSchoolPropertyListWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OldSchoolPropertyListWriting.m; sourceTree = "<group>"; };
 		1AFDDECA130C1B5D0075DD39 /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../../Components/OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		8DD76FA10486AA7600D96B5E /* ooconftool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ooconftool; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -81,6 +84,8 @@
 			isa = PBXGroup;
 			children = (
 				08FB7796FE84155DC02AAC07 /* ooconftool.m */,
+				1A7401AE132409B100FC1845 /* OldSchoolPropertyListWriting.h */,
+				1A7401AF132409B100FC1845 /* OldSchoolPropertyListWriting.m */,
 			);
 			name = Source;
 			path = ../Source;
@@ -195,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* ooconftool.m in Sources */,
+				1A7401B0132409B100FC1845 /* OldSchoolPropertyListWriting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

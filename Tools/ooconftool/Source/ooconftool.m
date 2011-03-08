@@ -12,12 +12,15 @@
 
 #import <OoliteBase/OoliteBase.h>
 #import <getopt.h>
+#import "OldSchoolPropertyListWriting.h"
 
 
 typedef enum OutFormat
 {
 	kFormatAuto,
-	kFormatPList,
+	kFormatAnyPList,
+	kFormatOpenStepPList,
+	kFormatXMLPList,
 	kFormatBinaryPList,
 	kFormatOOConf,
 	kFormatJSON
@@ -27,10 +30,11 @@ typedef enum OutFormat
 static void PrintUsageAndExit(const char *inCall) __attribute__((noreturn));
 static Format FormatForName(NSString *fileName);
 static NSString *FormatName(Format format);
+static BOOL IsPListFormat(Format format);
 
 static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format outFormat, BOOL compact) __attribute__((noreturn));
 static id Load(NSString *inFile, Format inFormat);
-static id Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact) __attribute__((noreturn));
+static void Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact) __attribute__((noreturn));
 
 /*	Convert number literal strings to number objects.
 	
@@ -52,12 +56,14 @@ int main (int argc, char *argv[])
 	
 	const struct option		longOpts[] =
 							{
-								{ "plist",		no_argument,		NULL, 'P' },
-								{ "bplist",		no_argument,		NULL, 'B' },
-								{ "ooconf",		no_argument,		NULL, 'O' },
-								{ "json",		no_argument,		NULL, 'J' },
-								{ "compact",	no_argument,		NULL, 'c' },
-								{ "help",		no_argument,		NULL, '?' }
+								{ "plist",			no_argument,	NULL, 'P' },
+								{ "openstep-plist",	no_argument,	NULL, 'T' },
+								{ "xml-plist",		no_argument,	NULL, 'X' },
+								{ "binary-plist",	no_argument,	NULL, 'B' },
+								{ "ooconf",			no_argument,	NULL, 'O' },
+								{ "json",			no_argument,	NULL, 'J' },
+								{ "compact",		no_argument,	NULL, 'c' },
+								{ "help",			no_argument,	NULL, '?' }
 							};
 	
 	BOOL					help = NO;
@@ -68,13 +74,21 @@ int main (int argc, char *argv[])
 	
 	for (;;)
 	{
-		int option = getopt_long(argc, argv, "PBOJ?", longOpts, NULL);
+		int option = getopt_long(argc, argv, "PTXBOJ?", longOpts, NULL);
 		if (option == -1)  break;
 		
 		switch (option)
 		{
 			case 'P':
-				outFormat = kFormatPList;
+				outFormat = kFormatAnyPList;
+				break;
+				
+			case 'T':
+				outFormat = kFormatOpenStepPList;
+				break;
+				
+			case 'X':
+				outFormat = kFormatXMLPList;
 				break;
 				
 			case 'B':
@@ -132,7 +146,7 @@ static Format FormatForName(NSString *fileName)
 {
 	NSString *extension = [[fileName pathExtension] lowercaseString];
 	
-	if ([extension isEqualToString:@"plist"])  return kFormatPList;
+	if ([extension isEqualToString:@"plist"])  return kFormatAnyPList;
 	if ([extension isEqualToString:@"ooconf"])  return kFormatOOConf;
 	if ([extension isEqualToString:@"oomesh"])  return kFormatOOConf;
 	if ([extension isEqualToString:@"json"])  return kFormatJSON;
@@ -148,8 +162,14 @@ static NSString *FormatName(Format format)
 		case kFormatAuto:
 			return @"auto";
 			
-		case kFormatPList:
+		case kFormatAnyPList:
 			return @"plist";
+			
+		case kFormatOpenStepPList:
+			return @"OpenStep plist";
+			
+		case kFormatXMLPList:
+			return @"XML plist";
 			
 		case kFormatBinaryPList:
 			return @"binary plist";
@@ -162,6 +182,25 @@ static NSString *FormatName(Format format)
 	}
 	
 	return $sprintf(@"unknown format %i", format);
+}
+
+
+static BOOL IsPListFormat(Format format)
+{
+	switch (format)
+	{
+		case kFormatAnyPList:
+		case kFormatOpenStepPList:
+		case kFormatXMLPList:
+		case kFormatBinaryPList:
+			return YES;
+			
+		case kFormatAuto:
+		case kFormatOOConf:
+		case kFormatJSON:
+			break;
+	}
+	return NO;
 }
 
 
@@ -194,7 +233,7 @@ static id Load(NSString *inFile, Format inFormat)
 		Fail(@"Could not read input file. %@", error);
 	}
 	
-	if (inFormat == kFormatPList || inFormat == kFormatBinaryPList)
+	if (IsPListFormat(inFormat))
 	{
 		NSString *errDesc = nil;
 		// This method is discouraged in Mac OS X and will probably be deprecated in 10.7, but the replacement isn't in GNUstep 1.20.1.
@@ -247,25 +286,78 @@ static id Load(NSString *inFile, Format inFormat)
 }
 
 
-static id Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact)
+static NSData *ConvertToOpenStepPList(id plistValue, NSString **errDesc)
+{
+	return [plistValue oldSchoolPListFormatWithErrorDescription:errDesc];
+}
+
+
+static NSData *ConvertToXMLPList(id plistValue, NSString **errDesc)
+{
+	return [NSPropertyListSerialization dataFromPropertyList:plistValue format:NSPropertyListXMLFormat_v1_0 errorDescription:errDesc];
+}
+
+
+static NSData *ConvertToBinaryPList(id plistValue, NSString **errDesc)
+{
+	return [NSPropertyListSerialization dataFromPropertyList:plistValue format:NSPropertyListBinaryFormat_v1_0 errorDescription:errDesc];
+}
+
+
+static NSData *ConvertToAnyPList(id plistValue, NSString **errDesc)
+{
+	NSData *result = ConvertToOpenStepPList(plistValue, errDesc);
+	if (result == nil)  result = ConvertToXMLPList(plistValue, errDesc);
+	if (result == nil)  result = ConvertToBinaryPList(plistValue, errDesc);
+	return result;
+}
+
+
+
+static void Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact)
 {
 	NSData *data = nil;
-	NSString *errDesc = nil;
 	NSError *error = nil;
+	NSString *errDesc = nil;
 	
-	if (inFormat == kFormatPList || inFormat == kFormatBinaryPList)
+	
+	OOConfGenerationOptions options = kOOConfGenerationIgnoreInvalid;
+	if (compact)  options |= kOOConfGenerationNoPrettyPrint;
+	
+	switch (inFormat)
 	{
-		NSPropertyListFormat format = (inFormat == kFormatBinaryPList) ? NSPropertyListBinaryFormat_v1_0 : NSPropertyListXMLFormat_v1_0;
-		data = [NSPropertyListSerialization dataFromPropertyList:plistValue format:format errorDescription:&errDesc];
-	}
-	else if (inFormat == kFormatOOConf || inFormat == kFormatJSON)
-	{
-		OOConfGenerationOptions options = kOOConfGenerationIgnoreInvalid;
-		if (inFormat == kFormatJSON)  options |= kOOConfGenerationJSONCompatible;
-		if (compact)  options |= kOOConfGenerationNoPrettyPrint;
-		
-		data = [plistValue ooConfDataWithOptions:options error:&error];
-		if (data == nil)  errDesc = [error description];
+		case kFormatAuto:
+			break;
+			
+		case kFormatAnyPList:
+			data = ConvertToAnyPList(plistValue, &errDesc);
+			break;
+			
+		case kFormatOpenStepPList:
+			data = ConvertToOpenStepPList(plistValue, &errDesc);
+			break;
+			
+		case kFormatXMLPList:
+			data = ConvertToXMLPList(plistValue, &errDesc);
+			break;
+			
+		case kFormatBinaryPList:
+			data = ConvertToBinaryPList(plistValue, &errDesc);
+			break;
+			
+		case kFormatJSON:
+			options |= kOOConfGenerationJSONCompatible;
+			// Fall through.
+			
+		case kFormatOOConf:
+		{
+			data = [plistValue ooConfDataWithOptions:options error:&error];
+			if (data == nil)
+			{
+				errDesc = [error localizedFailureReason];
+				if (errDesc == nil)  errDesc = [error localizedDescription];
+			}
+		}
 	}
 	
 	if (data == nil)
@@ -275,7 +367,7 @@ static id Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact)
 	
 	if (![data writeToFile:inFile options:NSDataWritingAtomic error:&error])
 	{
-		Fail(@"Could not write output file. %@", error);
+		Fail(@"Could not write output file. %@", [error localizedFailureReason] ?: [error localizedDescription]);
 	}
 	
 	exit(EXIT_SUCCESS);

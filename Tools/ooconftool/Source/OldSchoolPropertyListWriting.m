@@ -19,7 +19,7 @@
 */
 
 #import "OldSchoolPropertyListWriting.h"
-#import "NSNumberOOExtensions.h"
+#import <OoliteBase/OoliteBase.h>
 
 
 static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDepth);
@@ -29,37 +29,39 @@ static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDep
 
 - (NSString *)oldSchoolPListFormatWithIndentation:(unsigned)inIndentation errorDescription:(NSString **)outErrorDescription
 {
-	NSCharacterSet		*charSet;
-	NSRange				foundRange, searchRange;
-	NSString			*foundString;
-	NSMutableString		*newString;
-	unsigned			length;
+	static NSCharacterSet	*unquotedCharSet = nil,
+							*escapeCharSet = nil;
 	
-	length = [self length];
-	if (0 != length
-		&& [self rangeOfCharacterFromSet:[[NSCharacterSet alphanumericCharacterSet] invertedSet]].location == NSNotFound
-		&& ![[NSCharacterSet decimalDigitCharacterSet] longCharacterIsMember:[self characterAtIndex:0]])
+	if (unquotedCharSet == nil)
+	{
+		unquotedCharSet = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_$"];
+		[unquotedCharSet retain];
+		escapeCharSet = [NSCharacterSet characterSetWithCharactersInString:@"\"\r\n\\"];
+		[escapeCharSet retain];
+	}
+	
+	NSUInteger length = [self length];
+	if (length != 0 && [self rangeOfCharacterFromSet:[unquotedCharSet invertedSet]].location == NSNotFound)
 	{
 		// This is an alphanumeric string whose first character is not a digit
 		return [[self copy] autorelease];
 	}
 	else
 	{
-		charSet = [NSCharacterSet characterSetWithCharactersInString:@"\"\r\n\\"];
-		foundRange = [self rangeOfCharacterFromSet:charSet options:NSLiteralSearch];
+		NSRange foundRange = [self rangeOfCharacterFromSet:escapeCharSet options:NSLiteralSearch];
 		if (NSNotFound == foundRange.location)
 		{
-			newString = (NSMutableString *)self;
+			return [NSString stringWithFormat:@"\"%@\"", self];
 		}
 		else
 		{
 			// Escape quotes, backslashes and newlines
-			newString = [[[self substringToIndex:foundRange.location] mutableCopy] autorelease];
+			NSMutableString *newString = [[[self substringToIndex:foundRange.location] mutableCopy] autorelease];
 			
 			for (;;)
 			{
 				// Append escaped character
-				foundString = [self substringWithRange:foundRange];
+				NSString *foundString = [self substringWithRange:foundRange];
 				if ([foundString isEqual:@"\""]) [newString appendString:@"\\\""];
 				else if ([foundString isEqual:@"\n"]) [newString appendString:@"\\\n"];
 				else if ([foundString isEqual:@"\r"]) [newString appendString:@"\\\r"];
@@ -70,20 +72,23 @@ static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDep
 				}
 				
 				// Use rest of string…
-				searchRange.location = foundRange.location + foundRange.length;
-				searchRange.length = length - searchRange.location;
+				NSRange searchRange =
+				{
+					.location = foundRange.location + foundRange.length,
+					searchRange.length = length - searchRange.location
+				};
 				
 				// …to search for next char needing escaping
-				foundRange = [self rangeOfCharacterFromSet:charSet options:NSLiteralSearch range:searchRange];
+				foundRange = [self rangeOfCharacterFromSet:escapeCharSet options:NSLiteralSearch range:searchRange];
 				if (NSNotFound == foundRange.location)
 				{
 					[newString appendString:[self substringWithRange:searchRange]];
 					break;
 				}
 			}
+			
+			return [NSString stringWithFormat:@"\"%@\"", newString];
 		}
-		
-		return [NSString stringWithFormat:@"\"%@\"", newString];
 	}
 }
 
@@ -240,6 +245,19 @@ static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDep
 	allKeys = [self allKeys];
 	count = [allKeys count];
 	
+	// Ensure that all keys are strings before sorting them.
+	for (i = 0; i != count; ++i)
+	{
+		key = [allKeys objectAtIndex:i];
+		if (![key isKindOfClass:[NSString class]])
+		{
+			if (NULL != outErrorDescription)  *outErrorDescription = [NSString stringWithFormat:@"non-string key in dictionary"];
+			return nil;
+		}
+	}
+	
+	allKeys = [[self allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	
 	[result appendString:@"{"];
 	
 	if (2 < count || inIndentation == 0)  AppendNewLineAndIndent(result, inIndentation + 1);
@@ -253,11 +271,6 @@ static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDep
 		}
 		
 		key = [allKeys objectAtIndex:i];
-		if (![key isKindOfClass:[NSString class]])
-		{
-			if (NULL != outErrorDescription) *outErrorDescription = [NSString stringWithFormat:@"non-string key in dictionary"];
-			return nil;
-		}
 		value = [self objectForKey:key];
 		if (![value conformsToProtocol:@protocol(OldSchoolPropertyListWriting)])
 		{

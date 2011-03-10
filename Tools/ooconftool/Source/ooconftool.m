@@ -32,9 +32,10 @@ static Format FormatForName(NSString *fileName);
 static NSString *FormatName(Format format);
 static BOOL IsPListFormat(Format format);
 
-static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format outFormat, BOOL compact) __attribute__((noreturn));
+static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format outFormat, BOOL compact, BOOL nullToString) __attribute__((noreturn));
 static id Load(NSString *inFile, Format inFormat);
 static void Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact) __attribute__((noreturn));
+
 
 /*	Convert number literal strings to number objects.
 	
@@ -42,6 +43,11 @@ static void Write(NSString *inFile, Format inFormat, id plistValue, BOOL compact
 	native distinction between strings and numbers.
  */
 static id StringsToNumbers(id object);
+
+
+/*	Convert NSNulls to @"null".
+*/
+static id NullsToStrings(id object);
 
 static void Print(NSString *format, ...);
 static void Printv(NSString *format, va_list inArgs);
@@ -63,18 +69,20 @@ int main (int argc, char *argv[])
 								{ "ooconf",			no_argument,	NULL, 'O' },
 								{ "json",			no_argument,	NULL, 'J' },
 								{ "compact",		no_argument,	NULL, 'c' },
+								{ "null-to-string",	no_argument,	NULL, 'n' },
 								{ "help",			no_argument,	NULL, '?' }
 							};
 	
 	BOOL					help = NO;
 	BOOL					compact = NO;
+	BOOL					nullToString = NO;
 	Format					outFormat = kFormatAuto;
 	
 	if (argc < 2)  PrintUsageAndExit(argv[0]);
 	
 	for (;;)
 	{
-		int option = getopt_long(argc, argv, "PTXBOJ?", longOpts, NULL);
+		int option = getopt_long(argc, argv, "PTXBOJcn?", longOpts, NULL);
 		if (option == -1)  break;
 		
 		switch (option)
@@ -107,6 +115,10 @@ int main (int argc, char *argv[])
 				compact = YES;
 				break;
 				
+			case 'n':
+				nullToString = YES;
+				break;
+				
 			case '?':
 				help = YES;
 				break;
@@ -135,7 +147,7 @@ int main (int argc, char *argv[])
 	inFile = [[[inFile stringByStandardizingPath] stringByExpandingTildeInPath] stringByResolvingSymlinksInPath];
 	outFile = [[[outFile stringByStandardizingPath] stringByExpandingTildeInPath] stringByResolvingSymlinksInPath];
 	
-	Convert(inFile, inFormat, outFile, outFormat, compact);
+	Convert(inFile, inFormat, outFile, outFormat, compact, nullToString);
 	[pool drain];
 	
 	return EXIT_SUCCESS;
@@ -204,7 +216,7 @@ static BOOL IsPListFormat(Format format)
 }
 
 
-static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format outFormat, BOOL compact)
+static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format outFormat, BOOL compact, BOOL nullToString)
 {
 	id plistValue = nil;
 	
@@ -215,6 +227,12 @@ static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format
 		{
 			Fail(@"Loading failed, but didn't specify why.");
 		}
+		
+		if (nullToString)
+		{
+			plistValue = NullsToStrings(plistValue);
+		}
+		
 		Write(outFile, outFormat, plistValue, compact);
 	}
 	@catch (NSException *exception)
@@ -411,6 +429,39 @@ static id StringsToNumbers(id object)
 			}
 
 		}
+	}
+	return object;
+}
+
+
+static id NullsToStrings(id object)
+{
+	if ([object isKindOfClass:[NSDictionary class]])
+	{
+		NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[object count]];
+		id key = nil;
+		foreachkey (key, object)
+		{
+			id oldValue = [object objectForKey:key];
+			id newValue = NullsToStrings(oldValue);
+			[result setObject:newValue forKey:key];
+		}
+		object = result;
+	}
+	else if ([object isKindOfClass:[NSArray class]])
+	{
+		NSMutableArray *result = [NSMutableArray arrayWithCapacity:[object count]];
+		id oldValue = nil;
+		foreach (oldValue, object)
+		{
+			id newValue = NullsToStrings(oldValue);
+			[result addObject:newValue];
+		}
+		object = result;
+	}
+	else if (object == [NSNull null])
+	{
+		object = @"null";
 	}
 	return object;
 }

@@ -464,6 +464,15 @@ typedef enum
 	}
 	else
 	{
+		if ([self oo_isFloatingPointNumber])
+		{
+			if (!isfinite([self doubleValue]))
+			{
+				if (outError != NULL)  *outError = OOConfGenerationError(kOOConfGenerationErrorInvalidValue, @"Non-finite numbers (infinities and NaN) are not permitted in OOConf files.");
+				return NO;
+			}
+		}
+		
 		[string appendFormat:@"%@", self];
 	}
 	

@@ -87,7 +87,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	// step through the rescuees awarding insurance or bounty or adding to slaves
 	for (i = 0; i < [rescuees count]; i++)
 	{
-		OOCharacter* rescuee = (OOCharacter*)[rescuees objectAtIndex: i];
+		OOCharacter *rescuee = (OOCharacter*)[rescuees objectAtIndex: i];
 		if ([rescuee script])
 		{
 			[rescuee doScriptEvent:OOJSID("unloadCharacter")];

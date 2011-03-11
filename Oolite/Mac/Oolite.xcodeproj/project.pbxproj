@@ -31,7 +31,7 @@
 		1A1B976E13087FBE0078322D /* PlayerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B973B13087FBE0078322D /* PlayerEntity.m */; };
 		1A1B976F13087FBE0078322D /* PlayerEntityContracts.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B973D13087FBE0078322D /* PlayerEntityContracts.m */; };
 		1A1B977013087FBE0078322D /* PlayerEntityControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B973F13087FBE0078322D /* PlayerEntityControls.m */; };
-		1A1B977113087FBE0078322D /* PlayerEntityLegacyScriptEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974113087FBE0078322D /* PlayerEntityLegacyScriptEngine.m */; };
+		1A1B977113087FBE0078322D /* PlayerEntityLegacyScriptEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974113087FBE0078322D /* PlayerEntityLegacyScriptEngine.m */; settings = {COMPILER_FLAGS = "-Wno-deprecated"; }; };
 		1A1B977213087FBE0078322D /* PlayerEntityLoadSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974313087FBE0078322D /* PlayerEntityLoadSave.m */; };
 		1A1B977313087FBE0078322D /* PlayerEntityScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974513087FBE0078322D /* PlayerEntityScriptMethods.m */; };
 		1A1B977413087FBE0078322D /* PlayerEntitySound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974713087FBE0078322D /* PlayerEntitySound.m */; };

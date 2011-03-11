@@ -64,7 +64,6 @@ static JSBool ShipDumpCargo(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipSpawn(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipExplode(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipRemove(JSContext *context, uintN argc, jsval *vp);
-static JSBool ShipRunLegacyScriptActions(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipCommsMessage(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipFireECM(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipAbandonShip(JSContext *context, uintN argc, jsval *vp);

@@ -52,6 +52,8 @@
 		1A649FFF1323C29D00C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A7401AE132409B100FC1845 /* OldSchoolPropertyListWriting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OldSchoolPropertyListWriting.h; sourceTree = "<group>"; };
 		1A7401AF132409B100FC1845 /* OldSchoolPropertyListWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OldSchoolPropertyListWriting.m; sourceTree = "<group>"; };
+		1AD84A95132A40CA007E833B /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile; path = ../GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1AD84AB1132A4393007E833B /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 		1AFDDECA130C1B5D0075DD39 /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../../Components/OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		8DD76FA10486AA7600D96B5E /* ooconftool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ooconftool; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -103,6 +105,8 @@
 		1A649FFA1323C29D00C2FDDB /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1AD84A95132A40CA007E833B /* GNUmakefile */,
+				1AD84AB1132A4393007E833B /* oolite-shared.make */,
 				1A649FFB1323C29D00C2FDDB /* oolite-debug-configuration.xcconfig */,
 				1A649FFC1323C29D00C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649FFD1323C29D00C2FDDB /* oolite-enduser-configuration.xcconfig */,

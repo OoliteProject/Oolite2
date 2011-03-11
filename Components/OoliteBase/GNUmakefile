@@ -1,11 +1,13 @@
 OOLITE_TARGET				= OoliteBase
 OOLITE_ROOT					= ../../
-FRAMEWORK_NAME				= $(OOLITE_TARGET)
+LIBRARY_NAME				= $(OOLITE_TARGET)
+
+shared=no
 
 include $(OOLITE_ROOT)/Config/oolite-shared.make
 
 
-SOURCE_PATHS = Source:Dependencies/JAValueToString
+SOURCE_PATHS = Source
 vpath %.c $(SOURCE_PATHS)
 vpath %.h $(SOURCE_PATHS)
 vpath %.m $(SOURCE_PATHS)
@@ -13,8 +15,6 @@ vpath %.m $(SOURCE_PATHS)
 ADDITIONAL_ALLCFLAGS		+= $(WARNING_CFLAGS)
 ADDITIONAL_CFLAGS			+= $(ADDITIONAL_ALLCFLAGS)
 ADDITIONAL_OBJCFLAGS		+= $(ADDITIONAL_ALLCFLAGS)
-
-ADDITIONAL_INCLUDE_DIRS		= -IDependencies/JAValueToString
 
 
 OOBASE_CORE_FILES			=	OOCocoa.m \
@@ -33,7 +33,6 @@ OOBASE_OOCONF_FILES			=	OOConfGeneration.m \
 								OOConfParsing.m \
 								OOConfLexer.m
 
-# Missing: JAValueToString.
 OOBASE_UTILITY_FILES		=	NSDataOOExtensions.m \
 								NSDictionaryOOExtensions.m \
 								NSNumberOOExtensions.m \
@@ -55,6 +54,13 @@ OOBASE_UTILITY_FILES		=	NSDataOOExtensions.m \
 								OOProblemReporting.m \
 								OOSimpleMethodType.m \
 								OOWeakReference.m
+
+
+OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
+								$(OOBASE_LOGGING_FILES) \
+								$(OOBASE_MATHS_FILES) \
+								$(OOBASE_OOCONF_FILES) \
+								$(OOBASE_UTILITY_FILES)
 
 OoliteBase_HEADER_FILES		=	MYCollectionUtilities.h \
 								NSDataOOExtensions.h \
@@ -98,16 +104,7 @@ OoliteBase_HEADER_FILES		=	MYCollectionUtilities.h \
 								OOVector.h \
 								OOWeakReference.h
 
-OoliteBase_HEADER_FILES_DIR		= ./Source/
-
-
-OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
-								$(OOBASE_LOGGING_FILES) \
-								$(OOBASE_MATHS_FILES) \
-								$(OOBASE_OOCONF_FILES) \
-								$(OOBASE_UTILITY_FILES)
-
 
 -include GNUmakefile.preamble
-include $(GNUSTEP_MAKEFILES)/framework.make
+include $(GNUSTEP_MAKEFILES)/library.make
 -include GNUmakefile.postamble

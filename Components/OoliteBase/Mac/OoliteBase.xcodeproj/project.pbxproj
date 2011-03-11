@@ -160,6 +160,9 @@
 		1AD841D1122921DD00FC382A /* OOCPUInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCPUInfo.m; sourceTree = "<group>"; };
 		1AD8429A122922BD00FC382A /* OOWeakReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOWeakReference.h; sourceTree = "<group>"; };
 		1AD8429B122922BD00FC382A /* OOWeakReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOWeakReference.m; sourceTree = "<group>"; };
+		1AD84ABA132A4649007E833B /* GNUmakefile.postamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile.postamble; path = ../GNUmakefile.postamble; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1AD84ABC132A465D007E833B /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1AD84ADA132A4939007E833B /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 		1AE24BFB11FB0A4F00D96B3B /* OOProblemReporting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProblemReporting.h; sourceTree = "<group>"; };
 		1AE24BFC11FB0A4F00D96B3B /* OOProblemReporting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProblemReporting.m; sourceTree = "<group>"; };
 		1AED64FC11B5A84900811A44 /* OOLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLogging.h; path = ../Source/OOLogging.h; sourceTree = SOURCE_ROOT; };
@@ -195,8 +198,7 @@
 		0867D691FE84028FC02AAC07 /* OOBase */ = {
 			isa = PBXGroup;
 			children = (
-				1A990D001326D61900F4A2A7 /* GNUmakefile */,
-				1A649F4F1323B8E900C2FDDB /* Config */,
+				1A649F4F1323B8E900C2FDDB /* Build stuff */,
 				1A713F9511B56397009A9197 /* OoliteBase.h */,
 				1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */,
 				32C88DFF0371C24200C91783 /* Core */,
@@ -260,16 +262,20 @@
 			path = ../Source;
 			sourceTree = "<group>";
 		};
-		1A649F4F1323B8E900C2FDDB /* Config */ = {
+		1A649F4F1323B8E900C2FDDB /* Build stuff */ = {
 			isa = PBXGroup;
 			children = (
+				1A990D001326D61900F4A2A7 /* GNUmakefile */,
+				1AD84ABA132A4649007E833B /* GNUmakefile.postamble */,
+				1AD84ADA132A4939007E833B /* oolite-copy-headers.make */,
+				1AD84ABC132A465D007E833B /* oolite-shared.make */,
 				1A649F501323B8E900C2FDDB /* oolite-debug-configuration.xcconfig */,
 				1A649F511323B8E900C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649F521323B8E900C2FDDB /* oolite-enduser-configuration.xcconfig */,
 				1A649F531323B8E900C2FDDB /* oolite-shared-settings.xcconfig */,
 				1A649F541323B8E900C2FDDB /* oolite-version.inc */,
 			);
-			name = Config;
+			name = "Build stuff";
 			path = ../../../Config;
 			sourceTree = SOURCE_ROOT;
 		};

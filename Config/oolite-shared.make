@@ -1,6 +1,8 @@
 include $(GNUSTEP_MAKEFILES)/common.make
 include $(OOLITE_ROOT)/Config/oolite-version.inc
 
+VERSION = $(OOLITE_VERSION)
+
 
 # Configurable options. Standard option packages are defined with the "style"
 # parameter, which may be "debug", "developer" or "enduser".
@@ -30,7 +32,9 @@ endif
 
 
 
-# "developer" configuration is the default and the baseline.
+# "developer" style is the default and the baseline. (However, a standard
+# GNUstep install will set debug to yes, so debug is the effective default style.)
+
 #ifeq ($(style),developer)
 	OO_DEBUG					= no
 	OO_OPTIMIZE					= yes
@@ -91,10 +95,7 @@ ifeq ($(profile),yes)
 endif
 
 
-
-
-ADDITIONAL_ALLCFLAGS			+= -std=gnu99 -DOOLITE_VERSION="\"$(OOLITE_VERSION)\""
-WARNING_CFLAGS					= -Wall \
+WARNING_FLAGS					= -Wall \
 								  -Wextra \
 								  -Wno-unused-parameter \
 								  -Wno-missing-field-initializers \
@@ -103,7 +104,10 @@ WARNING_CFLAGS					= -Wall \
 								  -Wunused-variable
 
 
-ifeq ($(GNUSTEP_HOST_OS),mingw32)
+ADDITIONAL_ALLCFLAGS			+= -std=gnu99 -DOOLITE_VERSION="\"$(OOLITE_VERSION)\"" $(WARNING_FLAGS)
+
+
+ifeq ($(GNUSTEP_TARGET_OS),mingw32)
 	ADDITIONAL_ALLCFLAGS		+= -DWIN32
 	PLATFORM_DIR				= Win32
 else
@@ -112,5 +116,7 @@ else
 endif
 
 
-OUTPUT_BASE_DIR = "$(OOLITE_ROOT)/build/$(PLATFORM_DIR)/$(STYLE_DIR)"
-GNUSTEP_BUILD_DIR = "$(OUTPUT_BASE_DIR)"
+OUTPUT_BASE_DIR					= "$(OOLITE_ROOT)/build/$(PLATFORM_DIR)/$(STYLE_DIR)"
+GNUSTEP_BUILD_DIR				= "$(OUTPUT_BASE_DIR)"
+OOLITE_INCLUDE_DIR				= "$(OUTPUT_BASE_DIR)/include"
+OOLITE_OBJ_DIR					= "$(OUTPUT_BASE_DIR)/obj"

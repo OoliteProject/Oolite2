@@ -1,5 +1,6 @@
-FRAMEWORK_NAME = OoliteBase
-OOLITE_ROOT = ../../
+OOLITE_TARGET				= OoliteBase
+OOLITE_ROOT					= ../../
+FRAMEWORK_NAME				= $(OOLITE_TARGET)
 
 include $(OOLITE_ROOT)/Config/oolite-shared.make
 
@@ -55,6 +56,51 @@ OOBASE_UTILITY_FILES		=	NSDataOOExtensions.m \
 								OOSimpleMethodType.m \
 								OOWeakReference.m
 
+OoliteBase_HEADER_FILES		=	MYCollectionUtilities.h \
+								NSDataOOExtensions.h \
+								NSDictionaryOOExtensions.h \
+								NSNumberOOExtensions.h \
+								NSObjectOOExtensions.h \
+								NSScannerOOExtensions.h \
+								NSStringOOExtensions.h \
+								NSThreadOOExtensions.h \
+								OOAsyncQueue.h \
+								OOBaseErrors.h \
+								OOBaseStringParsing.h \
+								OOBoundingBox.h \
+								OOCocoa.h \
+								OOCollectionExtractors.h \
+								OOConfGeneration.h \
+								OOConfGenerationInternal.h \
+								OOConfLexer.h \
+								OOConfParsing.h \
+								OOConfParsingInternal.h \
+								OOCPUInfo.h \
+								OODeepCopy.h \
+								OOExcludeObjectEnumerator.h \
+								OOFastArithmetic.h \
+								OOFilteringEnumerator.h \
+								OOFunctionAttributes.h \
+								OOGarbageCollectionSupport.h \
+								OOIsNumberLiteral.h \
+								OoliteBase.h \
+								OOLogging.h \
+								OOLogOutputHandler.h \
+								OOMaths.h \
+								OOMatrix.h \
+								OOPListParsing.h \
+								OOPriorityQueue.h \
+								OOProbabilitySet.h \
+								OOProblemReporting.h \
+								OOQuaternion.h \
+								OORandom.h \
+								OOSimpleMethodType.h \
+								OOVector.h \
+								OOWeakReference.h
+
+OoliteBase_HEADER_FILES_DIR		= ./Source/
+
+
 OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
 								$(OOBASE_LOGGING_FILES) \
 								$(OOBASE_MATHS_FILES) \
@@ -62,4 +108,6 @@ OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
 								$(OOBASE_UTILITY_FILES)
 
 
+-include GNUmakefile.preamble
 include $(GNUSTEP_MAKEFILES)/framework.make
+-include GNUmakefile.postamble

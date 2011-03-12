@@ -811,27 +811,37 @@ static const char *sConsoleScriptName;	// Lifetime is lifetime of script object,
 static OOUInteger sConsoleEvalLineNo;
 
 
-static void GetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, OOUInteger *line)
+void OOJSGetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, OOUInteger *line)
 {
-	NSCParameterAssert(context != NULL && stackFrame != NULL && name != NULL && line != NULL);
+	NSCParameterAssert(context != NULL && name != NULL && line != NULL);
 	
 	*name = NULL;
 	*line = 0;
 	
-	JSScript *script = JS_GetFrameScript(context, stackFrame);
-	if (script != NULL)
+	if (stackFrame != NULL)
 	{
-		*name = JS_GetScriptFilename(context, script);
-		if (name != NULL)
+		JSScript *script = JS_GetFrameScript(context, stackFrame);
+		if (script != NULL)
 		{
-			jsbytecode *PC = JS_GetFramePC(context, stackFrame);
-			*line = JS_PCToLineNumber(context, script, PC);
+			*name = JS_GetScriptFilename(context, script);
+			if (name != NULL)
+			{
+				jsbytecode *PC = JS_GetFramePC(context, stackFrame);
+				*line = JS_PCToLineNumber(context, script, PC);
+			}
+		}
+		else if (JS_IsDebuggerFrame(context, stackFrame))
+		{
+			*name = "<debugger frame>";
 		}
 	}
-	else if (JS_IsDebuggerFrame(context, stackFrame))
-	{
-		*name = "<debugger frame>";
-	}
+}
+
+
+JSStackFrame *OOJSGetCurrentCallFrame(JSContext *context)
+{
+	JSStackFrame *frame = NULL;
+	return JS_FrameIterator(context, &frame);
 }
 
 
@@ -841,7 +851,7 @@ NSString *OOJSDescribeLocation(JSContext *context, JSStackFrame *stackFrame)
 	
 	const char	*fileName;
 	OOUInteger	lineNo;
-	GetLocationNameAndLine(context, stackFrame, &fileName, &lineNo);
+	OOJSGetLocationNameAndLine(context, stackFrame, &fileName, &lineNo);
 	if (fileName == NULL)  return NO;
 	
 	// If this stops working, we probably need to switch to strcmp().
@@ -861,7 +871,7 @@ NSString *OOJSDescribeLocation(JSContext *context, JSStackFrame *stackFrame)
 
 void OOJSMarkConsoleEvalLocation(JSContext *context, JSStackFrame *stackFrame)
 {
-	GetLocationNameAndLine(context, stackFrame, &sConsoleScriptName, &sConsoleEvalLineNo);
+	OOJSGetLocationNameAndLine(context, stackFrame, &sConsoleScriptName, &sConsoleEvalLineNo);
 }
 #endif
 

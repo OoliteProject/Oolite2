@@ -35,6 +35,10 @@ MA 02110-1301, USA.
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"
 
+#ifndef NDEBUG
+#include <jsdbgapi.h>
+#endif
+
 #import "NSFileManagerOOExtensions.h"
 
 
@@ -242,8 +246,39 @@ static JSBool GlobalLog(JSContext *context, uintN argc, jsval *vp)
 		message = [NSString concatenationOfStringsFromJavaScriptValues:OOJS_ARGV + 1 count:argc - 1 separator:@", " inContext:context];
 	}
 	
+#ifndef NDEBUG
+	//	Use JS debug API to get function, file and line for log.
+	OOJSPauseTimeLimiter();
+	
+	if (OOLogWillDisplayMessagesInClass(messageClass))
+	{
+		JSStackFrame	*frame = OOJSGetCurrentCallFrame(context);
+		const char		*fileName = NULL;
+		OOUInteger		line = 0;
+		jsval			callee;
+		NSString		*functionName = @"<anonymous function>";
+		
+		OOJSGetLocationNameAndLine(context, frame, &fileName, &line);
+		
+		if (JS_GetValidFrameCalleeObject(context, frame, &callee) && OOJSValueIsFunction(context, callee))
+		{
+			JSFunction *func = JS_ValueToFunction(context, callee);
+			JSString *nameJS = JS_GetFunctionId(func);
+			if (nameJS != NULL)
+			{
+				functionName = OOStringFromJSString(context, nameJS);
+			}
+		}
+		
+		OOLogWithFunctionFileAndLine(messageClass, [functionName UTF8String], fileName, line, @"%@", message);
+	}
+	
+	OOJS_BEGIN_FULL_NATIVE(context)
+	OOJSResumeTimeLimiter();
+#else
 	OOJS_BEGIN_FULL_NATIVE(context)
 	OOLog(messageClass, @"%@", message);
+#endif
 	
 #if OOJSENGINE_MONITOR_SUPPORT
 	[[OOJavaScriptEngine sharedEngine] sendMonitorLogMessage:message

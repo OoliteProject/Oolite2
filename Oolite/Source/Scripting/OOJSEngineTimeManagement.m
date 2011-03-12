@@ -798,8 +798,8 @@ static void UpdateProfileForFrame(OOHighResTimeValue now, OOJSProfileStackFrame 
 		NSString *location = nil;
 		if (JS_GetFunctionNative(context, function) == NULL)
 		{
-			JSStackFrame *frame = NULL;
-			if (JS_FrameIterator(context, &frame) != NULL)
+			JSStackFrame *frame = OOJSGetCurrentCallFrame(context);
+			if (frame != NULL)
 			{
 				location = OOJSDescribeLocation(context, frame);
 			}

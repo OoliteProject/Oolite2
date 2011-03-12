@@ -426,6 +426,7 @@
 	texture.load.asyncLoad.done				= inherit;
 	texture.load.asyncLoad.exception		= $error;
 	texture.load.detachThreads.failed		= $error;
+	texture.load.dimensions.invalid			= $error;
 	texture.load.noName						= $error;
 	texture.load.queueTask.inconsistency	= $error;
 	texture.load.rescale					= $textureDebug;

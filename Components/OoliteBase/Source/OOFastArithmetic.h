@@ -80,6 +80,12 @@ OOINLINE float OOFastInvSqrtf(float x)
 #endif
 
 
+OOINLINE BOOL OOIsPowerOf2(uint32_t value)
+{
+	return value == OORoundUpToPowerOf2(value);
+}
+
+
 OOINLINE float OOClamp_0_1_f(float value)
 {
 	return fmaxf(0.0f, fminf(value, 1.0f));

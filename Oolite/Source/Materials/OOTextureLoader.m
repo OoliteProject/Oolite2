@@ -38,7 +38,6 @@ SOFTWARE.
 static unsigned				sGLMaxSize;
 static uint32_t				sUserMaxSize;
 static BOOL					sReducedDetail;
-static BOOL					sHaveNPOTTextures = NO;	// TODO: support "true" non-power-of-two textures.
 static BOOL					sHaveSetUp = NO;
 
 
@@ -348,6 +347,12 @@ static BOOL					sHaveSetUp = NO;
 	uint8_t				components;
 	OOPixMap			pixMap;
 	
+	if (!OOIsPowerOf2(_width) || !OOIsPowerOf2(_height))
+	{
+		OOLogERR(@"texture.load.dimensions.invalid", @"Texture \"%@\" has non-power-of-two dimensions (%u x %u pixels).", [_path lastPathComponent], _width, _height);
+		return;
+	}
+	
 	components = OOTextureComponentsForFormat(_format);
 	
 	// Apply defaults.
@@ -433,8 +438,7 @@ static BOOL					sHaveSetUp = NO;
 		{
 			_isCubeMap = YES;
 			
-			desiredWidth = OORoundUpToPowerOf2((2 * _width) / 3);
-			desiredWidth = MIN(desiredWidth, sGLMaxSize / 8);
+			desiredWidth = MIN(_width, sGLMaxSize / 8);
 			if (sReducedDetail)
 			{
 				if (256 < desiredWidth)  desiredWidth /= 2;
@@ -445,20 +449,8 @@ static BOOL					sHaveSetUp = NO;
 		}
 		else
 		{
-			if (!sHaveNPOTTextures)
-			{
-				// Round to nearest power of two. NOTE: this is duplicated in OOTextureVerifierStage.m.
-				desiredWidth = OORoundUpToPowerOf2((2 * _width) / 3);
-				desiredHeight = OORoundUpToPowerOf2((2 * _height) / 3);
-			}
-			else
-			{
-				desiredWidth = _width;
-				desiredHeight = _height;
-			}
-			
-			desiredWidth = MIN(desiredWidth, sGLMaxSize);
-			desiredHeight = MIN(desiredHeight, sGLMaxSize);
+		desiredWidth = MIN(_width, sGLMaxSize);
+			desiredHeight = MIN(_height, sGLMaxSize);
 			
 			if (!_avoidShrinking)
 			{

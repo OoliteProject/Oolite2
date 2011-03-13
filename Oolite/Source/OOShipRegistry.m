@@ -32,7 +32,6 @@ SOFTWARE.
 #import "OOStringParsing.h"
 #import "OOMesh.h"
 #import "GameController.h"
-#import "OOLegacyScriptWhitelist.h"
 
 
 #define PRELOAD 0
@@ -65,7 +64,6 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 - (BOOL) loadAndApplyShipDataOverrides:(NSMutableDictionary *)ioData;
 - (BOOL) canonicalizeAndTagSubentities:(NSMutableDictionary *)ioData;
 - (BOOL) removeUnusableEntries:(NSMutableDictionary *)ioData;
-- (BOOL) sanitizeConditions:(NSMutableDictionary *)ioData;
 
 #if PRELOAD
 - (BOOL) preloadShipMeshes:(NSMutableDictionary *)ioData;
@@ -297,10 +295,6 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	// Add shipyard entries into shipdata entries.
 	if (![self loadAndMergeShipyard:result])  return;
 	OOLog(@"shipData.load.done", @"Finished adding shipyard entries...");
-	
-	// Sanitize conditions.
-	if (![self sanitizeConditions:result])  return;
-	OOLog(@"shipData.load.done", @"Finished validating data...");
 	
 #if PRELOAD
 	// Preload and cache meshes.
@@ -844,102 +838,6 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 			}
 		}
 		if (remove)  [ioData removeObjectForKey:shipKey];
-	}
-	
-	return YES;
-}
-
-
-/*	Transform conditions, determinant (if conditions array) and
-	shipyard.conditions from hasShipyard to sanitized form.
-*/
-- (BOOL) sanitizeConditions:(NSMutableDictionary *)ioData
-{
-	NSEnumerator			*shipKeyEnum = nil;
-	NSString				*shipKey = nil;
-	NSMutableDictionary		*shipEntry = nil;
-	NSMutableDictionary		*mutableShipyard = nil;
-	NSArray					*conditions = nil;
-	NSArray					*hasShipyard = nil;
-	NSArray					*shipyardConditions = nil;
-	
-	for (shipKeyEnum = [[ioData allKeys] objectEnumerator]; (shipKey = [shipKeyEnum nextObject]); )
-	{
-		shipEntry = [ioData objectForKey:shipKey];
-		conditions = [shipEntry objectForKey:@"conditions"];
-		hasShipyard = [shipEntry objectForKey:@"has_shipyard"];
-		if (![hasShipyard isKindOfClass:[NSArray class]])  hasShipyard = nil;	// May also be fuzzy boolean
-		if (hasShipyard == nil)
-		{
-			hasShipyard = [shipEntry objectForKey:@"hasShipyard"];
-			if (![hasShipyard isKindOfClass:[NSArray class]])  hasShipyard = nil;	// May also be fuzzy boolean
-		}
-		shipyardConditions = [[shipEntry oo_dictionaryForKey:@"_oo_shipyard"] objectForKey:@"conditions"];
-		
-		if (conditions == nil && hasShipyard && shipyardConditions == nil)  continue;
-		
-		if (conditions != nil)
-		{
-			if ([conditions isKindOfClass:[NSArray class]])
-			{
-				conditions = OOSanitizeLegacyScriptConditions(conditions, [NSString stringWithFormat:@"<shipdata.plist entry \"%@\">", shipKey]);
-			}
-			else
-			{
-				OOLogWARN(@"shipdata.load.warning", @"conditions for shipdata.plist entry \"%@\" are not an array, ignoring.", shipKey);
-				conditions = nil;
-			}
-			
-			if (conditions != nil)
-			{
-				[shipEntry setObject:conditions forKey:@"conditions"];
-			}
-			else
-			{
-				[shipEntry removeObjectForKey:@"conditions"];
-			}
-		}
-		
-		if (hasShipyard != nil)
-		{
-			hasShipyard = OOSanitizeLegacyScriptConditions(hasShipyard, [NSString stringWithFormat:@"<shipdata.plist entry \"%@\" hasShipyard conditions>", shipKey]);
-			
-			if (hasShipyard != nil)
-			{
-				[shipEntry setObject:hasShipyard forKey:@"has_shipyard"];
-			}
-			else
-			{
-				[shipEntry removeObjectForKey:@"hasShipyard"];
-				[shipEntry removeObjectForKey:@"has_shipyard"];
-			}
-		}
-		
-		if (shipyardConditions != nil)
-		{
-			mutableShipyard = [[[shipEntry oo_dictionaryForKey:@"_oo_shipyard"] mutableCopy] autorelease];
-			
-			if ([shipyardConditions isKindOfClass:[NSArray class]])
-			{
-				shipyardConditions = OOSanitizeLegacyScriptConditions(shipyardConditions, [NSString stringWithFormat:@"<shipyard.plist entry \"%@\">", shipKey]);
-			}
-			else
-			{
-				OOLogWARN(@"shipdata.load.warning", @"conditions for shipyard.plist entry \"%@\" are not an array, ignoring.", shipKey);
-				shipyardConditions = nil;
-			}
-			
-			if (shipyardConditions != nil)
-			{
-				[mutableShipyard setObject:shipyardConditions forKey:@"conditions"];
-			}
-			else
-			{
-				[mutableShipyard removeObjectForKey:@"conditions"];
-			}
-			
-			[shipEntry setObject:mutableShipyard forKey:@"_oo_shipyard"];
-		}
 	}
 	
 	return YES;

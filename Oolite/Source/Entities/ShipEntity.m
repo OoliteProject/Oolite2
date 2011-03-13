@@ -1888,10 +1888,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		//if (script != nil && [self scanClass] != CLASS_ROCK && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING))
 		if (script != nil && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING|| [self status] == STATUS_BEING_SCOOPED))
 		{
-			PlayerEntity *player = PLAYER;
-			[player setScriptTarget:self];
+			[PLAYER setScriptTarget:self];
 			[self doScriptEvent:OOJSID("shipSpawned")];
-			if ([self status] != STATUS_DEAD)  [player doScriptEvent:OOJSID("shipSpawned") withArgument:self];
+			if ([self status] != STATUS_DEAD)  [PLAYER doScriptEvent:OOJSID("shipSpawned") withArgument:self];
 		}
 		haveExecutedSpawnAction = YES;
 	}
@@ -8545,8 +8544,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		case CARGO_SCRIPTED_ITEM:
 			{
 				//scripting
-				PlayerEntity *player = PLAYER;
-				[player setScriptTarget:self];
+				[PLAYER setScriptTarget:self];
 				[other doScriptEvent:OOJSID("shipWasScooped") withArgument:self];
 				[self doScriptEvent:OOJSID("shipScoopedOther") withArgument:other];
 				

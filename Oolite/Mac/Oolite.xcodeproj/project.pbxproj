@@ -161,7 +161,6 @@
 		1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2A1213182C4E00D06C6C /* NSFileManagerOOExtensions.m */; };
 		1A1F2A2113182CB000D06C6C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F2A2013182CB000D06C6C /* OpenGL.framework */; };
 		1A1F2A2513182CC200D06C6C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F2A2413182CC200D06C6C /* CoreAudio.framework */; };
-		1A1F2A3013182D0F00D06C6C /* OOLegacyScriptWhitelist.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2A2F13182D0F00D06C6C /* OOLegacyScriptWhitelist.m */; };
 		1A1F2A4413182D7000D06C6C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F2A4313182D7000D06C6C /* AudioToolbox.framework */; };
 		1A1F2A4613182D7000D06C6C /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F2A4513182D7000D06C6C /* AudioUnit.framework */; };
 		1A1F2A8B13182DB500D06C6C /* dummy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2A8A13182DB500D06C6C /* dummy.cpp */; };
@@ -1122,8 +1121,6 @@
 		1A1F2A1213182C4E00D06C6C /* NSFileManagerOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileManagerOOExtensions.m; sourceTree = "<group>"; };
 		1A1F2A2013182CB000D06C6C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1A1F2A2413182CC200D06C6C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		1A1F2A2E13182D0F00D06C6C /* OOLegacyScriptWhitelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLegacyScriptWhitelist.h; sourceTree = "<group>"; };
-		1A1F2A2F13182D0F00D06C6C /* OOLegacyScriptWhitelist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLegacyScriptWhitelist.m; sourceTree = "<group>"; };
 		1A1F2A4313182D7000D06C6C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1A1F2A4513182D7000D06C6C /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		1A1F2A8A13182DB500D06C6C /* dummy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
@@ -1867,15 +1864,6 @@
 			path = ../Resources/Shaders;
 			sourceTree = SOURCE_ROOT;
 		};
-		1A1F2A3113182D1000D06C6C /* Legacy */ = {
-			isa = PBXGroup;
-			children = (
-				1A1F2A2E13182D0F00D06C6C /* OOLegacyScriptWhitelist.h */,
-				1A1F2A2F13182D0F00D06C6C /* OOLegacyScriptWhitelist.m */,
-			);
-			name = Legacy;
-			sourceTree = "<group>";
-		};
 		1A1F2AEB131831BB00D06C6C /* JS Interface */ = {
 			isa = PBXGroup;
 			children = (
@@ -2272,7 +2260,6 @@
 				1A1F2AEC131831D100D06C6C /* OOConstToJSString.h */,
 				1A1F2AED131831D100D06C6C /* OOConstToJSString.m */,
 				1A1F2AEB131831BB00D06C6C /* JS Interface */,
-				1A1F2A3113182D1000D06C6C /* Legacy */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -2796,7 +2783,6 @@
 				1A1F27C11317CCD600D06C6C /* Universe.m in Sources */,
 				1A1F2972131823BC00D06C6C /* Geometry.m in Sources */,
 				1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */,
-				1A1F2A3013182D0F00D06C6C /* OOLegacyScriptWhitelist.m in Sources */,
 				1A1F2A8B13182DB500D06C6C /* dummy.cpp in Sources */,
 				1A1F2AC01318303500D06C6C /* OOStringParsing.m in Sources */,
 				1A1F2ACC1318306C00D06C6C /* Groolite.m in Sources */,

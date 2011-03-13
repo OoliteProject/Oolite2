@@ -57,21 +57,11 @@ typedef enum
 @interface PlayerEntity (Scripting)
 
 - (void) setScriptTarget:(ShipEntity *)ship DEPRECATED_FUNC;
-- (ShipEntity*) scriptTarget DEPRECATED_FUNC;
-
-- (void) runUnsanitizedScriptActions:(NSArray *)unsanitizedActions allowingAIMethods:(BOOL)allowAIMethods withContextName:(NSString *)contextName forTarget:(ShipEntity *)target DEPRECATED_FUNC;
-
-// Test (sanitized) legacy script conditions array.
-- (BOOL) scriptTestConditions:(NSArray *)array DEPRECATED_FUNC;
 
 - (NSDictionary*) missionVariables;
 
 - (NSString *)missionVariableForKey:(NSString *)key;
 - (void)setMissionVariable:(NSString *)value forKey:(NSString *)key;
-
-- (NSMutableDictionary *)localVariablesForMission:(NSString *)missionKey DEPRECATED_FUNC;
-- (NSString *)localVariableForKey:(NSString *)variableName andMission:(NSString *)missionKey DEPRECATED_FUNC;
-- (void)setLocalVariable:(NSString *)value forKey:(NSString *)variableName andMission:(NSString *)missionKey DEPRECATED_FUNC;
 
 /*-----------------------------------------------------*/
 

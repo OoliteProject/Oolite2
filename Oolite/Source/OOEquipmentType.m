@@ -137,7 +137,6 @@ static NSDictionary		*sMissilesRegistry = nil;
 {
 	BOOL				OK = YES;
 	NSDictionary		*extra = nil;
-	NSArray				*conditions = nil;
 	
 	self = [super init];
 	if (self == nil)  OK = NO;
@@ -235,19 +234,6 @@ static NSDictionary		*sMissilesRegistry = nil;
 				OOLog(@"equipment.load", @"***** ERROR: %@ for equipment item %@ is not a string or an array.", @"incompatible_with_equipment", _identifier);
 			}
 			
-			object = [extra objectForKey:@"conditions"];
-			if ([object isKindOfClass:[NSString class]])  conditions = [NSArray arrayWithObject:object];
-			else if ([object isKindOfClass:[NSArray class]])  conditions = object;
-			else if (object != nil)
-			{
-				OOLog(@"equipment.load", @"***** ERROR: %@ for equipment item %@ is not a string or an array.", @"conditions", _identifier);
-			}
-			if (conditions != nil)
-			{
-				_conditions = OOSanitizeLegacyScriptConditions(conditions, [NSString stringWithFormat:@"<equipment type \"%@\">", _name]);
-				[_conditions retain];
-			}
-			
 			_scriptInfo = [extra oo_dictionaryForKey:@"script_info"];
 			[_scriptInfo retain];
 			
@@ -274,7 +260,6 @@ static NSDictionary		*sMissilesRegistry = nil;
 	DESTROY(_requiresEquipment);
 	DESTROY(_requiresAnyEquipment);
 	DESTROY(_incompatibleEquipment);
-	DESTROY(_conditions);
 	DESTROY(_scriptInfo);
 	DESTROY(_script);
 	
@@ -468,12 +453,6 @@ static NSDictionary		*sMissilesRegistry = nil;
 - (NSSet *) incompatibleEquipment
 {
 	return _incompatibleEquipment;
-}
-
-
-- (NSArray *) conditions
-{
-	return _conditions;
 }
 
 

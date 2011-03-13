@@ -7101,8 +7101,7 @@ static NSString *last_outfitting_key=nil;
 	if ([equipmentKey isEqualToString:@"EQ_RENOVATION"] && !(ship_trade_in_factor < 85 || [[[self shipSubEntityEnumerator] allObjects] count] < [self maxShipSubEntities]))  return NO;
 	if (![super canAddEquipment:equipmentKey])  return NO;
 	
-	NSArray *conditions = [[OOEquipmentType equipmentTypeWithIdentifier:equipmentKey] conditions];
-	if (conditions != nil && ![self scriptTestConditions:conditions])  return NO;
+	// FIXME: call a script for permission to add. See issue #2.
 	
 	return YES;
 }

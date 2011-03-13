@@ -2270,15 +2270,8 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		
 	// NOTE: non-standard capitalization is documented and entrenched.
 	if (determinant)
-	{		
-		if ([determinant isKindOfClass:[NSArray class]])
-		{
-			return [PLAYER scriptTestConditions:OOSanitizeLegacyScriptConditions(determinant, nil)];
-		}
-		else
-		{
-			return OOFuzzyBooleanFromObject(determinant, 0.0f);
-		}
+	{
+		return OOFuzzyBooleanFromObject(determinant, 0.0f);
 	}
 	else
 	{

@@ -31,7 +31,6 @@ MA 02110-1301, USA.
 #import "OOPlanetEntity.h"
 #import "WormholeEntity.h"
 #import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
 #import "OOJavaScriptEngine.h"
 #import "OOJSFunction.h"
 #import "OOShipGroup.h"

@@ -89,11 +89,6 @@ BOOL OOJSCallObjCObjectMethod(JSContext *context, id object, NSString *oo_jsClas
 							error = NO;
 	id						result = nil;
 	
-	if ([object isKindOfClass:[ShipEntity class]])
-	{
-		[PLAYER setScriptTarget:object];
-	}
-	
 	selectorString = OOStringFromJSValue(context,argv[0]);
 	
 	// Join all parameters together with spaces.

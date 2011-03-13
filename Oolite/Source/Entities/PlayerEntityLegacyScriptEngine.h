@@ -65,16 +65,6 @@ typedef enum
 
 /*-----------------------------------------------------*/
 
-- (NSString *) mission_string;
-- (NSString *) status_string;
-- (NSString *) gui_screen_string;
-- (NSNumber *) galaxy_number;
-- (NSNumber *) planet_number;
-- (NSNumber *) score_number;
-- (NSNumber *) credits_number;
-- (NSNumber *) scriptTimer_number;
-- (NSNumber *) shipsFound_number;
-
 - (NSNumber *) d100_number;
 - (NSNumber *) pseudoFixedD100_number;
 - (NSNumber *) d256_number;
@@ -133,26 +123,18 @@ typedef enum
 - (void) consoleMessage6s:(NSString *)valueString;
 
 - (void) setLegalStatus:(NSString *)valueString;
-- (void) awardCredits:(NSString *)valueString;
-- (void) awardShipKills:(NSString *)valueString;
-- (void) awardEquipment:(NSString *)equipString;  //eg. EQ_NAVAL_ENERGY_UNIT
-- (void) removeEquipment:(NSString *)equipString;  //eg. EQ_NAVAL_ENERGY_UNIT
 
 - (void) setPlanetinfo:(NSString *)key_valueString;	// uses key=value format
 - (void) setSpecificPlanetInfo:(NSString *)key_valueString;	// uses galaxy#=planet#=key=value
 
 - (void) awardCargo:(NSString *)amount_typeString;
-- (void) removeAllCargo;
 - (void) removeAllCargo:(BOOL)forceRemoval;
 
 - (void) useSpecialCargo:(NSString *)descriptionString;
 
 - (void) testForEquipment:(NSString *)equipString;  //eg. EQ_NAVAL_ENERGY_UNIT
 
-- (void) awardFuel:(NSString *)valueString;	// add to fuel up to 7.0 LY
-
 - (void) messageShipAIs:(NSString *)roles_message;
-- (void) ejectItem:(NSString *)item_key;
 - (void) addShips:(NSString *)roles_number;
 - (void) addSystemShips:(NSString *)roles_number_position;
 - (void) addShipsAt:(NSString *)roles_number_system_x_y_z;
@@ -183,7 +165,6 @@ typedef enum
 - (void) add:(NSString *)missionVariableString_value;
 - (void) subtract:(NSString *)missionVariableString_value;
 
-- (void) checkForShips: (NSString *)roleString;
 - (void) addMissionText: (NSString *)textKey;
 - (void) addLiteralMissionText: (NSString *)text;
 
@@ -232,7 +213,6 @@ typedef enum
 
 - (void) setGuiToMissionScreen;
 - (void) setGuiToMissionScreenWithCallback:(BOOL) callback;
-- (void) doMissionCallback;
 - (void) endMissionScreenAndNoteOpportunity;
 - (void) setBackgroundFromDescriptionsKey:(NSString*) d_key;
 - (void) addScene:(NSArray *) items atOffset:(Vector) off;

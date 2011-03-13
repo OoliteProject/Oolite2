@@ -25,9 +25,8 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
 #import "PlayerEntityScriptMethods.h"
-#import "PlayerEntityLegacyScriptEngine.h"
+#import "Universe.h"
 
 
 @implementation Entity (ShaderBindings)
@@ -54,27 +53,27 @@ MA 02110-1301, USA.
 // System attributes.
 - (unsigned) systemGovernment
 {
-	return [[PLAYER systemGovernment_number] unsignedIntValue];
+	return [[UNIVERSE currentSystemData] oo_unsignedIntForKey:KEY_GOVERNMENT];
 }
 
 - (unsigned) systemEconomy
 {
-	return [[PLAYER systemEconomy_number] unsignedIntValue];
+	return [[UNIVERSE currentSystemData] oo_unsignedIntForKey:KEY_ECONOMY];
 }
 
 - (unsigned) systemTechLevel
 {
-	return [[PLAYER systemTechLevel_number] unsignedIntValue];
+	return [[UNIVERSE currentSystemData] oo_unsignedIntForKey:KEY_TECHLEVEL];
 }
 
 - (unsigned) systemPopulation
 {
-	return [[PLAYER systemPopulation_number] unsignedIntValue];
+	return [[UNIVERSE currentSystemData] oo_unsignedIntForKey:KEY_POPULATION];
 }
 
 - (unsigned) systemProductivity
 {
-	return [[PLAYER systemProductivity_number] unsignedIntValue];
+	return [[UNIVERSE currentSystemData] oo_unsignedIntForKey:KEY_PRODUCTIVITY];
 }
 
 @end

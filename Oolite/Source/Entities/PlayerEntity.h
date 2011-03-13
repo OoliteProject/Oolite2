@@ -791,6 +791,8 @@ typedef enum
 - (BOOL) doWorldEventUntilMissionScreen:(jsid)message;
 - (void) doWorldScriptEvent:(jsid)message inContext:(JSContext *)context withArguments:(jsval *)argv count:(uintN)argc timeLimit:(OOTimeDelta)limit;
 
+- (void) runMissionCallback;
+
 - (BOOL)showInfoFlag;
 
 - (void) setGalacticHyperspaceBehaviour:(OOGalacticHyperspaceBehaviour) galacticHyperspaceBehaviour;

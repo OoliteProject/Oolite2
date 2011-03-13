@@ -27,6 +27,7 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "OOEquipmentType.h"
 #import "OOJSPlayer.h"
+#import "PlayerEntityLegacyScriptEngine.h"
 
 
 static JSObject *sEquipmentInfoPrototype;

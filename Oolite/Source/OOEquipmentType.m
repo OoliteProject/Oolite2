@@ -27,6 +27,8 @@ SOFTWARE.
 
 #import "OOEquipmentType.h"
 #import "Universe.h"
+#import "PlayerEntity.h"
+#import "PlayerEntityLegacyScriptEngine.h"
 
 
 static NSArray			*sEquipmentTypes = nil;
@@ -479,8 +481,6 @@ static NSDictionary		*sMissilesRegistry = nil;
 
 @end
 
-
-#import "PlayerEntityLegacyScriptEngine.h"
 
 @implementation OOEquipmentType (Conveniences)
 

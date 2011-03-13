@@ -25,7 +25,6 @@ MA 02110-1301, USA.
 */
 
 #import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
 
 #define PASSENGER_KEY_NAME				@"name"
 

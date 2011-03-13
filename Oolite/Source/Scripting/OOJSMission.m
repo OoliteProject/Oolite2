@@ -28,6 +28,7 @@ MA 02110-1301, USA.
 #import "OOJSScript.h"
 
 #import "OOJSPlayer.h"
+#import "PlayerEntityLegacyScriptEngine.h"
 #import "PlayerEntityScriptMethods.h"
 #import "OOStringParsing.h"
 #import "OOMusicController.h"
@@ -43,7 +44,7 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp);
 
 static JSBool MissionSetInstructionsInternal(JSContext *context, uintN argc, jsval *vp, BOOL isKey);
 
-//  Mission screen  callback varibables
+//  Mission screen callback varibables
 static jsval			sCallbackFunction;
 static jsval			sCallbackThis;
 static OOJSScript		*sCallbackScript = nil;

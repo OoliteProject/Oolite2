@@ -29,7 +29,6 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "HeadUpDisplay.h"
 
-#import "PlayerEntityLegacyScriptEngine.h"
 #import "OOPlanetEntity.h"
 #import "OOShipGroup.h"
 #import "OOQuiriumCascadeEntity.h"

@@ -121,7 +121,6 @@ static NSString * const kActionTempPrefix					= @ ACTIONS_TEMP_PREFIX;
 static NSString * const kActionTempFormat					= @ ACTIONS_TEMP_PREFIX ".%u";
 
 
-static NSString		*sMissionStringValue = nil;
 static NSString		*sCurrentMissionKey = nil;
 static ShipEntity	*scriptTarget = nil;
 
@@ -354,61 +353,6 @@ OOINLINE NSString *CurrentScriptDesc(void)
 	if (![mission_variables objectForKey:key]) return;
 	
 	[mission_variables removeObjectForKey:key];
-}
-
-
-- (NSString *) mission_string
-{
-	return sMissionStringValue;
-}
-
-
-- (NSString *) status_string
-{
-	return OOStringFromEntityStatus([self status]);
-}
-
-
-- (NSString *) gui_screen_string
-{
-	return OOStringFromGUIScreenID(gui_screen);
-}
-
-
-- (NSNumber *) galaxy_number
-{
-	return [NSNumber numberWithInt:[self currentGalaxyID]];
-}
-
-
-- (NSNumber *) planet_number
-{
-	return [NSNumber numberWithInt:[self currentSystemID]];
-}
-
-
-- (NSNumber *) score_number
-{
-	return [NSNumber numberWithUnsignedInt:[self score]];
-}
-
-
-- (NSNumber *) credits_number
-{
-	return [NSNumber numberWithDouble:[self creditBalance]];
-}
-
-
-- (NSNumber *) scriptTimer_number
-{
-	return [NSNumber numberWithDouble:0];
-}
-
-
-static int shipsFound;
-- (NSNumber *) shipsFound_number
-{
-	return [NSNumber numberWithInt:shipsFound];
 }
 
 
@@ -673,84 +617,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 }
 
 
-- (void) awardCredits:(NSString *)valueString
-{
-	if (scriptTarget != self)  return;
-	
-	/*	We can't use -longLongValue here for Mac OS X 10.4 compatibility, but
-		we don't need to since larger values have never been supported for
-		legacy scripts.
-	*/
-	int64_t award = [valueString intValue];
-	award *= 10;
-	if (award < 0 && credits < (OOCreditsQuantity)-award)  credits = 0;
-	else  credits += award;
-}
-
-
-- (void) awardShipKills:(NSString *)valueString
-{
-	if (scriptTarget != self)  return;
-	
-	int value = [valueString intValue];
-	if (0 < value)  ship_kills += value;
-}
-
-
-- (void) awardEquipment:(NSString *)equipString  //eg. EQ_NAVAL_ENERGY_UNIT
-{
-	if (scriptTarget != self)  return;
-	
-	if ([equipString isEqualToString:@"EQ_FUEL"])
-	{
-		[self setFuel:[self fuelCapacity]];
-	}
-	
-	OOEquipmentType *eqType = [OOEquipmentType equipmentTypeWithIdentifier:equipString];
-	
-	if ([eqType isMissileOrMine])
-	{
-		[self mountMissileWithRole:equipString];
-	}
-	else if([equipString hasPrefix:@"EQ_WEAPON"] && ![equipString hasSuffix:@"_DAMAGED"])
-	{
-		OOLog(kOOLogSyntaxAwardEquipment, @"***** SCRIPT ERROR: in %@, CANNOT award undamaged weapon:'%@'. Damaged weapons can be awarded instead.", CurrentScriptDesc(), equipString);
-	}
-	else if ([equipString hasSuffix:@"_DAMAGED"] && [self hasEquipmentItem:[equipString substringToIndex:[equipString length] - [@"_DAMAGED" length]]])
-	{
-		OOLog(kOOLogSyntaxAwardEquipment, @"***** SCRIPT ERROR: in %@, CANNOT award damaged equipment:'%@'. Undamaged version already equipped.", CurrentScriptDesc(), equipString);
-	}
-	else if ([eqType canCarryMultiple] || ![self hasEquipmentItem:equipString])
-	{
-		[self addEquipmentItem:equipString];
-	}
-}
-
-
-- (void) removeEquipment:(NSString *)equipKey  //eg. EQ_NAVAL_ENERGY_UNIT
-{
-	if (scriptTarget != self)  return;
-
-	if ([equipKey isEqualToString:@"EQ_FUEL"])
-	{
-		fuel = 0;
-		return;
-	}
-	
-	if ([equipKey isEqualToString:@"EQ_CARGO_BAY"] && [self hasEquipmentItem:equipKey]
-			&& ([self extraCargo] > [self availableCargoSpace]))
-	{
-		OOLog(kOOLogSyntaxRemoveEquipment, @"***** SCRIPT ERROR: in %@, CANNOT remove cargo bay. Too much cargo.", CurrentScriptDesc());
-		return;
-	}
-	if ([self hasEquipmentItem:equipKey] || [self hasEquipmentItem:[equipKey stringByAppendingString:@"_DAMAGED"]])
-	{
-		[self removeEquipmentItem:equipKey];
-	}
-
-}
-
-
 - (void) setPlanetinfo:(NSString *)key_valueString	// uses key=value format
 {
 	NSArray *	tokens = [key_valueString componentsSeparatedByString:@"="];
@@ -840,11 +706,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 }
 
 
-- (void) removeAllCargo
-{
-	[self removeAllCargo:NO];
-}
-
 - (void) removeAllCargo:(BOOL)forceRemoval
 {
 	// misnamed function. it only removes  cargo measured in TONS, g & Kg items are not removed. --Kaks 20091004 
@@ -912,21 +773,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 }
 
 
-- (void) awardFuel:(NSString *)valueString	// add to fuel up to 7.0 LY
-{
-	// all awardFuel calls from OXPs will potentially award the wrong fuel amount if multiplied by fuelChargeRate.
-	int delta  = 10 * [valueString floatValue];
-	// int delta  = 10 * [valueString floatValue] * [scriptTarget fuelChargeRate];
-	OOFuelQuantity scriptTargetFuelBeforeAward = [scriptTarget fuel];
-
-	if (delta < 0 && scriptTargetFuelBeforeAward < (unsigned)-delta)  [scriptTarget setFuel:0];
-	else
-	{
-		[scriptTarget setFuel:(scriptTargetFuelBeforeAward + delta)];
-	}
-}
-
-
 - (void) messageShipAIs:(NSString *)roles_message
 {
 	NSMutableArray*	tokens = ScanTokensFromString(roles_message);
@@ -944,13 +790,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 	messageString = [tokens componentsJoinedByString:@" "];
 
 	[UNIVERSE sendShipsWithPrimaryRole:roleString messageToAI:messageString];
-}
-
-
-- (void) ejectItem:(NSString *)itemKey
-{
-	if (scriptTarget == nil)  scriptTarget = self;
-	[scriptTarget ejectShipOfType:itemKey];
 }
 
 
@@ -1339,12 +1178,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 	{
 		OOLog(kOOLogSyntaxSubtract, @"***** SCRIPT ERROR: in %@, CANNOT ADD: '%@' -- IDENTIFIER '%@' DOES NOT BEGIN WITH 'mission_' or 'local_'", CurrentScriptDesc(), missionVariableString_value);
 	}
-}
-
-
-- (void) checkForShips:(NSString *)roleString
-{
-	shipsFound = [UNIVERSE countShipsWithPrimaryRole:roleString];
 }
 
 
@@ -1795,14 +1628,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 }
 
 /*-----------------------------------------------------*/
-
-
-- (void) doMissionCallback
-{
-	// make sure we don't call the same callback twice
-	_missionWithCallback = NO;
-	[[OOJavaScriptEngine sharedEngine] runMissionCallback];
-}
 
 
 - (void) endMissionScreenAndNoteOpportunity

@@ -494,7 +494,7 @@ static JSBool PlayerShipRemoveAllCargo(JSContext *context, uintN argc, jsval *vp
 	
 	if ([player isDocked])
 	{
-		[player removeAllCargo];
+		[player removeAllCargo:NO];
 		OOJS_RETURN_VOID;
 	}
 	else

@@ -4547,11 +4547,9 @@ static bool minShieldLevelPercentageInitialised = false;
 	if (gui_screen == GUI_SCREEN_MISSION)
 	{
 		[[UNIVERSE gui] clearBackground];
-		if (_missionWithCallback)
-		{
-			[self doMissionCallback];
-		}
-		// notify older scripts, but do not trigger missionScreenOpportunity.
+		[self runMissionCallback];
+		
+		// notify older scripts, but do not trigger missionScreenOpportunity. EMMSTRAN: remove? Note that there are other cases.
 		[self doWorldEventUntilMissionScreen:OOJSID("missionScreenEnded")];
 	}
 	
@@ -8037,6 +8035,16 @@ static NSString *last_outfitting_key=nil;
 		OOJSStartTimeLimiterWithTimeLimit(limit);
 		[theScript callMethod:message inContext:context withArguments:argv count:argc result:NULL];
 		OOJSStopTimeLimiter();
+	}
+}
+
+
+- (void) runMissionCallback
+{
+	if (_missionWithCallback)
+	{
+		_missionWithCallback = NO;
+		[[OOJavaScriptEngine sharedEngine] runMissionCallback];
 	}
 }
 

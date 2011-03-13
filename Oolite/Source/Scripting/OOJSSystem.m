@@ -32,6 +32,7 @@
 #import "Universe.h"
 #import "OOPlanetEntity.h"
 #import "PlayerEntityScriptMethods.h"
+#import "PlayerEntityLegacyScriptEngine.h"
 #import "OOJSSystemInfo.h"
 
 #import "OOConstToString.h"

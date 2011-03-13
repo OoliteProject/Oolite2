@@ -637,10 +637,8 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 			{
 				[[UNIVERSE gui] clearBackground];
 				[self switchToThisView:view];
-				if (_missionWithCallback)
-				{
-					[self doMissionCallback];
-				}
+				[self runMissionCallback];
+				
 				// notify older scripts, but do not trigger missionScreenOpportunity.
 				[self doWorldEventUntilMissionScreen:OOJSID("missionScreenEnded")];
 			}
@@ -3237,10 +3235,7 @@ static BOOL toggling_music;
 	
 	if ([self status] != STATUS_DOCKED) [self switchToThisView:VIEW_FORWARD];
 	
-	if (_missionWithCallback)
-	{
-		[self doMissionCallback];
-	}
+	[self runMissionCallback];
 	
 	if ([self status] != STATUS_DOCKED)	// did we launch inside callback? / are we in flight?
 	{

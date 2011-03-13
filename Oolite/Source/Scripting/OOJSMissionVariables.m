@@ -28,6 +28,7 @@ MA 02110-1301, USA.
 #import "OOJSMissionVariables.h"
 #import "OOJavaScriptEngine.h"
 #import "OOIsNumberLiteral.h"
+#import "PlayerEntityLegacyScriptEngine.h"
 
 #import "OOJSPlayer.h"
 

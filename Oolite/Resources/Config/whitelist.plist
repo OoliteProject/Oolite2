@@ -181,8 +181,6 @@
 		"recallDockingInstructions",
 		"enterPlayerWormhole",
 		"enterTargetWormhole",
-		"scriptActionOnTarget:",
-		"safeScriptActionOnTarget:",
 		"sendScriptMessage:",
 		"targetFirstBeaconWithCode:",
 		"targetNextBeaconWithCode:",

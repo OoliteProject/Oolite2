@@ -241,8 +241,6 @@ MA 02110-1301, USA.
 
 - (void) enterTargetWormhole;
 
-- (void) scriptActionOnTarget:(NSString *) action;
-
 - (void) sendScriptMessage:(NSString *)message;
 
 - (void) ai_throwSparks;
@@ -2224,58 +2222,6 @@ MA 02110-1301, USA.
 	}
 	
 	[self enterWormhole:whole replacing:NO];
-}
-
-
-- (void) scriptActionOnTarget:(NSString *)action
-{
-	PlayerEntity	*player = PLAYER;
-	ShipEntity		*targEnt = [self primaryTarget];
-	ShipEntity		*oldTarget = nil;
-	
-#ifndef NDEBUG
-	static BOOL		deprecationWarning = NO;
-	
-	if (!deprecationWarning)
-	{
-		deprecationWarning = YES;
-		OOLog(@"script.deprecated.scriptActionOnTarget", @"----- WARNING in AI %@: the AI method scriptActionOnTarget: is deprecated and should not be used. It is slow and has unpredictable side effects. The recommended alternative is to use sendScriptMessage: to call a function in a ship's JavaScript ship script instead. scriptActionOnTarget: should not be used at all from scripts. An alternative is safeScriptActionOnTarget:, which is similar to scriptActionOnTarget: but has less side effects.", [AI currentlyRunningAIDescription]);
-	}
-	else
-	{
-		OOLog(@"script.deprecated.scriptActionOnTarget.repeat", @"----- WARNING in AI %@: the AI method scriptActionOnTarget: is deprecated and should not be used.", [AI currentlyRunningAIDescription]);
-	}
-#endif
-	
-	if ([targEnt isShip])
-	{
-		oldTarget = [player scriptTarget];
-		[player setScriptTarget:(ShipEntity*)targEnt];
-		[player runUnsanitizedScriptActions:[NSArray arrayWithObject:action]
-						  allowingAIMethods:YES
-							withContextName:[NSString stringWithFormat:@"<AI \"%@\" state %@ - scriptActionOnTarget:>", [[self getAI] name], [[self getAI] state]]
-								  forTarget:targEnt];
-		[player setScriptTarget:oldTarget];
-	}
-}
-
-
-- (void) safeScriptActionOnTarget:(NSString *)action
-{
-	PlayerEntity	*player = PLAYER;
-	ShipEntity		*targEnt = [self primaryTarget];
-	ShipEntity		*oldTarget = nil;
-	
-	if ([targEnt isShip])
-	{
-		oldTarget = [player scriptTarget];
-		[player setScriptTarget:(ShipEntity*)targEnt];
-		[player runUnsanitizedScriptActions:[NSArray arrayWithObject:action]
-						  allowingAIMethods:YES
-							withContextName:[NSString stringWithFormat:@"<AI \"%@\" state %@ - safeScriptActionOnTarget:>", [[self getAI] name], [[self getAI] state]]
-								  forTarget:targEnt];
-		[player setScriptTarget:oldTarget];
-	}
 }
 
 

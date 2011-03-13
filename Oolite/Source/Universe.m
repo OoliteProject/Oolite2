@@ -2382,15 +2382,8 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 
 - (BOOL) canInstantiateShip:(NSString *)shipKey
 {
-	NSDictionary			*shipInfo = nil;
-	NSArray					*conditions = nil;
-	
-	shipInfo = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];
-	conditions = [shipInfo oo_arrayForKey:@"conditions"];
-	if (conditions == nil)  return YES;
-	
-	// Check conditions
-	return [PLAYER scriptTestConditions:conditions];
+	return YES;
+	// FIXME: needs to call a JS predicate to replace legacy conditions.
 }
 
 
@@ -7161,7 +7154,6 @@ static double estimatedTimeForJourney(double distance, int hops)
 	
 	float					tech_price_boost = (ship_seed.a + ship_seed.b) / 256.0;
 	unsigned				i;
-	PlayerEntity			*player = PLAYER;
 	OOShipRegistry			*registry = [OOShipRegistry sharedRegistry];
 	RANROTSeed				personalitySeed = RanrotSeedFromRandomSeed(ship_seed);
 	
@@ -7177,21 +7169,9 @@ static double estimatedTimeForJourney(double distance, int hops)
 		
 		double days_until_sale = (ship_sold_time - current_time) / 86400.0;
 		
-		NSMutableArray	*keysForShips = [NSMutableArray arrayWithArray:[registry playerShipKeys]];
-		unsigned		si;
-		for (si = 0; si < [keysForShips count]; si++)
-		{
-			//eliminate any ships that fail a 'conditions test'
-			NSString		*key = [keysForShips oo_stringAtIndex:si];
-			NSDictionary	*dict = [registry shipyardInfoForKey:key];
-			NSArray			*conditions = [dict oo_arrayForKey:@"conditions"];
-			
-			if (![player scriptTestConditions:conditions])
-			{
-				[keysForShips removeObjectAtIndex:si--];
-			}
-		}
+		// FIXME: needs to call a JS predicate to replace legacy conditions.
 		
+		NSMutableArray	*keysForShips = [NSMutableArray arrayWithArray:[registry playerShipKeys]];
 		NSDictionary	*systemInfo = [self generateSystemData:system_seed];
 		OOTechLevelID	techlevel;
 		if (specialTL != NSNotFound)  

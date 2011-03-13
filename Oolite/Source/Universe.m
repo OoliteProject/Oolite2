@@ -744,16 +744,6 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 		}
 	}
 	
-	// systeminfo might have a 'script_actions' resource we want to activate now...
-	NSArray *script_actions = [systeminfo oo_arrayForKey:@"script_actions"];
-	if (script_actions != nil)
-	{
-		[player runUnsanitizedScriptActions:script_actions
-						  allowingAIMethods:NO
-							withContextName:@"<witchspace script_actions>"
-								  forTarget:nil];
-	}
-	
 	OOLogOutdentIf(kOOLogUniversePopulateWitchspace);
 }
 
@@ -1119,18 +1109,6 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	
 	[a_sun release];
 	[a_station release];
-	
-	// systeminfo might have a 'script_actions' resource we want to activate now...
-	NSArray *script_actions = [systeminfo oo_arrayForKey:@"script_actions"];
-	if (script_actions != nil)
-	{
-		OO_DEBUG_PUSH_PROGRESS(@"setUpSpace - legacy script_actions");
-		[PLAYER runUnsanitizedScriptActions:script_actions
-											   allowingAIMethods:NO
-												 withContextName:@"<system script_actions>"
-													   forTarget:nil];
-		OO_DEBUG_POP_PROGRESS();
-	}
 }
 
 

@@ -47,7 +47,6 @@ MA 02110-1301, USA.
 	OOBrain				*brain;				// brain of character
 #endif
 	
-	NSArray				*script_actions;
 	OOJSScript			*_script;
 }
 
@@ -85,8 +84,6 @@ MA 02110-1301, USA.
 - (OOCreditsQuantity) insuranceCredits;
 - (void) setInsuranceCredits:(OOCreditsQuantity)value;
 
-- (NSArray *) legacyScript;
-- (void) setLegacyScript:(NSArray *)some_actions;
 - (OOJSScript *)script;
 - (void) setCharacterScript:(NSString *)script_name;
 - (void) doScriptEvent:(jsid)message;

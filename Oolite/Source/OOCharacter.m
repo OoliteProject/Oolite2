@@ -60,7 +60,6 @@ MA 02110-1301, USA.
 	[name release];
 	[shortDescription release];
 	[longDescription release];
-	[script_actions release];
 #ifdef OO_BRAIN_AI
 	[brain release];
 #endif
@@ -356,12 +355,6 @@ MA 02110-1301, USA.
 }
 
 
-- (NSArray *)legacyScript
-{
-	return script_actions;
-}
-
-
 #ifdef OO_BRAIN_AI
 - (OOBrain *)brain
 {
@@ -426,13 +419,6 @@ MA 02110-1301, USA.
 - (void)setInsuranceCredits:(OOCreditsQuantity)value
 {
 	insuranceCredits = value;
-}
-
-
-- (void)setLegacyScript:(NSArray *)some_actions
-{
-	[script_actions autorelease];
-	script_actions = [some_actions copy];
 }
 
 
@@ -519,7 +505,6 @@ MA 02110-1301, USA.
 	if ([dict objectForKey:@"bounty"])  [self setLegalStatus:[dict oo_intForKey:@"bounty"]];
 	if ([dict objectForKey:@"insurance"])  [self setInsuranceCredits:[dict oo_unsignedLongLongForKey:@"insurance"]];
 	if ([dict oo_stringForKey:@"script"]) [self setCharacterScript:[dict oo_stringForKey:@"script"]];
-	if ([dict oo_arrayForKey:@"script_actions"])  [self setLegacyScript:[dict oo_arrayForKey:@"script_actions"]];
 	
 }
 

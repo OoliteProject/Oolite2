@@ -92,13 +92,6 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 		{
 			[rescuee doScriptEvent:OOJSID("unloadCharacter")];
 		}
-		else if ([rescuee legacyScript])
-		{
-			[self runUnsanitizedScriptActions:[rescuee legacyScript]
-							allowingAIMethods:YES
-							  withContextName:[NSString stringWithFormat:@"<character \"%@\" script>", [rescuee name]]
-									forTarget:nil];
-		}
 		else if ([rescuee insuranceCredits] && [rescuee legalStatus])
 		{
 			float reward = (5.0 + government) * [rescuee legalStatus];

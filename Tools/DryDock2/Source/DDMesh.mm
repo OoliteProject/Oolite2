@@ -210,7 +210,9 @@ extern "C" {
 - (void) setBoxedTransform:(NSValue *)value
 {
 	SGMatrix4x4 matrix = [value sg_matrix4x4Value];
-	self.transform = matrix;
+	// Apple-clang 1.7 raises a nonsense error here if using property syntax. -- Ahruman 2011-03-13
+//	self.transform = matrix;
+	[self setTransform:matrix];
 }
 
 

@@ -33,12 +33,11 @@ SOFTWARE.
 #import "OODebugTCPConsoleClient.h"
 #import "OODebugTCPConsoleProtocol.h"
 #import "OODebugMonitor.h"
-#import <stdint.h>
 
 #if OOLITE_WINDOWS
-#import <winsock2.h>
+#include <winsock2.h>
 #else
-#import <arpa/inet.h>	// For htonl
+#include <arpa/inet.h>	// For htonl
 #endif
 
 #import "OOTCPStreamDecoder.h"

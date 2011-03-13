@@ -31,7 +31,6 @@ SOFTWARE.
 #if OO_SHADERS
 
 #import "OOShaderProgram.h"
-#import <string.h>
 #import "OOOpenGLExtensionManager.h"
 #import "OOGeometryGLHelpers.h"
 

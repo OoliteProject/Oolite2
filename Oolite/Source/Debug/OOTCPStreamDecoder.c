@@ -29,9 +29,6 @@ SOFTWARE.
 
 
 #include "OOTCPStreamDecoder.h"
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdint.h>
 #include "OODebugTCPConsoleProtocol.h"
 
 

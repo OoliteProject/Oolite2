@@ -25,8 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOPListParsing.h"
 #import "OOLogging.h"
-#import <ctype.h>
-#import <string.h>
+#include <ctype.h>
 
 
 #if !OOLITE_GNUSTEP

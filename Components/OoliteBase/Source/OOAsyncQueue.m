@@ -30,7 +30,6 @@ SOFTWARE.
 #import "OOFunctionAttributes.h"
 #import "OOLogging.h"
 #import "NSThreadOOExtensions.h"
-#import <stdlib.h>
 
 
 enum

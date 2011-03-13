@@ -3189,7 +3189,6 @@ static BOOL toggling_music;
 				{
 					if (!spacePressed)
 					{
-						[self setStatus:STATUS_DOCKED];
 						[[OOMusicController sharedController] stopMissionMusic];
 						
 						[self handleMissionCallback];
@@ -3245,6 +3244,7 @@ static BOOL toggling_music;
 	
 	if ([self status] != STATUS_DOCKED)	// did we launch inside callback? / are we in flight?
 	{
+		// TODO: This is no longer doing anything because of an 'isDocked' check inside the function. ***** Probably remove it for 1.76
 		[self doWorldEventUntilMissionScreen:OOJSID("missionScreenEnded")];	// no opportunity events.
 	}
 	else
@@ -3292,8 +3292,8 @@ static BOOL toggling_music;
 	NSString	*message				= nil;
 
 	// Check alert condition - on red alert, abort
-	isOkayToUseAutopilot = [self alertCondition] != ALERT_CONDITION_RED;
-	if( !isOkayToUseAutopilot )
+	// -- but only for fast docking
+	if (fastDocking && ([self alertCondition] == ALERT_CONDITION_RED))
 	{
 		[self playAutopilotCannotDockWithTarget];
 		message = DESC(@"autopilot-red-alert");
@@ -3320,26 +3320,27 @@ static BOOL toggling_music;
 				target = entities[i];
 			}
 		}
-		// If we found one target, dock with it.
 		// If inside the Aegis, dock with the main station.
+		// If we found one target, dock with it.
 		// If outside the Aegis and we found multiple targets, abort.
 		
-		if (nStations == 1)
+		if ( [self withinStationAegis] && legalStatus <= 50 )
 		{
 			isOkayToUseAutopilot = YES;
+			target = [UNIVERSE station];
 		}
 		else
 		{
-			if ( [self withinStationAegis] && ( nStations == 0 || legalStatus <= 50 ) )
+			if (nStations == 1)
 			{
 				isOkayToUseAutopilot = YES;
-				target = [UNIVERSE station];
 			}
 			else
 			{
 				if (nStations == 0)
 				{
-/* Do we want to provide this feedback? If not, we need to remove the descriptions.plist key. -kaks 20101031
+#if 0
+					// Do we want to provide this feedback? If not, we need to remove the descriptions.plist key. -kaks 20101031
 					// did we have a non-dockable entity targeted?
 					if (target != nil)
 					{
@@ -3347,7 +3348,7 @@ static BOOL toggling_music;
 						message = DESC(@"autopilot-cannot-dock-with-target");
 					}
 					else
-*/
+#endif
 					{
 						[self playAutopilotOutOfRange];
 						message = DESC(@"autopilot-out-of-range");
@@ -3364,7 +3365,7 @@ static BOOL toggling_music;
 	}
 
 	// We found a dockable, check whether we can dock with it
-	StationEntity *ts = (StationEntity*)target;
+	StationEntity *ts = (StationEntity *)target;
 
 	// If station is not transmitting docking instructions, we cannot use autopilot.
 	if (![ts allowsAutoDocking])

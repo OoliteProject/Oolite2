@@ -63,9 +63,10 @@ typedef JAAutoreleasePoolRef OOALAutoreleasePoolRef;
 
 #else	/* !OOTCPSTREAM_USE_COREFOUNDATION */
 
-#include <stdarg.h>
-#include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdarg.h>
 
 
 #if __OBJC__

@@ -151,19 +151,20 @@ typedef enum
 } OODockingClearanceStatus;
 
 
-typedef uint32_t	OOCargoQuantity;
-typedef int32_t		OOCargoQuantityDelta;
+typedef uint32_t		OOCargoQuantity;
+typedef int32_t			OOCargoQuantityDelta;
 
-typedef uint16_t	OOFuelQuantity;
-
-
-typedef uint64_t	OOCreditsQuantity;
+typedef uint16_t		OOFuelQuantity;
 
 
-typedef uint16_t	OOKeyCode;
+typedef uint64_t		OOCreditsQuantity;
+#define kOOMaxCredits	ULLONG_MAX
 
 
-typedef uint16_t	OOUniversalID;		// Valid IDs range from 100 to 1000.
+typedef uint16_t		OOKeyCode;
+
+
+typedef uint16_t		OOUniversalID;		// Valid IDs range from 100 to 1000.
 
 enum
 {
@@ -180,8 +181,8 @@ enum
 };
 
 
-typedef uint8_t		OOGalaxyID;			// 0..7
-typedef int16_t		OOSystemID;			// 0..255, -1 for interstellar space (?)
+typedef uint8_t			OOGalaxyID;			// 0..7
+typedef int16_t			OOSystemID;			// 0..255, -1 for interstellar space (?)
 
 
 enum
@@ -192,5 +193,5 @@ enum
 };
 
 
-typedef double OOTimeAbsolute;
-typedef double OOTimeDelta;
+typedef double		OOTimeAbsolute;
+typedef double		OOTimeDelta;

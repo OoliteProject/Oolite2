@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 #import "OOTypes.h"
-#import <jsapi.h>
+#include <jsapi.h>
 
 
 #define GUI_DEFAULT_COLUMNS			6

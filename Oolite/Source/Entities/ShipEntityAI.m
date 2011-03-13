@@ -1115,8 +1115,6 @@ MA 02110-1301, USA.
 }
 
 
-static WormholeEntity *whole = nil;
-//
 - (void) performHyperSpaceExit
 {
 	[self performHyperSpaceExitReplace:YES];
@@ -1141,8 +1139,10 @@ static WormholeEntity *whole = nil;
 	NSEnumerator		*shipEnum = nil;
 	ShipEntity			*ship = nil;
 	NSString			*context = nil;
+	WormholeEntity		*whole = nil;
 	
-	if (whole == nil)  return;
+	whole = [self primaryTarget];
+	if (![whole isWormhole])  return;
 	
 #ifndef NDEBUG
 	context = [NSString stringWithFormat:@"%@ wormholeEscorts", [self shortDescription]];
@@ -1165,6 +1165,10 @@ static WormholeEntity *whole = nil;
 {
 	NSEnumerator		*shipEnum = nil;
 	ShipEntity			*ship = nil;
+	WormholeEntity		*whole = nil;
+	
+	whole = [self primaryTarget];
+	if (![whole isWormhole])  return;
 	
 	for (shipEnum = [[self group] mutationSafeEnumerator]; (ship = [shipEnum nextObject]); )
 	{
@@ -1856,7 +1860,7 @@ static WormholeEntity *whole = nil;
 		ShipEntity *thing = scanned_ships[i];
 		GLfloat d2 = distance2_scanned_ships[i];
 		GLfloat e1 = [thing energy];
-		if ((d2 < found_d2) && ([thing isThargoid] || (([thing primaryTarget] == mother) && [thing hasHostileTarget])))
+		if ((d2 < found_d2) && (([thing isThargoid] && ![mother isThargoid]) || (([thing primaryTarget] == mother) && [thing hasHostileTarget])))
 		{
 			if (e1 > max_e)
 			{
@@ -2176,9 +2180,7 @@ static WormholeEntity *whole = nil;
 
 - (void) enterPlayerWormhole
 {
-	PlayerEntity	*player = PLAYER;
-	WormholeEntity	*whole = [player wormhole];
-	[whole suckInShip:self];
+	[self enterWormhole:[PLAYER wormhole] replacing:NO];
 }
 
 - (void) enterTargetWormhole
@@ -2221,11 +2223,7 @@ static WormholeEntity *whole = nil;
 		}
 	}
 	
-	if (!whole)
-		return;
-	if (!whole->isWormhole)
-		return;
-	[whole suckInShip:self];
+	[self enterWormhole:whole replacing:NO];
 }
 
 
@@ -2408,8 +2406,6 @@ static WormholeEntity *whole = nil;
 	Random_Seed		targetSystem;
 	int 			i = 0;
 	
-	whole = nil;
-	
 	// get a list of destinations within range
 	sDests = [UNIVERSE nearbyDestinationsWithinRange: 0.1 * fuel];
 	int n_dests = [sDests count];
@@ -2462,20 +2458,10 @@ static WormholeEntity *whole = nil;
 	fuel -= 10 * dist;
 	
 	// create wormhole
-	whole = [[[WormholeEntity alloc] initWormholeTo: targetSystem fromShip: self] autorelease];
+	WormholeEntity  *whole = [[[WormholeEntity alloc] initWormholeTo: targetSystem fromShip: self] autorelease];
 	[UNIVERSE addEntity: whole];
 	
-	// tell the ship we're about to jump (so it can inform escorts etc).
-	primaryTarget = [whole universalID];
-	found_target = primaryTarget;
-	[shipAI reactToMessage:@"WITCHSPACE OKAY" context:@"performHyperSpaceExit"];	// must be a reaction, the ship is about to disappear
-	
 	[self enterWormhole:whole replacing:replace];
-	if ([self scriptedMisjump])
-	{
-		[self setScriptedMisjump:NO];
-		[whole setMisjump];
-	}
 	
 	// we've no need for the destinations array anymore.
 	return YES;

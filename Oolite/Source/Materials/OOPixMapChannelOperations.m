@@ -26,7 +26,6 @@ SOFTWARE.
 */
 
 #include "OOPixMapChannelOperations.h"
-#import "OOCPUInfo.h"
 
 
 static void ExtractChannel_4(OOPixMap *ioPixMap, uint8_t channelIndex);

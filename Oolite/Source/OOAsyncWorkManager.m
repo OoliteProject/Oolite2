@@ -26,13 +26,12 @@ SOFTWARE.
 */
 
 #import "OOAsyncWorkManager.h"
-#import "OOCPUInfo.h"
 #import "OONSOperation.h"
 
 #define USE_PTHREAD_ONCE (!OOLITE_WINDOWS)
 
 #if USE_PTHREAD_ONCE
-#import <pthread.h>
+#include <pthread.h>
 #endif
 
 

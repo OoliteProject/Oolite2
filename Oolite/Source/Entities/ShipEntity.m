@@ -334,6 +334,10 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	}
 	else
 	{
+#if 0
+// Temporary fix for mass-dependent fuel prices.
+// See [ShipEntity fuelChargeRate] for more information.
+// - MKW 2011.03.11
 		GLfloat rate = 1.0;
 		if (PLAYER != nil)
 		{
@@ -349,6 +353,9 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 			else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
 			else fuel_charge_rate = rate;
 		}
+#else
+		fuel_charge_rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:1.0f];
+#endif
 	}
 #else
 	fuel_charge_rate = 1.0;
@@ -550,7 +557,8 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	}
 		
 	//  escorts
-	_pendingEscortCount = _maxEscortCount = [shipDict oo_unsignedIntForKey:@"escorts"];
+	_maxEscortCount = MIN([shipDict oo_unsignedCharForKey:@"escorts"], (uint8_t)MAX_ESCORTS);
+	_pendingEscortCount = _maxEscortCount;
 	
 	// beacons
 	[self setBeaconCode:[shipDict oo_stringForKey:@"beacon"]];
@@ -769,6 +777,20 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 
 - (void) dealloc
 {
+	/*	NOTE: we guarantee that entityDestroyed is sent immediately after the
+		JS ship becomes invalid (as a result of dropping the weakref), i.e.
+		with no intervening script activity.
+		It has to be after the invalidation so that scripts can't directly or
+		indirectly cause the ship to become strong-referenced. (Actually, we
+		could handle that situation by breaking out of dealloc, but that's a
+		nasty abuse of framework semantics and would require special-casing in
+		subclasses.)
+		-- Ahruman 2011-02-27
+	*/
+	[weakSelf weakRefDrop];
+	weakSelf = nil;
+	ShipScriptEventNoCx(self, "entityDestroyed");
+	
 	[self setTrackCloseContacts:NO];	// deallocs tracking dictionary
 	[[self parentEntity] subEntityReallyDied:self];	// Will do nothing if we're not really a subentity
 	[self clearSubEntities];
@@ -1945,6 +1967,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				if ([target isShip] && [target isCloaked])
 				{
 					[self doScriptEvent:OOJSID("shipTargetCloaked") andReactToAIMessage:@"TARGET_CLOAKED"];
+					last_escort_target = NO_TARGET; // needed to deploy escorts again after decloaking.
 				}
 				[self noteLostTarget];
 			}
@@ -4482,7 +4505,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 - (void) setPendingEscortCount:(uint8_t)count
 {
-	_pendingEscortCount = count;
+	_pendingEscortCount = MIN(count, _maxEscortCount);
 }
 
 
@@ -5305,7 +5328,33 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 
 - (GLfloat) fuelChargeRate
 {
+#if MASS_DEPENDENT_FUEL_PRICES
+	// Interim mass-dependent fuel price fix.  The current implentation
+	// in setUpFromDictionary: is no longer working because at player
+	// ship setup time, it is only partially configured and has no mass.
+	// - MKW 2011.03.11
+	GLfloat rate = 1.0f;
+
+	if (![UNIVERSE strict] && [self mass] > 0.0)
+	{
+
+#define kCobra3Mass (185580)     // the base mass of a Cobra Mk III
+		rate = calcFuelChargeRate([self mass], kCobra3Mass);
+		if (rate <= 0.0f) rate = 1.0f;
+#undef kCobra3Mass
+
+		// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
+		if ((fuel_charge_rate != 1.0f) && (fuel_charge_rate != rate))
+		{
+			if (fuel_charge_rate < 0.33f * rate) rate *= 0.33f;
+			else if (fuel_charge_rate > 3.0f * rate) rate *= 3.0f;
+			else rate = fuel_charge_rate;
+		}
+	}
+	return rate;
+#else
 	return fuel_charge_rate;
+#endif
 }
 
 
@@ -7536,7 +7585,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	r_pos = vector_normal_or_zbasis(vector_subtract(my_target->position, position));
 
-	Quaternion		q_laser = quaternion_rotation_between(r_pos, make_vector(0.0f,0.0f,1.0f));
+	Quaternion		q_laser = quaternion_rotation_between(r_pos, kBasisZVector);
 	q_laser.x += 0.01 * (randf() - 0.5);	// randomise aim a little (+/- 0.005)
 	q_laser.y += 0.01 * (randf() - 0.5);
 	q_laser.z += 0.01 * (randf() - 0.5);
@@ -8060,6 +8109,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		[self launchPodWithCrew:[NSArray arrayWithObject:[OOCharacter randomCharacterWithRole:@"passenger" andOriginalSystem:orig]]];
 	}
 	
+	// EMMSTRAN: provide array of secondary pods.
 	if (mainPod) [self doScriptEvent:OOJSID("shipLaunchedEscapePod") withArgument:mainPod];
 	
 	return result;
@@ -8147,9 +8197,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if ([jetto crew]) // jetto has a crew, so assume it is an escape pod.
 	{
 		// orient the pod away from the ship to avoid colliding with it.
-		Vector pod_cross = fast_cross_product(kBasisZVector, v_eject_normal); // kBasisZVector is vectorForward of kIdentityQuaternion
-		double pod_angle = acosf(dot_product(kBasisZVector, v_eject_normal));
-		quaternion_rotate_about_axis(&jetto_orientation, pod_cross, -pod_angle); // rotate vectorForward to v_eject_normal.
+		jetto_orientation = quaternion_rotation_between(v_eject_normal, kBasisZVector);
 	}
 	else
 	{
@@ -8206,21 +8254,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			}
 			else if ([ent isWormhole])
 			{
-				WormholeEntity* whole = (WormholeEntity*)ent;
-				if (isPlayer)
-				{
-					[(PlayerEntity*)self enterWormhole:whole];
-					return;
-				}
-				else
-				{
-					[whole suckInShip: self];
-					if ([self scriptedMisjump])
-					{
-						[self setScriptedMisjump:NO];
-						[whole setMisjump];
-					}
-				}
+				if( [self isPlayer] ) [self enterWormhole:(WormholeEntity*)ent];
+				else [self enterWormhole:(WormholeEntity*)ent replacing:NO];
 			}
 		}
 	}
@@ -8948,6 +8983,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing
 {
+	if (w_hole == nil)  return;
+
 	if (replacing && ![[UNIVERSE sun] willGoNova] && [UNIVERSE sun] != nil)
 	{
 		/*	Add a new ship to maintain quantities of standard ships, unless
@@ -8957,6 +8994,18 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		[UNIVERSE witchspaceShipWithPrimaryRole:[self primaryRole]];
 	}
 
+	// MKW 2011.02.27 - Moved here from ShipEntityAI so escorts reliably follow
+	//                  mother in all wormhole cases, not just when the ship
+	//                  creates the wormhole.
+	primaryTarget = [w_hole universalID];
+	found_target = primaryTarget;
+	[shipAI reactToMessage:@"WITCHSPACE OKAY" context:@"performHyperSpaceExit"];	// must be a reaction, the ship is about to disappear
+	
+	if ([self scriptedMisjump])
+	{
+		[self setScriptedMisjump:NO];
+		[w_hole setMisjump];
+	}
 	[w_hole suckInShip: self];	// removes ship from universe
 }
 
@@ -9650,13 +9699,14 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		// if I'm under attack send a thank-you message to the rescuer
 		//
 		NSArray* tokens = ScanTokensFromString(ms);
-		int switcher_id = [(NSString*)[tokens objectAtIndex:1] intValue];
+		int switcher_id = [(NSString*)[tokens objectAtIndex:1] intValue]; // Attacker that switched targets.
 		Entity* switcher = [UNIVERSE entityForUniversalID:switcher_id];
-		int rescuer_id = [(NSString*)[tokens objectAtIndex:2] intValue];
+		int rescuer_id = [(NSString*)[tokens objectAtIndex:2] intValue]; // New primary target of attacker. 
 		Entity* rescuer = [UNIVERSE entityForUniversalID:rescuer_id];
 		if ((switcher_id == primaryAggressor)&&(switcher_id == primaryTarget)&&(switcher)&&(rescuer)&&(rescuer->isShip)&&(thanked_ship_id != rescuer_id)&&(scanClass != CLASS_THARGOID))
 		{
 			ShipEntity* rescueShip = (ShipEntity*)rescuer;
+			ShipEntity* switchingShip = (ShipEntity*)switcher;
 			if (scanClass == CLASS_POLICE)
 			{
 				[self sendExpandedMessage:@"[police-thanks-for-assist]" toShip:rescueShip];
@@ -9667,7 +9717,11 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 				[self sendExpandedMessage:@"[thanks-for-assist]" toShip:rescueShip];
 			}
 			thanked_ship_id = rescuer_id;
-			[(ShipEntity*)switcher setBounty:[(ShipEntity*)switcher bounty] + 5 + (ranrot_rand() & 15)];	// reward
+			// we don't want clean ships that change target from one pirate to the other pirate getting a bounty.
+			if ([switchingShip bounty] > 0 || [rescueShip bounty] == 0)
+			{	
+				[switchingShip setBounty:[switchingShip bounty] + 5 + (ranrot_rand() & 15)];	// reward
+			}
 		}
 	}
 }

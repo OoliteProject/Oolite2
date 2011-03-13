@@ -31,7 +31,7 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 
 #import "OOOpenGL.h"
 #import "OOPixMap.h"

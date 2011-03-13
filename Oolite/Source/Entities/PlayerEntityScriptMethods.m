@@ -23,6 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "PlayerEntityScriptMethods.h"
+#import "PlayerEntityLoadSave.h"
 
 #import "Universe.h"
 #import "OOConstToString.h"
@@ -50,14 +51,13 @@ MA 02110-1301, USA.
 
 - (double)creditBalance
 {
-	return 0.1 * (double)credits;
+	return 0.1 * credits;
 }
 
 
 - (void)setCreditBalance:(double)value
 {
-	value = round(value * 10.0);
-	credits = OOClamp_0_max_d(value, (double)ULONG_MAX);
+	credits = OODeciCreditsFromDouble(value * 10.0);
 }
 
 
@@ -273,3 +273,15 @@ MA 02110-1301, USA.
 }
 
 @end
+
+
+Vector OOGalacticCoordinatesFromInternal(NSPoint internalCoordinates)
+{
+	return (Vector){ (float)internalCoordinates.x * 0.4f, (float)internalCoordinates.y * 0.2f, 0.0f };
+}
+
+
+NSPoint OOInternalCoordinatesFromGalactic(Vector galacticCoordinates)
+{
+	return (NSPoint){ (float)galacticCoordinates.x * 2.5f, (float)galacticCoordinates.y * 5.0f };
+}

@@ -29,8 +29,8 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
-#import <jsapi.h>
+#import <OoliteBase/OoliteBase.h>
+#include <jsapi.h>
 
 @class OODebugMonitor;
 

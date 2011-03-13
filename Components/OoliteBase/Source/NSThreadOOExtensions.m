@@ -26,31 +26,17 @@ SOFTWARE.
 */
 
 #import "NSThreadOOExtensions.h"
+#include <pthread.h>
 
 
-#ifndef OO_HAVE_PTHREAD_SETNAME_NP
-#define OO_HAVE_PTHREAD_SETNAME_NP 0
-#endif
-
-
-#if !OO_HAVE_PTHREAD_SETNAME_NP && OOLITE_MAC_OS_X
-#undef OO_HAVE_PTHREAD_SETNAME_NP
+#if OOLITE_MAC_OS_X
 #define OO_HAVE_PTHREAD_SETNAME_NP 1
-#define PTHREAD_SETNAME_DYNAMIC 1
 #endif
 
 
 #if !OO_HAVE_PTHREAD_SETNAME_NP
 #define pthread_setname_np(name) do {} while (0)
 #endif
-
-
-#if PTHREAD_SETNAME_DYNAMIC
-static int InitialSetNameFunc(const char *name);
-static int (*PThreadSetNameNPFunc)(const char *name) = InitialSetNameFunc;
-#define pthread_setname_np(name) do { if (PThreadSetNameNPFunc != NULL)  PThreadSetNameNPFunc(name); } while (0)
-#endif
-
 
 
 @interface NSThread (LeopardAdditions)
@@ -130,31 +116,3 @@ static int (*PThreadSetNameNPFunc)(const char *name) = InitialSetNameFunc;
 }
 
 @end
-
-
-#if PTHREAD_SETNAME_DYNAMIC
-
-#import <dlfcn.h>
-
-// Attempt to load pthread_setname_np() (available in Mac OS X 10.6 or later)
-static int InitialSetNameFunc(const char *name)
-{
-	@synchronized ([NSThread class])	// Thread functions should be thread safe.
-	{
-		if (PThreadSetNameNPFunc == InitialSetNameFunc)	// Only look up once.
-		{
-			PThreadSetNameNPFunc = dlsym(RTLD_DEFAULT, "pthread_setname_np");
-		}
-	}
-	
-	if (PThreadSetNameNPFunc != NULL)
-	{
-		return PThreadSetNameNPFunc(name);
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-#endif

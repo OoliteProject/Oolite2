@@ -1,0 +1,56 @@
+Contributors
+============
+This list is in alphabetical order, and almost certainly incomplete.
+
+The Man: Giles Williams (aegidian)
+
+Jens Ayton (Ahruman)
+Nikos Barkas (another_commander)
+Nicolas Boulenguez
+Eugene Chernyakov (seventh)
+colinh
+Commander McLane
+Dermot Costello
+Chris Crowther (hikari)
+Jelmer Graafstra
+James Hobson (Cmdr James)
+Influence D
+Kaks
+Olli Krienke (Svengali)
+Lazygun
+Dave MacLachlan (Jester)
+Nic
+No Sleep Nigel
+Vladimir A. Pavlov (pv4)
+Dennis Pedersen (Frame)
+Erich Ritz (drumz)
+Darren Salt (dsalt/_ds_)
+Adam Sampson
+Chip Richards (caracal)
+rion
+Rob C. Skilton (KZ9999)
+Alex Smith
+Dylan Smith (winston)
+stardotstar
+Konstantinos Sykas (Getafix)
+David Taylor (dajt)
+Eric Walch
+Michael Werle (Micha)
+Gary Wong (Y A J)
+
+
+Library credits:
+----------------
+GNUstep: various and numerous.
+libpng: Glenn Randers-Pehrson, Andreas Dilger, Guy Eric Schalnat
+        and contributors.
+SDL - Simple DirectMedia Layer: Sam Lantinga and contributors.
+SpiderMonkey: Brendan Eich et al, Mozilla Foundation.
+LibOgg/LibVorbis: Xiph.Org Foundation.
+
+
+Mac OS X-specific libraries:
+----------------------------
+RBSplitView: Rainer Brockerhoff
+Sparkle: Andy Matuschak and contributors
+VirtualRingBuffer: Kurt Revis

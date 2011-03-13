@@ -30,13 +30,14 @@ MA 02110-1301, USA.
 #endif
 
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
 #include <stdarg.h>
 #include <limits.h>
-#include <stdint.h>
-#include <limits.h>
+#include <string.h>
+#include <assert.h>
 
 # if __OBJC__
 

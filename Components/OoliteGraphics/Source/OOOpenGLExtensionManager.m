@@ -26,7 +26,6 @@ SOFTWARE.
 */
 
 #import "OOOpenGLExtensionManager.h"
-#import <stdlib.h>
 
 
 enum

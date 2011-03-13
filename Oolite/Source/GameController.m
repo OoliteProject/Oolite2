@@ -29,7 +29,6 @@ MA 02110-1301, USA.
 #import "OOSound.h"
 #import "OOOpenGL.h"
 #import "PlayerEntityLoadSave.h"
-#import <stdlib.h>
 #import "OODebugFlags.h"
 #import "OOJSFrameCallbacks.h"
 #import "OOOpenGLExtensionManager.h"

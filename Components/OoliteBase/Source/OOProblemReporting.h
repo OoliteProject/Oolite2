@@ -26,7 +26,6 @@
 */
 
 #import "OOCocoa.h"
-#import <stdarg.h>
 
 
 typedef enum OOProblemReportType

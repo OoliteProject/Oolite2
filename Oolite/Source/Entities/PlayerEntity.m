@@ -22,8 +22,6 @@ MA 02110-1301, USA.
 
 */
 
-#import <assert.h>
-
 #import "PlayerEntity.h"
 #import "PlayerEntityLegacyScriptEngine.h"
 #import "PlayerEntityContracts.h"
@@ -514,7 +512,6 @@ static GLfloat		sBaseMass = 0.0;
 		precision anyway.
 		-- Ahruman 2011-02-15
 	*/
-//	[result oo_setUnsignedLongLong:credits	forKey:@"credits"];
 	[result oo_setFloat:credits				forKey:@"credits"];
 	[result oo_setUnsignedInteger:fuel		forKey:@"fuel"];
 	[result oo_setFloat:fuel_charge_rate	forKey:@"fuel_charge_rate"]; // ## fuel charge testing
@@ -844,8 +841,8 @@ static GLfloat		sBaseMass = 0.0;
 	max_cargo = [dict oo_intForKey:@"max_cargo" defaultValue:max_cargo];
 	if (max_cargo > original_hold_size)  [self addEquipmentItem:@"EQ_CARGO_BAY"];
 	max_cargo = original_hold_size + ([self hasExpandedCargoBay] ? extra_cargo : 0) - max_passengers * 5;
+	credits = OODeciCreditsFromObject([dict objectForKey:@"credits"]);
 	
-	credits = [dict oo_unsignedLongLongForKey:@"credits" defaultValue:credits];
 	fuel = [dict oo_unsignedIntForKey:@"fuel" defaultValue:fuel];
 	fuel_charge_rate = [UNIVERSE strict]
 					 ? 1.0
@@ -1852,7 +1849,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		// do Revised sun-skimming check here...
 		if ([self hasScoop] && alt1 > 0.75 && [self fuel] < [self fuelCapacity])
 		{
-			fuel_accumulator += (float)(delta_t * flightSpeed * 0.010 / fuel_charge_rate);
+			fuel_accumulator += (float)(delta_t * flightSpeed * 0.010 / [self fuelChargeRate]);
 			// are we fast enough to collect any fuel?
 			scoopsActive = YES && flightSpeed > 0.1f;
 			while (fuel_accumulator > 1.0f)
@@ -2534,7 +2531,12 @@ static bool minShieldLevelPercentageInitialised = false;
 				OOLog(kOOLogInconsistentState, @"Internal Error - WH_SCANINFO_NONE reached in [PlayerEntity updateTargeting:]");
 				[self dumpState];
 				[wh dumpState];
-				assert([wh scanInfo] != WH_SCANINFO_NONE);
+				// Workaround a reported hit of the assert here.  We really
+				// should work out how/why this could happen though and fix
+				// the underlying cause.
+				// - MKW 2011.03.11
+				//assert([wh scanInfo] != WH_SCANINFO_NONE);
+				[wh setScannedAt:[self clockTimeAdjusted]];
 				break;
 			case WH_SCANINFO_SCANNED:
 				if ([self clockTimeAdjusted] > [wh scanTime] + 2)
@@ -2549,7 +2551,7 @@ static bool minShieldLevelPercentageInitialised = false;
 				{
 					[wh setScanInfo:WH_SCANINFO_ARRIVAL_TIME];
 					[UNIVERSE addCommsMessage:[NSString stringWithFormat:DESC(@"wormhole-arrival-time-computed-@"),
-											   ClockToString([wh arrivalTime], NO)] forCount:5.0];
+											   ClockToString([wh estimatedArrivalTime], NO)] forCount:5.0];
 				}
 				break;
 			case WH_SCANINFO_ARRIVAL_TIME:
@@ -2599,7 +2601,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		quaternion_rotate_about_x(&orientation, -climb1);
 	
 	/*	Bugginess may put us in a state where the orientation quat is all
-		zeros, at which point itâ€™s impossible to move.
+		zeros, at which point itÕs impossible to move.
 	*/
 	if (EXPECT_NOT(quaternion_equal(orientation, kZeroQuaternion)))
 	{
@@ -4641,6 +4643,9 @@ static bool minShieldLevelPercentageInitialised = false;
 	else
 		compassMode = COMPASS_MODE_BASIC;
 	
+	if ( ![self wormhole] ) {
+		OOLog(kOOLogInconsistentState, @"Internal Error : Player entering witchspace with no wormhole.");
+	}
 	[UNIVERSE allShipsDoScriptEvent:OOJSID("playerWillEnterWitchspace") andReactToAIMessage:@"PLAYER WITCHSPACE"];
 	
 	// set the new market seed now!
@@ -4886,6 +4891,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 	// NEW: Create the players' wormhole
 	wormhole = [[WormholeEntity alloc] initWormholeTo:target_system_seed fromShip:self];
+	[UNIVERSE addEntity:wormhole]; // New new: Add new wormhole to Universe to let other ships target it. Required for ships following the player.
 	[self addScannedWormhole:wormhole];
 
 	[self setStatus:STATUS_ENTERING_WITCHSPACE];
@@ -4929,7 +4935,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		galaxy_coordinates.y += sTo.b;
 		galaxy_coordinates.x /= 2;
 		galaxy_coordinates.y /= 2;
-		[wormhole playerMisjumped];
+		[wormhole setMisjump];
 		[self playWitchjumpMisjump];
 		[UNIVERSE setUpUniverseFromMisjump];
 	}
@@ -4952,6 +4958,11 @@ static bool minShieldLevelPercentageInitialised = false;
 	pos.y += v1.y * d1;
 	pos.z += v1.z * d1;
 
+	// While this looks very nice for ships following the player, the more 
+	// common case of the player following other ships, the player tends to
+	// ram the back of the ships, which is messy.
+	// TODO: work out a neater way of doing this.
+	//[wormhole setExitPosition: pos]; // Set wormhole position in case there are ships following
 	[wormhole release];
 	wormhole = nil;
 
@@ -6057,7 +6068,7 @@ static NSString *last_outfitting_key=nil;
 				
 				if ([eqKey isEqual:@"EQ_FUEL"])
 				{
-					price = (PLAYER_MAX_FUEL - fuel) * pricePerUnit * fuel_charge_rate;
+					price = (PLAYER_MAX_FUEL - fuel) * pricePerUnit * [self fuelChargeRate];
 				}
 				else if ([eqKey isEqualToString:@"EQ_RENOVATION"])
 				{
@@ -8046,6 +8057,12 @@ static NSString *last_outfitting_key=nil;
 }
 
 
+- (void) setGalacticHyperspaceFixedCoords:(NSPoint)point
+{
+	return [self setGalacticHyperspaceFixedCoordsX:OOClamp_0_max_f(roundf(point.x), 255.0f) y:OOClamp_0_max_f(roundf(point.y), 255.0f)];
+}
+
+
 - (void) setGalacticHyperspaceFixedCoordsX:(unsigned char)x y:(unsigned char)y
 {
 	galacticHyperspaceFixedCoords.x = x;
@@ -8202,12 +8219,11 @@ else _dockTarget = NO_TARGET;
 	assert(whole != nil);
 	
 	// Only add if we don't have it already!
-	NSEnumerator * wormholes = [scannedWormholes objectEnumerator];
-	WormholeEntity * wh;
+	NSEnumerator *wormholes = [scannedWormholes objectEnumerator];
+	WormholeEntity *wh = nil;
 	while ((wh = [wormholes nextObject]))
 	{
-		if ([wh universalID] == [whole universalID])
-			return;
+		if (wh == whole)  return;
 	}
 	[whole setScannedAt:[self clockTimeAdjusted]];
 	[scannedWormholes addObject:whole];
@@ -8237,7 +8253,7 @@ else _dockTarget = NO_TARGET;
 		{
 			[savedWormholes addObject:wh];
 		}
-		else if (equal_seeds([wh destination], [self system_seed]))
+		else if (NSEqualPoints(galaxy_coordinates, [wh destinationCoordinates]))
 		{
 			[wh disgorgeShips];
 			if ([[wh shipsInTransit] count] > 0)

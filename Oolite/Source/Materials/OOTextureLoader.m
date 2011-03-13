@@ -30,7 +30,6 @@ SOFTWARE.
 #import "Universe.h"
 #import "OOTextureScaling.h"
 #import "OOPixMapChannelOperations.h"
-#import <stdlib.h>
 #import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
 

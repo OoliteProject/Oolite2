@@ -37,7 +37,6 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOOpenGLExtensionManager.h"
-#import "OOCPUInfo.h"
 #import "OOMaterial.h"
 #import "OOTexture.h"
 #import "OORoleSet.h"
@@ -2047,7 +2046,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 		
 		// shorten the route by scanner range & sun radius, otherwise ships could be created inside it.
 		direction = vector_normal(vector_subtract(point0, point1));
-		point0 = vector_subtract(point0, vector_multiply_scalar(direction, radius0 + SCANNER_MAX_RANGE));
+		point0 = vector_subtract(point0, vector_multiply_scalar(direction, radius0 + SCANNER_MAX_RANGE * 1.1f));
 	}
 	else if ([route isEqualTo:@"st"])
 	{
@@ -2060,18 +2059,18 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	
 	// shorten the route by scanner range & radius, otherwise ships could be created inside the route destination.
 	direction = vector_normal(vector_subtract(point1, point0));
-	point1 = vector_subtract(point1, vector_multiply_scalar(direction, radius + SCANNER_MAX_RANGE));
+	point1 = vector_subtract(point1, vector_multiply_scalar(direction, radius + SCANNER_MAX_RANGE * 1.1f));
 	
 	pos = [self fractionalPositionFrom:point0 to:point1 withFraction:routeFraction];
 	if(isGroup)
 	{	
-		return [self addShipsAt:pos withRole:role quantity:count withinRadius:SCANNER_MAX_RANGE asGroup:YES];
+		return [self addShipsAt:pos withRole:role quantity:count withinRadius:(SCANNER_MAX_RANGE / 10.0f) asGroup:YES];
 	}
 	else
 	{
 		while (count--)
 		{
-			ship = [self addShipAt:pos withRole:role withinRadius:SCANNER_MAX_RANGE];
+			ship = [self addShipAt:pos withRole:role withinRadius:0]; // no radius because pos is already randomised with SCANNER_MAX_RANGE.
 			if (ship != nil) [ships addObject:ship];
 			if (count > 0) pos = [self fractionalPositionFrom:point0 to:point1 withFraction:routeFraction];
 		}
@@ -5004,7 +5003,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 
 - (void) update:(OOTimeDelta)inDeltaT
 {
-	_realTime += inDeltaT;
+	_realTime += inDeltaT;	// PRIOR to TAF scaling.
 	
 	volatile OOTimeDelta delta_t = inDeltaT * [self timeAccelerationFactor];
 	
@@ -6593,7 +6592,7 @@ static NSDictionary	*sCachedSystemData = nil;
 	In order to hide the cost of synthesizing textures, we want to start
 	rendering them asynchronously as soon as there's a hint they may be needed
 	soon: when a system is selected on one of the charts, and when beginning a
-	jump. However, it would be a Bad Ideaâ„¢ to allow an arbitrary number of
+	jump. However, it would be a Bad Ideaª to allow an arbitrary number of
 	planets to be queued, since you can click on lots of systems quite
 	quickly on the long-range chart.
 	
@@ -8776,7 +8775,7 @@ static void PreloadOneSound(NSString *soundName)
 			// If the wormhole has been scanned by the player then the
 			// PlayerEntity will take care of it
 			if (![whole isScanned] &&
-				equal_seeds([whole destination], system_seed))
+				NSEqualPoints([PLAYER galaxy_coordinates], [whole destinationCoordinates]))
 			{
 				// this is a wormhole to this system
 				[whole disgorgeShips];

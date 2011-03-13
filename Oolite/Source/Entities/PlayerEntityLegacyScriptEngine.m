@@ -1128,8 +1128,13 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 {
 	if (scriptTarget != self)  return;
 	
-	int award = 10 * [valueString intValue];
-	if (award < 0 && credits < (unsigned)-award)  credits = 0;
+	/*	We can't use -longLongValue here for Mac OS X 10.4 compatibility, but
+		we don't need to since larger values have never been supported for
+		legacy scripts.
+	*/
+	int64_t award = [valueString intValue];
+	award *= 10;
+	if (award < 0 && credits < (OOCreditsQuantity)-award)  credits = 0;
 	else  credits += award;
 }
 

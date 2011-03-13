@@ -26,7 +26,6 @@ SOFTWARE.
 
 
 #import "OOPixMapScaling.h"
-#import <stdlib.h>
 
 
 #define DUMP_MIP_MAPS	0

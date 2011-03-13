@@ -61,7 +61,6 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 		
 		IOHIDManagerRegisterDeviceMatchingCallback(hidManager, HandleDeviceMatchingCallback, self);
 		IOHIDManagerRegisterDeviceRemovalCallback(hidManager, HandleDeviceRemovalCallback, self);
-		IOHIDManagerRegisterInputValueCallback(hidManager, HandleInputValueCallback, self);
 		
 		IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 		IOReturn iores = IOHIDManagerOpen( hidManager, kIOHIDOptionsTypeNone );
@@ -123,6 +122,7 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 	OOLog(@"joystick.connect", @"Joystick connected: %@", IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
 	
 	CFArrayAppendValue(devices, device);
+	IOHIDDeviceRegisterInputValueCallback(device, HandleInputValueCallback, self);
 	
 	if (OOLogWillDisplayMessagesInClass(@"joystick.connect.element"))
 	{
@@ -256,12 +256,36 @@ static uint8_t MapHatValue(CFIndex value, CFIndex max)
 		evt.axis = axisNum;
 		
 		CFIndex intValue = IOHIDValueGetIntegerValue(value);
-		CFIndex max = IOHIDElementGetLogicalMax(element);
 		CFIndex min = IOHIDElementGetLogicalMin(element);
+		CFIndex max = IOHIDElementGetLogicalMax(element);
 		float axisValue = (float)(intValue - min) / (float)(max + 1 - min);
 		
 		// Note: this is designed so gammaIndex == intValue if min == 0 and max == kJoystickGammaTableSize - 1 (the common case).
-		unsigned gammaIndex = floor(axisValue * (kJoystickGammaTableSize));
+		unsigned gammaIndex = floor(axisValue * kJoystickGammaTableSize);
+		
+		/*
+			CRASH: r4435, Mac OS X 10.6.6, x86_64 -[OOLeopardJoystickManager handleInputEvent:] + 260
+			http://aegidian.org/bb/viewtopic.php?f=3&t=9382
+			The instruction is:
+				movl (%r15,%rbx,4), %r12d
+			which corresponds to the load gammaTable[gammaIndex].
+			Check added to find out-of-range values.
+			-- Ahruman 2011-03-07
+		*/
+		if (EXPECT_NOT(gammaIndex > kJoystickGammaTableSize))
+		{
+			OOLogERR(@"joystick.gamma.overflow", @"Joystick gamma table overflow - gammaIndex is %u of %u. Raw value: %i in [%i..%i]; axisValue: %g; unrounded gammaIndex: %g. Ignoring event. This is an internal error, please report it.",
+					 gammaIndex, kJoystickGammaTableSize,
+					 (int)intValue, (int)min, (int)max,
+					 axisValue,
+					 axisValue * kJoystickGammaTableSize,
+					 kJoystickGammaTableSize
+			);
+			
+			return;
+		}
+		// End bug check
+		
 		evt.value = gammaTable[gammaIndex];
 		[self decodeAxisEvent:&evt];
 	}

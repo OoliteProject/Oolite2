@@ -30,7 +30,6 @@ MA 02110-1301, USA.
 #define INCLUDED_OORANDOM_h
 
 #include "OOFunctionAttributes.h"
-#include <math.h>
 
 
 typedef struct Random_Seed

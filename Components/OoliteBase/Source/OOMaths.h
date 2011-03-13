@@ -31,22 +31,14 @@ MA 02110-1301, USA.
 #ifndef INCLUDED_OOMATHS_h
 #define INCLUDED_OOMATHS_h
 
+
+#include "OOCocoa.h"
+#include "OOFunctionAttributes.h"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-#endif
-
-#include "OOFunctionAttributes.h"
-#include <math.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <limits.h>
-#include <assert.h>
 
 
 typedef float OOScalar;

@@ -27,9 +27,6 @@ MA 02110-1301, USA.
 #import "OOJoystickManager.h"
 
 
-#define kOOLogUnconvertedNSLog @"unclassified.JoystickHandler"
-
-
 static Class sStickHandlerClass = Nil;
 static id sSharedStickHandler = nil;
 
@@ -398,7 +395,7 @@ static id sSharedStickHandler = nil;
 	}
 	else
 	{
-		NSLog(@"Stick axis out of range - axis was %d", evt->axis);
+		OOLog(@"decodeAxisEvent", @"Stick axis out of range - axis was %d", evt->axis);
 		return;
 	}
 	switch (function)
@@ -461,7 +458,7 @@ static id sSharedStickHandler = nil;
 	}
 	else
 	{
-		NSLog(@"Joystick button out of range: %d", evt->button);
+		OOLog(@"decodeButtonEvent", @"Joystick button out of range: %d", evt->button);
 		return;
 	}
 	if (evt->type == JOYBUTTONDOWN)

@@ -28,9 +28,9 @@ SOFTWARE.
 
 #import "OOCASoundChannel.h"
 #import "OOCASoundInternal.h"
-#import <mach/mach.h>
-#import <pthread.h>
-#import </usr/include/libkern/OSAtomic.h>
+#include <mach/mach.h>
+#include <pthread.h>
+#include </usr/include/libkern/OSAtomic.h>
 
 
 static NSString * const kOOLogSoundNULLError			= @"sound.render.undexpectedNull";

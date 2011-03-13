@@ -1,7 +1,6 @@
-#! /bin/bash
+#! /bin/sh
 
 
-# Paths relative to .., i.e. Cocoa-deps.
 TEMPDIR="temp-download-mozilla"
 TARGETDIR="mozilla"
 
@@ -15,7 +14,7 @@ DESIREDURL=`head -n 1 $URLFILE`
 
 
 # Report failure, as an error if there's no existing code but as a warning if there is.
-function fail
+fail()
 {
 	if [ $LIBRARY_PRESENT -eq 1 ]
 	then
@@ -61,7 +60,7 @@ fi
 
 # Create temp directory.
 mkdir "$TEMPDIR"
-if [ ! $? ]
+if [ "$?" -ne "0" ]
 then
 	echo "error: Could not create temporary directory $TEMPDIR."
 	exit 1
@@ -70,8 +69,8 @@ fi
 
 # Download mozilla source.
 echo "Downloading libjs source from $DESIREDURL..."
-curl -qgsS -o "$TEMPFILE" "$DESIREDURL"
-if [ ! $? ]
+curl -qgsSf -o "$TEMPFILE" "$DESIREDURL"
+if [ "$?" -ne "0" ]
 then
 	fail "could not download $DESIREDURL"
 fi
@@ -80,7 +79,7 @@ fi
 # Expand tarball.
 echo "Download complete, expanding archive..."
 tar -xkf "$TEMPFILE" -C "$TEMPDIR"
-if [ ! $? ]
+if [ "$?" -ne "0" ]
 then
 	fail "could not expand $TEMPFILE into $TEMPDIR"
 fi
@@ -96,16 +95,18 @@ rm -rf "$TARGETDIR"
 mkdir "$TARGETDIR"
 
 
+MOZILLADIR="$TEMPDIR/mozilla-2.0"
+
 # Move new code into place.
-mv "$TEMPDIR/mozilla-central/js" "$TARGETDIR/js"
-if [ ! $? ]
+mv "$MOZILLADIR/js" "$TARGETDIR/js"
+if [ "$?" -ne "0" ]
 then
 	echo "error: could not move expanded libjs source into place."
 	exit 1
 fi
 
-mv "$TEMPDIR/mozilla-central/nsprpub" "$TARGETDIR/nsprpub"
-if [ ! $? ]
+mv "$MOZILLADIR/nsprpub" "$TARGETDIR/nsprpub"
+if [ "$?" -ne "0" ]
 then
 	echo "error: could not move expanded libnspr4 source into place."
 	exit 1

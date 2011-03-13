@@ -151,6 +151,8 @@
 		1A1A37F011C2F9D10086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
 		1A1A37F611C2F9E20086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
 		1A1F25F31317C87200D06C6C /* Oolite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Oolite.xcodeproj; path = Oolite/Mac/Oolite.xcodeproj; sourceTree = "<group>"; };
+		1A38E96B132D14A90087770C /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1A38E96C132D14A90087770C /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 		1A4587E911F8964E000CBCF0 /* DryDock2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DryDock2.xcodeproj; path = DryDock2/DryDock2.xcodeproj; sourceTree = "<group>"; };
 		1A50F55611B6DB9D005D584E /* oomergemesh.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = oomergemesh.xcodeproj; path = oomergemesh/Mac/oomergemesh.xcodeproj; sourceTree = "<group>"; };
 		1A649F481323B8B000C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -244,6 +246,8 @@
 				1A649F491323B8B000C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649F4A1323B8B000C2FDDB /* oolite-enduser-configuration.xcconfig */,
 				1A649F4B1323B8B000C2FDDB /* oolite-shared-settings.xcconfig */,
+				1A38E96B132D14A90087770C /* oolite-copy-headers.make */,
+				1A38E96C132D14A90087770C /* oolite-shared.make */,
 				1A649F4C1323B8B000C2FDDB /* oolite-version.inc */,
 			);
 			path = Config;

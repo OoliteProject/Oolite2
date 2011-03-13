@@ -1,6 +1,6 @@
 Oolite2
 
-This is the modernization project for the space trading game Oolite, indended
+This is the modernization project for the space trading game Oolite, intended
 to culminate in an Oolite 2.0 release.
 
 For more information about Oolite, see http://www.oolite.org/

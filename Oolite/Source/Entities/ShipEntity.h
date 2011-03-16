@@ -645,7 +645,7 @@ typedef enum
 - (BOOL)isMissile;		// Primary role has suffix "MISSILE"
 - (BOOL)isMine;			// Primary role has suffix "MINE"
 - (BOOL)isWeapon;		// isMissile || isWeapon
-- (BOOL)isEscort;		// Primary role is "escort" or "wingman"
+- (BOOL)isEscort;		// Primary role is "escort"
 - (BOOL)isShuttle;		// Primary role is "shuttle"
 - (BOOL)isPirateVictim;	// Primary role is listed in pirate-victim-roles.plist
 - (BOOL)isUnpiloted;	// Has unpiloted = yes in its shipdata.plist entry

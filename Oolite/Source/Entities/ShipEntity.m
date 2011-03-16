@@ -38,6 +38,7 @@ MA 02110-1301, USA.
 #import "OOConstToJSString.h"
 #import "OORoleSet.h"
 #import "OOShipGroup.h"
+#import "OOShipClass.h"
 
 #import "OOCharacter.h"
 #import "AI.h"
@@ -433,7 +434,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	[shipAI autorelease];
 	shipAI = [[AI alloc] init];
 	[shipAI setOwner:self];
-	[shipAI setStateMachine:[shipDict oo_stringForKey:@"ai_type" defaultValue:@"nullAI.plist"]];
+	[shipAI setStateMachine:[shipDict oo_stringForKey:@"ai_type" defaultValue:kOODefaultShipAIName]];
 	
 	likely_cargo = [shipDict oo_unsignedIntForKey:@"likely_cargo"];
 	noRocks = [shipDict oo_fuzzyBooleanForKey:@"no_boulders"];
@@ -1246,7 +1247,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 
 - (void) setUpEscorts
 {
-	NSString		*defaultRole = @"escort";
+	NSString		*defaultRole = kOODefaultEscortRole;
 	NSString		*escortRole = nil;
 	NSString		*escortShipKey = nil;
 	NSString		*autoAI = nil;
@@ -1272,8 +1273,6 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 		_maxEscortCount = MAX_ESCORTS; // police and hunters can get up to MAX_ESCORTS.
 		[self updateEscortFormation];
 	}
-	
-	if ([self isPolice])  defaultRole = @"wingman";
 	
 	escortRole = [shipinfoDictionary oo_stringForKey:@"escort_role" defaultValue:nil];
 	if (escortRole == nil)
@@ -1357,14 +1356,14 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 		autoAI = [autoAIMap oo_stringForKey:defaultRole];
 		if (autoAI==nil) // no 'wingman' defined in autoAImap?
 		{
-			autoAI = [autoAIMap oo_stringForKey:@"escort" defaultValue:@"nullAI.plist"];
+			autoAI = [autoAIMap oo_stringForKey:kOODefaultEscortRole defaultValue:kOODefaultShipAIName];
 		}
 		
 		escortAI = [escorter getAI];
 		
 		// Let the populator decide which AI to use, unless we have a working alternative AI & we specify auto_ai = NO !
 		if ( ((escortShipKey || escortRole) && [escortShipDict oo_fuzzyBooleanForKey:@"auto_ai" defaultValue:YES])
-			|| ([[escortAI name] isEqualToString: @"nullAI.plist"] && ![autoAI isEqualToString:@"nullAI.plist"]) )
+			|| ([[escortAI name] isEqualToString: kOODefaultShipAIName] && ![autoAI isEqualToString:kOODefaultShipAIName]) )
 		{
 			[escorter switchAITo:autoAI];
 		}
@@ -1644,10 +1643,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 {
 	ShipEntity *pod = nil;
 	
-	pod = [UNIVERSE newShipWithRole:[shipinfoDictionary oo_stringForKey:@"escape_pod_model" defaultValue:@"escape-capsule"]];
+	pod = [UNIVERSE newShipWithRole:[shipinfoDictionary oo_stringForKey:@"escape_pod_model" defaultValue:kOODefaultEscapePodRole]];
 	if (!pod)
 	{
-		pod = [UNIVERSE newShipWithRole:@"escape-capsule"];
+		pod = [UNIVERSE newShipWithRole:kOODefaultEscapePodRole];
 		OOLog(@"shipEntity.noEscapePod", @"Ship %@ has no correct escape_pod_model defined. Now using default capsule.", self);
 	}
 	
@@ -4726,7 +4725,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 - (BOOL)isEscort
 {
-	return [self hasPrimaryRole:@"escort"] || [self hasPrimaryRole:@"wingman"];
+	return [self hasPrimaryRole:kOODefaultEscortRole];
 }
 
 
@@ -5291,7 +5290,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	script = [OOScript jsScriptFromFileNamed:script_name properties:properties];
 	if (script == nil)
 	{
-		script = [OOScript jsScriptFromFileNamed:@"oolite-default-ship-script.js" properties:properties];
+		script = [OOScript jsScriptFromFileNamed:kOODefaultShipScriptName properties:properties];
 	}
 	
 	[script retain];
@@ -5993,7 +5992,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 					{
 						int n_rocks = 2 + (Ranrot() % (likely_cargo + 1));
 						
-						NSString *debrisRole = [[self shipInfoDictionary] oo_stringForKey:@"debris_role" defaultValue:@"boulder"];
+						NSString *debrisRole = [[self shipInfoDictionary] oo_stringForKey:@"debris_role" defaultValue:kOODefaultDebrisRole];
 						for (i = 0; i < n_rocks; i++)
 						{
 							ShipEntity* rock = [UNIVERSE newShipWithRole:debrisRole];   // retain count = 1
@@ -8467,7 +8466,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	if([self status] == STATUS_BEING_SCOOPED) return; // both cargo and ship call this. Act only once.
 	desired_speed = 0.0;
-	[self setAITo:@"nullAI.plist"];	// prevent AI from changing status or behaviour.
+	[self setAITo:kOODefaultShipAIName];	// prevent AI from changing status or behaviour.
 	behaviour = BEHAVIOUR_TRACTORED;
 	[self setStatus:STATUS_BEING_SCOOPED];
 	[self addTarget:other];
@@ -8850,7 +8849,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			OK = YES;
 			[self removeEquipmentItem:@"EQ_ESCAPE_POD"];
-			[shipAI setStateMachine:@"nullAI.plist"];
+			[shipAI setStateMachine:kOODefaultShipAIName];
 			behaviour = BEHAVIOUR_IDLE;
 			frustration = 0.0;
 			[self setScanClass: CLASS_CARGO];			// we're unmanned now!

@@ -1750,9 +1750,6 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		default_defense_ship_role	= @"interceptor";
 	else
 		default_defense_ship_role	= @"police";
-		
-	if (scanClass == CLASS_ROCK)
-		default_defense_ship_role	= @"hermit-ship";
 	
 	if (defenders_launched >= max_defense_ships)   // shuttles are to rockhermits what police ships are to stations
 		return nil;

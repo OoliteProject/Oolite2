@@ -1560,7 +1560,7 @@ MA 02110-1301, USA.
 	else
 	{
 		[shipAI message:@"NOTHING_FOUND"];
-		if ([self hasPrimaryRole:@"wingman"])
+		if ([self isPolice])
 		{
 			// become free-lance police :)
 			[shipAI setStateMachine:@"route1patrolAI.plist"];	// use this to avoid referencing a released AI

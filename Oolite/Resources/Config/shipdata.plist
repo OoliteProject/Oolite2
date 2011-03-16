@@ -2338,6 +2338,7 @@
 	{
 		ai_type = "rockHermitAI.plist";
 		cargo_type = "CARGO_NOT_CARGO";
+		defense_ship_role = "hermit-ship";
 		energy_recharge_rate = 5;
 		"equipment_price_factor" = 4.5;
 		"equivalent_tech_level" = 1;
@@ -2683,6 +2684,7 @@
 		model = "viper_redux.dat";
 		name = "GalCop Viper";
 		roles = "police";
+		escort_role = "wingman";
 		scan_class = "CLASS_POLICE";
 		subentities = (
 			{
@@ -2802,6 +2804,7 @@
 		smooth = yes;
 		name = "GalCop Viper Interceptor";
 		roles = "interceptor wingman";
+		escort_role = "wingman";
 		scan_class = "CLASS_POLICE";
 		subentities = (
 			{
@@ -2914,6 +2917,7 @@
 		model = "viper_redux.dat";
 		name = "GalCop Viper";
 		roles = "wingman";
+		escort_role = "wingman";
 		scan_class = "CLASS_POLICE";
 		thrust = 36;
 		weapon_position_aft = "0.0 0.0 -27.5";

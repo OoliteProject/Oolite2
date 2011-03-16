@@ -2,7 +2,13 @@
 
 OOShipClass.h
 
-Abstract representation of a type of ship.
+Immutable, abstract representation of a type of ship.
+
+In addition to represening the immediate shipdata entries, this class can also
+resolve flexible attributes for a new ship. Methods beginning with “select” do
+this, and can return different values each time they’re called. For instance,
+-selectMissiles may randomly select among missile roles, and -selectWillFragment
+returns true with probability -fragmentChance.
 
 
 Oolite
@@ -35,12 +41,13 @@ MA 02110-1301, USA.
 @interface OOShipClass: NSObject <NSCopying>
 {
 @private
+	OOShipClass			*_likeShip;
 	NSString			*_shipKey;
 	NSString			*_name;
 	NSString			*_displayName;
 	OOScanClass			_scanClass;
 	NSString			*_beaconCode;
-	NSString			*_HUDName;	// FIXME: this should be shipyard info, although we might want to fold that in.
+	NSString			*_HUDName;
 	
 	NSString			*_pilotKey;
 	float				_unpilotedChance;
@@ -52,7 +59,7 @@ MA 02110-1301, USA.
 	
 	NSString			*_modelName;
 	NSDictionary		*_materialDefinitions;
-	NSArray				*_exhaustDefinition;
+	NSArray				*_exhaustDefinitions;
 	NSArray				*_scannerColors;
 	
 	OOCreditsQuantity	_bounty;
@@ -64,14 +71,12 @@ MA 02110-1301, USA.
 	NSString			*_escortShipKey;
 	NSString			*_escortRole;
 	
-	// Views
 	Vector				_forwardViewPosition;
 	Vector				_aftViewPosition;
 	Vector				_portViewPosition;
 	Vector				_starboardViewPosition;
 	NSArray				*_customViews;
 	
-	// Cargo
 	NSUInteger			_cargoSpaceCapacity;	// max_cargo
 	NSUInteger			_cargoSpaceUsedMin;
 	NSUInteger			_cargoSpaceUsedMax;		// likely_cargo
@@ -82,16 +87,16 @@ MA 02110-1301, USA.
 	BOOL				_isTemplate: 1,
 						_isExternalDependency: 1,
 						_isCarrier: 1,
-						_smooth: 1,				// FIXME: eliminate with new model format.
+						_smooth: 1,
 						_isHulk: 1,
-						_isFrangible: 1,		// FIXME: make subentity isBreakable attribute instead.
+						_isFrangible: 1,
 						_trackContacts: 1,
 						_autoAI: 1,
 						_hasHyperspaceMotor: 1,
 						_isSubmunition: 1,
 						_cloakPassive: 1,
 						_cloakAutomatic: 1,
-						_hasScoopMessage: 1,	// FIXME: remove, this should be scripted.
+						_hasScoopMessage: 1,
 						_rotating: 1,
 						_countsAsKill: 1,
 	// Carrier flags
@@ -109,18 +114,16 @@ MA 02110-1301, USA.
 	
 	float				_heatInsulation;
 	
-	float				_hyperspaceMotorSpinTime;
-	
 	// Flight parameters
 	float				_maxFlightSpeed;
 	float				_maxFlightRoll;
 	float				_maxFlightPitch;
 	float				_maxFlightYaw;
 	float				_maxThrust;
+	float				_hyperspaceMotorSpinTime;
 	
 	// Weapons
 	float				_accuracy;
-	// FIXME: these should be equipment types.
 	OOWeaponType		_forwardWeaponType;
 	OOWeaponType		_aftWeaponType;
 	OOWeaponType		_portWeaponType;
@@ -129,32 +132,29 @@ MA 02110-1301, USA.
 	Vector				_aftWeaponPosition;
 	Vector				_portWeaponPosition;
 	Vector				_starboardWeaponPosition;
-	// FIXME: these should be attributes of weapons, not ships.
 	float				_weaponEnergy;
 	float				_weaponRange;
 	OOColor				*_laserColor;
 	
 	NSUInteger			_missileCapacity;
-	NSUInteger			_missileCount;	// FIXME: should generate missiles array if missileCount is specified but not missiles.
-	NSString			*_missileRole;
+	NSUInteger			_missileCount;
+	OORoleSet			*_missileRoles;
 	NSArray				*_missiles;
 	
 	float				_scannerRange;
 	
-	// Array of { equipmentKey: String, probability: Number }.
 	NSArray				*_equipment;
 	
-	// On the subject of falling apart
 	float				_fragmentChance;
 	float				_noBouldersChance;
-	NSString			*_debrisRole;
+	OORoleSet			*_debrisRoles;
 	
 	Quaternion			_rotationalVelocity;
 	Vector				_scoopPosition;
 	Vector				_aftEjectPosition;
 	
 	// Carrier-specific
-	float				_stationRoll;	// Can we fold this into _rotationalVelocity?
+	float				_stationRoll;
 	float				_NPCTrafficChance;
 	float				_patrolShipChance;
 	NSUInteger			_maxScavengers;
@@ -162,17 +162,159 @@ MA 02110-1301, USA.
 	NSString			*_defenseShipRole;
 	NSString			*_defenseShipKey;
 	NSUInteger			_maxPolice;
-	// FIXME: we can probably drop these in favour of using a docking port subentity (which has been the normal way for a long time).
+	
 	float				_portRadius;
 	Vector				_portDimensions;
+	
 	OOTechLevelID		_equivalentTechLevel;
-	float				equipmentPriceFactor;
+	float				_equipmentPriceFactor;
+	NSString			*_marketKey;
+	
 	NSUInteger			_dockingTunnelCorners;
 	float				_dockingTunnelStartAngle;
 	float				_dockingTunnelAspectRatio;
-	NSString			*_marketKey;
 }
 
+- (OOShipClass *) likeShip;
+- (NSString *) shipKey;
+- (NSString *) name;
+- (NSString *) displayName;
+- (OOScanClass) scanClass;
+- (NSString *) beaconCode;
+- (NSString *) HUDName;	// FIXME: this should be shipyard info, although we might want to fold that in.
 
+- (NSString *) pilotKey;
+- (float) unpilotedChance;
+- (NSString *) escapePodRole;
+
+- (NSString *) scriptName;
+- (NSString *) AIName;
+- (NSDictionary *) scriptInfo;
+
+- (NSString *) modelName;
+- (NSDictionary *) materialDefinitions;
+- (NSArray *) exhaustDefinitions;
+- (NSArray *) scannerColors;
+
+- (OOCreditsQuantity) bounty;
+- (float) density;
+- (OORoleSet *) roles;
+- (NSArray *) subentityDefinitions;
+
+- (OOUInteger) escortCount;
+- (NSString *) escortShipKey;
+- (NSString *) escortRole;
+
+// Views
+- (Vector) forwardViewPosition;
+- (Vector) aftViewPosition;
+- (Vector) portViewPosition;
+- (Vector) starboardViewPosition;
+- (NSArray *) customViews;
+
+// Cargo
+- (NSUInteger) cargoSpaceCapacity;
+- (NSUInteger) cargoSpaceUsedMin;
+- (NSUInteger) cargoSpaceUsedMax;
+- (NSUInteger) cargoBayExpansionSize;
+- (NSString *) cargoType;
+
+- (BOOL) isTemplate;
+- (BOOL) isExternalDependency;
+- (BOOL) isCarrier;
+- (BOOL) smooth;				// FIXME: eliminate with new model format.
+- (BOOL) isHulk;
+- (BOOL) isFrangible;			// FIXME: make subentity isBreakable attribute instead.
+- (BOOL) trackContacts;
+- (BOOL) autoAI;
+- (BOOL) hasHyperspaceMotor;
+- (BOOL) isSubmunition;
+- (BOOL) cloakPassive;
+- (BOOL) cloakAutomatic;
+- (BOOL) hasScoopMessage;		// FIXME: remove, this should be scripted.
+- (BOOL) rotating;
+- (BOOL) countsAsKill;
+- (BOOL) hasShipyard;
+
+// Energy and fuel
+- (float) maxEnergy;
+- (float) energyRechargeRate;
+- (float) maxFuel;
+- (float) fuelChargeRate;
+
+- (float) heatInsulation;
+
+
+// Flight parameters
+- (float) maxFlightSpeed;
+- (float) maxFlightRoll;
+- (float) maxFlightPitch;
+- (float) maxFlightYaw;
+- (float) maxThrust;
+- (float) hyperspaceMotorSpinTime;
+
+// Weapons
+- (float) accuracy;
+// FIXME: these should be equipment types.
+- (OOWeaponType) forwardWeaponType;
+- (OOWeaponType) aftWeaponType;
+- (OOWeaponType) portWeaponType;
+- (OOWeaponType) starboardWeaponType;
+- (Vector) forwardWeaponPosition;
+- (Vector) aftWeaponPosition;
+- (Vector) portWeaponPosition;
+- (Vector) starboardWeaponPosition;
+// FIXME: these should be attributes of weapons, not ships.
+- (float) weaponEnergy;
+- (float) weaponRange;
+- (OOColor *) laserColor;
+
+- (NSUInteger) missileCapacity;
+- (NSUInteger) missileCount;
+- (OORoleSet *) missileRoles;
+- (NSArray *) missiles;
+- (NSMutableArray *) selectMissiles;	// Generate an array of missile types (OOEquipmentInfo *). May produce different results on multiple calls.
+
+- (float) scannerRange;
+
+- (NSArray *) equipment;				// Array of { equipmentKey: String, probability: Number }.
+- (NSMutableArray *) selectEquipment;	// Generate an array of internal equipment (OOEquipmentInfo *). May produce different results on multiple calls.
+
+// On the subject of falling apart
+- (float) fragmentChance;
+- (BOOL) selectCanFragment;
+- (float) noBouldersChance;
+- (BOOL) selectNoBoulders;
+- (OORoleSet *) debrisRoles;
+- (NSString *) selectDebrisRole;
+
+- (Quaternion) rotationalVelocity;
+- (Vector) scoopPosition;
+- (Vector) aftEjectPosition;
+
+// Carrier-specific
+- (float) stationRoll;	// Can we fold this into rotationalVelocity?
+- (float) NPCTrafficChance;
+- (float) patrolShipChance;
+- (NSUInteger) maxScavengers;
+- (NSUInteger) maxDefenseShips;
+- (NSString *) defenseShipRole;
+- (NSString *) defenseShipKey;
+- (NSUInteger) maxPolice;
+// FIXME: we can probably drop these in favour of using a docking port subentity (which has been the normal way for a long time).
+- (float) portRadius;
+- (Vector) portDimensions;
+
+- (OOTechLevelID) equivalentTechLevel;
+- (float) equipmentPriceFactor;
+- (NSString *) marketKey;
+
+- (BOOL) requiresDockingClearance;
+- (BOOL) allowsInterstellarUndocking;
+- (BOOL) allowsAutoDocking;
+- (BOOL) allowsFastDocking;
+- (NSUInteger) dockingTunnelCorners;
+- (float) dockingTunnelStartAngle;
+- (float) dockingTunnelAspectRatio;
 
 @end

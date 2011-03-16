@@ -117,8 +117,6 @@ typedef enum
 - (OOTechLevelID) equivalentTechLevel;
 - (void) setEquivalentTechLevel:(OOTechLevelID) value;
 
-- (double) port_radius;
-
 - (Vector) getPortPosition;
 
 - (Vector) getBeaconPosition;

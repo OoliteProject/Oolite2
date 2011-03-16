@@ -75,12 +75,6 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 }
 
 
-- (double) port_radius
-{
-	return magnitude(port_position);
-}
-
-
 - (Vector) getPortPosition
 {
 	Vector result = position;
@@ -774,24 +768,10 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	isStation = YES;
 	alertLevel = STATION_ALERT_LEVEL_GREEN;
 	
-	double port_radius = [dict oo_nonNegativeDoubleForKey:@"port_radius" defaultValue:500.0];
-	port_position = make_vector(0, 0, port_radius);
+	port_position = kBasisZVector;
+	port_dimensions = kZeroVector;
 	port_orientation = kIdentityQuaternion;
 	port_corridor = 0;
-	
-	// port_dimensions can be set for rock-hermits and other specials
-	port_dimensions = make_vector(69, 69, 250);
-	NSString *portDimensionsStr = [dict oo_stringForKey:@"port_dimensions"];
-	if (portDimensionsStr != nil)   // this can be set for rock-hermits and other specials
-	{
-		NSArray* tokens = [portDimensionsStr componentsSeparatedByString:@"x"];
-		if ([tokens count] == 3)
-		{
-			port_dimensions = make_vector([[tokens objectAtIndex:0] floatValue],
-										  [[tokens objectAtIndex:1] floatValue],
-										  [[tokens objectAtIndex:2] floatValue]);
-		}
-	}
 	
 	if (![super setUpShipFromDictionary:dict])  return NO;
 	

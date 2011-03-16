@@ -68,8 +68,7 @@ MA 02110-1301, USA.
 	NSArray				*_subentityDefinitions;
 	
 	OOUInteger			_escortCount;
-	NSString			*_escortShipKey;
-	NSString			*_escortRole;
+	OORoleSet			*_escortRoles;
 	
 	Vector				_forwardViewPosition;
 	Vector				_aftViewPosition;
@@ -83,38 +82,13 @@ MA 02110-1301, USA.
 	NSUInteger			_cargoBayExpansionSize;	// extra_cargo
 	NSString			*_cargoType;			// cargo_carried
 	
-	// Flags (non-fuzzy booleans)
-	BOOL				_isTemplate: 1,
-						_isExternalDependency: 1,
-						_isCarrier: 1,
-						_smooth: 1,
-						_isHulk: 1,
-						_isFrangible: 1,
-						_trackContacts: 1,
-						_autoAI: 1,
-						_hasHyperspaceMotor: 1,
-						_isSubmunition: 1,
-						_cloakPassive: 1,
-						_cloakAutomatic: 1,
-						_hasScoopMessage: 1,
-						_rotating: 1,
-						_countsAsKill: 1,
-	// Carrier flags
-						_hasShipyard: 1,
-						_requiresDockingClearance: 1,
-						_allowsInterstellarUndocking: 1,
-						_allowsAutoDocking: 1,
-						_allowsFastDocking: 1;
-	
-	// Energy and fuel
-	float				_maxEnergy;
+	float				_energyCapacity;
 	float				_energyRechargeRate;
-	float				_maxFuel;
+	float				_fuelCapacity;
 	float				_fuelChargeRate;
 	
 	float				_heatInsulation;
 	
-	// Flight parameters
 	float				_maxFlightSpeed;
 	float				_maxFlightRoll;
 	float				_maxFlightPitch;
@@ -122,7 +96,6 @@ MA 02110-1301, USA.
 	float				_maxThrust;
 	float				_hyperspaceMotorSpinTime;
 	
-	// Weapons
 	float				_accuracy;
 	OOWeaponType		_forwardWeaponType;
 	OOWeaponType		_aftWeaponType;
@@ -137,9 +110,9 @@ MA 02110-1301, USA.
 	OOColor				*_laserColor;
 	
 	NSUInteger			_missileCapacity;
-	NSUInteger			_missileCount;
+	NSUInteger			_missileCountMin;
+	NSUInteger			_missileCountMax;
 	OORoleSet			*_missileRoles;
-	NSArray				*_missiles;
 	
 	float				_scannerRange;
 	
@@ -153,18 +126,13 @@ MA 02110-1301, USA.
 	Vector				_scoopPosition;
 	Vector				_aftEjectPosition;
 	
-	// Carrier-specific
 	float				_stationRoll;
-	float				_NPCTrafficChance;
-	float				_patrolShipChance;
+	float				_hasNPCTrafficChance;
+	float				_hasPatrolShipsChance;
 	NSUInteger			_maxScavengers;
 	NSUInteger			_maxDefenseShips;
-	NSString			*_defenseShipRole;
-	NSString			*_defenseShipKey;
+	OORoleSet			*_defenseShipRoles;
 	NSUInteger			_maxPolice;
-	
-	float				_portRadius;
-	Vector				_portDimensions;
 	
 	OOTechLevelID		_equivalentTechLevel;
 	float				_equipmentPriceFactor;
@@ -173,37 +141,70 @@ MA 02110-1301, USA.
 	NSUInteger			_dockingTunnelCorners;
 	float				_dockingTunnelStartAngle;
 	float				_dockingTunnelAspectRatio;
+	
+	// Flags (non-fuzzy booleans)
+	BOOL				_isTemplate: 1,
+						_isExternalDependency: 1,
+						_isCarrier: 1,
+						_smooth: 1,
+						_isHulk: 1,
+						_isFrangible: 1,
+						_trackContacts: 1,
+						_autoAI: 1,
+						_hasHyperspaceMotor: 1,
+						_isSubmunition: 1,
+						_cloakIsPassive: 1,
+						_cloakIsAutomatic: 1,
+						_hasScoopMessage: 1,
+						_isRotating: 1,
+						_countsAsKill: 1,
+						_hasShipyard: 1,
+						_requiresDockingClearance: 1,
+						_allowsInterstellarUndocking: 1,
+						_allowsAutoDocking: 1,
+						_allowsFastDocking: 1;
 }
 
+- (BOOL) isTemplate;
+- (BOOL) isExternalDependency;
 - (OOShipClass *) likeShip;
 - (NSString *) shipKey;
 - (NSString *) name;
 - (NSString *) displayName;
 - (OOScanClass) scanClass;
 - (NSString *) beaconCode;
+- (BOOL) isHulk;
 - (NSString *) HUDName;	// FIXME: this should be shipyard info, although we might want to fold that in.
 
 - (NSString *) pilotKey;
 - (float) unpilotedChance;
+- (BOOL) selectUnpiloted;
 - (NSString *) escapePodRole;
+- (BOOL) countsAsKill;
 
 - (NSString *) scriptName;
-- (NSString *) AIName;
 - (NSDictionary *) scriptInfo;
+- (BOOL) hasScoopMessage;		// FIXME: remove, this should be scripted.
+- (NSString *) AIName;
+- (BOOL) trackContacts;
+- (BOOL) autoAI;
 
 - (NSString *) modelName;
+- (BOOL) smooth;				// FIXME: eliminate with new model format.
 - (NSDictionary *) materialDefinitions;
 - (NSArray *) exhaustDefinitions;
 - (NSArray *) scannerColors;
+- (float) scannerRange;
 
 - (OOCreditsQuantity) bounty;
 - (float) density;
 - (OORoleSet *) roles;
 - (NSArray *) subentityDefinitions;
+- (BOOL) isFrangible;			// FIXME: make subentity isBreakable attribute instead.
 
 - (OOUInteger) escortCount;
-- (NSString *) escortShipKey;
-- (NSString *) escortRole;
+- (OORoleSet *) escortRoles;
+- (NSString *) selectEscortShip;
 
 // Views
 - (Vector) forwardViewPosition;
@@ -216,30 +217,14 @@ MA 02110-1301, USA.
 - (NSUInteger) cargoSpaceCapacity;
 - (NSUInteger) cargoSpaceUsedMin;
 - (NSUInteger) cargoSpaceUsedMax;
+- (NSUInteger) selectCargoSpaceUsed;
 - (NSUInteger) cargoBayExpansionSize;
 - (NSString *) cargoType;
 
-- (BOOL) isTemplate;
-- (BOOL) isExternalDependency;
-- (BOOL) isCarrier;
-- (BOOL) smooth;				// FIXME: eliminate with new model format.
-- (BOOL) isHulk;
-- (BOOL) isFrangible;			// FIXME: make subentity isBreakable attribute instead.
-- (BOOL) trackContacts;
-- (BOOL) autoAI;
-- (BOOL) hasHyperspaceMotor;
-- (BOOL) isSubmunition;
-- (BOOL) cloakPassive;
-- (BOOL) cloakAutomatic;
-- (BOOL) hasScoopMessage;		// FIXME: remove, this should be scripted.
-- (BOOL) rotating;
-- (BOOL) countsAsKill;
-- (BOOL) hasShipyard;
-
 // Energy and fuel
-- (float) maxEnergy;
+- (float) energyCapacity;
 - (float) energyRechargeRate;
-- (float) maxFuel;
+- (float) fuelCapacity;
 - (float) fuelChargeRate;
 
 - (float) heatInsulation;
@@ -251,6 +236,7 @@ MA 02110-1301, USA.
 - (float) maxFlightPitch;
 - (float) maxFlightYaw;
 - (float) maxThrust;
+- (BOOL) hasHyperspaceMotor;
 - (float) hyperspaceMotorSpinTime;
 
 // Weapons
@@ -270,17 +256,22 @@ MA 02110-1301, USA.
 - (OOColor *) laserColor;
 
 - (NSUInteger) missileCapacity;
-- (NSUInteger) missileCount;
+- (NSUInteger) missileCountMin;
+- (NSUInteger) missileCountMax;
+- (NSUInteger) selectMissileCount;
 - (OORoleSet *) missileRoles;
-- (NSArray *) missiles;
 - (NSMutableArray *) selectMissiles;	// Generate an array of missile types (OOEquipmentInfo *). May produce different results on multiple calls.
 
-- (float) scannerRange;
+- (BOOL) isSubmunition;
 
-- (NSArray *) equipment;				// Array of { equipmentKey: String, probability: Number }.
-- (NSMutableArray *) selectEquipment;	// Generate an array of internal equipment (OOEquipmentInfo *). May produce different results on multiple calls.
+- (BOOL) cloakIsPassive;
+- (BOOL) cloakIsAutomatic;
 
-// On the subject of falling apart
+
+- (NSArray *) equipment;		// Array of { key: String, probability: Number }.
+- (NSArray *) selectEquipment;	// Generate an array of internal equipment (OOEquipmentInfo *). May produce different results on multiple calls. This does not validate that the equipment is appropriate for a given ship, so that needs to be done as an additional step.
+
+// Asteroid/boulder properties
 - (float) fragmentChance;
 - (BOOL) selectCanFragment;
 - (float) noBouldersChance;
@@ -288,26 +279,27 @@ MA 02110-1301, USA.
 - (OORoleSet *) debrisRoles;
 - (NSString *) selectDebrisRole;
 
+- (BOOL) isRotating;
 - (Quaternion) rotationalVelocity;
 - (Vector) scoopPosition;
 - (Vector) aftEjectPosition;
 
-// Carrier-specific
+// Carrier properties
+- (BOOL) isCarrier;
 - (float) stationRoll;	// Can we fold this into rotationalVelocity?
-- (float) NPCTrafficChance;
-- (float) patrolShipChance;
+- (float) hasNPCTrafficChance;
+- (BOOL) selectHasNPCTraffic;
+- (float) hasPatrolShipsChance;
+- (BOOL) selectHasPatrolShips;
 - (NSUInteger) maxScavengers;
 - (NSUInteger) maxDefenseShips;
-- (NSString *) defenseShipRole;
-- (NSString *) defenseShipKey;
+- (OORoleSet *) defenseShipRoles;
 - (NSUInteger) maxPolice;
-// FIXME: we can probably drop these in favour of using a docking port subentity (which has been the normal way for a long time).
-- (float) portRadius;
-- (Vector) portDimensions;
 
 - (OOTechLevelID) equivalentTechLevel;
 - (float) equipmentPriceFactor;
 - (NSString *) marketKey;
+- (BOOL) hasShipyard;
 
 - (BOOL) requiresDockingClearance;
 - (BOOL) allowsInterstellarUndocking;
@@ -318,3 +310,11 @@ MA 02110-1301, USA.
 - (float) dockingTunnelAspectRatio;
 
 @end
+
+
+extern NSString * const kOODefaultHUDName;
+extern NSString * const kOODefaultEscapePodRole;
+extern NSString * const kOODefaultShipScriptName;
+extern NSString * const kOODefaultShipAIName;
+extern NSString * const kOODefaultEscortRole;
+extern NSString * const kOODefaultDebrisRole;

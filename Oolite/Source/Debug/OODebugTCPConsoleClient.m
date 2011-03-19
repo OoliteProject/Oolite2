@@ -33,6 +33,7 @@ SOFTWARE.
 #import "OODebugTCPConsoleClient.h"
 #import "OODebugTCPConsoleProtocol.h"
 #import "OODebugMonitor.h"
+#import "OOVersion.h"
 
 #if OOLITE_WINDOWS
 #include <winsock2.h>
@@ -153,7 +154,7 @@ OOINLINE BOOL StatusIsSendable(OOTCPClientConnectionStatus status)
 			// Attempt to connect
 			parameters = [NSDictionary dictionaryWithObjectsAndKeys:
 							[NSNumber numberWithUnsignedInt:kOOTCPProtocolVersion_1_1_0], kOOTCPProtocolVersion,
-							[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"], kOOTCPOoliteVersion,
+							OoliteVersion(), kOOTCPOoliteVersion,
 							nil];
 			[self sendPacket:kOOTCPPacket_RequestConnection
 			   withParameters:parameters];

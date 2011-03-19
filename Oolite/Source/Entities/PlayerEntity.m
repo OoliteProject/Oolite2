@@ -64,6 +64,7 @@ MA 02110-1301, USA.
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSScript.h"
 #import "OOConstToJSString.h"
+#import "OOVersion.h"
 
 #import "OOJoystickManager.h"
 #import "PlayerEntityStickMapper.h"
@@ -482,7 +483,7 @@ static GLfloat		sBaseMass = 0.0;
 {
 	NSMutableDictionary *result = [NSMutableDictionary dictionary];
 	
-	[result setObject:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] forKey:@"written_by_version"];
+	[result setObject:OoliteVersion() forKey:@"written_by_version"];
 
 	NSString *gal_seed = [NSString stringWithFormat:@"%d %d %d %d %d %d", galaxy_seed.a, galaxy_seed.b, galaxy_seed.c, galaxy_seed.d, galaxy_seed.e, galaxy_seed.f];
 	NSString *gal_coords = [NSString stringWithFormat:@"%d %d",(int)galaxy_coordinates.x,(int)galaxy_coordinates.y];
@@ -6336,7 +6337,7 @@ static NSString *last_outfitting_key=nil;
 			if ([[arguments objectAtIndex:i] isEqual:@"-showversion"])
 			{
 				int ms_start = msgLine;
-				NSString *version = [NSString stringWithFormat:@"Version %@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+				NSString *version = [NSString stringWithFormat:@"Version %@", OoliteVersion()];
 				int i = msgLine = [gui addLongText:version startingAtRow:ms_start align:GUI_ALIGN_CENTER];
 				for (i-- ; i >= ms_start; i--) [gui setColor:[OOColor magentaColor] forRow:i];
 			}

@@ -29,6 +29,7 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "MyOpenGLView.h"
 #import "OoliteLogOutputHandler.h"
+#import "OOVersion.h"
 
 #import "OOJSScript.h"
 
@@ -331,9 +332,8 @@ static NSMutableDictionary *sStringCache;
 	if (requirementsMet)  [searchPaths addObject:path];
 	else
 	{
-		NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-		OOLog(@"oxp.versionMismatch", @"OXP %@ is incompatible with version %@ of Oolite.", path, version);
-		[self addErrorWithKey:@"oxp-is-incompatible" param1:[path lastPathComponent] param2:version];
+		OOLog(@"oxp.versionMismatch", @"OXP %@ is incompatible with version %@ of Oolite.", path, OoliteVersion());
+		[self addErrorWithKey:@"oxp-is-incompatible" param1:[path lastPathComponent] param2:OoliteVersion()];
 	}
 }
 
@@ -344,16 +344,9 @@ static NSMutableDictionary *sStringCache;
 	NSString			*requiredVersion = nil;
 	NSString			*maxVersion = nil;
 	unsigned			conditionsHandled = 0;
-	static NSArray		*ooVersionComponents = nil;
 	NSArray				*oxpVersionComponents = nil;
 	
 	if (requirements == nil)  return YES;
-	
-	if (ooVersionComponents == nil)
-	{
-		ooVersionComponents = ComponentsFromVersionString([[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]);
-		[ooVersionComponents retain];
-	}
 	
 	// Check "version" (minimum version)
 	if (OK)
@@ -365,8 +358,8 @@ static NSMutableDictionary *sStringCache;
 			++conditionsHandled;
 			if ([requiredVersion isKindOfClass:[NSString class]])
 			{
-				oxpVersionComponents = ComponentsFromVersionString(requiredVersion);
-				if (NSOrderedAscending == CompareVersions(ooVersionComponents, oxpVersionComponents))  OK = NO;
+				oxpVersionComponents = OOComponentsFromVersionString(requiredVersion);
+				if (NSOrderedAscending == OOCompareVersions(OoliteVersionComponents(), oxpVersionComponents))  OK = NO;
 			}
 			else
 			{
@@ -386,8 +379,8 @@ static NSMutableDictionary *sStringCache;
 			++conditionsHandled;
 			if ([maxVersion isKindOfClass:[NSString class]])
 			{
-				oxpVersionComponents = ComponentsFromVersionString(maxVersion);
-				if (NSOrderedDescending == CompareVersions(ooVersionComponents, oxpVersionComponents))  OK = NO;
+				oxpVersionComponents = OOComponentsFromVersionString(maxVersion);
+				if (NSOrderedDescending == OOCompareVersions(OoliteVersionComponents(), oxpVersionComponents))  OK = NO;
 			}
 			else
 			{

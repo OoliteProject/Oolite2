@@ -160,6 +160,7 @@
 		1A649F4A1323B8B000C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649F4B1323B8B000C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 		1A649F4C1323B8B000C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A6C1F721334BD0500821B1D /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -242,6 +243,7 @@
 		1A649F471323B8B000C2FDDB /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1A6C1F721334BD0500821B1D /* GNUmakefile */,
 				1A649F481323B8B000C2FDDB /* oolite-debug-configuration.xcconfig */,
 				1A649F491323B8B000C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649F4A1323B8B000C2FDDB /* oolite-enduser-configuration.xcconfig */,

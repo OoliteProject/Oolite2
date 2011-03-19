@@ -420,6 +420,7 @@
 		1A43CBFA13060F2B00BB8FB3 /* OOMacErrorDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CBF913060F2B00BB8FB3 /* OOMacErrorDescription.m */; };
 		1A43CC1013060FDA00BB8FB3 /* VirtualRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CC0F13060FDA00BB8FB3 /* VirtualRingBuffer.m */; };
 		1A64A1681323CA5700C2FDDB /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F24821317C5B700D06C6C /* OoliteBase.framework */; };
+		1A6C1F981334BEC700821B1D /* OOVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C1F971334BEC700821B1D /* OOVersion.m */; };
 		1A9C62E51305FD6500B30EFD /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62E31305FD6500B30EFD /* MainMenu.nib */; };
 		1A9C62F01305FE2100B30EFD /* oolite-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62ED1305FE2100B30EFD /* oolite-document.icns */; };
 		1A9C62F11305FE2100B30EFD /* oolite-expansion-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */; };
@@ -1486,6 +1487,8 @@
 		1A64A0CC1323C54000C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A64A0CD1323C54000C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 		1A64A0CE1323C54000C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A6C1F961334BEC700821B1D /* OOVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVersion.h; sourceTree = "<group>"; };
+		1A6C1F971334BEC700821B1D /* OOVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOVersion.m; sourceTree = "<group>"; };
 		1A9C62E41305FD6500B30EFD /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Oolite-Info.plist"; sourceTree = "<group>"; };
 		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-document.icns"; sourceTree = "<group>"; };
@@ -2410,6 +2413,8 @@
 				1A1F2E7D13184EC200D06C6C /* OOLogHeader.m */,
 				1A1F2EF8131854F700D06C6C /* OOMusicController.h */,
 				1A1F2EF9131854F700D06C6C /* OOMusicController.m */,
+				1A6C1F961334BEC700821B1D /* OOVersion.h */,
+				1A6C1F971334BEC700821B1D /* OOVersion.m */,
 			);
 			name = Misc;
 			sourceTree = "<group>";
@@ -2561,6 +2566,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "the Oolite team";
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Oolite" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = en;
@@ -2865,6 +2873,7 @@
 				1A1F2F32131858B700D06C6C /* OORegExpMatcher.m in Sources */,
 				1AB5C39913186F5500C73246 /* OOMacJoystickManager.m in Sources */,
 				1A18D69913191A920096D960 /* SUUpdater.m in Sources */,
+				1A6C1F981334BEC700821B1D /* OOVersion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

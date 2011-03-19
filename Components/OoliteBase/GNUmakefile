@@ -63,6 +63,7 @@ OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
 OoliteBase_HEADER_FILES		=	MYCollectionUtilities.h \
 								NSDataOOExtensions.h \
 								NSDictionaryOOExtensions.h \
+								NSMapTableOOExtensions.h \
 								NSNumberOOExtensions.h \
 								NSObjectOOExtensions.h \
 								NSScannerOOExtensions.h \

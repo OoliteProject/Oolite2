@@ -29,6 +29,7 @@
 		1A458BC911F909BD000CBCF0 /* OOIsNumberLiteral.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458BC711F909BD000CBCF0 /* OOIsNumberLiteral.m */; };
 		1A60EDE811B6FD8600224F2D /* OODeepCopy.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A60EDE611B6FD8500224F2D /* OODeepCopy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A60EDE911B6FD8600224F2D /* OODeepCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A60EDE711B6FD8500224F2D /* OODeepCopy.m */; };
+		1A6C21271334E9DA00821B1D /* NSMapTableOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21251334E9DA00821B1D /* NSMapTableOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713F9611B56397009A9197 /* OoliteBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713F9511B56397009A9197 /* OoliteBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FAA11B56436009A9197 /* OOCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FA811B56436009A9197 /* OOCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FAB11B56436009A9197 /* OOCocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FA911B56436009A9197 /* OOCocoa.m */; };
@@ -114,6 +115,7 @@
 		1A649F521323B8E900C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649F531323B8E900C2FDDB /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
 		1A649F541323B8E900C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A6C21251334E9DA00821B1D /* NSMapTableOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMapTableOOExtensions.h; sourceTree = "<group>"; };
 		1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteBase-Info.plist"; sourceTree = "<group>"; };
 		1A713F9511B56397009A9197 /* OoliteBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteBase.h; path = ../Source/OoliteBase.h; sourceTree = SOURCE_ROOT; };
 		1A713FA811B56436009A9197 /* OOCocoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCocoa.h; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				1A878B6411B57766001BB304 /* NSObjectOOExtensions.m */,
 				1A878B6711B57778001BB304 /* NSStringOOExtensions.h */,
 				1A878B6811B57778001BB304 /* NSStringOOExtensions.m */,
+				1A6C21251334E9DA00821B1D /* NSMapTableOOExtensions.h */,
 				1A878B6D11B57793001BB304 /* NSNumberOOExtensions.h */,
 				1A878B6E11B57793001BB304 /* NSNumberOOExtensions.m */,
 				1A878B7211B577AE001BB304 /* NSThreadOOExtensions.h */,
@@ -391,6 +394,7 @@
 				1A1F31A913185FE500D06C6C /* OOExcludeObjectEnumerator.h in Headers */,
 				1A990D3E1326DCF400F4A2A7 /* OOBaseErrors.h in Headers */,
 				1A990DCE1326DE0200F4A2A7 /* NSDataOOExtensions.h in Headers */,
+				1A6C21271334E9DA00821B1D /* NSMapTableOOExtensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

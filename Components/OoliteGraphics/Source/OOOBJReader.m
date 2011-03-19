@@ -29,6 +29,7 @@
 #import "OOOBJLexer.h"
 
 #import "OOAbstractMesh.h"
+#import "OOProgressReporting.h"
 
 
 #define kAnonymousMaterialName @"<unnamed>"
@@ -144,7 +145,7 @@
 	_texCoords = [NSMutableArray array];
 	_normals = [NSMutableArray array];
 	_smoothGroups = [NSMutableDictionary dictionary];
-	_smoothGroupIDs = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
+	_smoothGroupIDs = NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks, OOIntegerMapValueCallBacks, 0);
 	_materials = [NSMutableDictionary dictionary];
 	_materialGroups = [NSMutableDictionary dictionary];
 	_vertexCache = [NSMutableDictionary dictionary];

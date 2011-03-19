@@ -27,8 +27,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
-#import <OpenGL/gl.h>
+#import <OoliteBase/OoliteBase.h>
+#import "OOOpenGL.h"
 
 
 @interface OOIndexArray: NSArray

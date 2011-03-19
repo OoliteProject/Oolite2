@@ -59,7 +59,7 @@ typedef enum
 
 typedef enum
 {
-	CARGO_UNDEFINED					= -2,	// FIXME: it's unclear whether there's a useful distinction between CARGO_UNDEFINED (previously NSNotFound) and CARGO_NOT_CARGO.
+	CARGO_UNDEFINED					= -2,	// Used on loading to flag unknown values.
 	CARGO_NOT_CARGO					= -1,
 	CARGO_SLAVES					= 3,
 	CARGO_ALLOY						= 9,

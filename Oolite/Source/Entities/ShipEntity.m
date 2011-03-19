@@ -362,7 +362,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	fuel_charge_rate = 1.0;
 #endif
 	
-	OOColor *color = [OOColor brightColorWithDescription:[shipDict objectForKey:@"laser_color"]];
+	OOColor *color = [OOColor brightcolorWithDescription:[shipDict objectForKey:@"laser_color"]];
 	if (color == nil)  color = [OOColor redColor];
 	[self setLaserColor:color];
 	

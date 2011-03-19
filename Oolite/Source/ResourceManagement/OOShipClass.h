@@ -80,11 +80,13 @@ MA 02110-1301, USA.
 	NSUInteger			_cargoSpaceUsedMin;
 	NSUInteger			_cargoSpaceUsedMax;		// likely_cargo
 	NSUInteger			_cargoBayExpansionSize;	// extra_cargo
-	NSString			*_cargoType;			// cargo_carried
+	OOCargoType			_cargoType;
+	NSString			*_cargoCarried;
 	
 	float				_energyCapacity;
 	float				_energyRechargeRate;
-	float				_fuelCapacity;
+	OOFuelQuantity		_fuelCapacity;
+	OOFuelQuantity		_initialFuel;
 	float				_fuelChargeRate;
 	
 	float				_heatInsulation;
@@ -165,6 +167,21 @@ MA 02110-1301, USA.
 						_allowsFastDocking: 1;
 }
 
+/*
+	Create an OOShipClass from an Oolite 1.x shipdata.plist entry.
+	
+	key: the shipdata.plist key.
+	legacyPList: the shipdata.plist value.
+	knownShips: dictionary of previously-loaded OOShipClasses, for like_ship
+	support. The caller is responsible for ensuring dependencies are loaded in
+	advance.
+*/
+- (id) initWithKey:(NSString *)key
+	   legacyPList:(NSDictionary *)legacyPList
+		knownShips:(NSDictionary *)knownShips
+   problemReporter:(id<OOProblemReporting>)issues;
+
+
 - (BOOL) isTemplate;
 - (BOOL) isExternalDependency;
 - (OOShipClass *) likeShip;
@@ -179,7 +196,7 @@ MA 02110-1301, USA.
 - (NSString *) pilotKey;
 - (float) unpilotedChance;
 - (BOOL) selectUnpiloted;
-- (NSString *) escapePodRole;
+- (NSString *) escapePodRole;	// FIXME: should be role set.
 - (BOOL) countsAsKill;
 
 - (NSString *) scriptName;
@@ -219,13 +236,15 @@ MA 02110-1301, USA.
 - (NSUInteger) cargoSpaceUsedMax;
 - (NSUInteger) selectCargoSpaceUsed;
 - (NSUInteger) cargoBayExpansionSize;
-- (NSString *) cargoType;
+- (OOCargoType) cargoType;
+- (NSString *) cargoCarried;
 
 // Energy and fuel
 - (float) energyCapacity;
 - (float) energyRechargeRate;
-- (float) fuelCapacity;
-- (float) fuelChargeRate;
+- (OOFuelQuantity) fuelCapacity;
+- (OOFuelQuantity) initialFuel;
+- (float) fuelChargeRate;	// NOTE: this is the value in the config file, not adjusted for mass-dependent rules.
 
 - (float) heatInsulation;
 

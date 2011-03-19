@@ -30,13 +30,6 @@ SOFTWARE.
 #import "OOStringParsing.h"
 
 
-@interface OORoleSet (OOPrivate)
-
-- (id)initWithRolesAndProbabilities:(NSDictionary *)dict;
-
-@end
-
-
 @implementation OORoleSet
 
 + (id)roleSetWithString:(NSString *)roleString

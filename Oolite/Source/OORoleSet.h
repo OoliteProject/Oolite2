@@ -45,6 +45,7 @@ SOFTWARE.
 
 - (id)initWithRoleString:(NSString *)roleString;
 - (id)initWithRole:(NSString *)role probability:(float)probability;
+- (id)initWithRolesAndProbabilities:(NSDictionary *)dict;
 
 - (NSString *)roleString;
 

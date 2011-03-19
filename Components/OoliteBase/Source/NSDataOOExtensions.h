@@ -41,4 +41,6 @@ SOFTWARE.
 */
 + (id) oo_dataWithContentsOfURL:(NSURL *)url options:(NSUInteger)readOptionsMask error:(NSError **)errorPtr;
 
++ (id) oo_dataWithContentsOfFile:(NSString *)path options:(NSUInteger)readOptionsMask error:(NSError **)errorPtr;
+
 @end

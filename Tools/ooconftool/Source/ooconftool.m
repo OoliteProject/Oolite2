@@ -245,7 +245,7 @@ static void Convert(NSString *inFile, Format inFormat, NSString *outFile, Format
 static id Load(NSString *inFile, Format inFormat)
 {
 	NSError *error = nil;
-	NSData *data = [NSData dataWithContentsOfFile:inFile options:0 error:&error];
+	NSData *data = [NSData oo_dataWithContentsOfFile:inFile options:0 error:&error];
 	if (data == nil)
 	{
 		Fail(@"Could not read input file. %@", error);

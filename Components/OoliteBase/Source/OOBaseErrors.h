@@ -38,6 +38,7 @@ enum
 	
 	// Error reading file.
 	kOOBaseReadError,
+	kOOBaseNonFileURLError,
 	
 	// OOConfGeneration errors.
 	kOOConfGenerationErrorUnknownError,

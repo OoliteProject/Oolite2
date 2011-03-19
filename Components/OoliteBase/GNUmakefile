@@ -2,8 +2,6 @@ OOLITE_TARGET				= OoliteBase
 OOLITE_ROOT					= ../../
 LIBRARY_NAME				= $(OOLITE_TARGET)
 
-shared=no
-
 include $(OOLITE_ROOT)/Config/oolite-shared.make
 
 

@@ -37,19 +37,40 @@ SOFTWARE.
 #if OOLITE_MAC_OS_X
 	return [self dataWithContentsOfURL:url options:readOptionsMask error:errorPtr];
 #else
-	NSData *result = nil;
-	if ((readOptionsMask & NSDataReadingMapped) && [url isFileURL])
+	if ([url isFileURL])
 	{
-		result = [self dataWithContentsOfMappedFile:[url path]];
+		return [self oo_dataWithContentsOfFile:[url path] options:readOptionsMask error:errorPtr];
 	}
 	else
 	{
-		result = [self dataWithContentsOfURL:url];
+		if (errorPtr != NULL)
+		{
+			*errorPtr = [NSError errorWithDomain:kOoliteBaseErrorDomain code:kOOBaseNonFileURLError userInfo:$dict(NSLocalizedFailureReasonErrorKey, $sprintf(@"Could not read from non-file URL %@", [url absoluteString]))];
+		}
+		return nil;
+	}
+#endif
+}
+
+
++ (id) oo_dataWithContentsOfFile:(NSString *)path options:(NSUInteger)readOptionsMask error:(NSError **)errorPtr
+{
+#if OOLITE_MAC_OS_X
+	return [self dataWithContentsOfFile:path options:readOptionsMask error:errorPtr];
+#else
+	NSData *result = nil;
+	if ((readOptionsMask & NSDataReadingMapped))
+	{
+		result = [self dataWithContentsOfMappedFile:path];
+	}
+	else
+	{
+		result = [self dataWithContentsOfFile:path];
 	}
 	
 	if (result == nil && errorPtr != NULL)
 	{
-		*errorPtr = [NSError errorWithDomain:kOoliteBaseErrorDomain code:kOOBaseReadError userInfo:$dict(NSLocalizedFailureReasonErrorKey, $sprintf(@"Could not read file %@", [url path]))];
+		*errorPtr = [NSError errorWithDomain:kOoliteBaseErrorDomain code:kOOBaseReadError userInfo:$dict(NSLocalizedFailureReasonErrorKey, $sprintf(@"Could not read file %@", path))];
 	}
 	
 	return result;

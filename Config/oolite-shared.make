@@ -24,16 +24,16 @@ endif
 ifneq ($(style),debug)
 	ifneq ($(style),developer)
 		ifneq ($(style),enduser)
-			# Actually halts with "*** commands commence before first target." Oh, well.
-			$(error "Invalid style '$(style)' - must be 'debug', 'developer' or 'enduser'.")
+			# Defer error to build time, since make doesn't let you fail outside of a target.
+			ADDITIONAL_ALLCFLAGS += $(error Invalid style "$(style)" - must be "debug", "developer" or "enduser")
 		endif
 	endif
 endif
 
 
 
-# "developer" style is the default and the baseline. (However, a standard
-# GNUstep install will set debug to yes, so debug is the effective default style.)
+# "developer" style is the default and the baseline. (However, "debug" will be
+# used if debug=yes is set explicitly or by common.make.)
 
 #ifeq ($(style),developer)
 	OO_DEBUG					= no

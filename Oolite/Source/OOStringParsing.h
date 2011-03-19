@@ -86,18 +86,6 @@ NSString *OOPadStringTo(NSString * string, float numSpaces);
 @end
 
 
-// Given a string of the form 1.2.3.4 (with arbitrarily many components), return an array of unsigned ints.
-NSArray *ComponentsFromVersionString(NSString *string);
-
-/*	Compare two arrays of unsigned int NSNumbers, as returned by
-	ComponentsFromVersionString().
-	
-	Components are ordered from most to least significant, and a missing
-	component is treated as 0. Thus "1.7" < "1.60", and "1.2.3.0" == "1.2.3".
-*/
-NSComparisonResult CompareVersions(NSArray *version1, NSArray *version2);
-
-
 NSString *ClockToString(double clock, BOOL adjusting);
 
 

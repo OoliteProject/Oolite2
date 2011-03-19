@@ -72,11 +72,9 @@ static void AppendNewLineAndIndent(NSMutableString *ioString, unsigned indentDep
 				}
 				
 				// Use rest of string…
-				NSRange searchRange =
-				{
-					.location = foundRange.location + foundRange.length,
-					searchRange.length = length - searchRange.location
-				};
+				NSRange searchRange;
+				searchRange.location = foundRange.location + foundRange.length;
+				searchRange.length = length - searchRange.location;
 				
 				// …to search for next char needing escaping
 				foundRange = [self rangeOfCharacterFromSet:escapeCharSet options:NSLiteralSearch range:searchRange];

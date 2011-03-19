@@ -23,6 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOCacheManager.h"
+#import "OOVersion.h"
 
 
 #define WRITE_ASYNC				1
@@ -308,7 +309,7 @@ static OOCacheManager *sSingleton = nil;
 	BOOL					accept = YES;
 	uint64_t				endianTagValue = 0;
 	
-	ooliteVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	ooliteVersion = OoliteVersion();
 	
 	[self clear];
 	
@@ -394,7 +395,7 @@ static OOCacheManager *sSingleton = nil;
 	OOLog(@"dataCache.willWrite", @"About to write cache.");
 #endif
 	
-	ooliteVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	ooliteVersion = OoliteVersion();
 	endianTag = [NSData dataWithBytes:&endianTagValue length:sizeof endianTagValue];
 	formatVersion = [NSNumber numberWithUnsignedInt:kFormatVersionValue];
 	

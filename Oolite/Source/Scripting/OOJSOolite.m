@@ -29,12 +29,10 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "OOStringParsing.h"
 #import "OOJSPlayer.h"
+#import "OOVersion.h"
 
 
 static JSBool OoliteGetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
-
-static NSString *VersionString(void);
-static NSArray *VersionComponents(void);
 
 static JSBool OoliteCompareVersion(JSContext *context, uintN argc, jsval *vp);
 
@@ -104,11 +102,11 @@ static JSBool OoliteGetProperty(JSContext *context, JSObject *this, jsid propID,
 	switch (JSID_TO_INT(propID))
 	{
 		case kOolite_version:
-			result = VersionComponents();
+			result = OoliteVersionComponents();
 			break;
 		
 		case kOolite_versionString:
-			result = VersionString();
+			result = OoliteVersion();
 			break;
 		
 		case kOolite_jsVersion:
@@ -132,18 +130,6 @@ static JSBool OoliteGetProperty(JSContext *context, JSObject *this, jsid propID,
 	return YES;
 	
 	OOJS_NATIVE_EXIT
-}
-
-
-static NSString *VersionString(void)
-{
-	return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-}
-
-
-static NSArray *VersionComponents(void)
-{
-	return ComponentsFromVersionString(VersionString());
 }
 
 
@@ -179,13 +165,13 @@ static JSBool OoliteCompareVersion(JSContext *context, uintN argc, jsval *vp)
 	}
 	else if ([components isKindOfClass:[NSString class]])
 	{
-		components = ComponentsFromVersionString(components);
+		components = OOComponentsFromVersionString(components);
 	}
 	else  components = nil;
 	
 	if (components != nil)
 	{
-		OOJS_RETURN_INT(CompareVersions(components, VersionComponents()));
+		OOJS_RETURN_INT(OOCompareVersions(components, OoliteVersionComponents()));
 	}
 	else
 	{

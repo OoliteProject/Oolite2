@@ -29,6 +29,7 @@ SOFTWARE.
 #import "Universe.h"
 #import "OOStellarBody.h"
 #import "OOJavaScriptEngine.h"
+#import "OOVersion.h"
 
 
 static NSString *AdditionalLogHeaderInfo(void);
@@ -156,7 +157,7 @@ void OOPrintLogHeader(void)
 	#if (defined (SNAPSHOT_BUILD) && defined (OOLITE_SNAPSHOT_VERSION))
 		versionString = @"development version " OOLITE_SNAPSHOT_VERSION;
 	#else
-		versionString = [NSString stringWithFormat:@"version %@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+		versionString = [NSString stringWithFormat:@"version %@", OoliteVersion()];
 	#endif
 	if (versionString == nil)  versionString = @"<unknown version>";
 	

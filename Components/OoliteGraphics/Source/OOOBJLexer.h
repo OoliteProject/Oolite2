@@ -27,7 +27,7 @@
 
 #if !OOLITE_LEAN
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 
 @protocol OOProblemReporting;
 

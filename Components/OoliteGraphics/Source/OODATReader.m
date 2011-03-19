@@ -29,6 +29,7 @@
 #import "OODATLexer.h"
 
 #import "OOAbstractMesh.h"
+#import "OOProgressReporting.h"
 
 
 static void CleanVector(Vector *v)
@@ -490,7 +491,7 @@ enum
 	}
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	NSMapTable *smoothGroups = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSIntegerMapValueCallBacks, 0);
+	NSMapTable *smoothGroups = NSCreateMapTable(OOIntegerMapKeyCallBacks, OOIntegerMapValueCallBacks, 0);
 	
 	for (NSUInteger fIter = 0; fIter != _fileFaceCount; fIter++)
 	{

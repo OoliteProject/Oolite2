@@ -23,11 +23,12 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
-#import "OOProgressReporting.h"
+#import <OoliteBase/OoliteBase.h>
 
 @class OOAbstractMesh;
 @class OORenderMesh;
+
+@protocol OOProgressReporting;
 
 
 @protocol OOMeshReading <NSObject>

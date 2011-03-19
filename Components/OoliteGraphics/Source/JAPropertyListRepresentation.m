@@ -25,6 +25,10 @@
 
 #import "JAPropertyListRepresentation.h"
 
+#ifndef NDEBUG
+#include <OoliteBase/OoliteBase.h>
+#endif
+
 
 @implementation NSObject (JAPropertyListRepresentationConveniences)
 

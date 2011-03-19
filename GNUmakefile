@@ -2,6 +2,7 @@
 
 all: ooconftool
 
+
 ooconftool: OoliteBase
 	$(MAKE) -C Tools/ooconftool
 
@@ -9,3 +10,6 @@ ooconftool: OoliteBase
 OoliteBase:
 	$(MAKE) -C Components/OoliteBase
 
+
+OoliteGraphics: OoliteBase
+	$(MAKE) -C Components/OoliteGraphics

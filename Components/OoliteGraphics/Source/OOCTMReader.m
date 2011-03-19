@@ -32,6 +32,7 @@
 #import "OOIndexArray.h"
 #import "OORenderMesh.h"
 #import "OOAbstractMesh.h"
+#import "OOProgressReporting.h"
 
 
 @interface OOCTMReader (Private)

@@ -17,6 +17,8 @@
 		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */; };
+		1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */; };
+		1A6C21881334F5E100821B1D /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
@@ -85,8 +87,6 @@
 		1AF4293511A9897D008E883C /* OOMaterialSpecification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4293311A9897D008E883C /* OOMaterialSpecification.m */; };
 		1AF429BA11A98B4D008E883C /* OOTextureSpecification.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF429B811A98B4D008E883C /* OOTextureSpecification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF429BB11A98B4D008E883C /* OOTextureSpecification.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF429B911A98B4D008E883C /* OOTextureSpecification.m */; };
-		1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +151,12 @@
 		1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMacroOpenGL.h; sourceTree = "<group>"; };
 		1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOpenGLExtensionManager.h; sourceTree = "<group>"; };
 		1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOpenGLExtensionManager.m; sourceTree = "<group>"; };
+		1A6C20931334CB3B00821B1D /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; };
+		1A6C20941334CB3B00821B1D /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; };
+		1A6C20951334CB4500821B1D /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile; path = ../GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
+		1A6C20961334CB4500821B1D /* GNUmakefile.postamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile.postamble; path = ../GNUmakefile.postamble; sourceTree = SOURCE_ROOT; };
+		1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
+		1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
 		1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteGraphics-Info.plist"; sourceTree = "<group>"; };
 		1A713DDD11B55E96009A9197 /* OoliteGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteGraphics.h; path = ../Source/OoliteGraphics.h; sourceTree = SOURCE_ROOT; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
@@ -220,8 +226,6 @@
 		1AF4293311A9897D008E883C /* OOMaterialSpecification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMaterialSpecification.m; sourceTree = "<group>"; };
 		1AF429B811A98B4D008E883C /* OOTextureSpecification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTextureSpecification.h; sourceTree = "<group>"; };
 		1AF429B911A98B4D008E883C /* OOTextureSpecification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTextureSpecification.m; sourceTree = "<group>"; };
-		1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
-		1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,7 +259,6 @@
 				1A649F731323BADA00C2FDDB /* Config */,
 				1A713DDD11B55E96009A9197 /* OoliteGraphics.h */,
 				08FB77AEFE84172EC02AAC07 /* Source */,
-				1A864C8D11A5EC26008CDC78 /* Dependencies */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */,
@@ -301,6 +304,10 @@
 		1A649F731323BADA00C2FDDB /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1A6C20951334CB4500821B1D /* GNUmakefile */,
+				1A6C20961334CB4500821B1D /* GNUmakefile.postamble */,
+				1A6C20931334CB3B00821B1D /* oolite-copy-headers.make */,
+				1A6C20941334CB3B00821B1D /* oolite-shared.make */,
 				1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */,
 				1A649F751323BADA00C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649F761323BADA00C2FDDB /* oolite-enduser-configuration.xcconfig */,
@@ -370,6 +377,8 @@
 		1A7D37C211B16BF400857CEF /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */,
+				1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */,
 				1AC98DB411BC58910034572F /* OOProgressReporting.h */,
 				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
@@ -379,15 +388,6 @@
 				1AABAAA511B9C7ED003487D5 /* OOColor.m */,
 			);
 			name = Utility;
-			sourceTree = "<group>";
-		};
-		1A864C8D11A5EC26008CDC78 /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */,
-			);
-			name = Dependencies;
-			path = ../Dependencies;
 			sourceTree = "<group>";
 		};
 		1ABAC2B011C3973F005301BA /* Rendering */ = {
@@ -465,15 +465,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1AF42A1411A997AD008E883C /* JAPropertyListRepresentation */ = {
-			isa = PBXGroup;
-			children = (
-				1AF42A1511A997AD008E883C /* JAPropertyListRepresentation.h */,
-				1AF42A1611A997AD008E883C /* JAPropertyListRepresentation.m */,
-			);
-			path = JAPropertyListRepresentation;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -489,7 +480,6 @@
 				1AF426EE11A939F8008E883C /* OOFloatArray.h in Headers */,
 				1AF4293411A9897D008E883C /* OOMaterialSpecification.h in Headers */,
 				1AF429BA11A98B4D008E883C /* OOTextureSpecification.h in Headers */,
-				1AF42A1711A997AD008E883C /* JAPropertyListRepresentation.h in Headers */,
 				1AB7395F11B10B0300575507 /* OOAbstractFace.h in Headers */,
 				1AB7398F11B10EC800575507 /* OOMeshReader.h in Headers */,
 				1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */,
@@ -521,6 +511,7 @@
 				1AD841AA1229217F00FC382A /* OOPixMapChannelOperations.h in Headers */,
 				1AD842821229224E00FC382A /* OOPixMapScaling.h in Headers */,
 				1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */,
+				1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,7 +645,6 @@
 				1AF426EF11A939F8008E883C /* OOFloatArray.m in Sources */,
 				1AF4293511A9897D008E883C /* OOMaterialSpecification.m in Sources */,
 				1AF429BB11A98B4D008E883C /* OOTextureSpecification.m in Sources */,
-				1AF42A1811A997AD008E883C /* JAPropertyListRepresentation.m in Sources */,
 				1AB7395411B10A3300575507 /* OOAbstractVertex.m in Sources */,
 				1AB7396011B10B0300575507 /* OOAbstractFace.m in Sources */,
 				1AB7399011B10EC800575507 /* OOMeshReader.m in Sources */,
@@ -681,6 +671,7 @@
 				1AD841AB1229217F00FC382A /* OOPixMapChannelOperations.m in Sources */,
 				1AD842831229224E00FC382A /* OOPixMapScaling.m in Sources */,
 				1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */,
+				1A6C21881334F5E100821B1D /* JAPropertyListRepresentation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

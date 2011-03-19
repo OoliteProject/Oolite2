@@ -309,36 +309,57 @@ enum
 */
 
 #if OOLITE_MAC_OS_X
-	#if OOLITE_LEOPARD && NSINTEGER_DEFINED
-		// If OS X 10.5 SDK, use system definitions.
-		typedef NSInteger		OOInteger;
-		typedef NSUInteger		OOUInteger;
-		typedef CGFloat			OOCGFloat;
-		#if __LP64__
-			#define OOLITE_64_BIT			1
-		#endif
-	#else
-		// Older SDK, 32-bit only.
-		typedef int				OOInteger;
-		typedef unsigned int	OOUInteger;
-		typedef float			OOCGFloat;
+	typedef NSInteger			OOInteger;
+	typedef NSUInteger			OOUInteger;
+	typedef CGFloat				OOCGFloat;
+	#if __LP64__
+		#define OOLITE_64_BIT	1
 	#endif
 #elif OOLITE_GNUSTEP
 	/* MKW 20090414 - GNUStep 1.19 still has the NSInteger bug, so let's revert
 	 * to the older definitions for OOInteger */
 	#if GNUSTEP_BASE_MAJOR_VERSION > 1 || GNUSTEP_BASE_MINOR_VERSION >= 20
-		typedef NSInteger OOInteger;
-		typedef NSUInteger OOUInteger;
+		typedef NSInteger		OOInteger;
+		typedef NSUInteger		OOUInteger;
 	#else
 		// Older versions of GNUstep used int on all systems.
 		typedef int				OOInteger;
 		typedef unsigned int	OOUInteger;
 	#endif
-	typedef float			OOCGFloat;
+	#if CGFLOAT_DEFINED
+		typedef CGFloat			OOCGFloat;
+	#else
+		typedef float			OOCGFloat;
+	#endif
+	
+	/*	As of GNUstep-base 1.20.1, NSIntegerMin, NSIntegerMax and NSUIntegerMax
+		aren’t defined.
+	*/
+	#ifndef NSIntegerMax
+		#if GS_SIZEOF_VOIDP == GS_SIZEOF_LONG
+			#define NSIntegerMax	LONG_MAX
+			#define NSIntegerMin	LONG_MIN
+			#define NSUIntegerMax	ULONG_MAX
+		#elif GS_SIZEOF_VOIDP == GS_SIZEOF_INT
+			#define NSIntegerMax	INT_MAX
+			#define NSIntegerMin	INT_MIN
+			#define NSUIntegerMax	UINT_MAX
+		#else
+			#error Cannot determine size of NSInteger types.
+		#endif
+	#endif
+	
+	#if GS_SIZEOF_VOIDP == 8
+		#define OOLITE_64_BIT	1
+	#elif GS_SIZEOF_VOIDP == 4
+		#define OOLITE_64_BIT	0
+	#else
+		#error Holy funky bitness, Batman! This will take some work.
+	#endif
 #endif
 
 #ifndef OOLITE_64_BIT
-	#define OOLITE_64_BIT				0
+	#define OOLITE_64_BIT		0
 #endif
 
 

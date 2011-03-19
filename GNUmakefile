@@ -10,6 +10,10 @@ ooconftool: OoliteBase
 	$(MAKE) -C Tools/ooconftool
 
 
+oobasicconverter: OoliteBase OoliteGraphics
+	$(MAKE) -C Tools/oobasicconverter
+
+
 OoliteBase:
 	$(MAKE) -C Components/OoliteBase
 
@@ -25,3 +29,4 @@ clean:
 	$(MAKE) -C Tools/ooconftool clean
 	
 	$(RM) -rf "$(OUTPUT_PLATFORM_DIR)"
+

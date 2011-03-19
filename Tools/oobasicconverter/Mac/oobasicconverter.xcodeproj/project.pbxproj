@@ -48,6 +48,7 @@
 		08FB7796FE84155DC02AAC07 /* oobasicconverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = oobasicconverter.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A1A368A11C2F8800086265F /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
+		1A2A84021334FD8900BE9E05 /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile; path = ../GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 		1A649FDA1323BF0000C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649FDB1323BF0000C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649FDC1323BF0000C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -129,6 +130,7 @@
 		1A649FD91323BF0000C2FDDB /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1A2A84021334FD8900BE9E05 /* GNUmakefile */,
 				1A649FDA1323BF0000C2FDDB /* oolite-debug-configuration.xcconfig */,
 				1A649FDB1323BF0000C2FDDB /* oolite-developer-configuration.xcconfig */,
 				1A649FDC1323BF0000C2FDDB /* oolite-enduser-configuration.xcconfig */,

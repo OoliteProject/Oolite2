@@ -34,10 +34,7 @@ MA 02110-1301, USA.
 	Create an OOShipClass from an Oolite 1.x shipdata.plist entry.
 	
 	key: the shipdata.plist key.
-	legacyPList: the shipdata.plist value.
-	knownShips: dictionary of previously-loaded OOShipClasses, for like_ship
-	support. The caller is responsible for ensuring dependencies are loaded in
-	advance.
+	legacyPList: the shipdata.plist value, with like_ship stuff folded in.
 */
 - (id) initWithKey:(NSString *)key
 	   legacyPList:(NSDictionary *)legacyPList

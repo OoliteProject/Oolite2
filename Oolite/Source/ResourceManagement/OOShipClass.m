@@ -544,9 +544,9 @@ NSString * const kOODefaultDebrisRole		= @"boulder";
 }
 
 
-- (float) weaponRange
+- (float) turretRange
 {
-	return _weaponRange;
+	return _turretRange;
 }
 
 
@@ -729,12 +729,6 @@ NSString * const kOODefaultDebrisRole		= @"boulder";
 - (NSString *) selectDebrisRole
 {
 	return [[self debrisRoles] anyRole] ?: kOODefaultDebrisRole;
-}
-
-
-- (BOOL) isRotating
-{
-	return _isRotating;
 }
 
 

@@ -108,7 +108,7 @@ MA 02110-1301, USA.
 	Vector				_portWeaponPosition;
 	Vector				_starboardWeaponPosition;
 	float				_weaponEnergy;
-	float				_weaponRange;
+	float				_turretRange;
 	OOColor				*_laserColor;
 	
 	NSUInteger			_missileCapacity;
@@ -256,7 +256,7 @@ MA 02110-1301, USA.
 - (Vector) starboardWeaponPosition;
 // FIXME: these should be attributes of weapons, not ships.
 - (float) weaponEnergy;
-- (float) weaponRange;
+- (float) turretRange;
 - (OOColor *) laserColor;
 
 - (NSUInteger) missileCapacity;
@@ -271,25 +271,24 @@ MA 02110-1301, USA.
 - (BOOL) cloakIsPassive;
 - (BOOL) cloakIsAutomatic;
 
-
 - (NSArray *) equipment;		// Array of { key: String, probability: Number }.
 - (NSArray *) selectEquipment;	// Generate an array of internal equipment (OOEquipmentInfo *). May produce different results on multiple calls. This does not validate that the equipment is appropriate for a given ship, so that needs to be done as an additional step.
 
 // Asteroid/boulder properties
 - (float) fragmentChance;
 - (BOOL) selectCanFragment;
-- (float) noBouldersChance;
+- (float) noBouldersChance;		// FIXME: should be a range or something. Conversion from 1.x will be approximate.
 - (BOOL) selectNoBoulders;
 - (OORoleSet *) debrisRoles;
 - (NSString *) selectDebrisRole;
-
-- (BOOL) isRotating;
-- (Quaternion) rotationalVelocity;
 - (Vector) scoopPosition;
 - (Vector) aftEjectPosition;
 
+- (Quaternion) rotationalVelocity;
+
 // Carrier properties
 - (BOOL) isCarrier;
+- (BOOL) isRotating;
 - (float) stationRoll;	// Can we fold this into rotationalVelocity?
 - (float) hasNPCTrafficChance;
 - (BOOL) selectHasNPCTraffic;

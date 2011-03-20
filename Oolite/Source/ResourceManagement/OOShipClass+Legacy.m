@@ -20,6 +20,8 @@
 					   knownShips:(NSDictionary *)knownShips
 				  problemReporter:(id<OOProblemReporting>)issues;
 
+- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues;
+
 @end
 
 
@@ -87,11 +89,34 @@
 #define kDefault_maxThrust					15					// thrust
 #define kDefault_hasHyperspaceMotor			YES					// hyperspace_motor
 #define kDefault_hyperspaceMotorSpinTime	15
-#define kDefault_
-#define kDefault_
-#define kDefault_
-#define kDefault_
-#define kDefault_
+#define kDefault_accuracy					-100				// Signals fallback behaviour
+#define kDefault_forwardWeaponType			WEAPON_NONE
+#define kDefault_aftWeaponType				WEAPON_NONE
+#define kDefault_portWeaponType				WEAPON_NONE
+#define kDefault_starboardWeaponType		WEAPON_NONE
+#define kDefault_forwardWeaponPosition		kZeroVector
+#define kDefault_aftWeaponPosition			kZeroVector
+#define kDefault_portWeaponPosition			kZeroVector
+#define kDefault_starboardWeaponPosition	kZeroVector
+#define kDefault_weaponEnergy				0					// Actual default depends on forward_weapon_type
+#define kDefault_turretRange				6000				// weapon_range for turrets only
+//				 laserColor					redColor
+#define kDefault_missileCountMax			0					// missiles
+#define kDefault_missileCountMin			_missileCountMax
+#define kDefault_missileCapacity			_missileCountMax	// max_missiles
+#define kDefault_missileRoles				@"EQ_MISSILE(8) missile(2)"		// missile_role. (Note that you can’t specify multiple roles like this in 1.x, but specifying none has this effect.)
+#define kDefault_isSubmunition				NO
+#define kDefault_cloakIsPassive				NO
+#define kDefault_cloakIsAutomatic			YES
+#define kDefault_fragmentChance				0.9
+#define kDefault_noBouldersChance			0
+#define kDefault_debrisRoles				@"boulder"
+#define kDefault_scoopPosition				kZeroVector
+#define kDefault_aftEjectPosition			kZeroVector		// Actual default is middle back of bounding box.
+#define kDefault_rotationalVelocity			kIdentityQuaternion
+//				 isCarrier					NO
+#define kDefault_isRotating					NO
+#define kDefault_stationRoll				0.4
 #define kDefault_
 #define kDefault_
 #define kDefault_
@@ -105,7 +130,7 @@ static NSString *UniqueRoleForShipKey(NSString *key)
 }
 
 
-static float ReadLegacyChance(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, float defaultValue)
+static float ReadChance(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, float defaultValue)
 {
 	float result = defaultValue;
 	id fuzzy = [shipdata objectForKey:key];
@@ -124,7 +149,7 @@ static float ReadLegacyChance(NSDictionary *shipdata, NSString *key, OOShipClass
 }
 
 
-static Vector ReadLegacyVector(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Vector defaultValue)
+static Vector ReadVector(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Vector defaultValue)
 {
 	NSString *vecString = [shipdata oo_stringForKey:key];
 	Vector result = defaultValue;
@@ -146,6 +171,47 @@ static Vector ReadLegacyVector(NSDictionary *shipdata, NSString *key, OOShipClas
 }
 
 
+static Quaternion ReadQuaternion(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Quaternion defaultValue)
+{
+	NSString *quatString = [shipdata oo_stringForKey:key];
+	Quaternion result = defaultValue;
+	if (quatString != nil)
+	{
+		ScanQuaternionFromString(quatString, &result);
+	}
+	else if (likeShip != nil)
+	{
+		typedef Quaternion (*QuaternionGetterIMP)(id self, SEL _cmd);
+		QuaternionGetterIMP getter = (QuaternionGetterIMP)[likeShip methodForSelector:likeSelector];
+		if (getter != NULL)
+		{
+			result = getter(likeShip, likeSelector);
+		}
+	}
+	
+	return result;
+}
+
+
+static OOWeaponType ReadWeaponType(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, OOWeaponType defaultValue)
+{
+	NSString *weaponTypeString = [shipdata oo_stringForKey:key];
+	OOWeaponType result = defaultValue;
+	if (weaponTypeString != nil)  result = OOWeaponTypeFromString(weaponTypeString);
+	else if (likeShip != nil)
+	{
+		typedef OOWeaponType (*WeaponTypeIMP)(id self, SEL _cmd);
+		WeaponTypeIMP getter = (WeaponTypeIMP)[likeShip methodForSelector:likeSelector];
+		if (getter != NULL)
+		{
+			result = getter(likeShip, likeSelector);
+		}
+	}
+	
+	return result;
+}
+
+
 // N.B.: returns owning reference (hence name not being ReadRole).
 static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, NSString *defaultValue)
 {
@@ -154,12 +220,15 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	{
 		role = [likeShip performSelector:likeSelector];
 	}
-	if (role == nil)  role = defaultValue;
 	if (role != nil)
 	{
 		return [[OORoleSet alloc] initWithRole:role probability:1];
 	}
-	else  return nil;
+	if (defaultValue == nil)
+	{
+		return [[OORoleSet alloc] initWithRoleString:defaultValue];
+	}
+	return nil;
 }
 
 
@@ -173,10 +242,12 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	FLOAT
 	FUZZY	(A chance value for a “fuzzy boolean” value, ranging from 0 to 1)
 	PFLOAT	(A float no lower than 0)
+	QUAT	(A quaternion encoded as a string with four numbers)
 	ROLE	(A string put into a single-role OORoleSet with probability of 1)
 	STRING
 	UINT
-	VECTOR
+	VECTOR	(A vector encoded as a string with three numbers)
+	WEAPON	(OOWeaponType)
 */
 
 #define READ_ARRAY(NAME, KEY)	_##NAME = [[shipdata oo_arrayForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME] copy]
@@ -187,9 +258,11 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 #define READ_FLOAT(NAME, KEY)	_##NAME = [shipdata oo_floatForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME]
 
-#define READ_FUZZY(NAME, KEY)	_##NAME = ReadLegacyChance(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_FUZZY(NAME, KEY)	_##NAME = ReadChance(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
 
 #define READ_PFLOAT(NAME, KEY)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME])
+
+#define READ_QUAT(NAME, KEY)	_##NAME = ReadQuaternion(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
 
 #define READ_ROLE(NAME, KEY)	_##NAME = NewRoleSetFromProperty(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
 
@@ -197,7 +270,9 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 #define READ_UINT(NAME, KEY)	_##NAME = [shipdata oo_unsignedIntegerForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME]
 
-#define READ_VECTOR(NAME, KEY)	_##NAME = ReadLegacyVector(shipdata, @KEY, likeShip, @selector(name), kDefault_##NAME)
+#define READ_VECTOR(NAME, KEY)	_##NAME = ReadVector(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+
+#define READ_WEAPON(NAME, KEY)	_##NAME = ReadWeaponType(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
 
 
 @implementation OOShipClass (Legacy)
@@ -451,7 +526,139 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_BOOL	(hasHyperspaceMotor,	"hyperspace_motor");
 	READ_PFLOAT	(hyperspaceMotorSpinTime, "hyperspace_motor_spin_time");
 	
+	READ_FLOAT	(accuracy,				"accuracy");
+	READ_WEAPON	(forwardWeaponType,		"forward_weapon_type");
+	READ_WEAPON	(aftWeaponType,			"aft_weapon_type");
+	READ_WEAPON	(portWeaponType,		"port_weapon_type");
+	READ_WEAPON	(starboardWeaponType,	"starboard_weapon_type");
+	READ_VECTOR	(forwardWeaponPosition,	"weapon_position_forward");
+	READ_VECTOR	(aftWeaponPosition,		"weapon_position_aft");
+	READ_VECTOR	(portWeaponPosition,	"weapon_position_port");
+	READ_VECTOR	(starboardWeaponPosition, "weapon_position_starboard");
+	READ_PFLOAT	(weaponEnergy,			"weapon_energy");
+	READ_PFLOAT	(turretRange,			"weapon_range");
+	[self priv_adjustLegacyWeaponStatsWithProblemReporter:issues];
+	id laserColorDef = [shipdata objectForKey:@"laser_color"];
+	if (laserColorDef != nil)
+	{
+		_laserColor = [[OOColor brightColorWithDescription:laserColorDef] retain];
+	}
+	else
+	{
+		_laserColor = [[likeShip laserColor] retain];
+		if (_laserColor == nil)  _laserColor = [[OOColor redColor] retain];
+	}
+	
+	READ_UINT	(missileCountMax,		"missiles");
+	_missileCountMin = kDefault_missileCountMin;
+	READ_UINT	(missileCapacity,		"max_missiles");
+	READ_ROLE	(missileRoles,			"missile_role");
+	
+	READ_BOOL	(isSubmunition,			"is_submunition");
+	
+	READ_BOOL	(cloakIsPassive,		"cloak_passive");
+	READ_BOOL	(cloakIsAutomatic,		"cloak_automatic");
+	
+	READ_FUZZY	(fragmentChance,		"fragment_chance");
+	READ_FUZZY	(noBouldersChance,		"no_boulders");
+	READ_ROLE	(debrisRoles,			"debris_role");
+	READ_VECTOR	(scoopPosition,			"scoop_position");
+	READ_VECTOR	(aftEjectPosition,		"aft_eject_position");
+	
+	READ_QUAT	(rotationalVelocity,	"rotational_velocity");
+	
+	/*	is_carrier and isCarrier are synonyms; isCarrier has priority.
+		If it isn’t defined, carrierhood is inferred from roles.
+		In 1.x, an inherited is_carrier/isCarrier takes priority over roles;
+		implementing that behaviour here would be messy, and it feels like a
+		bug anyway.
+		-- Ahruman 2011-03-20
+	*/
+	id isCarrier = [shipdata objectForKey:@"isCarrier"];
+	if (isCarrier == nil)  isCarrier = [shipdata objectForKey:@"is_carrier"];
+	if (isCarrier != nil)  _isCarrier = OOBooleanFromObject(isCarrier, NO);
+	else
+	{
+		if ([likeShip isCarrier])  _isCarrier = YES;
+		else
+		{
+			_isCarrier = [roleString rangeOfString:@"station"].location != NSNotFound || [roleString rangeOfString:@"carrier"].location != NSNotFound;
+		}
+	}
+	
+	/*	It’s tempting to discard station-specific stuff here, but that might
+		mess with strange like_ship hierarchies.
+		-- Ahruman 2011-03-20
+	*/
+	READ_BOOL	(isRotating,			"rotating");
+	READ_BOOL	(stationRoll,			"station_roll");
+	
+	// EQUIPMENT
+	
 	return YES;
+}
+
+
+- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues
+{
+	float weaponDamage = 0;
+	float weaponRechargeRate = 0;
+	float weaponRange = 0;
+	
+	switch (_forwardWeaponType)
+	{
+		case WEAPON_PLASMA_CANNON:
+			weaponDamage =			6.0;
+			weaponRechargeRate =	0.25;
+			weaponRange =			5000;
+			break;
+		case WEAPON_PULSE_LASER:
+			weaponDamage =			15.0;
+			weaponRechargeRate =	0.33;
+			weaponRange =			12500;
+			break;
+		case WEAPON_BEAM_LASER:
+			weaponDamage =			15.0;
+			weaponRechargeRate =	0.25;
+			weaponRange =			15000;
+			break;
+		case WEAPON_MINING_LASER:
+			weaponDamage =			50.0;
+			weaponRechargeRate =	0.5;
+			weaponRange =			12500;
+			break;
+		case WEAPON_THARGOID_LASER:
+			weaponDamage =			12.5;
+			weaponRechargeRate =	0.5;
+			weaponRange =			17500;
+			break;
+		case WEAPON_MILITARY_LASER:
+			weaponDamage =			23.0;
+			weaponRechargeRate =	0.20;
+			weaponRange =			30000;
+			break;
+		case WEAPON_NONE:
+		case WEAPON_UNDEFINED:
+			weaponDamage =			0.0;	// indicating no weapon!
+			weaponRechargeRate =	0.20;	// maximum rate
+			weaponRange =			32000;
+			break;
+	}
+	
+	if (_weaponEnergy > 0)
+	{
+		/*	There are two cases for weapon_energy:
+			* if weaponDamage is 0, this is assumed to be a missile or bomb,
+			  which can have any weapon damage value (simply by leaving
+			  _weaponEnergy alone).
+			* Otherwise, the damage is limited to 50.
+		*/
+		if (weaponDamage != 0 && _weaponEnergy > 50)
+		{
+			OOReportWarning(issues, @"Ship %@ specifies out-of-range weapon_energy %g, which will be clamped to 50.", [self shipKey], _weaponEnergy);
+			_weaponEnergy = 50;
+		}
+	}
 }
 
 @end

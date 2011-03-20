@@ -51,6 +51,7 @@ MA 02110-1301, USA.
 	
 	NSString			*_pilotKey;
 	float				_unpilotedChance;
+	NSUInteger			_escapePodCount;
 	OORoleSet			*_escapePodRoles;
 	
 	NSString			*_scriptName;
@@ -175,11 +176,12 @@ MA 02110-1301, USA.
 - (OOScanClass) scanClass;
 - (NSString *) beaconCode;
 - (BOOL) isHulk;
-- (NSString *) HUDName;	// FIXME: this should be shipyard info, although we might want to fold that in.
+- (NSString *) HUDName;			// FIXME: this should be shipyard info, although we might want to fold that in.
 
 - (NSString *) pilotKey;
 - (float) unpilotedChance;
 - (BOOL) selectUnpiloted;
+- (NSUInteger) escapePodCount;	// FIXME: range
 - (OORoleSet *) escapePodRoles;
 - (BOOL) countsAsKill;
 
@@ -319,3 +321,6 @@ extern NSString * const kOODefaultShipScriptName;
 extern NSString * const kOODefaultShipAIName;
 extern NSString * const kOODefaultEscortRole;
 extern NSString * const kOODefaultDebrisRole;
+
+extern NSString * const kOOShipClassEquipmentKeyKey;
+extern NSString * const kOOShipClassEquipmentProbabilityKey;

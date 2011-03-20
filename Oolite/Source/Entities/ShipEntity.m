@@ -410,8 +410,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	reference	= v_forward;  // reference vector for (* turrets *)
 	
 	isShip = YES;
-
-	// FIXME: give NPCs shields instead.
+	
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_shield_booster"])  [self addEquipmentItem:@"EQ_SHIELD_BOOSTER"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_shield_enhancer"])  [self addEquipmentItem:@"EQ_SHIELD_ENHANCER"];
 	

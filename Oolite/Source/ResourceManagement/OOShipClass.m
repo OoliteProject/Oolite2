@@ -38,8 +38,8 @@ NSString * const kOODefaultShipAIName		= @"nullAI.plist";
 NSString * const kOODefaultEscortRole		= @"escort";
 NSString * const kOODefaultDebrisRole		= @"boulder";
 
-#define kKeyKey								((NSString *)@"key")
-#define kProbabilityKey						((NSString *)@"probability")
+NSString * const kOOShipClassEquipmentKeyKey = @"key";
+NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 
 
 @implementation OOShipClass
@@ -181,6 +181,12 @@ NSString * const kOODefaultDebrisRole		= @"boulder";
 - (BOOL) selectUnpiloted
 {
 	return randf() < [self unpilotedChance];
+}
+
+
+- (NSUInteger) escapePodCount
+{
+	return _escapePodCount;
 }
 
 
@@ -674,9 +680,9 @@ NSString * const kOODefaultDebrisRole		= @"boulder";
 	{
 		NSAssert([eqDict isKindOfClass:[NSDictionary class]], @"Non-NSDictionary in ostensibly sanitized OOShipClass equipment array.");
 		
-		NSString		*key = [eqDict oo_stringForKey:kKeyKey];
+		NSString		*key = [eqDict oo_stringForKey:kOOShipClassEquipmentKeyKey];
 		OOEquipmentType	*eqType = [OOEquipmentType equipmentTypeWithIdentifier:key];
-		float			probability = OOClamp_0_1_f([eqDict oo_floatForKey:kProbabilityKey]);
+		float			probability = OOClamp_0_1_f([eqDict oo_floatForKey:kOOShipClassEquipmentProbabilityKey]);
 		
 		if (eqType == nil)
 		{

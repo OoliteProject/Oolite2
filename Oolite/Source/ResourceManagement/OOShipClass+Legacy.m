@@ -36,6 +36,7 @@
 #define kKey_HUDName					@"hud"
 #define kKey_pilotKey					@"pilot"
 #define kKey_unpilotedChance			@"unpiloted"
+#define kKey_escapePodCount				@"has_escape_pod"
 #define kKey_escapePodRoles				@"escape_pod_model"
 #define kKey_countsAsKill				@"counts_as_kill"
 #define kKey_legacyLaunchActions		@"launch_actions"
@@ -131,6 +132,7 @@
 #define kKey_dockingTunnelCorners		@"tunnel_corners"
 #define kKey_dockingTunnelStartAngle	@"tunnel_start_angle"
 #define kKey_dockingTunnelAspectRatio	@"tunnel_aspect_ratio"
+#define kKey_extraEquipment				@"extra_equipment"
 
 
 /*	MARK: Defaults
@@ -153,6 +155,7 @@
 #define kDefault_HUDName					@"hud.plist"		// hud
 #define kDefault_pilotKey					nil					// pilot
 #define kDefault_unpilotedChance			NO					// unpiloted
+#define kDefault_escapePodCount				0					// has_escape_pod — despite the name, this may be greater than 1.
 #define kDefault_escapePodRoles				@"escape-capsule"	// escape_pod_model
 #define kDefault_countsAsKill				YES
 // launch_actions, script_actions, death_actions, setup_actions: nil
@@ -368,11 +371,15 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	if ((self = [self init]))
 	{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		
 		_shipKey = [key copy];
 		if (![self priv_loadFromLegacyPList:legacyPList problemReporter:issues])
 		{
 			DESTROY(self);
 		}
+		
+		[pool drain];
 	}
 	
 	return self;
@@ -400,6 +407,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	READ_STRING	(pilotKey);
 	READ_FUZZY	(unpilotedChance);
+	READ_UINT	(escapePodCount);
 	READ_ROLE	(escapePodRoles);	// Despite the name, escape_pod_model takes a role.
 	READ_BOOL	(countsAsKill);
 	
@@ -687,7 +695,67 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		READ_PFLOAT	(dockingTunnelAspectRatio);
 	}
 	
-	// TODO: equipment.
+	// Equipment.
+	BOOL			isPlayer = [[self roles] hasRole:@"player"];
+	
+	NSMutableArray	*equipment = [NSMutableArray array];
+	NSDictionary	*eqFuzzes = $dict
+	(
+		@"has_shield_booster",			@"EQ_SHIELD_BOOSTER",
+		@"has_shield_enhancer",			@"EQ_SHIELD_ENHANCER",
+		@"has_ecm",						@"EQ_ECM",
+		@"has_scoop",					@"EQ_FUEL_SCOOPS",
+		@"has_escape_pod",				@"EQ_ESCAPE_POD",
+		@"has_cloaking_device",			@"EQ_CLOAKING_DEVICE",
+		@"has_fuel_injection",			@"EQ_FUEL_INJECTION",
+		
+	 // These are not supported.
+		@"has_energy_bomb",				@"",
+		@"has_military_jammer"			@"",
+		@"has_military_scanner_filter"	@"",
+	);
+	NSString *eqFuzzKey = nil;
+	foreachkey (eqFuzzKey, eqFuzzes)
+	{
+		float chance = [shipdata oo_fuzzyBooleanProbabilityForKey:eqFuzzKey];
+		if (chance > 0)
+		{
+			NSString *eqType = [eqFuzzes objectForKey:eqFuzzKey];
+			if ([eqType length] > 0)
+			{
+				NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqType, kOOShipClassEquipmentProbabilityKey, [NSNumber numberWithFloat:chance]);
+				[equipment addObject:eqDict];
+			}
+			else
+			{
+				OOReportWarning(issues, @"Ship %@ specifies %@, but this equipment is not available in Oolite 2.", shipKey, eqFuzzKey);
+			}
+		}
+	}
+	
+	if (isPlayer)
+	{
+		//	extra_equipment is a dictionary of booleans moonlighting as a set.
+		NSDictionary *extraEquipment = [shipdata oo_dictionaryForKey:kKey_extraEquipment];
+		NSString *eqKey = nil;
+		foreachkey (eqKey, extraEquipment)
+		{
+			if (![extraEquipment oo_boolForKey:eqKey])
+			{
+				OOReportWarning(issues, @"Ship %@ has an extra_equipment dictionary which contains a false value for the equipment %@. This is pointless and will be ignored.", shipKey, eqKey);
+				continue;
+			}
+			
+			NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqKey, kOOShipClassEquipmentProbabilityKey, [NSNumber numberWithFloat:1]);
+			[equipment addObject:eqDict];
+		}
+	}
+	else if ([shipdata objectForKey:kKey_extraEquipment] != nil)
+	{
+		OOReportWarning(issues, @"Ship %@ has an extra_equipment dictionary, but is not a player ship. The extra_equipment will be ignored.", shipKey);
+	}
+	
+	_equipment = [equipment copy];
 	
 	return YES;
 }

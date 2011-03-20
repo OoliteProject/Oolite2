@@ -111,14 +111,29 @@
 #define kDefault_noBouldersChance			0
 #define kDefault_debrisRoles				@"boulder"
 #define kDefault_scoopPosition				kZeroVector
-#define kDefault_aftEjectPosition			kZeroVector		// Actual default is middle back of bounding box.
+#define kDefault_aftEjectPosition			kZeroVector			// Actual default is middle back of bounding box.
 #define kDefault_rotationalVelocity			kIdentityQuaternion
 //				 isCarrier					NO
-#define kDefault_isRotating					NO
+//				 is_rotating				NO
 #define kDefault_stationRoll				0.4
-#define kDefault_
-#define kDefault_
-#define kDefault_
+#define kDefault_hasNPCTrafficChance		YES
+#define kDefault_hasPatrolShipsChance		NO					// But forced to YES if is main station and has_npc_traffic
+#define kDefault_maxScavengers				3
+#define kDefault_maxDefenseShips			3
+#define kDefault_maxPolice					8
+// defense_ship: nil, defense_ship_role: contextual
+#define kDefault_defenseShipRoles			nil
+#define kDefault_equivalentTechLevel		NSNotFound			// Placeholder, similar to nil
+#define kDefault_equipmentPriceFactor		1
+#define kDefault_marketKey					nil
+#define kDefault_hasShipyard				NO					// Can be boolean or conditions; always treated as true for main station.
+#define kDefault_requiresDockingClearance	NO
+#define kDefault_allowsInterstellarUndocking NO
+#define kDefault_allowsAutoDocking			YES
+#define kDefault_allowsFastDocking			NO					// Overridden for main station
+#define kDefault_dockingTunnelCorners		4
+#define kDefault_dockingTunnelStartAngle	45
+#define kDefault_dockingTunnelAspectRatio	2.67
 
 
 // MARK: Helpers
@@ -408,7 +423,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	else
 	{
 		READ_ROLE(escortRoles, "escort_role");
-		if (_escortRoles == nil)  _escortRoles = [[OORoleSet alloc] initWithRole:kDefault_escortRoles probability:1];
 	}
 	
 	READ_VECTOR	(forwardViewPosition,	"view_position_forward");
@@ -503,10 +517,69 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		_isCarrier = [roleString rangeOfString:@"station"].location != NSNotFound || [roleString rangeOfString:@"carrier"].location != NSNotFound;
 	}
 	
-	READ_BOOL	(isRotating,			"rotating");
-	READ_BOOL	(stationRoll,			"station_roll");
+	if (_isCarrier)
+	{
+		/*	Only read carrier-related properties when actually loading a
+			carrier.
+		*/
+		if ([shipdata oo_boolForKey:@"rotating"])
+		{
+			READ_FLOAT(stationRoll,				"station_roll");
+		}
+		// else station_roll is effectively 0. (rotating predates station_roll and is now redundant.)
+		
+		READ_FLOAT	(hasNPCTrafficChance,		"has_npc_traffic");
+		READ_FLOAT	(hasPatrolShipsChance,		"has_patrol_ships");
+		READ_UINT	(maxScavengers,				"max_scavengers");
+		READ_UINT	(maxDefenseShips,			"max_defense_ships");
+		READ_UINT	(maxPolice,					"max_police");
+		
+		/*	defenseShipRoles has the same issues as escortRoles above. As a
+			bonus, the default depends on the system tech level and a random
+			roll, so we just default to nil.
+		*/
+		NSString *defenseShip = [shipdata oo_stringForKey:@"defense_ship"];
+		if (defenseShip != nil)  _escortRoles = [[OORoleSet alloc] initWithRole:UniqueRoleForShipKey(defenseShip) probability:1];
+		else
+		{
+			READ_ROLE(defenseShipRoles, "defense_ship_role");
+		}
+		
+		READ_UINT	(equivalentTechLevel,		"equivalent_tech_level");
+		READ_FLOAT	(equipmentPriceFactor,		"equipment_price_factor");
+		_equipmentPriceFactor = fmaxf(_equipmentPriceFactor, 0.5f);
+		READ_STRING	(marketKey,					"market");
+		
+		/*	hasShipyard can be a (non-fuzzy) boolean or a legacy script condition.
+			It can also be written has_shipyard or hasShipyard, with the former
+			taking precedence.
+			FIXME: bring in JS code generation!
+		*/
+		id hasShipyard = [shipdata objectForKey:@"has_shipyard"];
+		if (hasShipyard == nil)  hasShipyard = [shipdata objectForKey:@"hasShipyard"];
+		if (hasShipyard != nil)
+		{
+			if ([hasShipyard isKindOfClass:[NSArray class]])
+			{
+				OOReportWarning(issues, @"Ship %@ uses legacy script conditions for the has_shipyard property. This is being treated as false; the conditions must be translated to JavaScript.", shipKey);
+			}
+			else  _hasShipyard = OOBooleanFromObject(hasShipyard, kDefault_hasShipyard);
+		}
+		
+		/*	FIXME: in 1.x the requires_docking_clearance default can be
+			overriden through planetinfo. Not sure how to deal with that.
+			-- Ahruman 2011-03-20
+		*/
+		READ_BOOL	(requiresDockingClearance,	"requires_docking_clearance");
+		READ_BOOL	(allowsInterstellarUndocking, "interstellar_undocking");
+		READ_BOOL	(allowsAutoDocking,			"allows_auto_docking");
+		READ_BOOL	(allowsFastDocking,			"allows_fast_docking");
+		READ_UINT	(dockingTunnelCorners,		"tunnel_corners");
+		READ_FLOAT	(dockingTunnelStartAngle,	"tunnel_start_angle");
+		READ_PFLOAT	(dockingTunnelAspectRatio,	"tunnel_aspect_ratio");
+	}
 	
-	// EQUIPMENT
+	// TODO: equipment.
 	
 	return YES;
 }

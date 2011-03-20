@@ -158,7 +158,6 @@ MA 02110-1301, USA.
 						_cloakIsPassive: 1,
 						_cloakIsAutomatic: 1,
 						_hasScoopMessage: 1,
-						_isRotating: 1,
 						_countsAsKill: 1,
 						_hasShipyard: 1,
 						_requiresDockingClearance: 1,
@@ -288,7 +287,6 @@ MA 02110-1301, USA.
 
 // Carrier properties
 - (BOOL) isCarrier;
-- (BOOL) isRotating;
 - (float) stationRoll;	// Can we fold this into rotationalVelocity?
 - (float) hasNPCTrafficChance;
 - (BOOL) selectHasNPCTraffic;

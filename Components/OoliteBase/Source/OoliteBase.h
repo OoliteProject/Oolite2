@@ -34,6 +34,7 @@ extern "C" {
 #import "NSStringOOExtensions.h"
 #import "NSScannerOOExtensions.h"
 #import "NSThreadOOExtensions.h"
+#import "JAPropertyListRepresentation.h"
 
 #import "OOProblemReporting.h"
 

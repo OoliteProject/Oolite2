@@ -17,8 +17,6 @@
 		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */; };
-		1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */; };
-		1A6C21881334F5E100821B1D /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B911B138A100857CEF /* OOIndexArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7D35B711B138A100857CEF /* OOIndexArray.m */; };
@@ -155,8 +153,6 @@
 		1A6C20941334CB3B00821B1D /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; };
 		1A6C20951334CB4500821B1D /* GNUmakefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile; path = ../GNUmakefile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.make; };
 		1A6C20961334CB4500821B1D /* GNUmakefile.postamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile.postamble; path = ../GNUmakefile.postamble; sourceTree = SOURCE_ROOT; };
-		1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
-		1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
 		1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteGraphics-Info.plist"; sourceTree = "<group>"; };
 		1A713DDD11B55E96009A9197 /* OoliteGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteGraphics.h; path = ../Source/OoliteGraphics.h; sourceTree = SOURCE_ROOT; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
@@ -377,8 +373,6 @@
 		1A7D37C211B16BF400857CEF /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */,
-				1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */,
 				1AC98DB411BC58910034572F /* OOProgressReporting.h */,
 				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
@@ -511,7 +505,6 @@
 				1AD841AA1229217F00FC382A /* OOPixMapChannelOperations.h in Headers */,
 				1AD842821229224E00FC382A /* OOPixMapScaling.h in Headers */,
 				1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */,
-				1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,7 +664,6 @@
 				1AD841AB1229217F00FC382A /* OOPixMapChannelOperations.m in Sources */,
 				1AD842831229224E00FC382A /* OOPixMapScaling.m in Sources */,
 				1AD842BE1229234200FC382A /* OOTextureGenerator.m in Sources */,
-				1A6C21881334F5E100821B1D /* JAPropertyListRepresentation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

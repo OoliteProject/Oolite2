@@ -26,7 +26,6 @@
 */
 
 #import <OoliteBase/OoliteBase.h>
-#import "JAPropertyListRepresentation.h"
 #import "OOTextureSpecification.h"
 #import "OOColor.h"
 

@@ -81,6 +81,8 @@
 		1AED650011B5A84900811A44 /* OOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AED64FD11B5A84900811A44 /* OOLogging.m */; };
 		1AED650811B5A8D400811A44 /* OOLogOutputHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AED650611B5A8D400811A44 /* OOLogOutputHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AED650911B5A8D400811A44 /* OOLogOutputHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AED650711B5A8D400811A44 /* OOLogOutputHandler.m */; };
+		1AFD9E5E1336B2CB00460ABE /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFD9E5C1336B2CB00460ABE /* JAPropertyListRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AFD9E5F1336B2CB00460ABE /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFD9E5D1336B2CB00460ABE /* JAPropertyListRepresentation.m */; };
 		1AFDDD4B130BEE500075DD39 /* OOConfGeneration.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFDDD49130BEE500075DD39 /* OOConfGeneration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFDDD4C130BEE500075DD39 /* OOConfGeneration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFDDD4A130BEE500075DD39 /* OOConfGeneration.m */; };
 		1AFDDF77130C31170075DD39 /* OOConfGenerationInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFDDF76130C31170075DD39 /* OOConfGenerationInternal.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -171,6 +173,8 @@
 		1AED64FD11B5A84900811A44 /* OOLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLogging.m; path = ../Source/OOLogging.m; sourceTree = SOURCE_ROOT; };
 		1AED650611B5A8D400811A44 /* OOLogOutputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLogOutputHandler.h; sourceTree = "<group>"; };
 		1AED650711B5A8D400811A44 /* OOLogOutputHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLogOutputHandler.m; sourceTree = "<group>"; };
+		1AFD9E5C1336B2CB00460ABE /* JAPropertyListRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListRepresentation.h; sourceTree = "<group>"; };
+		1AFD9E5D1336B2CB00460ABE /* JAPropertyListRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListRepresentation.m; sourceTree = "<group>"; };
 		1AFDDD49130BEE500075DD39 /* OOConfGeneration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfGeneration.h; sourceTree = "<group>"; };
 		1AFDDD4A130BEE500075DD39 /* OOConfGeneration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOConfGeneration.m; sourceTree = "<group>"; };
 		1AFDDF76130C31170075DD39 /* OOConfGenerationInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOConfGenerationInternal.h; sourceTree = "<group>"; };
@@ -217,6 +221,8 @@
 		08FB77AEFE84172EC02AAC07 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				1AFD9E5C1336B2CB00460ABE /* JAPropertyListRepresentation.h */,
+				1AFD9E5D1336B2CB00460ABE /* JAPropertyListRepresentation.m */,
 				1A1F2A9013182E0300D06C6C /* OOAsyncQueue.h */,
 				1A1F2A9113182E0300D06C6C /* OOAsyncQueue.m */,
 				1A71414511B5678C009A9197 /* OOCollectionExtractors.h */,
@@ -395,6 +401,7 @@
 				1A990D3E1326DCF400F4A2A7 /* OOBaseErrors.h in Headers */,
 				1A990DCE1326DE0200F4A2A7 /* NSDataOOExtensions.h in Headers */,
 				1A6C21271334E9DA00821B1D /* NSMapTableOOExtensions.h in Headers */,
+				1AFD9E5E1336B2CB00460ABE /* JAPropertyListRepresentation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +521,7 @@
 				1A1F31AA13185FE500D06C6C /* OOExcludeObjectEnumerator.m in Sources */,
 				1A990D211326D95500F4A2A7 /* OORandom.m in Sources */,
 				1A990DCF1326DE0200F4A2A7 /* NSDataOOExtensions.m in Sources */,
+				1AFD9E5F1336B2CB00460ABE /* JAPropertyListRepresentation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

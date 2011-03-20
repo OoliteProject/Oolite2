@@ -49,8 +49,7 @@ OOGFX_WRITER_FILES			=	OODATWriter.m \
 
 OOGFX_UTILITY_FILES			=	OOColor.m \
 								OOFloatArray.m \
-								OOIndexArray.m \
-								JAPropertyListRepresentation.m
+								OOIndexArray.m
 
 OoliteGraphics_OBJC_FILES	=	$(OOGFX_RENDERING_FILES) \
 								$(OOGFX_PIXMAP_FILES) \
@@ -59,8 +58,7 @@ OoliteGraphics_OBJC_FILES	=	$(OOGFX_RENDERING_FILES) \
 								$(OOGFX_WRITER_FILES) \
 								$(OOGFX_UTILITY_FILES)
 
-OoliteGraphics_HEADER_FILES	=	JAPropertyListRepresentation.h \
-								OOAbstractFace.h \
+OoliteGraphics_HEADER_FILES	=	OOAbstractFace.h \
 								OOAbstractFaceGroup.h \
 								OOAbstractMesh.h \
 								OOAbstractMesh+NormalSynthesis.h \

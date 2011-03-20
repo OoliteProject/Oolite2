@@ -38,7 +38,6 @@ MA 02110-1301, USA.
 */
 - (id) initWithKey:(NSString *)key
 	   legacyPList:(NSDictionary *)legacyPList
-		knownShips:(NSDictionary *)knownShips
    problemReporter:(id<OOProblemReporting>)issues;
 
 @end

@@ -17,7 +17,6 @@
 @interface OOShipClass (LegacyPrivate)
 
 - (BOOL) priv_loadFromLegacyPList:(NSDictionary *)legacyPList
-					   knownShips:(NSDictionary *)knownShips
 				  problemReporter:(id<OOProblemReporting>)issues;
 
 - (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues;
@@ -130,26 +129,17 @@ static NSString *UniqueRoleForShipKey(NSString *key)
 }
 
 
-static float ReadChance(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, float defaultValue)
+static float ReadChance(NSDictionary *shipdata, NSString *key, float defaultValue)
 {
 	float result = defaultValue;
 	id fuzzy = [shipdata objectForKey:key];
 	if (fuzzy != nil)  result = OOFuzzyBooleanProbabilityFromObject(fuzzy, 0.0f);
-	else if (likeShip != nil)
-	{
-		typedef float (*FloatGetterIMP)(id self, SEL _cmd);
-		FloatGetterIMP getter = (FloatGetterIMP)[likeShip methodForSelector:likeSelector];
-		if (getter != NULL)
-		{
-			result = getter(likeShip, likeSelector);
-		}
-	}
 	
 	return result;
 }
 
 
-static Vector ReadVector(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Vector defaultValue)
+static Vector ReadVector(NSDictionary *shipdata, NSString *key, Vector defaultValue)
 {
 	NSString *vecString = [shipdata oo_stringForKey:key];
 	Vector result = defaultValue;
@@ -157,21 +147,12 @@ static Vector ReadVector(NSDictionary *shipdata, NSString *key, OOShipClass *lik
 	{
 		ScanVectorFromString(vecString, &result);
 	}
-	else if (likeShip != nil)
-	{
-		typedef Vector (*VectorGetterIMP)(id self, SEL _cmd);
-		VectorGetterIMP getter = (VectorGetterIMP)[likeShip methodForSelector:likeSelector];
-		if (getter != NULL)
-		{
-			result = getter(likeShip, likeSelector);
-		}
-	}
 	
 	return result;
 }
 
 
-static Quaternion ReadQuaternion(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Quaternion defaultValue)
+static Quaternion ReadQuaternion(NSDictionary *shipdata, NSString *key, Quaternion defaultValue)
 {
 	NSString *quatString = [shipdata oo_stringForKey:key];
 	Quaternion result = defaultValue;
@@ -179,47 +160,25 @@ static Quaternion ReadQuaternion(NSDictionary *shipdata, NSString *key, OOShipCl
 	{
 		ScanQuaternionFromString(quatString, &result);
 	}
-	else if (likeShip != nil)
-	{
-		typedef Quaternion (*QuaternionGetterIMP)(id self, SEL _cmd);
-		QuaternionGetterIMP getter = (QuaternionGetterIMP)[likeShip methodForSelector:likeSelector];
-		if (getter != NULL)
-		{
-			result = getter(likeShip, likeSelector);
-		}
-	}
 	
 	return result;
 }
 
 
-static OOWeaponType ReadWeaponType(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, OOWeaponType defaultValue)
+static OOWeaponType ReadWeaponType(NSDictionary *shipdata, NSString *key, OOWeaponType defaultValue)
 {
 	NSString *weaponTypeString = [shipdata oo_stringForKey:key];
 	OOWeaponType result = defaultValue;
 	if (weaponTypeString != nil)  result = OOWeaponTypeFromString(weaponTypeString);
-	else if (likeShip != nil)
-	{
-		typedef OOWeaponType (*WeaponTypeIMP)(id self, SEL _cmd);
-		WeaponTypeIMP getter = (WeaponTypeIMP)[likeShip methodForSelector:likeSelector];
-		if (getter != NULL)
-		{
-			result = getter(likeShip, likeSelector);
-		}
-	}
 	
 	return result;
 }
 
 
 // N.B.: returns owning reference (hence name not being ReadRole).
-static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, NSString *defaultValue)
+static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, NSString *defaultValue)
 {
 	NSString *role = [shipdata objectForKey:key];
-	if (role == nil && likeShip != nil)
-	{
-		role = [likeShip performSelector:likeSelector];
-	}
 	if (role != nil)
 	{
 		return [[OORoleSet alloc] initWithRole:role probability:1];
@@ -232,8 +191,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 }
 
 
-/*	These macros abstract the process of reading values, applying defaults and
-	inheriting from like_ship. The defaults are macros defined above.
+/*	These macros abstract the process of reading values and applying defaults.
+	The defaults are macros defined above.
 	
 	The types are:
 	ARRAY
@@ -250,36 +209,35 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	WEAPON	(OOWeaponType)
 */
 
-#define READ_ARRAY(NAME, KEY)	_##NAME = [[shipdata oo_arrayForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME] copy]
+#define READ_ARRAY(NAME, KEY)	_##NAME = [[shipdata oo_arrayForKey:@KEY defaultValue:kDefault_##NAME] copy]
 
-#define READ_BOOL(NAME, KEY)	_##NAME = [shipdata oo_boolForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME]
+#define READ_BOOL(NAME, KEY)	_##NAME = [shipdata oo_boolForKey:@KEY defaultValue:kDefault_##NAME]
 
-#define READ_DICT(NAME, KEY)	_##NAME = [[shipdata oo_dictionaryForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME] copy]
+#define READ_DICT(NAME, KEY)	_##NAME = [[shipdata oo_dictionaryForKey:@KEY defaultValue:kDefault_##NAME] copy]
 
-#define READ_FLOAT(NAME, KEY)	_##NAME = [shipdata oo_floatForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME]
+#define READ_FLOAT(NAME, KEY)	_##NAME = [shipdata oo_floatForKey:@KEY defaultValue:kDefault_##NAME]
 
-#define READ_FUZZY(NAME, KEY)	_##NAME = ReadChance(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_FUZZY(NAME, KEY)	_##NAME = ReadChance(shipdata, @KEY, kDefault_##NAME)
 
-#define READ_PFLOAT(NAME, KEY)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME])
+#define READ_PFLOAT(NAME, KEY)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:@KEY defaultValue:kDefault_##NAME])
 
-#define READ_QUAT(NAME, KEY)	_##NAME = ReadQuaternion(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_QUAT(NAME, KEY)	_##NAME = ReadQuaternion(shipdata, @KEY, kDefault_##NAME)
 
-#define READ_ROLE(NAME, KEY)	_##NAME = NewRoleSetFromProperty(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_ROLE(NAME, KEY)	_##NAME = NewRoleSetFromProperty(shipdata, @KEY, kDefault_##NAME)
 
-#define READ_STRING(NAME, KEY)	_##NAME = [[shipdata oo_stringForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME] copy]
+#define READ_STRING(NAME, KEY)	_##NAME = [[shipdata oo_stringForKey:@KEY defaultValue:kDefault_##NAME] copy]
 
-#define READ_UINT(NAME, KEY)	_##NAME = [shipdata oo_unsignedIntegerForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : kDefault_##NAME]
+#define READ_UINT(NAME, KEY)	_##NAME = [shipdata oo_unsignedIntegerForKey:@KEY defaultValue:kDefault_##NAME]
 
-#define READ_VECTOR(NAME, KEY)	_##NAME = ReadVector(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_VECTOR(NAME, KEY)	_##NAME = ReadVector(shipdata, @KEY, kDefault_##NAME)
 
-#define READ_WEAPON(NAME, KEY)	_##NAME = ReadWeaponType(shipdata, @KEY, likeShip, @selector(NAME), kDefault_##NAME)
+#define READ_WEAPON(NAME, KEY)	_##NAME = ReadWeaponType(shipdata, @KEY, kDefault_##NAME)
 
 
 @implementation OOShipClass (Legacy)
 
 - (id) initWithKey:(NSString *)key
 	   legacyPList:(NSDictionary *)legacyPList
-		knownShips:(NSDictionary *)knownShips
    problemReporter:(id<OOProblemReporting>)issues
 {
 	NSParameterAssert(key != nil);
@@ -287,7 +245,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	if ((self = [self init]))
 	{
 		_shipKey = [key copy];
-		if (![self priv_loadFromLegacyPList:legacyPList knownShips:knownShips problemReporter:issues])
+		if (![self priv_loadFromLegacyPList:legacyPList problemReporter:issues])
 		{
 			DESTROY(self);
 		}
@@ -298,22 +256,9 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 
 - (BOOL) priv_loadFromLegacyPList:(NSDictionary *)shipdata
-					   knownShips:(NSDictionary *)knownShips
 				  problemReporter:(id<OOProblemReporting>)issues
 {
 	NSString *shipKey = [self shipKey];
-	
-	OOShipClass *likeShip = nil;
-	NSString *likeShipKey = [shipdata oo_stringForKey:@"like_ship"];
-	if (likeShipKey != nil)
-	{
-		likeShip = [knownShips objectForKey:likeShipKey];
-		if (likeShip == nil)
-		{
-			OOReportError(issues, @"Ship %@ has unresolved like_ship dependency to %@.", shipKey, likeShipKey);
-			return NO;
-		}
-	}
 	
 	// These three values aren’t inherited.
 	_isTemplate = [shipdata oo_boolForKey:@"is_template"];
@@ -324,8 +269,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	OOScanClass scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scan_class" defaultValue:@"CLASS_NOT_SET"]);
 	if (scanClass == CLASS_NOT_SET)  scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scanClass" defaultValue:@"CLASS_NOT_SET"]);
-	if (scanClass != CLASS_NOT_SET)  _scanClass = scanClass;
-	else if (_likeShip != nil)  scanClass = [likeShip scanClass];
+	_scanClass = scanClass;	// Should we replace CLASS_NOT_SET with CLASS_NEUTRAL here? 1.x doesn’t, but that’s probably a bug. -- Ahruman 2011-03-20
 	
 	READ_STRING	(beaconCode,			"beacon");
 	READ_BOOL	(isHulk,				"is_hulk");
@@ -371,7 +315,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		}
 
 	}
-	else if (likeShip != nil)  _autoAI = [likeShip autoAI];
 	else  _autoAI = kDefault_autoAI;
 	
 	READ_STRING	(modelName,				"model");
@@ -388,7 +331,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	if (materials == nil)
 	{
 		if (shaders != nil)  _materialDefinitions = [shaders copy];
-		else  _materialDefinitions = [[likeShip materialDefinitions] copy];
 	}
 	else
 	{
@@ -409,17 +351,12 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	*/
 	READ_ARRAY	(exhaustDefinitions,	"exhaust");
 	
-	/*	Load scanner lollipop colours. This doesn’t correctly handle the case
-		where a ship is like_shipped to another and only overrides one colour
-		while inheriting the other. I can live with this.
-		-- Ahruman 2011-03-18
-	 */
+	//	Load scanner lollipop colours.
 	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color1"]];
 	OOColor *scannerColor2 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color2"]];
 	if (scannerColor1 == nil)
 	{
 		if (scannerColor2 != nil)  _scannerColors = $array(scannerColor2);
-		else _scannerColors = [[likeShip scannerColors] copy];
 	}
 	else
 	{
@@ -433,8 +370,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	/*	Deal with roles.
 		We want to add a unique role for each ship, to simplify cases where 1.x
 		allows ships to be referenced by key but 2.x doesn’t (like specifying
-		esorts). We also want to avoid including the unique role for the parent
-		ship if like_shipped.
+		esorts).
 	*/
 	NSString *uniqueRole = UniqueRoleForShipKey(shipKey);
 	NSString *roleString = [shipdata oo_stringForKey:@"roles"];
@@ -445,15 +381,9 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	}
 	else
 	{
-		// No roles specified; inherited or empty list.
-		if (_roles == nil)  _roles = [[OORoleSet alloc] initWithRole:uniqueRole probability:1];
-		else
-		{
-			[_roles autorelease];
-			_roles = [[[_roles roleSetWithRemovedRole:UniqueRoleForShipKey([[self likeShip] shipKey])] roleSetWithAddedRole:uniqueRole probability:1] retain];
-		}
+		_roles = [[OORoleSet alloc] initWithRole:uniqueRole probability:1];
 	}
-
+	
 	/*	FIXME: convert to canonical subentity representation.
 		-- Ahruman 2011-03-18
 	*/
@@ -478,7 +408,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	else
 	{
 		READ_ROLE(escortRoles, "escort_role");
-		if (_escortRoles == nil)  _escortRoles = [[likeShip escortRoles] copy];
 		if (_escortRoles == nil)  _escortRoles = [[OORoleSet alloc] initWithRole:kDefault_escortRoles probability:1];
 	}
 	
@@ -490,7 +419,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	READ_UINT	(cargoSpaceCapacity,	"max_cargo");
 	READ_UINT	(cargoSpaceUsedMax,		"likely_cargo");
-	_cargoSpaceUsedMin = MAX([likeShip cargoSpaceUsedMin], _cargoSpaceUsedMax);
+	_cargoSpaceUsedMin = _cargoSpaceUsedMax;
 	READ_UINT	(cargoBayExpansionSize,	"extra_cargo");
 	
 	NSString *cargoType = [shipdata oo_stringForKey:@"cargo_type"];
@@ -502,10 +431,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 			OOReportWarning(issues, @"Unknown cargo type \"%@\" for ship %@, treating as CARGO_NOT_CARGO.", cargoType, shipKey);
 			_cargoType = CARGO_NOT_CARGO;
 		}
-	}
-	else if (likeShip != nil)
-	{
-		_cargoType = [likeShip cargoType];
 	}
 	
 	READ_PFLOAT	(energyCapacity,		"max_energy");
@@ -545,8 +470,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	}
 	else
 	{
-		_laserColor = [[likeShip laserColor] retain];
-		if (_laserColor == nil)  _laserColor = [[OOColor redColor] retain];
+		_laserColor = [[OOColor redColor] retain];
 	}
 	
 	READ_UINT	(missileCountMax,		"missiles");
@@ -569,9 +493,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	/*	is_carrier and isCarrier are synonyms; isCarrier has priority.
 		If it isn’t defined, carrierhood is inferred from roles.
-		In 1.x, an inherited is_carrier/isCarrier takes priority over roles;
-		implementing that behaviour here would be messy, and it feels like a
-		bug anyway.
 		-- Ahruman 2011-03-20
 	*/
 	id isCarrier = [shipdata objectForKey:@"isCarrier"];
@@ -579,17 +500,9 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	if (isCarrier != nil)  _isCarrier = OOBooleanFromObject(isCarrier, NO);
 	else
 	{
-		if ([likeShip isCarrier])  _isCarrier = YES;
-		else
-		{
-			_isCarrier = [roleString rangeOfString:@"station"].location != NSNotFound || [roleString rangeOfString:@"carrier"].location != NSNotFound;
-		}
+		_isCarrier = [roleString rangeOfString:@"station"].location != NSNotFound || [roleString rangeOfString:@"carrier"].location != NSNotFound;
 	}
 	
-	/*	It’s tempting to discard station-specific stuff here, but that might
-		mess with strange like_ship hierarchies.
-		-- Ahruman 2011-03-20
-	*/
 	READ_BOOL	(isRotating,			"rotating");
 	READ_BOOL	(stationRoll,			"station_roll");
 	

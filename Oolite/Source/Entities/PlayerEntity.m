@@ -1895,7 +1895,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		bounty = 0;
 		// no access to all player.ship properties while inside the escape pod,
 		// we're not supposed to be inside our ship anymore! 
-		[self doScriptEvent:OOJSID("escapePodSequenceOver")];	// allow oxps to override the escape pod target
+		[self doScriptEvent:OOJSID("escapePodSequenceOver")];	// allow expansions to override the escape pod target
 		if (!equal_seeds(target_system_seed, system_seed)) // overridden: we're going to a nearby system!
 		{
 			system_seed = target_system_seed;
@@ -1905,7 +1905,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			
 			[UNIVERSE setUpSpace];
 			[self setDockTarget:[UNIVERSE station]];
-			// send world script events to let oxps know we're in a new system.
+			// send world script events to let expansions know we're in a new system.
 			// all player.ship properties are still disabled at this stage.
 			[self doScriptEvent:OOJSID("shipWillExitWitchspace")];
 			[self doScriptEvent:OOJSID("shipExitedWitchspace")];
@@ -2843,7 +2843,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		scannerZoom = [hud scannerZoom];
 	}
 	
-	// buggy oxp could override hud.plist with a non-dictionary.
+	// buggy expansion pack could override hud.plist with a non-dictionary.
 	if (hudDict != nil)
 	{
 		[hud setHidden:YES];	// hide the hud while rebuilding it.
@@ -5511,7 +5511,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[gui clearAndKeepBackground:!guiChanged];
 		[gui setTitle:DESC(@"short-range-chart-title")];
 		[gui setText:targetSystemName forRow:19];
-		// distance-f & est-travel-time-f are identical between short & long range charts in standard Oolite, however can be alterered separately via OXPs
+		// distance-f & est-travel-time-f are identical between short & long range charts in standard Oolite, however can be alterered separately via expansion packs
 		[gui setText:[NSString stringWithFormat:ExpandDescriptionForCurrentSystem(@"[short-range-chart-distance-f]"), distance] forRow:20];
 		if ([self hasHyperspaceMotor]) [gui setText:(NSString *)((distance > 0.0 && distance <= (double)fuel/10.0) ? (NSString *)[NSString stringWithFormat:ExpandDescriptionForCurrentSystem(@"[short-range-chart-est-travel-time-f]"), estimatedTravelTime] : (NSString *)@"") forRow:21];
 		[gui setShowTextCursor:NO];
@@ -6296,26 +6296,26 @@ static NSString *last_outfitting_key=nil;
 			msgLine++;
 		}
 		
-		// check for messages from OXPs
-		NSArray *OXPsWithMessages = [ResourceManager OXPsWithMessagesFound];
-		if ([OXPsWithMessages count] > 0)
+		// check for messages from expansion packs
+		NSArray *expansionPacksWithMessages = [ResourceManager expansionPacksWithMessagesFound];
+		if ([expansionPacksWithMessages count] > 0)
 		{
 			NSString *messageToDisplay = @"";
 			
-			// Show which OXPs were found with messages, but don't spam the screen if more than
-			// a certain number of them exist
-			if ([OXPsWithMessages count] < 5)
+			// Show which expansion packs were found with messages, but don't
+			// spam the screen if more than a certain number of them exist
+			if ([expansionPacksWithMessages count] < 5)
 			{
 				unsigned i;
-				for (i = 0; i < [OXPsWithMessages count]; i++)
+				for (i = 0; i < [expansionPacksWithMessages count]; i++)
 				{
 					messageToDisplay = [messageToDisplay stringByAppendingString:
 															[NSString stringWithFormat:([messageToDisplay isEqualToString:@""] ? @"%@" : @", %@"),
-															[OXPsWithMessages oo_stringAtIndex:i]]];
+															[expansionPacksWithMessages oo_stringAtIndex:i]]];
 				}
-				messageToDisplay = [NSString stringWithFormat:DESC(@"oxp-containing-messages-list-@"), messageToDisplay];
+				messageToDisplay = [NSString stringWithFormat:DESC(@"expansion-pack-containing-messages-list-@"), messageToDisplay];
 			}
-			messageToDisplay = [NSString stringWithFormat:@"%@%@",DESC(@"oxp-containing-messages-found"), messageToDisplay];
+			messageToDisplay = [NSString stringWithFormat:@"%@%@",DESC(@"expansion-pack-containing-messages-found"), messageToDisplay];
 			int ms_start = msgLine;
 			int i = msgLine = [gui addLongText:messageToDisplay startingAtRow:ms_start align:GUI_ALIGN_LEFT];
 			for (i-- ; i >= ms_start ; i--) [gui setColor:[OOColor orangeColor] forRow:i];

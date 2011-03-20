@@ -422,9 +422,9 @@
 	
 	// *** Misc. messages ***
 	
-	// OXP containing messages that are echoed to Latest.log
-	"oxp-containing-messages-found"		= "OXP message(s) written to the log";
-	"oxp-containing-messages-list-@"	= " from: %@";
+	// Expansion pack containing messages that are echoed to Latest.log
+	"expansion-pack-containing-messages-found"		= "Expansion pack message(s) written to the log";
+	"expansion-pack-containing-messages-list-@"	= " from: %@";
 	
 	// Messages used when awarding bounties
 	"bounty-@-total-@"				= "Bounty: %@\nTotal: %@";
@@ -1202,8 +1202,8 @@
 	"loadfailed-could-not-load-file"	= "Could not load file.";
 	"loadfailed-could-not-use-ship-type-@-please-switch-to-unrestricted"
 						= "Unable to use ship type “%@” in strict mode - please switch to unrestricted mode first.";
-	"loadfailed-could-not-find-ship-type-@-please-reinstall-the-appropriate-OXP"
-						= "Could not find ship type “%@” - please reinstall the appropriate OXP.";
+	"loadfailed-could-not-find-ship-type-@-please-reinstall-the-appropriate-expansion-pack"
+						= "Could not find ship type “%@” - please reinstall the appropriate expansion pack.";
 	"loadfailed-invalid-saved-game-no-ship-specified"
 						= "Invalid saved game - no ship specified.";
 	"loadfailed-could-not-set-up-player-ship"	= "Could not set up player ship.";
@@ -1253,7 +1253,7 @@
 	"wormhole-ETA-@"			= "ETA: %@";
 	"wormhole-collapsing-in-mm:ss"		= "Collapsing in %02d:%02d";
 	
-	"oxp-is-incompatible"			= "\t“%@” is incompatible with version %@ of Oolite.";
+	"expansion-pack-is-incompatible"	= "\t“%@” is incompatible with version %@ of Oolite.";
 	
 
 	// delivery reports

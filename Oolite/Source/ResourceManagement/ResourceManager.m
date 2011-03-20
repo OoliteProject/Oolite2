@@ -48,9 +48,9 @@ extern NSDictionary* ParseOOSScripts(NSString* script);
 
 @interface ResourceManager (OOPrivate)
 
-+ (void) checkOXPMessagesInPath:(NSString *)path;
++ (void) checkExpansionPackMessagesInPath:(NSString *)path;
 + (void) checkPotentialPath:(NSString *)path :(NSMutableArray *)searchPaths;
-+ (BOOL) areRequirementsFulfilled:(NSDictionary*)requirements forOXP:(NSString *)path;
++ (BOOL) areRequirementsFulfilled:(NSDictionary*)requirements forExpansionPack:(NSString *)path;
 + (void) addErrorWithKey:(NSString *)descriptionKey param1:(id)param1 param2:(id)param2;
 + (void) checkCacheUpToDateForPaths:(NSArray *)searchPaths;
 + (void) logPaths;
@@ -60,7 +60,7 @@ extern NSDictionary* ParseOOSScripts(NSString* script);
 
 static NSMutableArray	*sSearchPaths;
 static BOOL				sUseAddOns = YES;
-static NSMutableArray	*sOXPsWithMessagesFound;
+static NSMutableArray	*sExpansionPacksWithMessagesFound;
 static NSMutableArray	*sExternalPaths;
 static NSMutableArray	*sErrors;
 
@@ -196,11 +196,11 @@ static NSMutableDictionary *sStringCache;
 				path = [root stringByAppendingPathComponent:subPath];
 				if ([fmgr fileExistsAtPath:path isDirectory:&isDirectory] && isDirectory)
 				{
-					// If it is, is it an OXP?.
-					if ([[[path pathExtension] lowercaseString] isEqualToString:@"oxp"])
+					// If it is, is it an expansion pack?.
+					if ([[[path pathExtension] lowercaseString] isEqualToString:@"oxd"])
 					{
 						[self checkPotentialPath:path :sSearchPaths];
-						if ([sSearchPaths containsObject:path])  [self checkOXPMessagesInPath:path];
+						if ([sSearchPaths containsObject:path])  [self checkExpansionPackMessagesInPath:path];
 					}
 					else
 					{
@@ -215,7 +215,7 @@ static NSMutableDictionary *sStringCache;
 	for (pathEnum = [sExternalPaths objectEnumerator]; (path = [pathEnum nextObject]); )
 	{
 		[self checkPotentialPath:path :sSearchPaths];
-		if ([sSearchPaths containsObject:path])  [self checkOXPMessagesInPath:path];
+		if ([sSearchPaths containsObject:path])  [self checkExpansionPackMessagesInPath:path];
 	}
 	[self checkCacheUpToDateForPaths:sSearchPaths];
 	[self logPaths];
@@ -281,70 +281,70 @@ static NSMutableDictionary *sStringCache;
 }
 
 
-+ (NSEnumerator *)pathEnumerator
++ (NSEnumerator *) pathEnumerator
 {
 	return [[self paths] objectEnumerator];
 }
 
 
-+ (NSEnumerator *)reversePathEnumerator
++ (NSEnumerator *) reversePathEnumerator
 {
 	return [[self paths] reverseObjectEnumerator];
 }
 
 
-+ (NSArray *)OXPsWithMessagesFound
++ (NSArray *) expansionPacksWithMessagesFound
 {
-	return [[sOXPsWithMessagesFound copy] autorelease];
+	return [[sExpansionPacksWithMessagesFound copy] autorelease];
 }
 
 
-+ (void) checkOXPMessagesInPath:(NSString *)path
++ (void) checkExpansionPackMessagesInPath:(NSString *)path
 {
-	NSArray *OXPMessageArray = OOArrayFromFile([path stringByAppendingPathComponent:@"OXPMessages.plist"]);
+	NSArray *expansionPackMessageArray = OOArrayFromFile([path stringByAppendingPathComponent:@"messages.plist"]);
 	
-	if ([OXPMessageArray count] > 0)
+	if ([expansionPackMessageArray count] > 0)
 	{
 		unsigned i;
-		for (i = 0; i < [OXPMessageArray count]; i++)
+		for (i = 0; i < [expansionPackMessageArray count]; i++)
 		{
-			NSString *oxpMessage = [OXPMessageArray oo_stringAtIndex:i];
-			if (oxpMessage)
+			NSString *expansionPackMessage = [expansionPackMessageArray oo_stringAtIndex:i];
+			if (expansionPackMessage)
 			{
-				OOLog(@"oxp.message", @"%@: %@", path, oxpMessage);
+				OOLog(@"expansionPack.message", @"%@: %@", path, expansionPackMessage);
 			}
 		}
-		if (sOXPsWithMessagesFound == nil)  sOXPsWithMessagesFound = [[NSMutableArray alloc] init];
-		[sOXPsWithMessagesFound addObject:[path lastPathComponent]];
+		if (sExpansionPacksWithMessagesFound == nil)  sExpansionPacksWithMessagesFound = [[NSMutableArray alloc] init];
+		[sExpansionPacksWithMessagesFound addObject:[path lastPathComponent]];
 	}
 }
 
 
-// Given a path to an assumed OXP (or other location where files are permissible), check for a requires.plist and add to search paths if acceptable.
+// Given a path to an assumed expansion pack (or other location where files are permissible), check for a requires.plist and add to search paths if acceptable.
 + (void)checkPotentialPath:(NSString *)path :(NSMutableArray *)searchPaths
 {
 	NSDictionary			*requirements = nil;
 	BOOL					requirementsMet;
 	
 	requirements = OODictionaryFromFile([path stringByAppendingPathComponent:@"requires.plist"]);
-	requirementsMet = [self areRequirementsFulfilled:requirements forOXP:path];
+	requirementsMet = [self areRequirementsFulfilled:requirements forExpansionPack:path];
 	
 	if (requirementsMet)  [searchPaths addObject:path];
 	else
 	{
-		OOLog(@"oxp.versionMismatch", @"OXP %@ is incompatible with version %@ of Oolite.", path, OoliteVersion());
-		[self addErrorWithKey:@"oxp-is-incompatible" param1:[path lastPathComponent] param2:OoliteVersion()];
+		OOLog(@"expansionPack.versionMismatch", @"Expansion pack %@ is incompatible with version %@ of Oolite.", path, OoliteVersion());
+		[self addErrorWithKey:@"expansion-pack-is-incompatible" param1:[path lastPathComponent] param2:OoliteVersion()];
 	}
 }
 
 
-+ (BOOL) areRequirementsFulfilled:(NSDictionary*)requirements forOXP:(NSString *)path
++ (BOOL) areRequirementsFulfilled:(NSDictionary*)requirements forExpansionPack:(NSString *)path
 {
 	BOOL				OK = YES;
 	NSString			*requiredVersion = nil;
 	NSString			*maxVersion = nil;
 	unsigned			conditionsHandled = 0;
-	NSArray				*oxpVersionComponents = nil;
+	NSArray				*expansionPackVersionComponents = nil;
 	
 	if (requirements == nil)  return YES;
 	
@@ -358,12 +358,12 @@ static NSMutableDictionary *sStringCache;
 			++conditionsHandled;
 			if ([requiredVersion isKindOfClass:[NSString class]])
 			{
-				oxpVersionComponents = OOComponentsFromVersionString(requiredVersion);
-				if (NSOrderedAscending == OOCompareVersions(OoliteVersionComponents(), oxpVersionComponents))  OK = NO;
+				expansionPackVersionComponents = OOComponentsFromVersionString(requiredVersion);
+				if (NSOrderedAscending == OOCompareVersions(OoliteVersionComponents(), expansionPackVersionComponents))  OK = NO;
 			}
 			else
 			{
-				OOLog(@"requirements.wrongType", @"Expected requires.plist entry \"%@\" to be string, but got %@ in OXP %@.", @"version", [requirements class], [path lastPathComponent]);
+				OOLog(@"requirements.wrongType", @"Expected requires.plist entry \"%@\" to be string, but got %@ in expansion pack %@.", @"version", [requirements class], [path lastPathComponent]);
 				OK = NO;
 			}
 		}
@@ -379,12 +379,12 @@ static NSMutableDictionary *sStringCache;
 			++conditionsHandled;
 			if ([maxVersion isKindOfClass:[NSString class]])
 			{
-				oxpVersionComponents = OOComponentsFromVersionString(maxVersion);
-				if (NSOrderedDescending == OOCompareVersions(OoliteVersionComponents(), oxpVersionComponents))  OK = NO;
+				expansionPackVersionComponents = OOComponentsFromVersionString(maxVersion);
+				if (NSOrderedDescending == OOCompareVersions(OoliteVersionComponents(), expansionPackVersionComponents))  OK = NO;
 			}
 			else
 			{
-				OOLog(@"requirements.wrongType", @"Expected requires.plist entry \"%@\" to be string, but got %@ in OXP %@.", @"max_version", [requirements class], [path lastPathComponent]);
+				OOLog(@"requirements.wrongType", @"Expected requires.plist entry \"%@\" to be string, but got %@ in expansion pack %@.", @"max_version", [requirements class], [path lastPathComponent]);
 				OK = NO;
 			}
 		}
@@ -393,7 +393,7 @@ static NSMutableDictionary *sStringCache;
 	if (OK && conditionsHandled < [requirements count])
 	{
 		// There are unknown requirement keys - don't support. NOTE: this check was not made pre 1.69!
-		OOLog(@"requirements.unknown", @"requires.plist for OXP %@ contains unknown keys, rejecting.", [path lastPathComponent]);
+		OOLog(@"requirements.unknown", @"requires.plist for expansion pack %@ contains unknown keys, rejecting.", [path lastPathComponent]);
 		OK = NO;
 	}
 	
@@ -443,7 +443,7 @@ static NSMutableDictionary *sStringCache;
 	oldPaths = [cacheMgr objectForKey:kOOCacheKeySearchPaths inCache:kOOCacheSearchPathModDates];
 	if (upToDate && ![oldPaths isEqual:searchPaths])
 	{
-		// OXPs added/removed
+		// Expansion packs added/removed
 		if (oldPaths != nil) OOLog(kOOLogCacheStalePaths, @"Cache is stale (search paths have changed). Rebuilding from scratch.");
 		upToDate = NO;
 	}

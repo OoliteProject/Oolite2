@@ -46,7 +46,7 @@ typedef enum
 + (NSArray *)pathsWithAddOns;	// Root paths + add-on paths.
 + (NSArray *)paths;				// builtInPath or pathsWithAddOns, depending on useAddOns state.
 + (BOOL)useAddOns;
-+ (NSArray *)OXPsWithMessagesFound;
++ (NSArray *)expansionPacksWithMessagesFound;
 + (void)setUseAddOns:(BOOL)useAddOns;
 + (void)addExternalPath:(NSString *)fileName;
 + (NSEnumerator *)pathEnumerator;
@@ -54,7 +54,7 @@ typedef enum
 
 + (void)handleEquipmentListMerging: (NSMutableArray *)arrayToProcess forLookupIndex:(unsigned)lookupIndex;
 
-+ (NSString *)errors;			// Errors which occured during path scanning - essentially a list of OXPs whose requires.plist is bad.
++ (NSString *)errors;			// Errors which occured during path scanning - essentially a list of expansion packs whose requires.plist is bad.
 
 + (NSString *) pathForFileNamed:(NSString *)fileName inFolder:(NSString *)folderName;
 + (NSString *) pathForFileNamed:(NSString *)fileName inFolder:(NSString *)folderName cache:(BOOL)useCache;

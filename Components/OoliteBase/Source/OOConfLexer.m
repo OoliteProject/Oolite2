@@ -551,7 +551,6 @@ OOINLINE BOOL ScanNumber(OOConfLexerState *state)
 	
 	const uint8_t *loc = state->cursor;
 	size_t remaining = state->end - loc;
-	BOOL negative = NO;
 	BOOL seenDot = NO;
 	BOOL seenE = NO;
 	BOOL lastIsNonTerminator = NO;	// Marks . or E, which can’t end a number.
@@ -561,7 +560,6 @@ OOINLINE BOOL ScanNumber(OOConfLexerState *state)
 	{
 		if (*loc == kCharMinus)
 		{
-			negative = YES;
 			isNatural = NO;
 		}
 		loc++;

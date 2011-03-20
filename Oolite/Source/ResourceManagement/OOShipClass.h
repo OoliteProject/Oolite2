@@ -51,7 +51,7 @@ MA 02110-1301, USA.
 	
 	NSString			*_pilotKey;
 	float				_unpilotedChance;
-	NSString			*_escapePodRole;
+	OORoleSet			*_escapePodRoles;
 	
 	NSString			*_scriptName;
 	NSString			*_AIName;
@@ -167,21 +167,6 @@ MA 02110-1301, USA.
 						_allowsFastDocking: 1;
 }
 
-/*
-	Create an OOShipClass from an Oolite 1.x shipdata.plist entry.
-	
-	key: the shipdata.plist key.
-	legacyPList: the shipdata.plist value.
-	knownShips: dictionary of previously-loaded OOShipClasses, for like_ship
-	support. The caller is responsible for ensuring dependencies are loaded in
-	advance.
-*/
-- (id) initWithKey:(NSString *)key
-	   legacyPList:(NSDictionary *)legacyPList
-		knownShips:(NSDictionary *)knownShips
-   problemReporter:(id<OOProblemReporting>)issues;
-
-
 - (BOOL) isTemplate;
 - (BOOL) isExternalDependency;
 - (OOShipClass *) likeShip;
@@ -196,7 +181,7 @@ MA 02110-1301, USA.
 - (NSString *) pilotKey;
 - (float) unpilotedChance;
 - (BOOL) selectUnpiloted;
-- (NSString *) escapePodRole;	// FIXME: should be role set.
+- (OORoleSet *) escapePodRoles;
 - (BOOL) countsAsKill;
 
 - (NSString *) scriptName;

@@ -441,6 +441,7 @@
 		1AF2EBA6130615FF008ECA54 /* OOJSScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EBA3130615FF008ECA54 /* OOJSScript.m */; };
 		1AF2EBB21306163F008ECA54 /* OOScript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EBAF1306163F008ECA54 /* OOScript.m */; };
 		1AF2EBB31306163F008ECA54 /* OOScriptTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EBB11306163F008ECA54 /* OOScriptTimer.m */; };
+		1AFD9CB213361BA300460ABE /* OOShipClass+Legacy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFD9CB113361BA300460ABE /* OOShipClass+Legacy.m */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -1537,6 +1538,8 @@
 		1AF2EBB11306163F008ECA54 /* OOScriptTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOScriptTimer.m; sourceTree = "<group>"; };
 		1AF5F63D1305FC5200CB691A /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../Components/OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1AF5F6571305FC5E00CB691A /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = ../../Components/OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1AFD9CB013361BA300460ABE /* OOShipClass+Legacy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOShipClass+Legacy.h"; sourceTree = "<group>"; };
+		1AFD9CB113361BA300460ABE /* OOShipClass+Legacy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipClass+Legacy.m"; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* Oolite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oolite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2453,6 +2456,8 @@
 				1A1F2B7D1318354500D06C6C /* OOShipRegistry.m */,
 				1ABC565D133127170095274F /* OOShipClass.h */,
 				1ABC565E133127170095274F /* OOShipClass.m */,
+				1AFD9CB013361BA300460ABE /* OOShipClass+Legacy.h */,
+				1AFD9CB113361BA300460ABE /* OOShipClass+Legacy.m */,
 			);
 			name = "Resource Management";
 			path = ResourceManagement;
@@ -2880,6 +2885,7 @@
 				1A18D69913191A920096D960 /* SUUpdater.m in Sources */,
 				1ABC565F133127170095274F /* OOShipClass.m in Sources */,
 				1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */,
+				1AFD9CB213361BA300460ABE /* OOShipClass+Legacy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

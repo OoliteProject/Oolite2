@@ -28,28 +28,18 @@ MA 02110-1301, USA.
 #import "OORoleSet.h"
 #import "OOEquipmentType.h"
 #import "OOColor.h"
-#import "OOStringParsing.h"
 #import "OOConstToString.h"
 
 
-NSString * const kOODefaultHUDName					= @"hud.plist";
-NSString * const kOODefaultEscapePodRole			= @"escape-capsule";
-NSString * const kOODefaultShipScriptName			= @"oolite-default-ship-script.js";
-NSString * const kOODefaultShipAIName				= @"nullAI.plist";
-NSString * const kOODefaultEscortRole				= @"escort";
-NSString * const kOODefaultDebrisRole				= @"boulder";
+NSString * const kOODefaultHUDName			= @"hud.plist";
+NSString * const kOODefaultEscapePodRole	= @"escape-capsule";
+NSString * const kOODefaultShipScriptName	= @"oolite-default-ship-script.js";
+NSString * const kOODefaultShipAIName		= @"nullAI.plist";
+NSString * const kOODefaultEscortRole		= @"escort";
+NSString * const kOODefaultDebrisRole		= @"boulder";
 
-#define kKeyKey						((NSString *)@"key")
-#define kProbabilityKey				((NSString *)@"probability")
-
-
-@interface OOShipClass (OOPrivate)
-
-- (BOOL) priv_loadFromLegacyPList:(NSDictionary *)legacyPList
-					   knownShips:(NSDictionary *)knownShips
-				  problemReporter:(id<OOProblemReporting>)issues;
-
-@end
+#define kKeyKey								((NSString *)@"key")
+#define kProbabilityKey						((NSString *)@"probability")
 
 
 @implementation OOShipClass
@@ -77,7 +67,7 @@ NSString * const kOODefaultDebrisRole				= @"boulder";
 	DESTROY(_beaconCode);
 	DESTROY(_HUDName);
 	DESTROY(_pilotKey);
-	DESTROY(_escapePodRole);
+	DESTROY(_escapePodRoles);
 	DESTROY(_scriptName);
 	DESTROY(_AIName);
 	DESTROY(_scriptInfo);
@@ -111,280 +101,6 @@ NSString * const kOODefaultDebrisRole				= @"boulder";
 - (NSString *) descriptionComponents
 {
 	return $sprintf(@"%@ \"%@\"", [self shipKey], [self name]);
-}
-
-
-// MARK: Legacy plist support
-
-static NSString *UniqueRoleForShipKey(NSString *key)
-{
-	return $sprintf(@"_oo_unique_role_for_%@", key);
-}
-
-
-static float ReadLegacyChance()
-{
-	
-}
-
-
-static Vector ReadLegacyVector(NSDictionary *shipdata, NSString *key, OOShipClass *likeShip, SEL likeSelector, Vector defaultValue)
-{
-	NSString *vecString = [shipdata oo_stringForKey:key];
-	Vector result = defaultValue;
-	if (vecString != nil)
-	{
-		ScanVectorFromString(vecString, &result);
-	}
-	else if (likeShip != nil)
-	{
-		typedef Vector (*VectorGetterIMP)(id self, SEL _cmd);
-		VectorGetterIMP getter = (VectorGetterIMP)[likeShip methodForSelector:likeSelector];
-		if (getter != NULL)
-		{
-			result = getter(likeShip, likeSelector);
-		}
-	}
-	
-	return result;
-}
-
-
-- (id) initWithKey:(NSString *)key
-	   legacyPList:(NSDictionary *)legacyPList
-		knownShips:(NSDictionary *)knownShips
-   problemReporter:(id<OOProblemReporting>)issues
-{
-	NSParameterAssert(key != nil);
-	
-	if ((self = [self init]))
-	{
-		_shipKey = [key copy];
-		if (![self priv_loadFromLegacyPList:legacyPList knownShips:knownShips problemReporter:issues])
-		{
-			DESTROY(self);
-		}
-	}
-	
-	return self;
-}
-
-
-- (BOOL) priv_loadFromLegacyPList:(NSDictionary *)shipdata
-					   knownShips:(NSDictionary *)knownShips
-				  problemReporter:(id<OOProblemReporting>)issues
-{
-	NSString *shipKey = [self shipKey];
-	
-	OOShipClass *likeShip = nil;
-	NSString *likeShipKey = [shipdata oo_stringForKey:@"like_ship"];
-	if (likeShipKey != nil)
-	{
-		likeShip = [knownShips objectForKey:likeShipKey];
-		if (likeShip == nil)
-		{
-			OOReportError(issues, @"Ship %@ has unresolved like_ship dependency to %@.", shipKey, likeShipKey);
-			return NO;
-		}
-	}
-	
-	/*	Note that many defaults/fallbacks are implemented in accessors and
-		don’t need to be handled here. This is good because it means the same
-		defaults will be applied regardless of how the data was loaded.
-		If we want different behaviour for different sources, the exceptions
-		should be handled in the loaders. Numerical defaults are explicit partly
-		for this reason and partly because defining marker values for fallbacks
-		is more trouble than it’s worth.
-		
-		On the other hand, everything specifies its existing value as the
-		defaultValue:, to implement like_ship.
-		
-		If anything in this loader seems strange, remember that it’s designed
-		for maximum compatibility with 1.76 and any behaviour changes should
-		be made with that as the standard.
-	*/
-	
-	#define READ_BOOL_D(NAME, KEY, DEFAULT) _##NAME = [shipdata oo_boolForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : DEFAULT]
-	#define READ_BOOL(NAME, KEY) READ_BOOL_D(NAME, KEY, NO)
-	
-	#define READ_FUZZY_D(NAME, KEY, DEFAULT) _##NAME = ReadLegacyChance()
-	#define READ_FUZZY(NAME, KEY) READ_FUZZY_D(NAME, KEY, NO)
-	
-	#define READ_STRING_D(NAME, KEY, DEFAULT) _##NAME = [[shipdata oo_stringForKey:@KEY defaultValue:(likeShip != nil) ? [likeShip NAME] : DEFAULT] copy]
-	#define READ_STRING(NAME, KEY) READ_STRING_D(NAME, KEY, ((NSString *)nil))
-	
-	_isTemplate = [shipdata oo_boolForKey:@"is_template"];	// Does not inherit.
-	_isExternalDependency = [shipdata oo_boolForKey:@"is_external_dependency"];	// Does not inherit; caller is responsible for testing.
-	
-	READ_STRING(name, "name");
-	_displayName = [[shipdata oo_stringForKey:@"display_name"] copy];	// Does not inherit for 1.x.
-	
-	OOScanClass scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scan_class" defaultValue:@"CLASS_NOT_SET"]);
-	if (scanClass == CLASS_NOT_SET)  scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scanClass" defaultValue:@"CLASS_NOT_SET"]);
-	if (scanClass != CLASS_NOT_SET)  _scanClass = scanClass;
-	else if (_likeShip != nil)  scanClass = [likeShip scanClass];
-	
-	READ_STRING(beaconCode, "beacon");
-	READ_BOOL(isHulk, "is_hulk");
-	READ_STRING(HUDName, "hud");
-	
-	READ_STRING(pilotKey, "pilot");
-	id fuzzy = [shipdata objectForKey:@"unpiloted"];
-	if (fuzzy != nil)  _unpilotedChance = OOFuzzyBooleanProbabilityFromObject(fuzzy, 0.0f);
-	else if (_likeShip != nil)  _unpilotedChance = [likeShip unpilotedChance];
-	_escapePodRole = [[shipdata oo_stringForKey:@"escape_pod_model" defaultValue:[likeShip escapePodRole]] copy];
-	_countsAsKill = [shipdata oo_boolForKey:@"counts_as_kill" defaultValue:likeShip ? [likeShip countsAsKill] : YES];
-	
-	/*	FIXME: (maybe) automatically convert legacy actions to JavaScript.
-		-- Ahruman 2011-03-18
-	*/
-	if ([shipdata objectForKey:@"launch_actions"] != nil ||
-		[shipdata objectForKey:@"script_actions"] != nil ||
-		[shipdata objectForKey:@"death_actions"] != nil ||
-		[shipdata objectForKey:@"setup_actions"] != nil)
-	{
-		OOReportWarning(issues, @"Ship %@ has legacy script actions, which will be ignored.", shipKey);
-	}
-	_scriptName = [[shipdata oo_stringForKey:@"script" defaultValue:[likeShip scriptName]] copy];
-	_AIName = [[shipdata oo_stringForKey:@"ai_type" defaultValue:[likeShip AIName]] copy];
-	_scriptInfo = [[shipdata oo_dictionaryForKey:@"script_info" defaultValue:[likeShip scriptInfo]] copy];
-	
-	_modelName = [[shipdata oo_stringForKey:@"model" defaultValue:[likeShip modelName]] copy];
-	
-	NSDictionary *materials = [shipdata oo_dictionaryForKey:@"materials"];
-	NSDictionary *shaders = [shipdata oo_dictionaryForKey:@"shaders"];
-	if (materials == nil)
-	{
-		if (shaders != nil)  _materialDefinitions = [shaders copy];
-		else  _materialDefinitions = [[likeShip materialDefinitions] copy];
-	}
-	else
-	{
-		if (shaders == nil)  _materialDefinitions = [materials copy];
-		else
-		{
-			/*	Merge the two material dictionaries, with "shaders" overriding
-				"materials" since 2.x always has shaders.
-				FIXME: this might not be the right thing, since the actual shaders
-				are expected to stop working in 2.x.
-				-- Ahruman 2011-03-18
-			*/
-			NSMutableDictionary *mutableMaterials = [materials mutableCopy];
-			[mutableMaterials addEntriesFromDictionary:shaders];
-			_materialDefinitions = [mutableMaterials copy];
-			[mutableMaterials release];
-		}
-	}
-	
-	/*	FIXME: we probably want a more direct representation for exhaust
-		parameters. Current format is a string with six numbers, of which one
-		is ignored.
-		-- Ahruman 2011-03-18
-	*/
-	_exhaustDefinitions = [[shipdata oo_arrayForKey:@"exhaust" defaultValue:_exhaustDefinitions] copy];
-	
-	/*	Load scanner lollipop colours. This doesn’t correctly handle the case
-		where a ship is like_shipped to another and only overrides one colour
-		while inheriting the other. I can live with this.
-		-- Ahruman 2011-03-18
-	 */
-	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color1"]];
-	OOColor *scannerColor2 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color2"]];
-	if (scannerColor1 == nil)
-	{
-		if (scannerColor2 != nil)  _scannerColors = $array(scannerColor2);
-		else _scannerColors = [[likeShip scannerColors] copy];
-	}
-	else
-	{
-		if (scannerColor2 == nil)  _scannerColors = $array(scannerColor1);
-		else  _scannerColors = $array(scannerColor1, scannerColor2);
-	}
-	
-	_bounty = [shipdata oo_unsignedIntegerForKey:@"bounty" defaultValue:_bounty];
-	_density = fmaxf(0.0f, [shipdata oo_floatForKey:@"density" defaultValue:_density]);
-	
-	/*	Deal with roles.
-		We want to add a unique role for each ship, to simplify cases where 1.x
-		allows ships to be referenced by key but 2.x doesn’t (like specifying
-		esorts). We also want to avoid including the unique role for the parent
-		ship if like_shipped.
-	*/
-	NSString *uniqueRole = UniqueRoleForShipKey(shipKey);
-	NSString *roleString = [shipdata oo_stringForKey:@"roles"];
-	if (roleString != nil)
-	{
-		[_roles release];
-		_roles = [[[OORoleSet roleSetWithString:roleString] roleSetWithAddedRole:uniqueRole probability:1] retain];
-	}
-	else
-	{
-		// No roles specified; inherited or empty list.
-		if (_roles == nil)  _roles = [[OORoleSet alloc] initWithRole:uniqueRole probability:1];
-		else
-		{
-			[_roles autorelease];
-			_roles = [[[_roles roleSetWithRemovedRole:UniqueRoleForShipKey([[self likeShip] shipKey])] roleSetWithAddedRole:uniqueRole probability:1] retain];
-		}
-	}
-
-	/*	FIXME: convert to canonical subentity representation.
-		-- Ahruman 2011-03-18
-	*/
-	_subentityDefinitions = [[shipdata oo_arrayForKey:@"subentities" defaultValue:_subentityDefinitions] copy];
-	_escortCount = [shipdata oo_unsignedIntegerForKey:@"escorts" defaultValue:_escortCount];
-	if (_escortCount > 16)  _escortCount = 16;	// 1.x limit, should stay 16 even if 2.0 limit is raised.
-	
-	/*	Set up escort roles. 1.x has two options here: escort_ship (a ship key)
-		or escort_role, with escort_ship taking priority. For 2.x, we only
-		support roles, but we also add each ship’s key as a hopefully-unique
-		role.
-	*/
-	NSString *escort = [shipdata oo_stringForKey:@"escort_ship"];
-	if (escort != nil)  _escortRoles = [[OORoleSet alloc] initWithRole:UniqueRoleForShipKey(escort) probability:1];
-	else
-	{
-		escort = [shipdata oo_stringForKey:@"escort_role"];
-		if (escort != nil)  _escortRoles = [[OORoleSet alloc] initWithRole:escort probability:1];
-		else  _escortRoles = [[likeShip escortRoles] copy];
-	}
-	
-	_forwardViewPosition = ReadLegacyVector(shipdata, @"view_position_forward", likeShip, @selector(forwardViewPosition), kZeroVector);
-	_aftViewPosition = ReadLegacyVector(shipdata, @"view_position_aft", likeShip, @selector(aftViewPosition), kZeroVector);
-	_portViewPosition = ReadLegacyVector(shipdata, @"view_position_port", likeShip, @selector(portViewPosition), kZeroVector);
-	_starboardViewPosition = ReadLegacyVector(shipdata, @"view_position_starboard", likeShip, @selector(starboardViewPosition), kZeroVector);
-	_customViews = [[shipdata oo_arrayForKey:@"custom_views" defaultValue:[likeShip customViews]] copy];
-	
-	_cargoSpaceCapacity = [shipdata oo_unsignedIntegerForKey:@"max_cargo" defaultValue:[likeShip cargoSpaceCapacity]];
-	_cargoSpaceUsedMin = [likeShip cargoSpaceUsedMin];
-	_cargoSpaceUsedMax = [shipdata oo_unsignedIntegerForKey:@"likely_cargo" defaultValue:[likeShip cargoSpaceUsedMax]];
-	_cargoBayExpansionSize = [shipdata oo_unsignedIntegerForKey:@"extra_cargo" defaultValue:likeShip ? [likeShip cargoBayExpansionSize] : 15];
-	NSString *cargoType = [shipdata oo_stringForKey:@"cargo_type"];
-	if (cargoType != nil)
-	{
-		_cargoType = StringToCargoType(cargoType);
-		if (_cargoType == CARGO_UNDEFINED)
-		{
-			OOReportWarning(issues, @"Unknown cargo type \"%@\" for ship %@, treating as CARGO_NOT_CARGO.", cargoType, shipKey);
-			_cargoType = CARGO_NOT_CARGO;
-		}
-	}
-	else if (likeShip != nil)
-	{
-		_cargoType = [likeShip cargoType];
-	}
-	
-	_energyCapacity = [shipdata oo_floatForKey:@"max_energy" defaultValue:likeShip ? [likeShip energyCapacity] : 200.0f];
-	_energyRechargeRate = [shipdata oo_floatForKey:@"energy_recharge_rate" defaultValue:likeShip ? [likeShip energyRechargeRate] : 1.0f];
-	_fuelCapacity = 70;
-	// Note: as per 1.x, fuel defaults to 0.
-	_initialFuel = [shipdata oo_unsignedIntegerForKey:@"fuel" defaultValue:[likeShip initialFuel]];
-	if (_initialFuel > _fuelCapacity)  _fuelCapacity = _initialFuel;	// 1.x has no explicit fuel capacity.	
-	_fuelChargeRate = [shipdata oo_floatForKey:@"fuel_charge_rate" defaultValue:likeShip ? [likeShip fuelChargeRate] : 1.0];
-	
-	
-	
-	return YES;
 }
 
 
@@ -468,9 +184,16 @@ static Vector ReadLegacyVector(NSDictionary *shipdata, NSString *key, OOShipClas
 }
 
 
-- (NSString *) escapePodRole
+- (OORoleSet *) escapePodRoles
 {
-	return _escapePodRole ?: kOODefaultEscapePodRole;
+	if (_escapePodRoles != nil)  return _escapePodRoles;
+	
+	static OORoleSet *defaultEscapePodRoleSet = nil;
+	if (defaultEscapePodRoleSet == nil)
+	{
+		defaultEscapePodRoleSet = [[OORoleSet alloc] initWithRole:kOODefaultEscapePodRole probability:1];
+	}
+	return defaultEscapePodRoleSet;
 }
 
 

@@ -147,7 +147,7 @@
 
 #define kDefault_isTemplate					NO
 #define kDefault_isExternalDependency		NO
-#define kDefault_name						nil
+#define kDefault_name						@"?"
 #define kDefault_displayName				_name
 //				 scanClass					CLASS_NOT_SET (a buggy situation; should probably default to CLASS_NEUTRAL)
 #define kDefault_beaconCode					nil
@@ -712,7 +712,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	 // These are not supported.
 		@"has_energy_bomb",				@"",
 		@"has_military_jammer"			@"",
-		@"has_military_scanner_filter"	@"",
+		@"has_military_scanner_filter"	@""
 	);
 	NSString *eqFuzzKey = nil;
 	foreachkey (eqFuzzKey, eqFuzzes)

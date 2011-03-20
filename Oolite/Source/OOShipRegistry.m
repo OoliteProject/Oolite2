@@ -32,6 +32,7 @@ SOFTWARE.
 #import "OOStringParsing.h"
 #import "OOMesh.h"
 #import "GameController.h"
+#import "OOShipClass+Legacy.h"
 
 
 #define PRELOAD 0
@@ -64,6 +65,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 - (BOOL) loadAndApplyShipDataOverrides:(NSMutableDictionary *)ioData;
 - (BOOL) canonicalizeAndTagSubentities:(NSMutableDictionary *)ioData;
 - (BOOL) removeUnusableEntries:(NSMutableDictionary *)ioData;
+- (BOOL) reifyShipClasses:(NSMutableDictionary *)ioData;
 
 #if PRELOAD
 - (BOOL) preloadShipMeshes:(NSMutableDictionary *)ioData;
@@ -186,6 +188,12 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 }
 
 
+- (OOShipClass *) shipClassForKey:(NSString *)key
+{
+	return [_shipClasses objectForKey:key];
+}
+
+
 - (NSDictionary *) shipInfoForKey:(NSString *)key
 {
 	return [_shipData objectForKey:key];
@@ -295,6 +303,9 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	// Add shipyard entries into shipdata entries.
 	if (![self loadAndMergeShipyard:result])  return;
 	OOLog(@"shipData.load.done", @"Finished adding shipyard entries...");
+	
+	if (![self reifyShipClasses:result])  return;
+	OOLog(@"shipData.load.done", @"Finished building ship class models...");
 	
 #if PRELOAD
 	// Preload and cache meshes.
@@ -839,6 +850,29 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 		}
 		if (remove)  [ioData removeObjectForKey:shipKey];
 	}
+	
+	return YES;
+}
+
+
+- (BOOL) reifyShipClasses:(NSMutableDictionary *)ioData
+{
+	NSString						*shipKey = nil;
+	NSMutableDictionary				*shipClasses = [NSMutableDictionary dictionaryWithCapacity:[ioData count]];
+	OOSimpleProblemReportManager	*issues = [[[OOSimpleProblemReportManager alloc] init] autorelease];
+	
+	foreachkey (shipKey, ioData)
+	{
+		OOShipClass *shipClass = [[OOShipClass alloc] initWithKey:shipKey
+													  legacyPList:[ioData oo_dictionaryForKey:shipKey]
+												  problemReporter:issues];
+		if (shipClass == nil)  return NO;
+		
+		[shipClasses setObject:shipClass forKey:shipKey];
+		[shipClass release];
+	}
+	
+	_shipClasses = [shipClasses copy];
 	
 	return YES;
 }

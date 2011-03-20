@@ -24,7 +24,116 @@
 @end
 
 
-/* MARK: Defaults
+//	MARK: Keys
+#define kKey_isTemplate					@"is_template"
+#define kKey_isExternalDependency		@"is_external_dependency"
+#define kKey_name						@"name"
+#define kKey_displayName				@"display_name"
+#define kKey_scanClass1					@"scan_class"
+#define kKey_scanClass2					@"scanClass"
+#define kKey_beaconCode					@"beacon"
+#define kKey_isHulk						@"is_hulk"
+#define kKey_HUDName					@"hud"
+#define kKey_pilotKey					@"pilot"
+#define kKey_unpilotedChance			@"unpiloted"
+#define kKey_escapePodRoles				@"escape_pod_model"
+#define kKey_countsAsKill				@"counts_as_kill"
+#define kKey_legacyLaunchActions		@"launch_actions"
+#define kKey_legacyScriptActions		@"script_actions"
+#define kKey_legacyDeathActions			@"death_actions"
+#define kKey_legacySetupActions			@"setup_actions"
+#define kKey_scriptName					@"script"
+#define kKey_scriptInfo					@"script_info"
+#define kKey_hasScoopMessage			@"has_scoop_message"
+#define kKey_AIName						@"ai_type"
+#define kKey_autoAI						@"auto_ai"
+#define kKey_trackContacts				@"track_contacts"
+#define kKey_modelName					@"model"
+#define kKey_smooth						@"smooth"
+#define kKey_materials					@"materials"
+#define kKey_shaders					@"shaders"
+#define kKey_exhaustDefinitions			@"exhaust"
+#define kKey_scannerColor1				@"scanner_display_color1"
+#define kKey_scannerColor2				@"scanner_display_color2"
+#define kKey_bounty						@"bounty"
+#define kKey_density					@"density"
+#define kKey_roles						@"roles"
+#define kKey_subentityDefinitions		@"subentities"
+#define kKey_isFrangible				@"frangible"
+#define kKey_escortCount				@"escorts"
+#define kKey_escortShip					@"escort_ship"
+#define kKey_escortRoles				@"escort_role"
+#define kKey_forwardViewPosition		@"view_position_forward"
+#define kKey_aftViewPosition			@"view_position_aft"
+#define kKey_portViewPosition			@"view_position_port"
+#define kKey_starboardViewPosition		@"view_position_starboard"
+#define kKey_customViews				@"custom_views"
+#define kKey_cargoSpaceCapacity			@"max_cargo"
+#define kKey_cargoSpaceUsedMax			@"likely_cargo"
+#define kKey_cargoBayExpansionSize		@"extra_cargo"
+#define kKey_cargoType					@"cargo_type"
+#define kKey_energyCapacity				@"max_energy"
+#define kKey_energyRechargeRate			@"energy_recharge_rate"
+#define kKey_initialFuel				@"fuel"
+#define kKey_fuelChargeRate				@"fuel_charge_rate"
+#define kKey_heatInsulation				@"heat_insulation"
+#define kKey_maxFlightSpeed				@"max_flight_speed"
+#define kKey_maxFlightRoll				@"max_flight_roll"
+#define kKey_maxFlightPitch				@"max_flight_pitch"
+#define kKey_maxFlightYaw				@"max_flight_yaw"
+#define kKey_maxThrust					@"thrust"
+#define kKey_hasHyperspaceMotor			@"hyperspace_motor"
+#define kKey_hyperspaceMotorSpinTime	@"hyperspace_motor_spin_time"
+#define kKey_accuracy					@"accuracy"
+#define kKey_forwardWeaponType			@"forward_weapon_type"
+#define kKey_aftWeaponType				@"aft_weapon_type"
+#define kKey_portWeaponType				@"port_weapon_type"
+#define kKey_starboardWeaponType		@"starboard_weapon_type"
+#define kKey_forwardWeaponPosition		@"weapon_position_forward"
+#define kKey_aftWeaponPosition			@"weapon_position_aft"
+#define kKey_portWeaponPosition			@"weapon_position_port"
+#define kKey_starboardWeaponPosition	@"weapon_position_starboard"
+#define kKey_weaponEnergy				@"weapon_energy"
+#define kKey_turretRange				@"weapon_range"
+#define kKey_laserColor					@"laser_color"
+#define kKey_missileCountMax			@"missiles"
+#define kKey_missileCapacity			@"max_missiles"
+#define kKey_missileRoles				@"missile_role"
+#define kKey_isSubmunition				@"is_submunition"
+#define kKey_cloakIsPassive				@"cloak_passive"
+#define kKey_cloakIsAutomatic			@"cloak_automatic"
+#define kKey_fragmentChance				@"fragment_chance"
+#define kKey_noBouldersChance			@"no_boulders"
+#define kKey_debrisRoles				@"debris_role"
+#define kKey_scoopPosition				@"scoop_position"
+#define kKey_aftEjectPosition			@"aft_eject_position"
+#define kKey_rotationalVelocity			@"rotational_velocity"
+#define kKey_isCarrier1					@"isCarrier"
+#define kKey_isCarrier2					@"is_carrier"
+#define kKey_isRotating					@"rotating"
+#define kKey_stationRoll				@"station_roll"
+#define kKey_hasNPCTrafficChance		@"has_npc_traffic"
+#define kKey_hasPatrolShipsChance		@"has_patrol_ships"
+#define kKey_maxScavengers				@"max_scavengers"
+#define kKey_maxDefenseShips			@"max_defense_ships"
+#define kKey_maxPolice					@"max_police"
+#define kKey_defenseShip				@"defense_ship"
+#define kKey_defenseShipRoles			@"defense_ship_role"
+#define kKey_equivalentTechLevel		@"equivalent_tech_level"
+#define kKey_equipmentPriceFactor		@"equipment_price_factor"
+#define kKey_marketKey					@"market"
+#define kKey_hasShipyard1				@"has_shipyard"
+#define kKey_hasShipyard2				@"hasShipyard"
+#define kKey_requiresDockingClearance	@"requires_docking_clearance"
+#define kKey_allowsInterstellarUndocking @"interstellar_undocking"
+#define kKey_allowsAutoDocking			@"allows_auto_docking"
+#define kKey_allowsFastDocking			@"allows_fast_docking"
+#define kKey_dockingTunnelCorners		@"tunnel_corners"
+#define kKey_dockingTunnelStartAngle	@"tunnel_start_angle"
+#define kKey_dockingTunnelAspectRatio	@"tunnel_aspect_ratio"
+
+
+/*	MARK: Defaults
 	
 	Each default’s name is kDefault_ followed by the name of the correpsonding
 	property, so that it can be looked up by a READ macro below.
@@ -34,10 +143,10 @@
 	changed for 2.0.
 */
 
-//				 isTemplate					NO
-//				 isExternalDependency		NO
-//				 displayName				_name
+#define kDefault_isTemplate					NO
+#define kDefault_isExternalDependency		NO
 #define kDefault_name						nil
+#define kDefault_displayName				_name
 //				 scanClass					CLASS_NOT_SET (a buggy situation; should probably default to CLASS_NEUTRAL)
 #define kDefault_beaconCode					nil
 #define kDefault_isHulk						NO
@@ -207,7 +316,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 
 /*	These macros abstract the process of reading values and applying defaults.
-	The defaults are macros defined above.
+	The keys and defaults are macros defined above.
 	
 	The types are:
 	ARRAY
@@ -224,29 +333,29 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	WEAPON	(OOWeaponType)
 */
 
-#define READ_ARRAY(NAME, KEY)	_##NAME = [[shipdata oo_arrayForKey:@KEY defaultValue:kDefault_##NAME] copy]
+#define READ_ARRAY(NAME)	_##NAME = [[shipdata oo_arrayForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
 
-#define READ_BOOL(NAME, KEY)	_##NAME = [shipdata oo_boolForKey:@KEY defaultValue:kDefault_##NAME]
+#define READ_BOOL(NAME)		_##NAME = [shipdata oo_boolForKey:kKey_##NAME defaultValue:kDefault_##NAME]
 
-#define READ_DICT(NAME, KEY)	_##NAME = [[shipdata oo_dictionaryForKey:@KEY defaultValue:kDefault_##NAME] copy]
+#define READ_DICT(NAME)		_##NAME = [[shipdata oo_dictionaryForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
 
-#define READ_FLOAT(NAME, KEY)	_##NAME = [shipdata oo_floatForKey:@KEY defaultValue:kDefault_##NAME]
+#define READ_FLOAT(NAME)	_##NAME = [shipdata oo_floatForKey:kKey_##NAME defaultValue:kDefault_##NAME]
 
-#define READ_FUZZY(NAME, KEY)	_##NAME = ReadChance(shipdata, @KEY, kDefault_##NAME)
+#define READ_FUZZY(NAME)	_##NAME = ReadChance(shipdata, kKey_##NAME, kDefault_##NAME)
 
-#define READ_PFLOAT(NAME, KEY)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:@KEY defaultValue:kDefault_##NAME])
+#define READ_PFLOAT(NAME)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:kKey_##NAME defaultValue:kDefault_##NAME])
 
-#define READ_QUAT(NAME, KEY)	_##NAME = ReadQuaternion(shipdata, @KEY, kDefault_##NAME)
+#define READ_QUAT(NAME)		_##NAME = ReadQuaternion(shipdata, kKey_##NAME, kDefault_##NAME)
 
-#define READ_ROLE(NAME, KEY)	_##NAME = NewRoleSetFromProperty(shipdata, @KEY, kDefault_##NAME)
+#define READ_ROLE(NAME)		_##NAME = NewRoleSetFromProperty(shipdata, kKey_##NAME, kDefault_##NAME)
 
-#define READ_STRING(NAME, KEY)	_##NAME = [[shipdata oo_stringForKey:@KEY defaultValue:kDefault_##NAME] copy]
+#define READ_STRING(NAME)	_##NAME = [[shipdata oo_stringForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
 
-#define READ_UINT(NAME, KEY)	_##NAME = [shipdata oo_unsignedIntegerForKey:@KEY defaultValue:kDefault_##NAME]
+#define READ_UINT(NAME)		_##NAME = [shipdata oo_unsignedIntegerForKey:kKey_##NAME defaultValue:kDefault_##NAME]
 
-#define READ_VECTOR(NAME, KEY)	_##NAME = ReadVector(shipdata, @KEY, kDefault_##NAME)
+#define READ_VECTOR(NAME)	_##NAME = ReadVector(shipdata, kKey_##NAME, kDefault_##NAME)
 
-#define READ_WEAPON(NAME, KEY)	_##NAME = ReadWeaponType(shipdata, @KEY, kDefault_##NAME)
+#define READ_WEAPON(NAME)	_##NAME = ReadWeaponType(shipdata, kKey_##NAME, kDefault_##NAME)
 
 
 @implementation OOShipClass (Legacy)
@@ -275,47 +384,46 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 {
 	NSString *shipKey = [self shipKey];
 	
-	// These three values aren’t inherited.
-	_isTemplate = [shipdata oo_boolForKey:@"is_template"];
-	_isExternalDependency = [shipdata oo_boolForKey:@"is_external_dependency"];
-	_displayName = [[shipdata oo_stringForKey:@"display_name"] copy];
+	READ_BOOL	(isTemplate);
+	READ_BOOL	(isExternalDependency);
 	
-	READ_STRING	(name,					"name");
+	READ_STRING	(name);
+	READ_STRING	(displayName);
 	
-	OOScanClass scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scan_class" defaultValue:@"CLASS_NOT_SET"]);
-	if (scanClass == CLASS_NOT_SET)  scanClass = OOScanClassFromString([shipdata oo_stringForKey:@"scanClass" defaultValue:@"CLASS_NOT_SET"]);
+	OOScanClass scanClass = OOScanClassFromString([shipdata oo_stringForKey:kKey_scanClass1 defaultValue:@"CLASS_NOT_SET"]);
+	if (scanClass == CLASS_NOT_SET)  scanClass = OOScanClassFromString([shipdata oo_stringForKey:kKey_scanClass2 defaultValue:@"CLASS_NOT_SET"]);
 	_scanClass = scanClass;	// Should we replace CLASS_NOT_SET with CLASS_NEUTRAL here? 1.x doesn’t, but that’s probably a bug. -- Ahruman 2011-03-20
 	
-	READ_STRING	(beaconCode,			"beacon");
-	READ_BOOL	(isHulk,				"is_hulk");
-	READ_STRING	(HUDName,				"hud");
+	READ_STRING	(beaconCode);
+	READ_BOOL	(isHulk);
+	READ_STRING	(HUDName);
 	
-	READ_STRING	(pilotKey,				"pilot");
-	READ_FUZZY	(unpilotedChance,		"unpiloted");
-	READ_ROLE	(escapePodRoles,		"escape_pod_model");	// Despite the name, escape_pod_model takes a role.
-	READ_BOOL	(countsAsKill,			"counts_as_kill");
+	READ_STRING	(pilotKey);
+	READ_FUZZY	(unpilotedChance);
+	READ_ROLE	(escapePodRoles);	// Despite the name, escape_pod_model takes a role.
+	READ_BOOL	(countsAsKill);
 	
 	/*	FIXME: (maybe) automatically convert legacy actions to JavaScript.
 		-- Ahruman 2011-03-18
 	*/
-	if ([shipdata objectForKey:@"launch_actions"] != nil ||
-		[shipdata objectForKey:@"script_actions"] != nil ||
-		[shipdata objectForKey:@"death_actions"] != nil ||
-		[shipdata objectForKey:@"setup_actions"] != nil)
+	if ([shipdata objectForKey:kKey_legacyLaunchActions] != nil ||
+		[shipdata objectForKey:kKey_legacyScriptActions] != nil ||
+		[shipdata objectForKey:kKey_legacyDeathActions] != nil ||
+		[shipdata objectForKey:kKey_legacySetupActions] != nil)
 	{
 		OOReportWarning(issues, @"Ship %@ has legacy script actions, which will be ignored.", shipKey);
 	}
-	READ_STRING	(scriptName,			"script");
-	READ_DICT	(scriptInfo,			"script_info");
-	READ_BOOL	(hasScoopMessage,		"has_scoop_message");
-	READ_STRING	(AIName,				"ai_type");
-	READ_BOOL	(trackContacts,			"track_contacts");
+	READ_STRING	(scriptName);
+	READ_DICT	(scriptInfo);
+	READ_BOOL	(hasScoopMessage);
+	READ_STRING	(AIName);
+	READ_BOOL	(trackContacts);
 	
 	/*	auto_ai is, for some reason I don’t remember, a fuzzy boolean in 1.x.
 		The uses for this seem limited, and should be easily achieved by
 		scripting, so we only allow booleans and warn if fuzzy values are used.
 	*/
-	id autoAI = [shipdata objectForKey:@"auto_ai"];
+	id autoAI = [shipdata objectForKey:kKey_autoAI];
 	if (autoAI != nil)
 	{
 		float autoAIChance = OOFuzzyBooleanProbabilityFromObject(autoAI, 1.0f);
@@ -332,8 +440,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	}
 	else  _autoAI = kDefault_autoAI;
 	
-	READ_STRING	(modelName,				"model");
-	READ_BOOL	(smooth,				"smooth");
+	READ_STRING	(modelName);
+	READ_BOOL	(smooth);
 	
 	/*	Merge the two material dictionaries, with "shaders" overriding
 		"materials" since 2.x always has shaders.
@@ -341,8 +449,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		are expected to stop working in 2.x.
 		-- Ahruman 2011-03-18
 	*/
-	NSDictionary *materials = [shipdata oo_dictionaryForKey:@"materials"];
-	NSDictionary *shaders = [shipdata oo_dictionaryForKey:@"shaders"];
+	NSDictionary *materials = [shipdata oo_dictionaryForKey:kKey_materials];
+	NSDictionary *shaders = [shipdata oo_dictionaryForKey:kKey_shaders];
 	if (materials == nil)
 	{
 		if (shaders != nil)  _materialDefinitions = [shaders copy];
@@ -364,11 +472,11 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		is ignored.
 		-- Ahruman 2011-03-18
 	*/
-	READ_ARRAY	(exhaustDefinitions,	"exhaust");
+	READ_ARRAY	(exhaustDefinitions);
 	
 	//	Load scanner lollipop colours.
-	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color1"]];
-	OOColor *scannerColor2 = [OOColor colorWithDescription:[shipdata objectForKey:@"scanner_display_color2"]];
+	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:kKey_scannerColor1]];
+	OOColor *scannerColor2 = [OOColor colorWithDescription:[shipdata objectForKey:kKey_scannerColor2]];
 	if (scannerColor1 == nil)
 	{
 		if (scannerColor2 != nil)  _scannerColors = $array(scannerColor2);
@@ -379,8 +487,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		else  _scannerColors = $array(scannerColor1, scannerColor2);
 	}
 	
-	READ_UINT	(bounty,				"bounty");
-	READ_PFLOAT	(density,				"density");
+	READ_UINT	(bounty);
+	READ_PFLOAT	(density);
 	
 	/*	Deal with roles.
 		We want to add a unique role for each ship, to simplify cases where 1.x
@@ -388,7 +496,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		esorts).
 	*/
 	NSString *uniqueRole = UniqueRoleForShipKey(shipKey);
-	NSString *roleString = [shipdata oo_stringForKey:@"roles"];
+	NSString *roleString = [shipdata oo_stringForKey:kKey_roles];
 	if (roleString != nil)
 	{
 		[_roles release];
@@ -402,10 +510,10 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	/*	FIXME: convert to canonical subentity representation.
 		-- Ahruman 2011-03-18
 	*/
-	READ_ARRAY	(subentityDefinitions,	"subentities");
-	READ_BOOL	(isFrangible,			"frangible");
+	READ_ARRAY	(subentityDefinitions);
+	READ_BOOL	(isFrangible);
 	
-	READ_UINT	(escortCount,			"escorts");
+	READ_UINT	(escortCount);
 	// FIXME: wrap up limit handling in macros too?
 	if (_escortCount > 16)
 	{
@@ -418,25 +526,25 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		support roles, but we also add each ship’s key as a hopefully-unique
 		role.
 	*/
-	NSString *escort = [shipdata oo_stringForKey:@"escort_ship"];
+	NSString *escort = [shipdata oo_stringForKey:kKey_escortShip];
 	if (escort != nil)  _escortRoles = [[OORoleSet alloc] initWithRole:UniqueRoleForShipKey(escort) probability:1];
 	else
 	{
-		READ_ROLE(escortRoles, "escort_role");
+		READ_ROLE(escortRoles);
 	}
 	
-	READ_VECTOR	(forwardViewPosition,	"view_position_forward");
-	READ_VECTOR	(aftViewPosition,		"view_position_aft");
-	READ_VECTOR	(portViewPosition,		"view_position_port");
-	READ_VECTOR	(starboardViewPosition,	"view_position_starboard");
-	READ_ARRAY	(customViews,			"custom_views");
+	READ_VECTOR	(forwardViewPosition);
+	READ_VECTOR	(aftViewPosition);
+	READ_VECTOR	(portViewPosition);
+	READ_VECTOR	(starboardViewPosition);
+	READ_ARRAY	(customViews);
 	
-	READ_UINT	(cargoSpaceCapacity,	"max_cargo");
-	READ_UINT	(cargoSpaceUsedMax,		"likely_cargo");
+	READ_UINT	(cargoSpaceCapacity);
+	READ_UINT	(cargoSpaceUsedMax);
 	_cargoSpaceUsedMin = _cargoSpaceUsedMax;
-	READ_UINT	(cargoBayExpansionSize,	"extra_cargo");
+	READ_UINT	(cargoBayExpansionSize);
 	
-	NSString *cargoType = [shipdata oo_stringForKey:@"cargo_type"];
+	NSString *cargoType = [shipdata oo_stringForKey:kKey_cargoType];
 	if (cargoType != nil)
 	{
 		_cargoType = StringToCargoType(cargoType);
@@ -447,37 +555,37 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		}
 	}
 	
-	READ_PFLOAT	(energyCapacity,		"max_energy");
-	READ_PFLOAT	(energyRechargeRate,	"energy_recharge_rate");
+	READ_PFLOAT	(energyCapacity);
+	READ_PFLOAT	(energyRechargeRate);
 	
 	// Note: as per 1.x, fuel defaults to 0.
-	READ_UINT	(initialFuel,			"fuel");
-	READ_PFLOAT	(fuelChargeRate,		"fuel_charge_rate");
+	READ_UINT	(initialFuel);
+	READ_PFLOAT	(fuelChargeRate);
 	_fuelCapacity = MAX(70U, _initialFuel);		// 1.x has no explicit fuel capacity.	
 	
-	READ_PFLOAT	(heatInsulation,		"heat_insulation");	// FIXME: 1.x handles NPC heat shield equipment by changing the default to 2.0. Ideally, we’d handle it by handling equipment.
+	READ_PFLOAT	(heatInsulation);	// FIXME: 1.x handles NPC heat shield equipment by changing the default to 2.0. Ideally, we’d handle it by handling equipment.
 	
-	READ_PFLOAT	(maxFlightSpeed,		"max_flight_speed");
-	READ_PFLOAT	(maxFlightRoll,			"max_flight_roll");
-	READ_PFLOAT	(maxFlightPitch,		"max_flight_pitch");
-	READ_PFLOAT	(maxFlightYaw,			"max_flight_yaw");
-	READ_PFLOAT	(maxThrust,				"thrust");
-	READ_BOOL	(hasHyperspaceMotor,	"hyperspace_motor");
-	READ_PFLOAT	(hyperspaceMotorSpinTime, "hyperspace_motor_spin_time");
+	READ_PFLOAT	(maxFlightSpeed);
+	READ_PFLOAT	(maxFlightRoll);
+	READ_PFLOAT	(maxFlightPitch);
+	READ_PFLOAT	(maxFlightYaw);
+	READ_PFLOAT	(maxThrust);
+	READ_BOOL	(hasHyperspaceMotor);
+	READ_PFLOAT	(hyperspaceMotorSpinTime);
 	
-	READ_FLOAT	(accuracy,				"accuracy");
-	READ_WEAPON	(forwardWeaponType,		"forward_weapon_type");
-	READ_WEAPON	(aftWeaponType,			"aft_weapon_type");
-	READ_WEAPON	(portWeaponType,		"port_weapon_type");
-	READ_WEAPON	(starboardWeaponType,	"starboard_weapon_type");
-	READ_VECTOR	(forwardWeaponPosition,	"weapon_position_forward");
-	READ_VECTOR	(aftWeaponPosition,		"weapon_position_aft");
-	READ_VECTOR	(portWeaponPosition,	"weapon_position_port");
-	READ_VECTOR	(starboardWeaponPosition, "weapon_position_starboard");
-	READ_PFLOAT	(weaponEnergy,			"weapon_energy");
-	READ_PFLOAT	(turretRange,			"weapon_range");
+	READ_FLOAT	(accuracy);
+	READ_WEAPON	(forwardWeaponType);
+	READ_WEAPON	(aftWeaponType);
+	READ_WEAPON	(portWeaponType);
+	READ_WEAPON	(starboardWeaponType);
+	READ_VECTOR	(forwardWeaponPosition);
+	READ_VECTOR	(aftWeaponPosition);
+	READ_VECTOR	(portWeaponPosition);
+	READ_VECTOR	(starboardWeaponPosition);
+	READ_PFLOAT	(weaponEnergy);
+	READ_PFLOAT	(turretRange);
 	[self priv_adjustLegacyWeaponStatsWithProblemReporter:issues];
-	id laserColorDef = [shipdata objectForKey:@"laser_color"];
+	id laserColorDef = [shipdata objectForKey:kKey_laserColor];
 	if (laserColorDef != nil)
 	{
 		_laserColor = [[OOColor brightColorWithDescription:laserColorDef] retain];
@@ -487,30 +595,30 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		_laserColor = [[OOColor redColor] retain];
 	}
 	
-	READ_UINT	(missileCountMax,		"missiles");
+	READ_UINT	(missileCountMax);
 	_missileCountMin = kDefault_missileCountMin;
-	READ_UINT	(missileCapacity,		"max_missiles");
-	READ_ROLE	(missileRoles,			"missile_role");
+	READ_UINT	(missileCapacity);
+	READ_ROLE	(missileRoles);
 	
-	READ_BOOL	(isSubmunition,			"is_submunition");
+	READ_BOOL	(isSubmunition);
 	
-	READ_BOOL	(cloakIsPassive,		"cloak_passive");
-	READ_BOOL	(cloakIsAutomatic,		"cloak_automatic");
+	READ_BOOL	(cloakIsPassive);
+	READ_BOOL	(cloakIsAutomatic);
 	
-	READ_FUZZY	(fragmentChance,		"fragment_chance");
-	READ_FUZZY	(noBouldersChance,		"no_boulders");
-	READ_ROLE	(debrisRoles,			"debris_role");
-	READ_VECTOR	(scoopPosition,			"scoop_position");
-	READ_VECTOR	(aftEjectPosition,		"aft_eject_position");
+	READ_FUZZY	(fragmentChance);
+	READ_FUZZY	(noBouldersChance);
+	READ_ROLE	(debrisRoles);
+	READ_VECTOR	(scoopPosition);
+	READ_VECTOR	(aftEjectPosition);
 	
-	READ_QUAT	(rotationalVelocity,	"rotational_velocity");
+	READ_QUAT	(rotationalVelocity);
 	
 	/*	is_carrier and isCarrier are synonyms; isCarrier has priority.
 		If it isn’t defined, carrierhood is inferred from roles.
 		-- Ahruman 2011-03-20
 	*/
-	id isCarrier = [shipdata objectForKey:@"isCarrier"];
-	if (isCarrier == nil)  isCarrier = [shipdata objectForKey:@"is_carrier"];
+	id isCarrier = [shipdata objectForKey:kKey_isCarrier1];
+	if (isCarrier == nil)  isCarrier = [shipdata objectForKey:kKey_isCarrier2];
 	if (isCarrier != nil)  _isCarrier = OOBooleanFromObject(isCarrier, NO);
 	else
 	{
@@ -522,41 +630,41 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		/*	Only read carrier-related properties when actually loading a
 			carrier.
 		*/
-		if ([shipdata oo_boolForKey:@"rotating"])
+		if ([shipdata oo_boolForKey:kKey_isRotating])
 		{
-			READ_FLOAT(stationRoll,				"station_roll");
+			READ_FLOAT(stationRoll);
 		}
 		// else station_roll is effectively 0. (rotating predates station_roll and is now redundant.)
 		
-		READ_FLOAT	(hasNPCTrafficChance,		"has_npc_traffic");
-		READ_FLOAT	(hasPatrolShipsChance,		"has_patrol_ships");
-		READ_UINT	(maxScavengers,				"max_scavengers");
-		READ_UINT	(maxDefenseShips,			"max_defense_ships");
-		READ_UINT	(maxPolice,					"max_police");
+		READ_FLOAT	(hasNPCTrafficChance);
+		READ_FLOAT	(hasPatrolShipsChance);
+		READ_UINT	(maxScavengers);
+		READ_UINT	(maxDefenseShips);
+		READ_UINT	(maxPolice);
 		
 		/*	defenseShipRoles has the same issues as escortRoles above. As a
 			bonus, the default depends on the system tech level and a random
 			roll, so we just default to nil.
 		*/
-		NSString *defenseShip = [shipdata oo_stringForKey:@"defense_ship"];
+		NSString *defenseShip = [shipdata oo_stringForKey:kKey_defenseShip];
 		if (defenseShip != nil)  _escortRoles = [[OORoleSet alloc] initWithRole:UniqueRoleForShipKey(defenseShip) probability:1];
 		else
 		{
-			READ_ROLE(defenseShipRoles, "defense_ship_role");
+			READ_ROLE(defenseShipRoles);
 		}
 		
-		READ_UINT	(equivalentTechLevel,		"equivalent_tech_level");
-		READ_FLOAT	(equipmentPriceFactor,		"equipment_price_factor");
+		READ_UINT	(equivalentTechLevel);
+		READ_FLOAT	(equipmentPriceFactor);
 		_equipmentPriceFactor = fmaxf(_equipmentPriceFactor, 0.5f);
-		READ_STRING	(marketKey,					"market");
+		READ_STRING	(marketKey);
 		
 		/*	hasShipyard can be a (non-fuzzy) boolean or a legacy script condition.
 			It can also be written has_shipyard or hasShipyard, with the former
 			taking precedence.
 			FIXME: bring in JS code generation!
 		*/
-		id hasShipyard = [shipdata objectForKey:@"has_shipyard"];
-		if (hasShipyard == nil)  hasShipyard = [shipdata objectForKey:@"hasShipyard"];
+		id hasShipyard = [shipdata objectForKey:kKey_hasShipyard1];
+		if (hasShipyard == nil)  hasShipyard = [shipdata objectForKey:kKey_hasShipyard2];
 		if (hasShipyard != nil)
 		{
 			if ([hasShipyard isKindOfClass:[NSArray class]])
@@ -570,13 +678,13 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 			overriden through planetinfo. Not sure how to deal with that.
 			-- Ahruman 2011-03-20
 		*/
-		READ_BOOL	(requiresDockingClearance,	"requires_docking_clearance");
-		READ_BOOL	(allowsInterstellarUndocking, "interstellar_undocking");
-		READ_BOOL	(allowsAutoDocking,			"allows_auto_docking");
-		READ_BOOL	(allowsFastDocking,			"allows_fast_docking");
-		READ_UINT	(dockingTunnelCorners,		"tunnel_corners");
-		READ_FLOAT	(dockingTunnelStartAngle,	"tunnel_start_angle");
-		READ_PFLOAT	(dockingTunnelAspectRatio,	"tunnel_aspect_ratio");
+		READ_BOOL	(requiresDockingClearance);
+		READ_BOOL	(allowsInterstellarUndocking);
+		READ_BOOL	(allowsAutoDocking);
+		READ_BOOL	(allowsFastDocking);
+		READ_UINT	(dockingTunnelCorners);
+		READ_FLOAT	(dockingTunnelStartAngle);
+		READ_PFLOAT	(dockingTunnelAspectRatio);
 	}
 	
 	// TODO: equipment.

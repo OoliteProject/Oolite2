@@ -32,7 +32,7 @@ SOFTWARE.
 #import <OoliteBase/OoliteBase.h>
 
 
-@interface OORoleSet: NSObject <NSCopying>
+@interface OORoleSet: NSObject <NSCopying, JAPropertyListRepresentation>
 {
 	NSString					*_roleString;
 	NSDictionary				*_rolesAndProbabilities;

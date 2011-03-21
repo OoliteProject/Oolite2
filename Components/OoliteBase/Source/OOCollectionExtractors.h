@@ -296,6 +296,7 @@ SOFTWARE.
 - (void) oo_setLongLong:(long long)value forKey:(id)key;
 - (void) oo_setUnsignedLongLong:(unsigned long long)value forKey:(id)key;
 - (void) oo_setFloat:(double)value forKey:(id)key;
+- (void) oo_setFloatSingle:(float)value forKey:(id)key;	// For historical reasons, oo_setFloat: is double-precision, but we need an explicitly single-precision version to avoid extra precision in generated OOConfs.
 - (void) oo_setBool:(BOOL)value forKey:(id)key;
 - (void) oo_setVector:(Vector)value forKey:(id)key;
 - (void) oo_setQuaternion:(Quaternion)value forKey:(id)key;

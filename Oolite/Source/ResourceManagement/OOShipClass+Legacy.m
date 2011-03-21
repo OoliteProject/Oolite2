@@ -25,114 +25,115 @@
 
 
 //	MARK: Keys
-#define kKey_isTemplate					@"is_template"
-#define kKey_isExternalDependency		@"is_external_dependency"
-#define kKey_name						@"name"
-#define kKey_displayName				@"display_name"
-#define kKey_scanClass1					@"scan_class"
-#define kKey_scanClass2					@"scanClass"
-#define kKey_beaconCode					@"beacon"
-#define kKey_isHulk						@"is_hulk"
-#define kKey_HUDName					@"hud"
-#define kKey_pilotKey					@"pilot"
-#define kKey_unpilotedChance			@"unpiloted"
-#define kKey_escapePodCount				@"has_escape_pod"
-#define kKey_escapePodRoles				@"escape_pod_model"
-#define kKey_countsAsKill				@"counts_as_kill"
-#define kKey_legacyLaunchActions		@"launch_actions"
-#define kKey_legacyScriptActions		@"script_actions"
-#define kKey_legacyDeathActions			@"death_actions"
-#define kKey_legacySetupActions			@"setup_actions"
-#define kKey_scriptName					@"script"
-#define kKey_scriptInfo					@"script_info"
-#define kKey_hasScoopMessage			@"has_scoop_message"
-#define kKey_AIName						@"ai_type"
-#define kKey_autoAI						@"auto_ai"
-#define kKey_trackContacts				@"track_contacts"
-#define kKey_modelName					@"model"
-#define kKey_smooth						@"smooth"
-#define kKey_materials					@"materials"
-#define kKey_shaders					@"shaders"
-#define kKey_exhaustDefinitions			@"exhaust"
-#define kKey_scannerColor1				@"scanner_display_color1"
-#define kKey_scannerColor2				@"scanner_display_color2"
-#define kKey_bounty						@"bounty"
-#define kKey_density					@"density"
-#define kKey_roles						@"roles"
-#define kKey_subentityDefinitions		@"subentities"
-#define kKey_isFrangible				@"frangible"
-#define kKey_escortCount				@"escorts"
-#define kKey_escortShip					@"escort_ship"
-#define kKey_escortRoles				@"escort_role"
-#define kKey_forwardViewPosition		@"view_position_forward"
-#define kKey_aftViewPosition			@"view_position_aft"
-#define kKey_portViewPosition			@"view_position_port"
-#define kKey_starboardViewPosition		@"view_position_starboard"
-#define kKey_customViews				@"custom_views"
-#define kKey_cargoSpaceCapacity			@"max_cargo"
-#define kKey_cargoSpaceUsedMax			@"likely_cargo"
-#define kKey_cargoBayExpansionSize		@"extra_cargo"
-#define kKey_cargoType					@"cargo_type"
-#define kKey_energyCapacity				@"max_energy"
-#define kKey_energyRechargeRate			@"energy_recharge_rate"
-#define kKey_initialFuel				@"fuel"
-#define kKey_fuelChargeRate				@"fuel_charge_rate"
-#define kKey_heatInsulation				@"heat_insulation"
-#define kKey_maxFlightSpeed				@"max_flight_speed"
-#define kKey_maxFlightRoll				@"max_flight_roll"
-#define kKey_maxFlightPitch				@"max_flight_pitch"
-#define kKey_maxFlightYaw				@"max_flight_yaw"
-#define kKey_maxThrust					@"thrust"
-#define kKey_hasHyperspaceMotor			@"hyperspace_motor"
-#define kKey_hyperspaceMotorSpinTime	@"hyperspace_motor_spin_time"
-#define kKey_accuracy					@"accuracy"
-#define kKey_forwardWeaponType			@"forward_weapon_type"
-#define kKey_aftWeaponType				@"aft_weapon_type"
-#define kKey_portWeaponType				@"port_weapon_type"
-#define kKey_starboardWeaponType		@"starboard_weapon_type"
-#define kKey_forwardWeaponPosition		@"weapon_position_forward"
-#define kKey_aftWeaponPosition			@"weapon_position_aft"
-#define kKey_portWeaponPosition			@"weapon_position_port"
-#define kKey_starboardWeaponPosition	@"weapon_position_starboard"
-#define kKey_weaponEnergy				@"weapon_energy"
-#define kKey_turretRange				@"weapon_range"
-#define kKey_laserColor					@"laser_color"
-#define kKey_missileCountMax			@"missiles"
-#define kKey_missileCapacity			@"max_missiles"
-#define kKey_missileRoles				@"missile_role"
-#define kKey_isSubmunition				@"is_submunition"
-#define kKey_cloakIsPassive				@"cloak_passive"
-#define kKey_cloakIsAutomatic			@"cloak_automatic"
-#define kKey_fragmentChance				@"fragment_chance"
-#define kKey_noBouldersChance			@"no_boulders"
-#define kKey_debrisRoles				@"debris_role"
-#define kKey_scoopPosition				@"scoop_position"
-#define kKey_aftEjectPosition			@"aft_eject_position"
-#define kKey_rotationalVelocity			@"rotational_velocity"
-#define kKey_isCarrier1					@"isCarrier"
-#define kKey_isCarrier2					@"is_carrier"
-#define kKey_isRotating					@"rotating"
-#define kKey_stationRoll				@"station_roll"
-#define kKey_hasNPCTrafficChance		@"has_npc_traffic"
-#define kKey_hasPatrolShipsChance		@"has_patrol_ships"
-#define kKey_maxScavengers				@"max_scavengers"
-#define kKey_maxDefenseShips			@"max_defense_ships"
-#define kKey_maxPolice					@"max_police"
-#define kKey_defenseShip				@"defense_ship"
-#define kKey_defenseShipRoles			@"defense_ship_role"
-#define kKey_equivalentTechLevel		@"equivalent_tech_level"
-#define kKey_equipmentPriceFactor		@"equipment_price_factor"
-#define kKey_marketKey					@"market"
-#define kKey_hasShipyard1				@"has_shipyard"
-#define kKey_hasShipyard2				@"hasShipyard"
-#define kKey_requiresDockingClearance	@"requires_docking_clearance"
-#define kKey_allowsInterstellarUndocking @"interstellar_undocking"
-#define kKey_allowsAutoDocking			@"allows_auto_docking"
-#define kKey_allowsFastDocking			@"allows_fast_docking"
-#define kKey_dockingTunnelCorners		@"tunnel_corners"
-#define kKey_dockingTunnelStartAngle	@"tunnel_start_angle"
-#define kKey_dockingTunnelAspectRatio	@"tunnel_aspect_ratio"
-#define kKey_extraEquipment				@"extra_equipment"
+#define kKey_likeShipKey					@"like_ship"
+#define kKey_isTemplate						@"is_template"
+#define kKey_isExternalDependency			@"is_external_dependency"
+#define kKey_name							@"name"
+#define kKey_displayName					@"display_name"
+#define kKey_scanClass1						@"scan_class"
+#define kKey_scanClass2						@"scanClass"
+#define kKey_beaconCode						@"beacon"
+#define kKey_isHulk							@"is_hulk"
+#define kKey_HUDName						@"hud"
+#define kKey_pilotKey						@"pilot"
+#define kKey_unpilotedChance				@"unpiloted"
+#define kKey_escapePodCount					@"has_escape_pod"
+#define kKey_escapePodRoles					@"escape_pod_model"
+#define kKey_countsAsKill					@"counts_as_kill"
+#define kKey_legacyLaunchActions			@"launch_actions"
+#define kKey_legacyScriptActions			@"script_actions"
+#define kKey_legacyDeathActions				@"death_actions"
+#define kKey_legacySetupActions				@"setup_actions"
+#define kKey_scriptName						@"script"
+#define kKey_scriptInfo						@"script_info"
+#define kKey_hasScoopMessage				@"has_scoop_message"
+#define kKey_AIName							@"ai_type"
+#define kKey_autoAI							@"auto_ai"
+#define kKey_trackCloseContacts				@"track_contacts"
+#define kKey_modelName						@"model"
+#define kKey_smooth							@"smooth"
+#define kKey_materials						@"materials"
+#define kKey_shaders						@"shaders"
+#define kKey_exhaustDefinitions				@"exhaust"
+#define kKey_scannerColor1					@"scanner_display_color1"
+#define kKey_scannerColor2					@"scanner_display_color2"
+#define kKey_bounty							@"bounty"
+#define kKey_density						@"density"
+#define kKey_roles							@"roles"
+#define kKey_subentityDefinitions			@"subentities"
+#define kKey_isFrangible					@"frangible"
+#define kKey_escortCount					@"escorts"
+#define kKey_escortShip						@"escort_ship"
+#define kKey_escortRoles					@"escort_role"
+#define kKey_forwardViewPosition			@"view_position_forward"
+#define kKey_aftViewPosition				@"view_position_aft"
+#define kKey_portViewPosition				@"view_position_port"
+#define kKey_starboardViewPosition			@"view_position_starboard"
+#define kKey_customViews					@"custom_views"
+#define kKey_cargoSpaceCapacity				@"max_cargo"
+#define kKey_cargoSpaceUsedMax				@"likely_cargo"
+#define kKey_cargoBayExpansionSize			@"extra_cargo"
+#define kKey_cargoType						@"cargo_type"
+#define kKey_energyCapacity					@"max_energy"
+#define kKey_energyRechargeRate				@"energy_recharge_rate"
+#define kKey_initialFuel					@"fuel"
+#define kKey_fuelChargeRate					@"fuel_charge_rate"
+#define kKey_heatInsulation					@"heat_insulation"
+#define kKey_maxFlightSpeed					@"max_flight_speed"
+#define kKey_maxFlightRoll					@"max_flight_roll"
+#define kKey_maxFlightPitch					@"max_flight_pitch"
+#define kKey_maxFlightYaw					@"max_flight_yaw"
+#define kKey_maxThrust						@"thrust"
+#define kKey_hasHyperspaceMotor				@"hyperspace_motor"
+#define kKey_hyperspaceMotorSpinTime		@"hyperspace_motor_spin_time"
+#define kKey_accuracy						@"accuracy"
+#define kKey_forwardWeaponType				@"forward_weapon_type"
+#define kKey_aftWeaponType					@"aft_weapon_type"
+#define kKey_portWeaponType					@"port_weapon_type"
+#define kKey_starboardWeaponType			@"starboard_weapon_type"
+#define kKey_forwardWeaponPosition			@"weapon_position_forward"
+#define kKey_aftWeaponPosition				@"weapon_position_aft"
+#define kKey_portWeaponPosition				@"weapon_position_port"
+#define kKey_starboardWeaponPosition		@"weapon_position_starboard"
+#define kKey_weaponEnergy					@"weapon_energy"
+#define kKey_turretRange					@"weapon_range"
+#define kKey_laserColor						@"laser_color"
+#define kKey_missileCountMax				@"missiles"
+#define kKey_missileCapacity				@"max_missiles"
+#define kKey_missileRoles					@"missile_role"
+#define kKey_isSubmunition					@"is_submunition"
+#define kKey_cloakIsPassive					@"cloak_passive"
+#define kKey_cloakIsAutomatic				@"cloak_automatic"
+#define kKey_fragmentChance					@"fragment_chance"
+#define kKey_noBouldersChance				@"no_boulders"
+#define kKey_debrisRoles					@"debris_role"
+#define kKey_scoopPosition					@"scoop_position"
+#define kKey_aftEjectPosition				@"aft_eject_position"
+#define kKey_rotationalVelocity				@"rotational_velocity"
+#define kKey_isCarrier1						@"isCarrier"
+#define kKey_isCarrier2						@"is_carrier"
+#define kKey_isRotating						@"rotating"
+#define kKey_stationRoll					@"station_roll"
+#define kKey_hasNPCTrafficChance			@"has_npc_traffic"
+#define kKey_hasPatrolShipsChance			@"has_patrol_ships"
+#define kKey_maxScavengers					@"max_scavengers"
+#define kKey_maxDefenseShips				@"max_defense_ships"
+#define kKey_maxPolice						@"max_police"
+#define kKey_defenseShip					@"defense_ship"
+#define kKey_defenseShipRoles				@"defense_ship_role"
+#define kKey_equivalentTechLevel			@"equivalent_tech_level"
+#define kKey_equipmentPriceFactor			@"equipment_price_factor"
+#define kKey_marketKey						@"market"
+#define kKey_hasShipyard1					@"has_shipyard"
+#define kKey_hasShipyard2					@"hasShipyard"
+#define kKey_requiresDockingClearance		@"requires_docking_clearance"
+#define kKey_allowsInterstellarUndocking	@"interstellar_undocking"
+#define kKey_allowsAutoDocking				@"allows_auto_docking"
+#define kKey_allowsFastDocking				@"allows_fast_docking"
+#define kKey_dockingTunnelCorners			@"tunnel_corners"
+#define kKey_dockingTunnelStartAngle		@"tunnel_start_angle"
+#define kKey_dockingTunnelAspectRatio		@"tunnel_aspect_ratio"
+#define kKey_extraEquipment					@"extra_equipment"
 
 
 /*	MARK: Defaults
@@ -145,17 +146,18 @@
 	changed for 2.0.
 */
 
+#define kDefault_likeShipKey				nil					// like_ship
 #define kDefault_isTemplate					NO
 #define kDefault_isExternalDependency		NO
 #define kDefault_name						@"?"
 #define kDefault_displayName				_name
-//				 scanClass					CLASS_NOT_SET (a buggy situation; should probably default to CLASS_NEUTRAL)
+//				 scanClass					CLASS_NOT_SET (turns into CLASS_NEUTRAL)
 #define kDefault_beaconCode					nil
 #define kDefault_isHulk						NO
 #define kDefault_HUDName					@"hud.plist"		// hud
 #define kDefault_pilotKey					nil					// pilot
 #define kDefault_unpilotedChance			NO					// unpiloted
-#define kDefault_escapePodCount				0					// has_escape_pod — despite the name, this may be greater than 1.
+#define kDefault_escapePodCount				0					// has_escape_pod — despite the name, this may be greater than 1.	
 #define kDefault_escapePodRoles				@"escape-capsule"	// escape_pod_model
 #define kDefault_countsAsKill				YES
 // launch_actions, script_actions, death_actions, setup_actions: nil
@@ -163,7 +165,7 @@
 #define kDefault_scriptInfo					nil
 #define kDefault_hasScoopMessage			NO
 #define kDefault_AIName						@"nullAI.plist"		// ai_type
-#define kDefault_trackContacts				NO
+#define kDefault_trackCloseContacts			NO
 #define kDefault_autoAI						YES
 #define kDefault_modelName					nil
 #define kDefault_smooth						NO
@@ -238,7 +240,7 @@
 #define kDefault_equivalentTechLevel		NSNotFound			// Placeholder, similar to nil
 #define kDefault_equipmentPriceFactor		1
 #define kDefault_marketKey					nil
-#define kDefault_hasShipyard				NO					// Can be boolean or conditions; always treated as true for main station.
+#define kDefault_hasShipyard				NO					// Can be boolean or conditions; always treated as true for main station.	
 #define kDefault_requiresDockingClearance	NO
 #define kDefault_allowsInterstellarUndocking NO
 #define kDefault_allowsAutoDocking			YES
@@ -310,7 +312,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	{
 		return [[OORoleSet alloc] initWithRole:role probability:1];
 	}
-	if (defaultValue == nil)
+	if (defaultValue != nil)
 	{
 		return [[OORoleSet alloc] initWithRoleString:defaultValue];
 	}
@@ -337,27 +339,16 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 */
 
 #define READ_ARRAY(NAME)	_##NAME = [[shipdata oo_arrayForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
-
 #define READ_BOOL(NAME)		_##NAME = [shipdata oo_boolForKey:kKey_##NAME defaultValue:kDefault_##NAME]
-
 #define READ_DICT(NAME)		_##NAME = [[shipdata oo_dictionaryForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
-
 #define READ_FLOAT(NAME)	_##NAME = [shipdata oo_floatForKey:kKey_##NAME defaultValue:kDefault_##NAME]
-
 #define READ_FUZZY(NAME)	_##NAME = ReadChance(shipdata, kKey_##NAME, kDefault_##NAME)
-
 #define READ_PFLOAT(NAME)	_##NAME = fmaxf(0.0f, [shipdata oo_floatForKey:kKey_##NAME defaultValue:kDefault_##NAME])
-
 #define READ_QUAT(NAME)		_##NAME = ReadQuaternion(shipdata, kKey_##NAME, kDefault_##NAME)
-
 #define READ_ROLE(NAME)		_##NAME = NewRoleSetFromProperty(shipdata, kKey_##NAME, kDefault_##NAME)
-
 #define READ_STRING(NAME)	_##NAME = [[shipdata oo_stringForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
-
 #define READ_UINT(NAME)		_##NAME = [shipdata oo_unsignedIntegerForKey:kKey_##NAME defaultValue:kDefault_##NAME]
-
 #define READ_VECTOR(NAME)	_##NAME = ReadVector(shipdata, kKey_##NAME, kDefault_##NAME)
-
 #define READ_WEAPON(NAME)	_##NAME = ReadWeaponType(shipdata, kKey_##NAME, kDefault_##NAME)
 
 
@@ -391,6 +382,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 {
 	NSString *shipKey = [self shipKey];
 	
+	READ_STRING	(likeShipKey);
 	READ_BOOL	(isTemplate);
 	READ_BOOL	(isExternalDependency);
 	
@@ -399,7 +391,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	OOScanClass scanClass = OOScanClassFromString([shipdata oo_stringForKey:kKey_scanClass1 defaultValue:@"CLASS_NOT_SET"]);
 	if (scanClass == CLASS_NOT_SET)  scanClass = OOScanClassFromString([shipdata oo_stringForKey:kKey_scanClass2 defaultValue:@"CLASS_NOT_SET"]);
-	_scanClass = scanClass;	// Should we replace CLASS_NOT_SET with CLASS_NEUTRAL here? 1.x doesn’t, but that’s probably a bug. -- Ahruman 2011-03-20
+	if (scanClass == CLASS_NOT_SET)  scanClass = CLASS_NEUTRAL;
+	_scanClass = scanClass;
 	
 	READ_STRING	(beaconCode);
 	READ_BOOL	(isHulk);
@@ -425,11 +418,12 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_DICT	(scriptInfo);
 	READ_BOOL	(hasScoopMessage);
 	READ_STRING	(AIName);
-	READ_BOOL	(trackContacts);
+	READ_BOOL	(trackCloseContacts);
 	
 	/*	auto_ai is, for some reason I don’t remember, a fuzzy boolean in 1.x.
 		The uses for this seem limited, and should be easily achieved by
 		scripting, so we only allow booleans and warn if fuzzy values are used.
+		-- Ahruman 2011-03-20
 	*/
 	id autoAI = [shipdata objectForKey:kKey_autoAI];
 	if (autoAI != nil)
@@ -454,7 +448,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	/*	Merge the two material dictionaries, with "shaders" overriding
 		"materials" since 2.x always has shaders.
 		FIXME: this might not be the right thing, since the actual shaders
-		are expected to stop working in 2.x.
+		are expected to stop working in 2.x. Also, the contents of the
+		dictionaries need updating.
 		-- Ahruman 2011-03-18
 	*/
 	NSDictionary *materials = [shipdata oo_dictionaryForKey:kKey_materials];
@@ -569,7 +564,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	// Note: as per 1.x, fuel defaults to 0.
 	READ_UINT	(initialFuel);
 	READ_PFLOAT	(fuelChargeRate);
-	_fuelCapacity = MAX(70U, _initialFuel);		// 1.x has no explicit fuel capacity.	
+	_fuelCapacity = MAX(70U, _initialFuel);		// 1.x has no explicit fuel capacity.
 	
 	READ_PFLOAT	(heatInsulation);	// FIXME: 1.x handles NPC heat shield equipment by changing the default to 2.0. Ideally, we’d handle it by handling equipment.
 	

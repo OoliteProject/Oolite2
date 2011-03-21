@@ -432,6 +432,7 @@
 		1AB5C39913186F5500C73246 /* OOMacJoystickManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB5C39813186F5500C73246 /* OOMacJoystickManager.m */; };
 		1AB5C3A81318703200C73246 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB5C3A71318703200C73246 /* IOKit.framework */; };
 		1ABC565F133127170095274F /* OOShipClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC565E133127170095274F /* OOShipClass.m */; };
+		1AD6A7571336BA1C00E0B0B2 /* OOShipClass+IO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD6A7561336BA1C00E0B0B2 /* OOShipClass+IO.m */; };
 		1AF2EB64130614D8008ECA54 /* OOCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB63130614D8008ECA54 /* OOCacheManager.m */; };
 		1AF2EB7913061526008ECA54 /* OOJavaScriptEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB7813061526008ECA54 /* OOJavaScriptEngine.m */; };
 		1AF2EB7E1306152E008ECA54 /* OOJSEngineDebuggerHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB7A1306152E008ECA54 /* OOJSEngineDebuggerHelpers.m */; };
@@ -1515,6 +1516,8 @@
 		1AB5C3A71318703200C73246 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		1ABC565D133127170095274F /* OOShipClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShipClass.h; sourceTree = "<group>"; };
 		1ABC565E133127170095274F /* OOShipClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipClass.m; sourceTree = "<group>"; };
+		1AD6A7551336BA1C00E0B0B2 /* OOShipClass+IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOShipClass+IO.h"; sourceTree = "<group>"; };
+		1AD6A7561336BA1C00E0B0B2 /* OOShipClass+IO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipClass+IO.m"; sourceTree = "<group>"; };
 		1AF2EAF913061402008ECA54 /* Vorbis.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vorbis.xcodeproj; path = Dependencies/OggVorbis/Vorbis.xcodeproj; sourceTree = "<group>"; };
 		1AF2EB62130614D8008ECA54 /* OOCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCacheManager.h; sourceTree = "<group>"; };
 		1AF2EB63130614D8008ECA54 /* OOCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCacheManager.m; sourceTree = "<group>"; };
@@ -2458,6 +2461,8 @@
 				1ABC565E133127170095274F /* OOShipClass.m */,
 				1AFD9CB013361BA300460ABE /* OOShipClass+Legacy.h */,
 				1AFD9CB113361BA300460ABE /* OOShipClass+Legacy.m */,
+				1AD6A7551336BA1C00E0B0B2 /* OOShipClass+IO.h */,
+				1AD6A7561336BA1C00E0B0B2 /* OOShipClass+IO.m */,
 			);
 			name = "Resource Management";
 			path = ResourceManagement;
@@ -2886,6 +2891,7 @@
 				1ABC565F133127170095274F /* OOShipClass.m in Sources */,
 				1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */,
 				1AFD9CB213361BA300460ABE /* OOShipClass+Legacy.m in Sources */,
+				1AD6A7571336BA1C00E0B0B2 /* OOShipClass+IO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

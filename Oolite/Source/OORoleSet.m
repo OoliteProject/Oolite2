@@ -103,6 +103,12 @@ SOFTWARE.
 }
 
 
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	return [self rolesAndProbabilities];
+}
+
+
 - (NSString *)roleString
 {
 	NSArray					*roles = nil;

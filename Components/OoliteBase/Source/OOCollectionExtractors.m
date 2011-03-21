@@ -1077,6 +1077,12 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
+- (void) oo_setFloatSingle:(float)value forKey:(id)key
+{
+	[self setObject:[NSNumber numberWithFloat:value] forKey:key];
+}
+
+
 - (void) oo_setBool:(BOOL)value forKey:(id)key
 {
 	[self setObject:[NSNumber numberWithBool:value] forKey:key];

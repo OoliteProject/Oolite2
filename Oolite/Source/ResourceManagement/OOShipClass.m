@@ -29,6 +29,7 @@ MA 02110-1301, USA.
 #import "OOEquipmentType.h"
 #import "OOColor.h"
 #import "OOConstToString.h"
+#import "OOShipRegistry.h"
 
 
 NSString * const kOODefaultHUDName			= @"hud.plist";
@@ -60,7 +61,7 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 
 - (void) dealloc
 {
-	DESTROY(_likeShip);
+	DESTROY(_likeShipKey);
 	DESTROY(_shipKey);
 	DESTROY(_name);
 	DESTROY(_displayName);
@@ -106,6 +107,18 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 
 // MARK: Property accessors
 
+- (NSString *) likeShipKey
+{
+	return _likeShipKey;
+}
+
+
+- (OOShipClass *) likeShip
+{
+	return (_likeShipKey == nil) ? nil : [[OOShipRegistry sharedRegistry] shipClassForKey:_likeShipKey];
+}
+
+
 - (BOOL) isTemplate
 {
 	return _isTemplate;
@@ -115,12 +128,6 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 - (BOOL) isExternalDependency
 {
 	return _isExternalDependency;
-}
-
-
-- (OOShipClass *) likeShip
-{
-	return _likeShip;
 }
 
 
@@ -233,9 +240,9 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 }
 
 
-- (BOOL) trackContacts
+- (BOOL) trackCloseContacts
 {
-	return _trackContacts;
+	return _trackCloseContacts;
 }
 
 

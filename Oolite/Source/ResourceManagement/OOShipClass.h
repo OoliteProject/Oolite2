@@ -41,7 +41,7 @@ MA 02110-1301, USA.
 @interface OOShipClass: NSObject <NSCopying>
 {
 @private
-	OOShipClass			*_likeShip;
+	NSString			*_likeShipKey;
 	NSString			*_shipKey;
 	NSString			*_name;
 	NSString			*_displayName;
@@ -152,7 +152,7 @@ MA 02110-1301, USA.
 						_smooth: 1,
 						_isHulk: 1,
 						_isFrangible: 1,
-						_trackContacts: 1,
+						_trackCloseContacts: 1,
 						_autoAI: 1,
 						_hasHyperspaceMotor: 1,
 						_isSubmunition: 1,
@@ -166,6 +166,9 @@ MA 02110-1301, USA.
 						_allowsAutoDocking: 1,
 						_allowsFastDocking: 1;
 }
+
+- (NSString *) likeShipKey;
+- (OOShipClass *) likeShip;
 
 - (BOOL) isTemplate;
 - (BOOL) isExternalDependency;
@@ -189,7 +192,7 @@ MA 02110-1301, USA.
 - (NSDictionary *) scriptInfo;
 - (BOOL) hasScoopMessage;		// FIXME: remove, this should be scripted.
 - (NSString *) AIName;
-- (BOOL) trackContacts;
+- (BOOL) trackCloseContacts;
 - (BOOL) autoAI;
 
 - (NSString *) modelName;

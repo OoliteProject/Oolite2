@@ -510,12 +510,7 @@ MA 02110-1301, USA.
 {
 	OOCGFloat r, g, b, a;
 	[self getRed:&r green:&g blue:&b alpha:&a];
-	return [NSArray arrayWithObjects:
-		[NSNumber numberWithDouble:r],
-		[NSNumber numberWithDouble:g],
-		[NSNumber numberWithDouble:b],
-		[NSNumber numberWithDouble:a],
-		nil];
+	return $array($float(r), $float(g), $float(b), $float(a));
 }
 
 
@@ -528,6 +523,15 @@ MA 02110-1301, USA.
 - (NSString *)hsbaDescription
 {
 	return OOHSBAComponentsDescription([self hsbaComponents]);
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	OOCGFloat r, g, b, a;
+	[self getRed:&r green:&g blue:&b alpha:&a];
+	if (a == 1)  return $array($float(r), $float(g), $float(b));
+	else  return $array($float(r), $float(g), $float(b), $float(a));
 }
 
 @end

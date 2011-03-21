@@ -33,6 +33,7 @@ SOFTWARE.
 #import "OOMesh.h"
 #import "GameController.h"
 #import "OOShipClass+Legacy.h"
+#import "OOShipClass+IO.h"
 
 
 #define PRELOAD 0
@@ -315,6 +316,15 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	
 	_shipData = OODeepCopy(result);
 	[[OOCacheManager sharedCache] setObject:_shipData forKey:kShipDataCacheKey inCache:kShipRegistryCacheName];
+	
+#if !OOLITE_LEAN
+	/*	TEMP DEBUG
+		Write a unified shipdata.ooconf.
+	*/
+	NSDictionary *unified = [_shipClasses ja_propertyListRepresentation];
+	NSData *unifiedData = [unified ooConfDataWithOptions:kOOConfGenerationDefault error:NULL];
+	[ResourceManager writeDiagnosticData:unifiedData toFileNamed:@"shipdata.ooconf"];
+#endif
 	
 	OOLogOutdentIf(@"shipData.load.begin");
 	OOLog(@"shipData.load.done", @"Ship data loaded.");

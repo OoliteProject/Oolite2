@@ -3319,7 +3319,7 @@ static BOOL toggling_music;
 		// If we found one target, dock with it.
 		// If outside the Aegis and we found multiple targets, abort.
 		
-		if ( [self withinStationAegis] && legalStatus <= 50 )
+		if ( [self isWithinStationAegis] && legalStatus <= 50 )
 		{
 			isOkayToUseAutopilot = YES;
 			target = [UNIVERSE station];

@@ -360,7 +360,7 @@
 		"hasHostileTarget",
 		"weaponRange",
 		"scannerRange",
-		"withinStationAegis",
+		"isWithinStationAegis",
 		"fuel",
 		"flightPitch",
 		"flightRoll",

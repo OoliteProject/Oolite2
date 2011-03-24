@@ -17,7 +17,7 @@
 		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E5F11F25D370049AE20 /* OOOpenGLExtensionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5D11F25D370049AE20 /* OOOpenGLExtensionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A663E6011F25D370049AE20 /* OOOpenGLExtensionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E5E11F25D370049AE20 /* OOOpenGLExtensionManager.m */; };
-		1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */; };
+		1A6C21871334F5E100821B1D /* JAPropertyListRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21851334F5E100821B1D /* JAPropertyListRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A6C21881334F5E100821B1D /* JAPropertyListRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C21861334F5E100821B1D /* JAPropertyListRepresentation.m */; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -547,6 +547,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OoliteGraphics" */;
 			compatibilityVersion = "Xcode 3.2";

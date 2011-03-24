@@ -525,6 +525,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if (result == nil)  return nil;
 	
 	[result addEntriesFromDictionary:child];
+	[result setObject:[result objectForKey:@"like_ship"] forKey:@"_oo_like_ship_key"];
 	[result removeObjectForKey:@"like_ship"];
 	
 	// Certain properties cannot be inherited.

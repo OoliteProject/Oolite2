@@ -25,7 +25,7 @@
 
 
 //	MARK: Keys
-#define kKey_likeShipKey					@"like_ship"
+#define kKey_likeShipKey					@"_oo_like_ship_key" //@"like_ship"
 #define kKey_isTemplate						@"is_template"
 #define kKey_isExternalDependency			@"is_external_dependency"
 #define kKey_name							@"name"
@@ -404,14 +404,45 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_ROLE	(escapePodRoles);	// Despite the name, escape_pod_model takes a role.
 	READ_BOOL	(countsAsKill);
 	
-	/*	FIXME: (maybe) automatically convert legacy actions to JavaScript.
-		-- Ahruman 2011-03-18
+	/*
+		Check for legacy script actions, keeping in mind that setup_actions
+		containing ”initialiseTurret” are used as a flag to indicate that the
+		ship is used as a ball turret and isn’t a real script command any
+		longer.
+		-- Ahruman 2011-03-24
 	*/
+	BOOL hasLegacyActions = NO;
+	id setupActions = [shipdata objectForKey:kKey_legacySetupActions];
+	if ([setupActions isKindOfClass:[NSArray class]])
+	{
+		NSString *action = nil;
+		foreach (action, setupActions)
+		{
+			if ([action isKindOfClass:[NSString class]])
+			{
+				if ([[ScanTokensFromString(action) objectAtIndex:0] isEqualToString:@"initialiseTurret"])
+				{
+					_isBallTurret = YES;
+				}
+			}
+		}
+		if (!_isBallTurret || [setupActions count] > 1)
+		{
+			hasLegacyActions = YES;
+		}
+	}
 	if ([shipdata objectForKey:kKey_legacyLaunchActions] != nil ||
 		[shipdata objectForKey:kKey_legacyScriptActions] != nil ||
-		[shipdata objectForKey:kKey_legacyDeathActions] != nil ||
-		[shipdata objectForKey:kKey_legacySetupActions] != nil)
+		[shipdata objectForKey:kKey_legacyDeathActions] != nil)
 	{
+		hasLegacyActions = YES;
+	}
+	if (hasLegacyActions)
+	{
+		/*
+			FIXME: (maybe) automatically convert legacy actions to JavaScript.
+			-- Ahruman 2011-03-18
+		*/
 		OOReportWarning(issues, @"Ship %@ has legacy script actions, which will be ignored.", shipKey);
 	}
 	READ_STRING	(scriptName);
@@ -639,11 +670,11 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		}
 		// else station_roll is effectively 0. (rotating predates station_roll and is now redundant.)
 		
-		READ_FLOAT	(hasNPCTrafficChance);
-		READ_FLOAT	(hasPatrolShipsChance);
+		READ_FUZZY	(hasNPCTrafficChance);
+		READ_FUZZY	(hasPatrolShipsChance);
 		READ_UINT	(maxScavengers);
-		READ_UINT	(maxDefenseShips);
 		READ_UINT	(maxPolice);
+		READ_UINT	(maxDefenseShips);
 		
 		/*	defenseShipRoles has the same issues as escortRoles above. As a
 			bonus, the default depends on the system tech level and a random
@@ -718,7 +749,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 			NSString *eqType = [eqFuzzes objectForKey:eqFuzzKey];
 			if ([eqType length] > 0)
 			{
-				NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqType, kOOShipClassEquipmentProbabilityKey, [NSNumber numberWithFloat:chance]);
+				NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqType, kOOShipClassEquipmentChanceKey, [NSNumber numberWithFloat:chance]);
 				[equipment addObject:eqDict];
 			}
 			else
@@ -741,7 +772,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 				continue;
 			}
 			
-			NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqKey, kOOShipClassEquipmentProbabilityKey, [NSNumber numberWithFloat:1]);
+			NSDictionary *eqDict = $dict(kOOShipClassEquipmentKeyKey, eqKey, kOOShipClassEquipmentChanceKey, [NSNumber numberWithFloat:1]);
 			[equipment addObject:eqDict];
 		}
 	}

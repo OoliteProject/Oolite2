@@ -164,7 +164,8 @@ MA 02110-1301, USA.
 						_requiresDockingClearance: 1,
 						_allowsInterstellarUndocking: 1,
 						_allowsAutoDocking: 1,
-						_allowsFastDocking: 1;
+						_allowsFastDocking: 1,
+						_isBallTurret: 1;
 }
 
 - (NSString *) likeShipKey;
@@ -281,7 +282,7 @@ MA 02110-1301, USA.
 // Asteroid/boulder properties
 - (float) fragmentChance;
 - (BOOL) selectCanFragment;
-- (float) noBouldersChance;		// FIXME: should be a range or something. Conversion from 1.x will be approximate.
+- (float) noBouldersChance;		// FIXME: should be a range or something, and name should involve “debris”. Conversion from 1.x will be approximate.
 - (BOOL) selectNoBoulders;
 - (OORoleSet *) debrisRoles;
 - (NSString *) selectDebrisRole;
@@ -315,6 +316,10 @@ MA 02110-1301, USA.
 - (float) dockingTunnelStartAngle;
 - (float) dockingTunnelAspectRatio;
 
+
+// Legacy-only properties to help updates.
+- (BOOL) isBallTurret;		// Set if legacy setup_actions includes “initialiseTurret”.
+
 @end
 
 
@@ -326,4 +331,4 @@ extern NSString * const kOODefaultEscortRole;
 extern NSString * const kOODefaultDebrisRole;
 
 extern NSString * const kOOShipClassEquipmentKeyKey;
-extern NSString * const kOOShipClassEquipmentProbabilityKey;
+extern NSString * const kOOShipClassEquipmentChanceKey;

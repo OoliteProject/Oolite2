@@ -40,7 +40,7 @@ NSString * const kOODefaultEscortRole		= @"escort";
 NSString * const kOODefaultDebrisRole		= @"boulder";
 
 NSString * const kOOShipClassEquipmentKeyKey = @"key";
-NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
+NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 
 
 @implementation OOShipClass
@@ -689,7 +689,7 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 		
 		NSString		*key = [eqDict oo_stringForKey:kOOShipClassEquipmentKeyKey];
 		OOEquipmentType	*eqType = [OOEquipmentType equipmentTypeWithIdentifier:key];
-		float			probability = OOClamp_0_1_f([eqDict oo_floatForKey:kOOShipClassEquipmentProbabilityKey]);
+		float			probability = OOClamp_0_1_f([eqDict oo_floatForKey:kOOShipClassEquipmentChanceKey]);
 		
 		if (eqType == nil)
 		{
@@ -723,7 +723,7 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 
 - (float) noBouldersChance
 {
-	return _fragmentChance;
+	return _noBouldersChance;
 }
 
 
@@ -886,6 +886,12 @@ NSString * const kOOShipClassEquipmentProbabilityKey = @"probability";
 - (float) dockingTunnelAspectRatio
 {
 	return _dockingTunnelAspectRatio;
+}
+
+
+- (BOOL) isBallTurret
+{
+	return _isBallTurret;
 }
 
 @end

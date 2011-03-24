@@ -101,36 +101,32 @@ MA 02110-1301, USA.
 #define kKey_isSubmunition					@"isSubmunition"
 #define kKey_cloakIsPassive					@"isCloakPassive"
 #define kKey_cloakIsAutomatic				@"isCloakAutomatic"
-#define kKey_fragmentChance					
-#define kKey_noBouldersChance				
-#define kKey_debrisRoles					
-#define kKey_scoopPosition					
-#define kKey_aftEjectPosition				
-#define kKey_rotationalVelocity				
-#define kKey_isCarrier1						
-#define kKey_isCarrier2						
-#define kKey_isRotating						
-#define kKey_stationRoll					
-#define kKey_hasNPCTrafficChance			
-#define kKey_hasPatrolShipsChance			
-#define kKey_maxScavengers					
-#define kKey_maxDefenseShips				
-#define kKey_maxPolice						
-#define kKey_defenseShip					
-#define kKey_defenseShipRoles				
-#define kKey_equivalentTechLevel			
-#define kKey_equipmentPriceFactor			
-#define kKey_marketKey						
-#define kKey_hasShipyard1					
-#define kKey_hasShipyard2					
-#define kKey_requiresDockingClearance		
-#define kKey_allowsInterstellarUndocking	
-#define kKey_allowsAutoDocking				
-#define kKey_allowsFastDocking				
-#define kKey_dockingTunnelCorners			
-#define kKey_dockingTunnelStartAngle		
-#define kKey_dockingTunnelAspectRatio		
-#define kKey_extraEquipment					
+#define kKey_fragmentChance					@"fragment"
+#define kKey_noBouldersChance				@"noBoulders"
+#define kKey_debrisRoles					@"debrisRoles"
+#define kKey_scoopPosition					@"scoopPosition"
+#define kKey_aftEjectPosition				@"jettisionPosition"
+#define kKey_rotationalVelocity				@"angularVelocity"
+#define kKey_isCarrier						@"isCarrier"
+#define kKey_stationRoll					@"stationRoll"
+#define kKey_hasNPCTrafficChance			@"hasNPCTraffic"
+#define kKey_hasPatrolShipsChance			@"hasPatrolShips"
+#define kKey_maxScavengers					@"maxScavengers"
+#define kKey_maxDefenseShips				@"maxDefenseShips"
+#define kKey_maxPolice						@"maxPolice"
+#define kKey_defenseShipRoles				@"defenseShipRoles"
+#define kKey_equivalentTechLevel			@"equivalentTechLevel"
+#define kKey_equipmentPriceFactor			@"equipmentPriceFactor"
+#define kKey_marketKey						@"marketKey"
+#define kKey_hasShipyard					@"hasShipyard"
+#define kKey_requiresDockingClearance		@"requiresDockingClearance"
+#define kKey_allowsInterstellarUndocking	@"allowsInterstellarUndocking"
+#define kKey_allowsAutoDocking				@"allowsAutoDocking"
+#define kKey_allowsFastDocking				@"allowsFastDocking"
+#define kKey_dockingTunnelCorners			@"dockingTunnelCorners"
+#define kKey_dockingTunnelStartAngle		@"dockingTunnelStartAngle"
+#define kKey_dockingTunnelAspectRatio		@"dockingTunnelAspectRatio"
+#define kKey_equipment						@"equipment"
 
 
 // MARK: Defaults
@@ -213,12 +209,12 @@ MA 02110-1301, USA.
 #define kDefault_aftEjectPosition			kZeroVector
 #define kDefault_rotationalVelocity			kIdentityQuaternion
 #define kDefault_isCarrier					NO
-#define kDefault_stationRoll				0.4
-#define kDefault_hasNPCTrafficChance		YES
-#define kDefault_hasPatrolShipsChance		NO
-#define kDefault_maxScavengers				3
-#define kDefault_maxDefenseShips			3
-#define kDefault_maxPolice					8
+#define kDefault_stationRoll				0
+#define kDefault_hasNPCTrafficChance		1
+#define kDefault_hasPatrolShipsChance		0
+#define kDefault_maxScavengers				0
+#define kDefault_maxDefenseShips			0
+#define kDefault_maxPolice					0
 #define kDefault_defenseShipRoles			nil
 #define kDefault_equivalentTechLevel		NSNotFound
 #define kDefault_equipmentPriceFactor		1
@@ -231,6 +227,7 @@ MA 02110-1301, USA.
 #define kDefault_dockingTunnelCorners		4
 #define kDefault_dockingTunnelStartAngle	45
 #define kDefault_dockingTunnelAspectRatio	2.67
+#define kDefault_equipment					[NSArray array]
 
 
 @implementation OOShipClass (IO)
@@ -536,6 +533,59 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 	WRIT_ROLES	(missileRoles);
 	
 	WRIT_BOOL	(isSubmunition);
+	
+	WRIT_BOOL	(cloakIsPassive);
+	WRIT_BOOL	(cloakIsAutomatic);
+	
+	WRIT_FUZZY	(fragmentChance);
+	WRIT_FUZZY	(noBouldersChance);	// Needs change, see OOShipClass.h
+	WRIT_ROLES	(debrisRoles);
+	WRIT_VECTOR	(scoopPosition);
+	WRIT_VECTOR	(aftEjectPosition);
+	
+	WRIT_QUAT	(rotationalVelocity);
+	
+	WRIT_BOOL	(isCarrier);
+	if (_isCarrier)
+	{
+		WRIT_FLOAT	(stationRoll);
+		
+		WRIT_FUZZY	(hasNPCTrafficChance);
+		WRIT_FUZZY	(hasPatrolShipsChance);
+		WRIT_UINT	(maxScavengers);
+		WRIT_UINT	(maxPolice);
+		WRIT_UINT	(maxDefenseShips);
+		WRIT_ROLES	(defenseShipRoles);
+		
+		WRIT_UINT	(equivalentTechLevel);
+		WRIT_FLOAT	(equipmentPriceFactor);
+		WRIT_STRING	(marketKey);
+		
+		WRIT_BOOL	(hasShipyard);
+		
+		WRIT_BOOL	(requiresDockingClearance);
+		WRIT_BOOL	(allowsInterstellarUndocking);
+		WRIT_BOOL	(allowsAutoDocking);
+		WRIT_BOOL	(allowsFastDocking);
+		WRIT_UINT	(dockingTunnelCorners);
+		WRIT_FLOAT	(dockingTunnelStartAngle);
+		WRIT_PFLOAT	(dockingTunnelAspectRatio);
+	}
+	
+	NSMutableArray	*equipment = [NSMutableArray arrayWithCapacity:[_equipment count]];
+	NSDictionary	*eqSpec = nil;
+	foreach (eqSpec, _equipment)
+	{
+		if ([eqSpec oo_floatForKey:kOOShipClassEquipmentChanceKey] == 1.0f)
+		{
+			[equipment addObject:[eqSpec oo_stringForKey:kOOShipClassEquipmentKeyKey]];
+		}
+		else
+		{
+			[equipment addObject:eqSpec];
+		}
+	}
+	WriteObject(result, kKey_equipment, equipment, likeShip, @selector(equipment), kDefault_equipment);
 	
 	return result;
 }

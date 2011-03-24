@@ -64,7 +64,54 @@ function defineMethod(object, name, implementation)
 	  detail and subject to change.
 */
 
-// Ship.spawnOne(): like spawn(role, 1), but returns the ship rather than an array.
+
+/*	Entity#maxEnergy
+	
+	Backwards-compatibility alias for energyCapacity.
+*/
+Object.defineProperty(Entity.prototype, "maxEnergy",
+{
+	enumerable: true,
+	get: function ()
+	{
+		return this.energyCapacity;
+	}
+});
+
+
+/*	Ship#cloakAutomatic
+	
+	Backwards-compatibility alias for isCloakAutomatic.
+*/
+Object.defineProperty(Ship.prototype, "cloakAutomatic",
+{
+	enumerable: true,
+	get: function ()
+	{
+		return this.isCloakAutomatic;
+	},
+	set: function (value)
+	{
+		this.isCloakAutomatic = value;
+	}
+});
+
+
+/*	Ship#withinStationAegis
+	
+	Backwards-compatibility alias for isWithinStationAegis.
+*/
+Object.defineProperty(Ship.prototype, "withinStationAegis",
+{
+	enumerable: true,
+	get: function ()
+	{
+		return this.isWithinStationAegis;
+	}
+});
+
+
+// Ship#spawnOne(): like spawn(role, 1), but returns the ship rather than an array.
 defineMethod(Ship.prototype, "spawnOne", function spawnOne(role)
 {
 	var result = this.spawn(role, 1);
@@ -106,7 +153,7 @@ defineMethod(SystemInfo, "systemsInRange", function systemsInRange(range)
 });
 
 
-/*	system.scrambledPseudoRandomNumber(salt : Number (integer)) : Number
+/*	System#scrambledPseudoRandomNumber(salt : Number (integer)) : Number
 	
 	This function converts system.pseudoRandomNumber to an effectively
 	arbitrary different value that is also stable per system. Every combination

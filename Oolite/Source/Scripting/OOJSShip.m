@@ -108,13 +108,13 @@ enum
 	kShip_aftWeapon,			// the ship's aft weapon, equipmentType, read only
 	kShip_AI,					// AI state machine name, string, read/write
 	kShip_AIState,				// AI state machine state, string, read/write
+	kShip_areLightsActive,		// flasher/shader light flag, boolean, read/write
 	kShip_beaconCode,			// beacon code, string, read-only (should probably be read/write, but the beacon list needs to be maintained.)
 	kShip_bounty,				// bounty, unsigned int, read/write
 	kShip_cargoSpaceAvailable,	// free cargo space, integer, read-only
 	kShip_cargoSpaceCapacity,	// maximum cargo, integer, read-only
 	kShip_cargoSpaceUsed,		// cargo on board, integer, read-only
 	kShip_contracts,			// cargo contracts contracts, array - strings & whatnot, read only
-	kShip_cloakAutomatic,		// should cloack start by itself or by script, read/write
 	kShip_cruiseSpeed,			// desired cruising speed, number, read only
 	kShip_desiredSpeed,			// AI desired flight speed, double, read/write
 	kShip_displayName,			// name displayed on screen, string, read-only
@@ -134,6 +134,7 @@ enum
 	kShip_isBeacon,				// is beacon, boolean, read-only
 	kShip_isBoulder,			// is a boulder (generates splinters), boolean, read/write
 	kShip_isCargo,				// contains cargo, boolean, read-only
+	kShip_isCloakAutomatic,		// should cloack start by itself or by script, read/write
 	kShip_isCloaked,			// cloaked, boolean, read/write (if cloaking device installed)
 	kShip_isDerelict,			// is an abandoned ship, boolean, read-only
 	kShip_isFrangible,			// frangible, boolean, read-only
@@ -148,7 +149,7 @@ enum
 	kShip_isThargoid,			// is thargoid, boolean, read-only
 	kShip_isTrader,				// is trader, boolean, read-only
 	kShip_isWeapon,				// is missile or mine, boolean, read-only
-	kShip_lightsActive,			// flasher/shader light flag, boolean, read/write
+	kShip_isWithinStationAegis,	// within main station aegis, boolean, read/write
 	kShip_maxSpeed,				// maximum flight speed, double, read-only
 	kShip_maxThrust,			// maximum thrust, double, read-only
 	kShip_missileCapacity,		// max missiles capacity, integer, read-only
@@ -185,7 +186,6 @@ enum
 	kShip_vectorUp,				// upVector of a ship, read-only
 	kShip_velocity,				// velocity, vector, read/write
 	kShip_weaponRange,			// weapon range, double, read-only
-	kShip_withinStationAegis,	// within main station aegis, boolean, read/write
 };
 
 
@@ -202,7 +202,7 @@ static JSPropertySpec sShipProperties[] =
 	{ "cargoSpaceAvailable",	kShip_cargoSpaceAvailable,	OOJS_PROP_READONLY_CB },
 	// contracts instead of cargo to distinguish them from the manifest
 	{ "contracts",				kShip_contracts,			OOJS_PROP_READONLY_CB },
-	{ "cloakAutomatic",			kShip_cloakAutomatic,		OOJS_PROP_READWRITE_CB},
+	{ "isCloakAutomatic",		kShip_isCloakAutomatic,		OOJS_PROP_READWRITE_CB},
 	{ "cruiseSpeed",			kShip_cruiseSpeed,			OOJS_PROP_READONLY_CB },
 	{ "desiredSpeed",			kShip_desiredSpeed,			OOJS_PROP_READWRITE_CB },
 	{ "displayName",			kShip_displayName,			OOJS_PROP_READWRITE_CB },
@@ -236,7 +236,7 @@ static JSPropertySpec sShipProperties[] =
 	{ "isThargoid",				kShip_isThargoid,			OOJS_PROP_READONLY_CB },
 	{ "isTrader",				kShip_isTrader,				OOJS_PROP_READONLY_CB },
 	{ "isWeapon",				kShip_isWeapon,				OOJS_PROP_READONLY_CB },
-	{ "lightsActive",			kShip_lightsActive,			OOJS_PROP_READWRITE_CB },
+	{ "areLightsActive",		kShip_areLightsActive,		OOJS_PROP_READWRITE_CB },
 	{ "maxSpeed",				kShip_maxSpeed,				OOJS_PROP_READONLY_CB },
 	{ "maxThrust",				kShip_maxThrust,			OOJS_PROP_READONLY_CB },
 	{ "missileCapacity",		kShip_missileCapacity,		OOJS_PROP_READONLY_CB },
@@ -273,7 +273,7 @@ static JSPropertySpec sShipProperties[] =
 	{ "vectorUp",				kShip_vectorUp,				OOJS_PROP_READONLY_CB },
 	{ "velocity",				kShip_velocity,				OOJS_PROP_READWRITE_CB },
 	{ "weaponRange",			kShip_weaponRange,			OOJS_PROP_READONLY_CB },
-	{ "withinStationAegis",		kShip_withinStationAegis,	OOJS_PROP_READONLY_CB },
+	{ "isWithinStationAegis",	kShip_isWithinStationAegis,	OOJS_PROP_READONLY_CB },
 	{ 0 }
 };
 
@@ -450,7 +450,7 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 			*value = OOJSValueFromBOOL([entity isCloaked]);
 			return YES;
 			
-		case kShip_cloakAutomatic:
+		case kShip_isCloakAutomatic:
 			*value = OOJSValueFromBOOL([entity hasAutoCloak]);
 			return YES;
 			
@@ -480,8 +480,8 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 			*value = OOJSValueFromBOOL([entity reportAIMessages]);
 			return YES;
 		
-		case kShip_withinStationAegis:
-			*value = OOJSValueFromBOOL([entity withinStationAegis]);
+		case kShip_isWithinStationAegis:
+			*value = OOJSValueFromBOOL([entity isWithinStationAegis]);
 			return YES;
 			
 		case kShip_cargoSpaceCapacity:
@@ -641,7 +641,7 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 		case kShip_thrust:
 			return JS_NewNumberValue(context, [entity thrust], value);
 			
-		case kShip_lightsActive:
+		case kShip_areLightsActive:
 			*value = OOJSValueFromBOOL([entity lightsActive]);
 			return YES;
 			
@@ -803,7 +803,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 			}
 			break;
 			
-		case kShip_cloakAutomatic:
+		case kShip_isCloakAutomatic:
 			if (JS_ValueToBoolean(context, *value, &bValue))
 			{
 				[entity setAutoCloak:bValue];
@@ -897,7 +897,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 			}
 			break;
 			
-		case kShip_lightsActive:
+		case kShip_areLightsActive:
 			if (JS_ValueToBoolean(context, *value, &bValue))
 			{
 				if (bValue)  [entity switchLightsOn];

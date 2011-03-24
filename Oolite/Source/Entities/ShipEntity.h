@@ -674,7 +674,7 @@ typedef enum
 - (Entity<OOStellarBody> *) findNearestStellarBody;		// NOTE: includes sun.
 - (OOPlanetEntity *) findNearestPlanetExcludingMoons;
 - (OOAegisStatus) checkForAegis;
-- (BOOL) withinStationAegis;
+- (BOOL) isWithinStationAegis;
 
 - (NSArray*) crew;
 - (void) setCrew: (NSArray*) crewArray;

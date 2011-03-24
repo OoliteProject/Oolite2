@@ -5197,7 +5197,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (BOOL) withinStationAegis
+- (BOOL) isWithinStationAegis
 {
 	return aegis_status == AEGIS_IN_DOCKING_RANGE;
 }
@@ -9495,7 +9495,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	ShipEntity			*victim = parameter;
 	
 	// Select main station, if victim is in aegis
-	if (entity == [UNIVERSE station] && [victim withinStationAegis])
+	if (entity == [UNIVERSE station] && [victim isWithinStationAegis])
 	{
 		return YES;
 	}

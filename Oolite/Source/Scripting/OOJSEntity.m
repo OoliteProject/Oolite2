@@ -65,9 +65,9 @@ enum
 	kEntity_collisionRadius,	// collision radius, double, read-only.
 	kEntity_distanceTravelled,	// distance travelled, double, read-only.
 	kEntity_energy,				// energy, double, read-write.
+	kEntity_energyCapacity,		// energyCapacity, double, read-only.
 	kEntity_heading,			// heading, vector, read-only (like orientation but ignoring twist angle)
 	kEntity_mass,				// mass, double, read-only
-	kEntity_maxEnergy,			// maxEnergy, double, read-only.
 	kEntity_orientation,		// orientation, quaternion, read/write
 	kEntity_owner,				// owner, Entity, read-only. (Parent ship for subentities, station for defense ships, launching ship for missiles etc)
 	kEntity_position,			// position in system space, Vector, read/write
@@ -90,9 +90,9 @@ static JSPropertySpec sEntityProperties[] =
 	{ "collisionRadius",		kEntity_collisionRadius,	OOJS_PROP_READONLY_CB },
 	{ "distanceTravelled",		kEntity_distanceTravelled,	OOJS_PROP_READONLY_CB },
 	{ "energy",					kEntity_energy,				OOJS_PROP_READWRITE_CB },
+	{ "energyCapacity",			kEntity_energyCapacity,		OOJS_PROP_READONLY_CB },
 	{ "heading",				kEntity_heading,			OOJS_PROP_READONLY_CB },
 	{ "mass",					kEntity_mass,				OOJS_PROP_READONLY_CB },
-	{ "maxEnergy",				kEntity_maxEnergy,			OOJS_PROP_READONLY_CB },
 	{ "orientation",			kEntity_orientation,		OOJS_PROP_READWRITE_CB },
 	{ "owner",					kEntity_owner,				OOJS_PROP_READONLY_CB },
 	{ "position",				kEntity_position,			OOJS_PROP_READWRITE_CB },
@@ -217,7 +217,7 @@ static JSBool EntityGetProperty(JSContext *context, JSObject *this, jsid propID,
 		case kEntity_energy:
 			return JS_NewNumberValue(context, [entity energy], value);
 		
-		case kEntity_maxEnergy:
+		case kEntity_energyCapacity:
 			return JS_NewNumberValue(context, [entity maxEnergy], value);
 		
 		case kEntity_isValid:

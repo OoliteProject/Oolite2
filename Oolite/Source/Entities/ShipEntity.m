@@ -88,8 +88,6 @@ MA 02110-1301, USA.
 
 #define kOOLogUnconvertedNSLog @"unclassified.ShipEntity"
 
-#define USEMASC 0
-
 
 extern NSString * const kOOLogSyntaxAddShips;
 static NSString * const kOOLogEntityBehaviourChanged	= @"entity.behaviour.changed";
@@ -278,10 +276,6 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	{
 		// These items are not available in strict mode.
 		if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
-#if USEMASC
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_military_jammer"])  [self addEquipmentItem:@"EQ_MILITARY_JAMMER"];
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_military_scanner_filter"])  [self addEquipmentItem:@"EQ_MILITARY_SCANNER_FILTER"];
-#endif
 	}
 	
 	// can it be 'mined' for alloys?
@@ -1859,22 +1853,6 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		}
 	}
 
-	// military_jammer
-	if ([self hasMilitaryJammer])
-	{
-		if (military_jammer_active)
-		{
-			energy -= delta_t * MILITARY_JAMMER_ENERGY_RATE;
-			if (energy < MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = NO;
-		}
-		else
-		{
-			if (energy > 1.5 * MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = YES;
-		}
-	}
-
 	// check outside factors
 	//
 	aegis_status = [self checkForAegis];   // is a station or something nearby??
@@ -2823,26 +2801,6 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (BOOL) hasCloakingDevice
 {
 	return [self hasEquipmentItem:@"EQ_CLOAKING_DEVICE"];
-}
-
-
-- (BOOL) hasMilitaryScannerFilter
-{
-#if USEMASC
-	return [self hasEquipmentItem:@"EQ_MILITARY_SCANNER_FILTER"];
-#else
-	return NO;
-#endif
-}
-
-
-- (BOOL) hasMilitaryJammer
-{
-#if USEMASC
-	return [self hasEquipmentItem:@"EQ_MILITARY_JAMMER"];
-#else
-	return NO;
-#endif
 }
 
 
@@ -4079,9 +4037,6 @@ static GLfloat friendly_color[4] =	{ 0.0, 1.0, 0.0, 1.0};	// green
 static GLfloat missile_color[4] =	{ 0.0, 1.0, 1.0, 1.0};	// cyan
 static GLfloat police_color1[4] =	{ 0.5, 0.0, 1.0, 1.0};	// purpley-blue
 static GLfloat police_color2[4] =	{ 1.0, 0.0, 0.5, 1.0};	// purpley-red
-static GLfloat jammed_color[4] =	{ 0.0, 0.0, 0.0, 0.0};	// clear black
-static GLfloat mascem_color1[4] =	{ 0.3, 0.3, 0.3, 1.0};	// dark gray
-static GLfloat mascem_color2[4] =	{ 0.4, 0.1, 0.4, 1.0};	// purple
 static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by script
 
 - (GLfloat *) scannerDisplayColorForShip:(ShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2
@@ -4108,25 +4063,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		}
 		
 		return scripted_color;
-	}
-
-	// no scripted scanner display colors defined, proceed as per standard
-	if ([self isJammingScanning])
-	{
-		if (![otherShip hasMilitaryScannerFilter])
-			return jammed_color;
-		else
-		{
-			if (flash)
-				return mascem_color1;
-			else
-			{
-				if (isHostile)
-					return hostile_color;
-				else
-					return mascem_color2;
-			}
-		}
 	}
 
 	switch (scanClass)
@@ -4219,13 +4155,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 - (void)setAutoCloak:(BOOL)automatic
 {
 	cloakAutomatic = !!automatic;
-}
-
-
-
-- (BOOL) isJammingScanning
-{
-	return ([self hasMilitaryJammer] && military_jammer_active);
 }
 
 
@@ -4594,10 +4523,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 - (NSString *) identFromShip:(ShipEntity*) otherShip
 {
-	if ([self isJammingScanning] && ![otherShip hasMilitaryScannerFilter])
-	{
-		return DESC(@"unknown-target");
-	}
 	return displayName;
 }
 
@@ -7864,7 +7789,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	{
 		target_ship = (ShipEntity*)target;
 		if ([target_ship isCloaked])  return nil;
-		if (![self hasMilitaryScannerFilter] && [target_ship isJammingScanning]) return nil;
 	}
 	
 	unsigned i;

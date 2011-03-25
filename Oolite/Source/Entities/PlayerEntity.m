@@ -1635,24 +1635,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		if (energy < CLOAKING_DEVICE_MIN_ENERGY)
 			[self deactivateCloakingDevice];
 	}
-
-	// military_jammer
-	if ([self hasMilitaryJammer])
-	{
-		UPDATE_STAGE(@"updating military jammer");
-		
-		if (military_jammer_active)
-		{
-			energy -= (float)delta_t * MILITARY_JAMMER_ENERGY_RATE;
-			if (energy < MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = NO;
-		}
-		else
-		{
-			if (energy > 1.5 * MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = YES;
-		}
-	}
 	
 	// ecm
 	if (ecm_in_operation)
@@ -2417,9 +2399,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// If target is a ship, check whether it's cloaked or is actively jamming our scanner
 	if ([target isShip])
 	{
-		ShipEntity *targetShip = (ShipEntity*)target;
-		if ([targetShip isCloaked] ||	// checks for cloaked ships
-			([targetShip isJammingScanning] && ![self hasMilitaryScannerFilter]))	// checks for activated jammer
+		if ([(ShipEntity *)target isCloaked])
 		{
 			return NO;
 		}
@@ -3202,10 +3182,6 @@ static bool minShieldLevelPercentageInitialised = false;
 			
 		case COMPASS_MODE_TARGET:
 			beacon = [UNIVERSE firstBeacon];
-			while (beacon != nil && [beacon isJammingScanning])
-			{
-				beacon = [beacon nextBeacon];
-			}
 			[self setNextBeacon:beacon];
 			
 			if (beacon != nil)  [self setCompassMode:COMPASS_MODE_BEACONS];
@@ -3213,11 +3189,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			break;
 			
 		case COMPASS_MODE_BEACONS:
-			beacon = [self nextBeacon];
-			do
-			{
-				beacon = [beacon nextBeacon];
-			} while (beacon != nil && [beacon isJammingScanning]);
+			beacon = [[self nextBeacon] nextBeacon];
 			[self setNextBeacon:beacon];
 			
 			if (beacon == nil)

@@ -533,8 +533,6 @@ typedef enum
 - (BOOL) hasScoop;
 - (BOOL) hasECM;
 - (BOOL) hasCloakingDevice;
-- (BOOL) hasMilitaryScannerFilter;
-- (BOOL) hasMilitaryJammer;
 - (BOOL) hasExpandedCargoBay;
 - (BOOL) hasShieldBooster;
 - (BOOL) hasMilitaryShieldEnhancer;
@@ -589,8 +587,6 @@ typedef enum
 - (void)setCloaked:(BOOL)cloak;
 - (BOOL)hasAutoCloak;
 - (void)setAutoCloak:(BOOL)automatic;
-
-- (BOOL) isJammingScanning;
 
 - (void) applyThrust:(double) delta_t;
 

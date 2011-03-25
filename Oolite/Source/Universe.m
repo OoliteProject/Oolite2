@@ -4285,15 +4285,6 @@ static BOOL MaintainLinkedLists(Universe *uni)
 			}
 		}
 	}
-	// check for MASC'M
-	if ((hit_entity) && [hit_entity isShip])
-	{
-		ShipEntity * ship = (ShipEntity*)hit_entity;
-		if ([ship isJammingScanning] && ![player hasMilitaryScannerFilter])
-		{
-			hit_entity = nil;
-		}
-	}
 	
 	for (i = 0; i < ship_count; i++)
 		[my_entities[i] release]; //	released

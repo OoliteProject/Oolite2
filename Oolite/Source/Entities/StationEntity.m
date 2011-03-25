@@ -2237,16 +2237,13 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 
 - (BOOL) hasShipyard
 {
-	if ([UNIVERSE strict])
-		return NO;
-	if ([UNIVERSE station] == self)
-		return YES;
+	if ([UNIVERSE station] == self)  return YES;
+	
 	id	determinant = [shipinfoDictionary objectForKey:@"has_shipyard"];
 
 	if (!determinant)
 		determinant = [shipinfoDictionary objectForKey:@"hasShipyard"];
-		
-	// NOTE: non-standard capitalization is documented and entrenched.
+	
 	if (determinant)
 	{
 		return OOFuzzyBooleanFromObject(determinant, 0.0f);

@@ -59,7 +59,6 @@ extern NSDictionary* ParseOOSScripts(NSString* script);
 
 
 static NSMutableArray	*sSearchPaths;
-static BOOL				sUseAddOns = YES;
 static NSMutableArray	*sExpansionPacksWithMessagesFound;
 static NSMutableArray	*sExternalPaths;
 static NSMutableArray	*sErrors;
@@ -154,7 +153,7 @@ static NSMutableDictionary *sStringCache;
 }
 
 
-+ (NSArray *)pathsWithAddOns
++ (NSArray *)paths
 {
 	if ([sSearchPaths count] > 0)  return sSearchPaths;
 	
@@ -224,47 +223,9 @@ static NSMutableDictionary *sStringCache;
 }
 
 
-+ (NSArray *)paths
++ (NSArray *)pathsWithAddOns
 {
-	if (EXPECT_NOT(sSearchPaths == nil))
-		if (!sUseAddOns)
-		{
-			sSearchPaths = [[NSMutableArray alloc] init];
-			[self logPaths];
-		}
-	return sUseAddOns ? [self pathsWithAddOns] : (NSArray *)[NSArray arrayWithObject:[self builtInPath]];
-}
-
-
-+ (BOOL)useAddOns
-{
-	return sUseAddOns;
-}
-
-
-+ (void)setUseAddOns:(BOOL)useAddOns
-{
-	useAddOns = (useAddOns != 0);
-	if (sUseAddOns != useAddOns)
-	{
-		sUseAddOns = useAddOns;
-		[ResourceManager clearCaches];
-		
-		OOCacheManager *cmgr = [OOCacheManager sharedCache];
-		if (sUseAddOns)
-		{
-			[cmgr reloadAllCaches];
-			[cmgr setAllowCacheWrites:YES];
-		}
-		else
-		{
-			[cmgr clearAllCaches];
-			[cmgr setAllowCacheWrites:NO];
-		}
-		
-		[self checkCacheUpToDateForPaths:[self paths]];
-		[self logPaths];
-	}
+	return [self paths];
 }
 
 
@@ -1010,23 +971,15 @@ static NSMutableDictionary *sStringCache;
 	NSMutableArray			*displayPaths = nil;
 	NSEnumerator			*pathEnum = nil;
 	NSString				*path = nil;
-
-	if (sUseAddOns)
+	
+	// Prettify paths for logging.
+	displayPaths = [NSMutableArray arrayWithCapacity:[sSearchPaths count]];
+	for (pathEnum = [sSearchPaths objectEnumerator]; (path = [pathEnum nextObject]); )
 	{
-		// Prettify paths for logging.
-		displayPaths = [NSMutableArray arrayWithCapacity:[sSearchPaths count]];
-		for (pathEnum = [sSearchPaths objectEnumerator]; (path = [pathEnum nextObject]); )
-		{
-			[displayPaths addObject:[[path stringByStandardizingPath] stringByAbbreviatingWithTildeInPath]];
-		}
-		
-		OOLog(@"searchPaths.dumpAll", @"Unrestricted mode - resource paths:\n    %@", [displayPaths componentsJoinedByString:@"\n    "]);
+		[displayPaths addObject:[[path stringByStandardizingPath] stringByAbbreviatingWithTildeInPath]];
 	}
-	else
-	{
-		OOLog(@"searchPaths.dumpAll", @"Strict mode - resource path:\n    %@",
-			[[[self builtInPath] stringByStandardizingPath] stringByAbbreviatingWithTildeInPath]);
-	}
+	
+	OOLog(@"searchPaths.dumpAll", @"Unrestricted mode - resource paths:\n    %@", [displayPaths componentsJoinedByString:@"\n    "]);
 }
 
 

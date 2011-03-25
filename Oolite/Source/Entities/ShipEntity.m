@@ -272,11 +272,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_escape_pod"])  [self addEquipmentItem:@"EQ_ESCAPE_POD"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_energy_bomb"])  [self addEquipmentItem:@"EQ_ENERGY_BOMB"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_cloaking_device"])  [self addEquipmentItem:@"EQ_CLOAKING_DEVICE"];
-	if (![UNIVERSE strict])
-	{
-		// These items are not available in strict mode.
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
-	}
+	if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
 	
 	// can it be 'mined' for alloys?
 	canFragment = [shipDict oo_fuzzyBooleanForKey:@"fragment_chance" defaultValue:0.9];
@@ -286,15 +282,8 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	max_cargo = [shipDict oo_unsignedIntForKey:@"max_cargo"];
 	extra_cargo = [shipDict oo_unsignedIntForKey:@"extra_cargo" defaultValue:15];
 	
-	if (![UNIVERSE strict])
-	{
-		hyperspaceMotorSpinTime = [shipDict oo_floatForKey:@"hyperspace_motor_spin_time" defaultValue:DEFAULT_HYPERSPACE_SPIN_TIME];
-		if(![shipDict oo_boolForKey:@"hyperspace_motor" defaultValue:YES]) hyperspaceMotorSpinTime = -1;
-	}
-	else
-	{
-		hyperspaceMotorSpinTime = DEFAULT_HYPERSPACE_SPIN_TIME;
-	}
+	hyperspaceMotorSpinTime = [shipDict oo_floatForKey:@"hyperspace_motor_spin_time" defaultValue:DEFAULT_HYPERSPACE_SPIN_TIME];
+	if(![shipDict oo_boolForKey:@"hyperspace_motor" defaultValue:YES]) hyperspaceMotorSpinTime = -1;
 	
 	[name autorelease];
 	name = [[shipDict oo_stringForKey:@"name" defaultValue:@"?"] copy];
@@ -322,35 +311,28 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	
 #if MASS_DEPENDENT_FUEL_PRICES
 	// set up fuel scooping & charging
-	if ([UNIVERSE strict])
-	{
-		fuel_charge_rate = 1.0;
-	}
-	else
-	{
 #if 0
 // Temporary fix for mass-dependent fuel prices.
 // See [ShipEntity fuelChargeRate] for more information.
 // - MKW 2011.03.11
-		GLfloat rate = 1.0;
-		if (PLAYER != nil)
-		{
-			rate = calcFuelChargeRate (mass, [PLAYER baseMass]);
-		}
-		fuel_charge_rate = (rate > 0.0) ? rate : 1.0;
-		
-		rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate];
-		if (rate != fuel_charge_rate)
-		{
-			// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
-			if (rate < 0.33 * fuel_charge_rate) fuel_charge_rate *= 0.33;
-			else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
-			else fuel_charge_rate = rate;
-		}
-#else
-		fuel_charge_rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:1.0f];
-#endif
+	GLfloat rate = 1.0;
+	if (PLAYER != nil)
+	{
+		rate = calcFuelChargeRate (mass, [PLAYER baseMass]);
 	}
+	fuel_charge_rate = (rate > 0.0) ? rate : 1.0;
+	
+	rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate];
+	if (rate != fuel_charge_rate)
+	{
+		// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
+		if (rate < 0.33 * fuel_charge_rate) fuel_charge_rate *= 0.33;
+		else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
+		else fuel_charge_rate = rate;
+	}
+#else
+	fuel_charge_rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:1.0f];
+#endif
 #else
 	fuel_charge_rate = 1.0;
 #endif
@@ -2379,7 +2361,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	for (eqTypeEnum = [eqTypes objectEnumerator]; (eqType = [eqTypeEnum nextObject]); )
 	{
 		// Equipment list,  consistent with the rest of the API - Kaks
-		isDamaged = ![UNIVERSE strict] && [self hasEquipmentItem:[[eqType identifier] stringByAppendingString:@"_DAMAGED"]];
+		isDamaged = [self hasEquipmentItem:[[eqType identifier] stringByAppendingString:@"_DAMAGED"]];
 		if ([self hasEquipmentItem:[eqType identifier]] || isDamaged)
 		{
 			[quip addObject:eqType];
@@ -2716,9 +2698,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				_missileRole = nil;	// use generic ship fallback from now on.
 			}
 			
-			// In unrestricted mode, assign random missiles 20% of the time without missile_role (or 10% with valid missile_role)
-			if (chance > 0.8f && ![UNIVERSE strict]) role = @"missile";
-			// otherwise use the standard role (100% of the time in restricted mode).
+			// Assign random missiles 20% of the time without missile_role (or 10% with valid missile_role)
+			if (chance > 0.8f) role = @"missile";
+			// otherwise use the standard role.
 			else role = @"EQ_MISSILE";
 			
 			missileType = [self verifiedMissileTypeFromRole:role];
@@ -5259,7 +5241,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	// - MKW 2011.03.11
 	GLfloat rate = 1.0f;
 
-	if (![UNIVERSE strict] && [self mass] > 0.0)
+	if ([self mass] > 0.0)
 	{
 
 #define kCobra3Mass (185580)     // the base mass of a Cobra Mk III

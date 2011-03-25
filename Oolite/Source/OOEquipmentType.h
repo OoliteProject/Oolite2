@@ -64,7 +64,7 @@ SOFTWARE.
 	struct JSObject			*_jsSelf;
 }
 
-+ (void) loadEquipment;			// Load equipment data; called on loading and when changing to/from strict mode.
++ (void) loadEquipment;
 + (void) addEquipmentWithInfo:(NSArray *)itemInfo;	// Used to generate equipment from missile_role entries.
 
 + (NSString *) getMissileRegistryRoleForShip:(NSString *)shipKey;

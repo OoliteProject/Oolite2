@@ -42,12 +42,12 @@ typedef enum
 @interface ResourceManager : NSObject
 
 + (NSArray *)rootPaths;			// Places add-ons are searched for, not including add-on paths.
-+ (NSString *)builtInPath;		// Path for built-in data only.
-+ (NSArray *)pathsWithAddOns;	// Root paths + add-on paths.
-+ (NSArray *)paths;				// builtInPath or pathsWithAddOns, depending on useAddOns state.
-+ (BOOL)useAddOns;
++ (NSString *)builtInPath;		// Path for built-in data only.	// Root paths + add-on paths.
++ (NSArray *)paths;				// All search paths.
+
++ (NSArray *)pathsWithAddOns DEPRECATED_FUNC;	// Alias to +paths.
+
 + (NSArray *)expansionPacksWithMessagesFound;
-+ (void)setUseAddOns:(BOOL)useAddOns;
 + (void)addExternalPath:(NSString *)fileName;
 + (NSEnumerator *)pathEnumerator;
 + (NSEnumerator *)reversePathEnumerator;

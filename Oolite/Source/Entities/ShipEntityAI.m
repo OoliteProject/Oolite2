@@ -424,7 +424,7 @@ MA 02110-1301, USA.
 
 - (void) setThrustFactorTo:(NSString *)thrustFactorString
 {
-	thrust = OOClamp_0_1_f([thrustFactorString doubleValue]) * max_thrust;
+	thrust = OOClamp_0_1_f([thrustFactorString doubleValue]) * [self maxThrust];
 }
 
 

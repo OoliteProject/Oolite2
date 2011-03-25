@@ -320,7 +320,7 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 
 - (OOUInteger) escortCount
 {
-	return _escortCount;
+	return MIN(_escortCount, MAX_ESCORTS);
 }
 
 

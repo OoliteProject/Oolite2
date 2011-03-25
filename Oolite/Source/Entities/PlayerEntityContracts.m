@@ -1634,8 +1634,12 @@ static NSMutableDictionary* currentShipyard = nil;
 	// pay over the mazoolah
 	credits -= 10 * price - trade_in;
 	
+	// FIXME: purchasing should go through setUpShip…. 
 	[self clearSubEntities];
-	[self setShipDataKey:[ship_info oo_stringForKey:SHIPYARD_KEY_SHIPDATA_KEY]];
+	
+	NSString *shipKey = [ship_info oo_stringForKey:SHIPYARD_KEY_SHIPDATA_KEY];
+	[_shipClass release];
+	_shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:shipKey];
 	NSDictionary *shipDict = [ship_info oo_dictionaryForKey:SHIPYARD_KEY_SHIP];
 	
 	// get a full tank for free

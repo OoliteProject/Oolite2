@@ -135,7 +135,8 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if ((self = [super init]))
 	{
 		NSAutoreleasePool		*pool = [[NSAutoreleasePool alloc] init];
-		OOCacheManager			*cache = [OOCacheManager sharedCache];
+		OOCacheManager			*cache = nil;
+		//[OOCacheManager sharedCache];	Cache disabled pending OOShipCass caching.
 		
 		_shipData = [[cache objectForKey:kShipDataCacheKey inCache:kShipRegistryCacheName] retain];
 		_playerShips = [[cache objectForKey:kPlayerShipsCacheKey inCache:kShipRegistryCacheName] retain];

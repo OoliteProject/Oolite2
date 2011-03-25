@@ -57,6 +57,7 @@
 #define kKey_exhaustDefinitions				@"exhaust"
 #define kKey_scannerColor1					@"scanner_display_color1"
 #define kKey_scannerColor2					@"scanner_display_color2"
+#define kKey_scannerRange					@"scanner_range"
 #define kKey_bounty							@"bounty"
 #define kKey_density						@"density"
 #define kKey_roles							@"roles"
@@ -164,7 +165,7 @@
 // launch_actions, script_actions, death_actions, setup_actions: nil
 #define kDefault_scriptName					@"oolite-default-ship-script.js"
 #define kDefault_scriptInfo					nil
-#define kDefault_hasScoopMessage			NO
+#define kDefault_hasScoopMessage			YES
 #define kDefault_AIName						@"nullAI.plist"		// ai_type
 #define kDefault_trackCloseContacts			NO
 #define kDefault_autoAI						YES
@@ -174,6 +175,7 @@
 //				 shaders					nil
 // scanner_display_color1, scanner_display_color2: nil
 #define kDefault_exhaustDefinitions			nil					// exhaust
+#define kDefault_scannerRange				SCANNER_MAX_RANGE
 #define kDefault_bounty						0
 #define kDefault_density					1
 //				 roles						nil
@@ -195,7 +197,7 @@
 #define kDefault_energyRechargeRate			1
 #define kDefault_initialFuel				0					// fuel
 #define kDefault_fuelChargeRate				1
-#define kDefault_heatInsulation				1					// 2 with heat shield.
+#define kDefault_heatInsulation				1
 #define kDefault_maxFlightSpeed				160
 #define kDefault_maxFlightRoll				2
 #define kDefault_maxFlightPitch				1
@@ -522,6 +524,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		else  _scannerColors = $array(scannerColor1, scannerColor2);
 	}
 	
+	READ_FLOAT	(scannerRange);
+	
 	READ_UINT	(bounty);
 	READ_PFLOAT	(density);
 	
@@ -598,7 +602,16 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_PFLOAT	(fuelChargeRate);
 	_fuelCapacity = MAX(70U, _initialFuel);		// 1.x has no explicit fuel capacity.
 	
-	READ_PFLOAT	(heatInsulation);	// FIXME: 1.x handles NPC heat shield equipment by changing the default to 2.0. Ideally, we’d handle it by handling equipment.
+	/*
+		In 1.x, heat insulation defaults to 1 unless there is a heat shield,
+		which implies that we should reduce heatInsulation by 1 if the ship
+		has a heat shield with probability 1 and warn if it has one with a
+		probability < 1. However, there doesn’t actually seem to be a way to
+		specify that a ship has a heat shield, so this _appears_ to be a moot
+		point.
+		-- Ahruman 2011-03-26
+	*/
+	READ_PFLOAT	(heatInsulation);
 	
 	READ_PFLOAT	(maxFlightSpeed);
 	READ_PFLOAT	(maxFlightRoll);

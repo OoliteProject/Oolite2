@@ -56,7 +56,7 @@ static NSDictionary		*sMissilesRegistry = nil;
 	
 	equipmentData = [UNIVERSE equipmentData];
 	
-	[sEquipmentTypes release];
+	[sEquipmentTypes autorelease];
 	sEquipmentTypes = nil;
 	equipmentTypes = [NSMutableArray arrayWithCapacity:[equipmentData count]];
 	DESTROY(sEquipmentTypesByIdentifier);

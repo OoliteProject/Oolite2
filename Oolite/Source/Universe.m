@@ -7082,7 +7082,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 	if (setAI) [ship switchAITo:@"route2sunskimAI.plist"];	// perfectly acceptable for both route 2 & 3
 	// slow ships need extra insulation or they will burn up when sunskimming. (Tested at biggest sun in G3: Aenqute)
 	float minInsulation = 1000 / [ship maxFlightSpeed] + 1;
-	if ([ship heatInsulation] < minInsulation) [ship setHeatInsulation:minInsulation];
+	if ([ship effectiveHeatInsulation] < minInsulation) [ship setEffectiveHeatInsulation:minInsulation];
 }
 
 
@@ -8413,8 +8413,10 @@ Entity *gOOJSPlayerIfStale = nil;
 	OO_DEBUG_POP_PROGRESS();
 	[self setUpSpace];
 	
-	OO_DEBUG_PUSH_PROGRESS(@"Player init: setUpShipFromDictionary", __PRETTY_FUNCTION__);
-	[player setUpShipFromDictionary:[[OOShipRegistry sharedRegistry] shipInfoForKey:[player shipDataKey]]];	// the standard cobra at this point
+	OO_DEBUG_PUSH_PROGRESS(@"Player ship setup", __PRETTY_FUNCTION__);
+	OOShipClass *shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:[player shipDataKey]];
+	NSDictionary *shipInfo = [[OOShipRegistry sharedRegistry] shipInfoForKey:[player shipDataKey]];
+	[player setUpShipWithShipClass:shipClass andDictionary:shipInfo];	// the standard cobra at this point
 	OO_DEBUG_POP_PROGRESS();
 	
 	[self setViewDirection:VIEW_GUI_DISPLAY];

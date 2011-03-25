@@ -183,7 +183,7 @@ MA 02110-1301, USA.
 - (NSString *) HUDName;			// FIXME: this should be shipyard info, although we might want to fold that in.
 
 - (NSString *) pilotKey;
-- (float) unpilotedChance;
+- (float) unpilotedChance;		// FIXME: is the fuzziness of this actually desirable? It seems like an odd thing to want, and can be done by likeShipping and distributing role weights.
 - (BOOL) selectUnpiloted;
 - (NSUInteger) escapePodCount;	// FIXME: range
 - (OORoleSet *) escapePodRoles;

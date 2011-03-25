@@ -1,5 +1,12 @@
 build/
 
+# Dependencies
+Components/OoliteGraphics/Dependencies/libpng/
+Components/OoliteGraphics/Dependencies/OpenCTM/
+Oolite/Dependencies/SpiderMonkey/mozilla/
+Oolite/Mac/Dependencies/OggVorbis/libogg/
+Oolite/Mac/Dependencies/OggVorbis/libvorbis/
+
 # Stuff found in Xcode projects
 *.pbxuser
 *.mode1v3

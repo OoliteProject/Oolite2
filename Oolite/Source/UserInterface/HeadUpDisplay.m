@@ -1386,9 +1386,6 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 	BOOL			draw_surround;
 	GLfloat		alpha = overallAlpha;
 	
-	// YAW does not exist in strict mode
-	if ([UNIVERSE strict])  return;
-	
 	x = [info oo_intForKey:X_KEY defaultValue:PITCH_BAR_CENTRE_X] +
 		[[UNIVERSE gameView] x_offset] *
 		[info oo_floatForKey:X_ORIGIN_KEY defaultValue:0.0];

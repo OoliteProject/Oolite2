@@ -89,8 +89,6 @@ MA 02110-1301, USA.
 
 #define kOOLogUnconvertedNSLog @"unclassified.ShipEntity"
 
-#define USEMASC 0
-
 
 extern NSString * const kOOLogSyntaxAddShips;
 static NSString * const kOOLogEntityBehaviourChanged	= @"entity.behaviour.changed";
@@ -273,17 +271,9 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_ecm"])  [self addEquipmentItem:@"EQ_ECM"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_scoop"])  [self addEquipmentItem:@"EQ_FUEL_SCOOPS"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_escape_pod"])  [self addEquipmentItem:@"EQ_ESCAPE_POD"];
-	if ([shipDict oo_fuzzyBooleanForKey:@"has_energy_bomb"])  [self addEquipmentItem:@"EQ_ENERGY_BOMB"];
+	if ([shipDict oo_fuzzyBooleanForKey:@"has_energy_bomb"])  [self addEquipmentItem:@"EQ_QC_MINE"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_cloaking_device"])  [self addEquipmentItem:@"EQ_CLOAKING_DEVICE"];
-	if (![UNIVERSE strict])
-	{
-		// These items are not available in strict mode.
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
-#if USEMASC
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_military_jammer"])  [self addEquipmentItem:@"EQ_MILITARY_JAMMER"];
-		if ([shipDict oo_fuzzyBooleanForKey:@"has_military_scanner_filter"])  [self addEquipmentItem:@"EQ_MILITARY_SCANNER_FILTER"];
-#endif
-	}
+	if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
 	
 	// can it be 'mined' for alloys?
 	canFragment = [shipDict oo_fuzzyBooleanForKey:@"fragment_chance" defaultValue:0.9];
@@ -293,15 +283,8 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	max_cargo = [shipDict oo_unsignedIntForKey:@"max_cargo"];
 	extra_cargo = [shipDict oo_unsignedIntForKey:@"extra_cargo" defaultValue:15];
 	
-	if (![UNIVERSE strict])
-	{
-		hyperspaceMotorSpinTime = [shipDict oo_floatForKey:@"hyperspace_motor_spin_time" defaultValue:DEFAULT_HYPERSPACE_SPIN_TIME];
-		if(![shipDict oo_boolForKey:@"hyperspace_motor" defaultValue:YES]) hyperspaceMotorSpinTime = -1;
-	}
-	else
-	{
-		hyperspaceMotorSpinTime = DEFAULT_HYPERSPACE_SPIN_TIME;
-	}
+	hyperspaceMotorSpinTime = [shipDict oo_floatForKey:@"hyperspace_motor_spin_time" defaultValue:DEFAULT_HYPERSPACE_SPIN_TIME];
+	if(![shipDict oo_boolForKey:@"hyperspace_motor" defaultValue:YES]) hyperspaceMotorSpinTime = -1;
 	
 	[name autorelease];
 	name = [[shipDict oo_stringForKey:@"name" defaultValue:@"?"] copy];
@@ -329,35 +312,28 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	
 #if MASS_DEPENDENT_FUEL_PRICES
 	// set up fuel scooping & charging
-	if ([UNIVERSE strict])
-	{
-		fuel_charge_rate = 1.0;
-	}
-	else
-	{
 #if 0
 // Temporary fix for mass-dependent fuel prices.
 // See [ShipEntity fuelChargeRate] for more information.
 // - MKW 2011.03.11
-		GLfloat rate = 1.0;
-		if (PLAYER != nil)
-		{
-			rate = calcFuelChargeRate (mass, [PLAYER baseMass]);
-		}
-		fuel_charge_rate = (rate > 0.0) ? rate : 1.0;
-		
-		rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate];
-		if (rate != fuel_charge_rate)
-		{
-			// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
-			if (rate < 0.33 * fuel_charge_rate) fuel_charge_rate *= 0.33;
-			else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
-			else fuel_charge_rate = rate;
-		}
-#else
-		fuel_charge_rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:1.0f];
-#endif
+	GLfloat rate = 1.0;
+	if (PLAYER != nil)
+	{
+		rate = calcFuelChargeRate (mass, [PLAYER baseMass]);
 	}
+	fuel_charge_rate = (rate > 0.0) ? rate : 1.0;
+	
+	rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate];
+	if (rate != fuel_charge_rate)
+	{
+		// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
+		if (rate < 0.33 * fuel_charge_rate) fuel_charge_rate *= 0.33;
+		else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
+		else fuel_charge_rate = rate;
+	}
+#else
+	fuel_charge_rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:1.0f];
+#endif
 #else
 	fuel_charge_rate = 1.0;
 #endif
@@ -1857,22 +1833,6 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		}
 	}
 
-	// military_jammer
-	if ([self hasMilitaryJammer])
-	{
-		if (military_jammer_active)
-		{
-			energy -= delta_t * MILITARY_JAMMER_ENERGY_RATE;
-			if (energy < MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = NO;
-		}
-		else
-		{
-			if (energy > 1.5 * MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = YES;
-		}
-	}
-
 	// check outside factors
 	//
 	aegis_status = [self checkForAegis];   // is a station or something nearby??
@@ -2060,7 +2020,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				[self behaviour_fly_thru_navpoints: delta_t];
 				break;
 
-			case BEHAVIOUR_ENERGY_BOMB_COUNTDOWN:
+			case BEHAVIOUR_MINE_COUNTDOWN:
 				// Do nothing
 				break;
 		}
@@ -2399,7 +2359,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	for (eqTypeEnum = [eqTypes objectEnumerator]; (eqType = [eqTypeEnum nextObject]); )
 	{
 		// Equipment list,  consistent with the rest of the API - Kaks
-		isDamaged = ![UNIVERSE strict] && [self hasEquipmentItem:[[eqType identifier] stringByAppendingString:@"_DAMAGED"]];
+		isDamaged = [self hasEquipmentItem:[[eqType identifier] stringByAppendingString:@"_DAMAGED"]];
 		if ([self hasEquipmentItem:[eqType identifier]] || isDamaged)
 		{
 			[quip addObject:eqType];
@@ -2736,9 +2696,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				_missileRole = nil;	// use generic ship fallback from now on.
 			}
 			
-			// In unrestricted mode, assign random missiles 20% of the time without missile_role (or 10% with valid missile_role)
-			if (chance > 0.8f && ![UNIVERSE strict]) role = @"missile";
-			// otherwise use the standard role (100% of the time in restricted mode).
+			// Assign random missiles 20% of the time without missile_role (or 10% with valid missile_role)
+			if (chance > 0.8f) role = @"missile";
+			// otherwise use the standard role.
 			else role = @"EQ_MISSILE";
 			
 			missileType = [self verifiedMissileTypeFromRole:role];
@@ -2824,26 +2784,6 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (BOOL) hasMilitaryScannerFilter
-{
-#if USEMASC
-	return [self hasEquipmentItem:@"EQ_MILITARY_SCANNER_FILTER"];
-#else
-	return NO;
-#endif
-}
-
-
-- (BOOL) hasMilitaryJammer
-{
-#if USEMASC
-	return [self hasEquipmentItem:@"EQ_MILITARY_JAMMER"];
-#else
-	return NO;
-#endif
-}
-
-
 - (BOOL) hasExpandedCargoBay
 {
 	return [self hasEquipmentItem:@"EQ_CARGO_BAY"];
@@ -2874,9 +2814,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (BOOL) hasEnergyBomb
+- (BOOL) hasCascadeMine
 {
-	return [self hasEquipmentItem:@"EQ_ENERGY_BOMB"];
+	return [self hasEquipmentItem:@"EQ_QC_MINE" includeWeapons:YES];
 }
 
 
@@ -3588,12 +3528,12 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	int rhs = 3.2 / delta_t;
 	if (rhs)	missile_chance = 1 + (ranrot_rand() % rhs);
 
-	if (([self hasEnergyBomb]) && (range < 10000.0) && canBurn)
+	if (([self hasCascadeMine]) && (range < 10000.0) && canBurn)
 	{
 		float	qbomb_chance = 0.01 * delta_t;
 		if (randf() < qbomb_chance)
 		{
-			[self launchEnergyBomb];
+			[self launchCascadeMine];
 		}
 	}
 
@@ -4077,9 +4017,6 @@ static GLfloat friendly_color[4] =	{ 0.0, 1.0, 0.0, 1.0};	// green
 static GLfloat missile_color[4] =	{ 0.0, 1.0, 1.0, 1.0};	// cyan
 static GLfloat police_color1[4] =	{ 0.5, 0.0, 1.0, 1.0};	// purpley-blue
 static GLfloat police_color2[4] =	{ 1.0, 0.0, 0.5, 1.0};	// purpley-red
-static GLfloat jammed_color[4] =	{ 0.0, 0.0, 0.0, 0.0};	// clear black
-static GLfloat mascem_color1[4] =	{ 0.3, 0.3, 0.3, 1.0};	// dark gray
-static GLfloat mascem_color2[4] =	{ 0.4, 0.1, 0.4, 1.0};	// purple
 static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by script
 
 - (GLfloat *) scannerDisplayColorForShip:(ShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2
@@ -4106,25 +4043,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		}
 		
 		return scripted_color;
-	}
-
-	// no scripted scanner display colors defined, proceed as per standard
-	if ([self isJammingScanning])
-	{
-		if (![otherShip hasMilitaryScannerFilter])
-			return jammed_color;
-		else
-		{
-			if (flash)
-				return mascem_color1;
-			else
-			{
-				if (isHostile)
-					return hostile_color;
-				else
-					return mascem_color2;
-			}
-		}
 	}
 
 	switch (scanClass)
@@ -4217,13 +4135,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 - (void)setAutoCloak:(BOOL)automatic
 {
 	cloakAutomatic = !!automatic;
-}
-
-
-
-- (BOOL) isJammingScanning
-{
-	return ([self hasMilitaryJammer] && military_jammer_active);
 }
 
 
@@ -4592,10 +4503,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 - (NSString *) identFromShip:(ShipEntity*) otherShip
 {
-	if ([self isJammingScanning] && ![otherShip hasMilitaryScannerFilter])
-	{
-		return DESC(@"unknown-target");
-	}
 	return displayName;
 }
 
@@ -5332,7 +5239,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	// - MKW 2011.03.11
 	GLfloat rate = 1.0f;
 
-	if (![UNIVERSE strict] && [self mass] > 0.0)
+	if ([self mass] > 0.0)
 	{
 
 #define kCobra3Mass (185580)     // the base mass of a Cobra Mk III
@@ -7862,7 +7769,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	{
 		target_ship = (ShipEntity*)target;
 		if ([target_ship isCloaked])  return nil;
-		if (![self hasMilitaryScannerFilter] && [target_ship isJammingScanning]) return nil;
 	}
 	
 	unsigned i;
@@ -8020,14 +7926,14 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) launchEnergyBomb
+- (BOOL) launchCascadeMine
 {
-	if (![self hasEnergyBomb])  return NO;
+	if (![self hasCascadeMine])  return NO;
 	[self setSpeed: maxFlightSpeed + 300];
 	ShipEntity*	bomb = [UNIVERSE newShipWithRole:@"energy-bomb"];
 	if (bomb == nil)  return NO;
 	
-	[self removeEquipmentItem:@"EQ_ENERGY_BOMB"];
+	[self removeEquipmentItem:@"EQ_QC_MINE"];
 	
 	double  start = collision_radius + bomb->collision_radius;
 	Quaternion  random_direction;
@@ -8051,9 +7957,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	[bomb setRoll:random_roll];
 	[bomb setPitch:random_pitch];
 	[bomb setVelocity:vel];
-	[bomb setScanClass:CLASS_MINE];	// TODO: should it be CLASS_ENERGY_BOMB?
+	[bomb setScanClass:CLASS_MINE];
 	[bomb setEnergy:5.0];	// 5 second countdown
-	[bomb setBehaviour:BEHAVIOUR_ENERGY_BOMB_COUNTDOWN];
+	[bomb setBehaviour:BEHAVIOUR_MINE_COUNTDOWN];
 	[bomb setOwner:self];
 	[UNIVERSE addEntity:bomb];	// STATUS_IN_FLIGHT, AI state GLOBAL
 	[bomb release];

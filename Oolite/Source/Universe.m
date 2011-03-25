@@ -207,9 +207,6 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 - (void) prunePreloadingPlanetMaterials;
 #endif
 
-- (void) filterOutNonStrictEquipment;
-- (void) reinitAndShowDemo:(BOOL) showDemo strictChanged:(BOOL) strictChanged;
-
 // Set shader effects level without logging or triggering a reset -- should only be used directly during startup.
 - (void) setShaderEffectsLevelDirectly:(OOShaderSetting)value;
 
@@ -256,10 +253,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	// Preload cache
 	[OOCacheManager sharedCache];
 	
-	strict = [prefs oo_boolForKey:@"strict-gameplay" defaultValue:NO];
-	
 	// init the Resource Manager
-	[ResourceManager setUseAddOns:!strict];
 	[ResourceManager paths];
 	
 	// Set up the internal game strings
@@ -405,34 +399,6 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 {
 	doProcedurallyTexturedPlanets = !!value;	// ensure yes or no
 	[[NSUserDefaults standardUserDefaults] setBool:doProcedurallyTexturedPlanets forKey:@"procedurally-textured-planets"];
-}
-
-
-- (BOOL) strict
-{
-	return strict;
-}
-
-
-- (void) setStrict:(BOOL)value
-{
-	[self setStrict:value fromSaveGame:NO];
-}
-
-
-- (void) setStrict:(BOOL) value fromSaveGame:(BOOL) saveGame
-{
-	if (strict == value)  return;
-	
-	strict = !!value;
-	[[NSUserDefaults standardUserDefaults] setBool:strict forKey:@"strict-gameplay"];
-	[self reinitAndShowDemo:!saveGame strictChanged:YES];
-}
-
-
-- (void) reinitAndShowDemo:(BOOL) showDemo
-{
-	[self reinitAndShowDemo:showDemo strictChanged:NO];
 }
 
 
@@ -2110,7 +2076,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	GLfloat		startAngle = 0;
 	GLfloat		aspectRatio = 1;
 	
-	if (!strict && forDocking)
+	if (forDocking)
 	{
 		NSDictionary *info = [[PLAYER dockedStation] shipInfoDictionary];
 		sides = [info oo_unsignedIntForKey:@"tunnel_corners" defaultValue:4];
@@ -2135,10 +2101,15 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 
 - (void) handleGameOver
 {
-	// In unrestricted mode, reload last save game, if any. In strict mode, always restart as a fresh Jameson.
 	// NOTE: this is also called when loading a game fails.
-	if (![self strict] && [[gameView gameController] playerFileToLoad]) [[gameView gameController] loadPlayerIfRequired];
-	else [self reinitAndShowDemo:NO];
+	if ([[gameView gameController] playerFileToLoad])
+	{
+		[[gameView gameController] loadPlayerIfRequired];
+	}
+	else
+	{
+		[self reinitAndShowDemo:NO];
+	}
 }
 
 
@@ -4283,15 +4254,6 @@ static BOOL MaintainLinkedLists(Universe *uni)
 					}
 				}
 			}
-		}
-	}
-	// check for MASC'M
-	if ((hit_entity) && [hit_entity isShip])
-	{
-		ShipEntity * ship = (ShipEntity*)hit_entity;
-		if ([ship isJammingScanning] && ![player hasMilitaryScannerFilter])
-		{
-			hit_entity = nil;
 		}
 	}
 	
@@ -8355,36 +8317,13 @@ Entity *gOOJSPlayerIfStale = nil;
 	
 	[equipmentData autorelease];
 	equipmentData = [[ResourceManager arrayFromFilesNamed:@"equipment.plist" inFolder:@"Config" andMerge:YES] retain];
-	if (strict)  [self filterOutNonStrictEquipment];
 	
 	[OOEquipmentType loadEquipment];
 }
 
 
-- (void) filterOutNonStrictEquipment
-{
-	unsigned i, count = [equipmentData count];
-	NSMutableArray *filteredEq = [NSMutableArray arrayWithCapacity:count];
-	for (i = 0; i < count; i++)
-	{
-		BOOL compatible = NO;
-		NSArray *eqDef = [equipmentData objectAtIndex:i];
-		if ([eqDef count] > EQUIPMENT_EXTRA_INFO_INDEX)
-		{
-			NSDictionary *extra = [eqDef oo_dictionaryAtIndex:EQUIPMENT_EXTRA_INFO_INDEX];
-			compatible = [extra oo_boolForKey:@"strict_mode_compatible" defaultValue:([extra objectForKey:@"strict_mode_only"] != nil)];
-		}
-		
-		if (compatible)  [filteredEq addObject:eqDef];
-	}
-	
-	[equipmentData release];
-	equipmentData = [filteredEq copy];
-}
-
-
 // FIXME: needs less redundancy.
-- (void) reinitAndShowDemo:(BOOL) showDemo strictChanged:(BOOL) strictChanged
+- (void) reinitAndShowDemo:(BOOL)showDemo
 {
 	no_update = YES;
 	PlayerEntity* player = PLAYER;
@@ -8394,7 +8333,6 @@ Entity *gOOJSPlayerIfStale = nil;
 	[OOTexture clearCache];
 	[self resetSystemDataCache];
 	
-	[ResourceManager setUseAddOns:!strict];
 	//[ResourceManager loadScripts]; // initialised inside [player setUp]!
 	
 	// NOTE: Anything in the sharedCache is now trashed and must be
@@ -8403,14 +8341,6 @@ Entity *gOOJSPlayerIfStale = nil;
 	//       reinitialize itself - mwerle 20081107.
 	[OOShipRegistry reload];
 	[[gameView gameController] unpauseGame];
-	
-	if (strictChanged)
-	{
-		[descriptions release];
-		descriptions = [[ResourceManager dictionaryFromFilesNamed:@"descriptions.plist" inFolder:@"Config" andMerge:YES] retain];
-		[missiontext release];
-		missiontext = [[ResourceManager dictionaryFromFilesNamed:@"missiontext.plist" inFolder:@"Config" andMerge:YES] retain];
-	}
 	
 	if(showDemo)
 	{
@@ -8441,7 +8371,6 @@ Entity *gOOJSPlayerIfStale = nil;
 	if(showDemo)
 	{
 		[player setGuiToIntroFirstGo:NO];
-		if (strictChanged) [gui setText:(strict)? DESC(@"strict-play-enabled"):DESC(@"unrestricted-play-enabled") forRow:1 align:GUI_ALIGN_CENTER];
 		[player setStatus:STATUS_START_GAME];
 	}
 	else

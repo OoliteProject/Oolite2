@@ -28,7 +28,6 @@
 	key_scanner_unzoom			= "Z";
 
 	key_launch_escapepod		= 27;		// escape
-	key_energy_bomb				= "\t";		// tab
 
 	key_galactic_hyperspace		= "g";
 	key_hyperspace				= "h";

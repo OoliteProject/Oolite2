@@ -540,7 +540,6 @@ static GLfloat		sBaseMass = 0.0;
 		// manifest contains entries for all 17 commodities, whether their quantity is 0 or more.
 		[commodityInfo replaceObjectAtIndex:MARKET_UNITS withObject:[NSNumber numberWithInt:[UNIVERSE unitsForCommodity:i]]];
 		[manifest replaceObjectAtIndex:i withObject:[NSArray arrayWithArray:commodityInfo]];
-
 	}
 	[shipCommodityData release];
 	shipCommodityData = [[NSArray arrayWithArray:manifest] retain];
@@ -551,7 +550,6 @@ static GLfloat		sBaseMass = 0.0;
 	[result oo_setBool:[self hasEscapePod]				forKey:@"has_escape_pod"];
 	[result oo_setBool:[self hasECM]					forKey:@"has_ecm"];
 	[result oo_setBool:[self hasScoop]					forKey:@"has_scoop"];
-	[result oo_setBool:[self hasEnergyBomb]			forKey:@"has_energy_bomb"];
 	[result oo_setBool:[self hasFuelInjection]			forKey:@"has_fuel_injection"];
 	
 	if ([self hasEquipmentItem:@"EQ_NAVAL_ENERGY_UNIT"])
@@ -585,16 +583,16 @@ static GLfloat		sBaseMass = 0.0;
 	[result oo_setInteger:legalStatus forKey:@"legal_status"];
 	[result oo_setInteger:market_rnd forKey:@"market_rnd"];
 	[result oo_setInteger:ship_kills forKey:@"ship_kills"];
-
+	
 	// ship depreciation
 	[result oo_setInteger:ship_trade_in_factor forKey:@"ship_trade_in_factor"];
-
+	
 	// mission variables
 	if (mission_variables != nil)
 	{
 		[result setObject:[NSDictionary dictionaryWithDictionary:mission_variables] forKey:@"mission_variables"];
 	}
-
+	
 	// communications log
 	NSArray *log = [self commLog];
 	if (log != nil)  [result setObject:log forKey:@"comm_log"];
@@ -629,47 +627,41 @@ static GLfloat		sBaseMass = 0.0;
 	// contracts
 	[result setObject:contracts forKey:@"contracts"];
 	[result setObject:contract_record forKey:@"contract_record"];
-
+	
 	[result setObject:missionDestinations forKey:@"missionDestinations"];
-
+	
 	//shipyard
 	[result setObject:shipyard_record forKey:@"shipyard_record"];
-
+	
 	//ship's clock
 	[result setObject:[NSNumber numberWithDouble:ship_clock] forKey:@"ship_clock"];
-
+	
 	//speech
 	[result setObject:[NSNumber numberWithBool:isSpeechOn] forKey:@"speech_on"];
 #if OOLITE_ESPEAK
 	[result setObject:[UNIVERSE voiceName:voice_no] forKey:@"speech_voice"];
 	[result setObject:[NSNumber numberWithBool:voice_gender_m] forKey:@"speech_gender"];
 #endif
-
+	
 	//base ship description
 	[result setObject:[self shipDataKey] forKey:@"ship_desc"];
 	[result setObject:[[self shipInfoDictionary] oo_stringForKey:KEY_NAME] forKey:@"ship_name"];
-
+	
 	//custom view no.
 	[result oo_setUnsignedInteger:_customViewIndex forKey:@"custom_view_index"];
 
 	//local market
 	if ([dockedStation localMarket])  [result setObject:[dockedStation localMarket] forKey:@"localMarket"];
-
-	// strict UNIVERSE?
-	if ([UNIVERSE strict])
-	{
-		[result setObject:[NSNumber numberWithBool:YES] forKey:@"strict"];
-	}
-
+	
 	// persistant UNIVERSE information
 	if ([UNIVERSE localPlanetInfoOverrides])
 	{
 		[result setObject:[UNIVERSE localPlanetInfoOverrides] forKey:@"local_planetinfo_overrides"];
 	}
-
+	
 	// trumble information
 	[result setObject:[self trumbleValue] forKey:@"trumbles"];
-
+	
 	// wormhole information
 	NSMutableArray * wormholeDicts = [NSMutableArray arrayWithCapacity:[scannedWormholes count]];
 	NSEnumerator * wormholes = [scannedWormholes objectEnumerator];
@@ -714,8 +706,8 @@ static GLfloat		sBaseMass = 0.0;
 	if ([dict oo_stringForKey:@"galaxy_seed"] == nil)  return NO;
 	if ([dict oo_stringForKey:@"galaxy_coordinates"] == nil)  return NO;
 	
-	BOOL strict = [dict oo_boolForKey:@"strict" defaultValue:NO];
-	[UNIVERSE setStrict:strict fromSaveGame:YES];
+	// BOOL strict = [dict oo_boolForKey:@"strict" defaultValue:NO];
+	// FIXME: when upgrading is implemented, warn about strict mode not being supported.
 	
 	//base ship description
 	[self setShipDataKey:[dict oo_stringForKey:@"ship_desc"]];
@@ -763,11 +755,7 @@ static GLfloat		sBaseMass = 0.0;
 	if ([dict oo_boolForKey:@"has_escape_pod"])				[equipment oo_setBool:YES forKey:@"EQ_ESCAPE_POD"];
 	if ([dict oo_boolForKey:@"has_ecm"])					[equipment oo_setBool:YES forKey:@"EQ_ECM"];
 	if ([dict oo_boolForKey:@"has_scoop"])					[equipment oo_setBool:YES forKey:@"EQ_FUEL_SCOOPS"];
-	if ([dict oo_boolForKey:@"has_energy_bomb"])			[equipment oo_setBool:YES forKey:@"EQ_ENERGY_BOMB"];
-	if (!strict)
-	{
-		if ([dict oo_boolForKey:@"has_fuel_injection"])		[equipment oo_setBool:YES forKey:@"EQ_FUEL_INJECTION"];
-	}
+	if ([dict oo_boolForKey:@"has_fuel_injection"])			[equipment oo_setBool:YES forKey:@"EQ_FUEL_INJECTION"];
 	
 	// Legacy energy unit type -> energy unit equipment item
 	if ([dict oo_boolForKey:@"has_energy_unit"] && [self installedEnergyUnitType] == ENERGY_UNIT_NONE)
@@ -845,9 +833,7 @@ static GLfloat		sBaseMass = 0.0;
 	credits = OODeciCreditsFromObject([dict objectForKey:@"credits"]);
 	
 	fuel = [dict oo_unsignedIntForKey:@"fuel" defaultValue:fuel];
-	fuel_charge_rate = [UNIVERSE strict]
-					 ? 1.0
-					 : [dict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate]; // ## fuel charge testing
+	fuel_charge_rate = [dict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate]; // ## fuel charge testing
 	
 	galaxy_number = [dict oo_intForKey:@"galaxy_number"];
 	forward_weapon_type = [dict oo_intForKey:@"forward_weapon"];
@@ -1635,24 +1621,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		if (energy < CLOAKING_DEVICE_MIN_ENERGY)
 			[self deactivateCloakingDevice];
 	}
-
-	// military_jammer
-	if ([self hasMilitaryJammer])
-	{
-		UPDATE_STAGE(@"updating military jammer");
-		
-		if (military_jammer_active)
-		{
-			energy -= (float)delta_t * MILITARY_JAMMER_ENERGY_RATE;
-			if (energy < MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = NO;
-		}
-		else
-		{
-			if (energy > 1.5 * MILITARY_JAMMER_MIN_ENERGY)
-				military_jammer_active = YES;
-		}
-	}
 	
 	// ecm
 	if (ecm_in_operation)
@@ -2263,14 +2231,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		else  velocity = vector_multiply_scalar(velocity, velmag2 / velmag);
 		
 	}
-	if ([UNIVERSE strict])
-	{
-		if (velmag2 < OG_ELITE_FORWARD_DRIFT)
-		{
-			// add acceleration
-			velocity = vector_add(velocity, vector_multiply_scalar(v_forward, (float)delta_t * OG_ELITE_FORWARD_DRIFT * 20.0f));
-		}
-	}
 	
 	UPDATE_STAGE(@"updating joystick");
 	[self applyRoll:(float)delta_t*flightRoll andClimb:(float)delta_t*flightPitch];
@@ -2417,9 +2377,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// If target is a ship, check whether it's cloaked or is actively jamming our scanner
 	if ([target isShip])
 	{
-		ShipEntity *targetShip = (ShipEntity*)target;
-		if ([targetShip isCloaked] ||	// checks for cloaked ships
-			([targetShip isJammingScanning] && ![self hasMilitaryScannerFilter]))	// checks for activated jammer
+		if ([(ShipEntity *)target isCloaked])
 		{
 			return NO;
 		}
@@ -3202,10 +3160,6 @@ static bool minShieldLevelPercentageInitialised = false;
 			
 		case COMPASS_MODE_TARGET:
 			beacon = [UNIVERSE firstBeacon];
-			while (beacon != nil && [beacon isJammingScanning])
-			{
-				beacon = [beacon nextBeacon];
-			}
 			[self setNextBeacon:beacon];
 			
 			if (beacon != nil)  [self setCompassMode:COMPASS_MODE_BEACONS];
@@ -3213,11 +3167,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			break;
 			
 		case COMPASS_MODE_BEACONS:
-			beacon = [self nextBeacon];
-			do
-			{
-				beacon = [beacon nextBeacon];
-			} while (beacon != nil && [beacon isJammingScanning]);
+			beacon = [[self nextBeacon] nextBeacon];
 			[self setNextBeacon:beacon];
 			
 			if (beacon == nil)
@@ -3652,28 +3602,6 @@ static bool minShieldLevelPercentageInitialised = false;
 - (float) heatInsulation
 {
 	return [self hasHeatShield] ? 2.0f : 1.0f;
-}
-
-
-- (BOOL) fireEnergyBomb
-{
-	if (![self weaponsOnline])  return NO;
-
-	NSArray* targets = [UNIVERSE getEntitiesWithinRange:SCANNER_MAX_RANGE ofEntity:self];
-	if ([targets count] > 0)
-	{
-		unsigned i;
-		for (i = 0; i < [targets count]; i++)
-		{
-			Entity *e2 = [targets objectAtIndex:i];
-			if (e2->isShip)
-				[(ShipEntity *)e2 takeEnergyDamage:1000 from:self becauseOf:self];
-		}
-	}
-	[UNIVERSE addMessage:DESC(@"energy-bomb-activated") forCount:4.5];
-	[self playEnergyBombFired];
-	
-	return YES;
 }
 
 
@@ -4247,17 +4175,14 @@ static bool minShieldLevelPercentageInitialised = false;
 		legalStatus |= 64;
 	}
 	
-	if (![UNIVERSE strict])	// only mess with the scores if we're not in 'strict' mode
+	BOOL killIsCargo = ((killClass == CLASS_CARGO) && ([other commodityAmount] > 0));
+	if ((killIsCargo) || (killClass == CLASS_BUOY) || (killClass == CLASS_ROCK))
 	{
-		BOOL killIsCargo = ((killClass == CLASS_CARGO) && ([other commodityAmount] > 0));
-		if ((killIsCargo) || (killClass == CLASS_BUOY) || (killClass == CLASS_ROCK))
+		// EMMSTRAN: no killaward (but full bounty) for tharglets?
+		if (![other hasRole:@"tharglet"])	// okay, we'll count tharglets as proper kills
 		{
-			// EMMSTRAN: no killaward (but full bounty) for tharglets?
-			if (![other hasRole:@"tharglet"])	// okay, we'll count tharglets as proper kills
-			{
-				score /= 10;	// reduce bounty awarded
-				killAward = NO;	// don't award a kill
-			}
+			score /= 10;	// reduce bounty awarded
+			killAward = NO;	// don't award a kill
 		}
 	}
 	
@@ -4319,30 +4244,20 @@ static bool minShieldLevelPercentageInitialised = false;
 		[self setScriptTarget:self];
 		[UNIVERSE clearPreviousMessage];
 		[self removeEquipmentItem:system_key];
-		if (![UNIVERSE strict])
+		
+		NSString *damagedKey = [NSString stringWithFormat:@"%@_DAMAGED", system_key];
+		[self addEquipmentItem:damagedKey];	// for possible future repair.
+		[self doScriptEvent:OOJSID("equipmentDamaged") withArgument:system_key];
+		
+		if (![self hasEquipmentItem:system_name] && [self hasEquipmentItem:damagedKey])
 		{
-			NSString *damagedKey = [NSString stringWithFormat:@"%@_DAMAGED", system_key];
-			[self addEquipmentItem:damagedKey];	// for possible future repair.
-			[self doScriptEvent:OOJSID("equipmentDamaged") withArgument:system_key];
-			
-			if (![self hasEquipmentItem:system_name] && [self hasEquipmentItem:damagedKey])
-			{
-				/*
-					Display "foo damaged" message only if no script has
-					repaired or removed the equipment item. (If a script does
-					either of those and wants a message, it can write it
-					itself.)
-				*/
-				[UNIVERSE addMessage:[NSString stringWithFormat:DESC(@"@-damaged"), system_name] forCount:4.5];
-			}
-		}
-		else
-		{
-			[self doScriptEvent:OOJSID("equipmentDestroyed") withArgument:system_key];
-			if (![self hasEquipmentItem:system_name])	// Because script may have undestroyed it
-			{
-				[UNIVERSE addMessage:[NSString stringWithFormat:DESC(@"@-destroyed"), system_name] forCount:4.5];
-			}
+			/*
+				Display "foo damaged" message only if no script has
+				repaired or removed the equipment item. (If a script does
+				either of those and wants a message, it can write it
+				itself.)
+			*/
+			[UNIVERSE addMessage:[NSString stringWithFormat:DESC(@"@-damaged"), system_name] forCount:4.5];
 		}
 		
 		// if Docking Computers have been selected to take damage and they happen to be on, switch them off
@@ -4514,8 +4429,8 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	// Did we fail to observe traffic control regulations? However, due to the state of emergency,
 	// apply no unauthorized docking penalties if a nova is ongoing.
-	if (![UNIVERSE strict] && [dockedStation requiresDockingClearance] &&
-			![self clearedToDock] && ![[UNIVERSE sun] willGoNova])
+	if ([dockedStation requiresDockingClearance] &&
+		![self clearedToDock] && ![[UNIVERSE sun] willGoNova])
 	{
 		[self penaltyForUnauthorizedDocking];
 	}
@@ -5102,7 +5017,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			{
 				[quip addObject:[NSArray arrayWithObjects:[eqType name], [NSNumber numberWithBool:YES], nil]];
 			}
-			else if (![UNIVERSE strict])
+			else
 			{
 				// Check for damaged version
 				if ([self hasEquipmentItem:[[eqType identifier] stringByAppendingString:@"_DAMAGED"]])
@@ -5797,12 +5712,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		[gui setKey:GUI_KEY_OK forRow:GUI_ROW(,QUIT)];
 #endif
 		
-		if ([UNIVERSE strict])
-			[gui setText:DESC(@"options-reset-to-unrestricted-play") forRow:GUI_ROW(,STRICT) align:GUI_ALIGN_CENTER];
-		else
-			[gui setText:DESC(@"options-reset-to-strict-play") forRow:GUI_ROW(,STRICT) align:GUI_ALIGN_CENTER];
-		[gui setKey:GUI_KEY_OK forRow:GUI_ROW(,STRICT)];
-
 		[gui setSelectableRange:NSMakeRange(first_sel_row, GUI_ROW_OPTIONS_END_OF_LIST)];
 
 		if ([[UNIVERSE gameController] isGamePaused] || (!canLoadOrSave && [self status] == STATUS_DOCKED))
@@ -5958,7 +5867,7 @@ static NSString *last_outfitting_key=nil;
 		if (minTechLevel != 0 && [self hasEquipmentItem:[eqType damagedIdentifier]])  minTechLevel--;
 		
 		// reduce the minimum techlevel occasionally as a bonus..
-		if (![UNIVERSE strict] && techlevel < minTechLevel && techlevel + 3 > minTechLevel)
+		if (techlevel < minTechLevel && techlevel + 3 > minTechLevel)
 		{
 			unsigned day = i * 13 + (unsigned)floor([UNIVERSE gameTime] / 86400.0);
 			unsigned char dayRnd = (day & 0xff) ^ system_seed.a;
@@ -8209,9 +8118,8 @@ else _dockTarget = NO_TARGET;
 	OOCreditsQuantity	calculatedFine = credits * 0.05;
 	OOCreditsQuantity	maximumFine = 50000ULL;
 	
-	if ([UNIVERSE strict] || [self clearedToDock])
-		return;
-		
+	if ([self clearedToDock])  return;
+	
 	amountToPay = MIN(maximumFine, calculatedFine);
 	credits -= amountToPay;
 	[self addMessageToReport:[NSString stringWithFormat:DESC(@"station-docking-clearance-fined-@-cr"), OOCredits(amountToPay)]];
@@ -8307,7 +8215,6 @@ else _dockTarget = NO_TARGET;
 	ADD_FLAG_IF_SET(scoopsActive);
 	ADD_FLAG_IF_SET(game_over);
 	ADD_FLAG_IF_SET(finished);
-	ADD_FLAG_IF_SET(bomb_detonated);
 	ADD_FLAG_IF_SET(autopilot_engaged);
 	ADD_FLAG_IF_SET(afterburner_engaged);
 	ADD_FLAG_IF_SET(afterburnerSoundLooping);
@@ -8370,7 +8277,6 @@ else _dockTarget = NO_TARGET;
 	key_scanner_zoom &&
 	key_scanner_unzoom &&
 	key_launch_escapepod &&
-	key_energy_bomb &&
 	key_galactic_hyperspace &&
 	key_hyperspace &&
 	key_jumpdrive &&

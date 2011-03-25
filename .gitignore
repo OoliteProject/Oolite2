@@ -1,0 +1,19 @@
+build/
+
+# Stuff found in Xcode projects
+*.pbxuser
+*.mode1v3
+*.perspective
+*.perspective3
+TemplateIcon.icns
+xcuserdata/
+project.xcworkspace/
+
+# OS X cruft
+.DS_Store
+Icon?
+
+# Windows cruft
+Thumbs.db
+
+

@@ -53,14 +53,6 @@
 		}
 	),
 	(
-		7, 9000, "Energy Bomb",
-		"EQ_ENERGY_BOMB",
-		"A one-shot super-weapon capable of destroying all small craft within range.",
-		{
-			strict_mode_only = true;
-		}
-	),
-	(
 		8, 15000, "Extra Energy Unit",
 		"EQ_ENERGY_UNIT",
 		"An improved efficiency energy recharge unit.",
@@ -311,18 +303,6 @@
 		{
 			available_to_all = true;
 		}
-	),
-	/* next item has a TL too high to be available */
-	(
-		99, 1500000, "Military Anti-Scanner Countermeasures (MASC'M)",
-		"EQ_MILITARY_JAMMER",
-		"Developed from experimental cloaking prototypes, this jamming device stops enemy ships from scanning your craft."
-	),
-	/* next item has a TL too high to be available */
-	(
-		99, 250000, "Military Scanner Filtering",
-		"EQ_MILITARY_SCANNER_FILTER",
-		"Filters out the jamming signals from MASC'M devices."
 	),
 	/* NPC equipment, incompatible with player ship. Not buyable because of its TL. */
 	(

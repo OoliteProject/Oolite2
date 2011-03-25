@@ -708,7 +708,6 @@ static NSComparisonResult CompareDisplayModes(id arg1, id arg2, void *context)
 		}
 		
 		// Clear the front and back framebuffers before switching out of FullScreen mode.
-		// (This is not strictly necessary, but avoids an untidy flash of garbage.)
 		OOGL(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 		OOGL(glClear(GL_COLOR_BUFFER_BIT));
 		[fullScreenContext flushBuffer];
@@ -942,8 +941,7 @@ static void RemovePreference(NSString *key)
 	
 	if (action == @selector(showAddOnsAction:))
 	{
-		// Always enabled in unrestricted mode, to allow users to add OXPs more easily.
-		return [ResourceManager useAddOns];
+		return YES;
 	}
 	
 	if (action == @selector(showSnapshotsAction:))

@@ -138,7 +138,6 @@ enum
 	kShip_isCloaked,			// cloaked, boolean, read/write (if cloaking device installed)
 	kShip_isDerelict,			// is an abandoned ship, boolean, read-only
 	kShip_isFrangible,			// frangible, boolean, read-only
-	kShip_isJamming,			// jamming scanners, boolean, read/write (if jammer installed)
 	kShip_isMine,				// is mine, boolean, read-only
 	kShip_isMissile,			// is missile, boolean, read-only
 	kShip_isPiloted,			// is piloted, boolean, read-only (includes stations)
@@ -224,7 +223,6 @@ static JSPropertySpec sShipProperties[] =
 	{ "isCargo",				kShip_isCargo,				OOJS_PROP_READONLY_CB },
 	{ "isDerelict",				kShip_isDerelict,			OOJS_PROP_READONLY_CB },
 	{ "isFrangible",			kShip_isFrangible,			OOJS_PROP_READONLY_CB },
-	{ "isJamming",				kShip_isJamming,			OOJS_PROP_READONLY_CB },
 	{ "isMine",					kShip_isMine,				OOJS_PROP_READONLY_CB },
 	{ "isMissile",				kShip_isMissile,			OOJS_PROP_READONLY_CB },
 	{ "isPiloted",				kShip_isPiloted,			OOJS_PROP_READONLY_CB },
@@ -452,10 +450,6 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 			
 		case kShip_isCloakAutomatic:
 			*value = OOJSValueFromBOOL([entity hasAutoCloak]);
-			return YES;
-			
-		case kShip_isJamming:
-			*value = OOJSValueFromBOOL([entity isJammingScanning]);
 			return YES;
 		
 		case kShip_potentialCollider:
@@ -1606,13 +1600,6 @@ static JSBool ShipSetEquipmentStatus(JSContext *context, uintN argc, jsval *vp)
 	BOOL					hasOK = NO, hasDamaged = NO;
 	
 	GET_THIS_SHIP(thisEnt);
-	
-	if (EXPECT_NOT([UNIVERSE strict]))
-	{
-		// It's OK to have a hard error here since only built-in scripts run in strict mode.
-		OOJSReportError(context, @"Cannot set equipment status while in strict mode.");
-		return NO;
-	}
 	
 	if (argc < 2)
 	{

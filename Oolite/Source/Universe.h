@@ -255,8 +255,6 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	
 	NSArray					*closeSystems;
 	
-	BOOL					strict;
-	
 	BOOL					no_update;
 	
 #ifndef NDEBUG
@@ -305,10 +303,6 @@ typedef uint8_t		OOEconomyID;		// 0..7
 
 - (BOOL) doProcedurallyTexturedPlanets;
 - (void) setDoProcedurallyTexturedPlanets:(BOOL) value;
-
-- (BOOL) strict;
-- (void) setStrict:(BOOL) value;
-- (void) setStrict:(BOOL)value fromSaveGame: (BOOL)saveGame;
 
 - (void) reinitAndShowDemo:(BOOL)showDemo;
 

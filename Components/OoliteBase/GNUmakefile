@@ -31,7 +31,8 @@ OOBASE_OOCONF_FILES			=	OOConfGeneration.m \
 								OOConfParsing.m \
 								OOConfLexer.m
 
-OOBASE_UTILITY_FILES		=	NSDataOOExtensions.m \
+OOBASE_UTILITY_FILES		=	JAPropertyListRepresentation.m \
+								NSDataOOExtensions.m \
 								NSDictionaryOOExtensions.m \
 								NSNumberOOExtensions.m \
 								NSObjectOOExtensions.m \
@@ -60,7 +61,8 @@ OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
 								$(OOBASE_OOCONF_FILES) \
 								$(OOBASE_UTILITY_FILES)
 
-OoliteBase_HEADER_FILES		=	MYCollectionUtilities.h \
+OoliteBase_HEADER_FILES		=	JAPropertyListRepresentation.h \
+								MYCollectionUtilities.h \
 								NSDataOOExtensions.h \
 								NSDictionaryOOExtensions.h \
 								NSMapTableOOExtensions.h \

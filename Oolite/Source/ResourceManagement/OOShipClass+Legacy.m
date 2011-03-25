@@ -101,6 +101,7 @@
 #define kKey_missileCountMax				@"missiles"
 #define kKey_missileCapacity				@"max_missiles"
 #define kKey_missileRoles					@"missile_role"
+#define kKey_qcMineChance					@"has_energy_bomb"
 #define kKey_isSubmunition					@"is_submunition"
 #define kKey_cloakIsPassive					@"cloak_passive"
 #define kKey_cloakIsAutomatic				@"cloak_automatic"
@@ -634,6 +635,31 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_UINT	(missileCapacity);
 	READ_ROLE	(missileRoles);
 	
+	/*	has_energy_bomb, confusingly, is a fuzzy boolean that assigns NPC
+		ships one QC mine. This doesn’t translate directly to 2.x, so we
+		instead use it as a weight modifier for the QC-mine missile role.
+		Also, we need to add a missile slot of missileCapacity was implcit.
+	*/
+	float qcMineChance = ReadChance(shipdata, kKey_qcMineChance, 0);
+	if (qcMineChance > 0)
+	{
+		if ([shipdata objectForKey:kKey_missileCountMax] == nil)  _missileCountMax++;
+		
+		// Calculate a weight that will result in about one mine on average.
+		float avgMissileCount = 0.5f * (_missileCountMin + _missileCountMax);
+		float weight = [_missileRoles totalRoleWeight] / avgMissileCount;
+		
+		// Scale by specified chance.
+		weight *= qcMineChance;
+		
+		[_missileRoles autorelease];
+		_missileRoles = [_missileRoles roleSetWithAddedRole:@"EQ_QC_MINE" probability:weight];
+		[_missileRoles retain];
+		
+		OOReportWarning(issues, @"Ship %@ uses has_energy_bomb to add a Quirium Cascade Mine. This has no direct equivalent in Oolite 2. To compensate, ship's missileRoles have been changed to %@.", shipKey, [_missileRoles roleString]);
+	}
+	_missileCountMax = MIN(_missileCountMax, SHIPENTITY_MAX_MISSILES);
+	
 	READ_BOOL	(isSubmunition);
 	
 	READ_BOOL	(cloakIsPassive);
@@ -736,7 +762,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		@"has_fuel_injection",			@"EQ_FUEL_INJECTION",
 		
 	 // These are not supported.
-		@"has_energy_bomb",				@"",
 		@"has_military_jammer"			@"",
 		@"has_military_scanner_filter"	@""
 	);

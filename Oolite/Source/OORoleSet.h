@@ -57,6 +57,8 @@ SOFTWARE.
 - (NSArray *)sortedRoles;
 - (NSDictionary *)rolesAndProbabilities;
 
+- (float) totalRoleWeight;
+
 // Returns a random role, taking probabilities into account.
 - (NSString *)anyRole;
 

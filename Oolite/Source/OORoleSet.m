@@ -187,6 +187,12 @@ SOFTWARE.
 }
 
 
+- (float) totalRoleWeight
+{
+	return _totalProb;
+}
+
+
 - (NSString *)anyRole
 {
 	NSEnumerator			*roleEnum = nil;

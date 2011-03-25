@@ -15,6 +15,31 @@
 	<key>CFBundleShortVersionString</key>
 	<string>${OOLITE_VERSION}</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>${OOLITE_VERSION}</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.netscape.javascript-source</string>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Configuration File</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.ooconf</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>OOCf</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ooconf</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

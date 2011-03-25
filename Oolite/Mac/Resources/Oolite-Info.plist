@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -37,12 +37,12 @@
 			<string>Viewer</string>
 			<key>LSHandlerRank</key>
 			<string>Alternate</string>
-			<key>LSTypeIsPackage</key>
-			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.aegidian.oolite.oxp</string>
 			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -58,27 +58,43 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
-	<string>Ool8</string>
+	<string>Ool2</string>
+	<key>CFBundleURLTypes</key>
+	<array/>
 	<key>CFBundleVersion</key>
 	<string>${OOLITE_VERSION}</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.games</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<key>NSDockTilePlugIn</key>
+	<string>Oolite.docktileplugin</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>OoliteApp</string>
-	<key>NSDockTilePlugIn</key>
-	<string>Oolite.docktileplugin</string>
+	<key>NSServices</key>
+	<array/>
+	<key>SUPublicDSAKeyFile</key>
+	<string>SparkleVerificationKey.pem</string>
+	<key>SmartCrashReports_CommentsTemplate</key>
+	<string>Please paste the last few lines of the run log here (in your home folder, open Library, then Logs, then Oolite, then Latest.log). If a large portion of the log appears relevant, consider sending a bug report by e-mail to bugs@oolite.org instead; please include the crash log if you do (Library, Logs, CrashReporter, Oolite.crash.log).</string>
+	<key>SmartCrashReports_CompanyName</key>
+	<string>the Oolite team</string>
+	<key>SmartCrashReports_EmailTicket</key>
+	<string>SCR-A36F37AFFD</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.aegidian.oolite.save</string>
-			<key>UTTypeDescription</key>
-			<string>Oolite Saved Game</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.text</string>
 				<string>com.apple.property-list</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite Saved Game</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.aegidian.oolite.save</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -88,15 +104,15 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.aegidian.oolite.oxp</string>
-			<key>UTTypeDescription</key>
-			<string>Oolite Expansion Pack</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.item</string>
 				<string>com.apple.package</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite Expansion Pack</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.aegidian.oolite.oxp</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -106,18 +122,51 @@
 			</dict>
 		</dict>
 	</array>
-	<key>SmartCrashReports_CompanyName</key>
-	<string>the Oolite team</string>
-	<key>SmartCrashReports_EmailTicket</key>
-	<string>SCR-A36F37AFFD</string>
-	<key>SmartCrashReports_CommentsTemplate</key>
-	<string>Please paste the last few lines of the run log here (in your home folder, open Library, then Logs, then Oolite, then Latest.log). If a large portion of the log appears relevant, consider sending a bug report by e-mail to bugs@oolite.org instead; please include the crash log if you do (Library, Logs, CrashReporter, Oolite.crash.log).</string>
-	<key>LSMinimumSystemVersionByArchitecture</key>
-	<dict>
-		<key>x86_64</key>
-		<string>10.6.0</string>
-	</dict>
-	<key>SUPublicDSAKeyFile</key>
-	<string>SparkleVerificationKey.pem</string>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.netscape.javascript-source</string>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Configuration File</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.ooconf</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>OOCf</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ooconf</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.oolite.ooconf</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Mesh</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.oomesh</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>OOMe</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>oomesh</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

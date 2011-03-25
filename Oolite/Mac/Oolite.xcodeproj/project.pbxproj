@@ -2956,6 +2956,7 @@
 				INFOPLIST_FILE = "Resources/Oolite-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Oolite;
 				USER_HEADER_SEARCH_PATHS = "../Source//** ../Tables/ Source/";
 			};
@@ -2978,6 +2979,7 @@
 				INFOPLIST_FILE = "Resources/Oolite-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Oolite;
 				USER_HEADER_SEARCH_PATHS = "../Source//** ../Tables/ Source/";
 			};
@@ -2998,6 +3000,7 @@
 				INFOPLIST_FILE = "Resources/Oolite-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks/";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = Oolite;
 				USER_HEADER_SEARCH_PATHS = "../Source//** ../Tables/ Source/";
 			};

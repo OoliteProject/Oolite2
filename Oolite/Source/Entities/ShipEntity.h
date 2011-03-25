@@ -538,7 +538,7 @@ typedef enum
 - (BOOL) hasMilitaryShieldEnhancer;
 - (BOOL) hasHeatShield;
 - (BOOL) hasFuelInjection;
-- (BOOL) hasEnergyBomb;
+- (BOOL) hasCascadeMine;
 - (BOOL) hasEscapePod;
 - (BOOL) hasDockingComputer;
 - (BOOL) hasGalacticHyperdrive;
@@ -862,7 +862,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) cascadeIfAppropriateWithDamageAmount:(double)amount cascadeOwner:(Entity *)owner;
 - (BOOL) activateCloakingDevice;
 - (void) deactivateCloakingDevice;
-- (BOOL) launchEnergyBomb;
+- (BOOL) launchCascadeMine;
 - (OOUniversalID) launchEscapeCapsule;
 - (OOCargoType) dumpCargo;
 - (ShipEntity *) dumpCargoItem;

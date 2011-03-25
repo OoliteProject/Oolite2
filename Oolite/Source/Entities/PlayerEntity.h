@@ -385,7 +385,6 @@ typedef enum
 	OOKeyCode				key_scanner_unzoom;
 	
 	OOKeyCode				key_launch_escapepod;
-	OOKeyCode				key_energy_bomb;
 	
 	OOKeyCode				key_galactic_hyperspace;
 	OOKeyCode				key_hyperspace;
@@ -464,7 +463,6 @@ typedef enum
 							scoopOverride: 1, //scripted to just be on, ignoring normal rules
 							game_over: 1,
 							finished: 1,
-							bomb_detonated: 1,
 							autopilot_engaged: 1,
 	
 							afterburner_engaged: 1,
@@ -659,7 +657,6 @@ typedef enum
 - (OOEnergyUnitType) installedEnergyUnitType;
 - (OOEnergyUnitType) energyUnitType;
 
-- (BOOL) fireEnergyBomb;
 - (ShipEntity *) launchMine:(ShipEntity *)mine;
 
 - (BOOL) weaponsOnline;

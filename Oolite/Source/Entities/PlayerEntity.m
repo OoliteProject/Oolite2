@@ -550,7 +550,6 @@ static GLfloat		sBaseMass = 0.0;
 	[result oo_setBool:[self hasEscapePod]				forKey:@"has_escape_pod"];
 	[result oo_setBool:[self hasECM]					forKey:@"has_ecm"];
 	[result oo_setBool:[self hasScoop]					forKey:@"has_scoop"];
-	[result oo_setBool:[self hasEnergyBomb]			forKey:@"has_energy_bomb"];
 	[result oo_setBool:[self hasFuelInjection]			forKey:@"has_fuel_injection"];
 	
 	if ([self hasEquipmentItem:@"EQ_NAVAL_ENERGY_UNIT"])
@@ -756,7 +755,6 @@ static GLfloat		sBaseMass = 0.0;
 	if ([dict oo_boolForKey:@"has_escape_pod"])				[equipment oo_setBool:YES forKey:@"EQ_ESCAPE_POD"];
 	if ([dict oo_boolForKey:@"has_ecm"])					[equipment oo_setBool:YES forKey:@"EQ_ECM"];
 	if ([dict oo_boolForKey:@"has_scoop"])					[equipment oo_setBool:YES forKey:@"EQ_FUEL_SCOOPS"];
-	if ([dict oo_boolForKey:@"has_energy_bomb"])			[equipment oo_setBool:YES forKey:@"EQ_ENERGY_BOMB"];
 	if ([dict oo_boolForKey:@"has_fuel_injection"])			[equipment oo_setBool:YES forKey:@"EQ_FUEL_INJECTION"];
 	
 	// Legacy energy unit type -> energy unit equipment item
@@ -3604,28 +3602,6 @@ static bool minShieldLevelPercentageInitialised = false;
 - (float) heatInsulation
 {
 	return [self hasHeatShield] ? 2.0f : 1.0f;
-}
-
-
-- (BOOL) fireEnergyBomb
-{
-	if (![self weaponsOnline])  return NO;
-
-	NSArray* targets = [UNIVERSE getEntitiesWithinRange:SCANNER_MAX_RANGE ofEntity:self];
-	if ([targets count] > 0)
-	{
-		unsigned i;
-		for (i = 0; i < [targets count]; i++)
-		{
-			Entity *e2 = [targets objectAtIndex:i];
-			if (e2->isShip)
-				[(ShipEntity *)e2 takeEnergyDamage:1000 from:self becauseOf:self];
-		}
-	}
-	[UNIVERSE addMessage:DESC(@"energy-bomb-activated") forCount:4.5];
-	[self playEnergyBombFired];
-	
-	return YES;
 }
 
 
@@ -8239,7 +8215,6 @@ else _dockTarget = NO_TARGET;
 	ADD_FLAG_IF_SET(scoopsActive);
 	ADD_FLAG_IF_SET(game_over);
 	ADD_FLAG_IF_SET(finished);
-	ADD_FLAG_IF_SET(bomb_detonated);
 	ADD_FLAG_IF_SET(autopilot_engaged);
 	ADD_FLAG_IF_SET(afterburner_engaged);
 	ADD_FLAG_IF_SET(afterburnerSoundLooping);
@@ -8302,7 +8277,6 @@ else _dockTarget = NO_TARGET;
 	key_scanner_zoom &&
 	key_scanner_unzoom &&
 	key_launch_escapepod &&
-	key_energy_bomb &&
 	key_galactic_hyperspace &&
 	key_hyperspace &&
 	key_jumpdrive &&

@@ -270,7 +270,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_ecm"])  [self addEquipmentItem:@"EQ_ECM"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_scoop"])  [self addEquipmentItem:@"EQ_FUEL_SCOOPS"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_escape_pod"])  [self addEquipmentItem:@"EQ_ESCAPE_POD"];
-	if ([shipDict oo_fuzzyBooleanForKey:@"has_energy_bomb"])  [self addEquipmentItem:@"EQ_ENERGY_BOMB"];
+	if ([shipDict oo_fuzzyBooleanForKey:@"has_energy_bomb"])  [self addEquipmentItem:@"EQ_QC_MINE"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_cloaking_device"])  [self addEquipmentItem:@"EQ_CLOAKING_DEVICE"];
 	if ([shipDict oo_fuzzyBooleanForKey:@"has_fuel_injection"])  [self addEquipmentItem:@"EQ_FUEL_INJECTION"];
 	
@@ -2022,7 +2022,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				[self behaviour_fly_thru_navpoints: delta_t];
 				break;
 
-			case BEHAVIOUR_ENERGY_BOMB_COUNTDOWN:
+			case BEHAVIOUR_MINE_COUNTDOWN:
 				// Do nothing
 				break;
 		}
@@ -2816,9 +2816,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (BOOL) hasEnergyBomb
+- (BOOL) hasCascadeMine
 {
-	return [self hasEquipmentItem:@"EQ_ENERGY_BOMB"];
+	return [self hasEquipmentItem:@"EQ_QC_MINE" includeWeapons:YES];
 }
 
 
@@ -3530,12 +3530,12 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	int rhs = 3.2 / delta_t;
 	if (rhs)	missile_chance = 1 + (ranrot_rand() % rhs);
 
-	if (([self hasEnergyBomb]) && (range < 10000.0) && canBurn)
+	if (([self hasCascadeMine]) && (range < 10000.0) && canBurn)
 	{
 		float	qbomb_chance = 0.01 * delta_t;
 		if (randf() < qbomb_chance)
 		{
-			[self launchEnergyBomb];
+			[self launchCascadeMine];
 		}
 	}
 
@@ -7928,14 +7928,14 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) launchEnergyBomb
+- (BOOL) launchCascadeMine
 {
-	if (![self hasEnergyBomb])  return NO;
+	if (![self hasCascadeMine])  return NO;
 	[self setSpeed: maxFlightSpeed + 300];
 	ShipEntity*	bomb = [UNIVERSE newShipWithRole:@"energy-bomb"];
 	if (bomb == nil)  return NO;
 	
-	[self removeEquipmentItem:@"EQ_ENERGY_BOMB"];
+	[self removeEquipmentItem:@"EQ_QC_MINE"];
 	
 	double  start = collision_radius + bomb->collision_radius;
 	Quaternion  random_direction;
@@ -7959,9 +7959,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	[bomb setRoll:random_roll];
 	[bomb setPitch:random_pitch];
 	[bomb setVelocity:vel];
-	[bomb setScanClass:CLASS_MINE];	// TODO: should it be CLASS_ENERGY_BOMB?
+	[bomb setScanClass:CLASS_MINE];
 	[bomb setEnergy:5.0];	// 5 second countdown
-	[bomb setBehaviour:BEHAVIOUR_ENERGY_BOMB_COUNTDOWN];
+	[bomb setBehaviour:BEHAVIOUR_MINE_COUNTDOWN];
 	[bomb setOwner:self];
 	[UNIVERSE addEntity:bomb];	// STATUS_IN_FLIGHT, AI state GLOBAL
 	[bomb release];

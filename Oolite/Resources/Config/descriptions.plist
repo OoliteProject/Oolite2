@@ -470,7 +470,6 @@
 	"missile-safe"					= "Missiles on safety.";
 	"incoming-missile"				= "Incoming missile.";
 	"energy-low"					= "Energy low.";
-	"energy-bomb-activated"			= "Energy bomb triggered.";
 	"weapon-overheat"				= "Weapon system overheated.";
 	"weapon-out-of-juice"			= "Weapon system inactive (no energy left).";
 	"weapons-systems-online"		= "Weapons systems online.";

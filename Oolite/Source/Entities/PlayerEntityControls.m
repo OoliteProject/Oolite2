@@ -216,7 +216,6 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 	LOAD_KEY_SETTING(key_scanner_unzoom,		'Z'			);
 	
 	LOAD_KEY_SETTING(key_launch_escapepod,		27	/* esc */ );
-	LOAD_KEY_SETTING(key_energy_bomb,			'\t'		);
 	
 	LOAD_KEY_SETTING(key_galactic_hyperspace,	'g'			);
 	LOAD_KEY_SETTING(key_hyperspace,			'h'			);
@@ -1014,17 +1013,6 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 							[self playFiredECMSound];
 							[UNIVERSE addMessage:DESC(@"ecm-on") forCount:3.0];
 						}
-					}
-				}
-				
-				exceptionContext = @"energy bomb";
-				//  shoot 'tab'   // Energy bomb
-				if (([gameView isDown:key_energy_bomb] || joyButtonState[BUTTON_ENERGYBOMB]) && [self hasEnergyBomb])
-				{
-					// original energy bomb routine
-					if ([self fireEnergyBomb])
-					{
-						[self removeEquipmentItem:@"EQ_ENERGY_BOMB"];
 					}
 				}
 				

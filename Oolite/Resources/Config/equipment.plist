@@ -53,14 +53,6 @@
 		}
 	),
 	(
-		7, 9000, "Energy Bomb",
-		"EQ_ENERGY_BOMB",
-		"A one-shot super-weapon capable of destroying all small craft within range.",
-		{
-			strict_mode_only = true;
-		}
-	),
-	(
 		8, 15000, "Extra Energy Unit",
 		"EQ_ENERGY_UNIT",
 		"An improved efficiency energy recharge unit.",

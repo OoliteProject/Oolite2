@@ -131,7 +131,6 @@
 		1A1F27551317CB0500D06C6C /* shipyard.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26F91317CACF00D06C6C /* shipyard.plist */; };
 		1A1F27561317CB0500D06C6C /* speech_pronunciation_guide.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FA1317CACF00D06C6C /* speech_pronunciation_guide.plist */; };
 		1A1F27571317CB0500D06C6C /* startextures.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FB1317CACF00D06C6C /* startextures.plist */; };
-		1A1F27581317CB0500D06C6C /* verifyOXP.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FC1317CACF00D06C6C /* verifyOXP.plist */; };
 		1A1F27591317CB0500D06C6C /* whitelist.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FD1317CACF00D06C6C /* whitelist.plist */; };
 		1A1F275A1317CB0500D06C6C /* world-scripts.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FE1317CACF00D06C6C /* world-scripts.plist */; };
 		1A1F275C1317CB2000D06C6C /* oolite-cloaking-device-mission.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27001317CACF00D06C6C /* oolite-cloaking-device-mission.js */; };
@@ -640,7 +639,6 @@
 				1A1F27551317CB0500D06C6C /* shipyard.plist in Copy Config */,
 				1A1F27561317CB0500D06C6C /* speech_pronunciation_guide.plist in Copy Config */,
 				1A1F27571317CB0500D06C6C /* startextures.plist in Copy Config */,
-				1A1F27581317CB0500D06C6C /* verifyOXP.plist in Copy Config */,
 				1A1F27591317CB0500D06C6C /* whitelist.plist in Copy Config */,
 				1A1F275A1317CB0500D06C6C /* world-scripts.plist in Copy Config */,
 			);
@@ -1084,7 +1082,6 @@
 		1A1F26F91317CACF00D06C6C /* shipyard.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = shipyard.plist; sourceTree = "<group>"; };
 		1A1F26FA1317CACF00D06C6C /* speech_pronunciation_guide.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = speech_pronunciation_guide.plist; sourceTree = "<group>"; };
 		1A1F26FB1317CACF00D06C6C /* startextures.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = startextures.plist; sourceTree = "<group>"; };
-		1A1F26FC1317CACF00D06C6C /* verifyOXP.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = verifyOXP.plist; sourceTree = "<group>"; };
 		1A1F26FD1317CACF00D06C6C /* whitelist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = whitelist.plist; sourceTree = "<group>"; };
 		1A1F26FE1317CACF00D06C6C /* world-scripts.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = "world-scripts.plist"; sourceTree = "<group>"; };
 		1A1F27001317CACF00D06C6C /* oolite-cloaking-device-mission.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "oolite-cloaking-device-mission.js"; sourceTree = "<group>"; };
@@ -1824,7 +1821,6 @@
 				1A1F26F91317CACF00D06C6C /* shipyard.plist */,
 				1A1F26FA1317CACF00D06C6C /* speech_pronunciation_guide.plist */,
 				1A1F26FB1317CACF00D06C6C /* startextures.plist */,
-				1A1F26FC1317CACF00D06C6C /* verifyOXP.plist */,
 				1A1F26FD1317CACF00D06C6C /* whitelist.plist */,
 				1A1F26FE1317CACF00D06C6C /* world-scripts.plist */,
 			);

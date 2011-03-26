@@ -25,24 +25,14 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>oxp</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>oolite-expansion-document</string>
 			<key>CFBundleTypeName</key>
-			<string>Oolite Expansion Pack</string>
+			<string>Oolite 2 Expansion Pack</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.aegidian.oolite.oxp</string>
+				<string>org.oolite.expansion-pack.oxz</string>
 			</array>
-			<key>LSTypeIsPackage</key>
-			<true/>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -59,8 +49,6 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>Ool2</string>
-	<key>CFBundleURLTypes</key>
-	<array/>
 	<key>CFBundleVersion</key>
 	<string>${OOLITE_VERSION}</string>
 	<key>LSApplicationCategoryType</key>
@@ -73,8 +61,6 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>OoliteApp</string>
-	<key>NSServices</key>
-	<array/>
 	<key>SUPublicDSAKeyFile</key>
 	<string>SparkleVerificationKey.pem</string>
 	<key>SmartCrashReports_CommentsTemplate</key>
@@ -107,17 +93,53 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.item</string>
-				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Oolite Expansion Pack</string>
+			<string>Oolite 2 Expansion Pack</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-expansion-document</string>
 			<key>UTTypeIdentifier</key>
-			<string>org.aegidian.oolite.oxp</string>
+			<string>org.oolite.expansion-pack</string>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.oolite.expansion-pack</string>
+				<string>com.pkware.zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Expansion Pack</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-expansion-document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.expansion-pack.oxz</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>oxp</string>
+					<string>oxz</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x.oolite.expansion-pack+zip</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.oolite.expansion-pack</string>
+				<string>public.folder</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Development Expansion Pack</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.expansion-pack.oxd</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>oxd</string>
 				</array>
 			</dict>
 		</dict>

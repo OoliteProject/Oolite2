@@ -430,6 +430,7 @@
 		1A9C63AE1306018C00B30EFD /* OoliteApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9C63AD1306018C00B30EFD /* OoliteApp.m */; };
 		1AB5C39913186F5500C73246 /* OOMacJoystickManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB5C39813186F5500C73246 /* OOMacJoystickManager.m */; };
 		1AB5C3A81318703200C73246 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB5C3A71318703200C73246 /* IOKit.framework */; };
+		1AE283C3133E387E002023F2 /* OOXMLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE283C2133E387E002023F2 /* OOXMLExtensions.m */; };
 		1AF2EB64130614D8008ECA54 /* OOCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB63130614D8008ECA54 /* OOCacheManager.m */; };
 		1AF2EB7913061526008ECA54 /* OOJavaScriptEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB7813061526008ECA54 /* OOJavaScriptEngine.m */; };
 		1AF2EB7E1306152E008ECA54 /* OOJSEngineDebuggerHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2EB7A1306152E008ECA54 /* OOJSEngineDebuggerHelpers.m */; };
@@ -1508,6 +1509,8 @@
 		1AB5C39713186F5500C73246 /* OOMacJoystickManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMacJoystickManager.h; sourceTree = "<group>"; };
 		1AB5C39813186F5500C73246 /* OOMacJoystickManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMacJoystickManager.m; sourceTree = "<group>"; };
 		1AB5C3A71318703200C73246 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		1AE283C1133E387E002023F2 /* OOXMLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOXMLExtensions.h; sourceTree = "<group>"; };
+		1AE283C2133E387E002023F2 /* OOXMLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOXMLExtensions.m; sourceTree = "<group>"; };
 		1AF2EAF913061402008ECA54 /* Vorbis.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vorbis.xcodeproj; path = Dependencies/OggVorbis/Vorbis.xcodeproj; sourceTree = "<group>"; };
 		1AF2EB62130614D8008ECA54 /* OOCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCacheManager.h; sourceTree = "<group>"; };
 		1AF2EB63130614D8008ECA54 /* OOCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCacheManager.m; sourceTree = "<group>"; };
@@ -2464,6 +2467,8 @@
 				1A1B9B141308A3530078322D /* OORoleSet.m */,
 				1A1F2F30131858B700D06C6C /* OORegExpMatcher.h */,
 				1A1F2F31131858B700D06C6C /* OORegExpMatcher.m */,
+				1AE283C1133E387E002023F2 /* OOXMLExtensions.h */,
+				1AE283C2133E387E002023F2 /* OOXMLExtensions.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -2870,6 +2875,7 @@
 				1AB5C39913186F5500C73246 /* OOMacJoystickManager.m in Sources */,
 				1A18D69913191A920096D960 /* SUUpdater.m in Sources */,
 				1A6C1F981334BEC700821B1D /* OOVersion.m in Sources */,
+				1AE283C3133E387E002023F2 /* OOXMLExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

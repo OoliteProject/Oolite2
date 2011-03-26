@@ -30,13 +30,6 @@ SOFTWARE.
 #import "OOStringParsing.h"
 
 
-@interface OORoleSet (OOPrivate)
-
-- (id)initWithRolesAndProbabilities:(NSDictionary *)dict;
-
-@end
-
-
 @implementation OORoleSet
 
 + (id)roleSetWithString:(NSString *)roleString
@@ -107,6 +100,12 @@ SOFTWARE.
 {
 	// Note: since object is immutable, a copy is no different from the original.
 	return [self retain];
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	return [self rolesAndProbabilities];
 }
 
 
@@ -185,6 +184,12 @@ SOFTWARE.
 - (NSDictionary *)rolesAndProbabilities
 {
 	return _rolesAndProbabilities;
+}
+
+
+- (float) totalRoleWeight
+{
+	return _totalProb;
 }
 
 

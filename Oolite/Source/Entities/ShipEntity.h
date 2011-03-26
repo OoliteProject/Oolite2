@@ -30,8 +30,7 @@ MA 02110-1301, USA.
 #import "OOJSPropID.h"
 #import "OOTriangle.h"
 
-@class	OOColor, StationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript,
-		OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
+@class	OOShipClass, OOColor, StationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript, OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
 
 #ifdef OO_BRAIN_AI
 @class OOBrain;
@@ -72,10 +71,10 @@ MA 02110-1301, USA.
 
 #define SUN_TEMPERATURE					1250.0f
 
-#define MAX_ESCORTS						16
+#define MAX_ESCORTS						16U
 #define ESCORT_SPACING_FACTOR			3.0
 
-#define SHIPENTITY_MAX_MISSILES			32
+#define SHIPENTITY_MAX_MISSILES			32U
 
 #define TURRET_TYPICAL_ENERGY			25.0f
 #define TURRET_SHOT_SPEED				2000.0f
@@ -184,9 +183,6 @@ typedef enum
 	OOBoundingBox			totalBoundingBox;			// records ship configuration
 	
 @protected
-	//set-up
-	NSDictionary			*shipinfoDictionary;
-	
 	Quaternion				subentityRotationalVelocity;
 	
 	//scripting
@@ -201,17 +197,22 @@ typedef enum
 	OOColor					*scanner_display_color1;
 	OOColor					*scanner_display_color2;
 	
-	// per ship-type variables
-	//
+	/*
+		The “max” variables here are per-ship-class constants, but are cached
+		in the entity for efficiency (although the value of this is
+		questionable and should be revisited).
+		cruiseSpeed is not constant as it can be adjusted for ships with slow
+		escorts.
+		-- Ahruman 2011-03-25
+	*/
 	GLfloat					maxFlightSpeed;				// top speed			(160.0 for player)  (200.0 for fast raider)
 	GLfloat					max_flight_roll;			// maximum roll rate	(2.0 for player)	(3.0 for fast raider)
 	GLfloat					max_flight_pitch;			// maximum pitch rate   (1.0 for player)	(1.5 for fast raider) also radians/sec for (* turrets *)
 	GLfloat					max_flight_yaw;
 	GLfloat					cruiseSpeed;				// 80% of top speed
+//	GLfloat					max_thrust;					// acceleration
 	
-	GLfloat					max_thrust;					// acceleration
 	GLfloat					thrust;						// acceleration
-	float					hyperspaceMotorSpinTime;	// duration of hyperspace countdown
 	
 	// TODO: stick all equipment in a list, and move list from playerEntity to shipEntity. -- Ahruman
 	unsigned				military_jammer_active: 1,	// military_jammer
@@ -253,7 +254,6 @@ typedef enum
 	
 	OOCargoQuantity			likely_cargo;				// likely amount of cargo (for merchantmen, this is what is spilled as loot)
 	OOCargoQuantity			max_cargo;					// capacity of cargo hold
-	OOCargoQuantity			extra_cargo;				// capacity of cargo hold extension (if any)
 	OOCargoType				cargo_type;					// if this is scooped, this is indicates contents
 	OOCargoFlag				cargo_flag;					// indicates contents for merchantmen
 	OOCreditsQuantity		bounty;						// bounty (if any)
@@ -279,8 +279,6 @@ typedef enum
 #endif
 	AI						*shipAI;					// ship's AI system
 	
-	NSString				*name;						// descriptive name
-	NSString				*displayName;				// name shown on screen
 	OORoleSet				*roleSet;					// Roles a ship can take, eg. trader, hunter, police, pirate, scavenger &c.
 	NSString				*primaryRole;				// "Main" role of the ship.
 	
@@ -379,10 +377,13 @@ typedef enum
 	NSMutableArray			*subEntities;
 	OOEquipmentType			*missile_list[SHIPENTITY_MAX_MISSILES];
 	
-@private
-	OOWeakReference			*_subEntityTakingDamage;	//	frangible => subEntities can be damaged individually
+	OOShipClass				*_shipClass;				// Should be private, but is mutated by nasty player ship-buying code.
 	
-	NSString				*_shipKey;
+@private
+	NSDictionary			*_shipInfoDictionary;
+	NSString				*_displayName;				// name shown on screen
+	
+	OOWeakReference			*_subEntityTakingDamage;	//	frangible => subEntities can be damaged individually
 	
 	NSMutableSet			*_equipment;
 	float					_heatInsulation;
@@ -406,6 +407,14 @@ typedef enum
 	OOWeakReference			*_nextBeacon;
 	id <OOHUDBeaconIcon>	_beaconDrawable;
 }
+
+- (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict;
+
+- (OOShipClass *) shipClass;
+
+- (NSString *) name;
+- (NSString *) displayName;
+- (void) setDisplayName:(NSString *)inName;
 
 // ship brains
 - (void) setStateMachine:(NSString *)ai_desc;
@@ -480,17 +489,13 @@ typedef enum
 - (void) setUpEscorts;
 - (void) updateEscortFormation;
 
-- (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict;
-- (BOOL)setUpFromDictionary:(NSDictionary *) shipDict;
-- (BOOL)setUpShipFromDictionary:(NSDictionary *) shipDict;
 - (BOOL)setUpSubEntities;
 
 - (NSString *) shipDataKey;
-- (void)setShipDataKey:(NSString *)key;
 
-- (NSDictionary *)shipInfoDictionary;
+- (NSDictionary *)shipInfoDictionary DEPRECATED_FUNC;
 
-- (void) setDefaultWeaponOffsets;
+//- (void) setDefaultWeaponOffsets;
 
 - (BOOL) isFrangible;
 - (BOOL) suppressFlightNotifications;
@@ -506,7 +511,9 @@ typedef enum
 - (BOOL) equipmentValidToAdd:(NSString *)equipmentKey;	// Actual test if equipment satisfies validation criteria.
 - (BOOL) addEquipmentItem:(NSString *)equipmentKey;
 - (BOOL) addEquipmentItem:(NSString *)equipmentKey withValidation:(BOOL)validateAddition;
+
 - (BOOL) hasHyperspaceMotor;
+- (OOTimeDelta) hyperspaceMotorSpinTime;
 
 - (NSEnumerator *) equipmentEnumerator;
 - (unsigned) equipmentCount;
@@ -617,10 +624,6 @@ typedef enum
 - (ShipEntity *) proximity_alert;
 - (void) setProximity_alert:(ShipEntity*) other;
 
-- (NSString *) name;
-- (NSString *) displayName;
-- (void) setName:(NSString *)inName;
-- (void) setDisplayName:(NSString *)inName;
 - (NSString *) identFromShip:(ShipEntity*) otherShip; // name displayed to other ships
 
 - (BOOL) hasRole:(NSString *)role;
@@ -641,7 +644,7 @@ typedef enum
 - (BOOL)isMissile;		// Primary role has suffix "MISSILE"
 - (BOOL)isMine;			// Primary role has suffix "MINE"
 - (BOOL)isWeapon;		// isMissile || isWeapon
-- (BOOL)isEscort;		// Primary role is "escort" or "wingman"
+- (BOOL)isEscort;		// Primary role is "escort"
 - (BOOL)isShuttle;		// Primary role is "shuttle"
 - (BOOL)isPirateVictim;	// Primary role is listed in pirate-victim-roles.plist
 - (BOOL)isUnpiloted;	// Has unpiloted = yes in its shipdata.plist entry
@@ -746,8 +749,11 @@ typedef enum
 
 - (GLfloat) temperature;
 - (void) setTemperature:(GLfloat) value;
-- (GLfloat) heatInsulation;
-- (void) setHeatInsulation:(GLfloat) value;
+
+- (GLfloat) baseHeatInsulation;
+- (void) setBaseHeatInsulation:(GLfloat) value;
+- (GLfloat) effectiveHeatInsulation;
+- (void) setEffectiveHeatInsulation:(GLfloat)value;
 
 - (float) randomEjectaTemperature;
 - (float) randomEjectaTemperatureWithMaxFactor:(float)factor;
@@ -991,6 +997,27 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) sendAIMessage:(NSString *)message;		// Queued message
 - (void) doScriptEvent:(jsid)scriptEvent andReactToAIMessage:(NSString *)aiMessage;
 - (void) doScriptEvent:(jsid)scriptEvent withArgument:(id)argument andReactToAIMessage:(NSString *)aiMessage;
+
+
+/*	MARK: Subclass interface
+	
+	The following methods are intended for subclasses, not clients. If this
+	list grows long, we can split it into a separate file.
+	-- Ahruman 2011-03-24
+*/
+
+/*
+	-setUpShipWithShipClass:andDictionary:
+	This method performs the complete ship set-up. Subclasses should override
+	it as necessary. It’s called by -initWithKey:definition:.
+	
+	-setUpShipBaseWithShipClass:andDictionary:
+	This performs the core ShipEntity setup that’s shared between players and
+	NPCs. PlayerEntity calls this instead of super setUpShip….
+*/
+
+- (BOOL) setUpShipBaseWithShipClass:(OOShipClass *)shipClass andDictionary:(NSDictionary *)shipDict;
+- (BOOL) setUpShipWithShipClass:(OOShipClass *)shipClass andDictionary:(NSDictionary *)shipDict;
 
 @end
 

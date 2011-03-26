@@ -29,12 +29,13 @@ SOFTWARE.
 
 #import <OoliteBase/OoliteBase.h>
 
-@class OOProbabilitySet;
+@class OOProbabilitySet, OOShipClass;
 
 
 @interface OOShipRegistry: NSObject
 {
 	NSDictionary			*_shipData;
+	NSDictionary			*_shipClasses;
 	NSArray					*_demoShips;
 	NSArray					*_playerShips;
 	NSDictionary			*_probabilitySets;
@@ -44,6 +45,7 @@ SOFTWARE.
 
 + (void) reload;
 
+- (OOShipClass *) shipClassForKey:(NSString *)key;
 - (NSDictionary *) shipInfoForKey:(NSString *)key;
 - (NSDictionary *) shipyardInfoForKey:(NSString *)key;
 - (OOProbabilitySet *) probabilitySetForRole:(NSString *)role;

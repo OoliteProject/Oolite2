@@ -471,6 +471,12 @@ typedef enum
 				if (outError != NULL)  *outError = OOConfGenerationError(kOOConfGenerationErrorInvalidValue, @"Non-finite numbers (infinities and NaN) are not permitted in OOConf files.");
 				return NO;
 			}
+			if (strcmp([self objCType], @encode(float)))
+			{
+				// Single-precision; use six digits.
+				[string appendFormat:@"%.6g", [self doubleValue]];
+				return YES;
+			}
 		}
 		
 		[string appendFormat:@"%@", self];

@@ -1138,7 +1138,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 						}
 						else if ([self witchJumpChecklist:false])
 						{
-							witchspaceCountdown = hyperspaceMotorSpinTime;
+							witchspaceCountdown = [self hyperspaceMotorSpinTime];
 							[self setStatus:STATUS_WITCHSPACE_COUNTDOWN];
 							[self playStandardHyperspace];
 							// say it!
@@ -1177,7 +1177,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 							galactic_witchjump = YES;
 							
 							// even if we don't have a witchspace motor, we can still do a default galactic jump (!)
-							if(EXPECT([self hasHyperspaceMotor])) witchspaceCountdown = hyperspaceMotorSpinTime;
+							if(EXPECT([self hasHyperspaceMotor])) witchspaceCountdown = [self hyperspaceMotorSpinTime];
 							else witchspaceCountdown = DEFAULT_HYPERSPACE_SPIN_TIME;
 							
 							[self setStatus:STATUS_WITCHSPACE_COUNTDOWN];

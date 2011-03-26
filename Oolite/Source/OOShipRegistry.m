@@ -32,6 +32,8 @@ SOFTWARE.
 #import "OOStringParsing.h"
 #import "OOMesh.h"
 #import "GameController.h"
+#import "OOShipClass+Legacy.h"
+#import "OOShipClass+IO.h"
 
 
 #define PRELOAD 0
@@ -64,6 +66,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 - (BOOL) loadAndApplyShipDataOverrides:(NSMutableDictionary *)ioData;
 - (BOOL) canonicalizeAndTagSubentities:(NSMutableDictionary *)ioData;
 - (BOOL) removeUnusableEntries:(NSMutableDictionary *)ioData;
+- (BOOL) reifyShipClasses:(NSMutableDictionary *)ioData;
 
 #if PRELOAD
 - (BOOL) preloadShipMeshes:(NSMutableDictionary *)ioData;
@@ -132,7 +135,8 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if ((self = [super init]))
 	{
 		NSAutoreleasePool		*pool = [[NSAutoreleasePool alloc] init];
-		OOCacheManager			*cache = [OOCacheManager sharedCache];
+		OOCacheManager			*cache = nil;
+		//[OOCacheManager sharedCache];	Cache disabled pending OOShipCass caching.
 		
 		_shipData = [[cache objectForKey:kShipDataCacheKey inCache:kShipRegistryCacheName] retain];
 		_playerShips = [[cache objectForKey:kPlayerShipsCacheKey inCache:kShipRegistryCacheName] retain];
@@ -183,6 +187,12 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	[_probabilitySets release];
 	
 	[super dealloc];
+}
+
+
+- (OOShipClass *) shipClassForKey:(NSString *)key
+{
+	return [_shipClasses objectForKey:key];
 }
 
 
@@ -296,6 +306,9 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if (![self loadAndMergeShipyard:result])  return;
 	OOLog(@"shipData.load.done", @"Finished adding shipyard entries...");
 	
+	if (![self reifyShipClasses:result])  return;
+	OOLog(@"shipData.load.done", @"Finished building ship class models...");
+	
 #if PRELOAD
 	// Preload and cache meshes.
 	if (![self preloadShipMeshes:result])  return;
@@ -304,6 +317,15 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	
 	_shipData = OODeepCopy(result);
 	[[OOCacheManager sharedCache] setObject:_shipData forKey:kShipDataCacheKey inCache:kShipRegistryCacheName];
+	
+#if !OOLITE_LEAN
+	/*	TEMP DEBUG
+		Write a unified shipdata.ooconf.
+	*/
+	NSDictionary *unified = [_shipClasses ja_propertyListRepresentation];
+	NSData *unifiedData = [unified ooConfDataWithOptions:kOOConfGenerationDefault error:NULL];
+	[ResourceManager writeDiagnosticData:unifiedData toFileNamed:@"shipdata.ooconf"];
+#endif
 	
 	OOLogOutdentIf(@"shipData.load.begin");
 	OOLog(@"shipData.load.done", @"Ship data loaded.");
@@ -504,6 +526,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if (result == nil)  return nil;
 	
 	[result addEntriesFromDictionary:child];
+	[result setObject:[result objectForKey:@"like_ship"] forKey:@"_oo_like_ship_key"];
 	[result removeObjectForKey:@"like_ship"];
 	
 	// Certain properties cannot be inherited.
@@ -839,6 +862,29 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 		}
 		if (remove)  [ioData removeObjectForKey:shipKey];
 	}
+	
+	return YES;
+}
+
+
+- (BOOL) reifyShipClasses:(NSMutableDictionary *)ioData
+{
+	NSString						*shipKey = nil;
+	NSMutableDictionary				*shipClasses = [NSMutableDictionary dictionaryWithCapacity:[ioData count]];
+	OOSimpleProblemReportManager	*issues = [[[OOSimpleProblemReportManager alloc] init] autorelease];
+	
+	foreachkey (shipKey, ioData)
+	{
+		OOShipClass *shipClass = [[OOShipClass alloc] initWithKey:shipKey
+													  legacyPList:[ioData oo_dictionaryForKey:shipKey]
+												  problemReporter:issues];
+		if (shipClass == nil)  return NO;
+		
+		[shipClasses setObject:shipClass forKey:shipKey];
+		[shipClass release];
+	}
+	
+	_shipClasses = [shipClasses copy];
 	
 	return YES;
 }

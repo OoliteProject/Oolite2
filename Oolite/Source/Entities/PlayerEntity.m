@@ -710,11 +710,11 @@ static GLfloat		sBaseMass = 0.0;
 	// FIXME: when upgrading is implemented, warn about strict mode not being supported.
 	
 	//base ship description
-	[self setShipDataKey:[dict oo_stringForKey:@"ship_desc"]];
-	
-	NSDictionary *shipDict = [[OOShipRegistry sharedRegistry] shipInfoForKey:[self shipDataKey]];
-	if (shipDict == nil)  return NO;
-	if (![self setUpShipFromDictionary:shipDict])  return NO;
+	NSString *shipKey = [dict oo_stringForKey:@"ship_desc"];
+	OOShipClass *shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:shipKey];
+	NSDictionary *shipInfo = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];
+	if (shipInfo == nil)  return NO;
+	if (![self setUpShipWithShipClass:shipClass andDictionary:shipInfo])  return NO;
 	
 	// ship depreciation
 	ship_trade_in_factor = [dict oo_intForKey:@"ship_trade_in_factor" defaultValue:95];
@@ -829,7 +829,7 @@ static GLfloat		sBaseMass = 0.0;
 	unsigned original_hold_size = [UNIVERSE maxCargoForShip:[self shipDataKey]];
 	max_cargo = [dict oo_intForKey:@"max_cargo" defaultValue:max_cargo];
 	if (max_cargo > original_hold_size)  [self addEquipmentItem:@"EQ_CARGO_BAY"];
-	max_cargo = original_hold_size + ([self hasExpandedCargoBay] ? extra_cargo : 0) - max_passengers * 5;
+	max_cargo = original_hold_size + ([self hasExpandedCargoBay] ? [self extraCargo] : 0) - max_passengers * 5;
 	credits = OODeciCreditsFromObject([dict objectForKey:@"credits"]);
 	
 	fuel = [dict oo_unsignedIntForKey:@"fuel" defaultValue:fuel];
@@ -1064,7 +1064,6 @@ static GLfloat		sBaseMass = 0.0;
 		[self removeAllCargo:YES];		// force removal of cargo
 	}
 	
-	[self setShipDataKey:PLAYER_SHIP_DESC];
 	ship_trade_in_factor = 95;
 
 	[self switchHudTo:@"hud.plist"];	
@@ -1273,12 +1272,12 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
-- (BOOL) setUpShipFromDictionary:(NSDictionary *)shipDict
+- (BOOL) setUpShipWithShipClass:(OOShipClass *)shipClass andDictionary:(NSDictionary *)shipDict
 {
+	if (![self setUpShipBaseWithShipClass:shipClass andDictionary:shipDict]) return NO;
+	
 	compassTarget = nil;
 	[UNIVERSE setBlockJSPlayerShipProps:NO];	// full access to player.ship properties!
-	
-	if (![super setUpFromDictionary:shipDict]) return NO;
 	
 	// boostrap base mass at program startup!
 	if (sBaseMass == 0.0 && [[self shipDataKey] isEqualTo:PLAYER_SHIP_DESC])
@@ -1837,7 +1836,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		UPDATE_STAGE(@"updating cabin temperature");
 		
 		// work on the cabin temperature
-		float heatInsulation = [self heatInsulation]; // Optimisation, suggested by EricW
+		float heatInsulation = [self effectiveHeatInsulation];
 		float deltaInsulation = delta_t/heatInsulation;
 		float heatThreshold = heatInsulation * 100.0f;
 		ship_temperature += (float)( flightSpeed * air_friction * deltaInsulation);	// wind_speed
@@ -3590,6 +3589,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	return ENERGY_UNIT_NONE;
 }
 
+
 - (OOEnergyUnitType) energyUnitType
 {
 	if ([self hasEquipmentItem:@"EQ_NAVAL_ENERGY_UNIT"])  return ENERGY_UNIT_NAVAL;
@@ -3597,11 +3597,6 @@ static bool minShieldLevelPercentageInitialised = false;
 	if ([self hasEquipmentItem:@"EQ_NAVAL_ENERGY_UNIT_DAMAGED"])  return ENERGY_UNIT_NAVAL_DAMAGED;
 	if ([self hasEquipmentItem:@"EQ_ENERGY_UNIT_DAMAGED"])  return ENERGY_UNIT_NORMAL_DAMAGED;
 	return ENERGY_UNIT_NONE;
-}
-
-- (float) heatInsulation
-{
-	return [self hasHeatShield] ? 2.0f : 1.0f;
 }
 
 
@@ -3844,7 +3839,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		internal_damage = ((ranrot_rand() & PLAYER_INTERNAL_DAMAGE_FACTOR) < amount);	// base chance of damage to systems
 		energy -= amount;
 		[self playDirectHit];
-		ship_temperature += (amount / [self heatInsulation]);
+		ship_temperature += (amount / [self effectiveHeatInsulation]);
 	}
 	
 	OOShipDamageType damageType = kOODamageTypeEnergy;
@@ -4925,7 +4920,6 @@ static bool minShieldLevelPercentageInitialised = false;
 
 	// GUI stuff
 	{
-		NSString			*shipName = displayName;
 		NSString			*legal_desc = nil, *rating_desc = nil,
 							*alert_desc = nil, *fuel_desc = nil,
 							*credits_desc = nil;
@@ -4948,7 +4942,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		text = DESC(@"status-commander-@");
 		[gui setTitle:[NSString stringWithFormat:text, player_name]];
 		
-		[gui setText:shipName forRow:0 align:GUI_ALIGN_CENTER];
+		[gui setText:[self displayName] forRow:0 align:GUI_ALIGN_CENTER];
 		
 		[gui setArray:[NSArray arrayWithObjects:DESC(@"status-present-system"), systemName, nil]	forRow:1];
 		if ([self hasHyperspaceMotor]) [gui setArray:[NSArray arrayWithObjects:DESC(@"status-hyperspace-system"), targetSystemName, nil] forRow:2];

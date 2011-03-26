@@ -424,7 +424,7 @@ MA 02110-1301, USA.
 
 - (void) setThrustFactorTo:(NSString *)thrustFactorString
 {
-	thrust = OOClamp_0_1_f([thrustFactorString doubleValue]) * max_thrust;
+	thrust = OOClamp_0_1_f([thrustFactorString doubleValue]) * [self maxThrust];
 }
 
 
@@ -1560,7 +1560,7 @@ MA 02110-1301, USA.
 	else
 	{
 		[shipAI message:@"NOTHING_FOUND"];
-		if ([self hasPrimaryRole:@"wingman"])
+		if ([self isPolice])
 		{
 			// become free-lance police :)
 			[shipAI setStateMachine:@"route1patrolAI.plist"];	// use this to avoid referencing a released AI

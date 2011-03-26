@@ -79,9 +79,9 @@ static OOShipGroup *GroupForGroupID(OOUInteger groupID, NSMutableDictionary *con
 	NSMutableDictionary *result = [NSMutableDictionary dictionary];
 	if (context == nil)  context = [NSMutableDictionary dictionary];
 	
-	[result setObject:_shipKey forKey:KEY_SHIP_KEY];
+	[result setObject:[self shipDataKey] forKey:KEY_SHIP_KEY];
 	
-	NSMutableDictionary *updatedShipInfo = [NSMutableDictionary dictionaryWithDictionary:shipinfoDictionary];
+	NSMutableDictionary *updatedShipInfo = [NSMutableDictionary dictionaryWithDictionary:[self shipInfoDictionary]];
 	
 	[updatedShipInfo setObject:[[self roleSet] roleString] forKey:KEY_ROLES];
 	[updatedShipInfo oo_setUnsignedInteger:fuel forKey:KEY_FUEL];

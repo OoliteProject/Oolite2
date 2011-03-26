@@ -62,9 +62,7 @@ SOFTWARE.
 - (NSUInteger) oo_unsignedIntegerAtIndex:(NSUInteger)index defaultValue:(NSUInteger)value;
 
 - (BOOL) oo_boolAtIndex:(NSUInteger)index defaultValue:(BOOL)value;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanAtIndex:(NSUInteger)index defaultValue:(float)value;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
 
 - (float) oo_floatAtIndex:(NSUInteger)index defaultValue:(float)value;
 - (double) oo_doubleAtIndex:(NSUInteger)index defaultValue:(double)value;
@@ -79,10 +77,8 @@ SOFTWARE.
 - (NSDictionary *) oo_dictionaryAtIndex:(NSUInteger)index defaultValue:(NSDictionary *)value;
 - (NSData *) oo_dataAtIndex:(NSUInteger)index defaultValue:(NSData *)value;
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorAtIndex:(NSUInteger)index defaultValue:(Vector)value;
 - (Quaternion) oo_quaternionAtIndex:(NSUInteger)index defaultValue:(Quaternion)value;
-#endif
 
 
 // Default: 0
@@ -102,9 +98,8 @@ SOFTWARE.
 
 // Default: NO
 - (BOOL) oo_boolAtIndex:(NSUInteger)index;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanAtIndex:(NSUInteger)index;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
+
 
 // Default: 0.0
 - (float) oo_floatAtIndex:(NSUInteger)index;
@@ -121,12 +116,10 @@ SOFTWARE.
 - (NSDictionary *) oo_dictionaryAtIndex:(NSUInteger)index;
 - (NSData *) oo_dataAtIndex:(NSUInteger)index;
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 // Default: kZeroVector
 - (Vector) oo_vectorAtIndex:(NSUInteger)index;
 // Default: kIdentityQuaternion
 - (Quaternion) oo_quaternionAtIndex:(NSUInteger)index;
-#endif
 
 @end
 
@@ -148,9 +141,8 @@ SOFTWARE.
 - (NSUInteger) oo_unsignedIntegerForKey:(id)key defaultValue:(NSUInteger)value;
 
 - (BOOL) oo_boolForKey:(id)key defaultValue:(BOOL)value;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key defaultValue:(float)value;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
+- (float) oo_fuzzyBooleanProbabilityForKey:(id)key defaultValue:(float)value;
 
 - (float) oo_floatForKey:(id)key defaultValue:(float)value;
 - (double) oo_doubleForKey:(id)key defaultValue:(double)value;
@@ -165,10 +157,8 @@ SOFTWARE.
 - (NSDictionary *) oo_dictionaryForKey:(id)key defaultValue:(NSDictionary *)value;
 - (NSData *) oo_dataForKey:(id)key defaultValue:(NSData *)value;
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorForKey:(id)key defaultValue:(Vector)value;
 - (Quaternion) oo_quaternionForKey:(id)key defaultValue:(Quaternion)value;
-#endif
 
 
 // Default: 0
@@ -188,9 +178,8 @@ SOFTWARE.
 
 // Default: NO
 - (BOOL) oo_boolForKey:(id)key;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
+- (float) oo_fuzzyBooleanProbabilityForKey:(id)key;
 
 // Default: 0.0
 - (float) oo_floatForKey:(id)key;
@@ -207,12 +196,10 @@ SOFTWARE.
 - (NSDictionary *) oo_dictionaryForKey:(id)key;
 - (NSData *) oo_dataForKey:(id)key;
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 // Default: kZeroVector
 - (Vector) oo_vectorForKey:(id)key;
 // Default: kIdentityQuaternion
 - (Quaternion) oo_quaternionForKey:(id)key;
-#endif
 
 @end
 
@@ -232,9 +219,7 @@ SOFTWARE.
 - (unsigned long long) oo_unsignedLongLongForKey:(id)key defaultValue:(unsigned long long)value;
 
 - (BOOL) oo_boolForKey:(id)key defaultValue:(BOOL)value;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key defaultValue:(float)value;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
 
 - (float) oo_floatForKey:(id)key defaultValue:(float)value;
 - (double) oo_doubleForKey:(id)key defaultValue:(double)value;
@@ -265,9 +250,7 @@ SOFTWARE.
 
 // Default: NO
 // - (BOOL) boolForKey:(id)key;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key;	// Reads a float in the range [0, 1], and returns YES with that probability.
-#endif
 
 // Default: 0.0
 // - (float) floatForKey:(id)key;
@@ -293,19 +276,15 @@ SOFTWARE.
 - (void) oo_addUnsignedInteger:(unsigned long)value;
 - (void) oo_addFloat:(double)value;
 - (void) oo_addBool:(BOOL)value;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_addVector:(Vector)value;
 - (void) oo_addQuaternion:(Quaternion)value;
-#endif
 
 - (void) oo_insertInteger:(long)value atIndex:(NSUInteger)index;
 - (void) oo_insertUnsignedInteger:(unsigned long)value atIndex:(NSUInteger)index;
 - (void) oo_insertFloat:(double)value atIndex:(NSUInteger)index;
 - (void) oo_insertBool:(BOOL)value atIndex:(NSUInteger)index;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_insertVector:(Vector)value atIndex:(NSUInteger)index;
 - (void) oo_insertQuaternion:(Quaternion)value atIndex:(NSUInteger)index;
-#endif
 
 @end
 
@@ -317,11 +296,10 @@ SOFTWARE.
 - (void) oo_setLongLong:(long long)value forKey:(id)key;
 - (void) oo_setUnsignedLongLong:(unsigned long long)value forKey:(id)key;
 - (void) oo_setFloat:(double)value forKey:(id)key;
+- (void) oo_setFloatSingle:(float)value forKey:(id)key;	// For historical reasons, oo_setFloat: is double-precision, but we need an explicitly single-precision version to avoid extra precision in generated OOConfs.
 - (void) oo_setBool:(BOOL)value forKey:(id)key;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_setVector:(Vector)value forKey:(id)key;
 - (void) oo_setQuaternion:(Quaternion)value forKey:(id)key;
-#endif
 
 @end
 
@@ -332,10 +310,8 @@ SOFTWARE.
 - (void)oo_addUnsignedInteger:(unsigned long)value;
 - (void)oo_addFloat:(double)value;
 - (void)oo_addBool:(BOOL)value;
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void)oo_addVector:(Vector)value;
 - (void)oo_addQuaternion:(Quaternion)value;
-#endif
 
 @end
 
@@ -355,13 +331,12 @@ SOFTWARE.
 BOOL OOBooleanFromObject(id object, BOOL defaultValue);
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 /*	Utility function to interpret a fuzzy boolean. May be any of the strings
 	accepted by OOBooleanFromObject(), or a number indicating probability of
 	a yes (between 0 and 1).
 */
 BOOL OOFuzzyBooleanFromObject(id object, float defaultValue);
-#endif
+float OOFuzzyBooleanProbabilityFromObject(id object, float defaultValue);
 
 
 float OOFloatFromObject(id object, float defaultValue);
@@ -369,14 +344,12 @@ double OODoubleFromObject(id object, double defaultValue);
 float OONonNegativeFloatFromObject(id object, float defaultValue);
 double OONonNegativeDoubleFromObject(id object, double defaultValue);
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 //	These take strings, dictionaries or arrays.
 Vector OOVectorFromObject(id object, Vector defaultValue);
 Quaternion OOQuaternionFromObject(id object, Quaternion defaultValue);
 
 NSDictionary *OOPropertyListFromVector(Vector value);
 NSDictionary *OOPropertyListFromQuaternion(Quaternion value);
-#endif
 
 
 OOINLINE long long OOClampInteger(long long value, long long minValue, long long maxValue) ALWAYS_INLINE_FUNC;

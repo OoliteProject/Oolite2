@@ -240,7 +240,7 @@ static JSPropertySpec sShipProperties[] =
 	{ "missileCapacity",		kShip_missileCapacity,		OOJS_PROP_READONLY_CB },
 	{ "missileLoadTime",		kShip_missileLoadTime,		OOJS_PROP_READWRITE_CB },
 	{ "missiles",				kShip_missiles,				OOJS_PROP_READONLY_CB },
-	{ "name",					kShip_name,					OOJS_PROP_READWRITE_CB },
+	{ "name",					kShip_name,					OOJS_PROP_READONLY_CB },
 	{ "passengerCount",			kShip_passengerCount,		OOJS_PROP_READONLY_CB },
 	{ "passengerCapacity",		kShip_passengerCapacity,	OOJS_PROP_READONLY_CB },
 	{ "passengers",				kShip_passengers,			OOJS_PROP_READONLY_CB },
@@ -423,7 +423,7 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 			return JS_NewNumberValue(context, [entity temperature] / SHIP_MAX_CABIN_TEMP, value);
 			
 		case kShip_heatInsulation:
-			return JS_NewNumberValue(context, [entity heatInsulation], value);
+			return JS_NewNumberValue(context, [entity effectiveHeatInsulation], value);
 			
 		case kShip_heading:
 			return VectorToJSValue(context, [entity forwardVector], value);
@@ -687,17 +687,6 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 	
 	switch (JSID_TO_INT(propID))
 	{
-		case kShip_name:
-			if (EXPECT_NOT([entity isPlayer]))  goto playerReadOnly;
-			
-			sValue = OOStringFromJSValue(context,*value);
-			if (sValue != nil)
-			{
-				[entity setName:sValue];
-				return YES;
-			}
-			break;
-			
 		case kShip_displayName:
 			if (EXPECT_NOT([entity isPlayer]))  goto playerReadOnly;
 			
@@ -784,7 +773,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
 				fValue = fmax(fValue, 0.125);
-				[entity setHeatInsulation:fValue];
+				[entity setEffectiveHeatInsulation:fValue];
 				return YES;
 			}
 			break;

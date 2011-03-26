@@ -41,7 +41,7 @@ typedef struct
 } OOHSBAComponents;
 
 
-@interface OOColor : NSObject <NSCopying>
+@interface OOColor : NSObject <NSCopying, JAPropertyListRepresentation>
 {
 	OOCGFloat	rgba[4];
 }

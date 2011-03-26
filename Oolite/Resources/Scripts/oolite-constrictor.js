@@ -59,7 +59,7 @@ this.shipSpawned = function ()
 	{
 		this.ship.awardEquipment("EQ_SHIELD_ENHANCER"); // Player is Deadly
 	}
-	this.ship.energy = this.ship.maxEnergy; // start with all energy banks full.
+	this.ship.energy = this.ship.energyCapacity; // start with all energy banks full.
 };
 
 

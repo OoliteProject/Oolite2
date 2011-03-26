@@ -710,8 +710,6 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 }
 
 
-//////////////////////////////////////////////// from superclass
-
 - (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict
 {
 	OOJS_PROFILE_ENTER
@@ -719,6 +717,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	self = [super initWithKey:key definition:dict];
 	if (self != nil)
 	{
+		// FIXME: why aren't these in setup?
 		isStation = YES;
 		
 		shipsOnApproach = [[NSMutableDictionary alloc] init];
@@ -760,7 +759,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 }
 
 
-- (BOOL) setUpShipFromDictionary:(NSDictionary *) dict
+- (BOOL) setUpShipWithShipClass:(OOShipClass *)shipClass andDictionary:(NSDictionary *)dict
 {
 	OOJS_PROFILE_ENTER
 	
@@ -773,7 +772,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	port_orientation = kIdentityQuaternion;
 	port_corridor = 0;
 	
-	if (![super setUpShipFromDictionary:dict])  return NO;
+	if (![super setUpShipWithShipClass:shipClass andDictionary:dict])  return NO;
 	
 	equivalentTechLevel = [dict oo_unsignedIntegerForKey:@"equivalent_tech_level" defaultValue:NSNotFound];
 	max_scavengers = [dict oo_unsignedIntForKey:@"max_scavengers" defaultValue:3];
@@ -1619,9 +1618,11 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 					[escort_ship setScanClass: CLASS_NEUTRAL];
 					[escort_ship setCargoFlag: CARGO_FLAG_FULL_PLENTIFUL];
 					[escort_ship setPrimaryRole:@"escort"];					
-					if (sunskimmer && [escort_ship heatInsulation] < [ship heatInsulation]) 
-							[escort_ship setHeatInsulation:[ship heatInsulation]];
-
+					if (sunskimmer && [escort_ship effectiveHeatInsulation] < [ship effectiveHeatInsulation])
+					{
+						[escort_ship setEffectiveHeatInsulation:[ship effectiveHeatInsulation]];
+					}
+					
 					[escort_ship setGroup:escortGroup];
 					[escort_ship setOwner:ship];
 					
@@ -1730,9 +1731,6 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		default_defense_ship_role	= @"interceptor";
 	else
 		default_defense_ship_role	= @"police";
-		
-	if (scanClass == CLASS_ROCK)
-		default_defense_ship_role	= @"hermit-ship";
 	
 	if (defenders_launched >= max_defense_ships)   // shuttles are to rockhermits what police ships are to stations
 		return nil;
@@ -1743,14 +1741,14 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		return nil;
 	}
 	
-	defense_ship_key = [shipinfoDictionary oo_stringForKey:@"defense_ship"];
+	defense_ship_key = [[self shipInfoDictionary] oo_stringForKey:@"defense_ship"];
 	if (defense_ship_key != nil)
 	{
 		defense_ship = [UNIVERSE newShipWithName:defense_ship_key];
 	}
 	if (!defense_ship)
 	{
-		defense_ship_role = [shipinfoDictionary oo_stringForKey:@"defense_ship_role" defaultValue:default_defense_ship_role];
+		defense_ship_role = [[self shipInfoDictionary] oo_stringForKey:@"defense_ship_role" defaultValue:default_defense_ship_role];
 		defense_ship = [UNIVERSE newShipWithRole:defense_ship_role];
 	}
 	
@@ -2219,8 +2217,8 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 
 - (BOOL) isRotatingStation
 {
-	if ([shipinfoDictionary oo_boolForKey:@"rotating" defaultValue:NO])  return YES;
-	return [[shipinfoDictionary objectForKey:@"roles"] rangeOfString:@"rotating-station"].location != NSNotFound;	// legacy
+	if ([[self shipInfoDictionary] oo_boolForKey:@"rotating" defaultValue:NO])  return YES;
+	return [[[self shipInfoDictionary] objectForKey:@"roles"] rangeOfString:@"rotating-station"].location != NSNotFound;	// legacy
 }
 
 
@@ -2231,7 +2229,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	//				work properly with the various overrides.  The primary role will get
 	//				used if either there is no market override, or the market wasn't
 	//				defined.
-	return [shipinfoDictionary oo_stringForKey:@"market"];
+	return [[self shipInfoDictionary] oo_stringForKey:@"market"];
 }
 
 
@@ -2239,10 +2237,10 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 {
 	if ([UNIVERSE station] == self)  return YES;
 	
-	id	determinant = [shipinfoDictionary objectForKey:@"has_shipyard"];
+	id	determinant = [[self shipInfoDictionary] objectForKey:@"has_shipyard"];
 
 	if (!determinant)
-		determinant = [shipinfoDictionary objectForKey:@"hasShipyard"];
+		determinant = [[self shipInfoDictionary] objectForKey:@"hasShipyard"];
 	
 	if (determinant)
 	{
@@ -2264,12 +2262,6 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 - (void) setSuppressArrivalReports:(BOOL)newValue
 {
 	suppress_arrival_reports = !!newValue;	// ensure YES or NO
-}
-
-
-- (NSString *) descriptionComponents
-{
-	return [NSString stringWithFormat:@"\"%@\" %@", name, [super descriptionComponents]];
 }
 
 

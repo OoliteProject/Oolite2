@@ -32,7 +32,7 @@ SOFTWARE.
 #import <OoliteBase/OoliteBase.h>
 
 
-@interface OORoleSet: NSObject <NSCopying>
+@interface OORoleSet: NSObject <NSCopying, JAPropertyListRepresentation>
 {
 	NSString					*_roleString;
 	NSDictionary				*_rolesAndProbabilities;
@@ -45,6 +45,7 @@ SOFTWARE.
 
 - (id)initWithRoleString:(NSString *)roleString;
 - (id)initWithRole:(NSString *)role probability:(float)probability;
+- (id)initWithRolesAndProbabilities:(NSDictionary *)dict;
 
 - (NSString *)roleString;
 
@@ -55,6 +56,8 @@ SOFTWARE.
 - (NSSet *)roles;
 - (NSArray *)sortedRoles;
 - (NSDictionary *)rolesAndProbabilities;
+
+- (float) totalRoleWeight;
 
 // Returns a random role, taking probabilities into account.
 - (NSString *)anyRole;

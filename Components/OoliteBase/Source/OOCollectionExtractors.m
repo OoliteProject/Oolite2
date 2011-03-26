@@ -112,12 +112,10 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanAtIndex:(NSUInteger)index defaultValue:(float)value
 {
 	return OOFuzzyBooleanFromObject([self oo_objectAtIndex:index], value);
 }
-#endif
 
 
 - (float) oo_floatAtIndex:(NSUInteger)index defaultValue:(float)value
@@ -198,7 +196,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorAtIndex:(NSUInteger)index defaultValue:(Vector)value
 {
 	return OOVectorFromObject([self oo_objectAtIndex:index], value);
@@ -209,7 +206,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	return OOQuaternionFromObject([self oo_objectAtIndex:index], value);
 }
-#endif
 
 
 - (char) oo_charAtIndex:(NSUInteger)index
@@ -290,12 +286,10 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanAtIndex:(NSUInteger)index
 {
 	return [self oo_fuzzyBooleanAtIndex:index defaultValue:0.0f];
 }
-#endif
 
 
 - (float) oo_floatAtIndex:(NSUInteger)index
@@ -365,7 +359,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorAtIndex:(NSUInteger)index
 {
 	return [self oo_vectorAtIndex:index defaultValue:kZeroVector];
@@ -376,7 +369,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	return [self oo_quaternionAtIndex:index defaultValue:kIdentityQuaternion];
 }
-#endif
 
 @end
 
@@ -461,12 +453,16 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key defaultValue:(float)value
 {
 	return OOFuzzyBooleanFromObject([self objectForKey:key], value);
 }
-#endif
+
+
+- (float) oo_fuzzyBooleanProbabilityForKey:(id)key defaultValue:(float)value
+{
+	return OOFuzzyBooleanProbabilityFromObject([self objectForKey:key], value);
+}
 
 
 - (float) oo_floatForKey:(id)key defaultValue:(float)value
@@ -547,7 +543,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorForKey:(id)key defaultValue:(Vector)value
 {
 	return OOVectorFromObject([self objectForKey:key], value);
@@ -558,7 +553,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	return OOQuaternionFromObject([self objectForKey:key], value);
 }
-#endif
 
 
 - (char) oo_charForKey:(id)key
@@ -639,12 +633,16 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key
 {
 	return [self oo_fuzzyBooleanForKey:key defaultValue:0.0f];
 }
-#endif
+
+
+- (float) oo_fuzzyBooleanProbabilityForKey:(id)key
+{
+	return [self oo_fuzzyBooleanProbabilityForKey:key defaultValue:0.0f];
+}
 
 
 - (float) oo_floatForKey:(id)key
@@ -707,7 +705,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (Vector) oo_vectorForKey:(id)key
 {
 	return [self oo_vectorForKey:key defaultValue:kZeroVector];
@@ -718,7 +715,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	return [self oo_quaternionForKey:key defaultValue:kIdentityQuaternion];
 }
-#endif
 
 @end
 
@@ -791,12 +787,10 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key defaultValue:(float)value
 {
 	return OOFuzzyBooleanFromObject([self objectForKey:key], value);
 }
-#endif
 
 
 - (float) oo_floatForKey:(id)key defaultValue:(float)value
@@ -937,12 +931,10 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (BOOL) oo_fuzzyBooleanForKey:(id)key
 {
 	return [self oo_fuzzyBooleanForKey:key defaultValue:0.0f];
 }
-#endif
 
 
 - (double) oo_doubleForKey:(NSString *)key
@@ -1003,7 +995,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_addVector:(Vector)value
 {
 	[self addObject:OOPropertyListFromVector(value)];
@@ -1014,7 +1005,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	[self addObject:OOPropertyListFromQuaternion(value)];
 }
-#endif
 
 
 - (void) oo_insertInteger:(long)value atIndex:(NSUInteger)index
@@ -1041,7 +1031,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_insertVector:(Vector)value atIndex:(NSUInteger)index
 {
 	[self insertObject:OOPropertyListFromVector(value) atIndex:index];
@@ -1052,7 +1041,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	[self insertObject:OOPropertyListFromQuaternion(value) atIndex:index];
 }
-#endif
 
 @end
 
@@ -1089,13 +1077,18 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
+- (void) oo_setFloatSingle:(float)value forKey:(id)key
+{
+	[self setObject:[NSNumber numberWithFloat:value] forKey:key];
+}
+
+
 - (void) oo_setBool:(BOOL)value forKey:(id)key
 {
 	[self setObject:[NSNumber numberWithBool:value] forKey:key];
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_setVector:(Vector)value forKey:(id)key
 {
 	[self setObject:OOPropertyListFromVector(value) forKey:key];
@@ -1106,7 +1099,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	[self setObject:OOPropertyListFromQuaternion(value) forKey:key];
 }
-#endif
 
 @end
 
@@ -1137,7 +1129,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 - (void) oo_addVector:(Vector)value
 {
 	[self addObject:OOPropertyListFromVector(value)];
@@ -1148,7 +1139,6 @@ static NSString *StringForObject(id object, NSString *defaultValue);
 {
 	[self addObject:OOPropertyListFromQuaternion(value)];
 }
-#endif
 
 @end
 
@@ -1227,7 +1217,6 @@ static BOOL BooleanFromString(NSString *string, BOOL defaultValue)
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 static float FuzzyBooleanProbabilityFromString(NSString *string, float defaultValue)
 {
 	if (NSOrderedSame == [string caseInsensitiveCompare:@"yes"] ||
@@ -1246,7 +1235,6 @@ static float FuzzyBooleanProbabilityFromString(NSString *string, float defaultVa
 	}
 	return defaultValue;
 }
-#endif
 
 
 BOOL OOBooleanFromObject(id object, BOOL defaultValue)
@@ -1268,8 +1256,7 @@ BOOL OOBooleanFromObject(id object, BOOL defaultValue)
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
-BOOL OOFuzzyBooleanFromObject(id object, float defaultValue)
+float OOFuzzyBooleanProbabilityFromObject(id object, float defaultValue)
 {
 	float probability;
 	
@@ -1293,9 +1280,14 @@ BOOL OOFuzzyBooleanFromObject(id object, float defaultValue)
 		greater than 1, as expected. randf() is always less than 1, so
 		< is the correct operator here.
 	*/
-	return randf() < probability;
+	return probability;
 }
-#endif
+
+
+BOOL OOFuzzyBooleanFromObject(id object, float defaultValue)
+{
+	return randf() < OOFuzzyBooleanProbabilityFromObject(object, defaultValue);
+}
 
 
 float OOFloatFromObject(id object, float defaultValue)
@@ -1358,7 +1350,6 @@ double OONonNegativeDoubleFromObject(id object, double defaultValue)
 }
 
 
-#ifndef OOCOLLECTIONEXTRACTORS_SIMPLE
 Vector OOVectorFromObject(id object, Vector defaultValue)
 {
 	Vector				result = defaultValue;
@@ -1451,7 +1442,6 @@ NSDictionary *OOPropertyListFromQuaternion(Quaternion value)
 			[NSNumber numberWithFloat:value.z], @"z",
 			nil];
 }
-#endif
 
 
 static NSSet *SetForObject(id object, NSSet *defaultValue)

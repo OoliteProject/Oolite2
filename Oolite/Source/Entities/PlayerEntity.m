@@ -427,6 +427,12 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
+- (unsigned) galaxyNumber
+{
+	return galaxy_number;
+}
+
+
 - (Random_Seed) galaxy_seed
 {
 	return galaxy_seed;
@@ -3151,6 +3157,18 @@ static bool minShieldLevelPercentageInitialised = false;
 - (void) setWeaponsOnline:(BOOL)newValue
 {
 	weapons_online = !!newValue;
+}
+
+
+- (OOWeaponType) portWeaponType
+{
+	return port_weapon_type;
+}
+
+
+- (OOWeaponType) starboardWeaponType
+{
+	return starboard_weapon_type;
 }
 
 
@@ -6841,9 +6859,8 @@ static NSString *last_outfitting_key=nil;
 		digramchars[0] = ([trumbleDigrams characterAtIndex:i] & 0x007f) | 0x0020;
 		digramchars[1] = (([trumbleDigrams characterAtIndex:i + 1] ^ xchar) & 0x007f) | 0x0020;
 		xchar = digramchars[0];
-		NSString* digramstring = [NSString stringWithCharacters:digramchars length:2];
-		if (trumble[i])
-			[trumble[i] release];
+		NSString *digramstring = [NSString stringWithCharacters:digramchars length:2];
+		[trumble[i] release];
 		trumble[i] = [[OOTrumble alloc] initForPlayer:self digram:digramstring];
 	}
 	
@@ -6915,9 +6932,9 @@ static NSString *last_outfitting_key=nil;
 	
 	[[NSUserDefaults standardUserDefaults]  setInteger:trumbleHash forKey:namekey];
 	
-	int i;
-	NSMutableArray* trumbleArray = [NSMutableArray arrayWithCapacity:PLAYER_MAX_TRUMBLES];
-	for (i = 0; i < PLAYER_MAX_TRUMBLES; i++)
+	unsigned i;
+	NSMutableArray* trumbleArray = [NSMutableArray arrayWithCapacity:trumbleCount];
+	for (i = 0; i < trumbleCount; i++)
 	{
 		[trumbleArray addObject:[trumble[i] dictionary]];
 	}
@@ -6933,8 +6950,8 @@ static NSString *last_outfitting_key=nil;
 	int putativeHash = 0;
 	int putativeNTrumbles = 0;
 	NSArray* putativeTrumbleArray = nil;
-	int i;
-	NSString* namekey = [NSString stringWithFormat:@"%@-humbletrash", player_name];
+	NSUInteger i;
+	NSString *namekey = [NSString stringWithFormat:@"%@-humbletrash", player_name];
 	
 	[self setUpTrumbles];
 	
@@ -7011,11 +7028,10 @@ static NSString *last_outfitting_key=nil;
 	}
 	// at this stage we've done the best we can to stop cheaters
 	trumbleCount = putativeNTrumbles;
-
-	if ((putativeTrumbleArray != nil) && ([putativeTrumbleArray count] == PLAYER_MAX_TRUMBLES))
+	
+	for (i = 0; i < PLAYER_MAX_TRUMBLES && i < [putativeTrumbleArray count]; i++)
 	{
-		for (i = 0; i < PLAYER_MAX_TRUMBLES; i++)
-			[trumble[i] setFromDictionary:(NSDictionary *)[putativeTrumbleArray objectAtIndex:i]];
+		[trumble[i] setFromDictionary:(NSDictionary *)[putativeTrumbleArray oo_dictionaryAtIndex:i]];
 	}
 	
 	clear_checksum();

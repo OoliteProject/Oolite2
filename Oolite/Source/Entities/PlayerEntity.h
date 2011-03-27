@@ -545,6 +545,7 @@ typedef enum
 - (OOCreditsQuantity) deciCredits;
 
 - (int) random_factor;
+- (unsigned) galaxyNumber;
 - (Random_Seed) galaxy_seed;
 - (NSPoint) galaxy_coordinates;
 - (NSPoint) cursor_coordinates;
@@ -659,6 +660,9 @@ typedef enum
 
 - (BOOL) weaponsOnline;
 - (void) setWeaponsOnline:(BOOL)newValue;
+
+- (OOWeaponType) portWeaponType;
+- (OOWeaponType) starboardWeaponType;
 
 - (BOOL) fireMainWeapon;
 - (OOWeaponType) weaponForView:(OOViewID)view;

@@ -28,6 +28,7 @@ extern "C" {
 
 #import "NSObjectOOExtensions.h"
 #import "NSDataOOExtensions.h"
+#import "NSData+DDGZip.h"
 #import "NSDictionaryOOExtensions.h"
 #import "NSMapTableOOExtensions.h"
 #import "NSNumberOOExtensions.h"

@@ -2540,6 +2540,18 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
+- (OOWeaponType) forwardWeaponType
+{
+	return forward_weapon_type;
+}
+
+
+- (OOWeaponType) aftWeaponType
+{
+	return aft_weapon_type;
+}
+
+
 - (OOEquipmentType *) verifiedMissileTypeFromRole:(NSString *)role
 {
 	NSString			*eqRole = nil;

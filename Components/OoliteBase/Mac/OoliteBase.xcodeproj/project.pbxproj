@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A158171133F9E720075FC2A /* NSData+DDGZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A15816F133F9E720075FC2A /* NSData+DDGZip.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A158172133F9E720075FC2A /* NSData+DDGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A158170133F9E720075FC2A /* NSData+DDGZip.m */; };
+		1A158174133F9ED40075FC2A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A158173133F9ED40075FC2A /* libz.dylib */; };
 		1A1B995D13088B5F0078322D /* OOBoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1B995B13088B5F0078322D /* OOBoundingBox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A1B995E13088B5F0078322D /* OOBoundingBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B995C13088B5F0078322D /* OOBoundingBox.m */; };
 		1A1F29F913182B5D00D06C6C /* NSScannerOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1F29F713182B5D00D06C6C /* NSScannerOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -90,6 +93,9 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A15816F133F9E720075FC2A /* NSData+DDGZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DDGZip.h"; sourceTree = "<group>"; };
+		1A158170133F9E720075FC2A /* NSData+DDGZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DDGZip.m"; sourceTree = "<group>"; };
+		1A158173133F9ED40075FC2A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1A1B995B13088B5F0078322D /* OOBoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBoundingBox.h; sourceTree = "<group>"; };
 		1A1B995C13088B5F0078322D /* OOBoundingBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBoundingBox.m; sourceTree = "<group>"; };
 		1A1F29F713182B5D00D06C6C /* NSScannerOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScannerOOExtensions.h; sourceTree = "<group>"; };
@@ -186,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A158174133F9ED40075FC2A /* libz.dylib in Frameworks */,
 				1A878B5F11B57749001BB304 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,6 +211,7 @@
 		0867D691FE84028FC02AAC07 /* OOBase */ = {
 			isa = PBXGroup;
 			children = (
+				1A158173133F9ED40075FC2A /* libz.dylib */,
 				1A649F4F1323B8E900C2FDDB /* Build stuff */,
 				1A713F9511B56397009A9197 /* OoliteBase.h */,
 				1A713F5F11B5626F009A9197 /* OoliteBase-Info.plist */,
@@ -244,6 +252,8 @@
 				1A878B7311B577AE001BB304 /* NSThreadOOExtensions.m */,
 				1A990DCC1326DE0200F4A2A7 /* NSDataOOExtensions.h */,
 				1A990DCD1326DE0200F4A2A7 /* NSDataOOExtensions.m */,
+				1A15816F133F9E720075FC2A /* NSData+DDGZip.h */,
+				1A158170133F9E720075FC2A /* NSData+DDGZip.m */,
 				1A878B7B11B577E8001BB304 /* NSDictionaryOOExtensions.h */,
 				1A878B7C11B577E8001BB304 /* NSDictionaryOOExtensions.m */,
 				1A1F29F713182B5D00D06C6C /* NSScannerOOExtensions.h */,
@@ -400,6 +410,7 @@
 				1A1F31A913185FE500D06C6C /* OOExcludeObjectEnumerator.h in Headers */,
 				1A990D3E1326DCF400F4A2A7 /* OOBaseErrors.h in Headers */,
 				1A990DCE1326DE0200F4A2A7 /* NSDataOOExtensions.h in Headers */,
+				1A158171133F9E720075FC2A /* NSData+DDGZip.h in Headers */,
 				1A6C21271334E9DA00821B1D /* NSMapTableOOExtensions.h in Headers */,
 				1AFD9E5E1336B2CB00460ABE /* JAPropertyListRepresentation.h in Headers */,
 			);
@@ -522,6 +533,7 @@
 				1A990D211326D95500F4A2A7 /* OORandom.m in Sources */,
 				1A990DCF1326DE0200F4A2A7 /* NSDataOOExtensions.m in Sources */,
 				1AFD9E5F1336B2CB00460ABE /* JAPropertyListRepresentation.m in Sources */,
+				1A158172133F9E720075FC2A /* NSData+DDGZip.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

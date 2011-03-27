@@ -7,14 +7,6 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>oolite-save</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>oolite-document</string>
-			<key>CFBundleTypeName</key>
-			<string>Oolite Saved Game</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
@@ -25,13 +17,21 @@
 			</array>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Oolite 2 Expansion Pack</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>org.oolite.expansion-pack.oxz</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.oolite.save</string>
 			</array>
 		</dict>
 	</array>
@@ -49,6 +49,8 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>Ool2</string>
+	<key>CFBundleURLTypes</key>
+	<array/>
 	<key>CFBundleVersion</key>
 	<string>${OOLITE_VERSION}</string>
 	<key>LSApplicationCategoryType</key>
@@ -61,6 +63,8 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>OoliteApp</string>
+	<key>NSServices</key>
+	<array/>
 	<key>SUPublicDSAKeyFile</key>
 	<string>SparkleVerificationKey.pem</string>
 	<key>SmartCrashReports_CommentsTemplate</key>
@@ -78,7 +82,9 @@
 				<string>com.apple.property-list</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Oolite Saved Game</string>
+			<string>Oolite 1 Saved Game</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.aegidian.oolite.save</string>
 			<key>UTTypeTagSpecification</key>
@@ -93,6 +99,7 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.item</string>
+				<string>public.content</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Oolite 2 Expansion Pack</string>
@@ -100,6 +107,8 @@
 			<string>oolite-expansion-document</string>
 			<key>UTTypeIdentifier</key>
 			<string>org.oolite.expansion-pack</string>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
@@ -140,6 +149,69 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>oxd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.item</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Saved Game</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.save</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>Ool2</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.oolite.save</string>
+				<string>org.gnu.gnu-zip-archive</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Saved Game</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.ooliate.save.gz</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>Ool2</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>oolite2</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>org.oolite.save</string>
+				<string>org.oolite.ooconf</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Oolite 2 Saved Game</string>
+			<key>UTTypeIconFile</key>
+			<string>oolite-document</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.save.ooconf</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>oolite2x</string>
 				</array>
 			</dict>
 		</dict>

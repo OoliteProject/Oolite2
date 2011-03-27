@@ -36,7 +36,362 @@ MA 02110-1301, USA.
 #import "OOEquipmentType.h"
 
 
+#if OO_DEBUG
+#define DEFAULT_COMPRESS		0
+#else
+#define DEFAULT_COMPRESS		1
+#endif
+
+
+// MARK: Keys
+#define kOOSaveKey_writtenBy				@"writtenBy"
+#define kOOSaveKey_version					@"version"
+#define kOOSaveKey_revision					@"revision"
+#define kOOSaveKey_platform					@"platform"
+
+#define kOOSaveKey_playerName				@"name"
+#define kOOSaveKey_shipKey					@"ship"
+#define kOOSaveKey_shipName					@"shipTypeName"
+#define kOOSaveKey_shipDisplayName			@"shipName"
+#define kOOSaveKey_clock					@"clock"
+#define kOOSaveKey_galaxyNumber				@"galaxyNumber"
+#define kOOSaveKey_galaxySeed				@"galaxySeed"
+#define kOOSaveKey_galaxyCoordinates		@"galaxyCoordinates"
+#define kOOSaveKey_cursorCoordinates		@"cursorCoordinates"
+#define kOOSaveKey_foundSystemSeed			@"foundSystemSeed"
+#define kOOSaveKey_currentSystemName		@"currentSystemName"
+#define kOOSaveKey_targetSystemName			@"targetSystemName"
+#define kOOSaveKey_deciCredits				@"deciCredits"
+#define kOOSaveKey_fuel						@"fuel"
+#define kOOSaveKey_weaponsOnline			@"weaponsOnline"
+#define kOOSaveKey_forwardWeaponType		@"forwardWeaponType"
+#define kOOSaveKey_aftWeaponType			@"aftWeaponType"
+#define kOOSaveKey_portWeaponType			@"portWeaponType"
+#define kOOSaveKey_starboardWeaponType		@"starboardWeaponType"
+#define kOOSaveKey_subentityStatus			@"subentityStatus"
+#define kOOSaveKey_missiles					@"missiles"
+#define kOOSaveKey_manifest					@"manifest"
+#define kOOSaveKey_legalStatus				@"legalStatus"
+#define kOOSaveKey_marketRandomFactor		@"marketRandomFactor"
+#define kOOSaveKey_killCount				@"killCount"
+#define kOOSaveKey_shipTradeInFactor		@"shipTradeInFactor"
+#define kOOSaveKey_missionVariables			@"missionVariables"
+#define kOOSaveKey_legacyMissionVariables	@"legacyMissionVariables"
+#define kOOSaveKey_commLog					@"commLog"
+#define kOOSaveKey_entityPersonality		@"entityPersonality"
+#define kOOSaveKey_equipment				@"equipment"
+#define kOOSaveKey_primedEquipment			@"primedEquipment"
+#define kOOSaveKey_contractReputation		@"contractReputation"
+#define kOOSaveKey_contracts				@"contracts"
+#define kOOSaveKey_contractRecord			@"contractRecord"
+#define kOOSaveKey_passengerReputation		@"passengerReputation"
+#define kOOSaveKey_passengers				@"passengers"
+#define kOOSaveKey_passengerRecord			@"passengerRecord"
+#define kOOSaveKey_specialCargo				@"specialCargo"
+#define kOOSaveKey_missionDestinations		@"missionDestinations"
+#define kOOSaveKey_shipyardRecord			@"shipyardRecord"
+#define kOOSaveKey_customViewIndex			@"viewIndex"
+#define kOOSaveKey_localMarket				@"localMarket"
+#define kOOSaveKey_localPlanetInfoOverrides	@"planetInfoOverrides"
+#define kOOSaveKey_trumbles					@"trumbles"
+#define kOOSaveKey_wormholes				@"wormholes"
+#define kOOSaveKey_
+#define kOOSaveKey_
+#define kOOSaveKey_
+#define kOOSaveKey_
+#define kOOSaveKey_
+#define kOOSaveKey_
+#define kOOSaveKey_
+
+
+@interface PlayerEntity (SerializationPrivate)
+
+- (NSDictionary *) savedGamePropertyListWithError:(NSError **)error;
++ (BOOL) priv_useCompressionForSavedGames;
+
+- (NSArray *) priv_simplifiedContractReputation;
+- (NSArray *) priv_simplifiedPassengerReputation;
+
+@end
+
+
 @implementation PlayerEntity (Serialization)
+
++ (NSString *) savedPathGameForName:(NSString *)name directoryPath:(NSString *)directoryPath
+{
+	/*
+		In order to be able to bind compressed and uncompressed files to
+		different applications (and to allow different file type metadata under
+		Mac OS X), we use two different extensions. Note, however, that the
+		extension does not affect parsing, so it is valid to rename an oolite2x
+		file to oolite2.
+	*/
+	NSString *extension = nil;
+	if ([self priv_useCompressionForSavedGames])
+	{
+		extension = @"oolite2";
+	}
+	else
+	{
+		extension = @"oolite2x";
+	}
+	
+	return [directoryPath stringByAppendingPathComponent:[name stringByAppendingPathExtension:extension]];
+}
+
+
+- (BOOL) writeSavedGameToPath:(NSString *)path error:(NSError **)error
+{
+	NSDictionary *properties = [self savedGamePropertyListWithError:error];
+	if (properties == nil)  return NO;
+	
+	BOOL compress = [PlayerEntity priv_useCompressionForSavedGames];
+	OOConfGenerationOptions options = compress ? kOOConfGenerationSmall : kOOConfGenerationDefault;
+	
+	NSData *data = [properties ooConfDataWithOptions:options error:error];
+	if (data == nil)  return NO;
+	
+	if (compress)
+	{
+		/* FIXME: I’d like to set the gzip file name to foo.oolite2x,
+			but there doesn’t seem to be a supported way of doing this without
+			using gzwrite() and friends to write the file.
+			-- Ahruman 2011-03-28
+		*/
+		NSData *compressedData = [data dd_gzipDeflate];
+		if (compressedData != nil)  data = compressedData;
+	}
+	
+	return [data writeToFile:path options:NSAtomicWrite error:error];
+}
+
+
++ (BOOL) priv_useCompressionForSavedGames
+{
+	return [[NSUserDefaults standardUserDefaults] oo_boolForKey:@"compress-saved-games" defaultValue:DEFAULT_COMPRESS];
+}
+
+
+static NSArray *ArrayFromSeed(Random_Seed seed)
+{
+	return $array($int(seed.a), $int(seed.b), $int(seed.c), $int(seed.d), $int(seed.e), $int(seed.f));
+}
+
+
+static NSArray *ArrayFromCoords(NSPoint coords)
+{
+	return $array($float(coords.x), $float(coords.y));
+}
+
+
+#define WRIT_WEAPON(NAME)	do { OOWeaponType wp = [self NAME]; if (wp != WEAPON_NONE) { [result setObject:OOStringFromWeaponType(wp) forKey:kOOSaveKey_##NAME]; } }  while(0)
+
+
+- (NSDictionary *) savedGamePropertyListWithError:(NSError **)error
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	
+	[result setObject:$dict(kOOSaveKey_version,  OoliteVersion(),
+							kOOSaveKey_revision, OoliteRevisionIdentifier(),
+							kOOSaveKey_platform, OolitePlatformDescription())
+			   forKey:kOOSaveKey_writtenBy];
+	
+	[result setObject:[self captainName] forKey:kOOSaveKey_playerName];
+	[result setObject:[self shipDataKey] forKey:kOOSaveKey_shipKey];
+	NSString *shipName = [self name];
+	NSString *displayName = [self displayName];
+	[result setObject:displayName forKey:kOOSaveKey_shipDisplayName];
+	if (![shipName isEqualToString:displayName])  [result setObject:shipName forKey:kOOSaveKey_shipName];
+	
+	[result oo_setLongLong:round(ship_clock) forKey:kOOSaveKey_clock];
+	
+	[result oo_setInteger:[self galaxyNumber] + 1 forKey:kOOSaveKey_galaxyNumber];
+	[result setObject:ArrayFromSeed([self galaxy_seed]) forKey:kOOSaveKey_galaxySeed];
+	[result setObject:ArrayFromCoords([self galaxy_coordinates]) forKey:kOOSaveKey_galaxyCoordinates];
+	if (!NSEqualPoints([self galaxy_coordinates], [self cursor_coordinates]))
+	{
+		[result setObject:ArrayFromCoords([self cursor_coordinates]) forKey:kOOSaveKey_cursorCoordinates];
+	}
+	if (!equal_seeds(found_system_seed, kNilRandomSeed))
+	{
+		[result setObject:ArrayFromSeed(found_system_seed) forKey:kOOSaveKey_foundSystemSeed];
+	}
+	
+	// Write name of current and target systems, for disambiguating overlapping systems.
+	[result setObject:[UNIVERSE getSystemName:[self system_seed]] forKey:kOOSaveKey_currentSystemName];
+	[result setObject:[UNIVERSE getSystemName:[self target_system_seed]] forKey:kOOSaveKey_targetSystemName];
+	
+	[result oo_setUnsignedLongLong:[self deciCredits] forKey:kOOSaveKey_deciCredits];
+	[result oo_setUnsignedInteger:[self fuel] forKey:kOOSaveKey_fuel];
+	
+	[result oo_setBool:[self weaponsOnline] forKey:kOOSaveKey_weaponsOnline];
+	WRIT_WEAPON	(forwardWeaponType);
+	WRIT_WEAPON	(aftWeaponType);
+	WRIT_WEAPON	(portWeaponType);
+	WRIT_WEAPON	(starboardWeaponType);
+	
+	NSUInteger i, count = [self missileCapacity];
+	if (count > 0)
+	{
+		NSMutableArray *missileList = [NSMutableArray arrayWithCapacity:count];
+		for (i = 0; i < count; i++)
+		{
+			ShipEntity *missile = missile_entity[i];
+			if (missile != nil)  [missileList addObject:[missile primaryRole]];
+			else  [missileList addObject:[NSNull null]];
+		}
+		[result setObject:missileList forKey:kOOSaveKey_missiles];
+	}
+	
+	// Subentity status. FIXME: this is a pretty nasty representation.
+	NSString *subentityStatus = [self serializeShipSubEntities];
+	if ([subentityStatus rangeOfString:@"0"].location != NSNotFound)
+	{
+		[result setObject:subentityStatus forKey:kOOSaveKey_subentityStatus];
+	}
+	
+#if 0
+	/*	FIXME: WTF is this? Hard-coded, horrible.
+		A bunch of magic goes on with this in 1.x, setting up the cargo bay
+		expansion and such. For 2.x, we should just use the ship’s intrinsic
+		cargo capacity + effects of equipment, then grow space only if we’re
+		overfilled at loading time. Or possibly just sell off the cheapest
+		stuff.
+		
+		On a related point, legacy format has a “max_passengers” entry. We
+		should be able to derive this from equipment.
+		-- Ahruman 2011-03-27
+	*/
+//	[result setUnsignedInteger:[self maxCargo] + 5 * [self passengerCapacity] forKey:@"cargoCapacity"];
+	
+	// FIXME: shipCommodityData is pretty horrible. It contains complete market info. Do we need anything other than name and quantity? [Issue #10] -- Ahruman 2011-03-27
+	[result setObject:shipCommodityData forKey:@"shipCommodityData"];
+	// Legacy version sanitises shipCommodityData here. Presumably this was meant to happen when _loading_.
+#else
+	NSMutableDictionary *manifest = [NSMutableDictionary dictionary];
+	NSArray *commodity = nil;
+	foreach (commodity, shipCommodityData)
+	{
+		NSUInteger quantity = [commodity oo_unsignedIntegerAtIndex:MARKET_QUANTITY];
+		if (quantity != 0)
+		{
+			[manifest oo_setUnsignedInteger:quantity forKey:[commodity oo_stringAtIndex:MARKET_NAME]];
+		}
+	}
+	if ([manifest count] != 0)  [result setObject:manifest forKey:kOOSaveKey_manifest];
+#endif
+	if (specialCargo != nil)  [result setObject:specialCargo forKey:kOOSaveKey_specialCargo];
+	
+	if ([self legalStatus] != 0)  [result oo_setInteger:[self legalStatus] forKey:kOOSaveKey_legalStatus];
+	if (ship_kills > 0)  [result oo_setUnsignedInteger:ship_kills forKey:kOOSaveKey_killCount];
+	
+	[result oo_setUnsignedInteger:[self entityPersonalityInt] forKey:kOOSaveKey_entityPersonality];
+	[result oo_setInteger:[self random_factor] forKey:kOOSaveKey_marketRandomFactor];
+	
+	// FIXME: shipyard_record representation.
+	if ([shipyard_record count] > 0)  [result setObject:shipyard_record forKey:kOOSaveKey_shipyardRecord];
+	[result oo_setInteger:ship_trade_in_factor forKey:kOOSaveKey_shipTradeInFactor];	// ship depreciation
+	
+	NSArray *localMarket = [[self dockedStation] localMarket];
+	if ([localMarket count] > 0)  [result setObject:localMarket forKey:kOOSaveKey_localMarket];
+	
+	// FIXME: new-style mission variables.
+	// FIXME: there’s stuff in mission_variables that isn’t mission variables.
+	if ([mission_variables count] != 0)
+	{
+		[result setObject:mission_variables forKey:kOOSaveKey_legacyMissionVariables];
+	}
+	
+	NSArray *log = [self commLog];
+	if ([log count] > 0)
+	{
+		[result setObject:log forKey:kOOSaveKey_commLog];
+	}
+	
+	NSMutableDictionary	*equipment = [NSMutableDictionary dictionary];
+	NSEnumerator		*eqEnum = nil;
+	NSString			*eqDesc = nil;
+	for (eqEnum = [self equipmentEnumerator]; (eqDesc = [eqEnum nextObject]); )
+	{
+		BOOL OK = YES;
+		if ([eqDesc hasSuffix:@"_DAMAGED"])
+		{
+			OK = NO;
+		}
+		[equipment oo_setBool:OK forKey:eqDesc];
+	}
+	if ([equipment count] > 0)  [result setObject:equipment forKey:kOOSaveKey_equipment];
+	
+	// FIXME: what does this representation actually mean, and can we do it in terms of equipment types instead? -- Ahruman 2011-03-28
+	if (primedEquipment < [eqScripts count])
+	{
+		[result setObject:[[eqScripts oo_arrayAtIndex:primedEquipment] oo_stringAtIndex:0] forKey:kOOSaveKey_primedEquipment];
+	}
+	
+	/*
+		Contracts.
+		FIXME: update representations.
+		Currently contracts and passengers are arrays of dictionaries using
+		keys defined at the top of PlayerEntityContracts.h. These should be
+		camelcaseified at minimum.
+		passengerRecord/contractRecord are dictionaries of past passengers/
+		contracts (keyed by PASSENGER_KEY_NAME/CARGO_KEY_ID) to avoid duplicates.
+	*/
+	[result setObject:[self priv_simplifiedContractReputation] forKey:kOOSaveKey_contractReputation];
+	if ([contracts count] > 0)  [result setObject:contracts forKey:kOOSaveKey_contracts];
+	if ([contract_record count] > 0)  [result setObject:contract_record forKey:kOOSaveKey_contractRecord];
+	
+	[result setObject:[self priv_simplifiedPassengerReputation] forKey:kOOSaveKey_passengerReputation];
+	if ([passengers count] > 0)  [result setObject:passengers forKey:kOOSaveKey_passengers];
+	if ([passenger_record count] > 0)  [result setObject:passenger_record forKey:kOOSaveKey_passengerRecord];
+	
+	if ([missionDestinations count] > 0)  [result setObject:missionDestinations forKey:kOOSaveKey_missionDestinations];
+	
+	// 1.x saved speech settings here. I consider these to be game settings that belong in preferences, not saved games. -- Ahruman 2011-03-28
+	
+	[result oo_setUnsignedInteger:_customViewIndex forKey:kOOSaveKey_customViewIndex];
+	
+	NSDictionary *localPlanetInfoOverrides = [UNIVERSE localPlanetInfoOverrides];
+	if ([localPlanetInfoOverrides count] > 0)  [result setObject:localPlanetInfoOverrides forKey:kOOSaveKey_localPlanetInfoOverrides];
+	
+	// FIXME: camelCaseify trumble dictionaries. Also, do we really want the cheat detection and shadow hash in preferences on top of compressed saved games? -- Ahruman 2011-03-28
+	[result setObject:[self trumbleValue] forKey:kOOSaveKey_trumbles];
+	
+	// FIXME: wormholes representation.
+	if ([scannedWormholes count] > 0)
+	{
+		NSMutableArray * wormholes = [NSMutableArray arrayWithCapacity:[scannedWormholes count]];
+		WormholeEntity * wh = nil;
+		foreach (wh, scannedWormholes)
+		{
+			[wormholes addObject:[wh getDict]];
+		}
+		[result setObject:wormholes forKey:kOOSaveKey_wormholes];
+	}
+	
+	// 1.x format includes a checksum, but it’s never used for anything.
+	
+	return result;
+}
+
+
+- (NSArray *) priv_simplifiedContractReputation
+{
+	int contractsBad = [reputation oo_integerForKey:CONTRACTS_BAD_KEY];
+	int contractsUnknown = [reputation oo_integerForKey:CONTRACTS_UNKNOWN_KEY];
+	int contractsGood = [reputation oo_integerForKey:CONTRACTS_GOOD_KEY];
+	return $array($int(contractsBad), $int(contractsUnknown), $int(contractsGood));
+}
+
+
+- (NSArray *) priv_simplifiedPassengerReputation
+{
+	int passageBad = [reputation oo_integerForKey:PASSAGE_BAD_KEY];
+	int passageUnknown = [reputation oo_integerForKey:PASSAGE_UNKNOWN_KEY];
+	int passageGood = [reputation oo_integerForKey:PASSAGE_GOOD_KEY];
+	return $array($int(passageBad), $int(passageUnknown), $int(passageGood));
+}
+
 
 - (NSDictionary *) legacyCommanderDataDictionary
 {

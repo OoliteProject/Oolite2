@@ -527,6 +527,10 @@ typedef enum
 - (BOOL) hasPrimaryWeapon:(OOWeaponType)weaponType;
 - (BOOL) removeExternalStore:(OOEquipmentType *)eqType;
 
+- (OOWeaponType) forwardWeaponType;
+- (OOWeaponType) aftWeaponType;
+
+
 // Passengers - not supported for NPCs, but interface is here for genericity.
 - (unsigned) passengerCount;
 - (unsigned) passengerCapacity;

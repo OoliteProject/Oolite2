@@ -586,6 +586,11 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 		return;
 	}
 	
+	// TEMP: write a new-style save game alongside the old-style one.
+	NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
+	NSString *dirPath = [path stringByDeletingLastPathComponent];
+	[self writeSavedGameToPath:[PlayerEntity savedPathGameForName:name directoryPath:dirPath] error:NULL];
+	
 	dict = [self legacyCommanderDataDictionary];
 	if (dict == nil)  errDesc = @"could not construct commander data dictionary.";
 	else  didSave = [dict writeOOXMLToFile:path atomically:YES errorDescription:&errDesc];

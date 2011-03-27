@@ -30,6 +30,10 @@ MA 02110-1301, USA.
 
 @interface PlayerEntity (Serialization)
 
++ (NSString *) savedPathGameForName:(NSString *)name directoryPath:(NSString *)directoryPath;
+
+- (BOOL) writeSavedGameToPath:(NSString *)path error:(NSError **)error;
+
 - (NSDictionary *) legacyCommanderDataDictionary;
 - (BOOL)setCommanderDataFromLegacyDictionary:(NSDictionary *) dict;
 

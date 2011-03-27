@@ -26,6 +26,7 @@
 #import "PlayerEntityContracts.h"
 #import "PlayerEntityControls.h"
 #import "PlayerEntitySound.h"
+#import "PlayerEntity+Serialization.h"
 
 #import "GameController.h"
 #import "PlayerEntityControls.h"
@@ -50,11 +51,7 @@
 
 
 // Name of modifier key used to issue commands. See also -isCommandModifierKeyDown.
-#if OOLITE_MAC_OS_X
 #define COMMAND_MODIFIER_KEY		"Ctrl" // was "Command"
-#else
-#define COMMAND_MODIFIER_KEY		"Ctrl"
-#endif
 
 
 static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
@@ -443,7 +440,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 	if (loadedOK)
 	{
 		[self setUp];
-		if ([self setCommanderDataFromDictionary:fileDic])
+		if ([self setCommanderDataFromLegacyDictionary:fileDic])
 		{
 			// Remember the savegame target.
 			Random_Seed target = target_system_seed;
@@ -589,7 +586,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 		return;
 	}
 	
-	dict = [self commanderDataDictionary];
+	dict = [self legacyCommanderDataDictionary];
 	if (dict == nil)  errDesc = @"could not construct commander data dictionary.";
 	else  didSave = [dict writeOOXMLToFile:path atomically:YES errorDescription:&errDesc];
 	if (didSave)
@@ -1040,12 +1037,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 
 - (BOOL)isCommandModifierKeyDown
 {
-#if OOLITE_MAC_OS_X
-	//return [self isCommandDown];
 	return [self isCtrlDown];
-#else
-	return [self isCtrlDown];
-#endif
 }
 
 @end

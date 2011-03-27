@@ -196,6 +196,7 @@ typedef enum
 
 #define HYPERSPEED_FACTOR				32.0
 
+#define PLAYER_DEFAULT_NAME				@"Jameson"
 #define PLAYER_SHIP_DESC				@"cobra3-player"
 
 #define ESCAPE_SEQUENCE_TIME			10.0
@@ -552,9 +553,6 @@ typedef enum
 - (void) setSystem_seed:(Random_Seed) s_seed;
 - (Random_Seed) target_system_seed;
 - (void) setTargetSystemSeed:(Random_Seed) s_seed;
-
-- (NSDictionary *) commanderDataDictionary;
-- (BOOL)setCommanderDataFromDictionary:(NSDictionary *) dict;
 
 - (void) doBookkeeping:(double) delta_t;
 

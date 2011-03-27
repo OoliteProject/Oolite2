@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A15816D133F8C180075FC2A /* PlayerEntity+Serialization.m */; };
 		1A18D69913191A920096D960 /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18D69813191A920096D960 /* SUUpdater.m */; };
 		1A1B975A13087FBE0078322D /* DustEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971313087FBE0078322D /* DustEntity.m */; };
 		1A1B975B13087FBE0078322D /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971513087FBE0078322D /* Entity.m */; };
@@ -935,6 +936,8 @@
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A15816C133F8C180075FC2A /* PlayerEntity+Serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "PlayerEntity+Serialization.h"; path = "../Source/Entities/PlayerEntity+Serialization.h"; sourceTree = "<group>"; };
+		1A15816D133F8C180075FC2A /* PlayerEntity+Serialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "PlayerEntity+Serialization.m"; path = "../Source/Entities/PlayerEntity+Serialization.m"; sourceTree = "<group>"; };
 		1A18D69713191A920096D960 /* SUUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUpdater.h; sourceTree = "<group>"; };
 		1A18D69813191A920096D960 /* SUUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUpdater.m; sourceTree = "<group>"; };
 		1A1B971213087FBE0078322D /* DustEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DustEntity.h; sourceTree = "<group>"; };
@@ -2512,6 +2515,8 @@
 		29B97314FDCFA39411CA2CEA /* Oolite */ = {
 			isa = PBXGroup;
 			children = (
+				1A15816C133F8C180075FC2A /* PlayerEntity+Serialization.h */,
+				1A15816D133F8C180075FC2A /* PlayerEntity+Serialization.m */,
 				1A64A0C91323C54000C2FDDB /* Config */,
 				1A9C64411306082E00B30EFD /* Tables */,
 				1A9C63CA1306022100B30EFD /* Source */,
@@ -2519,10 +2524,6 @@
 				1A9C639B130600A000B30EFD /* Game Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks and Libraries */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				1A1F2C2A13183BA200D06C6C /* CoreServices.framework */,
-				1A1F2D4F1318411A00D06C6C /* Carbon.framework */,
-				1A1F2E6713184E6700D06C6C /* libz.dylib */,
-				1AB5C3A71318703200C73246 /* IOKit.framework */,
 			);
 			name = Oolite;
 			sourceTree = "<group>";
@@ -2545,6 +2546,10 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				1A1F2C2A13183BA200D06C6C /* CoreServices.framework */,
+				1A1F2D4F1318411A00D06C6C /* Carbon.framework */,
+				1A1F2E6713184E6700D06C6C /* libz.dylib */,
+				1AB5C3A71318703200C73246 /* IOKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				1A1F2A2013182CB000D06C6C /* OpenGL.framework */,
 				1A1F2A2413182CC200D06C6C /* CoreAudio.framework */,
@@ -2934,6 +2939,7 @@
 				1AFD9CB213361BA300460ABE /* OOShipClass+Legacy.m in Sources */,
 				1AD6A7571336BA1C00E0B0B2 /* OOShipClass+IO.m in Sources */,
 				1A5BFE0C133E6B0E0093BDC2 /* OOXMLExtensions.m in Sources */,
+				1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

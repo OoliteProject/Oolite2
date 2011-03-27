@@ -26,6 +26,7 @@ MA 02110-1301, USA.
 #import "PlayerEntityLegacyScriptEngine.h"
 #import "PlayerEntityContracts.h"
 #import "PlayerEntityControls.h"
+#import "PlayerEntity+Serialization.h"
 #import "ProxyPlayerEntity.h"
 
 #import "Universe.h"
@@ -1563,7 +1564,7 @@ static NSMutableDictionary* currentShipyard = nil;
 		for-sale ships.
 		-- Ahruman 20070707, fix applied 20070708
 	*/
-	unsigned long long value = [UNIVERSE tradeInValueForCommanderDictionary:[self commanderDataDictionary]];
+	unsigned long long value = [UNIVERSE tradeInValueForCommanderDictionary:[self legacyCommanderDataDictionary]];
 	value -= cunningFee(value * 0.006 * [self missingSubEntitiesAdjustment]);	// TODO: 0.006 might need rethinking.
 	value = ((value * 75 * ship_trade_in_factor) + 5000) / 10000;	// Multiply by two percentages, divide by 100*100. The +5000 is to get normal rounding.
 	return value * 10;
@@ -1713,8 +1714,8 @@ static NSMutableDictionary* currentShipyard = nil;
 	[[dockedStation localShipyard] removeObjectAtIndex:sel_row - GUI_ROW_SHIPYARD_START];
 	
 	// perform the transformation
-	NSDictionary* cmdr_dict = [self commanderDataDictionary];	// gather up all the info
-	if (![self setCommanderDataFromDictionary:cmdr_dict])  return NO;
+	NSDictionary* cmdr_dict = [self legacyCommanderDataDictionary];	// gather up all the info
+	if (![self setCommanderDataFromLegacyDictionary:cmdr_dict])  return NO;
 
 	[self setStatus:STATUS_DOCKED];
 	[self setEntityPersonalityInt:[ship_info oo_unsignedShortForKey:SHIPYARD_KEY_PERSONALITY]];

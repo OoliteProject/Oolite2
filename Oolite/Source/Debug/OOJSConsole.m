@@ -30,6 +30,7 @@ SOFTWARE.
 
 #import "OOJSConsole.h"
 #import "OODebugMonitor.h"
+#import "OOVersion.h"
 
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSScript.h"
@@ -50,9 +51,6 @@ SOFTWARE.
 - (void) inspect;
 
 @end
-
-
-NSString *OOPlatformDescription(void);
 
 
 static JSObject *sConsolePrototype = NULL;
@@ -329,7 +327,7 @@ static JSBool ConsoleGetProperty(JSContext *context, JSObject *this, jsid propID
 			break;
 			
 		case kConsole_platformDescription:
-			*value = OOJSValueFromNativeObject(context, OOPlatformDescription());
+			*value = OOJSValueFromNativeObject(context, OolitePlatformDescription());
 			break;
 			
 		case kConsole_pedanticMode:

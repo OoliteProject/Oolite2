@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		1A15815E133F7B230075FC2A /* Revision header */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1A158164133F7B230075FC2A /* Build configuration list for PBXAggregateTarget "Revision header" */;
+			buildPhases = (
+				1A158169133F7B360075FC2A /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Revision header";
+			productName = "Revision header";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		1A18D69913191A920096D960 /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18D69813191A920096D960 /* SUUpdater.m */; };
 		1A1B975A13087FBE0078322D /* DustEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971313087FBE0078322D /* DustEntity.m */; };
@@ -447,6 +461,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A15816A133F7BA20075FC2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A15815E133F7B230075FC2A;
+			remoteInfo = "Revision header";
+		};
 		1A18D776131939020096D960 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A1F2E5E13184E4D00D06C6C /* libpng.xcodeproj */;
@@ -2564,6 +2585,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A15816B133F7BA20075FC2A /* PBXTargetDependency */,
 				1A1F25C11317C83C00D06C6C /* PBXTargetDependency */,
 				1A1F25C31317C83C00D06C6C /* PBXTargetDependency */,
 				1A1F25C71317C83C00D06C6C /* PBXTargetDependency */,
@@ -2627,6 +2649,7 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* Oolite */,
+				1A15815E133F7B230075FC2A /* Revision header */,
 			);
 		};
 /* End PBXProject section */
@@ -2719,6 +2742,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A158169133F7B360075FC2A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$OOLITE_ROOT/Scripts/make-revision-header.sh\" \"$DEP_HEADER_PATH/OORevision.h\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
@@ -2900,6 +2940,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1A15816B133F7BA20075FC2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1A15815E133F7B230075FC2A /* Revision header */;
+			targetProxy = 1A15816A133F7BA20075FC2A /* PBXContainerItemProxy */;
+		};
 		1A18D777131939020096D960 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = libpng;
@@ -2952,6 +2997,27 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1A158165133F7B230075FC2A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1A158166133F7B230075FC2A /* Developer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Developer;
+		};
+		1A158167133F7B230075FC2A /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = EndUser;
+		};
 		1AF5F6371305FBEF00CB691A /* EndUser */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A64A0CC1323C54000C2FDDB /* oolite-enduser-configuration.xcconfig */;
@@ -3045,6 +3111,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1A158164133F7B230075FC2A /* Build configuration list for PBXAggregateTarget "Revision header" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A158165133F7B230075FC2A /* Debug */,
+				1A158166133F7B230075FC2A /* Developer */,
+				1A158167133F7B230075FC2A /* EndUser */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Oolite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

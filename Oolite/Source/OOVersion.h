@@ -7,8 +7,14 @@ OOINLINE NSString *OoliteVersion(void)
 	return @OOLITE_VERSION;
 }
 
-
 NSArray *OoliteVersionComponents(void);
+
+
+NSUInteger OoliteRevisionNumber(void);
+NSString *OoliteRevisionIdentifier(void);	// Currently, Git revision hash.
+NSString *OoliteBuildDate(void);
+NSString *OolitePlatformDescription(void);
+
 
 // Version handling utilities, should probably be moved to Base.
 
@@ -22,3 +28,4 @@ NSArray *OOComponentsFromVersionString(NSString *string);
 	component is treated as 0. Thus "1.7" < "1.60", and "1.2.3.0" == "1.2.3".
 */
 NSComparisonResult OOCompareVersions(NSArray *version1, NSArray *version2);
+

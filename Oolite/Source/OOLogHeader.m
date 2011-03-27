@@ -32,77 +32,15 @@ SOFTWARE.
 #import "OOVersion.h"
 
 
-static NSString *AdditionalLogHeaderInfo(void);
+static NSString *AdditionalSystemInfo(void);
 
 NSString *OOPlatformDescription(void);
 
 
-#ifdef ALLOW_PROCEDURAL_PLANETS
-#warning ALLOW_PROCEDURAL_PLANETS is no longer optional and the macro should no longer be defined.
-#endif
-
-#ifdef DOCKING_CLEARANCE_ENABLED
-#warning DOCKING_CLEARANCE_ENABLED is no longer optional and the macro should no longer be defined.
-#endif
-
-#ifdef WORMHOLE_SCANNER
-#warning WORMHOLE_SCANNER is no longer optional and the macro should no longer be defined.
-#endif
-
-#ifdef TARGET_INCOMING_MISSILES
-#warning TARGET_INCOMING_MISSILES is no longer optional and the macro should no longer be defined.
-#endif
-
-
 void OOPrintLogHeader(void)
 {
-	// Bunch of string literal macros which are assembled into a CPU info string.
-	#if defined (__ppc__)
-		#define CPU_TYPE_STRING "PPC-32"
-	#elif defined (__ppc64__)
-		#define CPU_TYPE_STRING "PPC-64"
-	#elif defined (__i386__)
-		#define CPU_TYPE_STRING "x86-32"
-	#elif defined (__x86_64__)
-		#define CPU_TYPE_STRING "x86-64"
-	#else
-		#if OOLITE_BIG_ENDIAN
-			#define CPU_TYPE_STRING "<unknown big-endian architecture>"
-		#elif OOLITE_LITTLE_ENDIAN
-			#define CPU_TYPE_STRING "<unknown little-endian architecture>"
-		#else
-			#define CPU_TYPE_STRING "<unknown architecture with unknown byte order>"
-		#endif
-	#endif
-	
-	#if OOLITE_MAC_OS_X
-		#define OS_TYPE_STRING "Mac OS X"
-	#elif OOLITE_WINDOWS
-		#define OS_TYPE_STRING "Windows"
-	#elif OOLITE_LINUX
-		#define OS_TYPE_STRING "Linux"	// Hmm, what about other unices?
-	#elif OOLITE_SDL
-		#define OS_TYPE_STRING "unknown SDL system"
-	#elif OOLITE_HAVE_APPKIT
-		#define OS_TYPE_STRING "unknown AppKit system"
-	#else
-		#define OS_TYPE_STRING "unknown system"
-	#endif
-	
-	#if OO_DEBUG
-		#define RELEASE_VARIANT_STRING " debug"
-	#elif !defined (NDEBUG)
-		#define RELEASE_VARIANT_STRING " test release"
-	#else
-		#define RELEASE_VARIANT_STRING ""
-	#endif
-	
 	NSArray *featureStrings = [NSArray arrayWithObjects:
 	// User features
-	#if OO_SHADERS
-		@"GLSL shaders",
-	#endif
-	
 	#if NEW_PLANETS
 		@"new planets",
 	#endif
@@ -146,44 +84,19 @@ void OOPrintLogHeader(void)
 	
 		nil];
 	
-	// systemString: NSString with system type and possibly version.
-	#if OOLITE_MAC_OS_X
-		NSString *systemString = [NSString stringWithFormat:@OS_TYPE_STRING " %@", [[NSProcessInfo processInfo] operatingSystemVersionString]];
-	#else
-		#define systemString @OS_TYPE_STRING
-	#endif
 	
-	NSString *versionString = nil;
-	#if (defined (SNAPSHOT_BUILD) && defined (OOLITE_SNAPSHOT_VERSION))
-		versionString = @"development version " OOLITE_SNAPSHOT_VERSION;
-	#else
-		versionString = [NSString stringWithFormat:@"version %@", OoliteVersion()];
-	#endif
-	if (versionString == nil)  versionString = @"<unknown version>";
-	
-	NSMutableString *miscString = [NSMutableString stringWithFormat:@"Opening log for Oolite %@ (" CPU_TYPE_STRING RELEASE_VARIANT_STRING ") under %@ at %@.\n", versionString, systemString, [NSDate date]];
-	
-	[miscString appendString:AdditionalLogHeaderInfo()];
+	NSMutableString *headerString = [NSMutableString string];
+	[headerString appendFormat:@"Opening log on %@\n", [NSDate date]]; 
+	[headerString appendFormat:@"Oolite version: %@ (revision %u built on %@, ID: %@)\n", OoliteVersion(), OoliteRevisionNumber(), OoliteBuildDate(), OoliteRevisionIdentifier()];
+	[headerString appendFormat:@"System: %@; %@\n", OolitePlatformDescription(), AdditionalSystemInfo()];
 	
 	NSString *featureDesc = [featureStrings componentsJoinedByString:@", "];
 	if ([featureDesc length] == 0)  featureDesc = @"none";
-	[miscString appendFormat:@"\nBuild options: %@.\n", featureDesc];
+	[headerString appendFormat:@"\nBuild options: %@.\n", featureDesc];
 	
-	[miscString appendString:@"\nNote that the contents of the log file can be adjusted by editing logcontrol.plist."];
+	[headerString appendString:@"\nNote that the contents of the log file can be adjusted by editing logcontrol.plist."];
 	
-	OOLog(@"log.header", @"%@\n", miscString);
-}
-
-
-NSString *OOPlatformDescription(void)
-{
-	#if OOLITE_MAC_OS_X
-		NSString *systemString = [NSString stringWithFormat:@OS_TYPE_STRING " %@", [[NSProcessInfo processInfo] operatingSystemVersionString]];
-	#else
-		#define systemString @OS_TYPE_STRING
-	#endif
-	
-	return [NSString stringWithFormat:@"%@ ("CPU_TYPE_STRING RELEASE_VARIANT_STRING")", systemString];
+	OOLog(@"log.header", @"%@\n", headerString);
 }
 
 
@@ -192,48 +105,11 @@ NSString *OOPlatformDescription(void)
 #include <sys/sysctl.h>
 
 
-#ifndef CPUFAMILY_INTEL_6_13
-// Copied from OS X 10.5 SDK
-#define CPUFAMILY_INTEL_6_13	0xaa33392b
-#define CPUFAMILY_INTEL_6_14	0x73d67300  /* "Intel Core Solo" and "Intel Core Duo" (32-bit Pentium-M with SSE3) */
-#define CPUFAMILY_INTEL_6_15	0x426f69ef  /* "Intel Core 2 Duo" */
-#define CPUFAMILY_INTEL_6_23	0x78ea4fbc  /* Penryn */
-#define CPUFAMILY_INTEL_6_26	0x6b5a4cd2
-
-#define CPUFAMILY_INTEL_YONAH	CPUFAMILY_INTEL_6_14
-#define CPUFAMILY_INTEL_MEROM	CPUFAMILY_INTEL_6_15
-#define CPUFAMILY_INTEL_PENRYN	CPUFAMILY_INTEL_6_23
-#define CPUFAMILY_INTEL_NEHALEM	CPUFAMILY_INTEL_6_26
-
-#define CPUFAMILY_INTEL_CORE	CPUFAMILY_INTEL_6_14
-#define CPUFAMILY_INTEL_CORE2	CPUFAMILY_INTEL_6_15
-#endif
-
-#ifndef CPUFAMILY_INTEL_WESTMERE
-// Copied from OS X 10.6 SDK
-#define CPUFAMILY_INTEL_WESTMERE	0x573b5eec
-#endif
-
-#ifndef CPU_TYPE_ARM
-#define CPU_TYPE_ARM			((cpu_type_t) 12)
-#define CPU_SUBTYPE_ARM_ALL		((cpu_subtype_t) 0)
-#define CPU_SUBTYPE_ARM_V4T		((cpu_subtype_t) 5)
-#define CPU_SUBTYPE_ARM_V6		((cpu_subtype_t) 6)
-#define CPUFAMILY_ARM_9			0xe73283ae
-#define CPUFAMILY_ARM_11		0x8ff620d8
-#endif
-#ifndef CPUFAMILY_ARM_XSCALE
-// From 10.6 SDK
-#define CPUFAMILY_ARM_XSCALE 0x53b005f5
-#define CPUFAMILY_ARM_13     0x0cc90e64
-#endif
-
-
 static NSString *GetSysCtlString(const char *name);
 static unsigned long long GetSysCtlInt(const char *name);
 static NSString *GetCPUDescription(void);
 
-static NSString *AdditionalLogHeaderInfo(void)
+static NSString *AdditionalSystemInfo(void)
 {
 	NSString				*sysModel = nil;
 	unsigned long long		sysPhysMem;
@@ -241,7 +117,7 @@ static NSString *AdditionalLogHeaderInfo(void)
 	sysModel = GetSysCtlString("hw.model");
 	sysPhysMem = GetSysCtlInt("hw.memsize");
 	
-	return [NSString stringWithFormat:@"Machine type: %@, %llu MiB memory, %@.", sysModel, sysPhysMem >> 20, GetCPUDescription()];
+	return [NSString stringWithFormat:@"%@, %llu MiB memory, %@", sysModel, sysPhysMem >> 20, GetCPUDescription()];
 }
 
 
@@ -399,9 +275,9 @@ static unsigned long long GetSysCtlInt(const char *name)
 }
 
 #else
-static NSString *AdditionalLogHeaderInfo(void)
+static NSString *AdditionalSystemInfo(void)
 {
 	unsigned cpuCount = OOCPUCount();
-	return [NSString stringWithFormat:@"%u processor%@ detected.", cpuCount, cpuCount != 1 ? @"s" : @""];
+	return [NSString stringWithFormat:@"%u processor%@", cpuCount, cpuCount != 1 ? @"s" : @""];
 }
 #endif

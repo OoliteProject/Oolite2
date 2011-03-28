@@ -150,6 +150,9 @@ static GLfloat calcFuelChargeRate (GLfloat my_mass, GLfloat base_mass)
 
 - (void) setShipHitByLaser:(ShipEntity *)ship;
 
+- (float) density;
+- (void) calculateMass;
+
 @end
 
 
@@ -289,8 +292,6 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 		OOLogWARN(@"ship.setUp.noModel", @"Ship %@ does not specify a model. Ships with no model cannot be instantiated, only used as templates.", [self shipDataKey]);
 		return NO;
 	}
-	
-	mass = [shipClass density] * 20.0f * [octree volume];
 	
 	[self setBaseHeatInsulation:[shipClass heatInsulation]];
 	
@@ -778,14 +779,12 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 - (void) clearSubEntities
 {
 	[subEntities makeObjectsPerformSelector:@selector(setOwner:) withObject:nil];	// Ensure backlinks are broken
-	[subEntities release];
-	subEntities = nil;
+	DESTROY(subEntities);
 	
 	// reset size & mass!
 	collision_radius = [self findCollisionRadius];
 	_profileRadius = collision_radius;
-	float density = [[self shipInfoDictionary] oo_floatForKey:@"density" defaultValue:1.0f];
-	if (octree)  mass = (GLfloat)(density * 20.0 * [octree volume]);
+	[self calculateMass];
 }
 
 
@@ -826,6 +825,28 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 		[self setDrawable:mesh];
 		[octree autorelease];
 		octree = [[mesh octree] retain];
+		[self calculateMass];
+		[[self rootShipEntity] calculateMass];
+	}
+}
+
+
+- (float) density
+{
+	return [[self shipClass] density] * 20.0f;
+}
+
+
+- (void) calculateMass
+{
+	if (octree != nil)
+	{
+		mass = [self density] * [octree volume];
+		Entity *subEnt = nil;
+		foreach (subEnt, subEntities)
+		{
+			mass = [subEnt mass];
+		}
 	}
 }
 
@@ -1564,7 +1585,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			collision_radius = distance;
 		}
 		
-		mass += 20.0 * [(ShipEntity *)subent volume];
+		mass += [subent mass];
 	}
 	if (distance > _profileRadius)
 	{

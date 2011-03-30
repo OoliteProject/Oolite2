@@ -992,7 +992,7 @@ static JSBool SystemStaticSystemNameForID(JSContext *context, uintN argc, jsval 
 		return NO;
 	}
 	
-	OOJS_RETURN_OBJECT([UNIVERSE getSystemName:[UNIVERSE systemSeedForSystemNumber:systemID]]);
+	OOJS_RETURN_OBJECT([UNIVERSE generateSystemName:[UNIVERSE systemSeedForSystemNumber:systemID]]);
 	
 	OOJS_NATIVE_EXIT
 }

@@ -1,8 +1,7 @@
 /*
 
-NSScannerOOExtensions.h
+OOLegacyEngineUtilities.m
 
-Additions to NSScanner to work around bugs.
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -24,15 +23,19 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
+#import "OOLegacyEngineUtilities.h"
 
 
-@interface NSScanner (OOExtensions)
-
-- (BOOL) ooliteScanCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value;
-- (BOOL) ooliteScanUpToCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value;
-
-@end
-
-
-NSMutableArray *OOScanTokensFromString(NSString *values);
+NSString *OOComparisonTypeToString(OOComparisonType type)
+{
+	switch (type)
+	{
+		case COMPARISON_EQUAL:			return @"equal";
+		case COMPARISON_NOTEQUAL:		return @"notequal";
+		case COMPARISON_LESSTHAN:		return @"lessthan";
+		case COMPARISON_GREATERTHAN:	return @"greaterthan";
+		case COMPARISON_ONEOF:			return @"oneof";
+		case COMPARISON_UNDEFINED:		return @"undefined";
+	}
+	return @"<error: invalid comparison type>";
+}

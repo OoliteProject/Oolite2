@@ -1,0 +1,414 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A4588C111F89740000CBCF0 /* OOTrJSAST.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A4588C011F89740000CBCF0 /* OOTrJSAST.m */; };
+		1A458A0611F8D810000CBCF0 /* OOTrConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458A0511F8D810000CBCF0 /* OOTrConverter.m */; };
+		1A458A6411F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A458A6311F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.m */; };
+		1A8F9D3B13461AE800068766 /* NSString+OOJavaScriptLiteral.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F9D3A13461AE800068766 /* NSString+OOJavaScriptLiteral.m */; };
+		1A8F9D4B13461B8000068766 /* whitelist_shim.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F9D4A13461B8000068766 /* whitelist_shim.c */; };
+		1A8F9D5513461BD000068766 /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A8F9D13134619A000068766 /* OoliteBase.framework */; };
+		1A8F9DB713461D6200068766 /* OOLegacyEngineUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F9DB613461D6200068766 /* OOLegacyEngineUtilities.m */; };
+		1AE248AD11FA140C00D96B3B /* OOTrConverterCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE248A011FA13AE00D96B3B /* OOTrConverterCore.m */; };
+		1AE24D4F11FB31E800D96B3B /* OOTRJSSimplify.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE24D4E11FB31E800D96B3B /* OOTRJSSimplify.m */; };
+		1AE24D5211FB31EE00D96B3B /* OOTRJSGraphViz.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE24D5111FB31EE00D96B3B /* OOTRJSGraphViz.m */; };
+		8DD76F9A0486AA7600D96B5E /* ootranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* ootranscript.m */; settings = {ATTRIBUTES = (); }; };
+		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1A8F9D071346198C00068766 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A8F9CFF1346198C00068766 /* plist2c.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1A458AC411F8E3EC000CBCF0 /* plist2c */;
+			remoteInfo = plist2c;
+		};
+		1A8F9D091346199300068766 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A8F9CFF1346198C00068766 /* plist2c.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A458AC311F8E3EC000CBCF0 /* plist2c */;
+			remoteInfo = plist2c;
+		};
+		1A8F9D12134619A000068766 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4587FA11F8966C000CBCF0 /* OoliteBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OoliteBase.framework */;
+			remoteInfo = OoliteBase;
+		};
+		1A8F9D14134619A700068766 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A4587FA11F8966C000CBCF0 /* OoliteBase.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OoliteBase */;
+			remoteInfo = OoliteBase;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DD76F9E0486AA7600D96B5E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		08FB7796FE84155DC02AAC07 /* ootranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ootranscript.m; sourceTree = "<group>"; };
+		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A4587FA11F8966C000CBCF0 /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../../Components/OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A4588BF11F89740000CBCF0 /* OOTrJSAST.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTrJSAST.h; sourceTree = "<group>"; };
+		1A4588C011F89740000CBCF0 /* OOTrJSAST.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTrJSAST.m; sourceTree = "<group>"; };
+		1A458A0411F8D810000CBCF0 /* OOTrConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTrConverter.h; sourceTree = "<group>"; };
+		1A458A0511F8D810000CBCF0 /* OOTrConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTrConverter.m; sourceTree = "<group>"; };
+		1A458A6211F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLegacyScriptWhitelist.h; sourceTree = "<group>"; };
+		1A458A6311F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLegacyScriptWhitelist.m; sourceTree = "<group>"; };
+		1A8F9B3D1346150200068766 /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; };
+		1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B411346150200068766 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B421346150200068766 /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; };
+		1A8F9B431346150200068766 /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A8F9CFB1346197500068766 /* whitelist.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = whitelist.plist; path = ../Resources/whitelist.plist; sourceTree = SOURCE_ROOT; };
+		1A8F9CFF1346198C00068766 /* plist2c.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = plist2c.xcodeproj; path = ../../plist2c/Mac/plist2c.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A8F9D3913461AE800068766 /* NSString+OOJavaScriptLiteral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+OOJavaScriptLiteral.h"; sourceTree = "<group>"; };
+		1A8F9D3A13461AE800068766 /* NSString+OOJavaScriptLiteral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+OOJavaScriptLiteral.m"; sourceTree = "<group>"; };
+		1A8F9D4A13461B8000068766 /* whitelist_shim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = whitelist_shim.c; sourceTree = SOURCE_ROOT; };
+		1A8F9DB513461D6200068766 /* OOLegacyEngineUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLegacyEngineUtilities.h; sourceTree = "<group>"; };
+		1A8F9DB613461D6200068766 /* OOLegacyEngineUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLegacyEngineUtilities.m; sourceTree = "<group>"; };
+		1AE248A011FA13AE00D96B3B /* OOTrConverterCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTrConverterCore.m; sourceTree = "<group>"; };
+		1AE248AC11FA140A00D96B3B /* OOTrConverterInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTrConverterInternal.h; sourceTree = "<group>"; };
+		1AE24D4D11FB31E800D96B3B /* OOTRJSSimplify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTRJSSimplify.h; sourceTree = "<group>"; };
+		1AE24D4E11FB31E800D96B3B /* OOTRJSSimplify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTRJSSimplify.m; sourceTree = "<group>"; };
+		1AE24D5011FB31EE00D96B3B /* OOTRJSGraphViz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTRJSGraphViz.h; sourceTree = "<group>"; };
+		1AE24D5111FB31EE00D96B3B /* OOTRJSGraphViz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTRJSGraphViz.m; sourceTree = "<group>"; };
+		8DD76FA10486AA7600D96B5E /* ootranscript */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ootranscript; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DD76F9B0486AA7600D96B5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
+				1A8F9D5513461BD000068766 /* OoliteBase.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* ootranscript */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9B3C1346150200068766 /* Config */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				1A8F9CFB1346197500068766 /* whitelist.plist */,
+				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
+				1A8F9CFF1346198C00068766 /* plist2c.xcodeproj */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = ootranscript;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7796FE84155DC02AAC07 /* ootranscript.m */,
+				1A458A0411F8D810000CBCF0 /* OOTrConverter.h */,
+				1A458A0511F8D810000CBCF0 /* OOTrConverter.m */,
+				1AE248AC11FA140A00D96B3B /* OOTrConverterInternal.h */,
+				1AE248A011FA13AE00D96B3B /* OOTrConverterCore.m */,
+				1AE248F011FA1B4400D96B3B /* AST */,
+				1A458A6211F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.h */,
+				1A458A6311F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.m */,
+				1A8F9D3913461AE800068766 /* NSString+OOJavaScriptLiteral.h */,
+				1A8F9D3A13461AE800068766 /* NSString+OOJavaScriptLiteral.m */,
+				1A8F9DB513461D6200068766 /* OOLegacyEngineUtilities.h */,
+				1A8F9DB613461D6200068766 /* OOLegacyEngineUtilities.m */,
+				1A8F9D4A13461B8000068766 /* whitelist_shim.c */,
+			);
+			name = Source;
+			path = ../Source;
+			sourceTree = "<group>";
+		};
+		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1A4587FA11F8966C000CBCF0 /* OoliteBase.xcodeproj */,
+				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		1A8F9B3C1346150200068766 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9B3D1346150200068766 /* oolite-copy-headers.make */,
+				1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */,
+				1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */,
+				1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */,
+				1A8F9B411346150200068766 /* oolite-shared-settings.xcconfig */,
+				1A8F9B421346150200068766 /* oolite-shared.make */,
+				1A8F9B431346150200068766 /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
+		};
+		1A8F9D001346198C00068766 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9D081346198C00068766 /* plist2c */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A8F9D0F134619A000068766 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9D13134619A000068766 /* OoliteBase.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DD76FA10486AA7600D96B5E /* ootranscript */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AE248F011FA1B4400D96B3B /* AST */ = {
+			isa = PBXGroup;
+			children = (
+				1A4588BF11F89740000CBCF0 /* OOTrJSAST.h */,
+				1A4588C011F89740000CBCF0 /* OOTrJSAST.m */,
+				1AE24D4D11FB31E800D96B3B /* OOTRJSSimplify.h */,
+				1AE24D4E11FB31E800D96B3B /* OOTRJSSimplify.m */,
+				1AE24D5011FB31EE00D96B3B /* OOTRJSGraphViz.h */,
+				1AE24D5111FB31EE00D96B3B /* OOTRJSGraphViz.m */,
+			);
+			name = AST;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8DD76F960486AA7600D96B5E /* ootranscript */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "ootranscript" */;
+			buildPhases = (
+				1A458AD711F8E445000CBCF0 /* Build whitelist.c */,
+				8DD76F990486AA7600D96B5E /* Sources */,
+				8DD76F9B0486AA7600D96B5E /* Frameworks */,
+				8DD76F9E0486AA7600D96B5E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1A8F9D0A1346199300068766 /* PBXTargetDependency */,
+				1A8F9D15134619A700068766 /* PBXTargetDependency */,
+			);
+			name = ootranscript;
+			productInstallPath = "$(HOME)/bin";
+			productName = ootranscript;
+			productReference = 8DD76FA10486AA7600D96B5E /* ootranscript */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "the Oolite team";
+			};
+			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "ootranscript" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* ootranscript */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1A8F9D0F134619A000068766 /* Products */;
+					ProjectRef = 1A4587FA11F8966C000CBCF0 /* OoliteBase.xcodeproj */;
+				},
+				{
+					ProductGroup = 1A8F9D001346198C00068766 /* Products */;
+					ProjectRef = 1A8F9CFF1346198C00068766 /* plist2c.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8DD76F960486AA7600D96B5E /* ootranscript */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1A8F9D081346198C00068766 /* plist2c */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = plist2c;
+			remoteRef = 1A8F9D071346198C00068766 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1A8F9D13134619A000068766 /* OoliteBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteBase.framework;
+			remoteRef = 1A8F9D12134619A000068766 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A458AD711F8E445000CBCF0 /* Build whitelist.c */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../Resources/whitelist.plist",
+			);
+			name = "Build whitelist.c";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/whitelist.c",
+				"$(DERIVED_FILE_DIR)/whitelist.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$BUILT_PRODUCTS_DIR/plist2c $SRCROOT/../Resources/whitelist.plist $DERIVED_FILE_DIR\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DD76F990486AA7600D96B5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DD76F9A0486AA7600D96B5E /* ootranscript.m in Sources */,
+				1A4588C111F89740000CBCF0 /* OOTrJSAST.m in Sources */,
+				1A458A0611F8D810000CBCF0 /* OOTrConverter.m in Sources */,
+				1A458A6411F8DFB9000CBCF0 /* OOLegacyScriptWhitelist.m in Sources */,
+				1AE248AD11FA140C00D96B3B /* OOTrConverterCore.m in Sources */,
+				1AE24D4F11FB31E800D96B3B /* OOTRJSSimplify.m in Sources */,
+				1AE24D5211FB31EE00D96B3B /* OOTRJSGraphViz.m in Sources */,
+				1A8F9D3B13461AE800068766 /* NSString+OOJavaScriptLiteral.m in Sources */,
+				1A8F9D4B13461B8000068766 /* whitelist_shim.c in Sources */,
+				1A8F9DB713461D6200068766 /* OOLegacyEngineUtilities.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A8F9D0A1346199300068766 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = plist2c;
+			targetProxy = 1A8F9D091346199300068766 /* PBXContainerItemProxy */;
+		};
+		1A8F9D15134619A700068766 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteBase;
+			targetProxy = 1A8F9D14134619A700068766 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1A8F9E40134620A400068766 /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = EndUser;
+		};
+		1A8F9E41134620A400068766 /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
+				PRODUCT_NAME = ootranscript;
+			};
+			name = EndUser;
+		};
+		1DEB927508733DD40010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
+				PRODUCT_NAME = ootranscript;
+			};
+			name = Debug;
+		};
+		1DEB927608733DD40010E9CD /* Developer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/";
+				PRODUCT_NAME = ootranscript;
+			};
+			name = Developer;
+		};
+		1DEB927908733DD40010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = Debug;
+		};
+		1DEB927A08733DD40010E9CD /* Developer */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = Developer;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "ootranscript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB927508733DD40010E9CD /* Debug */,
+				1DEB927608733DD40010E9CD /* Developer */,
+				1A8F9E41134620A400068766 /* EndUser */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Developer;
+		};
+		1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "ootranscript" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB927908733DD40010E9CD /* Debug */,
+				1DEB927A08733DD40010E9CD /* Developer */,
+				1A8F9E40134620A400068766 /* EndUser */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Developer;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

@@ -1,0 +1,219 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A8F9BBB1346160F00068766 /* plist2c.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F9BBA1346160F00068766 /* plist2c.m */; };
+		1A8F9BCB1346165100068766 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A8F9BCA1346165100068766 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A458AC411F8E3EC000CBCF0 /* plist2c */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = plist2c; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A8F9B3D1346150200068766 /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; };
+		1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B411346150200068766 /* oolite-shared-settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-shared-settings.xcconfig"; sourceTree = "<group>"; };
+		1A8F9B421346150200068766 /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; };
+		1A8F9B431346150200068766 /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
+		1A8F9BBA1346160F00068766 /* plist2c.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = plist2c.m; sourceTree = "<group>"; };
+		1A8F9BCA1346165100068766 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A458AC211F8E3EC000CBCF0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A8F9BCB1346165100068766 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* ootranscript */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9B3C1346150200068766 /* Config */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = ootranscript;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9BBA1346160F00068766 /* plist2c.m */,
+			);
+			name = Source;
+			path = ../Source;
+			sourceTree = "<group>";
+		};
+		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9BCA1346165100068766 /* Foundation.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		1A8F9B3C1346150200068766 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F9B3D1346150200068766 /* oolite-copy-headers.make */,
+				1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */,
+				1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */,
+				1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */,
+				1A8F9B411346150200068766 /* oolite-shared-settings.xcconfig */,
+				1A8F9B421346150200068766 /* oolite-shared.make */,
+				1A8F9B431346150200068766 /* oolite-version.inc */,
+			);
+			name = Config;
+			path = ../../../Config;
+			sourceTree = SOURCE_ROOT;
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A458AC411F8E3EC000CBCF0 /* plist2c */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A458AC311F8E3EC000CBCF0 /* plist2c */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A458ACA11F8E3F3000CBCF0 /* Build configuration list for PBXNativeTarget "plist2c" */;
+			buildPhases = (
+				1A458AC111F8E3EC000CBCF0 /* Sources */,
+				1A458AC211F8E3EC000CBCF0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = plist2c;
+			productName = plist2c;
+			productReference = 1A458AC411F8E3EC000CBCF0 /* plist2c */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "the Oolite team";
+			};
+			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "plist2c" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* ootranscript */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A458AC311F8E3EC000CBCF0 /* plist2c */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A458AC111F8E3EC000CBCF0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A8F9BBB1346160F00068766 /* plist2c.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1A458AC611F8E3ED000CBCF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = plist2c;
+			};
+			name = Debug;
+		};
+		1A458AC711F8E3ED000CBCF0 /* Developer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = plist2c;
+			};
+			name = Developer;
+		};
+		1A8F9E46134620B800068766 /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B401346150200068766 /* oolite-enduser-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = EndUser;
+		};
+		1A8F9E47134620B800068766 /* EndUser */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = plist2c;
+			};
+			name = EndUser;
+		};
+		1DEB927908733DD40010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B3E1346150200068766 /* oolite-debug-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = Debug;
+		};
+		1DEB927A08733DD40010E9CD /* Developer */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A8F9B3F1346150200068766 /* oolite-developer-configuration.xcconfig */;
+			buildSettings = {
+				OOLITE_ROOT = ../../../;
+			};
+			name = Developer;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A458ACA11F8E3F3000CBCF0 /* Build configuration list for PBXNativeTarget "plist2c" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A458AC611F8E3ED000CBCF0 /* Debug */,
+				1A458AC711F8E3ED000CBCF0 /* Developer */,
+				1A8F9E47134620B800068766 /* EndUser */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Developer;
+		};
+		1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "plist2c" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB927908733DD40010E9CD /* Debug */,
+				1DEB927A08733DD40010E9CD /* Developer */,
+				1A8F9E46134620B800068766 /* EndUser */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Developer;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

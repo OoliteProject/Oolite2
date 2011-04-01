@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 @class Entity;
 
 
-NSMutableArray *ScanTokensFromString(NSString *values);
+NSMutableArray *ScanTokensFromString(NSString *values) DEPRECATED_FUNC;	 // Use OOScanTokensFromString() instead.
 
 // Note: these functions will leave their out values untouched if they fail (and return NO). They will not log an error if passed a NULL string (but will return NO). This means they can be used to, say, read dictionary entries which might not exist. They also ignore any extra components in the string.
 BOOL ScanVectorFromString(NSString *xyzString, Vector *outVector);

@@ -152,10 +152,6 @@
 		return NO;
 	}
 	
-	if ([[super class] instancesRespondToSelector:@selector(validateUserInterfaceItem:)])
-	{
-		return [super validateUserInterfaceItem:anItem];
-	}
 	return YES;
 }
 

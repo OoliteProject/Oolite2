@@ -48,28 +48,7 @@ static NSString *NewRandomDigrams(void);
 
 NSMutableArray *ScanTokensFromString(NSString *values)
 {
-	NSMutableArray			*result = nil;
-	NSScanner				*scanner = nil;
-	NSString				*token = nil;
-	static NSCharacterSet	*space_set = nil;
-	
-	// Note: Shark suggests we're getting a lot of early exits, but testing showed a pretty steady 2% early exit rate.
-	if (EXPECT_NOT(values == nil))  return [NSArray array];
-	if (EXPECT_NOT(space_set == nil)) space_set = [[NSCharacterSet whitespaceAndNewlineCharacterSet] retain];
-	
-	result = [NSMutableArray array];
-	scanner = [NSScanner scannerWithString:values];
-	
-	while (![scanner isAtEnd])
-	{
-		[scanner ooliteScanCharactersFromSet:space_set intoString:NULL];
-		if ([scanner ooliteScanUpToCharactersFromSet:space_set intoString:&token])
-		{
-			[result addObject:token];
-		}
-	}
-	
-	return result;
+	return OOScanTokensFromString(values);
 }
 
 

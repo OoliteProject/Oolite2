@@ -1,8 +1,9 @@
 /*
 
-NSScannerOOExtensions.h
+OOLegacyEngineUtilities.h
 
-Additions to NSScanner to work around bugs.
+Utility functions and types torn from PlayerEntityLegacyScriptEngine.
+
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -24,15 +25,31 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 
 
-@interface NSScanner (OOExtensions)
+typedef enum
+{
+	COMPARISON_EQUAL,
+	COMPARISON_NOTEQUAL,
+	COMPARISON_LESSTHAN,
+	COMPARISON_GREATERTHAN,
+	COMPARISON_ONEOF,
+	COMPARISON_UNDEFINED
+} OOComparisonType;
 
-- (BOOL) ooliteScanCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value;
-- (BOOL) ooliteScanUpToCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value;
 
-@end
+typedef enum
+{
+	OP_STRING,
+	OP_NUMBER,
+	OP_BOOL,
+	OP_MISSION_VAR,
+	OP_LOCAL_VAR,
+	OP_FALSE,
+	
+	OP_INVALID	// Must be last.
+} OOOperationType;
 
 
-NSMutableArray *OOScanTokensFromString(NSString *values);
+NSString *OOComparisonTypeToString(OOComparisonType type) CONST_FUNC;

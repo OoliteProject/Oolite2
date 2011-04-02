@@ -61,18 +61,6 @@ MA 02110-1301, USA.
 }
 
 
-- (float)fuelLeakRate
-{
-	return fuel_leak_rate;
-}
-
-
-- (void)setFuelLeakRate:(float)value
-{
-	fuel_leak_rate = fmaxf(value, 0.0f);
-}
-
-
 - (NSString *) dockedStationName
 {
 	return [(ShipEntity *)dockedStation name];
@@ -241,6 +229,12 @@ MA 02110-1301, USA.
 			missionChoice = [newChoice copy];
 		}
 	}
+}
+
+
+- (NSString *) missionChoice
+{
+	return missionChoice;
 }
 
 

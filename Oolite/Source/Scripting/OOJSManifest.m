@@ -326,7 +326,6 @@ static JSBool ManifestGetProperty(JSContext *context, JSObject *this, jsid propI
 	OOJS_NATIVE_ENTER(context)
 	
 	id							result = nil;
-	PlayerEntity				*entity = OOPlayerForScripting();
 	unsigned					commodity;
 	
 	if (GetCommodityID(context, propID, &commodity))
@@ -334,7 +333,7 @@ static JSBool ManifestGetProperty(JSContext *context, JSObject *this, jsid propI
 		OOCommodityType type;
 		if (GetCommodityType(context, commodity, propID, &type))
 		{
-			*value = INT_TO_JSVAL([entity cargoQuantityForType:type]);
+			*value = INT_TO_JSVAL([PLAYER cargoQuantityForType:type]);
 			return YES;
 		}
 		else
@@ -350,7 +349,7 @@ static JSBool ManifestGetProperty(JSContext *context, JSObject *this, jsid propI
 		switch (JSID_TO_INT(propID))
 		{
 			case kManifest_list:
-				result = [entity cargoListForScripting];
+				result = [PLAYER cargoListForScripting];
 				break;
 				
 			default:
@@ -370,14 +369,13 @@ static JSBool ManifestSetProperty(JSContext *context, JSObject *this, jsid propI
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*entity = OOPlayerForScripting();
 	int32						iValue;
 	unsigned					commodity;
 	
 	if (!GetCommodityID(context, propID, &commodity))  return YES;
 	
 	// we can always change gold, platinum & gem-stones quantities, even with special cargo
-	if ((commodity < kManifest_gold || commodity > kManifest_gemStones) && [entity specialCargo])
+	if ((commodity < kManifest_gold || commodity > kManifest_gemStones) && [PLAYER specialCargo])
 	{
 		OOJSReportWarning(context, @"PlayerShip.manifest['foo'] - cannot modify cargo tonnage when Special Cargo is in use.");
 		return YES;
@@ -389,7 +387,7 @@ static JSBool ManifestSetProperty(JSContext *context, JSObject *this, jsid propI
 		if (JS_ValueToInt32(context, *value, &iValue))
 		{
 			if (iValue < 0)  iValue = 0;
-			[entity setCargoQuantityForType:type amount:iValue];
+			[PLAYER setCargoQuantityForType:type amount:iValue];
 		}
 		else
 		{

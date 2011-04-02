@@ -115,10 +115,9 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
 	double						clockTime;
 	
-	clockTime = [player clockTime];
+	clockTime = [PLAYER clockTime];
 	
 	switch (JSID_TO_INT(propID))
 	{
@@ -153,11 +152,11 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 			return YES;
 			
 		case kClock_clockString:
-			*value = OOJSValueFromNativeObject(context, [player dial_clock]);
+			*value = OOJSValueFromNativeObject(context, [PLAYER dial_clock]);
 			return YES;
 			
 		case kClock_isAdjusting:
-			*value = OOJSValueFromBOOL([player isClockAdjusting]);
+			*value = OOJSValueFromBOOL([PLAYER isClockAdjusting]);
 			return YES;
 			
 		default:
@@ -176,7 +175,7 @@ static JSBool JSClockToString(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	OOJS_RETURN_OBJECT([OOPlayerForScripting() dial_clock]);
+	OOJS_RETURN_OBJECT([PLAYER dial_clock]);
 	
 	OOJS_NATIVE_EXIT
 }
@@ -224,7 +223,7 @@ static JSBool ClockAddSeconds(JSContext *context, uintN argc, jsval *vp)
 		OOJS_RETURN_BOOL(NO);
 	}
 	
-	[OOPlayerForScripting() advanceClockBy:time];
+	[PLAYER advanceClockBy:time];
 	
 	OOJS_RETURN_BOOL(YES);
 	

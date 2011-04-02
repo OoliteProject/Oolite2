@@ -122,12 +122,15 @@ static NSString * const kActionTempFormat					= @ ACTIONS_TEMP_PREFIX ".%u";
 
 
 static NSString		*sCurrentMissionKey = nil;
-static ShipEntity	*scriptTarget = nil;
 
 
 @interface PlayerEntity (ScriptingPrivate)
 
 - (NSString *) expandMessage:(NSString *)valueString;
+
+- (void) addScene:(NSArray *) items atOffset:(Vector) off;
+- (BOOL) processSceneDictionary:(NSDictionary *) couplet atOffset:(Vector) off;
+- (BOOL) processSceneString:(NSString*) item atOffset:(Vector) off;
 
 @end
 
@@ -154,18 +157,6 @@ OOINLINE NSString *CurrentScriptName(void)
 OOINLINE NSString *CurrentScriptDesc(void)
 {
 	return CurrentScriptNameOr(@"<anonymous actions>");
-}
-
-
-- (void) setScriptTarget:(ShipEntity *)ship
-{
-	scriptTarget = ship;
-}
-
-
-- (ShipEntity*) scriptTarget
-{
-	return scriptTarget;
 }
 
 
@@ -356,221 +347,11 @@ OOINLINE NSString *CurrentScriptDesc(void)
 }
 
 
-- (NSNumber *) commanderLegalStatus_number
-{
-	return [NSNumber numberWithInt:[self legalStatus]];
-}
-
-
 - (void) setLegalStatus:(NSString *)valueString
 {
 	legalStatus = [valueString intValue];
 }
 
-
-- (NSString *) commanderLegalStatus_string
-{
-	return OODisplayStringFromLegalStatus(legalStatus);
-}
-
-
-static int scriptRandomSeed = -1;	// ensure proper random function
-- (NSNumber *) d100_number
-{
-	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * [self clockTime]);	// stop predictable sequences
-	ranrot_srand(scriptRandomSeed);
-	scriptRandomSeed = ranrot_rand();
-	int d100 = ranrot_rand() % 100;
-	return [NSNumber numberWithInt:d100];
-}
-
-
-- (NSNumber *) pseudoFixedD100_number
-{
-	return [NSNumber numberWithInt:[self systemPseudoRandom100]];
-}
-
-
-- (NSNumber *) d256_number
-{
-	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * [self clockTime]);	// stop predictable sequences
-	ranrot_srand(scriptRandomSeed);
-	scriptRandomSeed = ranrot_rand();
-	int d256 = ranrot_rand() % 256;
-	return [NSNumber numberWithInt:d256];
-}
-
-
-- (NSNumber *) pseudoFixedD256_number
-{
-	return [NSNumber numberWithInt:[self systemPseudoRandom256]];
-}
-
-
-- (NSNumber *) clock_number				// returns the game time in seconds
-{
-	return [NSNumber numberWithDouble:[self clockTime]];
-}
-
-
-- (NSNumber *) clock_secs_number		// returns the game time in seconds
-{
-	return [NSNumber numberWithUnsignedLongLong:[self clockTime]];
-}
-
-
-- (NSNumber *) clock_mins_number		// returns the game time in minutes
-{
-	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 60.0];
-}
-
-
-- (NSNumber *) clock_hours_number		// returns the game time in hours
-{
-	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 3600.0];
-}
-
-
-- (NSNumber *) clock_days_number		// returns the game time in days
-{
-	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 86400.0];
-}
-
-
-- (NSNumber *) fuelLevel_number			// returns the fuel level in LY
-{
-	return [NSNumber numberWithFloat:floor(0.1 * fuel)];
-}
-
-
-- (NSString *) dockedAtMainStation_bool
-{
-	if ([self dockedAtMainStation])  return @"YES";
-	else  return @"NO";
-}
-
-
-- (NSString *) foundEquipment_bool
-{
-	return (found_equipment)? @"YES" : @"NO";
-}
-
-
-- (NSString *) sunWillGoNova_bool		// returns whether the sun is going to go nova
-{
-	return ([[UNIVERSE sun] willGoNova])? @"YES" : @"NO";
-}
-
-
-- (NSString *) sunGoneNova_bool		// returns whether the sun has gone nova
-{
-	return ([[UNIVERSE sun] goneNova])? @"YES" : @"NO";
-}
-
-
-- (NSString *) missionChoice_string		// returns nil or the key for the chosen option
-{
-	return missionChoice;
-}
-
-
-- (NSNumber *) dockedTechLevel_number
-{
-	if (!dockedStation) 
-	{
-		return [self systemTechLevel_number];
-	}
-	return [NSNumber numberWithInt:[dockedStation equivalentTechLevel]];
-}
-
-- (NSString *) dockedStationName_string	// returns 'NONE' if the player isn't docked, [station name] if it is, 'UNKNOWN' otherwise (?)
-{
-	NSString			*result = nil;
-	if ([self status] != STATUS_DOCKED)  return @"NONE";
-	
-	result = [self dockedStationName];
-	if (result == nil)  result = @"UNKNOWN";
-	return result;
-}
-
-
-- (NSString *) systemGovernment_string
-{
-	int government = [[self systemGovernment_number] intValue]; // 0 .. 7 (0 anarchic .. 7 most stable)
-	NSString *result = OODisplayStringFromGovernmentID(government);
-	if (result == nil) result = @"UNKNOWN";
-	
-	return result;
-}
-
-
-- (NSNumber *) systemGovernment_number
-{
-	NSDictionary *systeminfo = [UNIVERSE generateSystemData:system_seed];
-	return [systeminfo objectForKey:KEY_GOVERNMENT];
-}
-
-
-- (NSString *) systemEconomy_string
-{
-	int economy = [[self systemEconomy_number] intValue]; // 0 .. 7 (0 rich industrial .. 7 poor agricultural)
-	NSString *result = OODisplayStringFromEconomyID(economy);
-	if (result == nil) result = @"UNKNOWN";
-	
-	return result;
-}
-
-
-- (NSNumber *) systemEconomy_number
-{
-	NSDictionary *systeminfo = [UNIVERSE generateSystemData:system_seed];
-	return [systeminfo objectForKey:KEY_ECONOMY];
-}
-
-
-- (NSNumber *) systemTechLevel_number
-{
-	NSDictionary *systeminfo = [UNIVERSE generateSystemData:system_seed];
-	return [systeminfo objectForKey:KEY_TECHLEVEL];
-}
-
-
-- (NSNumber *) systemPopulation_number
-{
-	NSDictionary *systeminfo = [UNIVERSE generateSystemData:system_seed];
-	return [systeminfo objectForKey:KEY_POPULATION];
-}
-
-
-- (NSNumber *) systemProductivity_number
-{
-	NSDictionary *systeminfo = [UNIVERSE generateSystemData:system_seed];
-	return [systeminfo objectForKey:KEY_PRODUCTIVITY];
-}
-
-
-- (NSString *) commanderName_string
-{
-	return [self playerName];
-}
-
-
-- (NSString *) commanderRank_string
-{
-	return OODisplayRatingStringFromKillCount([self score]);
-}
-
-
-- (NSString *) commanderShip_string
-{
-	return [self name];
-}
-
-
-- (NSString *) commanderShipDisplayName_string
-{
-	return [self displayName];
-}
 
 /*-----------------------------------------------------*/
 
@@ -661,8 +442,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (void) awardCargo:(NSString *)amount_typeString
 {
-	if (scriptTarget != self)  return;
-
 	NSArray					*tokens = ScanTokensFromString(amount_typeString);
 	NSString				*typeString = nil;
 	OOCargoQuantityDelta	amount;
@@ -712,8 +491,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 	OOCargoType				type;
 	OOMassUnit				unit;
 	
-	if (scriptTarget != self)  return;
-	
 	if ([self status] != STATUS_DOCKED && !forceRemoval)
 	{
 		OOLogWARN(kOOLogRemoveAllCargoNotDocked, @"%@removeAllCargo only works when docked.", [NSString stringWithFormat:@" in %@, ", CurrentScriptDesc()]);
@@ -759,8 +536,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (void) useSpecialCargo:(NSString *)descriptionString
 {
-	if (scriptTarget != self)  return;
-
 	[self removeAllCargo:YES];	
 	OOLog(kOOLogNoteUseSpecialCargo, @"Going to useSpecialCargo:'%@'", descriptionString);
 	specialCargo = [ExpandDescriptionForCurrentSystem(descriptionString) retain];
@@ -1410,223 +1185,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 	}
 }
 
-
-- (void) setFuelLeak:(NSString *)value
-{	
-	if (scriptTarget != self)
-	{
-		[scriptTarget setFuel:0];
-		return;
-	}
-	
-	fuel_leak_rate = [value doubleValue];
-	if (fuel_leak_rate > 0)
-	{
-		[self playFuelLeak];
-		[UNIVERSE addMessage:DESC(@"danger-fuel-leak") forCount:6];
-		OOLog(kOOLogNoteFuelLeak, @"FUEL LEAK activated!");
-	}
-}
-
-
-- (NSNumber *) fuelLeakRate_number
-{
-	return [NSNumber numberWithFloat:[self fuelLeakRate]];
-}
-
-
-- (void) setSunNovaIn:(NSString *)time_value
-{
-	double time_until_nova = [time_value doubleValue];
-	[[UNIVERSE sun] setGoingNova:YES inTime: time_until_nova];
-}
-
-
-- (void) launchFromStation
-{
-	// ensure autosave is ready for the next unscripted launch
-	if ([UNIVERSE autoSave]) [UNIVERSE setAutoSaveNow:YES];
-	[self leaveDock:dockedStation];
-}
-
-
-- (void) blowUpStation
-{
-	StationEntity		*mainStation = nil;
-	
-	mainStation = [UNIVERSE station];
-	if (mainStation != nil)
-	{
-		[UNIVERSE unMagicMainStation];
-		[mainStation takeEnergyDamage:500000000.0 from:nil becauseOf:nil];	// 500 million should do it!
-	}
-}
-
-
-- (void) sendAllShipsAway
-{
-	if (!UNIVERSE)
-		return;
-	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity*		my_entities[ent_count];
-	int i;
-	for (i = 0; i < ent_count; i++)
-		my_entities[i] = [uni_entities[i] retain];		//	retained
-
-	for (i = 1; i < ent_count; i++)
-	{
-		Entity* e1 = my_entities[i];
-		if ([e1 isShip])
-		{
-			ShipEntity* se1 = (ShipEntity*)e1;
-			int e_class = [e1 scanClass];
-			if (((e_class == CLASS_NEUTRAL)||(e_class == CLASS_POLICE)||(e_class == CLASS_MILITARY)||(e_class == CLASS_THARGOID)) &&
-											! ([se1 isStation] && [se1 maxFlightSpeed] == 0)) // exclude only stations, not carriers.
-			{
-				AI*	se1AI = [se1 getAI];
-				[se1 setFuel:MAX(PLAYER_MAX_FUEL, [se1 fuelCapacity])];
-				[se1AI setStateMachine:@"exitingTraderAI.plist"];	// lets them return to their previous state after the jump
-				[se1AI setState:@"EXIT_SYSTEM"];
-				// The following should prevent all ships leaving at once (freezes oolite on slower machines)
-				[se1AI setNextThinkTime:[UNIVERSE gameTime] + 3 + (ranrot_rand() & 15)];
-				[se1 setPrimaryRole:@"none"];	// prevents new ship from appearing at witchpoint when this one leaves!
-			}
-		}
-	}
-	// ships need to be released after their AIs makes them jump away.
-	//for (i = 0; i < ent_count; i++)
-	//	[my_entities[i] release];		//	released
-}
-
-
-- (OOPlanetEntity *) addPlanet: (NSString *)planetKey
-{
-	OOLog(kOOLogNoteAddPlanet, @"addPlanet: %@", planetKey);
-
-	if (!UNIVERSE)
-		return nil;
-	NSDictionary* dict = [[UNIVERSE planetInfo] oo_dictionaryForKey:planetKey];
-	if (!dict)
-	{
-		OOLog(@"script.error.addPlanet.keyNotFound", @"***** ERROR: could not find an entry in planetinfo.plist for '%@'", planetKey);
-		return nil;
-	}
-
-	/*- add planet -*/
-	OOLog(kOOLogDebugAddPlanet, @"DEBUG: initPlanetFromDictionary: %@", dict);
-	OOPlanetEntity *planet = [[[OOPlanetEntity alloc] initFromDictionary:dict withAtmosphere:YES andSeed:[UNIVERSE systemSeed]] autorelease];
-	
-	Quaternion planetOrientation;
-	if (ScanQuaternionFromString([dict objectForKey:@"orientation"], &planetOrientation))
-	{
-		[planet setOrientation:planetOrientation];
-	}
-
-	if (![dict objectForKey:@"position"])
-	{
-		OOLog(@"script.error.addPlanet.noPosition", @"***** ERROR: you must specify a position for scripted planet '%@' before it can be created", planetKey);
-		return nil;
-	}
-	
-	NSString *positionString = [dict objectForKey:@"position"];
-	if([positionString hasPrefix:@"abs "] && ([UNIVERSE planet] != nil || [UNIVERSE sun] !=nil))
-	{
-		OOLogWARN(@"script.deprecated", @"setting %@ for %@ '%@' in 'abs' inside .plists can cause compatibility issues across Oolite versions. Use coordinates relative to main system objects instead.",@"position",@"planet",planetKey);
-	}
-	
-	Vector posn = [UNIVERSE coordinatesFromCoordinateSystemString:positionString];
-	if (posn.x || posn.y || posn.z)
-	{
-		OOLog(kOOLogDebugAddPlanet, @"planet position (%.2f %.2f %.2f) derived from %@", posn.x, posn.y, posn.z, positionString);
-	}
-	else
-	{
-		ScanVectorFromString(positionString, &posn);
-		OOLog(kOOLogDebugAddPlanet, @"planet position (%.2f %.2f %.2f) derived from %@", posn.x, posn.y, posn.z, positionString);
-	}
-	[planet setPosition: posn];
-	
-	[UNIVERSE addEntity:planet];
-	return planet;
-}
-
-
-- (OOPlanetEntity *) addMoon: (NSString *)moonKey
-{
-	OOLog(kOOLogNoteAddPlanet, @"DEBUG: addMoon '%@'", moonKey);
-
-	if (!UNIVERSE)
-		return nil;
-	NSDictionary* dict = [[UNIVERSE planetInfo] oo_dictionaryForKey:moonKey];
-	if (!dict)
-	{
-		OOLog(@"script.error.addPlanet.keyNotFound", @"***** ERROR: could not find an entry in planetinfo.plist for '%@'", moonKey);
-		return nil;
-	}
-
-	OOLog(kOOLogDebugAddPlanet, @"DEBUG: initMoonFromDictionary: %@", dict);
-	OOPlanetEntity *planet = [[[OOPlanetEntity alloc] initFromDictionary:dict withAtmosphere:NO andSeed:[UNIVERSE systemSeed]] autorelease];
-	
-	Quaternion planetOrientation;
-	if (ScanQuaternionFromString([dict objectForKey:@"orientation"], &planetOrientation))
-	{
-		[planet setOrientation:planetOrientation];
-	}
-
-	if (![dict objectForKey:@"position"])
-	{
-		OOLog(@"script.error.addPlanet.noPosition", @"***** ERROR: you must specify a position for scripted moon '%@' before it can be created", moonKey);
-		return nil;
-	}
-	
-	NSString *positionString = [dict objectForKey:@"position"];
-	if([positionString hasPrefix:@"abs "] && ([UNIVERSE planet] != nil || [UNIVERSE sun] !=nil))
-	{
-		OOLogWARN(@"script.deprecated", @"setting %@ for %@ '%@' in 'abs' inside .plists can cause compatibility issues across Oolite versions. Use coordinates relative to main system objects instead.",@"position",@"moon",moonKey);
-	}
-	Vector posn = [UNIVERSE coordinatesFromCoordinateSystemString:positionString];
-	if (posn.x || posn.y || posn.z)
-	{
-		OOLog(kOOLogDebugAddPlanet, @"moon position (%.2f %.2f %.2f) derived from %@", posn.x, posn.y, posn.z, positionString);
-	}
-	else
-	{
-		ScanVectorFromString(positionString, &posn);
-		OOLog(kOOLogDebugAddPlanet, @"moon position (%.2f %.2f %.2f) derived from %@", posn.x, posn.y, posn.z, positionString);
-	}
-	[planet setPosition: posn];
-	
-	[UNIVERSE addEntity:planet];
-	return planet;
-}
-
-
-- (void) debugOn
-{
-	OOLogSetDisplayMessagesInClass(kOOLogDebugOnMetaClass, YES);
-	OOLog(kOOLogDebugOnOff, @"SCRIPT debug messages ON");
-}
-
-
-- (void) debugOff
-{
-	OOLog(kOOLogDebugOnOff, @"SCRIPT debug messages OFF");
-	OOLogSetDisplayMessagesInClass(kOOLogDebugOnMetaClass, NO);
-}
-
-
-- (void) debugMessage:(NSString *)args
-{
-	OOLog(kOOLogDebugMessage, @"SCRIPT debugMessage: %@", args);
-}
-
-
-- (void) playSound:(NSString *) soundName
-{
-	[self playLegacyScriptSound:soundName];
-}
-
 /*-----------------------------------------------------*/
 
 
@@ -1638,12 +1196,6 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 		// if we're here, no mission screen is running. Opportunity! :)
 		[self doWorldEventUntilMissionScreen:OOJSID("missionScreenOpportunity")];
 	}
-}
-
-
-- (void) setGuiToMissionScreen
-{
-	[self setGuiToMissionScreenWithCallback:NO];
 }
 
 
@@ -1690,13 +1242,10 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (void) setBackgroundFromDescriptionsKey:(NSString*) d_key
 {
-	NSArray * items = (NSArray *)[[UNIVERSE descriptions] objectForKey:d_key];
-	//
-	if (!items)
-		return;
-	//
-	[self addScene: items atOffset: kZeroVector];
-	//
+	NSArray* items = [[UNIVERSE descriptions] oo_arrayForKey:d_key];
+	if (items == nil) return;
+	
+	[self addScene:items atOffset:kZeroVector];
 	[self setShowDemoShips: YES];
 }
 
@@ -2047,6 +1596,7 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 }
 
 
+#if OBSOLETE
 - (void) targetNearestHostile
 {
 	[self scanForHostiles];
@@ -2061,6 +1611,7 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 		}
 	}
 }
+#endif
 
 
 - (void) targetNearestIncomingMissile

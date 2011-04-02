@@ -101,7 +101,6 @@ void MissionRunCallback()
 	
 	jsval				argval = JSVAL_VOID;
 	jsval				rval = JSVAL_VOID;
-	PlayerEntity		*player = OOPlayerForScripting();
 	OOJavaScriptEngine	*engine  = [OOJavaScriptEngine sharedEngine];
 	JSContext			*context = OOJSAcquireContext();
 	
@@ -123,9 +122,9 @@ void MissionRunCallback()
 	sCallbackFunction = JSVAL_NULL;
 	sCallbackThis = JSVAL_NULL;
 	
-	argval = OOJSValueFromNativeObject(context, [player missionChoice_string]);
+	argval = OOJSValueFromNativeObject(context, [PLAYER missionChoice]);
 	// now reset the mission choice silently, before calling the callback script.
-	[player setMissionChoice:nil withEvent:NO];
+	[PLAYER setMissionChoice:nil withEvent:NO];
 	
 	// Call the callback.
 	NS_DURING
@@ -157,11 +156,10 @@ static JSBool MissionMarkSystem(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*params = nil;
 	
 	params = [NSString concatenationOfStringsFromJavaScriptValues:OOJS_ARGV count:argc separator:@" " inContext:context];
-	[player addMissionDestination:params];
+	[PLAYER addMissionDestination:params];
 	
 	OOJS_RETURN_VOID;
 	
@@ -174,11 +172,10 @@ static JSBool MissionUnmarkSystem(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*params = nil;
 	
 	params = [NSString concatenationOfStringsFromJavaScriptValues:OOJS_ARGV count:argc separator:@" " inContext:context];
-	[player removeMissionDestination:params];
+	[PLAYER removeMissionDestination:params];
 	
 	OOJS_RETURN_VOID;
 	
@@ -191,7 +188,6 @@ static JSBool MissionAddMessageText(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*text = nil;
 	
 	if (EXPECT_NOT(argc == 0))
@@ -208,7 +204,7 @@ static JSBool MissionAddMessageText(JSContext *context, uintN argc, jsval *vp)
 	// Found "FIXME: warning if no mission screen running.",,,
 	// However: used routinely by the Constrictor mission in F7, without mission screens.
 	text = OOStringFromJSValue(context, OOJS_ARGV[0]);
-	[player addLiteralMissionText:text];
+	[PLAYER addLiteralMissionText:text];
 	
 	OOJS_RETURN_VOID;
 	
@@ -234,7 +230,6 @@ static JSBool MissionSetInstructionsInternal(JSContext *context, uintN argc, jsv
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*text = nil;
 	NSString			*missionKey = nil;
 	
@@ -262,16 +257,16 @@ static JSBool MissionSetInstructionsInternal(JSContext *context, uintN argc, jsv
 	{
 		if (isKey)
 		{
-			[player setMissionDescription:text forMission:missionKey];
+			[PLAYER setMissionDescription:text forMission:missionKey];
 		}
 		else
 		{
-			[player setMissionInstructions:text forMission:missionKey];
+			[PLAYER setMissionInstructions:text forMission:missionKey];
 		}
 	}
 	else
 	{
-		[player clearMissionDescriptionForMission:missionKey];
+		[PLAYER clearMissionDescriptionForMission:missionKey];
 	}
 	
 	OOJS_RETURN_VOID;
@@ -310,13 +305,12 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	jsval				function = JSVAL_NULL;
 	jsval				value = JSVAL_NULL;
 	JSObject			*params = NULL;
 	
 	// No mission screens during intro.
-	if ([player guiScreen] == GUI_SCREEN_INTRO1 || [player guiScreen] == GUI_SCREEN_INTRO2)
+	if ([PLAYER guiScreen] == GUI_SCREEN_INTRO1 || [PLAYER guiScreen] == GUI_SCREEN_INTRO2)
 	{
 		OOJS_RETURN_BOOL(NO);
 	}
@@ -354,7 +348,7 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 	// Apply settings.
 	if (JS_GetProperty(context, params, "title", &value) && !JSVAL_IS_VOID(value))
 	{
-		[player setMissionTitle:OOStringFromJSValue(context, value)];
+		[PLAYER setMissionTitle:OOStringFromJSValue(context, value)];
 	}
 	else
 	{
@@ -363,21 +357,20 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 		{
 			titleKey = [[UNIVERSE missiontext] oo_stringForKey:titleKey];
 			titleKey = ExpandDescriptionForCurrentSystem(titleKey);
-			titleKey = [player replaceVariablesInString:titleKey];
-			[player setMissionTitle:titleKey];
+			[PLAYER setMissionTitle:titleKey];
 		}
 	}
 	
 	[[OOMusicController	sharedController] setMissionMusic:GetParameterString(context, params, "music")];
-	[player setMissionOverlayDescriptor:GetParameterImageDescriptor(context, params, "overlay")];
-	[player setMissionBackgroundDescriptor:GetParameterImageDescriptor(context, params, "background")];
+	[PLAYER setMissionOverlayDescriptor:GetParameterImageDescriptor(context, params, "overlay")];
+	[PLAYER setMissionBackgroundDescriptor:GetParameterImageDescriptor(context, params, "background")];
 	
 	[UNIVERSE removeDemoShips];	// remove any demoship or miniature planet that may be remaining from previous screens
 	
 	ShipEntity *demoShip = nil;
 	if (JS_GetProperty(context, params, "model", &value) && !JSVAL_IS_VOID(value))
 	{
-		if ([player status] == STATUS_IN_FLIGHT && JSVAL_IS_STRING(value))
+		if ([PLAYER status] == STATUS_IN_FLIGHT && JSVAL_IS_STRING(value))
 		{
 			OOJSReportWarning(context, @"Mission.runScreen: model cannot be displayed while in flight.");
 		}
@@ -391,7 +384,7 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 				JS_ValueToBoolean(context, value, &spinning);
 			}
 			
-		//	[player showShipModel:OOStringFromJSValue(context, value)];
+		//	[PLAYER showShipModel:OOStringFromJSValue(context, value)];
 			demoShip = [UNIVERSE makeDemoShipWithRole:role spinning:spinning];
 		}
 	}
@@ -408,27 +401,27 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 	
 	// Start the mission screen.
 	sCallbackFunction = function;
-	[player setGuiToMissionScreenWithCallback:!JSVAL_IS_NULL(sCallbackFunction)];
+	[PLAYER setGuiToMissionScreenWithCallback:!JSVAL_IS_NULL(sCallbackFunction)];
 	
 	// Apply more settings. (These must be done after starting the screen for legacy reasons.)
 	NSString *message = GetParameterString(context, params, "message");
 	if (message != nil)
 	{
-		[player addLiteralMissionText:message];
+		[PLAYER addLiteralMissionText:message];
 	}
 	else
 	{
 		NSString *messageKey = GetParameterString(context, params, "messageKey");
-		if (messageKey != nil)  [player addMissionText:messageKey];
+		if (messageKey != nil)  [PLAYER addMissionText:messageKey];
 	}
 	
-	[player setMissionChoices:GetParameterString(context, params, "choicesKey")];
+	[PLAYER setMissionChoices:GetParameterString(context, params, "choicesKey")];
 	
 	// now clean up!
-	[player setMissionOverlayDescriptor:nil];
-	[player setMissionBackgroundDescriptor:nil];
-	[player setMissionTitle:nil];
-	[player setMissionMusic:nil];
+	[PLAYER setMissionOverlayDescriptor:nil];
+	[PLAYER setMissionBackgroundDescriptor:nil];
+	[PLAYER setMissionTitle:nil];
+	[PLAYER setMissionMusic:nil];
 	
 	OOJSResumeTimeLimiter();
 	

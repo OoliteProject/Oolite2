@@ -137,8 +137,8 @@ void InitOOJSPlayer(JSContext *context, JSObject *global)
 	sPlayerPrototype = JS_InitClass(context, global, NULL, &sPlayerClass, OOJSUnconstructableConstruct, 0, sPlayerProperties, sPlayerMethods, NULL, NULL);
 	OOJSRegisterObjectConverter(&sPlayerClass, OOJSBasicPrivateObjectConverter);
 	
-	// Create player object as a property of the global object.
-	sPlayerObject = JS_DefineObject(context, global, "player", &sPlayerClass, sPlayerPrototype, OOJS_PROP_READONLY);
+	// Create PLAYER object as a property of the global object.
+	sPlayerObject = JS_DefineObject(context, global, "PLAYER", &sPlayerClass, sPlayerPrototype, OOJS_PROP_READONLY);
 }
 
 
@@ -162,10 +162,7 @@ JSObject *JSPlayerObject(void)
 
 PlayerEntity *OOPlayerForScripting(void)
 {
-	PlayerEntity *player = PLAYER;
-	[player setScriptTarget:player];
-	
-	return player;
+	return PLAYER;
 }
 
 
@@ -176,71 +173,70 @@ static JSBool PlayerGetProperty(JSContext *context, JSObject *this, jsid propID,
 	OOJS_NATIVE_ENTER(context)
 	
 	id							result = nil;
-	PlayerEntity				*player = OOPlayerForScripting();
 	
 	switch (JSID_TO_INT(propID))
 	{
 		case kPlayer_name:
-			result = [player playerName];
+			result = [PLAYER playerName];
 			break;
 			
 		case kPlayer_score:
-			*value = INT_TO_JSVAL([player score]);
+			*value = INT_TO_JSVAL([PLAYER score]);
 			return YES;
 			
 		case kPlayer_credits:
-			return JS_NewNumberValue(context, [player creditBalance], value);
+			return JS_NewNumberValue(context, [PLAYER creditBalance], value);
 			
 		case kPlayer_rank:
-			*value = OOJSValueFromNativeObject(context, OODisplayRatingStringFromKillCount([player score]));
+			*value = OOJSValueFromNativeObject(context, OODisplayRatingStringFromKillCount([PLAYER score]));
 			return YES;
 			
 		case kPlayer_legalStatus:
-			*value = OOJSValueFromNativeObject(context, OODisplayStringFromLegalStatus([player bounty]));
+			*value = OOJSValueFromNativeObject(context, OODisplayStringFromLegalStatus([PLAYER bounty]));
 			return YES;
 			
 		case kPlayer_alertCondition:
-			*value = INT_TO_JSVAL([player alertCondition]);
+			*value = INT_TO_JSVAL([PLAYER alertCondition]);
 			return YES;
 			
 		case kPlayer_alertTemperature:
-			*value = OOJSValueFromBOOL([player alertFlags] & ALERT_FLAG_TEMP);
+			*value = OOJSValueFromBOOL([PLAYER alertFlags] & ALERT_FLAG_TEMP);
 			return YES;
 			
 		case kPlayer_alertMassLocked:
-			*value = OOJSValueFromBOOL([player alertFlags] & ALERT_FLAG_MASS_LOCK);
+			*value = OOJSValueFromBOOL([PLAYER alertFlags] & ALERT_FLAG_MASS_LOCK);
 			return YES;
 			
 		case kPlayer_alertAltitude:
-			*value = OOJSValueFromBOOL([player alertFlags] & ALERT_FLAG_ALT);
+			*value = OOJSValueFromBOOL([PLAYER alertFlags] & ALERT_FLAG_ALT);
 			return YES;
 			
 		case kPlayer_alertEnergy:
-			*value = OOJSValueFromBOOL([player alertFlags] & ALERT_FLAG_ENERGY);
+			*value = OOJSValueFromBOOL([PLAYER alertFlags] & ALERT_FLAG_ENERGY);
 			return YES;
 			
 		case kPlayer_alertHostiles:
-			*value = OOJSValueFromBOOL([player alertFlags] & ALERT_FLAG_HOSTILES);
+			*value = OOJSValueFromBOOL([PLAYER alertFlags] & ALERT_FLAG_HOSTILES);
 			return YES;
 			
 		case kPlayer_trumbleCount:
-			return JS_NewNumberValue(context, [player trumbleCount], value);
+			return JS_NewNumberValue(context, [PLAYER trumbleCount], value);
 			
 		case kPlayer_contractReputation:
-			*value = INT_TO_JSVAL([player contractReputation]);
+			*value = INT_TO_JSVAL([PLAYER contractReputation]);
 			return YES;
 			
 		case kPlayer_passengerReputation:
-			*value = INT_TO_JSVAL([player passengerReputation]);
+			*value = INT_TO_JSVAL([PLAYER passengerReputation]);
 			return YES;
 			
 		case kPlayer_dockingClearanceStatus:
 			// EMMSTRAN: OOConstToJSString-ify this.
-			*value = OOJSValueFromNativeObject(context, DockingClearanceStatusToString([player getDockingClearanceStatus]));
+			*value = OOJSValueFromNativeObject(context, DockingClearanceStatusToString([PLAYER getDockingClearanceStatus]));
 			return YES;
 			
 		case kPlayer_bounty:
-			*value = INT_TO_JSVAL([player legalStatus]);
+			*value = INT_TO_JSVAL([PLAYER legalStatus]);
 			return YES;
 		
 		default:
@@ -261,7 +257,6 @@ static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
 	jsdouble					fValue;
 	int32						iValue;
 	
@@ -271,7 +266,7 @@ static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID,
 			if (JS_ValueToInt32(context, *value, &iValue))
 			{
 				iValue = MAX(iValue, 0);
-				[player setScore:iValue];
+				[PLAYER setScore:iValue];
 				return YES;
 			}
 			break;
@@ -279,7 +274,7 @@ static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID,
 		case kPlayer_credits:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				[player setCreditBalance:fValue];
+				[PLAYER setCreditBalance:fValue];
 				return YES;
 			}
 			break;
@@ -288,7 +283,7 @@ static JSBool PlayerSetProperty(JSContext *context, JSObject *this, jsid propID,
 			if (JS_ValueToInt32(context, *value, &iValue))
 			{
 				if (iValue < 0)  iValue = 0;
-				[player setBounty:iValue];
+				[PLAYER setBounty:iValue];
 				return YES;
 			}
 			break;
@@ -360,7 +355,7 @@ static JSBool PlayerIncreaseContractReputation(JSContext *context, uintN argc, j
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	[OOPlayerForScripting() increaseContractReputation];
+	[PLAYER increaseContractReputation];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -372,7 +367,7 @@ static JSBool PlayerDecreaseContractReputation(JSContext *context, uintN argc, j
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	[OOPlayerForScripting() decreaseContractReputation];
+	[PLAYER decreaseContractReputation];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -384,7 +379,7 @@ static JSBool PlayerIncreasePassengerReputation(JSContext *context, uintN argc, 
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	[OOPlayerForScripting() increasePassengerReputation];
+	[PLAYER increasePassengerReputation];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -396,7 +391,7 @@ static JSBool PlayerDecreasePassengerReputation(JSContext *context, uintN argc, 
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	[OOPlayerForScripting() decreasePassengerReputation];
+	[PLAYER decreasePassengerReputation];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -408,7 +403,6 @@ static JSBool PlayerAddMessageToArrivalReport(JSContext *context, uintN argc, js
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString				*report = nil;
-	PlayerEntity			*player = OOPlayerForScripting();
 	
 	if (argc > 0)  report = OOStringFromJSValue(context, OOJS_ARGV[0]);
 	if (report == nil)
@@ -417,7 +411,7 @@ static JSBool PlayerAddMessageToArrivalReport(JSContext *context, uintN argc, js
 		return NO;
 	}
 	
-	[player addMessageToReport:report];
+	[PLAYER addMessageToReport:report];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -437,7 +431,6 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 	
 	BOOL			OK = NO;
 	id				destValue = nil;
-	PlayerEntity	*player = OOPlayerForScripting();
 	
 	if (argc == 1)
 	{
@@ -445,12 +438,12 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 		
 		if (destValue == nil)
 		{
-			[player setDockTarget:NULL];
+			[PLAYER setDockTarget:NULL];
 			OK = YES;
 		}
 		else if ([destValue isKindOfClass:[ShipEntity class]] && [destValue isStation])
 		{
-			[player setDockTarget:destValue];
+			[PLAYER setDockTarget:destValue];
 			OK = YES;
 		}
 		else if ([destValue isKindOfClass:[NSString class]])
@@ -458,7 +451,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 			if ([destValue isEqualToString:@"NEARBY_SYSTEM"])
 			{
 				// find the nearest system with a main station, or die in the attempt!
-				[player setDockTarget:NULL];
+				[PLAYER setDockTarget:NULL];
 				
 				double rescueRange = 7.0;	// reach at least 1 other system!
 				if ([UNIVERSE inInterstellarSpace])
@@ -486,10 +479,10 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 					
 					// add more time until rescue, with overheads for entering witchspace in case of overlapping systems.
 					double dist = [dest oo_doubleForKey:@"distance"];
-					[player advanceClockBy:OOHOURS(.2 + dist * dist + 1.5 * (ranrot_rand() & 127))];
+					[PLAYER advanceClockBy:OOHOURS(.2 + dist * dist + 1.5 * (ranrot_rand() & 127))];
 					
 					// at the end of the docking sequence we'll check if the target system is the same as the system we're in...
-					[player setTargetSystemSeed:RandomSeedFromString([dest oo_stringForKey:@"system_seed"])];
+					[PLAYER setTargetSystemSeed:RandomSeedFromString([dest oo_stringForKey:@"system_seed"])];
 				}
 				OK = YES;
 			}
@@ -499,7 +492,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 			JSBool bValue;
 			if (JS_ValueToBoolean(context, OOJS_ARGV[0], &bValue) && bValue == NO)
 			{
-				[player setDockTarget:NULL];
+				[PLAYER setDockTarget:NULL];
 				OK = YES;
 			}
 		}

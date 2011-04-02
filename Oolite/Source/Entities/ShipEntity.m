@@ -1826,7 +1826,6 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		//if (script != nil && [self scanClass] != CLASS_ROCK && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING))
 		if (script != nil && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING|| [self status] == STATUS_BEING_SCOOPED))
 		{
-			[PLAYER setScriptTarget:self];
 			[self doScriptEvent:OOJSID("shipSpawned")];
 			if ([self status] != STATUS_DEAD)  [PLAYER doScriptEvent:OOJSID("shipSpawned") withArgument:self];
 		}
@@ -5699,8 +5698,6 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 
 - (void) noteKilledBy:(Entity *)whom damageType:(OOShipDamageType)type
 {
-	[PLAYER setScriptTarget:self];
-	
 	JSContext *context = OOJSAcquireContext();
 	
 	jsval whomVal = OOJSValueFromNativeObject(context, whom);
@@ -8457,7 +8454,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		case CARGO_SCRIPTED_ITEM:
 			{
 				//scripting
-				[PLAYER setScriptTarget:self];
 				[other doScriptEvent:OOJSID("shipWasScooped") withArgument:self];
 				[self doScriptEvent:OOJSID("shipScoopedOther") withArgument:other];
 				

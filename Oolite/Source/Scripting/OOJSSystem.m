@@ -34,6 +34,8 @@
 #import "PlayerEntityScriptMethods.h"
 #import "PlayerEntityLegacyScriptEngine.h"
 #import "OOJSSystemInfo.h"
+#import "OOStringParsing.h"
+#import "AI.h"
 
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
@@ -211,17 +213,14 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 	OOJS_NATIVE_ENTER(context)
 	
 	id							result = nil;
-	PlayerEntity				*player = nil;
 	NSDictionary				*systemData = nil;
 	BOOL						handled = NO;
-	
-	player = OOPlayerForScripting();
 	
 	// Handle cases which don't require systemData.
 	switch (JSID_TO_INT(propID))
 	{
 		case kSystem_ID:
-			*value = INT_TO_JSVAL([player currentSystemID]);
+			*value = INT_TO_JSVAL([PLAYER currentSystemID]);
 			return YES;
 			
 		case kSystem_isInterstellarSpace:
@@ -256,25 +255,25 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 			break;
 			
 		case kSystem_info:
-			*value = GetJSSystemInfoForSystem(context, [player currentGalaxyID], [player currentSystemID]);
+			*value = GetJSSystemInfoForSystem(context, [PLAYER currentGalaxyID], [PLAYER currentSystemID]);
 			return YES;
 		
 		case kSystem_pseudoRandomNumber:
-			return JS_NewNumberValue(context, [player systemPseudoRandomFloat], value);
+			return JS_NewNumberValue(context, [PLAYER systemPseudoRandomFloat], value);
 			
 		case kSystem_pseudoRandom100:
-			*value = INT_TO_JSVAL([player systemPseudoRandom100]);
+			*value = INT_TO_JSVAL([PLAYER systemPseudoRandom100]);
 			return YES;
 			
 		case kSystem_pseudoRandom256:
-			*value = INT_TO_JSVAL([player systemPseudoRandom256]);
+			*value = INT_TO_JSVAL([PLAYER systemPseudoRandom256]);
 			return YES;
 	}
 	
 	if (!handled)
 	{
 		// Handle cases which do require systemData.
-		systemData = [UNIVERSE generateSystemData:player->system_seed];
+		systemData = [UNIVERSE generateSystemData:PLAYER->system_seed];
 		
 		switch (JSID_TO_INT(propID))
 		{
@@ -339,16 +338,13 @@ static JSBool SystemSetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = nil;
 	OOGalaxyID					galaxy;
 	OOSystemID					system;
 	NSString					*stringValue = nil;
 	int32						iValue;
 	
-	player = OOPlayerForScripting();
-	
-	galaxy = [player currentGalaxyID];
-	system = [player currentSystemID];
+	galaxy = [PLAYER currentGalaxyID];
+	system = [PLAYER currentSystemID];
 	
 	if (system == -1)  return YES;	// Can't change anything in interstellar space.
 	
@@ -446,11 +442,66 @@ static JSBool SystemToString(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*systemDesc = nil;
 	
-	systemDesc = [NSString stringWithFormat:@"[System %u:%u \"%@\"]", [player currentGalaxyID], [player currentSystemID], [[UNIVERSE currentSystemData] objectForKey:KEY_NAME]];
+	systemDesc = [NSString stringWithFormat:@"[System %u:%u \"%@\"]", [PLAYER currentGalaxyID], [PLAYER currentSystemID], [[UNIVERSE currentSystemData] objectForKey:KEY_NAME]];
 	OOJS_RETURN_OBJECT(systemDesc);
+	
+	OOJS_NATIVE_EXIT
+}
+
+
+static JSBool AddPlanetOrMoon(JSContext *context, uintN argc, jsval *vp, BOOL isMoon)
+{
+	OOJS_NATIVE_ENTER(context)
+	
+	NSString			*planetKey = nil;
+	OOPlanetEntity		*planet = nil;
+	
+	if (argc > 0)  planetKey = OOStringFromJSValue(context, OOJS_ARGV[0]);
+	if (EXPECT_NOT(planetKey == nil))
+	{
+		OOJSReportBadArguments(context, @"System", isMoon ? @"addMoon" : @"addPlanet", MIN(argc, 1U), OOJS_ARGV, nil, @"string (planet key)");
+		return NO;
+	}
+	
+	NSDictionary *dict = [[UNIVERSE planetInfo] oo_dictionaryForKey:planetKey];
+	if (dict == nil)
+	{
+		OOJSReportError(context, @"Cannot add %@ \"%@\", because there is no such entry in planetinfo.plist.", isMoon ? @"moon" : @"planet", planetKey);
+		return NO;
+	}
+	
+	NSString *positionString = [dict oo_stringForKey:@"position"];
+	if (positionString == nil)
+	{
+		OOJSReportError(context, @"Planetinfo.plist entry \"%@\" does not specify a position.", planetKey);
+		return NO;
+	}
+	
+	
+	OOJS_BEGIN_FULL_NATIVE(context)
+	
+	planet = [[[OOPlanetEntity alloc] initFromDictionary:dict withAtmosphere:!isMoon andSeed:[UNIVERSE systemSeed]] autorelease];
+	
+	Quaternion planetOrientation;
+	if (ScanQuaternionFromString([dict oo_stringForKey:@"orientation"], &planetOrientation))
+	{
+		[planet setOrientation:planetOrientation];
+	}
+	
+	Vector posn = [UNIVERSE coordinatesFromCoordinateSystemString:positionString];
+	if (vector_equal(posn, kZeroVector))
+	{
+		ScanVectorFromString(positionString, &posn);
+	}
+	[planet setPosition:posn];
+	
+	[UNIVERSE addEntity:planet];
+	
+	OOJS_END_FULL_NATIVE
+	
+	OOJS_RETURN_OBJECT(planet);
 	
 	OOJS_NATIVE_EXIT
 }
@@ -459,52 +510,14 @@ static JSBool SystemToString(JSContext *context, uintN argc, jsval *vp)
 // addPlanet(key : String) : Planet
 static JSBool SystemAddPlanet(JSContext *context, uintN argc, jsval *vp)
 {
-	OOJS_NATIVE_ENTER(context)
-	
-	PlayerEntity		*player = OOPlayerForScripting();
-	NSString			*key = nil;
-	OOPlanetEntity		*planet = nil;
-	
-	if (argc > 0)  key = OOStringFromJSValue(context, OOJS_ARGV[0]);
-	if (EXPECT_NOT(key == nil))
-	{
-		OOJSReportBadArguments(context, @"System", @"addPlanet", MIN(argc, 1U), OOJS_ARGV, nil, @"string (planet key)");
-		return NO;
-	}
-	
-	OOJS_BEGIN_FULL_NATIVE(context)
-	planet = [player addPlanet:key];
-	OOJS_END_FULL_NATIVE
-	
-	OOJS_RETURN_OBJECT(planet);
-	
-	OOJS_NATIVE_EXIT
+	return AddPlanetOrMoon(context, argc, vp, NO);
 }
 
 
 // addMoon(key : String) : Planet
 static JSBool SystemAddMoon(JSContext *context, uintN argc, jsval *vp)
 {
-	OOJS_NATIVE_ENTER(context)
-	
-	PlayerEntity		*player = OOPlayerForScripting();
-	NSString			*key = nil;
-	OOPlanetEntity		*planet = nil;
-	
-	if (argc > 0)  key = OOStringFromJSValue(context, OOJS_ARGV[0]);
-	if (EXPECT_NOT(key == nil))
-	{
-		OOJSReportBadArguments(context, @"System", @"addMoon", MIN(argc, 1U), OOJS_ARGV, nil, @"string (planet key)");
-		return NO;
-	}
-	
-	OOJS_BEGIN_FULL_NATIVE(context)
-	planet = [player addMoon:key];
-	OOJS_END_FULL_NATIVE
-	
-	OOJS_RETURN_OBJECT(planet);
-	
-	OOJS_NATIVE_EXIT
+	return AddPlanetOrMoon(context, argc, vp, YES);
 }
 
 
@@ -513,9 +526,41 @@ static JSBool SystemSendAllShipsAway(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity *player = OOPlayerForScripting();
+	unsigned	i, ent_count =	UNIVERSE->n_entities;
+	Entity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
+	Entity		*my_entities[ent_count];
 	
-	[player sendAllShipsAway];
+	for (i = 0; i < ent_count; i++)
+	{
+		my_entities[i] = [uni_entities[i] retain];		//	retained
+	}
+
+	for (i = 0; i < ent_count; i++)
+	{
+		Entity* e1 = my_entities[i];
+		if ([e1 isShip] && ![e1 isPlayer])
+		{
+			ShipEntity* se1 = (ShipEntity*)e1;
+			int e_class = [e1 scanClass];
+			if (((e_class == CLASS_NEUTRAL)||(e_class == CLASS_POLICE)||(e_class == CLASS_MILITARY)||(e_class == CLASS_THARGOID)) &&
+											! ([se1 isStation] && [se1 maxFlightSpeed] == 0)) // exclude only stations, not carriers.
+			{
+				AI*	se1AI = [se1 getAI];
+				[se1 setFuel:MAX(PLAYER_MAX_FUEL, [se1 fuelCapacity])];
+				[se1AI setStateMachine:@"exitingTraderAI.plist"];	// lets them return to their previous state after the jump
+				[se1AI setState:@"EXIT_SYSTEM"];
+				// The following should prevent all ships leaving at once (freezes oolite on slower machines)
+				[se1AI setNextThinkTime:[UNIVERSE gameTime] + 3 + (ranrot_rand() & 15)];
+				[se1 setPrimaryRole:@"none"];	// prevents new ship from appearing at witchpoint when this one leaves!
+			}
+		}
+	}
+	
+	for (i = 0; i < ent_count; i++)
+	{
+		[my_entities[i] release];		//	released
+	}
+	
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -846,7 +891,6 @@ static JSBool SystemLegacyAddShipsAt(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	Vector				where;
 	NSString			*role = nil;
 	int32				count;
@@ -868,7 +912,7 @@ static JSBool SystemLegacyAddShipsAt(JSContext *context, uintN argc, jsval *vp)
 	
 	OOJS_BEGIN_FULL_NATIVE(context)
 	arg = [NSString stringWithFormat:@"%@ %d %@ %f %f %f", role, count, coordScheme, where.x, where.y, where.z];
-	[player addShipsAt:arg];
+	[PLAYER addShipsAt:arg];
 	OOJS_END_FULL_NATIVE
 	
 	OOJS_RETURN_VOID;
@@ -882,7 +926,6 @@ static JSBool SystemLegacyAddShipsAtPrecisely(JSContext *context, uintN argc, js
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	Vector				where;
 	NSString			*role = nil;
 	int32				count;
@@ -904,7 +947,7 @@ static JSBool SystemLegacyAddShipsAtPrecisely(JSContext *context, uintN argc, js
 	
 	OOJS_BEGIN_FULL_NATIVE(context)
 	arg = [NSString stringWithFormat:@"%@ %d %@ %f %f %f", role, count, coordScheme, where.x, where.y, where.z];
-	[player addShipsAtPrecisely:arg];
+	[PLAYER addShipsAtPrecisely:arg];
 	OOJS_END_FULL_NATIVE
 	
 	OOJS_RETURN_VOID;
@@ -918,7 +961,6 @@ static JSBool SystemLegacyAddShipsWithinRadius(JSContext *context, uintN argc, j
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	Vector				where;
 	jsdouble			radius;
 	NSString			*role = nil;
@@ -943,7 +985,7 @@ static JSBool SystemLegacyAddShipsWithinRadius(JSContext *context, uintN argc, j
 	
 	OOJS_BEGIN_FULL_NATIVE(context)
 	arg = [NSString stringWithFormat:@"%@ %d %@ %f %f %f %f", role, count, coordScheme, where.x, where.y, where.z, radius];
-	[player addShipsWithinRadius:arg];
+	[PLAYER addShipsWithinRadius:arg];
 	OOJS_END_FULL_NATIVE
 	
 	OOJS_RETURN_VOID;
@@ -958,7 +1000,6 @@ static JSBool SystemLegacySpawnShip(JSContext *context, uintN argc, jsval *vp)
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString			*key = nil;
-	OOPlayerForScripting();	// For backwards-compatibility
 	
 	if (argc > 0)  key = OOStringFromJSValue(context, OOJS_ARGV[0]);
 	if (key == nil)

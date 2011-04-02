@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import <Foundation/Foundation.h>
+#import <OoliteBase/OoliteBase.h>
 #include <jsapi.h>
 
 @class PlayerEntity;
@@ -37,10 +37,4 @@ JSObject *JSPlayerPrototype(void);
 JSObject *JSPlayerObject(void);
 
 
-/*	All JS functions which talk to the player entity should call
-	OOOPlayerForScripting() to ensure that the script target (for the legacy
-	system) is set correctly. Additionally, all such functions should _always_
-	call OOPlayerForScripting(), even if they end up not using it, to ensure
-	consistent state.
-*/
-PlayerEntity *OOPlayerForScripting(void);
+PlayerEntity *OOPlayerForScripting(void) DEPRECATED_FUNC;	 // Use PLAYER instead.

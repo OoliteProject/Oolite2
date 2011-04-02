@@ -92,12 +92,10 @@ static JSBool MissionVariablesDeleteProperty(JSContext *context, JSObject *this,
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
-	
 	if (JSID_IS_STRING(propID))
 	{
 		NSString *key = KeyForPropertyID(context, propID);
-		[player setMissionVariable:nil forKey:key];
+		[PLAYER setMissionVariable:nil forKey:key];
 	}
 	return YES;
 	
@@ -109,14 +107,12 @@ static JSBool MissionVariablesGetProperty(JSContext *context, JSObject *this, js
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
-	
 	if (JSID_IS_STRING(propID))
 	{
 		NSString *key = KeyForPropertyID(context, propID);
 		if (key == nil)  return YES;
 		
-		id mvar = [player missionVariableForKey:key];
+		id mvar = [PLAYER missionVariableForKey:key];
 		
 		if ([mvar isKindOfClass:[NSString class]])	// Currently there should only be strings, but we may want to change this.
 		{
@@ -138,8 +134,6 @@ static JSBool MissionVariablesSetProperty(JSContext *context, JSObject *this, js
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
-	
 	if (JSID_IS_STRING(propID))
 	{
 		NSString *key = KeyForPropertyID(context, propID);
@@ -152,7 +146,7 @@ static JSBool MissionVariablesSetProperty(JSContext *context, JSObject *this, js
 		NSString *objValue = OOStringFromJSValue(context, *value);
 		
 		if ([objValue isKindOfClass:[NSNull class]])  objValue = nil;
-		[player setMissionVariable:objValue forKey:key];
+		[PLAYER setMissionVariable:objValue forKey:key];
 	}
 	return YES;
 	

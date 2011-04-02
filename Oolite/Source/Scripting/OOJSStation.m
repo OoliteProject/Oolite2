@@ -319,8 +319,6 @@ static JSBool StationDockPlayer(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity	*player = OOPlayerForScripting();
-	
 	if (EXPECT_NOT([UNIVERSE isGamePaused]))
 	{
 		/*	Station.dockPlayer() was executed while the game was in pause.
@@ -330,14 +328,14 @@ static JSBool StationDockPlayer(JSContext *context, uintN argc, jsval *vp)
 		[[[UNIVERSE gameView] gameController] unpauseGame];
 	}
 	
-	if (EXPECT(![player isDocked]))
+	if (EXPECT(![PLAYER isDocked]))
 	{
 		StationEntity *stationForDockingPlayer = nil;
 		JSStationGetStationEntity(context, OOJS_THIS, &stationForDockingPlayer); 
-		[player setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_GRANTED];
-		[player safeAllMissiles];
+		[PLAYER setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_GRANTED];
+		[PLAYER safeAllMissiles];
 		[UNIVERSE setViewDirection:VIEW_FORWARD];
-		[player enterDock:stationForDockingPlayer];
+		[PLAYER enterDock:stationForDockingPlayer];
 	}
 	OOJS_RETURN_VOID;
 	

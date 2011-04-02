@@ -56,55 +56,10 @@ typedef enum
 
 @interface PlayerEntity (Scripting)
 
-- (void) setScriptTarget:(ShipEntity *)ship DEPRECATED_FUNC;
-
 - (NSDictionary*) missionVariables;
 
 - (NSString *)missionVariableForKey:(NSString *)key;
 - (void)setMissionVariable:(NSString *)value forKey:(NSString *)key;
-
-/*-----------------------------------------------------*/
-
-- (NSNumber *) d100_number;
-- (NSNumber *) pseudoFixedD100_number;
-- (NSNumber *) d256_number;
-- (NSNumber *) pseudoFixedD256_number;
-
-- (NSNumber *) clock_number;			// returns the game time in seconds
-- (NSNumber *) clock_secs_number;		// returns the game time in seconds
-- (NSNumber *) clock_mins_number;		// returns the game time in minutes
-- (NSNumber *) clock_hours_number;		// returns the game time in hours
-- (NSNumber *) clock_days_number;		// returns the game time in days
-
-- (NSNumber *) fuelLevel_number;		// returns the fuel level in LY
-
-- (NSString *) dockedAtMainStation_bool;
-- (NSString *) foundEquipment_bool;
-
-- (NSString *) sunWillGoNova_bool;		// returns whether the sun is going to go nova
-- (NSString *) sunGoneNova_bool;		// returns whether the sun has gone nova
-
-- (NSString *) missionChoice_string;	// returns nil or the key for the chosen option
-
-- (NSNumber *) dockedTechLevel_number;
-- (NSString *) dockedStationName_string;	// returns 'NONE' if the player isn't docked, [station name] if it is, 'UNKNOWN' otherwise
-
-- (NSNumber *) systemGovernment_number;
-- (NSString *) systemGovernment_string;
-- (NSNumber *) systemEconomy_number;
-- (NSString *) systemEconomy_string;
-- (NSNumber *) systemTechLevel_number;
-- (NSNumber *) systemPopulation_number;
-- (NSNumber *) systemProductivity_number;
-
-- (NSString *) commanderName_string;
-- (NSString *) commanderRank_string;
-- (NSString *) commanderShip_string;
-- (NSString *) commanderShipDisplayName_string;
-- (NSString *) commanderLegalStatus_string;
-- (NSNumber *) commanderLegalStatus_number;
-
-/*-----------------------------------------------------*/
 
 - (NSArray *) missionsList;
 
@@ -181,45 +136,21 @@ typedef enum
 - (void) setMissionMusic: (NSString *)value;
 - (void) setMissionTitle: (NSString *)value;
 
-- (void) setFuelLeak: (NSString *)value;
-- (NSNumber *)fuelLeakRate_number;
-- (void) setSunNovaIn: (NSString *)time_value;
-- (void) launchFromStation;
-- (void) blowUpStation;
-- (void) sendAllShipsAway;
-
-- (OOPlanetEntity *) addPlanet: (NSString *)planetKey;
-- (OOPlanetEntity *) addMoon: (NSString *)moonKey;
-
-- (void) debugOn;
-- (void) debugOff;
-- (void) debugMessage:(NSString *)args;
-
-- (NSString*) replaceVariablesInString:(NSString*) args;
-
-- (void) playSound:(NSString *) soundName;
+- (void) setGuiToMissionScreenWithCallback:(BOOL) callback;
+- (void) endMissionScreenAndNoteOpportunity;
+- (void) setBackgroundFromDescriptionsKey:(NSString*) d_key;
 
 - (BOOL) addEqScriptForKey:(NSString *)eq_key;
 - (void) removeEqScriptForKey:(NSString *)eq_key;
 - (unsigned) getEqScriptIndexForKey:(NSString *)eq_key;
 
-- (void) targetNearestHostile;
-- (void) targetNearestIncomingMissile;
-
 - (void) setGalacticHyperspaceBehaviourTo:(NSString *) galacticHyperspaceBehaviourString;
 - (void) setGalacticHyperspaceFixedCoordsTo:(NSString *) galacticHyperspaceFixedCoordsString;
 
-/*-----------------------------------------------------*/
-
-- (void) setGuiToMissionScreen;
-- (void) setGuiToMissionScreenWithCallback:(BOOL) callback;
-- (void) endMissionScreenAndNoteOpportunity;
-- (void) setBackgroundFromDescriptionsKey:(NSString*) d_key;
-- (void) addScene:(NSArray *) items atOffset:(Vector) off;
-- (BOOL) processSceneDictionary:(NSDictionary *) couplet atOffset:(Vector) off;
-- (BOOL) processSceneString:(NSString*) item atOffset:(Vector) off;
+- (void) targetNearestIncomingMissile;
 
 @end
+
 
 NSString *missionTitle;
 

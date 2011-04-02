@@ -164,16 +164,14 @@ static JSBool GlobalGetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity				*player = OOPlayerForScripting();
-	
 	switch (JSID_TO_INT(propID))
 	{
 		case kGlobal_galaxyNumber:
-			*value = INT_TO_JSVAL([player currentGalaxyID]);
+			*value = INT_TO_JSVAL([PLAYER currentGalaxyID]);
 			return YES;
 			
 		case kGlobal_guiScreen:
-			*value = OOJSValueFromGUIScreenID(context, [player guiScreen]);
+			*value = OOJSValueFromGUIScreenID(context, [PLAYER guiScreen]);
 			return YES;
 			
 #ifndef NDEBUG

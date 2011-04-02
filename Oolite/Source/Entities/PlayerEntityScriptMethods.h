@@ -38,9 +38,6 @@ MA 02110-1301, USA.
 - (double) creditBalance;
 - (void) setCreditBalance:(double)value;
 
-- (float)fuelLeakRate;
-- (void)setFuelLeakRate:(float)value;
-
 - (NSString *) dockedStationName;
 - (NSString *) dockedStationDisplayName;
 - (BOOL) dockedAtMainStation;
@@ -53,6 +50,7 @@ MA 02110-1301, USA.
 
 - (void) setMissionChoice:(NSString *)newChoice;
 - (void) setMissionChoice:(NSString *)newChoice withEvent:(BOOL) withEvent;
+- (NSString *) missionChoice;
 
 - (unsigned) systemPseudoRandom100;
 - (unsigned) systemPseudoRandom256;

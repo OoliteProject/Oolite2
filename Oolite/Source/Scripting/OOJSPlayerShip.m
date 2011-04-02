@@ -170,7 +170,7 @@ void InitOOJSPlayerShip(JSContext *context, JSObject *global)
 	
 	PlayerEntity *player = [PlayerEntity sharedPlayer];	// NOTE: at time of writing, this creates the player entity. Don't use PLAYER here.
 	
-	// Create ship object as a property of the player object.
+	// Create ship object as a property of the PLAYER object.
 	sPlayerShipObject = JS_DefineObject(context, JSPlayerObject(), "ship", &sPlayerShipClass, sPlayerShipPrototype, OOJS_PROP_READONLY);
 	JS_SetPrivate(context, sPlayerShipObject, OOConsumeReference([player weakRetain]));
 	[player setJSSelf:sPlayerShipObject context:context];
@@ -244,94 +244,93 @@ static JSBool PlayerShipGetProperty(JSContext *context, JSObject *this, jsid pro
 	if (EXPECT_NOT(OOIsPlayerStale() || this == sPlayerShipPrototype))  { *value = JSVAL_VOID; return YES; }
 	
 	id							result = nil;
-	PlayerEntity				*player = OOPlayerForScripting();
 	
 	switch (JSID_TO_INT(propID))
 	{
 		case kPlayerShip_fuelLeakRate:
-			return JS_NewNumberValue(context, [player fuelLeakRate], value);
+			return JS_NewNumberValue(context, [PLAYER fuelLeakRate], value);
 			
 		case kPlayerShip_docked:
-			*value = OOJSValueFromBOOL([player isDocked]);
+			*value = OOJSValueFromBOOL([PLAYER isDocked]);
 			return YES;
 			
 		case kPlayerShip_dockedStation:
-			result = [player dockedStation];
+			result = [PLAYER dockedStation];
 			break;
 			
 		case kPlayerShip_specialCargo:
-			result = [player specialCargo];
+			result = [PLAYER specialCargo];
 			break;
 			
 		case kPlayerShip_reticleTargetSensitive:
-			*value = OOJSValueFromBOOL([[player hud] reticleTargetSensitive]);
+			*value = OOJSValueFromBOOL([[PLAYER hud] reticleTargetSensitive]);
 			return YES;
 			
 		case kPlayerShip_galacticHyperspaceBehaviour:
-			*value = OOJSValueFromGalacticHyperspaceBehaviour(context, [player galacticHyperspaceBehaviour]);
+			*value = OOJSValueFromGalacticHyperspaceBehaviour(context, [PLAYER galacticHyperspaceBehaviour]);
 			return YES;
 			
 		case kPlayerShip_galacticHyperspaceFixedCoords:
-			return NSPointToVectorJSValue(context, [player galacticHyperspaceFixedCoords], value);
+			return NSPointToVectorJSValue(context, [PLAYER galacticHyperspaceFixedCoords], value);
 			
 		case kPlayerShip_galacticHyperspaceFixedCoordsInLY:
-			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([player galacticHyperspaceFixedCoords]), value);
+			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([PLAYER galacticHyperspaceFixedCoords]), value);
 			
 		case kPlayerShip_forwardShield:
-			return JS_NewNumberValue(context, [player forwardShieldLevel], value);
+			return JS_NewNumberValue(context, [PLAYER forwardShieldLevel], value);
 			
 		case kPlayerShip_aftShield:
-			return JS_NewNumberValue(context, [player aftShieldLevel], value);
+			return JS_NewNumberValue(context, [PLAYER aftShieldLevel], value);
 			
 		case kPlayerShip_maxForwardShield:
-			return JS_NewNumberValue(context, [player maxForwardShieldLevel], value);
+			return JS_NewNumberValue(context, [PLAYER maxForwardShieldLevel], value);
 			
 		case kPlayerShip_maxAftShield:
-			return JS_NewNumberValue(context, [player maxAftShieldLevel], value);
+			return JS_NewNumberValue(context, [PLAYER maxAftShieldLevel], value);
 			
 		case kPlayerShip_forwardShieldRechargeRate:
 		case kPlayerShip_aftShieldRechargeRate:
 			// No distinction made internally
-			return JS_NewNumberValue(context, [player shieldRechargeRate], value);
+			return JS_NewNumberValue(context, [PLAYER shieldRechargeRate], value);
 			
 		case kPlayerShip_galaxyCoordinates:
-			return NSPointToVectorJSValue(context, [player galaxy_coordinates], value);
+			return NSPointToVectorJSValue(context, [PLAYER galaxy_coordinates], value);
 			
 		case kPlayerShip_galaxyCoordinatesInLY:
-			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([player galaxy_coordinates]), value);
+			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([PLAYER galaxy_coordinates]), value);
 			
 		case kPlayerShip_cursorCoordinates:
-			return NSPointToVectorJSValue(context, [player cursor_coordinates], value);
+			return NSPointToVectorJSValue(context, [PLAYER cursor_coordinates], value);
 			
 		case kPlayerShip_cursorCoordinatesInLY:
-			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([player cursor_coordinates]), value);
+			return VectorToJSValue(context, OOGalacticCoordinatesFromInternal([PLAYER cursor_coordinates]), value);
 			
 		case kPlayerShip_targetSystem:
-			*value = INT_TO_JSVAL([UNIVERSE findSystemNumberAtCoords:[player cursor_coordinates] withGalaxySeed:[player galaxy_seed]]);
+			*value = INT_TO_JSVAL([UNIVERSE findSystemNumberAtCoords:[PLAYER cursor_coordinates] withGalaxySeed:[PLAYER galaxy_seed]]);
 			return YES;
 			
 		case kPlayerShip_scoopOverride:
-			*value = OOJSValueFromBOOL([player scoopOverride]);
+			*value = OOJSValueFromBOOL([PLAYER scoopOverride]);
 			return YES;
 			
 		case kPlayerShip_compassTarget:
-			result = [player compassTarget];
+			result = [PLAYER compassTarget];
 			break;
 			
 		case kPlayerShip_compassMode:
-			*value = OOJSValueFromCompassMode(context, [player compassMode]);
+			*value = OOJSValueFromCompassMode(context, [PLAYER compassMode]);
 			return YES;
 			
 		case kPlayerShip_hud:
-			result = [[player hud] hudName];
+			result = [[PLAYER hud] hudName];
 			break;
 			
 		case kPlayerShip_hudHidden:
-			*value = OOJSValueFromBOOL([[player hud] isHidden]);
+			*value = OOJSValueFromBOOL([[PLAYER hud] isHidden]);
 			return YES;
 			
 		case kPlayerShip_weaponsOnline:
-			*value = OOJSValueFromBOOL([player weaponsOnline]);
+			*value = OOJSValueFromBOOL([PLAYER weaponsOnline]);
 			return YES;
 			
 		case kPlayerShip_viewDirection:
@@ -357,7 +356,6 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 	
 	if (EXPECT_NOT(OOIsPlayerStale())) return YES;
 	
-	PlayerEntity				*player = OOPlayerForScripting();
 	jsdouble					fValue;
 	JSBool						bValue;
 	NSString					*sValue = nil;
@@ -369,7 +367,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_fuelLeakRate:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				[player setFuelLeakRate:fValue];
+				[PLAYER setFuelLeakRate:fValue];
 				return YES;
 			}
 			break;
@@ -377,7 +375,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_reticleTargetSensitive:
 			if (JS_ValueToBoolean(context, *value, &bValue))
 			{
-				[[player hud] setReticleTargetSensitive:bValue];
+				[[PLAYER hud] setReticleTargetSensitive:bValue];
 				return YES;
 			}
 			break;
@@ -386,7 +384,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 			ghBehaviour = OOGalacticHyperspaceBehaviourFromJSValue(context, *value);
 			if (ghBehaviour != GALACTIC_HYPERSPACE_BEHAVIOUR_UNKNOWN)
 			{
-				[player setGalacticHyperspaceBehaviour:ghBehaviour];
+				[PLAYER setGalacticHyperspaceBehaviour:ghBehaviour];
 				return YES;
 			}
 			break;
@@ -395,7 +393,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 			if (JSValueToVector(context, *value, &vValue))
 			{
 				NSPoint coords = { vValue.x, vValue.y };
-				[player setGalacticHyperspaceFixedCoords:coords];
+				[PLAYER setGalacticHyperspaceFixedCoords:coords];
 				return YES;
 			}
 			break;
@@ -404,7 +402,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 			if (JSValueToVector(context, *value, &vValue))
 			{
 				NSPoint coords = OOInternalCoordinatesFromGalactic(vValue);
-				[player setGalacticHyperspaceFixedCoords:coords];
+				[PLAYER setGalacticHyperspaceFixedCoords:coords];
 				return YES;
 			}
 			break;
@@ -412,7 +410,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_forwardShield:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				[player setForwardShieldLevel:fValue];
+				[PLAYER setForwardShieldLevel:fValue];
 				return YES;
 			}
 			break;
@@ -420,7 +418,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_aftShield:
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
-				[player setAftShieldLevel:fValue];
+				[PLAYER setAftShieldLevel:fValue];
 				return YES;
 			}
 			break;
@@ -428,7 +426,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_scoopOverride:
 			if (JS_ValueToBoolean(context, *value, &bValue))
 			{
-				[player setScoopOverride:bValue];
+				[PLAYER setScoopOverride:bValue];
 				return YES;
 			}
 			break;
@@ -437,12 +435,12 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 			sValue = OOStringFromJSValue(context, *value);
 			if (sValue != nil)
 			{
-				[player switchHudTo:sValue];	// EMMSTRAN: logged error should be a JS warning.
+				[PLAYER switchHudTo:sValue];	// EMMSTRAN: logged error should be a JS warning.
 				return YES;
 			}
 			else
 			{
-				[player resetHud];
+				[PLAYER resetHud];
 				return YES;
 			}
 			break;
@@ -450,7 +448,7 @@ static JSBool PlayerShipSetProperty(JSContext *context, JSObject *this, jsid pro
 		case kPlayerShip_hudHidden:
 			if (JS_ValueToBoolean(context, *value, &bValue))
 			{
-				[[player hud] setHidden:bValue];
+				[[PLAYER hud] setHidden:bValue];
 				return YES;
 			}
 			break;
@@ -476,7 +474,10 @@ static JSBool PlayerShipLaunch(JSContext *context, uintN argc, jsval *vp)
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	[OOPlayerForScripting() launchFromStation];
+	// ensure autosave is ready for the next unscripted launch
+	if ([UNIVERSE autoSave])  [UNIVERSE setAutoSaveNow:YES];
+	[PLAYER leaveDock:[PLAYER dockedStation]];
+	
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -490,11 +491,9 @@ static JSBool PlayerShipRemoveAllCargo(JSContext *context, uintN argc, jsval *vp
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	PlayerEntity *player = OOPlayerForScripting();
-	
-	if ([player isDocked])
+	if ([PLAYER isDocked])
 	{
-		[player removeAllCargo:NO];
+		[PLAYER removeAllCargo:NO];
 		OOJS_RETURN_VOID;
 	}
 	else
@@ -514,7 +513,6 @@ static JSBool PlayerShipUseSpecialCargo(JSContext *context, uintN argc, jsval *v
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	PlayerEntity			*player = OOPlayerForScripting();
 	NSString				*name = nil;
 	
 	if (argc > 0)  name = OOStringFromJSValue(context, OOJS_ARGV[0]);
@@ -524,7 +522,7 @@ static JSBool PlayerShipUseSpecialCargo(JSContext *context, uintN argc, jsval *v
 		return NO;
 	}
 	
-	[player useSpecialCargo:OOStringFromJSValue(context, OOJS_ARGV[0])];
+	[PLAYER useSpecialCargo:OOStringFromJSValue(context, OOJS_ARGV[0])];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -538,7 +536,6 @@ static JSBool PlayerShipEngageAutopilotToStation(JSContext *context, uintN argc,
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	PlayerEntity			*player = OOPlayerForScripting();
 	StationEntity			*stationForDocking = nil;
 	
 	if (argc > 0)  stationForDocking = OOJSNativeObjectOfClassFromJSValue(context, OOJS_ARGV[0], [StationEntity class]);
@@ -548,7 +545,7 @@ static JSBool PlayerShipEngageAutopilotToStation(JSContext *context, uintN argc,
 		return NO;
 	}
 	
-	OOJS_RETURN_BOOL([player engageAutopilotToStation:stationForDocking]);
+	OOJS_RETURN_BOOL([PLAYER engageAutopilotToStation:stationForDocking]);
 	
 	OOJS_NATIVE_EXIT
 }
@@ -561,7 +558,7 @@ static JSBool PlayerShipDisengageAutopilot(JSContext *context, uintN argc, jsval
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	[OOPlayerForScripting() disengageAutopilot];
+	[PLAYER disengageAutopilot];
 	OOJS_RETURN_VOID;
 	
 	OOJS_NATIVE_EXIT
@@ -575,7 +572,6 @@ static JSBool PlayerShipAwardEquipmentToCurrentPylon(JSContext *context, uintN a
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	PlayerEntity			*player = OOPlayerForScripting();
 	NSString				*key = nil;
 	OOEquipmentType			*eqType = nil;
 	
@@ -587,7 +583,7 @@ static JSBool PlayerShipAwardEquipmentToCurrentPylon(JSContext *context, uintN a
 		return NO;
 	}
 	
-	OOJS_RETURN_BOOL([player assignToActivePylon:key]);
+	OOJS_RETURN_BOOL([PLAYER assignToActivePylon:key]);
 	
 	OOJS_NATIVE_EXIT
 }
@@ -598,7 +594,6 @@ static JSBool PlayerShipAddPassenger(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString 			*name = nil;
 	OOSystemID			start = 0, destination = 0;
 	jsdouble			eta = 0.0, fee = 0.0;
@@ -619,9 +614,9 @@ static JSBool PlayerShipAddPassenger(JSContext *context, uintN argc, jsval *vp)
 	if (!ValidateContracts(context, argc, vp, NO, &start, &destination, &eta, &fee))  return NO; // always go through validate contracts (cargo)
 	
 	// Ensure there's space.
-	if ([player passengerCount] >= [player passengerCapacity])  OOJS_RETURN_BOOL(NO);
+	if ([PLAYER passengerCount] >= [PLAYER passengerCapacity])  OOJS_RETURN_BOOL(NO);
 	
-	BOOL OK = [player addPassenger:name start:start destination:destination eta:eta fee:fee];
+	BOOL OK = [PLAYER addPassenger:name start:start destination:destination eta:eta fee:fee];
 	OOJS_RETURN_BOOL(OK);
 	
 	OOJS_NATIVE_EXIT
@@ -633,7 +628,6 @@ static JSBool PlayerShipRemovePassenger(JSContext *context, uintN argc, jsval *v
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString			*name = nil;
 	BOOL				OK = YES;
 	
@@ -644,8 +638,8 @@ static JSBool PlayerShipRemovePassenger(JSContext *context, uintN argc, jsval *v
 		return NO;
 	}
 	
-	OK = [player passengerCount] > 0 && [name length] > 0;
-	if (OK)  OK = [player removePassenger:name];
+	OK = [PLAYER passengerCount] > 0 && [name length] > 0;
+	if (OK)  OK = [PLAYER removePassenger:name];
 	
 	OOJS_RETURN_BOOL(OK);
 	
@@ -658,7 +652,6 @@ static JSBool PlayerShipAwardContract(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	PlayerEntity		*player = OOPlayerForScripting();
 	NSString 			*key = nil;
 	int32 				qty = 0;
 	OOSystemID			start = 0, destination = 0;
@@ -685,7 +678,7 @@ static JSBool PlayerShipAwardContract(JSContext *context, uintN argc, jsval *vp)
 	
 	if (!ValidateContracts(context, argc, vp, YES, &start, &destination, &eta, &fee))  return NO; // always go through validate contracts (cargo)
 	
-	BOOL OK = [player awardContract:qty commodity:key start:start destination:destination eta:eta fee:fee];
+	BOOL OK = [PLAYER awardContract:qty commodity:key start:start destination:destination eta:eta fee:fee];
 	OOJS_RETURN_BOOL(OK);
 	
 	OOJS_NATIVE_EXIT

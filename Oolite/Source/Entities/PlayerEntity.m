@@ -576,7 +576,6 @@ static GLfloat		sBaseMass = 0.0;
 	[localVariables release];
 	localVariables = [[NSMutableDictionary alloc] init];
 	
-	[self setScriptTarget:nil];
 	[self resetMissionChoice];
 	[[UNIVERSE gameView] resetTypedString];
 	found_system_seed = kNilRandomSeed;
@@ -2570,9 +2569,15 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (float)fuelLeakRate
+- (float) fuelLeakRate
 {
 	return fuel_leak_rate;
+}
+
+
+- (void) setFuelLeakRate:(float)value
+{
+	fuel_leak_rate = fmaxf(value, 0.0f);
 }
 
 
@@ -3746,7 +3751,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		if (![eqType canBeDamaged] || system_name == nil)  return NO;
 		
 		// set the following so removeEquipment works on the right entity
-		[self setScriptTarget:self];
 		[UNIVERSE clearPreviousMessage];
 		[self removeEquipmentItem:system_key];
 		
@@ -4282,12 +4286,14 @@ static bool minShieldLevelPercentageInitialised = false;
 	//  perform any check here for forced witchspace encounters
 	unsigned malfunc_chance = 253;
 	if (ship_trade_in_factor < 80)
-		    malfunc_chance -= (1 + ranrot_rand() % (81-ship_trade_in_factor)) / 2;	// increase chance of misjump in worn-out craft
-
+	{
+		malfunc_chance -= (1 + ranrot_rand() % (81-ship_trade_in_factor)) / 2;	// increase chance of misjump in worn-out craft
+	}
+	
 	BOOL malfunc = ((ranrot_rand() & 0xff) > malfunc_chance);
 	// 75% of the time a malfunction means a misjump
 	BOOL misjump = [self scriptedMisjump] || ((flightPitch == max_flight_pitch) || (malfunc && (randf() > 0.75)));
-
+	
 	if (malfunc && !misjump)
 	{
 		// some malfunctions will start fuel leaks, some will result in no witchjump at all.
@@ -4300,20 +4306,22 @@ static bool minShieldLevelPercentageInitialised = false;
 		}
 		else
 		{
-			[self setFuelLeak:[NSString stringWithFormat:@"%f", (randf() + randf()) * 5.0]];
+			[self setFuelLeakRate:(randf() + randf()) * 5.0f];
+			[self playFuelLeak];
+			[UNIVERSE addMessage:DESC(@"danger-fuel-leak") forCount:6];
 		}
 	}
-
+	
 	// From this point forward we are -definitely- witchjumping
-
+	
 	// burn the full fuel amount to create the wormhole
 	fuel -= [self fuelRequiredForJump];
-
+	
 	// NEW: Create the players' wormhole
 	wormhole = [[WormholeEntity alloc] initWormholeTo:target_system_seed fromShip:self];
 	[UNIVERSE addEntity:wormhole]; // New new: Add new wormhole to Universe to let other ships target it. Required for ships following the player.
 	[self addScannedWormhole:wormhole];
-
+	
 	[self setStatus:STATUS_ENTERING_WITCHSPACE];
 	ShipScriptEventNoCx(self, "shipWillEnterWitchspace", OOJSSTR("standard jump"));
 	if ([self scriptedMisjump]) misjump = YES; // a script could just have changed this to true;

@@ -801,12 +801,12 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	if ([self isRotatingStation] && [self hasNPCTraffic])
 	{
 		docked_shuttles = ranrot_rand() & 3;   // 0..3;
-		shuttle_launch_interval = 15.0 * 60.0;  // every 15 minutes
-		last_shuttle_launch_time = unitime - (ranrot_rand() & 63) * shuttle_launch_interval / 60.0;
+		shuttle_launch_interval = OOMINUTES(15.0);
+		last_shuttle_launch_time = unitime - (ranrot_rand() & 63) * shuttle_launch_interval / kOOSecondsPerMinute;
 		
 		docked_traders = 3 + (ranrot_rand() & 7);   // 1..3;
-		trader_launch_interval = 3600.0 / docked_traders;  // every few minutes
-		last_trader_launch_time = unitime + 60.0 - trader_launch_interval; // in one minute's time
+		trader_launch_interval = kOOSecondsPerHour / docked_traders;  // every few minutes
+		last_trader_launch_time = unitime + kOOSecondsPerMinute - trader_launch_interval; // in one minute's time
 	}
 	else
 	{
@@ -814,7 +814,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		docked_traders = 0;   // 1..3;
 	}
 	
-	patrol_launch_interval = 300.0;	// 5 minutes
+	patrol_launch_interval = OOMINUTES(5.0);
 	last_patrol_report_time = unitime - patrol_launch_interval;
 	
 	[self setCrew:[NSArray arrayWithObject:[OOCharacter characterWithRole:@"police" andOriginalSystem:[UNIVERSE systemSeed]]]];

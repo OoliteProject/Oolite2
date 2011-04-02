@@ -759,12 +759,12 @@ NSString *ClockToString(double clock, BOOL adjusting)
 	int				days, hrs, mins, secs;
 	NSString		*format = nil;
 	
-	days = floor(clock / 86400.0);
-	secs = floor(clock - days * 86400.0);
-	hrs = floor(secs / 3600.0);
-	secs %= 3600;
-	mins = floor(secs / 60.0);
-	secs %= 60;
+	days = floor(clock / kOOSecondsPerDay);
+	secs = floor(clock - days * kOOSecondsPerDay);
+	hrs = floor(secs / kOOSecondsPerHour);
+	secs %= (int)kOOSecondsPerHour;
+	mins = floor(secs / kOOSecondsPerMinute);
+	secs %= (int)kOOSecondsPerMinute;
 	
 	if (adjusting)  format = DESC(@"clock-format-adjusting");
 	else  format = DESC(@"clock-format");

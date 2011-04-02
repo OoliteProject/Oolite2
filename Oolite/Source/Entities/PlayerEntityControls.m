@@ -3365,7 +3365,7 @@ static BOOL toggling_music;
 		}
 		[self setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_GRANTED];
 		
-		ship_clock_adjust = 1200.0;			// 20 minutes penalty to enter dock
+		[self advanceClockBy:OOMINUTES(20.0)];
 		ident_engaged = NO;
 		[self safeAllMissiles];
 		[UNIVERSE setViewDirection:VIEW_FORWARD];

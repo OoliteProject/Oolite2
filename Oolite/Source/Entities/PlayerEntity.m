@@ -626,12 +626,12 @@ static GLfloat		sBaseMass = 0.0;
 	[self setEquipScreenBackgroundDescriptor:nil];
 	
 	NSCalendarDate *nowDate = [NSCalendarDate calendarDate];
-	ship_clock = PLAYER_SHIP_CLOCK_START;
-	ship_clock += [nowDate hourOfDay] * 3600.0;
-	ship_clock += [nowDate minuteOfHour] * 60.0;
-	ship_clock += [nowDate secondOfMinute];
-	fps_check_time = ship_clock;
-	ship_clock_adjust = 0.0;
+	_clockTime = PLAYER_SHIP_CLOCK_START;
+	_clockTime += OOHOURS([nowDate hourOfDay]);
+	_clockTime += OOMINUTES([nowDate minuteOfHour]);
+	_clockTime += OOSECONDS([nowDate secondOfMinute]);
+	fps_check_time = [self clockTime];
+	_shipClockAdjust = 0.0;
 	
 	isSpeechOn = NO;
 #if OOLITE_ESPEAK
@@ -1563,45 +1563,42 @@ static bool minShieldLevelPercentageInitialised = false;
 {
 	// shot time updates are still needed here for STATUS_DEAD!
 	shot_time += delta_t;
-	ship_clock += delta_t;
-	if (ship_clock_adjust > 0.0)				// adjust for coming out of warp (add LY * LY hrs)
+	_clockTime += delta_t;
+	
+	if (_shipClockAdjust > 0.0)
 	{
-		double fine_adjust = delta_t * 7200.0;
-		if (ship_clock_adjust > 86400)			// more than a day
-			fine_adjust = delta_t * 115200.0;	// 16 times faster
-		if (ship_clock_adjust > 0)
+		double scale = 7200.0;
+		if (_shipClockAdjust > kOOSecondsPerDay)
 		{
-			if (fine_adjust > ship_clock_adjust)
-				fine_adjust = ship_clock_adjust;
-			ship_clock += fine_adjust;
-			ship_clock_adjust -= fine_adjust;
+			// More than a day.
+			scale *= 16.0;
 		}
-		else
-		{
-			if (fine_adjust < ship_clock_adjust)
-				fine_adjust = ship_clock_adjust;
-			ship_clock -= fine_adjust;
-			ship_clock_adjust += fine_adjust;
-		}
+		
+		double fineAdjust = fmin(delta_t * scale, _shipClockAdjust);
+		
+		_clockTime += fineAdjust;
+		_shipClockAdjust -= fineAdjust;
 	}
-	else 
-		ship_clock_adjust = 0.0;
+	else
+	{
+		_shipClockAdjust = 0.0;
+	}
 	
 	//fps
-	if (ship_clock > fps_check_time)
+	if (_clockTime > fps_check_time)
 	{
-		if (![self clockAdjusting])
+		if (![self isClockAdjusting])
 		{
 			fps_counter = (int)([UNIVERSE timeAccelerationFactor] * floor([UNIVERSE framesDoneThisUpdate] / (fps_check_time - last_fps_check_time)));
 			last_fps_check_time = fps_check_time;
-			fps_check_time = ship_clock + MINIMUM_GAME_TICK;
+			fps_check_time = _clockTime + MINIMUM_GAME_TICK;
 		}
 		else
 		{
 			// Good approximation for when the clock is adjusting and proper fps calculation
 			// cannot be performed.
 			fps_counter = (int)([UNIVERSE timeAccelerationFactor] * floor(1.0 / delta_t));
-			fps_check_time = ship_clock + MINIMUM_GAME_TICK;
+			fps_check_time = _clockTime + MINIMUM_GAME_TICK;
 		}
 		[UNIVERSE resetFramesDoneThisUpdate];	// Reset frame counter
 	}
@@ -2482,37 +2479,37 @@ static bool minShieldLevelPercentageInitialised = false;
 
 - (double) clockTime
 {
-	return ship_clock;
+	return _clockTime;
 }
 
 
 - (double) clockTimeAdjusted
 {
-	return ship_clock + ship_clock_adjust;
+	return _clockTime + _shipClockAdjust;
 }
 
 
-- (BOOL) clockAdjusting
+- (BOOL) isClockAdjusting
 {
-	return ship_clock_adjust > 0;
+	return _shipClockAdjust > 0;
 }
 
 
-- (void) addToAdjustTime:(double)seconds
+- (void) advanceClockBy:(double)seconds
 {
-	ship_clock_adjust += seconds;
+	_shipClockAdjust += seconds;
 }
 
 
 - (NSString*) dial_clock
 {
-	return ClockToString(ship_clock, ship_clock_adjust > 0);
+	return ClockToString([self clockTime], [self isClockAdjusting]);
 }
 
 
 - (NSString*) dial_clock_adjusted
 {
-	return ClockToString(ship_clock + ship_clock_adjust, NO);
+	return ClockToString([self clockTimeAdjusted], NO);
 }
 
 
@@ -3514,8 +3511,8 @@ static bool minShieldLevelPercentageInitialised = false;
 		since we're not supposed to be inside our ship anymore! -- Kaks 20101114
 	*/
 	
-	[UNIVERSE setBlockJSPlayerShipProps:YES]; 	// no player.ship properties while inside the pod!
-	ship_clock_adjust += 43200 + 5400 * (ranrot_rand() & 127);	// add up to 8 days until rescue!
+	[UNIVERSE setBlockJSPlayerShipProps:YES];						// no player.ship properties while inside the pod!
+	[self advanceClockBy:43200 + 5400 * (ranrot_rand() & 127)];	// add up to 8 days until rescue!
 	dockingClearanceStatus = DOCKING_CLEARANCE_STATUS_NOT_REQUIRED;
 	flightSpeed = fmaxf(flightSpeed, 50.0f);
 	
@@ -4001,8 +3998,8 @@ static bool minShieldLevelPercentageInitialised = false;
 	[[UNIVERSE gameView] clearKeys];	// try to stop keybounces
 	
 	[[OOMusicController sharedController] stop];
-
-	ship_clock_adjust = 600.0;			// 10 minutes to leave dock
+	
+	[self advanceClockBy:600.0];		// 10 minutes to leave dock
 	
 	[station launchShip:self];
 
@@ -4209,12 +4206,13 @@ static bool minShieldLevelPercentageInitialised = false;
 	if (passengers)
 	{
 		unsigned i;
+		NSNumber *arrivalTime = $float([self clockTime]);
 		for (i = 0; i < [passengers count]; i++)
 		{
 			// set the expected arrival time to now, so they storm off the ship at the first port
-			NSMutableDictionary* passenger_info = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)[passengers objectAtIndex:i]];
-			[passenger_info setObject:[NSNumber numberWithDouble:ship_clock] forKey:CONTRACT_KEY_ARRIVAL_TIME];
-			[passengers replaceObjectAtIndex:i withObject:passenger_info];
+			NSMutableDictionary* passengerInfo = [NSMutableDictionary dictionaryWithDictionary:[passengers oo_dictionaryAtIndex:i]];
+			[passengerInfo setObject:arrivalTime forKey:CONTRACT_KEY_ARRIVAL_TIME];
+			[passengers replaceObjectAtIndex:i withObject:passengerInfo];
 		}
 	}
 	
@@ -4336,7 +4334,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	// set clock after "playerWillEnterWitchspace" and before  removeAllEntitiesExceptPlayer, to allow escorts time to follow their mother. 
 	double distance = distanceBetweenPlanetPositions(sTo.d,sTo.b,galaxy_coordinates.x,galaxy_coordinates.y);
-	ship_clock_adjust = distance * distance * (misjump ? 2700.0 : 3600.0);	// LY * LY hrs - misjumps take 3/4 time of the full jump, they're not the same as a jump of half the length!
+	[self advanceClockBy:distance * distance * (misjump ? 2700.0 : 3600.0)];	// LY * LY hrs - misjumps take 3/4 time of the full jump, they're not the same as a jump of half the length!
 	
 	[UNIVERSE removeAllEntitiesExceptPlayer];
 	
@@ -4689,7 +4687,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[contract setObject:[NSNumber numberWithUnsignedInt:planet] forKey:CONTRACT_KEY_START];
 		[contract setObject:planetName forKey:@"startName"];
 
-		int 		dest_eta = [dict oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - ship_clock;
+		int 		dest_eta = [dict oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - [self clockTime];
 		[contract setObject:[NSNumber numberWithInt:dest_eta] forKey:@"eta"];
 		[contract setObject:[UNIVERSE shortTimeDescription:dest_eta] forKey:@"etaDescription"];
 		[contract setObject:[dict oo_stringForKey:CONTRACT_KEY_PREMIUM] forKey:CONTRACT_KEY_PREMIUM]; 
@@ -5376,7 +5374,7 @@ static NSString *last_outfitting_key=nil;
 		// reduce the minimum techlevel occasionally as a bonus..
 		if (techlevel < minTechLevel && techlevel + 3 > minTechLevel)
 		{
-			unsigned day = i * 13 + (unsigned)floor([UNIVERSE gameTime] / 86400.0);
+			unsigned day = i * 13 + (unsigned)floor([UNIVERSE gameTime] / kOOSecondsPerDay);
 			unsigned char dayRnd = (day & 0xff) ^ system_seed.a;
 			OOTechLevelID originalMinTechLevel = minTechLevel;
 			
@@ -5877,7 +5875,7 @@ static NSString *last_outfitting_key=nil;
 			// adjust time before playerBoughtEquipment gets to change credits dynamically
 			// wind the clock forward by 10 minutes plus 10 minutes for every 60 credits spent
 			double time_adjust = (old_credits > credits) ? (old_credits - credits) : 0.0;
-			ship_clock_adjust += time_adjust + 600.0;
+			[self advanceClockBy:time_adjust + 600.0];
 			
 			[self doScriptEvent:OOJSID("playerBoughtEquipment") withArgument:key];
 			if (gui_screen == GUI_SCREEN_EQUIP_SHIP) //if we haven't changed gui screen inside playerBoughtEquipment
@@ -6757,7 +6755,7 @@ static NSString *last_outfitting_key=nil;
 
 - (void) getFined
 {
-	if (legalStatus == 0)  return;				// nothing to pay for
+	if (legalStatus == 0)  return;		// nothing to pay for
 	
 	OOGovernmentID local_gov = [[UNIVERSE currentSystemData] oo_intForKey:KEY_GOVERNMENT];
 	if ([UNIVERSE inInterstellarSpace])  local_gov = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
@@ -6778,14 +6776,14 @@ static NSString *last_outfitting_key=nil;
 	// one of the fined-@-credits strings includes expansion tokens
 	NSString* fined_message = [NSString stringWithFormat:ExpandDescriptionForCurrentSystem(DESC(@"fined-@-credits")), OOCredits(fine)];
 	[self addMessageToReport:fined_message];
-	ship_clock_adjust = 24 * 3600;	// take up a day
+	[self advanceClockBy:24 * 3600];	// take up a day
 }
 
 
 - (void) reduceTradeInFactorBy:(int)value
 {
 	ship_trade_in_factor -= value;
-	if (ship_trade_in_factor < 75) ship_trade_in_factor = 75;
+	ship_trade_in_factor = MAX(ship_trade_in_factor, 75);
 }
 
 

@@ -213,7 +213,7 @@ typedef enum
 
 #define KEY_REPEAT_INTERVAL				0.20
 
-#define PLAYER_SHIP_CLOCK_START			(2084004 * 86400.0)
+#define PLAYER_SHIP_CLOCK_START			OODAYS(2084004)
 
 #define CONTRACTS_GOOD_KEY				@"contracts_fulfilled"
 #define CONTRACTS_BAD_KEY				@"contracts_expired"
@@ -275,8 +275,8 @@ typedef enum
 	
 	NSString				*lastTextKey;
 	
-	double					ship_clock;
-	double					ship_clock_adjust;
+	double					_clockTime;
+	OOTimeDelta				_shipClockAdjust;
 	
 	double					fps_check_time;
 	int						fps_counter;
@@ -615,8 +615,8 @@ typedef enum
 
 - (double) clockTime;		// Note that this is not an OOTimeAbsolute
 - (double) clockTimeAdjusted;	// Note that this is not an OOTimeAbsolute
-- (BOOL) clockAdjusting;
-- (void) addToAdjustTime:(double) seconds ;
+- (BOOL) isClockAdjusting;
+- (void) advanceClockBy:(OOTimeDelta)seconds;
 
 - (NSString *) dial_clock;
 - (NSString *) dial_clock_adjusted;

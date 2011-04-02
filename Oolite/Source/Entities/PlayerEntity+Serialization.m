@@ -203,7 +203,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	[result setObject:displayName forKey:kOOSaveKey_shipDisplayName];
 	if (![shipName isEqualToString:displayName])  [result setObject:shipName forKey:kOOSaveKey_shipName];
 	
-	[result oo_setLongLong:round(ship_clock) forKey:kOOSaveKey_clock];
+	[result oo_setLongLong:round([self clockTime]) forKey:kOOSaveKey_clock];
 	
 	[result oo_setInteger:[self galaxyNumber] + 1 forKey:kOOSaveKey_galaxyNumber];
 	[result setObject:ArrayFromSeed([self galaxy_seed]) forKey:kOOSaveKey_galaxySeed];
@@ -548,7 +548,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	[result setObject:shipyard_record forKey:@"shipyard_record"];
 	
 	//ship's clock
-	[result setObject:[NSNumber numberWithDouble:ship_clock] forKey:@"ship_clock"];
+	[result setObject:[NSNumber numberWithDouble:[self clockTime]] forKey:@"ship_clock"];
 	
 	//speech
 	[result setObject:[NSNumber numberWithBool:isSpeechOn] forKey:@"speech_on"];
@@ -761,8 +761,8 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	market_rnd = [dict oo_intForKey:@"market_rnd"];
 	ship_kills = [dict oo_intForKey:@"ship_kills"];
 	
-	ship_clock = [dict oo_doubleForKey:@"ship_clock" defaultValue:PLAYER_SHIP_CLOCK_START];
-	fps_check_time = ship_clock;
+	_clockTime = [dict oo_doubleForKey:@"ship_clock" defaultValue:PLAYER_SHIP_CLOCK_START];
+	fps_check_time = _clockTime;
 
 	// mission_variables
 	[mission_variables release];

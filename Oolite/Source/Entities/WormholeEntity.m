@@ -156,15 +156,21 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 		witch_mass = 200000.0; // MKW 2010.11.21 - originally the ship's mass was added twice - once here and once in suckInShip.  Instead, we give each wormhole a minimum mass.
 		if ([ship isPlayer])
 			witch_mass += [ship mass]; // The player ship never gets sucked in, so add its mass here.
-
-		if (sun && ([sun willGoNova] || [sun goneNova]) && [ship mass] > 240000) 
-			shrink_factor = [ship mass] / 240000; // don't allow longstanding wormholes in nova systems. (60 sec * WORMHOLE_SHRINK_RATE = 240 000)
+		
+		// Don't allow longstanding wormholes in nova systems.
+		const double novaShrinkAccelThreshold =  WORMHOLE_SHRINK_RATE * kOOSecondsPerMinute;
+		if (sun && ([sun willGoNova] || [sun goneNova]) && [ship mass] > novaShrinkAccelThreshold)
+		{
+			shrink_factor = [ship mass] / novaShrinkAccelThreshold;
+		}
 		else
+		{
 			shrink_factor = 1;
-			
+		}
+		
 		collision_radius = 0.5 * M_PI * pow(witch_mass, 1.0/3.0);
 		expiry_time = now + (witch_mass / WORMHOLE_SHRINK_RATE / shrink_factor);
-		travel_time = (distance * distance * 3600); // Taken from PlayerEntity.h
+		travel_time = OOHOURS(distance * distance);
 		arrival_time = now + travel_time;
 		estimated_arrival_time = arrival_time;
 		position = [ship position];
@@ -181,7 +187,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	if (!_misjump)
 	{
 		double distance = distanceBetweenPlanetPositions(originCoords.x, originCoords.y, destinationCoords.x, destinationCoords.y);
-		double time_adjust = distance * distance * (3600 - 2700); // NB: Time adjustment is calculated using original distance. Formula matches the one in [PlayerEntity witchJumpTo]
+		double time_adjust = distance * distance * OOMINUTES(15.0); // NB: Time adjustment is calculated using original distance. Formula matches the one in [PlayerEntity witchJumpTo]
 		arrival_time -= time_adjust;
 		travel_time -= time_adjust;
 		destinationCoords.x = (originCoords.x + destinationCoords.x) / 2;

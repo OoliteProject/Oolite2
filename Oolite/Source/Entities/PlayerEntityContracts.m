@@ -152,6 +152,8 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	if (dockedStation != [UNIVERSE station])	// only drop off passengers or fulfil contracts at main station
 		return nil;
 	
+	double clockTime = [self clockTime];
+	
 	// check escape pods...
 	// TODO
 	
@@ -167,7 +169,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 		Random_Seed dest_seed = [UNIVERSE systemSeedForSystemNumber:dest];
 		// the system name can change via script
 		NSString* passenger_dest_name = [UNIVERSE getSystemName: dest_seed];
-		int dest_eta = [passenger_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - ship_clock;
+		int dest_eta = [passenger_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - clockTime;
 		
 		if (equal_seeds( system_seed, dest_seed))
 		{
@@ -176,7 +178,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			{
 				// and in good time
 				long long fee = [passenger_info oo_longLongForKey:CONTRACT_KEY_FEE];
-				while ((randf() < 0.75)&&(dest_eta > 3600))	// delivered with more than an hour to spare and a decent customer?
+				while (randf() < 0.75 && dest_eta > OOHOURS(1))	// delivered with more than an hour to spare and a decent customer?
 				{
 					fee *= 110;	// tip + 10%
 					fee /= 100;
@@ -193,8 +195,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			{
 				// but we're late!
 				long long fee = [passenger_info oo_longLongForKey:CONTRACT_KEY_FEE] / 2;	// halve fare
-				while (randf() < 0.5)	// maybe halve fare a few times!
-					fee /= 2;
+				while (randf() < 0.5)  fee /= 2;	// maybe halve fare a few times!
 				credits += 10 * fee;
 				
 				[result oo_appendFormatLine:DESC(@"passenger-delivered-late-@-@-@"), passenger_name, OOIntCredits(fee), passenger_dest_name];
@@ -221,7 +222,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 		NSDictionary* contract_info = [contracts oo_dictionaryAtIndex:i];
 		NSString* contract_cargo_desc = [contract_info oo_stringForKey:CARGO_KEY_DESCRIPTION];
 		int dest = [contract_info oo_intForKey:CONTRACT_KEY_DESTINATION];
-		int dest_eta = [contract_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - ship_clock;
+		int dest_eta = [contract_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - clockTime;
 		
 		int premium = 10 * [contract_info oo_floatForKey:CONTRACT_KEY_PREMIUM];
 		int fee = 10 * [contract_info oo_floatForKey:CONTRACT_KEY_FEE];
@@ -315,10 +316,10 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	}
 	
 	// check passenger_record for expired contracts
-	NSArray* names = [passenger_record allKeys];
+	NSArray *names = [passenger_record allKeys];
 	for (i = 0; i < [names count]; i++)
 	{
-		double dest_eta = [passenger_record oo_doubleForKey:[names objectAtIndex:i]] - ship_clock;
+		double dest_eta = [passenger_record oo_doubleForKey:[names objectAtIndex:i]] - clockTime;
 		if (dest_eta < 0)
 		{
 			// check they're not STILL on board
@@ -338,10 +339,10 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	}
 	
 	// check contract_record for expired contracts
-	NSArray* ids = [contract_record allKeys];
+	NSArray *ids = [contract_record allKeys];
 	for (i = 0; i < [ids count]; i++)
 	{
-		double dest_eta = [(NSNumber*)[contract_record objectForKey:[ids objectAtIndex:i]] doubleValue] - ship_clock;
+		double dest_eta = [(NSNumber*)[contract_record objectForKey:[ids objectAtIndex:i]] doubleValue] - clockTime;
 		if (dest_eta < 0)
 		{
 			[contract_record removeObjectForKey:[ids objectAtIndex:i]];
@@ -570,12 +571,14 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	gui_screen = GUI_SCREEN_CONTRACTS;
 	BOOL			guiChanged = (oldScreen != gui_screen);
 	
+	double			clockTime = [self clockTime];
+	
 	// set up initial markets if there are none
 	StationEntity* the_station = [UNIVERSE station];
 	if (![the_station localPassengers])
-		[the_station setLocalPassengers:[NSMutableArray arrayWithArray:[UNIVERSE passengersForLocalSystemAtTime:ship_clock]]];
+		[the_station setLocalPassengers:[NSMutableArray arrayWithArray:[UNIVERSE passengersForLocalSystemAtTime:clockTime]]];
 	if (![the_station localContracts])
-		[the_station setLocalContracts:[NSMutableArray arrayWithArray:[UNIVERSE contractsForLocalSystemAtTime:ship_clock]]];
+		[the_station setLocalContracts:[NSMutableArray arrayWithArray:[UNIVERSE contractsForLocalSystemAtTime:clockTime]]];
 		
 	NSMutableArray* passenger_market = [the_station localPassengers];
 	NSMutableArray* contract_market = [the_station localContracts];
@@ -652,7 +655,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			NSDictionary* passenger_info = [passenger_market oo_dictionaryAtIndex:i];
 			NSString *Name = [passenger_info oo_stringForKey:PASSENGER_KEY_NAME];
 			if([Name length] >27)	Name =[[Name substringToIndex:25] stringByAppendingString:@"..."];
-			int dest_eta = [passenger_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - ship_clock;
+			int dest_eta = [passenger_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - clockTime;
 			[row_info removeAllObjects];
 			[row_info addObject:[NSString stringWithFormat:@" %@ ",Name]];
 			[row_info addObject:[NSString stringWithFormat:@" %@ ",[passenger_info oo_stringForKey:CONTRACT_KEY_DESTINATION_NAME]]];
@@ -690,7 +693,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 			
 			float premium = [(NSNumber *)[contract_info objectForKey:CONTRACT_KEY_PREMIUM] floatValue];
 			BOOL not_possible = ((cargo_space_required > max_cargo - current_cargo)||(premium * 10 > credits));
-			int dest_eta = [(NSNumber*)[contract_info objectForKey:CONTRACT_KEY_ARRIVAL_TIME] doubleValue] - ship_clock;
+			int dest_eta = [(NSNumber*)[contract_info objectForKey:CONTRACT_KEY_ARRIVAL_TIME] doubleValue] - clockTime;
 			[row_info removeAllObjects];
 			[row_info addObject:[NSString stringWithFormat:@" %@ ",[contract_info objectForKey:CARGO_KEY_DESCRIPTION]]];
 			[row_info addObject:[NSString stringWithFormat:@" %@ ",[contract_info objectForKey:CONTRACT_KEY_DESTINATION_NAME]]];
@@ -988,7 +991,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 		NSString* label = [contract_info oo_stringForKey:forCargo ? CARGO_KEY_DESCRIPTION : PASSENGER_KEY_NAME];
 		// the system name can change via script. The following PASSENGER_KEYs are identical to the corresponding CONTRACT_KEYs
 		NSString* dest_name = [UNIVERSE getSystemName: [UNIVERSE systemSeedForSystemNumber:[contract_info oo_intForKey:CONTRACT_KEY_DESTINATION]]];
-		int dest_eta = [contract_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - ship_clock;
+		int dest_eta = [contract_info oo_doubleForKey:CONTRACT_KEY_ARRIVAL_TIME] - [self clockTime];
 		[result addObject:[NSString stringWithFormat:formatString, label, dest_name, [UNIVERSE shortTimeDescription:dest_eta]]];
 	}
 	
@@ -1290,7 +1293,7 @@ static NSMutableDictionary* currentShipyard = nil;
 		station_tl = NSNotFound;
 	}
 	if (![the_station localShipyard])
-		[the_station setLocalShipyard:[UNIVERSE shipsForSaleForSystem:system_seed withTL:station_tl atTime:ship_clock]];
+		[the_station setLocalShipyard:[UNIVERSE shipsForSaleForSystem:system_seed withTL:station_tl atTime:[self clockTime]]];
 		
 	NSMutableArray* shipyard = [the_station localShipyard];
 		
@@ -1721,7 +1724,7 @@ static NSMutableDictionary* currentShipyard = nil;
 	[self setEntityPersonalityInt:[ship_info oo_unsignedShortForKey:SHIPYARD_KEY_PERSONALITY]];
 	
 	// adjust the clock forward by an hour
-	ship_clock_adjust += 3600.0;
+	[self advanceClockBy:OOHOURS(1)];
 	
 	// finally we can get full hock if we sell it back
 	ship_trade_in_factor = 100;

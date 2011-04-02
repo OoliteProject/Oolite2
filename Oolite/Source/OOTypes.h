@@ -195,3 +195,18 @@ enum
 
 typedef double		OOTimeAbsolute;
 typedef double		OOTimeDelta;
+
+
+#define OOSECONDS(n)				(n)
+
+#define kOOSecondsPerMinute			(60.0)
+#define OOMINUTES(n)				((n) * kOOSecondsPerMinute)
+
+#define kOOMinutesPerHour			(60.0)
+#define kOOSecondsPerHour			(kOOSecondsPerMinute * kOOMinutesPerHour)
+#define OOHOURS(n)					OOMINUTES((n) * kOOMinutesPerHour)
+
+#define kOOHoursPerDay				(24.0)
+#define kOOMinutesPerDay			(kOOMinutesPerHour * kOOHoursPerDay)
+#define kOOSecondsPerDay			(kOOSecondsPerHour * kOOHoursPerDay)
+#define OODAYS(n)					OOHOURS((n) * kOOHoursPerDay)

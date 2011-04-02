@@ -675,7 +675,7 @@ static AIStackElement *sStack;
 	[aiStack removeAllObjects];
 	[pendingMessages removeAllObjects];
 	
-	nextThinkTime += 36000.0;	// should dealloc in under ten hours!
+	nextThinkTime += OOHOURS(10);	// Should dealloc in under ten hours!
 }
 
 

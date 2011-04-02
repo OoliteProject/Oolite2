@@ -6706,7 +6706,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 		if (passenger_departure_time < 0)
 			passenger_departure_time += 0x1000000;	// roll it around
 		
-		double days_until_departure = (passenger_departure_time - current_time) / 86400.0;
+		double days_until_departure = (passenger_departure_time - current_time) / kOOSecondsPerDay;
 		
 		OOSystemID		passenger_destination = passenger_seed.d;	// system number 0..255
 		Random_Seed		destination_seed = systems[passenger_destination];
@@ -6816,22 +6816,22 @@ static double estimatedTimeForJourney(double distance, int hops)
 	double r_time = interval;
 	NSString* result = @"";
 	
-	if (r_time > 86400)
+	if (r_time > kOOSecondsPerDay)
 	{
-		int days = floor(r_time / 86400);
-		r_time -= 86400 * days;
+		int days = floor(r_time / kOOSecondsPerDay);
+		r_time -= kOOSecondsPerDay * days;
 		result = [NSString stringWithFormat:@"%@ %d day%@", result, days, (days > 1) ? @"s" : @""];
 	}
-	if (r_time > 3600)
+	if (r_time > kOOSecondsPerHour)
 	{
-		int hours = floor(r_time / 3600);
-		r_time -= 3600 * hours;
+		int hours = floor(r_time / kOOSecondsPerHour);
+		r_time -= kOOSecondsPerHour * hours;
 		result = [NSString stringWithFormat:@"%@ %d hour%@", result, hours, (hours > 1) ? @"s" : @""];
 	}
-	if (r_time > 60)
+	if (r_time > kOOSecondsPerMinute)
 	{
-		int mins = floor(r_time / 60);
-		r_time -= 60 * mins;
+		int mins = floor(r_time / kOOSecondsPerMinute);
+		r_time -= kOOSecondsPerMinute * mins;
 		result = [NSString stringWithFormat:@"%@ %d minute%@", result, mins, (mins > 1) ? @"s" : @""];
 	}
 	if (r_time > 0)
@@ -6852,24 +6852,24 @@ static double estimatedTimeForJourney(double distance, int hops)
 	if (interval <= 0.0)
 		return DESC(@"contracts-no-time");
 	
-	if (r_time > 86400)
+	if (r_time > kOOSecondsPerDay)
 	{
-		int days = floor(r_time / 86400);
-		r_time -= 86400 * days;
+		int days = floor(r_time / kOOSecondsPerDay);
+		r_time -= kOOSecondsPerDay * days;
 		result = [NSString stringWithFormat:@"%@ %d %@", result, days, DESC_PLURAL(@"contracts-day-word", days)];
 		parts++;
 	}
-	if (r_time > 3600)
+	if (r_time > kOOSecondsPerHour)
 	{
-		int hours = floor(r_time / 3600);
-		r_time -= 3600 * hours;
+		int hours = floor(r_time / kOOSecondsPerHour);
+		r_time -= kOOSecondsPerHour * hours;
 		result = [NSString stringWithFormat:@"%@ %d %@", result, hours, DESC_PLURAL(@"contracts-hour-word", hours)];
 		parts++;
 	}
-	if (parts < 2 && r_time > 60)
+	if (parts < 2 && r_time > kOOSecondsPerMinute)
 	{
-		int mins = floor(r_time / 60);
-		r_time -= 60 * mins;
+		int mins = floor(r_time / kOOSecondsPerMinute);
+		r_time -= kOOSecondsPerMinute * mins;
 		result = [NSString stringWithFormat:@"%@ %d %@", result, mins, DESC_PLURAL(@"contracts-minute-word", mins)];
 		parts++;
 	}
@@ -6914,7 +6914,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 		if (contract_departure_time < 0)
 			contract_departure_time += 0x1000000; //	wrap around
 		
-		double days_until_departure = (contract_departure_time - current_time) / 86400.0;
+		double days_until_departure = (contract_departure_time - current_time) / kOOSecondsPerDay;
 		
 		// determine the destination
 		int contract_destination = contract_seed.d;	// system number 0..255
@@ -7128,7 +7128,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 		if (ship_sold_time < 0)
 			ship_sold_time += 0x1000000;	// wraparound
 		
-		double days_until_sale = (ship_sold_time - current_time) / 86400.0;
+		double days_until_sale = (ship_sold_time - current_time) / kOOSecondsPerDay;
 		
 		// FIXME: needs to call a JS predicate to replace legacy conditions.
 		

@@ -318,7 +318,7 @@ static const BaseFace kTexturedFaces[][3] =
 	
 	shuttles_on_ground = 0;
 	last_launch_time = 0.0;
-	shuttle_launch_interval = 3600.0;
+	shuttle_launch_interval = OOHOURS(1.0);
 	
 	scanClass = CLASS_NO_DRAW;
 	
@@ -360,7 +360,7 @@ static const BaseFace kTexturedFaces[][3] =
 	planet_type = STELLAR_TYPE_MINIATURE;
 	shuttles_on_ground = 0;
 	last_launch_time = 0.0;
-	shuttle_launch_interval = 3600.0;
+	shuttle_launch_interval = OOHOURS(1.0);
 	[self setStatus:STATUS_COCKPIT_DISPLAY];
 	collision_radius = [self collisionRadius] * PLANET_MINIATURE_FACTOR; // teeny tiny
 	[self scaleVertices];
@@ -374,7 +374,7 @@ static const BaseFace kTexturedFaces[][3] =
 }
 
 
-- (id) initFromDictionary:(NSDictionary*)dict withAtmosphere:(BOOL)atmo andSeed:(Random_Seed)p_seed
+- (id) initFromDictionary:(NSDictionary *)dict withAtmosphere:(BOOL)atmo andSeed:(Random_Seed)p_seed
 {
 	BOOL procGen = [UNIVERSE doProcedurallyTexturedPlanets];
 	
@@ -435,9 +435,9 @@ static const BaseFace kTexturedFaces[][3] =
 	
 	shuttles_on_ground = 1 + floor(techlevel * 0.5);
 	last_launch_time = 0.0;
-	shuttle_launch_interval = 3600.0 / shuttles_on_ground; // all are launched in an hour
+	shuttle_launch_interval = kOOSecondsPerHour / shuttles_on_ground; // all are launched in an hour
 
-	last_launch_time = 30.0 - shuttle_launch_interval;   // debug - launch 30s after player enters universe
+	last_launch_time = OOSECONDS(30.0) - shuttle_launch_interval;   // debug - launch 30s after player enters universe
 
 	collision_radius = radius_km * 10.0; // scale down by a factor of 100 !
 	
@@ -564,7 +564,7 @@ static const BaseFace kTexturedFaces[][3] =
 
 	/* MKW - rotate planet based on current time.
 	 *     - do it here so that we catch all planets (OXP-added and otherwise! */
-	int		deltaT = floor(fmod([PLAYER clockTimeAdjusted], 86400));
+	int		deltaT = floor(fmod([PLAYER clockTimeAdjusted], kOOSecondsPerDay));
 	quaternion_rotate_about_axis(&orientation, rotationAxis, rotational_velocity * deltaT);
 
 	[self setStatus:STATUS_ACTIVE];

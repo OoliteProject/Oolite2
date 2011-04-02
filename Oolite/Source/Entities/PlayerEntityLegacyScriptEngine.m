@@ -377,7 +377,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 static int scriptRandomSeed = -1;	// ensure proper random function
 - (NSNumber *) d100_number
 {
-	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * ship_clock);	// stop predictable sequences
+	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * [self clockTime]);	// stop predictable sequences
 	ranrot_srand(scriptRandomSeed);
 	scriptRandomSeed = ranrot_rand();
 	int d100 = ranrot_rand() % 100;
@@ -393,7 +393,7 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (NSNumber *) d256_number
 {
-	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * ship_clock);	// stop predictable sequences
+	if (scriptRandomSeed == -1)	scriptRandomSeed = floor(1301 * [self clockTime]);	// stop predictable sequences
 	ranrot_srand(scriptRandomSeed);
 	scriptRandomSeed = ranrot_rand();
 	int d256 = ranrot_rand() % 256;
@@ -409,31 +409,31 @@ static int scriptRandomSeed = -1;	// ensure proper random function
 
 - (NSNumber *) clock_number				// returns the game time in seconds
 {
-	return [NSNumber numberWithDouble:ship_clock];
+	return [NSNumber numberWithDouble:[self clockTime]];
 }
 
 
 - (NSNumber *) clock_secs_number		// returns the game time in seconds
 {
-	return [NSNumber numberWithUnsignedLongLong:ship_clock];
+	return [NSNumber numberWithUnsignedLongLong:[self clockTime]];
 }
 
 
 - (NSNumber *) clock_mins_number		// returns the game time in minutes
 {
-	return [NSNumber numberWithUnsignedLongLong:ship_clock / 60.0];
+	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 60.0];
 }
 
 
 - (NSNumber *) clock_hours_number		// returns the game time in hours
 {
-	return [NSNumber numberWithUnsignedLongLong:ship_clock / 3600.0];
+	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 3600.0];
 }
 
 
 - (NSNumber *) clock_days_number		// returns the game time in days
 {
-	return [NSNumber numberWithUnsignedLongLong:ship_clock / 86400.0];
+	return [NSNumber numberWithUnsignedLongLong:[self clockTime] / 86400.0];
 }
 
 

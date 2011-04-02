@@ -129,27 +129,27 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 			return JS_NewNumberValue(context, clockTime, value);
 			
 		case kClock_minutes:
-			return JS_NewNumberValue(context, floor(clockTime / 60.0), value);
+			return JS_NewNumberValue(context, floor(clockTime / kOOSecondsPerMinute), value);
 			
 		case kClock_hours:
-			return JS_NewNumberValue(context, floor(clockTime /3600.0), value);
+			return JS_NewNumberValue(context, floor(clockTime / kOOSecondsPerHour), value);
 			return YES;
 			
 		case kClock_secondsComponent:
-			*value = INT_TO_JSVAL(fmod(clockTime, 60.0));
+			*value = INT_TO_JSVAL(fmod(clockTime, kOOSecondsPerMinute));
 			return YES;
 			
 		case kClock_minutesComponent:
-			*value = INT_TO_JSVAL(fmod(floor(clockTime / 60.0), 60.0));
+			*value = INT_TO_JSVAL(fmod(floor(clockTime / kOOSecondsPerMinute), kOOMinutesPerHour));
 			return YES;
 			
 		case kClock_hoursComponent:
-			*value = INT_TO_JSVAL(fmod(floor(clockTime / 3600.0), 24.0));
+			*value = INT_TO_JSVAL(fmod(floor(clockTime / kOOSecondsPerHour), kOOHoursPerDay));
 			return YES;
 			
 		case kClock_days:
 		case kClock_daysComponent:
-			*value = INT_TO_JSVAL(floor(clockTime / 86400.0));
+			*value = INT_TO_JSVAL(floor(clockTime / kOOSecondsPerDay));
 			return YES;
 			
 		case kClock_clockString:
@@ -157,7 +157,7 @@ static JSBool ClockGetProperty(JSContext *context, JSObject *this, jsid propID, 
 			return YES;
 			
 		case kClock_isAdjusting:
-			*value = OOJSValueFromBOOL([player clockAdjusting]);
+			*value = OOJSValueFromBOOL([player isClockAdjusting]);
 			return YES;
 			
 		default:
@@ -209,7 +209,7 @@ static JSBool ClockAddSeconds(JSContext *context, uintN argc, jsval *vp)
 	OOJS_NATIVE_ENTER(context)
 	
 	double						time;
-	const double				kMaxTime = 30.0 * 24.0 * 3600.0;	// 30 days
+	const double				kMaxTime = OODAYS(30.0);
 	
 	if (EXPECT_NOT(argc < 1 || !JS_ValueToNumber(context, OOJS_ARGV[0], &time)))
 	{
@@ -224,7 +224,7 @@ static JSBool ClockAddSeconds(JSContext *context, uintN argc, jsval *vp)
 		OOJS_RETURN_BOOL(NO);
 	}
 	
-	[OOPlayerForScripting() addToAdjustTime:time];
+	[OOPlayerForScripting() advanceClockBy:time];
 	
 	OOJS_RETURN_BOOL(YES);
 	

@@ -138,7 +138,7 @@ void InitOOJSPlayer(JSContext *context, JSObject *global)
 	OOJSRegisterObjectConverter(&sPlayerClass, OOJSBasicPrivateObjectConverter);
 	
 	// Create PLAYER object as a property of the global object.
-	sPlayerObject = JS_DefineObject(context, global, "PLAYER", &sPlayerClass, sPlayerPrototype, OOJS_PROP_READONLY);
+	sPlayerObject = JS_DefineObject(context, global, "player", &sPlayerClass, sPlayerPrototype, OOJS_PROP_READONLY);
 }
 
 

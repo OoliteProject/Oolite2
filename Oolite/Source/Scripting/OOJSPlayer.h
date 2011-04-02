@@ -35,6 +35,3 @@ void InitOOJSPlayer(JSContext *context, JSObject *global);
 JSClass *JSPlayerClass(void);
 JSObject *JSPlayerPrototype(void);
 JSObject *JSPlayerObject(void);
-
-
-PlayerEntity *OOPlayerForScripting(void) DEPRECATED_FUNC;	 // Use PLAYER instead.

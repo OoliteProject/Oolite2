@@ -160,12 +160,6 @@ JSObject *JSPlayerObject(void)
 }
 
 
-PlayerEntity *OOPlayerForScripting(void)
-{
-	return PLAYER;
-}
-
-
 static JSBool PlayerGetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value)
 {
 	if (!JSID_IS_INT(propID))  return YES;

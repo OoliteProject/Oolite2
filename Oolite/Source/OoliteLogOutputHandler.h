@@ -58,3 +58,7 @@ SOFTWARE.
 
 
 NSString *OOLogHandlerGetLogBasePath(void);
+
+
+// This will attempt to ensure the containing directory exists. If it fails, it will return nil.
+NSString *OOLogHandlerGetLogPath(void);

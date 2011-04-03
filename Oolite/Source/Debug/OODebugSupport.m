@@ -52,59 +52,40 @@ static id LoadDebugPlugIn(NSString *path);
 
 void OOInitDebugSupport(void)
 {
-	NSString				*debugOXPPath = nil;
-	id						plugInController = nil;
-	NSDictionary			*debugSettings = nil;
-	NSString				*consoleHost = nil;
-	unsigned short			consolePort = 0;
-	id<OODebuggerInterface>	debugger = nil;
-	BOOL					activateDebugConsole = NO;
-	
 	// Load debug settings.
-	debugSettings = [ResourceManager dictionaryFromFilesNamed:@"debugConfig.plist"
-													 inFolder:@"Config"
-													mergeMode:MERGE_BASIC
-														cache:NO];
+	NSDictionary * debugSettings = [ResourceManager dictionaryFromFilesNamed:@"debugConfig.plist"
+																	inFolder:@"Config"
+																   mergeMode:MERGE_BASIC
+																	   cache:NO];
 	
-	// Check that the debug OXP is installed. If not, we don't enable debug support.
-	debugOXPPath = [ResourceManager pathForFileNamed:@"DebugOXPLocatorBeacon.magic" inFolder:@"nil"];
-	if (debugOXPPath != nil)
+	id plugInController = nil;
+	id<OODebuggerInterface>	debugger = nil;
+	
+#if OOLITE_MAC_OS_X
+	NSString *debugPlugInPath = [[[NSBundle mainBundle] builtInPlugInsPath] stringByAppendingPathComponent:@"DebugExtras.bundle"];
+	plugInController = LoadDebugPlugIn(debugPlugInPath);
+#endif
+	
+	NSString *consoleHost = [debugSettings oo_stringForKey:@"console-host"];
+	uint16_t consolePort = [debugSettings oo_unsignedShortForKey:@"console-port"];
+	
+	// If consoleHost is nil, and the debug plug-in can set up a debugger, use that.
+	if (consoleHost == nil && [plugInController respondsToSelector:@selector(setUpDebugger)])
 	{
-		// Load plug-in debugging code on platforms where this is supported.
-		plugInController = LoadDebugPlugIn(debugOXPPath);
-		
-		consoleHost = [debugSettings oo_stringForKey:@"console-host"];
-		consolePort = [debugSettings oo_unsignedShortForKey:@"console-port"];
-		
-		// If consoleHost is nil, and the debug plug-in can set up a debugger, use that.
-		if (consoleHost == nil && [plugInController respondsToSelector:@selector(setUpDebugger)])
-		{
-			debugger = [plugInController setUpDebugger];
-		}
-		
-		// Otherwise, use TCP debugger connection.
-		if (debugger == nil)
-		{
-			debugger = [[OODebugTCPConsoleClient alloc] initWithAddress:consoleHost
-																   port:consolePort];
-			[debugger autorelease];
-		}
-		
-		activateDebugConsole = (debugger != nil);
+		debugger = [plugInController setUpDebugger];
 	}
 	
-	if (!activateDebugConsole)
+	// Otherwise, use TCP debugger connection.
+	if (debugger == nil)
 	{
-		activateDebugConsole = [debugSettings oo_boolForKey:@"always-load-debug-console"];
+		debugger = [[OODebugTCPConsoleClient alloc] initWithAddress:consoleHost
+															   port:consolePort];
+		[debugger autorelease];
 	}
 	
-	
-	if (activateDebugConsole)
-	{
-		// Set up monitor and register debugger, if any.
-		[[OODebugMonitor sharedDebugMonitor] setDebugger:debugger];
-		[[OOJavaScriptEngine sharedEngine] enableDebuggerStatement];
-	}
+	// Set up monitor and register debugger, if any.
+	[[OODebugMonitor sharedDebugMonitor] setDebugger:debugger];
+	[[OOJavaScriptEngine sharedEngine] enableDebuggerStatement];
 }
 
 
@@ -116,12 +97,10 @@ static id LoadDebugPlugIn(NSString *path)
 	OO_DEBUG_PUSH_PROGRESS(@"Loading debug plug-in");
 	
 	Class					principalClass = Nil;
-	NSString				*bundlePath = nil;
 	NSBundle				*bundle = nil;
 	id						debugController = nil;
 	
-	bundlePath = [path stringByDeletingLastPathComponent];
-	bundle = [NSBundle bundleWithPath:bundlePath];
+	bundle = [NSBundle bundleWithPath:path];
 	if ([bundle load])
 	{
 		principalClass = [bundle principalClass];
@@ -137,7 +116,7 @@ static id LoadDebugPlugIn(NSString *path)
 	}
 	else
 	{
-		OOLog(@"debugOXP.load.failed", @"Failed to load debug OXP plug-in from %@.", bundlePath);
+		OOLog(@"debugOXP.load.failed", @"Failed to load debug OXP plug-in from %@.", path);
 	}
 	
 	OO_DEBUG_POP_PROGRESS();

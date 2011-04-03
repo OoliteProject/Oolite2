@@ -40,9 +40,6 @@ static void OOLogOutputHandlerInit(void);
 static void OOLogOutputHandlerClose(void);
 static void OOLogOutputHandlerPrint(NSString *string);
 
-// This will attempt to ensure the containing directory exists. If it fails, it will return nil.
-static NSString *OOLogHandlerGetLogPath(void);
-
 
 static OoliteLogOutputHandler	*sSingleton;
 

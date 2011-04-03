@@ -43,28 +43,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8FA18B1347549800068766 /* OoliteBase.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* OoliteBase.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = OoliteBase;
 		};
 		1A8FA1911347549E00068766 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8FA18B1347549800068766 /* OoliteBase.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* OoliteBase */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = OoliteBase;
 		};
 		1A8FA20B134756C400068766 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8FA206134756C400068766 /* Oolite.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D1107320486CEB800E47090 /* Oolite.app */;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
 			remoteInfo = Oolite;
 		};
 		1A8FA210134756D500068766 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8FA206134756C400068766 /* Oolite.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D1107260486CEB800E47090 /* Oolite */;
+			remoteGlobalIDString = 8D1107260486CEB800E47090;
 			remoteInfo = Oolite;
 		};
 /* End PBXContainerItemProxy section */
@@ -81,7 +81,7 @@
 		1A8FA0BA1347520300068766 /* oolite-shared.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-shared.make"; sourceTree = "<group>"; };
 		1A8FA0BB1347520300068766 /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A8FA0E91347537E00068766 /* debugLogMessageClassesMenu.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = debugLogMessageClassesMenu.plist; sourceTree = "<group>"; };
-		1A8FA0EB1347537E00068766 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1A8FA0EB1347537E00068766 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1A8FA0ED1347537E00068766 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OOAIDebugInspectorModule.xib; sourceTree = "<group>"; };
 		1A8FA0EF1347537E00068766 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OODebugController.xib; sourceTree = "<group>"; };
 		1A8FA0F11347537E00068766 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OODebugInspector.xib; sourceTree = "<group>"; };

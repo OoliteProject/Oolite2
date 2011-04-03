@@ -148,7 +148,6 @@
 		1A1F27571317CB0500D06C6C /* startextures.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FB1317CACF00D06C6C /* startextures.plist */; };
 		1A1F27591317CB0500D06C6C /* whitelist.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FD1317CACF00D06C6C /* whitelist.plist */; };
 		1A1F275A1317CB0500D06C6C /* world-scripts.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A1F26FE1317CACF00D06C6C /* world-scripts.plist */; };
-		1A1F275C1317CB2000D06C6C /* oolite-cloaking-device-mission.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27001317CACF00D06C6C /* oolite-cloaking-device-mission.js */; };
 		1A1F275D1317CB2000D06C6C /* oolite-cloaking-device-pod.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27011317CACF00D06C6C /* oolite-cloaking-device-pod.js */; };
 		1A1F275E1317CB2000D06C6C /* oolite-cloaking-device-target-ship.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27021317CACF00D06C6C /* oolite-cloaking-device-target-ship.js */; };
 		1A1F275F1317CB2000D06C6C /* oolite-constrictor-hunt-mission.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27031317CACF00D06C6C /* oolite-constrictor-hunt-mission.js */; };
@@ -433,6 +432,8 @@
 		1A43CBEB13060EBA00BB8FB3 /* OOSoundSourcePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CBE913060EBA00BB8FB3 /* OOSoundSourcePool.m */; };
 		1A43CBFA13060F2B00BB8FB3 /* OOMacErrorDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CBF913060F2B00BB8FB3 /* OOMacErrorDescription.m */; };
 		1A43CC1013060FDA00BB8FB3 /* VirtualRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CC0F13060FDA00BB8FB3 /* VirtualRingBuffer.m */; };
+		1A4691BA1347E8D9004EEFD5 /* debugConfig.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A4691B61347E8B4004EEFD5 /* debugConfig.plist */; };
+		1A4691BB1347E8E6004EEFD5 /* oolite-debug-console.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */; };
 		1A5BFE0C133E6B0E0093BDC2 /* OOXMLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5BFE0B133E6B0E0093BDC2 /* OOXMLExtensions.m */; };
 		1A64A1681323CA5700C2FDDB /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F24821317C5B700D06C6C /* OoliteBase.framework */; };
 		1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C20551334C5EB00821B1D /* OOVersion.m */; };
@@ -637,6 +638,7 @@
 			dstPath = Config;
 			dstSubfolderSpec = 7;
 			files = (
+				1A4691BA1347E8D9004EEFD5 /* debugConfig.plist in Copy Config */,
 				1A1F273C1317CB0500D06C6C /* autoAImap.plist in Copy Config */,
 				1A1F273D1317CB0500D06C6C /* characters.plist in Copy Config */,
 				1A1F273E1317CB0500D06C6C /* commodities.plist in Copy Config */,
@@ -677,7 +679,7 @@
 			dstPath = Scripts;
 			dstSubfolderSpec = 7;
 			files = (
-				1A1F275C1317CB2000D06C6C /* oolite-cloaking-device-mission.js in Copy Scripts */,
+				1A4691BB1347E8E6004EEFD5 /* oolite-debug-console.js in Copy Scripts */,
 				1A1F275D1317CB2000D06C6C /* oolite-cloaking-device-pod.js in Copy Scripts */,
 				1A1F275E1317CB2000D06C6C /* oolite-cloaking-device-target-ship.js in Copy Scripts */,
 				1A1F275F1317CB2000D06C6C /* oolite-constrictor-hunt-mission.js in Copy Scripts */,
@@ -1507,6 +1509,8 @@
 		1A43CC0E13060FDA00BB8FB3 /* VirtualRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VirtualRingBuffer.h; sourceTree = "<group>"; };
 		1A43CC0F13060FDA00BB8FB3 /* VirtualRingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VirtualRingBuffer.m; sourceTree = "<group>"; };
 		1A43CC451306115B00BB8FB3 /* Ogg.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Ogg.xcodeproj; path = Dependencies/OggVorbis/Ogg.xcodeproj; sourceTree = "<group>"; };
+		1A4691B61347E8B4004EEFD5 /* debugConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = debugConfig.plist; path = ../Debug/debugConfig.plist; sourceTree = SOURCE_ROOT; };
+		1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "oolite-debug-console.js"; path = "../Debug/oolite-debug-console.js"; sourceTree = SOURCE_ROOT; };
 		1A5BFE0A133E6B0E0093BDC2 /* OOXMLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOXMLExtensions.h; sourceTree = "<group>"; };
 		1A5BFE0B133E6B0E0093BDC2 /* OOXMLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOXMLExtensions.m; sourceTree = "<group>"; };
 		1A64A0CA1323C54000C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -1831,6 +1835,7 @@
 		1A1F26DF1317CACF00D06C6C /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1A4691B61347E8B4004EEFD5 /* debugConfig.plist */,
 				1A1F26E01317CACF00D06C6C /* autoAImap.plist */,
 				1A1F26E11317CACF00D06C6C /* characters.plist */,
 				1A1F26E21317CACF00D06C6C /* commodities.plist */,
@@ -1869,6 +1874,7 @@
 		1A1F26FF1317CACF00D06C6C /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */,
 				1A1F27001317CACF00D06C6C /* oolite-cloaking-device-mission.js */,
 				1A1F27011317CACF00D06C6C /* oolite-cloaking-device-pod.js */,
 				1A1F27021317CACF00D06C6C /* oolite-cloaking-device-target-ship.js */,
@@ -2760,7 +2766,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$OOLITE_ROOT/Scripts/make-revision-header.sh\" \"$DEP_HEADER_PATH/OORevision.h\"\n";
+			shellScript = "mkdir -p \"$DEP_HEADER_PATH\"\n\"$OOLITE_ROOT/Scripts/make-revision-header.sh\" \"$DEP_HEADER_PATH/OORevision.h\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3040,6 +3046,7 @@
 					NDEBUG,
 					"OO_EXCLUDE_DEBUG_SUPPORT=1",
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(DEP_HEADER_PATH)/js\"",
@@ -3063,6 +3070,7 @@
 					"DEBUG=1",
 					$OOLITE_OPTION_MACROS,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(DEP_HEADER_PATH)/js\"",
@@ -3084,6 +3092,7 @@
 					"DEBUG_GRAPHVIZ=1",
 					$OOLITE_OPTION_MACROS,
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"\"$(DEP_HEADER_PATH)/js\"",

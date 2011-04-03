@@ -16,7 +16,21 @@
                BlueprintIdentifier = "8D1107260486CEB800E47090"
                BuildableName = "Oolite.app"
                BlueprintName = "Oolite"
-               ReferencedContainer = "container:Oolite.xcodeproj">
+               ReferencedContainer = "container:Oolite/Mac/Oolite.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1A8FA213134756E900068766"
+               BuildableName = "Build Oolite"
+               BlueprintName = "Build Oolite"
+               ReferencedContainer = "container:Build_Everything.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -43,7 +57,7 @@
             BlueprintIdentifier = "8D1107260486CEB800E47090"
             BuildableName = "Oolite.app"
             BlueprintName = "Oolite"
-            ReferencedContainer = "container:Oolite.xcodeproj">
+            ReferencedContainer = "container:Oolite/Mac/Oolite.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -62,7 +76,7 @@
             BlueprintIdentifier = "8D1107260486CEB800E47090"
             BuildableName = "Oolite.app"
             BlueprintName = "Oolite"
-            ReferencedContainer = "container:Oolite.xcodeproj">
+            ReferencedContainer = "container:Oolite/Mac/Oolite.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

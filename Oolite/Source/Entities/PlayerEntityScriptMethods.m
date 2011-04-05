@@ -28,6 +28,18 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "OOConstToString.h"
 
+#ifndef NDEBUG
+#import "ResourceManager.h"
+#import "OOColor.h"
+#endif
+
+
+@interface Universe (Peek)
+
+- (NSDictionary *) generateSystemDataForGalaxy:(OOGalaxyID)gnum planet:(OOSystemID)pnum;
+
+@end
+
 
 @implementation PlayerEntity (ScriptMethods)
 
@@ -265,6 +277,51 @@ MA 02110-1301, USA.
 	return (double)a / (double)0x01000000;
 	
 }
+
+
+#ifndef NDEBUG
+/*
+	dbgDumpSystemInfo
+	
+	Write JSON file with info about all systems in current galaxy.
+	Activate from console with “:: dbgDumpSystemInfo”.
+*/
+- (void) dbgDumpSystemInfo
+{
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:256];
+	
+	for (unsigned i = 0; i < 256; i++)
+	{
+		NSMutableDictionary *info = [[[UNIVERSE generateSystemDataForGalaxy:galaxy_number planet:i] mutableCopy] autorelease];
+		
+		[info removeObjectsForKeys:$array(@"nebula_count_multiplier", @"star_count_multiplier", @"stations_require_docking_clearance", @"corona_flare")];
+		
+		Random_Seed seed = [UNIVERSE systemSeedForSystemNumber:i];
+		NSPoint coords = [UNIVERSE coordinatesForSystem:seed];
+		
+		[info setObject:$array($int(seed.a), $int(seed.b), $int(seed.c), $int(seed.d), $int(seed.e), $int(seed.f)) forKey:@"system_seed"];
+		[info setObject:$array($float(coords.x), $float(coords.y)) forKey:@"coordinates"];
+		
+		seed_for_planet_description(seed);
+		float h1 = randf();
+		float h2 = h1 + 1.0 / (1.0 + (Ranrot() % 5));
+		while (h2 > 1.0)  h2 -= 1.0;
+		OOColor *col1 = [OOColor colorWithCalibratedHue:h1 saturation:randf() brightness:0.5 + randf()/2.0 alpha:1.0];
+		OOColor *col2 = [OOColor colorWithCalibratedHue:h2 saturation:0.5 + randf()/2.0 brightness:0.5 + randf()/2.0 alpha:1.0];
+		OOColor *sunColor = [col2 blendedColorWithFraction:0.5 ofColor:col1];
+		sunColor = [sunColor blendedColorWithFraction:0.5 ofColor:[OOColor whiteColor]];
+		
+		[info setObject:[col1 normalizedArray] forKey:@"sky_color_1"];
+		[info setObject:[col2 normalizedArray] forKey:@"sky_color_2"];
+		[info setObject:[sunColor normalizedArray] forKey:@"sun_color"];
+		
+		[result addObject:info];
+	}
+	
+	NSData *data = [result ooConfDataWithOptions:kOOConfGenerationJSONCompatible error:NULL];
+	[ResourceManager writeDiagnosticData:data toFileNamed:$sprintf(@"galaxy_%u.json", galaxy_number)];
+}
+#endif
 
 @end
 

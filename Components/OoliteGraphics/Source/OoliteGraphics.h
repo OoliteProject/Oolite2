@@ -12,12 +12,8 @@ extern "C" {
 
 #import "OODATReader.h"
 #import "OODATWriter.h"
-#import "OOProgressReporting.h"
 
 #import "OOOBJReader.h"
-
-#import "OOMeshReader.h"
-#import "OOMeshWriter.h"
 
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"

@@ -72,8 +72,8 @@ NSString *OOLogAbbreviatedFileName(const char *inName);
 #define OOGL_PERFORM_CHECK(label, code, line)  OOCheckOpenGLErrors(@"%s %@:%u (%s)%s", label, OOLogAbbreviatedFileName(__FILE__), line, __PRETTY_FUNCTION__, code)
 #define OOGL(statement)  do { OOGL_PERFORM_CHECK("PRE", " -- " #statement, __LINE__); statement; OOGL_PERFORM_CHECK("POST", " -- " #statement, __LINE__); } while (0)
 #define OOCheckOpenGLErrorsHeavy OOCheckOpenGLErrors
-#define OOGLBEGIN(mode) do { OOGL_PERFORM_CHECK("PRE-BEGIN", " -- " #mode); glBegin(mode); } while (0)
-#define OOGLEND() do { glEnd(); OOGL_PERFORM_CHECK("POST-END", ""); } while (0)
+#define OOGLBEGIN(mode) do { OOGL_PERFORM_CHECK("PRE-BEGIN", " -- " #mode, __LINE__); glBegin(mode); } while (0)
+#define OOGLEND() do { glEnd(); OOGL_PERFORM_CHECK("POST-END", "", __LINE__); } while (0)
 
 #else
 

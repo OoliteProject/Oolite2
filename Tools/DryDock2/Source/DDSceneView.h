@@ -8,11 +8,15 @@
 
 #import "JASceneGraphView.h"
 
+@class OOGraphicsContext;
+
 
 @interface DDSceneView: JASceneGraphView
 {
 @private
-	
+	OOGraphicsContext			*_context;
 }
+
+@property (nonatomic, readonly) OOGraphicsContext *graphicsContext;
 
 @end

@@ -4,12 +4,30 @@ extern "C" {
 
 
 #import <OoliteBase/OoliteBase.h>
-	
+
+// OpenGL and contexts
 #import "OOOpenGL.h"
+#import "OOGraphicsContext.h"
+
+// Utilities
 #import "OOOpenGLUtilities.h"
+#import "OOProgressReporting.h"
 
+#if !OOLITE_LEAN
+// Abstract representations
 #import "OOAbstractMesh.h"
+	
+#import "OOAbstractMesh+NormalSynthesis.h"
+#import "OOAbstractMesh+Winding.h"
+#endif
 
+// Concrete representations
+#import "OORenderMesh.h"
+
+#import "OOTexture.h"
+#import "OOShaderProgram.h"
+
+// I/O
 #import "OODATReader.h"
 #import "OODATWriter.h"
 
@@ -19,17 +37,6 @@ extern "C" {
 #import "OOMeshWriter.h"
 
 #import "OOCTMReader.h"
-
-#import "OOAbstractMesh+NormalSynthesis.h"
-#import "OOAbstractMesh+Winding.h"
-
-#import "OORenderMesh.h"
-
-#import "OOTexture.h"
-
-#import "OOShaderProgram.h"
-	
-#import "OOProgressReporting.h"
 
 
 #ifdef __cplusplus

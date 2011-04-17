@@ -7,7 +7,7 @@
 //
 
 #import "DDMainDocumentView.h"
-#import <OoliteBase/OoliteBase.h>
+#import <OoliteGraphics/OoliteGraphics.h>
 
 #import "SGSceneGraph.h"
 #import "SGAxisNode.h"
@@ -99,6 +99,8 @@
 {
 	if (_contentHolderNode == nil)
 	{
+		[self.graphicsContext makeCurrent];
+		
 		// Build scene graph.
 		SGSceneNode *rootNode = [SGSceneNode new];
 		[rootNode setLocalizedName:@"root"];

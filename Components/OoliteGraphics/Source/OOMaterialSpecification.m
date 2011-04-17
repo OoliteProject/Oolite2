@@ -121,6 +121,12 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 }
 
 
+- (NSString *) descriptionComponents
+{
+	return $sprintf(@"\"%@\"", self.materialKey);
+}
+
+
 static void GetColor(NSMutableDictionary *plist, NSString *key, OOColor **color)
 {
 	NSCParameterAssert(plist != nil && key != nil && color != NULL);

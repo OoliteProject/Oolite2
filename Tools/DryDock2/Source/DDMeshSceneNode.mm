@@ -82,7 +82,7 @@
 
 - (void) setMaterialSpecifications:(NSArray *)specs
 {
-	if (![specs isEqualToArray:self.materialSpecifications])
+	if (![specs isEqualToArray:_materialSpecs])
 	{
 		_materialSpecs = specs;
 		_materials = nil;

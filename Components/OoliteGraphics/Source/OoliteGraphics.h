@@ -28,6 +28,8 @@ extern "C" {
 #import "OOTexture.h"
 
 #import "OOShaderProgram.h"
+	
+#import "OOProgressReporting.h"
 
 
 #ifdef __cplusplus

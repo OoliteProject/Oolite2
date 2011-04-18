@@ -21,8 +21,7 @@ ADDITIONAL_CFLAGS			+=	$(ADDITIONAL_ALLCFLAGS)
 ADDITIONAL_OBJCFLAGS		+=	$(ADDITIONAL_ALLCFLAGS)
 
 
-OOGFX_RENDERING_FILES		=	OOOpenGLExtensionManager.m \
-								OOOpenGLUtilities.m \
+OOGFX_RENDERING_FILES		=	OOOpenGLUtilities.m \
 								OORenderMesh.m
 
 OOGFX_PIXMAP_FILES			=	OOPixMap.m \
@@ -79,7 +78,6 @@ OoliteGraphics_HEADER_FILES	=	OOAbstractFace.h \
 								OOOBJLexer.h \
 								OOOBJReader.h \
 								OOOpenGL.h \
-								OOOpenGLExtensionManager.h \
 								OOOpenGLUtilities.h \
 								OOPixMap.h \
 								OOPixMapChannelOperations.h \

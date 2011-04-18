@@ -25,7 +25,6 @@ SOFTWARE.
 
 */
 
-#import "OOOpenGLExtensionManager.h"
 #import "OOShaderProgram.h"
 #import "OOMacroOpenGL.h"
 #import "OOOpenGLUtilities.h"

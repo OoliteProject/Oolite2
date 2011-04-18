@@ -32,7 +32,6 @@ SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import "OOOpenGL.h"
-#import "OOOpenGLExtensionManager.h"
 
 
 @interface OOShaderProgram: NSObject

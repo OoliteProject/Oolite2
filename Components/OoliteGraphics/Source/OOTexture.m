@@ -32,6 +32,7 @@
 #import "OOTextureLoader.h"
 #import "OOTextureGenerator.h"
 
+#import "OOGraphicsContext.h"
 #import "OOMacroOpenGL.h"
 #import "OOOpenGLUtilities.h"
 #import "OOPixMap.h"
@@ -220,24 +221,27 @@ static NSString *sGlobalTraceContext = nil;
 {
 	OO_ENTER_OPENGL();
 	
+	// FIXME: extension check needs to be per-context.
+	
 	sCheckedExtensions = YES;
 	
-	OOOpenGLExtensionManager	*extMgr = [OOOpenGLExtensionManager sharedManager];
+	OOGraphicsContext *context = [OOGraphicsContext currentContext];
+	NSAssert(context != nil, @"Can't set up textures without an active graphics context.");
 	
 #if GL_EXT_texture_filter_anisotropic
-	gOOTextureInfo.anisotropyAvailable = [extMgr haveExtension:@"GL_EXT_texture_filter_anisotropic"];
+	gOOTextureInfo.anisotropyAvailable = [context haveExtension:@"GL_EXT_texture_filter_anisotropic"];
 	OOGL(glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &gOOTextureInfo.anisotropyScale));
 	gOOTextureInfo.anisotropyScale *= OOClamp_0_1_f([[NSUserDefaults standardUserDefaults] oo_floatForKey:@"texture-anisotropy-scale" defaultValue:0.5]);
 #endif
 	
 #if OO_GL_CLIENT_STORAGE
-	gOOTextureInfo.clientStorageAvailable = [extMgr haveExtension:@"GL_APPLE_client_storage"];
+	gOOTextureInfo.clientStorageAvailable = [context haveExtension:@"GL_APPLE_client_storage"];
 #endif
 	
 #if GL_EXT_texture_lod_bias
 	if ([[NSUserDefaults standardUserDefaults] oo_boolForKey:@"use-texture-lod-bias" defaultValue:YES])
 	{
-		gOOTextureInfo.textureLODBiasAvailable = [extMgr haveExtension:@"GL_EXT_texture_lod_bias"];
+		gOOTextureInfo.textureLODBiasAvailable = [context haveExtension:@"GL_EXT_texture_lod_bias"];
 	}
 	else
 	{

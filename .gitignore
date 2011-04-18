@@ -19,6 +19,7 @@ project.xcworkspace/
 # OS X cruft
 .DS_Store
 Icon?
+.LSOverride
 
 # Windows cruft
 Thumbs.db

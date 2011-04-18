@@ -223,18 +223,6 @@ static void GLDumpMaterialState(void)
 	OOGL(glGetTexEnviv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, &texMode));
 	OOLog(kOOLogOpenGLStateDump, @"Texture env mode: %@", GLEnumToString(texMode));
 	
-#if OO_MULTITEXTURE
-	if ([[OOOpenGLExtensionManager sharedManager] textureUnitCount] > 1)
-	{
-		GLint textureUnit;
-		OOGL(glGetIntegerv(GL_ACTIVE_TEXTURE_ARB, &textureUnit));
-		OOLog(kOOLogOpenGLStateDump, @"Active texture unit: %@", GLEnumToString(textureUnit));
-		
-		OOGL(glGetIntegerv(GL_CLIENT_ACTIVE_TEXTURE_ARB, &textureUnit));
-		OOLog(kOOLogOpenGLStateDump, @"Active client texture unit: %@", GLEnumToString(textureUnit));
-	}
-#endif
-	
 	OOLogOutdent();
 }
 

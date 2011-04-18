@@ -30,7 +30,6 @@ SOFTWARE.
 #import "OOPNGTextureLoader.h"
 #import "OOPixMapScaling.h"
 #import "OOPixMapChannelOperations.h"
-#import "OOOpenGLExtensionManager.h"
 #import "OOOpenGLUtilities.h"
 
 

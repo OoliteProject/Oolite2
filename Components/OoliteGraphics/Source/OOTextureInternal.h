@@ -28,7 +28,6 @@ SOFTWARE.
 */
 
 #import "OOTexture.h"
-#import "OOOpenGLExtensionManager.h"
 
 @interface OOTexture (SubclassResponsibilities)
 

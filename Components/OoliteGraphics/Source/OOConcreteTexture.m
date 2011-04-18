@@ -30,7 +30,6 @@
 
 #import "OOTextureLoader.h"
 
-#import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
 #import "OOPixMap.h"
 

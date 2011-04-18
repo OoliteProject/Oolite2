@@ -2,8 +2,7 @@
 
 OOWeakReference.h
 
-Weak reference class for Cocoa/GNUstep/OpenStep. As it stands, this will not
-work as a weak reference in a garbage-collected environment.
+Weak reference class for Cocoa/GNUstep/OpenStep.
 
 A weak reference allows code to maintain a reference to an object while
 allowing the object to reach a retain count of zero and deallocate itself.
@@ -56,25 +55,25 @@ OOWeakReferenceSupport implementation is also simple:
 
 @interface Thing: NSObject <OOWeakReferenceSupport>
 {
-	OOWeakReference		*weakSelf;
+	OO_WEAK OOWeakReference	*_weakSelf;
 }
 @end
 
 @implementation Thing
 - (id)weakRetain
 {
-	if (weakSelf == nil)  weakSelf = [OOWeakReference weakRefWithObject:self];
-	return [weakSelf retain];
+	if (weakSelf == nil)  _weakSelf = [OOWeakReference weakRefWithObject:self];
+	return [_weakSelf retain];
 }
 
 - (void)weakRefDied:(OOWeakReference *)weakRef
 {
-	if (weakRef == weakSelf)  weakSelf = nil;
+	if (weakRef == _weakSelf)  _weakSelf = nil;
 }
 
 - (void)dealloc
 {
-	[weakSelf weakRefDrop];	// Very important!
+	[_weakSelf weakRefDrop];	// Very important!
 	[super dealloc];
 }
 
@@ -92,6 +91,7 @@ This code is hereby placed in the public domain.
 
 #import <Foundation/Foundation.h>
 #import "OOFunctionAttributes.h"
+#import "OOGarbageCollectionSupport.h"
 
 @class OOWeakReference;
 
@@ -106,7 +106,8 @@ This code is hereby placed in the public domain.
 
 @interface OOWeakReference: NSProxy
 {
-	id<OOWeakReferenceSupport>	_object;
+
+	OO_WEAK id<OOWeakReferenceSupport>	_object;
 }
 
 - (BOOL)weakRefObjectStillExists;

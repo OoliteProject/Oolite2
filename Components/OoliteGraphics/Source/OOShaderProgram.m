@@ -28,9 +28,7 @@ SOFTWARE.
 #import "OOShaderProgram.h"
 #import "OOMacroOpenGL.h"
 #import "OOOpenGLUtilities.h"
-
-
-static OOShaderProgram			*sActiveProgram = nil;
+#import "OOGraphicsContextInternal.h"
 
 
 static NSString *GetGLSLInfoLog(GLuint shaderObject);
@@ -56,7 +54,7 @@ static BOOL ValidateShaderObject(GLuint object, NSString *name);
 + (id) shaderProgramWithVertexShader:(NSString *)vertexShaderSource
 					  fragmentShader:(NSString *)fragmentShaderSource
 					vertexShaderName:(NSString *)vertexShaderName
-					vertexShaderName:(NSString *)fragmentShaderName
+				  fragmentShaderName:(NSString *)fragmentShaderName
 							  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
 				   attributeBindings:(NSDictionary *)attributeBindings
 {
@@ -70,53 +68,101 @@ static BOOL ValidateShaderObject(GLuint object, NSString *name);
 }
 
 
+static NSString *LoadOneShader(NSString *name, id <OOFileResolving> resolver, id <OOProblemReporting>problemReporter)
+{
+	NSData *data = OOLoadFile(@"Shaders", name, resolver, problemReporter);
+	if (data == nil)  return nil;
+	
+	NSString *source = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	if (source == nil)
+	{
+		OOReportError(problemReporter, @"Could not interpret shader file %@ as UTF-8 text.", name);
+		return nil;
+	}
+	
+	return source;
+}
+
+
++ (id) shaderProgramWithVertexShaderName:(NSString *)vertexShaderName
+					  fragmentShaderName:(NSString *)fragmentShaderName
+								  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
+					   attributeBindings:(NSDictionary *)attributeBindings	// Maps vertex attribute names to "locations".
+							fileResolver:(id <OOFileResolving>)resolver
+						 problemReporter:(id <OOProblemReporting>)problemReporter
+{
+	NSString *vsSource = LoadOneShader(vertexShaderName, resolver, problemReporter);
+	if (vsSource == nil)  return nil;
+	NSString *fsSource = LoadOneShader(fragmentShaderName, resolver, problemReporter);
+	if (fsSource == nil)  return nil;
+	
+	return [self shaderProgramWithVertexShader:vsSource
+								fragmentShader:fsSource
+							  vertexShaderName:vertexShaderName
+							fragmentShaderName:fragmentShaderName
+										prefix:prefixString
+							 attributeBindings:attributeBindings];
+}
+
+
 - (void)dealloc
 {
 	OO_ENTER_OPENGL();
 	
 #ifndef NDEBUG
-	if (EXPECT_NOT(sActiveProgram == self))
+	if (EXPECT_NOT([OOCurrentGraphicsContext() currentShaderProgram] == self))
 	{
 		OOLog(@"shader.dealloc.imbalance", @"***** OOShaderProgram deallocated while active, indicating a retain/release imbalance. Expect imminent crash.");
 		[OOShaderProgram applyNone];
 	}
+	DESTROY(_description);
 #endif
 	
-	OOGL(glDeleteProgram(program));
+	OOGL(glDeleteProgram(_program));
 	
 	[super dealloc];
 }
 
 
+#ifndef NDEBUG
+- (NSString *) descriptionComponents
+{
+	return _description;
+}
+#endif
+
+
 - (void)apply
 {
-	OO_ENTER_OPENGL();
+	OOGraphicsContext *context = OOCurrentGraphicsContext();
+	NSAssert(context != nil, @"Can't apply material with no graphics context.");
 	
-	if (sActiveProgram != self)
+	if ([context currentShaderProgram] != self)
 	{
-		[sActiveProgram release];
-		sActiveProgram = [self retain];
-		OOGL(glUseProgram(program));
+		OO_ENTER_OPENGL();
+		OOGL(glUseProgram(_program));
+		[context setCurrentShaderProgram:self];
 	}
 }
 
 
 + (void)applyNone
 {
-	OO_ENTER_OPENGL();
+	OOGraphicsContext *context = OOCurrentGraphicsContext();
+	NSAssert(context != nil, @"Can't apply material with no graphics context.");
 	
-	if (sActiveProgram != nil)
+	if ([context currentShaderProgram] != self)
 	{
-		[sActiveProgram release];
-		sActiveProgram = nil;
+		OO_ENTER_OPENGL();
 		OOGL(glUseProgram(0));
+		[context setCurrentShaderProgram:nil];
 	}
 }
 
 
 - (GLuint) program
 {
-	return program;
+	return _program;
 }
 
 
@@ -177,15 +223,15 @@ static BOOL ValidateShaderObject(GLuint object, NSString *name);
 	if (OK)
 	{
 		// Link shader.
-		OOGL(program = glCreateProgram());
-		if (program != 0)
+		OOGL(_program = glCreateProgram());
+		if (_program != 0)
 		{
-			if (vertexShader != 0)  OOGL(glAttachShader(program, vertexShader));
-			if (fragmentShader != 0)  OOGL(glAttachShader(program, fragmentShader));
+			if (vertexShader != 0)  OOGL(glAttachShader(_program, vertexShader));
+			if (fragmentShader != 0)  OOGL(glAttachShader(_program, fragmentShader));
 			[self bindAttributes:attributeBindings];
-			OOGL(glLinkProgram(program));
+			OOGL(glLinkProgram(_program));
 			
-			OK = ValidateShaderObject(program, [NSString stringWithFormat:@"%@/%@", vertexName, fragmentName]);
+			OK = ValidateShaderObject(_program, [NSString stringWithFormat:@"%@/%@", vertexName, fragmentName]);
 		}
 		else  OK = NO;
 	}
@@ -193,12 +239,19 @@ static BOOL ValidateShaderObject(GLuint object, NSString *name);
 	if (vertexShader != 0)  OOGL(glDeleteShader(vertexShader));
 	if (fragmentShader != 0)  OOGL(glDeleteShader(fragmentShader));
 	
+#ifndef NDEBUG
+	if (OK)
+	{
+		_description = [$sprintf(@"%@/%@", vertexName, fragmentName) retain];
+	}
+#endif
+	
 	if (!OK)
 	{
-		if (program != 0)
+		if (_program != 0)
 		{
-			OOGL(glDeleteShader(program));
-			program = 0;
+			OOGL(glDeleteShader(_program));
+			_program = 0;
 		}
 		
 		[self release];
@@ -217,7 +270,7 @@ static BOOL ValidateShaderObject(GLuint object, NSString *name);
 	
 	for (keyEnum = [attributeBindings keyEnumerator]; (attrKey = [keyEnum nextObject]); )
 	{
-		OOGL(glBindAttribLocation(program, [attributeBindings oo_unsignedIntForKey:attrKey], [attrKey UTF8String]));	
+		OOGL(glBindAttribLocation(_program, [attributeBindings oo_unsignedIntForKey:attrKey], [attrKey UTF8String]));	
 	}
 }
 

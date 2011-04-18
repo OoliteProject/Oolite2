@@ -11,5 +11,12 @@
 
 
 @interface DDApplicationDelegate: OOLogOutputHandler <NSApplicationDelegate>
+{
+@private
+	id <OOFileResolving>			_resourceResolver;
+}
+
++ (DDApplicationDelegate *) applicationDelegate;
+- (id <OOFileResolving>) applicationResourceResolver;
 
 @end

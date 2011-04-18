@@ -36,16 +36,27 @@ SOFTWARE.
 
 @interface OOShaderProgram: NSObject
 {
-	GLuint							program;
+	GLuint							_program;
+	
+#ifndef NDEBUG
+	NSString						*_description;
+#endif
 }
 
 // Loads a shader from a file, caching and sharing shader program instances.
 + (id) shaderProgramWithVertexShader:(NSString *)vertexShaderSource
 					  fragmentShader:(NSString *)fragmentShaderSource
 					vertexShaderName:(NSString *)vertexShaderName
-					vertexShaderName:(NSString *)fragmentShaderName
+				  fragmentShaderName:(NSString *)fragmentShaderName
 							  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
 				   attributeBindings:(NSDictionary *)attributeBindings;	// Maps vertex attribute names to "locations".
+
++ (id) shaderProgramWithVertexShaderName:(NSString *)vertexShaderName
+					  fragmentShaderName:(NSString *)fragmentShaderName
+								  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
+					   attributeBindings:(NSDictionary *)attributeBindings	// Maps vertex attribute names to "locations".
+							fileResolver:(id <OOFileResolving>)resolver
+						 problemReporter:(id <OOProblemReporting>)problemReporter;
 
 - (void) apply;
 + (void) applyNone;

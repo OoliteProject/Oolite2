@@ -12,6 +12,12 @@
 
 @implementation DDApplicationDelegate
 
++ (DDApplicationDelegate *) applicationDelegate
+{
+	return [NSApp delegate];
+}
+
+
 - (void) awakeFromNib
 {
 	OOLoggingInit(self);
@@ -30,6 +36,17 @@
 - (BOOL) showMessageClass
 {
 	return NO;//YES;
+}
+
+
+- (id <OOFileResolving>) applicationResourceResolver
+{
+	if (_resourceResolver == nil)
+	{
+		_resourceResolver = [[OOSimpleFileResolver alloc] initWithBasePath:[[NSBundle mainBundle] resourcePath]];
+	}
+	
+	return _resourceResolver;
 }
 
 @end

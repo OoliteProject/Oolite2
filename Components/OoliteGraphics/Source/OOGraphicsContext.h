@@ -37,6 +37,8 @@ SOFTWARE.
 #import <OoliteBase/OoliteBase.h>
 #import "OOOpenGL.h"
 
+@class OOMaterial, OOShaderProgram;
+
 
 @interface OOGraphicsContext: NSObject
 {
@@ -52,6 +54,9 @@ SOFTWARE.
 	
 	NSSet					*_extensions;
 	GLint					_textureImageUnitCount;
+	
+	OOMaterial				*_currentMaterial;
+	OOShaderProgram			*_currentShaderProgram;
 }
 
 - (id) init;

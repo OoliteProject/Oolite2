@@ -434,6 +434,8 @@
 		1A43CC1013060FDA00BB8FB3 /* VirtualRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A43CC0F13060FDA00BB8FB3 /* VirtualRingBuffer.m */; };
 		1A4691BA1347E8D9004EEFD5 /* debugConfig.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A4691B61347E8B4004EEFD5 /* debugConfig.plist */; };
 		1A4691BB1347E8E6004EEFD5 /* oolite-debug-console.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */; };
+		1A5BA1BE135B411E00FC93C2 /* oolite-default.fs in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 1A5BA1BC135B40E900FC93C2 /* oolite-default.fs */; };
+		1A5BA1BF135B411E00FC93C2 /* oolite-default.vs in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 1A5BA1BD135B40E900FC93C2 /* oolite-default.vs */; };
 		1A5BFE0C133E6B0E0093BDC2 /* OOXMLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5BFE0B133E6B0E0093BDC2 /* OOXMLExtensions.m */; };
 		1A64A1681323CA5700C2FDDB /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F24821317C5B700D06C6C /* OoliteBase.framework */; };
 		1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C20551334C5EB00821B1D /* OOVersion.m */; };
@@ -703,6 +705,8 @@
 			dstPath = Shaders;
 			dstSubfolderSpec = 7;
 			files = (
+				1A5BA1BE135B411E00FC93C2 /* oolite-default.fs in Copy Shaders */,
+				1A5BA1BF135B411E00FC93C2 /* oolite-default.vs in Copy Shaders */,
 				1A1F276B1317CB3100D06C6C /* oolite-default-shader.fragment in Copy Shaders */,
 				1A1F276C1317CB3100D06C6C /* oolite-dust.fragment in Copy Shaders */,
 				1A1F276D1317CB3100D06C6C /* oolite-dust.vertex in Copy Shaders */,
@@ -1511,6 +1515,8 @@
 		1A43CC451306115B00BB8FB3 /* Ogg.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Ogg.xcodeproj; path = Dependencies/OggVorbis/Ogg.xcodeproj; sourceTree = "<group>"; };
 		1A4691B61347E8B4004EEFD5 /* debugConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = debugConfig.plist; path = ../Debug/debugConfig.plist; sourceTree = SOURCE_ROOT; };
 		1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "oolite-debug-console.js"; path = "../Debug/oolite-debug-console.js"; sourceTree = SOURCE_ROOT; };
+		1A5BA1BC135B40E900FC93C2 /* oolite-default.fs */ = {isa = PBXFileReference; lastKnownFileType = text; path = "oolite-default.fs"; sourceTree = "<group>"; };
+		1A5BA1BD135B40E900FC93C2 /* oolite-default.vs */ = {isa = PBXFileReference; lastKnownFileType = text; path = "oolite-default.vs"; sourceTree = "<group>"; };
 		1A5BFE0A133E6B0E0093BDC2 /* OOXMLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOXMLExtensions.h; sourceTree = "<group>"; };
 		1A5BFE0B133E6B0E0093BDC2 /* OOXMLExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOXMLExtensions.m; sourceTree = "<group>"; };
 		1A64A0CA1323C54000C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -1897,6 +1903,8 @@
 		1A1F270E1317CACF00D06C6C /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				1A5BA1BC135B40E900FC93C2 /* oolite-default.fs */,
+				1A5BA1BD135B40E900FC93C2 /* oolite-default.vs */,
 				1A1F270F1317CACF00D06C6C /* oolite-default-shader.fragment */,
 				1A1F27101317CACF00D06C6C /* oolite-dust.fragment */,
 				1A1F27111317CACF00D06C6C /* oolite-dust.vertex */,

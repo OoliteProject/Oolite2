@@ -17,6 +17,7 @@
 #if !__OBJC2__
 	DDMesh						*_mesh;
 	NSArray						*_materialSpecs;
+	NSArray						*_renderMaterials;
 #endif
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materials;

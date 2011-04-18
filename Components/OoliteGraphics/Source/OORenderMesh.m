@@ -25,6 +25,7 @@
 
 #import "OORenderMesh.h"
 #import "OOOpenGLUtilities.h"
+#import "OOMaterial.h"
 
 
 @implementation OORenderMesh
@@ -263,6 +264,7 @@
 	
 	for (GLuint gIter = 0; gIter < _groupCount; gIter++)
 	{
+		[[materials objectAtIndex:gIter] apply];
 		OOGL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _elementVBOs[gIter]));
 		OOGL(glDrawElements(GL_TRIANGLES, [_groups[gIter] count], [_groups[gIter] glType], NULL));
 	}

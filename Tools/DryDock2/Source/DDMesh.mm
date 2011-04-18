@@ -12,6 +12,7 @@
 extern "C" {
 #import "MAFuture.h"
 }
+#import "DDApplicationDelegate.h"
 
 
 @interface DDMesh ()
@@ -198,6 +199,38 @@ extern "C" {
 {
 	if (_renderMesh == nil)  [self.abstractMesh getRenderMesh:&_renderMesh andMaterialSpecs:&_materialSpecs];
 	return _materialSpecs;
+}
+
+
+- (NSArray *) renderMaterials
+{
+	if (_renderMaterials == nil)
+	{
+		OORenderMesh *mesh = self.renderMesh;
+		NSArray *materialSpecs = self.materialSpecifications;
+		
+		// FIXME: should do this during init and use main problem reporter.
+		OOSimpleProblemReportManager *problemReporter = [[OOSimpleProblemReportManager alloc] initWithContextString:$sprintf(@"Loading materials for %@:", self.name) messageClassPrefix:@"material.load.error"];
+		
+		// FIXME: need to be able to load built-in shaders and shaders relative to mesh file.
+		id <OOFileResolving> resolver = [DDApplicationDelegate applicationDelegate].applicationResourceResolver;
+		
+		NSMutableArray *renderMaterials = [NSMutableArray arrayWithCapacity:materialSpecs.count];
+		for (OOMaterialSpecification *spec in materialSpecs)
+		{
+			OOMaterial *material = [[OOMaterial alloc] initWithSpecification:spec
+																		mesh:mesh
+																	  macros:nil	// ?
+															   bindingTarget:nil
+																fileResolver:resolver
+															 problemReporter:problemReporter];
+			// FIXME: deal with failure.
+			[renderMaterials addObject:material];
+		}
+		_renderMaterials = [renderMaterials copy];
+	}
+	
+	return _renderMaterials;
 }
 
 

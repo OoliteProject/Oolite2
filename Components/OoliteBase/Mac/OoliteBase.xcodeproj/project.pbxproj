@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A122069135CD74D006EE6E3 /* OOFileResolving.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A122067135CD74D006EE6E3 /* OOFileResolving.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A12206A135CD74D006EE6E3 /* OOFileResolving.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A122068135CD74D006EE6E3 /* OOFileResolving.m */; };
 		1A158171133F9E720075FC2A /* NSData+DDGZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A15816F133F9E720075FC2A /* NSData+DDGZip.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A158172133F9E720075FC2A /* NSData+DDGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A158170133F9E720075FC2A /* NSData+DDGZip.m */; };
 		1A158174133F9ED40075FC2A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A158173133F9ED40075FC2A /* libz.dylib */; };
@@ -93,6 +95,8 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A122067135CD74D006EE6E3 /* OOFileResolving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFileResolving.h; sourceTree = "<group>"; };
+		1A122068135CD74D006EE6E3 /* OOFileResolving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFileResolving.m; sourceTree = "<group>"; };
 		1A15816F133F9E720075FC2A /* NSData+DDGZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+DDGZip.h"; sourceTree = "<group>"; };
 		1A158170133F9E720075FC2A /* NSData+DDGZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+DDGZip.m"; sourceTree = "<group>"; };
 		1A158173133F9ED40075FC2A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -276,6 +280,8 @@
 				1AD841D1122921DD00FC382A /* OOCPUInfo.m */,
 				1AD8429A122922BD00FC382A /* OOWeakReference.h */,
 				1AD8429B122922BD00FC382A /* OOWeakReference.m */,
+				1A122067135CD74D006EE6E3 /* OOFileResolving.h */,
+				1A122068135CD74D006EE6E3 /* OOFileResolving.m */,
 			);
 			name = Utilities;
 			path = ../Source;
@@ -402,6 +408,7 @@
 				1A748BEB130C9084004BF8B9 /* OOConfLexer.h in Headers */,
 				1A1F29F913182B5D00D06C6C /* NSScannerOOExtensions.h in Headers */,
 				1A1F2A9213182E0300D06C6C /* OOAsyncQueue.h in Headers */,
+				1A122069135CD74D006EE6E3 /* OOFileResolving.h in Headers */,
 				1A1F2B94131835D600D06C6C /* OOProbabilitySet.h in Headers */,
 				1A1F2BB21318389000D06C6C /* OOSimpleMethodType.h in Headers */,
 				1A1F2BD8131839D500D06C6C /* OOPListParsing.h in Headers */,
@@ -534,6 +541,7 @@
 				1A990DCF1326DE0200F4A2A7 /* NSDataOOExtensions.m in Sources */,
 				1AFD9E5F1336B2CB00460ABE /* JAPropertyListRepresentation.m in Sources */,
 				1A158172133F9E720075FC2A /* NSData+DDGZip.m in Sources */,
+				1A12206A135CD74D006EE6E3 /* OOFileResolving.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

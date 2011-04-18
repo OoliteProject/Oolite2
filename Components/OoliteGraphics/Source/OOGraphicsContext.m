@@ -25,10 +25,10 @@ SOFTWARE.
 
 */
 
-#import "OOGraphicsContext.h"
+#import "OOGraphicsContextInternal.h"
 
 
-static OOGraphicsContext *sCurrentContext = nil;
+OOGraphicsContext *gOOCurrentGraphicsContext = nil;
 
 
 static NSSet *SetOfExtensions(NSString *extensionString);
@@ -46,7 +46,6 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 	if ((self = [super init]))
 	{
 		[self reset];
-		OOLog(@"temp", @"Created context %@", self);
 	}
 	
 	return self;
@@ -73,9 +72,9 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 
 - (void) dealloc
 {
-	if (sCurrentContext == self)
+	if (gOOCurrentGraphicsContext == self)
 	{
-		sCurrentContext = nil;
+		gOOCurrentGraphicsContext = nil;
 #if OOLITE_MAC_OS_X
 		[NSOpenGLContext clearCurrentContext];
 #endif
@@ -135,13 +134,13 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 
 + (OOGraphicsContext *) currentContext
 {
-	return sCurrentContext;
+	return OOCurrentGraphicsContext();
 }
 
 
 - (void) makeCurrent
 {
-	sCurrentContext = self;
+	gOOCurrentGraphicsContext = self;
 	
 #if OOLITE_MAC_OS_X
 	[_nsContext makeCurrentContext];
@@ -209,6 +208,38 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 - (NSUInteger) textureImageUnitCount
 {
 	return _textureImageUnitCount;
+}
+
+
+- (OOMaterial *) currentMaterial
+{
+	return _currentMaterial;
+}
+
+
+- (void) setCurrentMaterial:(OOMaterial *)material
+{
+	if (material != _currentMaterial)
+	{
+		[_currentMaterial release];
+		_currentMaterial = [material retain];
+	}
+}
+
+
+- (OOShaderProgram *) currentShaderProgram
+{
+	return _currentShaderProgram;
+}
+
+
+- (void) setCurrentShaderProgram:(OOShaderProgram *)shaderProgram
+{
+	if (shaderProgram != _currentShaderProgram)
+	{
+		[shaderProgram release];
+		_currentShaderProgram = [shaderProgram retain];
+	}
 }
 
 @end

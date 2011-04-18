@@ -21,6 +21,7 @@
 	OOAbstractMesh				*_abstractMesh;
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materialSpecs;
+	NSArray						*_renderMaterials;
 	NSString					*_name;
 	NSString					*_modelDescription;
 	
@@ -32,8 +33,10 @@
 - (id) initWithReader:(id<OOMeshReading>)reader issues:(id <OOProblemReporting>)issues;
 
 @property (readwrite, assign) OOAbstractMesh *abstractMesh;
-@property (readonly) OORenderMesh *renderMesh;
 @property (readonly) NSArray *materialSpecifications;
+
+@property (readonly) OORenderMesh *renderMesh;
+@property (readonly) NSArray *renderMaterials;
 
 @property (copy) NSString *name;
 @property (copy) NSString *modelDescription;

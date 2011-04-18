@@ -9,8 +9,10 @@
 #import "DDMeshSceneNode.h"
 #import "DDMesh.h"
 #import "SGSceneGraphUtilities.h"
+#import "DDApplicationDelegate.h"
 
 #import <OoliteGraphics/OoliteGraphics.h>
+#import <OoliteGraphics/OOShaderProgram.h>
 
 
 @interface DDMeshSceneNode ()
@@ -109,15 +111,15 @@
 		else  [self priv_renderFilledNormal];
 	}
 	
-	[OOShaderProgram applyNone];
+	[OOMaterial applyNone];
 	OOCheckOpenGLErrors(@"After rendering DDMeshSceneNode");
 }
 
 
 - (void) priv_renderFilledNormal
 {
-	// TODO: use materials.
-	[self priv_renderFilledWhite];
+	if (_materials == nil)  _materials = self.mesh.renderMaterials;
+	[self.renderMesh renderWithMaterials:_materials];
 }
 
 
@@ -283,19 +285,16 @@
 
 - (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name attributeMap:(NSDictionary *)attributeMap
 {
-	NSURL *url = [[NSBundle mainBundle] URLForResource:name withExtension:@"vs"];
-	NSString *vertexShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-	url = [[NSBundle mainBundle] URLForResource:name withExtension:@"fs"];
-	NSString *fragmentShader = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+	id <OOFileResolving> resolver = [DDApplicationDelegate applicationDelegate].applicationResourceResolver;
 	
 	if (attributeMap == nil)  attributeMap = self.renderMesh.prefixedAttributeIndices;
 	
-	return [OOShaderProgram shaderProgramWithVertexShader:vertexShader
-										   fragmentShader:fragmentShader
-										 vertexShaderName:[name stringByAppendingPathExtension:@"vs"]
-										 vertexShaderName:[name stringByAppendingPathExtension:@"fs"]
-												   prefix:nil
-										attributeBindings:attributeMap];
+	return [OOShaderProgram shaderProgramWithVertexShaderName:[name stringByAppendingPathExtension:@"vs"]
+										   fragmentShaderName:[name stringByAppendingPathExtension:@"fs"]
+													   prefix:nil
+											attributeBindings:attributeMap
+												 fileResolver:resolver
+											  problemReporter:nil];
 }
 
 @end

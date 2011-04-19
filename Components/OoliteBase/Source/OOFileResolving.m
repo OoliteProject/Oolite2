@@ -29,30 +29,37 @@
 #import "MYCollectionUtilities.h"
 
 
-static NSString *FileName(NSString *folder, NSString *name)
+/*
+	OOErrorDetectingProblemReporter wraps a “real” problem reporter and keeps
+	track of whether any errors have been reported.
+*/
+@interface OOErrorDetectingProblemReporter: NSObject <OOProblemReporting>
 {
-	if (folder == nil)  return name;
-	return $sprintf(@"%@/%@", folder, name);
+@private
+	id <OOProblemReporting>			_underlyingProblemReporter;
+	BOOL							_hadError;
 }
+
+- (id) initWithProblemReporter:(id <OOProblemReporting>)problemReporter;
+- (BOOL) hadError;
+
+@end
 
 
 NSData *OOLoadFile(NSString *folder, NSString *name, id <OOFileResolving> resolver, id <OOProblemReporting> problemReporter)
 {
-	NSString *path = [resolver pathForFileNamed:name inFolder:folder];
-	if (path == nil)
+	NSCParameterAssert(name != nil && resolver != nil);
+	
+	OOErrorDetectingProblemReporter *problemReporterWrapper = [[OOErrorDetectingProblemReporter alloc] initWithProblemReporter:problemReporter];
+	
+	NSData *data = [resolver contentsOfFileFileNamed:name inFolder:folder problemReporter:problemReporterWrapper];
+	
+	if (data == nil && ![problemReporterWrapper hadError])
 	{
-		OOReportError(problemReporter, @"Could not find file %@.", FileName(folder, name));
-		return nil;
+		OOReportError(problemReporter, $sprintf(OOLocalizeProblemString(problemReporter, @"Could not load file %@"), OODisplayFileName(folder, name)));
 	}
 	
-	NSError *error = nil;
-	NSData *result = [NSData oo_dataWithContentsOfFile:path options:NSDataReadingMapped error:&error];
-	if (result == nil)
-	{
-		OOReportNSError(problemReporter, $sprintf(OOLocalizeProblemString(problemReporter, @"Could not load file %@"), FileName(folder, name)), error);
-	}
-	
-	return result;
+	return data;
 }
 
 
@@ -90,26 +97,86 @@ NSData *OOLoadFile(NSString *folder, NSString *name, id <OOFileResolving> resolv
 }
 
 
-- (NSString *) pathForFileNamed:(NSString *)name inFolder:(NSString *)folder
+- (NSData *) contentsOfFileFileNamed:(NSString *)name
+							inFolder:(NSString *)folder
+					 problemReporter:(id <OOProblemReporting>)problemReporter
 {
-	NSString *result = nil;
+	NSString *path = nil;
 	if (name != nil)
 	{
 		NSFileManager *fmgr = [NSFileManager defaultManager];
 		
 		if (folder != nil)
 		{
-			result = [[_basePath stringByAppendingPathComponent:folder] stringByAppendingPathComponent:name];
-			if (![fmgr fileExistsAtPath:result])  result = nil;
+			path = [[_basePath stringByAppendingPathComponent:folder] stringByAppendingPathComponent:name];
+			if (![fmgr fileExistsAtPath:path])  path = nil;
 		}
-		if (result == nil)
+		if (path == nil)
 		{
-			result = [_basePath stringByAppendingPathComponent:name];
-			if (![fmgr fileExistsAtPath:result])  result = nil;
+			path = [_basePath stringByAppendingPathComponent:name];
+			if (![fmgr fileExistsAtPath:path])  path = nil;
 		}
+	}
+	
+	if (path == nil)  return nil;
+	
+	NSError *error = nil;
+	NSData *result = [NSData oo_dataWithContentsOfFile:path options:NSDataReadingMapped error:&error];
+	if (result == nil)
+	{
+		OOReportNSError(problemReporter, $sprintf(OOLocalizeProblemString(problemReporter, @"Could not load file %@"), OODisplayFileName(folder, name)), error);
 	}
 	
 	return result;
 }
 
 @end
+
+
+@implementation OOErrorDetectingProblemReporter
+
+- (id) initWithProblemReporter:(id <OOProblemReporting>)problemReporter
+{
+	if ((self = [super init]))
+	{
+		_underlyingProblemReporter = [problemReporter retain];
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_underlyingProblemReporter release];
+	
+	[super dealloc];
+}
+
+
+- (BOOL) hadError
+{
+	return _hadError;
+}
+
+
+- (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
+{
+	if (type == kOOProblemTypeError)  _hadError = YES;
+	return [_underlyingProblemReporter addProblemOfType:type message:message];
+}
+
+
+- (NSString *) localizedProblemStringForKey:(NSString *)string
+{
+	return [_underlyingProblemReporter localizedProblemStringForKey:string];
+}
+
+@end
+
+
+NSString *OODisplayFileName(NSString *folder, NSString *name)
+{
+	if (folder == nil)  return name;
+	return $sprintf(@"%@/%@", folder, name);
+}

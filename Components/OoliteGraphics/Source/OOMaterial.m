@@ -1,33 +1,34 @@
 /*
- 
- OOMaterial.m
- 
- 
- Copyright (C) 2011 Jens Ayton
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
- 
- */
+
+OOMaterial.m
+
+
+Copyright © 2011 Jens Ayton
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
 
 
 #import "OOMaterial.h"
 #import "OOMaterialSpecification.h"
+#import "OODefaultShaderSynthesizer.h"
 
 #import "OOOpenGL.h"
 #import "OOMacroOpenGL.h"
@@ -67,8 +68,6 @@ static NSString *MacrosToString(NSDictionary *macros);
 	
 	BOOL					OK = YES;
 	NSString				*macroString = nil;
-	NSString				*vertexShaderName = nil;
-	NSString				*fragmentShaderName = nil;
 	GLint					textureUnits = [context textureImageUnitCount];
 	NSMutableDictionary		*modifiedMacros = nil;
 	
@@ -93,20 +92,20 @@ static NSString *MacrosToString(NSDictionary *macros);
 		macroString = MacrosToString(modifiedMacros);
 	}
 	
-	// FIXME: actually set up material from specification.
-	vertexShaderName = @"oolite-default.vs";
-	fragmentShaderName = @"oolite-default.fs";
+	// Synthesize material. FIXME: support custom shaders.
+	NSString *vertexShader = nil, *fragmentShader = nil;
+	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, nil);
 	
 	NSDictionary *attributeBindings = [mesh prefixedAttributeIndices];
 	
 	if (OK)
 	{
-		_shaderProgram = [OOShaderProgram shaderProgramWithVertexShaderName:vertexShaderName
-														 fragmentShaderName:fragmentShaderName
-																	 prefix:macroString
-														  attributeBindings:attributeBindings
-															   fileResolver:resolver
-															problemReporter:problemReporter];
+		_shaderProgram = [OOShaderProgram shaderProgramWithVertexShader:vertexShader
+														 fragmentShader:fragmentShader
+													   vertexShaderName:@".synthesized.vs"
+													 fragmentShaderName:@".synthesized.fs"
+																 prefix:macroString
+													  attributeBindings:attributeBindings];
 		OK = (_shaderProgram != nil);
 		[_shaderProgram retain];
 	}

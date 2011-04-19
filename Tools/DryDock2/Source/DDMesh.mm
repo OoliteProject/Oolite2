@@ -225,7 +225,7 @@ extern "C" {
 																fileResolver:resolver
 															 problemReporter:problemReporter];
 			// FIXME: deal with failure.
-			[renderMaterials addObject:material];
+			if (material != nil)  [renderMaterials addObject:material];
 		}
 		_renderMaterials = [renderMaterials copy];
 	}

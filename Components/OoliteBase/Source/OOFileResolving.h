@@ -1,12 +1,16 @@
 /*
 	OOFileResolving.h
 	
-	Abstraction of the process of looking up files.
+	Abstraction of the process of looking up and loading files.
 	
-	Objects which implement <OOFileResolving> provide an absolute path for a
-	given file name and expected containing folder. The folder name may be nil.
+	Objects which implement <OOFileResolving> can find and open a file with a
+	given name and expected containing folder. The folder name may be nil.
 	
-	OOLoadFile() looks up a file with a given resolver, and attempts to read it.
+	Because we will need to create aggregate resolvers to check multiple
+	locations, the core contentsOfFile... method does not report “file not
+	found” errors. The function OOLoadFile() attempts to load a file with a
+	resolver, and if it fails and no messages have been added to the problem
+	reporter, it adds a file not found message.
 	
 	OOSimpleFileResolver implements <OOFileResolving> by looking up the
 	requested file within a base directory. The file may be found either in
@@ -42,7 +46,9 @@
 
 @protocol OOFileResolving <NSObject>
 
-- (NSString *) pathForFileNamed:(NSString *)name inFolder:(NSString *)folder;
+- (NSData *) contentsOfFileFileNamed:(NSString *)name
+							inFolder:(NSString *)folder
+					 problemReporter:(id <OOProblemReporting>)problemReporter;
 
 @end
 
@@ -61,3 +67,11 @@ NSData *OOLoadFile(NSString *folder, NSString *name, id <OOFileResolving> fileRe
 - (NSString *) basePath;
 
 @end
+
+
+/*
+	OODisplayFileName()
+	
+	Returns a string of the form folder/file, or just file if folder is nil.
+*/
+NSString *OODisplayFileName(NSString *folder, NSString *name);

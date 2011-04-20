@@ -142,13 +142,6 @@
 @end
 
 
-extern NSString * const kOOPositionAttributeKey;	// "position"
-extern NSString * const kOONormalAttributeKey;		// "normal"
-extern NSString * const kOOTangentAttributeKey;		// "tangent"
-extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
-extern NSString * const kOOSmoothGroupAttributeKey;	// "_smoothGroup" -- not saved in oomesh.
-
-
 @interface NSArray (OOAbstractVertex)
 
 - (OOAbstractVertex *) oo_abstractVertexAtIndex:(NSUInteger)i;
@@ -179,3 +172,10 @@ Vector OOVectorFromArray(NSArray *array);
 @end
 
 #endif	// OOLITE_LEAN
+
+
+extern NSString * const kOOPositionAttributeKey;	// "position"
+extern NSString * const kOONormalAttributeKey;		// "normal"
+extern NSString * const kOOTangentAttributeKey;		// "tangent"
+extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
+extern NSString * const kOOSmoothGroupAttributeKey;	// "_smoothGroup" -- not saved in oomesh.

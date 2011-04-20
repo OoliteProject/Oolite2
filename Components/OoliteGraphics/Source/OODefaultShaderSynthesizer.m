@@ -26,8 +26,10 @@ SOFTWARE.
 */
 
 #import "OODefaultShaderSynthesizer.h"
-#import	"OOMaterialSpecification.h"
 #import "OORenderMesh.h"
+#import	"OOMaterialSpecification.h"
+#import "OOTextureSpecification.h"
+#import "OOAbstractVertex.h"
 
 
 @interface OODefaultShaderSynthesizer: NSObject
@@ -48,6 +50,11 @@ SOFTWARE.
 	NSMutableString				*_fragmentHelpers;
 	NSMutableString				*_vertexBody;
 	NSMutableString				*_fragmentBody;
+	
+	// _textures: dictionary mapping texture file names to texture specifications.
+	NSMutableDictionary			*_textures;
+	// _textureIDs: dictionary mapping texture file names to numerical IDs used to name variables.
+	NSMutableDictionary			*_textureIDs;
 }
 
 - (id) initWithMaterialSpecifiction:(OOMaterialSpecification *)spec
@@ -170,25 +177,170 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) writePosition
+- (void) addVertexUniform:(NSString *)name ofType:(NSString *)type
 {
-	[self addAttribute:@"aPosition" ofType:@"vec3"];
+	[self appendVariable:name ofType:type withPrefix:@"uniform" to:_vertexUniforms];
+}
+
+
+- (void) addFragmentUniform:(NSString *)name ofType:(NSString *)type
+{
+	[self appendVariable:name ofType:type withPrefix:@"uniform" to:_fragmentUniforms];
+}
+
+
+- (void) setUpOneTexture:(OOTextureSpecification *)spec
+{
+	if (spec == nil)  return;
 	
-	[_vertexBody appendString:@"\tgl_Position = gl_ModelViewProjectionMatrix * vec4(aPosition, 1.0);\n"];
+	if ([spec isCubeMap])
+	{
+		OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" specifies a cube map texture, but doesn't have custom shaders. Cube map textures are not supported with the default shaders.", [_spec materialKey], [_mesh name]);
+		[NSException raise:NSGenericException format:@"Invalid material"];
+	}
+	
+	NSString *name = [spec textureMapName];
+	OOTextureSpecification *existing = [_textures objectForKey:name];
+	if (existing == nil)
+	{
+		[_textures setObject:spec forKey:name];
+		[_textureIDs setObject:$int([_textures count]) forKey:name];
+	}
+	else
+	{
+		if (![spec isEqual:existing])
+		{
+			OOReportWarning(_problemReporter, @"The texture map \"%@\" is used more than once in material \"%@\" of \"%@\", and the options specified are not consistent. Only one set of options will be used.", name, [_spec materialKey], [_mesh name]);
+		}
+	}
+}
+
+
+- (void) setUpTextures
+{
+	_textures = [[NSMutableDictionary alloc] init];
+	_textureIDs = [[NSMutableDictionary alloc] init];
+	
+	[self setUpOneTexture:[_spec diffuseMap]];
+	[self setUpOneTexture:[_spec specularMap]];
+	[self setUpOneTexture:[_spec emissionMap]];
+	[self setUpOneTexture:[_spec illuminationMap]];
+	[self setUpOneTexture:[_spec normalMap]];
+#if 0
+	// Parallax map needs to be handled separately.
+	[self setUpOneTexture:[_spec parallaxMap]];
+#endif
+	
+	if ([_textures count] == 0)  return;
+	
+	// Ensure we have valid texture coordinates.
+	NSUInteger texCoordsSize = [_mesh attributeSizeForKey:kOOTexCoordsAttributeKey];
+	switch (texCoordsSize)
+	{
+		case 0:
+			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the mesh has no %@ attribute.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
+			[NSException raise:NSGenericException format:@"Invalid material"];
+			
+		case 1:
+		OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the mesh has no %@ attribute.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
+		[NSException raise:NSGenericException format:@"Invalid material"];
+			
+		case 2:
+			break;	// Perfect!
+			
+		default:
+			OOReportWarning(_problemReporter, @"The mesh \"%@\" has a %@ attribute with %u values per vertex. Only the first two will be used by standard materials.", [_mesh name], kOOTexCoordsAttributeKey, texCoordsSize);
+	}
+	
+	[self addAttribute:@"aTexCoords" ofType:@"vec2"];
+	[self addVarying:@"vTexCoords" ofType:@"vec2"];
+	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n"];
+	
+	// FIXME: texCoords will need to be handled differently if parallax mapping.
+	[_fragmentBody appendString:@"\t// Texture reads\n\tvec2 texCoords = vTexCoords;\n"];
+	
+	NSString *name = nil;
+	foreachkey(name, _textureIDs)
+	{
+		NSUInteger texID = [_textureIDs oo_unsignedIntegerForKey:name];
+		
+		[_fragmentBody appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, name];
+		[self addFragmentUniform:$sprintf(@"uTexture%u", texID) ofType:@"sampler2D"];
+	}
+	
+	[_fragmentBody appendString:@"\t\n"];
+}
+
+
+- (NSString *) readForTextureSpec:(OOTextureSpecification *)spec gettingChannelCount:(NSUInteger *)outCount
+{
+	NSParameterAssert(spec != nil && outCount != NULL);
+	
+	NSString *key = [spec textureMapName];
+	NSUInteger texID = [_textureIDs oo_unsignedIntegerForKey:key];
+	
+	// FIXME: Support swizzling (generalization of extract_channel to support multiple channels).
+	// FIXME: Support different channel counts.
+	
+	*outCount = 4;
+	return $sprintf(@"tex%uSample", texID);
 }
 
 
 - (void) writeDiffuseColorTerm
 {
-	// FIXME: diffuse map
-	[_fragmentBody appendString:@"\tvec4 diffuseColor = vec4(1.0);\n"];
+	[_fragmentBody appendString:@"\t// Diffuse colour\n"];
+	
+	BOOL haveDiffuseColor = NO;
+	OOTextureSpecification *diffuseMap = [_spec diffuseMap];
+	if (diffuseMap != nil)
+	{
+		NSUInteger channelCount;
+		NSString *readInstr = [self readForTextureSpec:diffuseMap gettingChannelCount:&channelCount];
+		switch (channelCount)
+		{
+			case 1:
+				// Grey -> RGB, A = 1
+				readInstr = $sprintf(@"vec4(vec3(%@), 1.0)", readInstr);
+				break;
+				
+			case 2:
+				// Grey + alpha -> RGB + A
+				readInstr = $sprintf(@"(%@).xxxy", readInstr);
+				
+			case 3:
+				// RGB -> RGB, A = 1
+				readInstr = $sprintf(@"vec4(%@, 1.0)", readInstr);
+				
+			case 4:
+				readInstr = readInstr;
+		}
+		
+		[_fragmentBody appendFormat:@"\tvec4 diffuseColor = %@;\n", readInstr];
+		 haveDiffuseColor = YES;
+	}
 	
 	OOColor *diffuseColor = [_spec diffuseColor];
 	if (![diffuseColor isWhite])
 	{
 		float rgba[4];
 		[[_spec diffuseColor] getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
-		[_fragmentBody appendFormat:@"\tdiffuseColor *= vec4(%g, %g, %g, %g);\n", rgba[0], rgba[1], rgba[2], rgba[3]];
+		NSString *format = nil;
+		if (haveDiffuseColor)
+		{
+			format = @"\tdiffuseColor *= vec4(%g, %g, %g, %g);\n";
+		}
+		else
+		{
+			format = @"\tconst vec4 diffuseColor = vec4(%g, %g, %g, %g);\n";
+			haveDiffuseColor = YES;
+		}
+		[_fragmentBody appendFormat:format, rgba[0], rgba[1], rgba[2], rgba[3]];
+	}
+	else if (!haveDiffuseColor)
+	{
+		[_fragmentBody appendString:@"const vec4 diffuseColor = vec4(1.0);\n"];
+		haveDiffuseColor = YES;
 	}
 	
 	[_fragmentBody appendString:@"\t\n"];
@@ -203,7 +355,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	[_vertexBody appendString:@"\tvNormal = aNormal;\n\n"];
 	
-	[_fragmentBody appendString:@"\t// Placeholder diffuse light.\n\tvec4 diffuseLight = vec4(vec3(normalize(vNormal).y), 1.0);\n\n"];
+	[_fragmentBody appendString:@"\t// Placeholder diffuse light\n\tvec4 diffuseLight = vec4(vec3(max(0.0, normalize(vNormal).y)), 1.0);\n\n"];
+}
+
+
+- (void) writePosition
+{
+	[self addAttribute:@"aPosition" ofType:@"vec3"];
+	
+	[_vertexBody appendString:@"\tgl_Position = gl_ModelViewProjectionMatrix * vec4(aPosition, 1.0);\n"];
 }
 
 
@@ -242,18 +402,29 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[_vertexBody appendString:@"void main(void)\n{\n"];
 	[_fragmentBody appendString:@"void main(void)\n{\n"];
 	
-	[self writeDiffuseColorTerm];
-	[self writeDiffuseLighting];
-	[self writeFinalColorComposite];
-	[self writePosition];
-	
-	[_vertexBody appendString:@"}"];
-	[_fragmentBody appendString:@"}"];
-	
-	[self composeVertexShader];
-	[self composeFragmentShader];
-	
-	[self destroyTemporaries];
+	@try
+	{
+		[self setUpTextures];
+		[self writeDiffuseColorTerm];
+		[self writeDiffuseLighting];
+		[self writeFinalColorComposite];
+		[self writePosition];
+		
+		[_vertexBody appendString:@"}"];
+		[_fragmentBody appendString:@"}"];
+		
+		[self composeVertexShader];
+		[self composeFragmentShader];
+	}
+	@catch (NSException *exception)
+	{
+		// Error should have been reported already.
+		return NO;
+	}
+	@finally
+	{
+		[self destroyTemporaries];
+	}
 	
 	return YES;
 }
@@ -280,6 +451,9 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	DESTROY(_fragmentHelpers);
 	DESTROY(_vertexBody);
 	DESTROY(_fragmentBody);
+	
+	DESTROY(_textures);
+	DESTROY(_textureIDs);
 }
 
 @end

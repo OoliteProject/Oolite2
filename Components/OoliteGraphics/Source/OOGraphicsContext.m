@@ -119,7 +119,19 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 	const GLubyte *versionString = glGetString(GL_VERSION);
 	ParseVersionString(versionString, &_major, &_minor, &_release);
 	
-	if ([self versionIsAtLeastMajor:2 minor:0] || [self haveExtension:@"GL_ARB_fragment_shader"])
+	BOOL is2OrLater = _major >= 2;
+	
+	if (is2OrLater || [self haveExtension:@"GL_ARB_shading_language_100"])
+	{
+		versionString = glGetString(GL_SHADING_LANGUAGE_VERSION);
+		ParseVersionString(versionString, &_glslMajor, &_glslMinor, &_glslRelease);
+	}
+	else
+	{
+		_glslMajor = _glslMinor = _glslRelease = 0;
+	}
+	
+	if (is2OrLater || [self haveExtension:@"GL_ARB_fragment_shader"])
 	{
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_textureImageUnitCount);
 	}
@@ -179,6 +191,40 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 - (BOOL) versionIsAtLeastMajor:(unsigned)maj minor:(unsigned)min
 {
 	return _major > maj || (_major == maj && _minor >= min);
+}
+
+
+- (NSUInteger) majorGLSLVersionNumber
+{
+	return _glslMajor;
+}
+
+
+- (NSUInteger) minorGLSLVersionNumber
+{
+	return _glslMinor;
+}
+
+
+- (NSUInteger) releaseGLSLVersionNumber
+{
+	return _glslRelease;
+}
+
+
+- (void) getGLSLVersionMajor:(NSUInteger *)outMajor
+					   minor:(unsigned *)outMinor
+					 release:(unsigned *)outRelease
+{
+	if (outMajor != NULL)  *outMajor = _glslMajor;
+	if (outMinor != NULL)  *outMinor = _glslMinor;
+	if (outRelease != NULL)  *outRelease = _glslRelease;
+}
+
+
+- (BOOL) glslVersionIsAtLeastMajor:(unsigned)maj minor:(unsigned)min
+{
+	return _glslMajor > maj || (_glslMajor == maj && _glslMinor >= min);
 }
 
 - (NSString *) vendorString

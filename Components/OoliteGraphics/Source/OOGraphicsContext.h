@@ -51,6 +51,7 @@ SOFTWARE.
 	NSString				*_renderer;
 	
 	NSUInteger				_major, _minor, _release;
+	NSUInteger				_glslMajor, _glslMinor, _glslRelease;
 	
 	NSSet					*_extensions;
 	GLint					_textureImageUnitCount;
@@ -75,6 +76,15 @@ SOFTWARE.
 					 minor:(unsigned *)outMinor
 				   release:(unsigned *)outRelease;
 - (BOOL) versionIsAtLeastMajor:(unsigned)maj minor:(unsigned)min;
+
+// GLSL version (0.0.0 if no GLSL support).
+- (NSUInteger) majorGLSLVersionNumber;
+- (NSUInteger) minorGLSLVersionNumber;
+- (NSUInteger) releaseGLSLVersionNumber;
+- (void) getGLSLVersionMajor:(NSUInteger *)outMajor
+					   minor:(unsigned *)outMinor
+					 release:(unsigned *)outRelease;
+- (BOOL) glslVersionIsAtLeastMajor:(unsigned)maj minor:(unsigned)min;
 
 - (NSString *) vendorString;
 - (NSString *) rendererString;

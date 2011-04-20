@@ -96,6 +96,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 	NSString *vertexShader = nil, *fragmentShader = nil;
 	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, nil);
 	
+	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader);
+	
 	NSDictionary *attributeBindings = [mesh prefixedAttributeIndices];
 	
 	if (OK)

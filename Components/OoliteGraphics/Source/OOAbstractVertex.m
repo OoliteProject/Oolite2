@@ -23,10 +23,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#if !OOLITE_LEAN
-
 #import "OOAbstractVertex.h"
-#import "OOFloatArray.h"
 
 
 NSString * const kOOPositionAttributeKey	= @"position";
@@ -34,6 +31,11 @@ NSString * const kOONormalAttributeKey		= @"normal";
 NSString * const kOOTangentAttributeKey		= @"tangent";
 NSString * const kOOTexCoordsAttributeKey	= @"texCoords";
 NSString * const kOOSmoothGroupAttributeKey	= @"_smoothGroup";
+
+
+#if !OOLITE_LEAN
+
+#import "OOFloatArray.h"
 
 
 #ifndef NDEBUG

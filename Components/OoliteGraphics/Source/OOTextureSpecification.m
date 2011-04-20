@@ -158,6 +158,12 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 }
 
 
+- (NSString *) descriptionComponents
+{
+	return $sprintf(@"\"%@\"", [self textureMapName]);
+}
+
+
 - (NSString *) textureMapName
 {
 	return _name;

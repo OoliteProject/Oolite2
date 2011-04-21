@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		1A0A81D61360E51C00F3CD38 /* oolite-cloaking-device-mission.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A1F27001317CACF00D06C6C /* oolite-cloaking-device-mission.js */; };
 		1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A15816D133F8C180075FC2A /* PlayerEntity+Serialization.m */; };
 		1A18D69913191A920096D960 /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18D69813191A920096D960 /* SUUpdater.m */; };
 		1A1B975A13087FBE0078322D /* DustEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971313087FBE0078322D /* DustEntity.m */; };
@@ -681,6 +682,7 @@
 			dstPath = Scripts;
 			dstSubfolderSpec = 7;
 			files = (
+				1A0A81D61360E51C00F3CD38 /* oolite-cloaking-device-mission.js in Copy Scripts */,
 				1A4691BB1347E8E6004EEFD5 /* oolite-debug-console.js in Copy Scripts */,
 				1A1F275D1317CB2000D06C6C /* oolite-cloaking-device-pod.js in Copy Scripts */,
 				1A1F275E1317CB2000D06C6C /* oolite-cloaking-device-target-ship.js in Copy Scripts */,
@@ -1261,11 +1263,11 @@
 		1A1F2DA713184C2000D06C6C /* OOCombinedEmissionMapGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCombinedEmissionMapGenerator.m; path = Materials/OOCombinedEmissionMapGenerator.m; sourceTree = "<group>"; };
 		1A1F2DA813184C2000D06C6C /* OOConcreteTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOConcreteTexture.h; path = Materials/OOConcreteTexture.h; sourceTree = "<group>"; };
 		1A1F2DA913184C2000D06C6C /* OOConcreteTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOConcreteTexture.m; path = Materials/OOConcreteTexture.m; sourceTree = "<group>"; };
-		1A1F2DAA13184C2000D06C6C /* OOLegacyMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyMaterial.h; path = Materials/OOLegacyMaterial.h; sourceTree = "<group>"; };
+		1A1F2DAA13184C2000D06C6C /* OOLegacyMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyMaterial.h; path = Materials/OOLegacyMaterial.h; sourceTree = "<group>"; };
 		1A1F2DAB13184C2000D06C6C /* OOLegacyMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyMaterial.m; path = Materials/OOLegacyMaterial.m; sourceTree = "<group>"; };
 		1A1F2DAC13184C2000D06C6C /* OOMaterialConvenienceCreators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMaterialConvenienceCreators.h; path = Materials/OOMaterialConvenienceCreators.h; sourceTree = "<group>"; };
 		1A1F2DAD13184C2000D06C6C /* OOMaterialConvenienceCreators.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOMaterialConvenienceCreators.m; path = Materials/OOMaterialConvenienceCreators.m; sourceTree = "<group>"; };
-		1A1F2DAE13184C2000D06C6C /* OOLegacyMaterialSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyMaterialSpecifier.h; path = Materials/OOLegacyMaterialSpecifier.h; sourceTree = "<group>"; };
+		1A1F2DAE13184C2000D06C6C /* OOLegacyMaterialSpecifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyMaterialSpecifier.h; path = Materials/OOLegacyMaterialSpecifier.h; sourceTree = "<group>"; };
 		1A1F2DAF13184C2000D06C6C /* OOLegacyMaterialSpecifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyMaterialSpecifier.m; path = Materials/OOLegacyMaterialSpecifier.m; sourceTree = "<group>"; };
 		1A1F2DB013184C2000D06C6C /* OOMultiTextureMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMultiTextureMaterial.h; path = Materials/OOMultiTextureMaterial.h; sourceTree = "<group>"; };
 		1A1F2DB113184C2000D06C6C /* OOMultiTextureMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOMultiTextureMaterial.m; path = Materials/OOMultiTextureMaterial.m; sourceTree = "<group>"; };
@@ -1279,22 +1281,22 @@
 		1A1F2DB913184C2000D06C6C /* OOPixMapTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOPixMapTextureLoader.m; path = Materials/OOPixMapTextureLoader.m; sourceTree = "<group>"; };
 		1A1F2DBA13184C2000D06C6C /* OOPlanetTextureGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOPlanetTextureGenerator.h; path = Materials/OOPlanetTextureGenerator.h; sourceTree = "<group>"; };
 		1A1F2DBB13184C2000D06C6C /* OOPlanetTextureGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOPlanetTextureGenerator.m; path = Materials/OOPlanetTextureGenerator.m; sourceTree = "<group>"; };
-		1A1F2DBC13184C2000D06C6C /* OOLegacyPNGTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyPNGTextureLoader.h; path = Materials/OOLegacyPNGTextureLoader.h; sourceTree = "<group>"; };
+		1A1F2DBC13184C2000D06C6C /* OOLegacyPNGTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyPNGTextureLoader.h; path = Materials/OOLegacyPNGTextureLoader.h; sourceTree = "<group>"; };
 		1A1F2DBD13184C2000D06C6C /* OOLegacyPNGTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyPNGTextureLoader.m; path = Materials/OOLegacyPNGTextureLoader.m; sourceTree = "<group>"; };
 		1A1F2DBE13184C2000D06C6C /* OOShaderMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOShaderMaterial.h; path = Materials/OOShaderMaterial.h; sourceTree = "<group>"; };
 		1A1F2DBF13184C2000D06C6C /* OOShaderMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOShaderMaterial.m; path = Materials/OOShaderMaterial.m; sourceTree = "<group>"; };
-		1A1F2DC013184C2000D06C6C /* OOLegacyShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyShaderProgram.h; path = Materials/OOLegacyShaderProgram.h; sourceTree = "<group>"; };
+		1A1F2DC013184C2000D06C6C /* OOLegacyShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyShaderProgram.h; path = Materials/OOLegacyShaderProgram.h; sourceTree = "<group>"; };
 		1A1F2DC113184C2000D06C6C /* OOLegacyShaderProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyShaderProgram.m; path = Materials/OOLegacyShaderProgram.m; sourceTree = "<group>"; };
-		1A1F2DC213184C2000D06C6C /* OOLegacyShaderUniform.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyShaderUniform.h; path = Materials/OOLegacyShaderUniform.h; sourceTree = "<group>"; };
+		1A1F2DC213184C2000D06C6C /* OOLegacyShaderUniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyShaderUniform.h; path = Materials/OOLegacyShaderUniform.h; sourceTree = "<group>"; };
 		1A1F2DC313184C2000D06C6C /* OOLegacyShaderUniform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyShaderUniform.m; path = Materials/OOLegacyShaderUniform.m; sourceTree = "<group>"; };
 		1A1F2DC413184C2000D06C6C /* OOSingleTextureMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOSingleTextureMaterial.h; path = Materials/OOSingleTextureMaterial.h; sourceTree = "<group>"; };
 		1A1F2DC513184C2000D06C6C /* OOSingleTextureMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOSingleTextureMaterial.m; path = Materials/OOSingleTextureMaterial.m; sourceTree = "<group>"; };
-		1A1F2DC613184C2000D06C6C /* OOLegacyTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyTexture.h; path = Materials/OOLegacyTexture.h; sourceTree = "<group>"; };
+		1A1F2DC613184C2000D06C6C /* OOLegacyTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyTexture.h; path = Materials/OOLegacyTexture.h; sourceTree = "<group>"; };
 		1A1F2DC713184C2000D06C6C /* OOLegacyTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyTexture.m; path = Materials/OOLegacyTexture.m; sourceTree = "<group>"; };
-		1A1F2DC813184C2000D06C6C /* OOLegacyTextureGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyTextureGenerator.h; path = Materials/OOLegacyTextureGenerator.h; sourceTree = "<group>"; };
+		1A1F2DC813184C2000D06C6C /* OOLegacyTextureGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyTextureGenerator.h; path = Materials/OOLegacyTextureGenerator.h; sourceTree = "<group>"; };
 		1A1F2DC913184C2000D06C6C /* OOLegacyTextureGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyTextureGenerator.m; path = Materials/OOLegacyTextureGenerator.m; sourceTree = "<group>"; };
 		1A1F2DCA13184C2000D06C6C /* OOLegacyTextureInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyTextureInternal.h; path = Materials/OOLegacyTextureInternal.h; sourceTree = "<group>"; };
-		1A1F2DCB13184C2000D06C6C /* OOLegacyTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyTextureLoader.h; path = Materials/OOLegacyTextureLoader.h; sourceTree = "<group>"; };
+		1A1F2DCB13184C2000D06C6C /* OOLegacyTextureLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyTextureLoader.h; path = Materials/OOLegacyTextureLoader.h; sourceTree = "<group>"; };
 		1A1F2DCC13184C2000D06C6C /* OOLegacyTextureLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyTextureLoader.m; path = Materials/OOLegacyTextureLoader.m; sourceTree = "<group>"; };
 		1A1F2E3F13184DBF00D06C6C /* OOPolygonSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPolygonSprite.h; sourceTree = "<group>"; };
 		1A1F2E4013184DBF00D06C6C /* OOPolygonSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPolygonSprite.m; sourceTree = "<group>"; };
@@ -1302,7 +1304,7 @@
 		1A1F2E4313184DD400D06C6C /* OOTextureSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOTextureSprite.m; sourceTree = "<group>"; };
 		1A1F2E4513184DE000D06C6C /* OODebugGLDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODebugGLDrawing.h; sourceTree = "<group>"; };
 		1A1F2E4613184DE000D06C6C /* OODebugGLDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODebugGLDrawing.m; sourceTree = "<group>"; };
-		1A1F2E5613184E2A00D06C6C /* OOLegacyOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOLegacyOpenGL.h; sourceTree = "<group>"; };
+		1A1F2E5613184E2A00D06C6C /* OOLegacyOpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOLegacyOpenGL.h; sourceTree = "<group>"; };
 		1A1F2E5713184E2A00D06C6C /* OOLegacyOpenGL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOLegacyOpenGL.m; sourceTree = "<group>"; };
 		1A1F2E5E13184E4D00D06C6C /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = ../../Components/OoliteGraphics/Mac/libpng.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A1F2E6713184E6700D06C6C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };

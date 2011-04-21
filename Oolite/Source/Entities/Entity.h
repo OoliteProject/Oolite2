@@ -114,12 +114,10 @@ enum OOScanClass
 	Entity					*z_previous, *z_next;
 	
 	Entity					*collision_chain;
-	
-	OOUniversalID			shadingEntityID;
-	
 	Entity					*collider;
-	
 	CollisionRegion			*collisionRegion;		// initially nil - then maintained
+	
+	OOWeakReference			*_shadingEntity;
 	
 @protected
 	Vector					lastPosition;

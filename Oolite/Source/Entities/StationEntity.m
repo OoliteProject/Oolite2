@@ -178,18 +178,21 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 }
 
 
-- (void) setPlanet:(OOPlanetEntity *)planet_entity
+- (void) setPlanet:(OOPlanetEntity *)planet
 {
-	if (planet_entity)
-		planet = [planet_entity universalID];
-	else
-		planet = NO_TARGET;
+	if (planet != [_planet weakRefUnderlyingObject])
+	{
+		DESTROY(_planet);
+		_planet = [planet weakRetain];
+	}
 }
 
 
 - (OOPlanetEntity *) planet
 {
-	return [UNIVERSE entityForUniversalID:planet];
+	OOPlanetEntity *planet = [_planet weakRefUnderlyingObject];
+	if (planet == nil && _planet != nil)  DESTROY(_planet);
+	return planet;
 }
 
 
@@ -738,6 +741,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	DESTROY(launchQueue);
 	[self clearIdLocks:nil];
 	
+	DESTROY(_planet);
 	DESTROY(localMarket);
 	DESTROY(localPassengers);
 	DESTROY(localContracts);

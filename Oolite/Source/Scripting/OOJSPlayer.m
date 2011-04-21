@@ -432,12 +432,12 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 		
 		if (destValue == nil)
 		{
-			[PLAYER setDockTarget:NULL];
+			[PLAYER setEscapePodDestination:NULL];
 			OK = YES;
 		}
 		else if ([destValue isKindOfClass:[ShipEntity class]] && [destValue isStation])
 		{
-			[PLAYER setDockTarget:destValue];
+			[PLAYER setEscapePodDestination:destValue];
 			OK = YES;
 		}
 		else if ([destValue isKindOfClass:[NSString class]])
@@ -445,7 +445,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 			if ([destValue isEqualToString:@"NEARBY_SYSTEM"])
 			{
 				// find the nearest system with a main station, or die in the attempt!
-				[PLAYER setDockTarget:NULL];
+				[PLAYER setEscapePodDestination:NULL];
 				
 				double rescueRange = 7.0;	// reach at least 1 other system!
 				if ([UNIVERSE inInterstellarSpace])
@@ -486,7 +486,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 			JSBool bValue;
 			if (JS_ValueToBoolean(context, OOJS_ARGV[0], &bValue) && bValue == NO)
 			{
-				[PLAYER setDockTarget:NULL];
+				[PLAYER setEscapePodDestination:NULL];
 				OK = YES;
 			}
 		}

@@ -346,7 +346,7 @@ typedef enum
 	NSMutableArray			*shipCommodityData;
 	
 	ShipEntity				*missile_entity[PLAYER_MAX_MISSILES];	// holds the actual missile entities or equivalents
-	OOUniversalID			_dockTarget;	// used by the escape pod code
+	OOWeakReference			*_escapePodDestination;
 	
 	int						legalStatus;
 	int						market_rnd;
@@ -801,7 +801,7 @@ typedef enum
 
 - (BOOL) scoopOverride;
 - (void) setScoopOverride:(BOOL)newValue;
-- (void) setDockTarget:(ShipEntity *)entity;
+- (void) setEscapePodDestination:(ShipEntity *)entity;
 
 - (BOOL) clearedToDock;
 - (void) setDockingClearanceStatus:(OODockingClearanceStatus) newValue;

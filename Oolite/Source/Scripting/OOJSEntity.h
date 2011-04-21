@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 
 void InitOOJSEntity(JSContext *context, JSObject *global);
 
-BOOL JSValueToEntity(JSContext *context, jsval value, Entity **outEntity);	// Value may be Entity or integer (OOUniversalID).
+BOOL JSValueToEntity(JSContext *context, jsval value, Entity **outEntity);
 
 JSClass gOOEntityJSClass;
 JSObject *gOOEntityJSPrototype;
@@ -45,10 +45,9 @@ OOINLINE JSObject *JSEntityPrototype(void)  { return gOOEntityJSPrototype; }
 
 /*	EntityFromArgumentList()
 	
-	Construct a entity from an argument list which is either a (JS) entity or
-	an integer (a OOUniversalID). The optional outConsumed argument can be
-	used to find out how many parameters were used (currently, this will be 0
-	on failure, otherwise 1).
+	Construct a entity from an argument list containing a JS Entity object.
+	The optional outConsumed argument can be used to find out how many
+	parameters were used (currently, this will be 0 on failure, otherwise 1).
 	
 	On failure, it will return NO, annd the entity will be unaltered. If
 	scriptClass and function are non-nil, a warning will be reported to the

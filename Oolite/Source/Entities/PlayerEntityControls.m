@@ -1046,7 +1046,9 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 						}
 					}
 					if (goodToLaunch)
-						found_target = [self launchEscapeCapsule];
+					{
+						found_target = [[self launchEscapeCapsule] universalID];
+					}
 				}
 				
 				exceptionContext = @"dump cargo";

@@ -893,6 +893,8 @@ static GLfloat		sBaseMass = 0.0;
 	DESTROY(player_name);
 	DESTROY(shipCommodityData);
 	
+	DESTROY(_escapePodDestination);
+	
 	DESTROY(specialCargo);
 	
 	DESTROY(save_path);
@@ -1371,7 +1373,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			galaxy_coordinates.y = system_seed.b;
 			
 			[UNIVERSE setUpSpace];
-			[self setDockTarget:[UNIVERSE station]];
+			[self setEscapePodDestination:[UNIVERSE station]];
 			// send world script events to let expansions know we're in a new system.
 			// all player.ship properties are still disabled at this stage.
 			[self doScriptEvent:OOJSID("shipWillExitWitchspace")];
@@ -1380,9 +1382,11 @@ static bool minShieldLevelPercentageInitialised = false;
 			[[UNIVERSE planet] update: 2.34375 * market_rnd];	// from 0..10 minutes
 			[[UNIVERSE station] update: 2.34375 * market_rnd];	// from 0..10 minutes
 		}
-		primaryTarget = _dockTarget;	// main station in the original system, unless overridden.
+		Entity *escapePodDestination = [_escapePodDestination weakRefUnderlyingObject];
+		primaryTarget = (escapePodDestination != nil) ? [escapePodDestination universalID] : NO_TARGET;	// main station in the original system, unless overridden.
+		
 		[UNIVERSE setBlockJSPlayerShipProps:NO];	// re-enable player.ship!
-		if ([[self primaryTarget] isStation]) // also fails if primaryTarget is NO_TARGET
+		if ([escapePodDestination isStation])
 		{
 			[doppelganger becomeExplosion];	// blow up the doppelganger
 			// restore player ship
@@ -3498,11 +3502,10 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (OOUniversalID)launchEscapeCapsule
+- (ShipEntity *) launchEscapeCapsule
 {
 	ShipEntity		*doppelganger = nil;
 	ShipEntity		*escapePod = nil;
-	OOUniversalID	result = NO_TARGET;
 	
 	if ([UNIVERSE displayGUI]) [self switchToMainView];	// Clear the F7 screen!
 	[UNIVERSE setViewDirection:VIEW_FORWARD];
@@ -3528,8 +3531,6 @@ static bool minShieldLevelPercentageInitialised = false;
 		[doppelganger setRoll:0.2 * (randf() - 0.5)];
 		[doppelganger setOwner:self];
 		[UNIVERSE addEntity:doppelganger];
-		
-		result = [doppelganger universalID];
 	}
 	
 	// set up you
@@ -3552,7 +3553,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	// set up the standard location where the escape pod will dock.
 	target_system_seed = system_seed;			// we're staying in this system
-	[self setDockTarget:[UNIVERSE station]];	// we're docking at the main station, if there is one
+	[self setEscapePodDestination:[UNIVERSE station]];	// we're docking at the main station, if there is one
 	
 	[self doScriptEvent:OOJSID("shipLaunchedEscapePod") withArgument:escapePod];	// no player.ship properties should be available to script
 	
@@ -3577,9 +3578,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	port_shot_time = 0.0;
 	starboard_shot_time = 0.0;
 	
-	[escapePod release];
-	
-	return result;
+	return [escapePod autorelease];
 }
 
 
@@ -7518,11 +7517,10 @@ static NSString *last_outfitting_key=nil;
 }
 
 
-- (void) setDockTarget:(ShipEntity *)entity
+- (void) setEscapePodDestination:(ShipEntity *)entity
 {
-if ([entity isStation]) _dockTarget = [entity universalID];
-else _dockTarget = NO_TARGET;
-	//_dockTarget = [entity isStation] ? [entity universalID]: NO_TARGET;
+	DESTROY(_escapePodDestination);
+	_escapePodDestination = [entity weakRetain];
 }
 
 

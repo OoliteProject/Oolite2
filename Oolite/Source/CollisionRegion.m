@@ -548,43 +548,45 @@ static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_
 		if ([e1 status] == STATUS_COCKPIT_DISPLAY)
 		{
 			e1->isSunlit = YES;
-			e1->shadingEntityID = NO_TARGET;
+			DESTROY(e1->_shadingEntity);
 			continue;	// don't check shading in demo mode
 		}
 		if (e1->isSunlit == NO)
 		{
-			Entity* occluder = [UNIVERSE entityForUniversalID:e1->shadingEntityID];
+			Entity* occluder = [e1->_shadingEntity weakRefUnderlyingObject];
 			if (occluder)
+			{
 				occluder_moved = occluder->hasMoved;
+			}
+			else
+			{
+				DESTROY(e1->_shadingEntity);
+			}
 		}
-		if (([e1 isShip] ||[e1 isPlanet]) && (e1->hasMoved || occluder_moved))
+		if (([e1 isShip] || [e1 isPlanet]) && (e1->hasMoved || occluder_moved))
 		{
-			e1->isSunlit = YES;				// sunlit by default
-			e1->shadingEntityID = NO_TARGET;
-			//
-			// check demo mode here..
-			if ([e1 isPlayer] && ([(PlayerEntity*)e1 showDemoShips]))
-				continue;	// don't check shading in demo mode
-			//
-			//	test planets
-			//
+			e1->isSunlit = YES;				// Sunlit by default.
+			DESTROY(e1->_shadingEntity);
+			
+			if ([e1 isPlayer] && [PLAYER showDemoShips])  continue;	// Don't check shading in demo mode.
+			
+			//	Test planets.
 			for (j = 0; j < n_planets; j++)
 			{
 				if (testEntityOccludedByEntity(e1, planets[j], the_sun))
 				{
 					e1->isSunlit = NO;
-					e1->shadingEntityID = [planets[j] universalID];
+					e1->_shadingEntity = [planets[j] weakRetain];
 				}
 			}
-			//
-			// test local entities
-			//
+			
+			// Test local entities.
 			for (j = i + 1; j < n_entities; j++)
 			{
 				if (testEntityOccludedByEntity(e1, entity_array[j], the_sun))
 				{
 					e1->isSunlit = NO;
-					e1->shadingEntityID = [entity_array[j] universalID];
+					e1->_shadingEntity = [entity_array[j] weakRetain];
 				}
 			}
 		}

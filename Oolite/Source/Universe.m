@@ -3664,7 +3664,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 		
 		// lighting considerations
 		entity->isSunlit = YES;
-		entity->shadingEntityID = NO_TARGET;
+		DESTROY(entity->_shadingEntity);
 		
 		// add it to the universe
 		[entities addObject:entity];

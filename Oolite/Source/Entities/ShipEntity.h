@@ -873,7 +873,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (BOOL) activateCloakingDevice;
 - (void) deactivateCloakingDevice;
 - (BOOL) launchCascadeMine;
-- (OOUniversalID) launchEscapeCapsule;
+- (ShipEntity *) launchEscapeCapsule;
 - (OOCargoType) dumpCargo;
 - (ShipEntity *) dumpCargoItem;
 - (OOCargoType) dumpItem: (ShipEntity*) jetto;

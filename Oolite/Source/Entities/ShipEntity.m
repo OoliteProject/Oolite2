@@ -7980,9 +7980,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (OOUniversalID)launchEscapeCapsule
+- (ShipEntity *) launchEscapeCapsule
 {
-	OOUniversalID		result = NO_TARGET;
 	ShipEntity			*mainPod = nil;
 	unsigned			n_pods, i;
 	
@@ -8005,7 +8004,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		mainPod = [self launchPodWithCrew:crew];
 		if (mainPod)
 		{
-			result = [mainPod universalID];
 			[self setCrew:nil];
 			[self setHulk:YES]; //CmdrJames experiment with fixing ejection behaviour
 		}
@@ -8019,9 +8017,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	}
 	
 	// EMMSTRAN: provide array of secondary pods.
-	if (mainPod) [self doScriptEvent:OOJSID("shipLaunchedEscapePod") withArgument:mainPod];
+	if (mainPod != nil)  [self doScriptEvent:OOJSID("shipLaunchedEscapePod") withArgument:mainPod];
 	
-	return result;
+	return mainPod;
 }
 
 

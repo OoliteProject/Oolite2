@@ -75,7 +75,7 @@ typedef enum
 							hasNPCTraffic: 1;
 	BOOL					hasPatrolShips;
 	
-	OOUniversalID			planet;
+	OOWeakReference			*_planet;
 	
 	NSMutableArray			*localMarket;
 	NSMutableArray			*localPassengers;

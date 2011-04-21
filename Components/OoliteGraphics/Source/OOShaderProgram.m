@@ -110,11 +110,15 @@ static NSString *LoadOneShader(NSString *name, id <OOFileResolving> resolver, id
 	OO_ENTER_OPENGL();
 	
 #ifndef NDEBUG
+	OOAssertGraphicsContext(_context);
+	
 	if (EXPECT_NOT([OOCurrentGraphicsContext() currentShaderProgram] == self))
 	{
 		OOLog(@"shader.dealloc.imbalance", @"***** OOShaderProgram deallocated while active, indicating a retain/release imbalance. Expect imminent crash.");
 		[OOShaderProgram applyNone];
 	}
+	DESTROY(_context);
+	
 	DESTROY(_description);
 #endif
 	
@@ -132,11 +136,11 @@ static NSString *LoadOneShader(NSString *name, id <OOFileResolving> resolver, id
 #endif
 
 
-- (void)apply
+- (void) apply
 {
-	OOGraphicsContext *context = OOCurrentGraphicsContext();
-	NSAssert(context != nil, @"Can't apply material with no graphics context.");
+	OOAssertGraphicsContext(_context);
 	
+	OOGraphicsContext *context = OOCurrentGraphicsContext();
 	if ([context currentShaderProgram] != self)
 	{
 		OO_ENTER_OPENGL();
@@ -146,12 +150,10 @@ static NSString *LoadOneShader(NSString *name, id <OOFileResolving> resolver, id
 }
 
 
-+ (void)applyNone
++ (void) applyNone
 {
 	OOGraphicsContext *context = OOCurrentGraphicsContext();
-	NSAssert(context != nil, @"Can't apply material with no graphics context.");
-	
-	if ([context currentShaderProgram] != self)
+	if ([context currentShaderProgram] != nil)
 	{
 		OO_ENTER_OPENGL();
 		OOGL(glUseProgram(0));
@@ -177,6 +179,11 @@ static NSString *LoadOneShader(NSString *name, id <OOFileResolving> resolver, id
 	const GLchar			*sourceStrings[2] = { "", NULL };
 	GLuint					vertexShader = 0;
 	GLuint					fragmentShader = 0;
+	
+#ifndef NDEBUG
+	_context = [OOCurrentGraphicsContext() retain];
+	NSAssert(_context != nil, @"Can't create shader with no graphics context.");
+#endif
 	
 	OO_ENTER_OPENGL();
 	

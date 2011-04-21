@@ -30,6 +30,8 @@ SOFTWARE.
 
 #import "OOTexture.h"
 
+@class OOGraphicsContext;
+
 
 #define OOTEXTURE_RELOADABLE		1
 
@@ -37,6 +39,11 @@ SOFTWARE.
 @interface OOConcreteTexture: OOTexture
 {
 @private
+#ifndef NDEBUG
+	OOGraphicsContext		*_context;
+	NSString				*_name;
+#endif
+	
 #if OOTEXTURE_RELOADABLE
 	NSString				*_path;
 #endif
@@ -67,10 +74,6 @@ SOFTWARE.
 #endif
 #if GL_EXT_texture_filter_anisotropic
 	float					_anisotropy;
-#endif
-	
-#ifndef NDEBUG
-	NSString				*_name;
 #endif
 }
 

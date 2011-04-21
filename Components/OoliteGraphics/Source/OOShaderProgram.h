@@ -33,13 +33,17 @@ SOFTWARE.
 #import <Foundation/Foundation.h>
 #import "OOOpenGL.h"
 
+@class OOGraphicsContext;
+
 
 @interface OOShaderProgram: NSObject
 {
-	GLuint							_program;
+@private
+	GLuint						_program;
 	
 #ifndef NDEBUG
-	NSString						*_description;
+	OOGraphicsContext			*_context;
+	NSString					*_description;
 #endif
 }
 

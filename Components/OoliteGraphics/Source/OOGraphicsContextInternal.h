@@ -49,3 +49,19 @@ OOINLINE OOGraphicsContext *OOCurrentGraphicsContext(void)
 - (void) setCurrentShaderProgram:(OOShaderProgram *)shaderProgram;
 
 @end
+
+/*
+	OOAssertGraphicsContext(expectedContext)
+	Assert that the current graphics context is non-nil and is shared with
+	expectedContext.
+	See comment at -isSharingWithContext: in OOGraphicsContext.h.
+*/
+#ifndef NDEBUG
+#define OOAssertGraphicsContext(expectedContext)  do { \
+	OOGraphicsContext *currentContext = OOCurrentGraphicsContext(); \
+	NSCAssert(currentContext != nil && [currentContext isSharingWithContext:expectedContext], @"Incompatible graphics context."); \
+} while (0)
+#else
+#define OOAssertGraphicsContext(expectedContext)  do {} while (0)
+#endif
+

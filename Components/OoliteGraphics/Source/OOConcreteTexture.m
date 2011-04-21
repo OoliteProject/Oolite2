@@ -27,6 +27,7 @@
 #import "OOTextureInternal.h"
 #import "OOConcreteTexture.h"
 #import "OOOpenGLUtilities.h"
+#import "OOGraphicsContextInternal.h"
 
 #import "OOTextureLoader.h"
 
@@ -95,6 +96,9 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #endif
 	
 #ifndef NDEBUG
+	_context = [OOCurrentGraphicsContext() retain];
+	NSAssert(_context != nil, @"Can't create texture with no graphics context.");
+	
 	if ([loader isKindOfClass:[OOTextureGenerator class]])
 	{
 		_name = [[NSString alloc] initWithFormat:@"<%@>", [loader class]];
@@ -132,6 +136,9 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 {
 #ifndef NDEBUG
 	OOLog(_trace ? @"texture.allocTrace.dealloc" : @"texture.dealloc", @"Deallocating and uncaching texture %p", self);
+	
+	OOAssertGraphicsContext(_context);
+	DESTROY(_context);
 #endif
 	
 #if OOTEXTURE_RELOADABLE
@@ -216,6 +223,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (void)apply
 {
+	OOAssertGraphicsContext(_context);
+	
 	OO_ENTER_OPENGL();
 	
 	if (EXPECT_NOT(!_loaded))  [self setUpTexture];
@@ -266,6 +275,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (struct OOPixMap) copyPixMapRepresentation
 {
+	OOAssertGraphicsContext(_context);
+	
 	[self ensureFinishedLoading];
 	
 	OOPixMap				px = kOONullPixMap;
@@ -421,6 +432,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	GLint					filter;
 	BOOL					mipMap = NO;
 	
+	OOAssertGraphicsContext(_context);
+	
 	OO_ENTER_OPENGL();
 	
 	if (!_uploaded)
@@ -512,6 +525,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	char					*bytes = _bytes;
 	uint8_t					components = OOTextureComponentsForFormat(format);
 	
+	OOAssertGraphicsContext(_context);
+	
 	OO_ENTER_OPENGL();
 	
 	if (!DecodeFormat(format, _options, &glFormat, &internalFormat, &type))  return;
@@ -534,6 +549,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #if OO_TEXTURE_CUBE_MAP
 - (void) uploadTextureCubeMapDataWithMipMap:(BOOL)mipMap format:(OOTextureDataFormat)format
 {
+	OOAssertGraphicsContext(_context);
+	
 	OO_ENTER_OPENGL();
 	
 	GLenum glFormat = 0, internalFormat = 0, type = 0;
@@ -585,6 +602,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 {
 	if (_loaded && _uploaded && _valid)
 	{
+		OOAssertGraphicsContext(_context);
+		
 		OO_ENTER_OPENGL();
 		
 		_uploaded = NO;

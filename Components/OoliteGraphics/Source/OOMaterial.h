@@ -30,12 +30,16 @@ SOFTWARE.
 
 #import <OoliteBase/OoliteBase.h>
 
-@class OOMaterialSpecification, OORenderMesh, OOShaderProgram, OOTexture;
+@class OOGraphicsContext, OOMaterialSpecification, OORenderMesh, OOShaderProgram, OOTexture;
 
 
 @interface OOMaterial: NSObject
 {
 @private
+#ifndef NDEBUG
+	OOGraphicsContext			*_context;
+#endif
+	
 	NSString					*_name;
 	
 	OOShaderProgram				*_shaderProgram;

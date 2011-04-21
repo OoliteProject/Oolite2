@@ -65,6 +65,9 @@ static NSString *MacrosToString(NSDictionary *macros);
 	
 	OOGraphicsContext		*context = OOCurrentGraphicsContext();
 	NSAssert(context != nil, @"Can't create material with no graphics context.");
+#ifndef NDEBUG
+	_context = [context retain];
+#endif
 	
 	BOOL					OK = YES;
 	NSString				*macroString = nil;
@@ -121,12 +124,17 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void) dealloc
 {
-	OOGraphicsContext *context = OOCurrentGraphicsContext();
-	if ([context currentMaterial] == self)
+#ifndef NDEBUG
+	OOAssertGraphicsContext(_context);
+	
+	if ([OOCurrentGraphicsContext() currentMaterial] == self)
 	{
 		OOLogERR(@"material.dealloc.imbalance", @"Material deallocated while active, indicating a retain/release imbalance.");
 		[[self class] applyNone];
 	}
+	
+	DESTROY(_context);
+#endif
 	
 	DESTROY(_name);
 	DESTROY(_shaderProgram);
@@ -160,9 +168,9 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void) apply
 {
-	OOGraphicsContext *context = OOCurrentGraphicsContext();
-	NSAssert(context != nil, @"Can't apply material with no graphics context.");
+	OOAssertGraphicsContext(_context);
 	
+	OOGraphicsContext *context = OOCurrentGraphicsContext();
 	OOMaterial *current = [context currentMaterial];
 	if (current != self)
 	{
@@ -182,8 +190,6 @@ static NSString *MacrosToString(NSDictionary *macros);
 + (void) applyNone
 {
 	OOGraphicsContext *context = OOCurrentGraphicsContext();
-	NSAssert(context != nil, @"Can't apply material with no graphics context.");
-	
 	[[context currentMaterial] unapplyWithNext:nil];
 	[context setCurrentMaterial:nil];
 	[OOShaderProgram applyNone];
@@ -192,6 +198,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (BOOL) doApply
 {
+	OOAssertGraphicsContext(_context);
+	
 	[_shaderProgram apply];
 	
 	if (_textures != NULL)
@@ -211,6 +219,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void)unapplyWithNext:(OOMaterial *)next
 {
+	OOAssertGraphicsContext(_context);
+	
 	// Probably not needed now with all materials being shader materials.
 }
 

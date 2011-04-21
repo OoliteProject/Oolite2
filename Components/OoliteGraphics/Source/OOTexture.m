@@ -48,31 +48,15 @@ OOTextureInfo				gOOTextureInfo;
 
 + (void)checkExtensions;
 
-#ifndef NDEBUG
-- (id) retainInContext:(NSString *)context;
-- (void) releaseInContext:(NSString *)context;
-- (id) autoreleaseInContext:(NSString *)context;
-#endif
-
 @end
-
-
-#ifndef NDEBUG
-static NSString *sGlobalTraceContext = nil;
-
-#define SET_TRACE_CONTEXT(str) do { sGlobalTraceContext = (str); } while (0)
-#else
-#define SET_TRACE_CONTEXT(str) do { } while (0)
-#endif
-#define CLEAR_TRACE_CONTEXT() SET_TRACE_CONTEXT(nil)
 
 
 @implementation OOTexture
 
-+ (id)textureFromFile:(NSString *)path
-			  options:(uint32_t)options
-		   anisotropy:(GLfloat)anisotropy
-			  lodBias:(GLfloat)lodBias
++ (id) textureFromFile:(NSString *)path
+			   options:(uint32_t)options
+			anisotropy:(GLfloat)anisotropy
+			   lodBias:(GLfloat)lodBias
 {
 	if (EXPECT_NOT(path == nil))  return nil;
 	if (EXPECT_NOT(!sCheckedExtensions))  [self checkExtensions];
@@ -249,62 +233,6 @@ static NSString *sGlobalTraceContext = nil;
 	}
 #endif
 }
-
-
-#ifndef NDEBUG
-- (id) retainInContext:(NSString *)context
-{
-	if (_trace)
-	{
-		if (context)  OOLog(@"texture.allocTrace.retain", @"Texture %p retained (retain count -> %u) - %@.", self, [self retainCount] + 1, context);
-		else  OOLog(@"texture.allocTrace.retain", @"Texture %p retained.", self, [self retainCount] + 1);
-	}
-	
-	return [super retain];
-}
-
-
-- (void) releaseInContext:(NSString *)context
-{
-	if (_trace)
-	{
-		if (context)  OOLog(@"texture.allocTrace.release", @"Texture %p released (retain count -> %u) - %@.", self, [self retainCount] - 1, context);
-		else  OOLog(@"texture.allocTrace.release", @"Texture %p released (retain count -> %u).", self, [self retainCount] - 1);
-	}
-	
-	[super release];
-}
-
-
-- (id) autoreleaseInContext:(NSString *)context
-{
-	if (_trace)
-	{
-		if (context)  OOLog(@"texture.allocTrace.autoreleased", @"Texture %p autoreleased - %@.", self, context);
-		else  OOLog(@"texture.allocTrace.autoreleased", @"Texture %p autoreleased.", self);
-	}
-	
-	return [super autorelease];
-}
-
-
-- (id) retain
-{
-	return [self retainInContext:sGlobalTraceContext];
-}
-
-
-- (void) release
-{
-	[self releaseInContext:sGlobalTraceContext];
-}
-
-
-- (id) autorelease
-{
-	return [self autoreleaseInContext:sGlobalTraceContext];
-}
-#endif
 
 @end
 

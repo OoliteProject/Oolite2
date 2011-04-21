@@ -68,6 +68,15 @@ SOFTWARE.
 + (id) currentContext;
 - (void) makeCurrent;
 
+/*
+	-isSharingWithContext:
+	Test whether resources from context A can be used in context B.
+	This is obviously true if A == B, but can be true in other cases on an
+	OS-dependant basis; for instance, under Mac OS X, this comparse CGL
+	“share groups”.
+*/
+- (BOOL) isSharingWithContext:(OOGraphicsContext *)other;
+
 // OpenGL version.
 - (NSUInteger) majorGLVersionNumber;
 - (NSUInteger) minorGLVersionNumber;
@@ -94,7 +103,8 @@ SOFTWARE.
 
 - (NSUInteger) textureImageUnitCount;
 
-/*	-reset
+/*
+	-reset
 	Rebuild the context on top of the current OpenGL context. This is necessary
 	to deal with state changes in SDL builds. Under Mac OS X, it is an error
 	to call -reset on a context associated with an NSOpenGLContext.

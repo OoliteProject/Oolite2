@@ -27,6 +27,10 @@ SOFTWARE.
 
 #import "OOGraphicsContextInternal.h"
 
+#if OOLITE_MAC_OS_X
+#import <OpenGL/CGLDevice.h>
+#endif
+
 
 OOGraphicsContext *gOOCurrentGraphicsContext = nil;
 
@@ -157,6 +161,29 @@ NSString * const kOOGraphicsContextDidResetNotification = @"org.oolite OOGraphic
 #if OOLITE_MAC_OS_X
 	[_nsContext makeCurrentContext];
 #endif
+}
+
+
+- (BOOL) isSharingWithContext:(OOGraphicsContext *)other
+{
+	if (self == other)  return YES;
+	
+#if OOLITE_MAC_OS_X
+	if (_nsContext == nil || other->_nsContext == nil)
+	{
+		return NO;
+	}
+	if (_nsContext == other->_nsContext)
+	{
+		return YES;
+	}
+	if (CGLGetShareGroup([_nsContext CGLContextObj]) == CGLGetShareGroup([_nsContext CGLContextObj]))
+	{
+		return YES;
+	}
+#endif
+	
+	return NO;
 }
 
 

@@ -175,7 +175,6 @@ typedef enum
 	
 	// variables which are controlled by instincts/AI
 	Vector					destination;				// for flying to/from a set point
-	OOUniversalID			primaryTarget;				// for combat or rendezvous
 	GLfloat					desired_range;				// range to which to journey/scan
 	GLfloat					desired_speed;				// speed at which to travel
 	OOBehaviour				behaviour;					// ship's behavioural state
@@ -183,6 +182,8 @@ typedef enum
 	OOBoundingBox			totalBoundingBox;			// records ship configuration
 	
 @protected
+	OOWeakReference			*_primaryTarget;			// for combat or rendezvous
+	
 	Quaternion				subentityRotationalVelocity;
 	
 	//scripting
@@ -809,11 +810,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (ShipEntity**) scannedShips;
 - (int) numberOfScannedShips;
 
-- (void) setFound_target:(Entity *) targetEntity;
-- (void) setPrimaryAggressor:(Entity *) targetEntity;
-- (void) setTargetStation:(Entity *) targetEntity;
-- (void) addTarget:(Entity *) targetEntity;
-- (void) removeTarget:(Entity *) targetEntity;
+- (void) setFound_target:(Entity *)targetEntity;
+- (id) primaryAggressor;
+- (void) setPrimaryAggressor:(Entity *)targetEntity;
+- (void) setTargetStation:(Entity *)targetEntity;
+- (void) addTarget:(Entity *)targetEntity;
+- (void) addTargetByID:(OOUniversalID)uID DEPRECATED_FUNC;
+- (void) removeTarget:(Entity *)targetEntity;
 - (id) primaryTarget;
 - (OOUniversalID) primaryTargetID;
 
@@ -895,8 +898,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) enterDock:(StationEntity *)station;
 - (void) leaveDock:(StationEntity *)station;
 
-- (void) enterWormhole:(WormholeEntity *) w_hole;
-- (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing;
+- (void) enterWormhole:(WormholeEntity *) wormhole replacing:(BOOL)replacing;
 - (void) enterWitchspace;
 - (void) leaveWitchspace;
 - (void) witchspaceLeavingEffects;

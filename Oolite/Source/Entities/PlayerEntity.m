@@ -826,7 +826,7 @@ static GLfloat		sBaseMass = 0.0;
 		missile_entity[i] = [UNIVERSE newShipWithRole:@"EQ_MISSILE"];   // retain count = 1
 	}
 	
-	primaryTarget = NO_TARGET;
+	DESTROY(_primaryTarget);
 	[self safeAllMissiles];
 	[self setActiveMissile:0];
 	
@@ -1382,11 +1382,11 @@ static bool minShieldLevelPercentageInitialised = false;
 			[[UNIVERSE planet] update: 2.34375 * market_rnd];	// from 0..10 minutes
 			[[UNIVERSE station] update: 2.34375 * market_rnd];	// from 0..10 minutes
 		}
-		Entity *escapePodDestination = [_escapePodDestination weakRefUnderlyingObject];
-		primaryTarget = (escapePodDestination != nil) ? [escapePodDestination universalID] : NO_TARGET;	// main station in the original system, unless overridden.
+		[_primaryTarget release];
+		_primaryTarget = [_escapePodDestination weakRetain];	// main station in the original system, unless overridden.
 		
 		[UNIVERSE setBlockJSPlayerShipProps:NO];	// re-enable player.ship!
-		if ([escapePodDestination isStation])
+		if ([[self primaryTarget] isStation])
 		{
 			[doppelganger becomeExplosion];	// blow up the doppelganger
 			// restore player ship
@@ -1639,7 +1639,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	}
 		
 	targetStation = [stationForDocking universalID];
-	primaryTarget = NO_TARGET;
+	DESTROY(_primaryTarget);
 	autopilot_engaged = YES;
 	ident_engaged = NO;
 	[self safeAllMissiles];
@@ -1670,7 +1670,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		behaviour = BEHAVIOUR_IDLE;
 		frustration = 0.0;
 		autopilot_engaged = NO;
-		primaryTarget = NO_TARGET;
+		DESTROY(_primaryTarget);
 		targetStation = NO_TARGET;
 		[self setStatus:STATUS_IN_FLIGHT];
 		[self playAutopilotOff];
@@ -1937,7 +1937,7 @@ static bool minShieldLevelPercentageInitialised = false;
 				suppressTargetLost = NO;
 			}
 
-			primaryTarget = NO_TARGET;
+			DESTROY(_primaryTarget);
 		}
 	}
 
@@ -1957,7 +1957,7 @@ static bool minShieldLevelPercentageInitialised = false;
 				if (i == activeMissile)
 				{
 					[self noteLostTarget];
-					primaryTarget = NO_TARGET;
+					DESTROY(_primaryTarget);
 					missile_status = MISSILE_STATUS_ARMED;
 				}
 			}
@@ -2717,7 +2717,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 - (NSString *) dialTargetName
 {
-	Entity		*target_entity = [UNIVERSE entityForUniversalID:primaryTarget];
+	Entity		*target_entity = [self primaryTarget];
 	NSString	*result = nil;
 	
 	if (target_entity == nil)
@@ -2817,7 +2817,7 @@ static bool minShieldLevelPercentageInitialised = false;
 						if([self hasEquipmentItem:@"EQ_MULTI_TARGET"])
 						{
 							[self noteLostTarget];
-							primaryTarget = NO_TARGET;
+							DESTROY(_primaryTarget);
 						}
 						else
 						{
@@ -2915,7 +2915,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[UNIVERSE addMessage:DESC(@"autopilot-denied") forCount:4.5];
 		autopilot_engaged = NO;
 		[self resetAutopilotAI];
-		primaryTarget = NO_TARGET;
+		DESTROY(_primaryTarget);
 		[self setStatus:STATUS_IN_FLIGHT];
 		[[OOMusicController sharedController] stopDockingMusic];
 		[self doScriptEvent:OOJSID("playerDockingRefused")];
@@ -3867,7 +3867,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	hyperspeed_engaged = NO;
 	hyperspeed_locked = NO;
 	[self safeAllMissiles];
-	primaryTarget = NO_TARGET; // must happen before showing break_pattern to supress active reticule.
+	DESTROY(_primaryTarget); // must happen before showing break_pattern to supress active reticule.
 	[self clearTargetMemory];
 	
 	[hud setScannerZoom:1.0];
@@ -4049,10 +4049,10 @@ static bool minShieldLevelPercentageInitialised = false;
 	suppressAegisMessages=YES;
 	hyperspeed_engaged = NO;
 	
-	if (primaryTarget != NO_TARGET)
+	if ([self primaryTarget] != nil)
 	{
 		[self noteLostTarget];	// losing target? Fire lost target event!
-		primaryTarget = NO_TARGET;
+		DESTROY(_primaryTarget);
 	}
 	
 	[hud setScannerZoom:1.0];
@@ -4268,7 +4268,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 // now with added misjump goodness!
 // If the wormhole generator misjumped, the player's ship misjumps too. Kaks 20110211
-- (void) enterWormhole:(WormholeEntity *) w_hole
+- (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing
 {
 	BOOL misjump = [self scriptedMisjump] || [w_hole withMisjump] || flightPitch == max_flight_pitch || randf() > 0.995;
 	wormhole = [w_hole retain];
@@ -7102,6 +7102,8 @@ static NSString *last_outfitting_key=nil;
 	
 	if ([self hasEquipmentItem:@"EQ_TARGET_MEMORY"])
 	{
+		OOUniversalID primaryTarget = [self primaryTargetID];
+		
 		int i = 0;
 		BOOL foundSlot = NO;
 		// if targeted previously use that memory space

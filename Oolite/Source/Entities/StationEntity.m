@@ -1665,7 +1665,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 // Exposed to AI
 - (NSArray *) launchPolice
 {
-	OOUniversalID	police_target = primaryTarget;
+	OOUniversalID	police_target = [self primaryTargetID];
 	unsigned		i;
 	NSMutableArray	*result = nil;
 	OOTechLevelID	techlevel = [self equivalentTechLevel];
@@ -1720,7 +1720,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 // Exposed to AI
 - (ShipEntity *) launchDefenseShip
 {
-	OOUniversalID	defense_target = primaryTarget;
+	OOUniversalID	defense_target = [self primaryTargetID];
 	ShipEntity	*defense_ship = nil;
 	NSString	*defense_ship_key = nil,
 				*defense_ship_role = nil,
@@ -1864,7 +1864,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 - (ShipEntity *) launchPirateShip
 {
 	//Pirate ships are launched from the same pool as defence ships.
-	OOUniversalID	defense_target = primaryTarget;
+	OOUniversalID	defense_target = [self primaryTargetID];
 	ShipEntity		*pirate_ship = nil;
 	
 	if (defenders_launched >= max_defense_ships)  return nil;   // shuttles are to rockhermits what police ships are to stations

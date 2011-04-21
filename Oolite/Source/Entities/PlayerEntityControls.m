@@ -838,8 +838,8 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 						// Clear current target if we're already in Ident mode
 						if (ident_engaged)
 						{
-							if (primaryTarget != NO_TARGET) [self noteLostTarget];
-							primaryTarget = NO_TARGET;
+							if ([self primaryTarget] != nil) [self noteLostTarget];
+							DESTROY(_primaryTarget);
 						}
 						[self safeAllMissiles];
 						ident_engaged = YES;
@@ -943,7 +943,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 						// Clear current target if we're already in Missile Targeting mode
 						if (missile_status != MISSILE_STATUS_SAFE)
 						{
-							primaryTarget = NO_TARGET;
+							DESTROY(_primaryTarget);
 						}
 
 						// Arm missile and check for missile lock
@@ -983,8 +983,8 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 					if (!safety_pressed)
 					{
 						//targeting off in both cases!
-						if (primaryTarget != NO_TARGET) [self noteLostTarget];
-						primaryTarget = NO_TARGET;
+						if ([self primaryTarget] != nil) [self noteLostTarget];
+						DESTROY(_primaryTarget);
 						[self safeAllMissiles];
 						if (!ident_engaged)
 						{

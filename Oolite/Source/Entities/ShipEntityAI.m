@@ -445,19 +445,19 @@ MA 02110-1301, USA.
 
 - (void) setTargetToPrimaryAggressor
 {
-	if (![UNIVERSE entityForUniversalID:primaryAggressor])
-		return;
-	if (primaryTarget == primaryAggressor)
-		return;
+	Entity *aggressor = [self primaryAggressor];
+	if (aggressor == nil)  return;
+	
+	Entity *primaryTarget = [self primaryTarget];
+	if (primaryTarget == aggressor)  return;
 		
-	// a more considered approach here:
-	// if we're already busy attacking a target we don't necessarily want to break off
-	//
+	// A more considered approach here:
+	// if we're already busy attacking a target we don't necessarily want to break off.
 	switch (behaviour)
 	{
 		case BEHAVIOUR_ATTACK_FLY_FROM_TARGET:
 		case BEHAVIOUR_ATTACK_FLY_TO_TARGET:
-			if (randf() < 0.75)	// if I'm attacking, ignore 75% of new aggressor's attacks
+			if (randf() < 0.75)	// If I'm attacking, ignore 75% of new aggressor's attacks.
 				return;
 			break;
 		
@@ -465,17 +465,14 @@ MA 02110-1301, USA.
 			break;
 	}
 	
-	// inform our old target of our new target
-	//
-	Entity *primeTarget = [UNIVERSE entityForUniversalID:primaryTarget];
-	if ((primeTarget)&&(primeTarget->isShip))
+	// Inform our old target of our new target.
+	if ([primaryTarget isShip])
 	{
-		ShipEntity *currentShip = [UNIVERSE entityForUniversalID:primaryTarget];
-		[[currentShip getAI] message:[NSString stringWithFormat:@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, universalID, primaryAggressor]];
+		[[(ShipEntity *)primaryTarget getAI] message:[NSString stringWithFormat:@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, universalID, primaryAggressor]];
 	}
 	
 	// okay, so let's now target the aggressor
-	[self addTarget:[UNIVERSE entityForUniversalID:primaryAggressor]];
+	[self addTarget:aggressor];
 }
 
 
@@ -879,7 +876,7 @@ MA 02110-1301, USA.
 
 - (void) checkTargetLegalStatus
 {
-	ShipEntity  *other_ship = [UNIVERSE entityForUniversalID:primaryTarget];
+	ShipEntity  *other_ship = [self primaryTarget];
 	if (!other_ship)
 	{
 		[shipAI message:@"NO_TARGET"];
@@ -944,7 +941,7 @@ MA 02110-1301, USA.
 
 - (void) setDestinationToTarget
 {
-	Entity *the_target = [UNIVERSE entityForUniversalID:primaryTarget];
+	Entity *the_target = [self primaryTarget];
 	if (the_target)
 		destination = the_target->position;
 }
@@ -952,7 +949,7 @@ MA 02110-1301, USA.
 
 - (void) setDestinationWithinTarget
 {
-	Entity *the_target = [UNIVERSE entityForUniversalID:primaryTarget];
+	Entity *the_target = [self primaryTarget];
 	if (the_target)
 	{
 		Vector pos = the_target->position;
@@ -1351,7 +1348,7 @@ MA 02110-1301, USA.
 	scanClass = CLASS_CARGO;
 	reportAIMessages = NO;
 	[shipAI setStateMachine:@"dumbAI.plist"];
-	primaryTarget = NO_TARGET;
+	DESTROY(_primaryTarget);
 	[self setSpeed: 0.0];
 	[self setGroup:nil];
 }
@@ -1375,7 +1372,7 @@ MA 02110-1301, USA.
 		}
 		
 		primaryAggressor = found_target;
-		primaryTarget = found_target;
+		[self addTargetByID:found_target];
 		[self deployEscorts];
 		[shipAI message:@"DEPLOYING_ESCORTS"];
 		[shipAI message:@"FLEEING"];
@@ -1388,7 +1385,7 @@ MA 02110-1301, USA.
 		if (randf() < 0.50)
 		{
 			primaryAggressor = found_target;
-			primaryTarget = found_target;
+			[self addTargetByID:found_target];
 			[self fireMissile];
 			[shipAI message:@"FLEEING"];
 			return;
@@ -1410,7 +1407,7 @@ MA 02110-1301, USA.
 
 - (void) suggestEscort
 {
-	ShipEntity   *mother = [UNIVERSE entityForUniversalID:primaryTarget];
+	ShipEntity   *mother = [self primaryTarget];
 	if (mother)
 	{
 #ifndef NDEBUG
@@ -1503,11 +1500,11 @@ MA 02110-1301, USA.
 	NSEnumerator		*shipEnum = nil;
 	ShipEntity			*target = nil, *ship = nil;
 	
-	if (primaryTarget == NO_TARGET) return;
+	if ([self primaryTarget] == nil) return;
 	
 	if ([self group] == nil)		// ship is alone!
 	{
-		found_target = primaryTarget;
+		found_target = [self primaryTargetID];
 		[shipAI reactToMessage:@"GROUP_ATTACK_TARGET" context:@"groupAttackTarget"];
 		return;
 	}
@@ -2162,8 +2159,9 @@ MA 02110-1301, USA.
 		desired_range = [dockingInstructions oo_floatForKey:@"range"];
 		if ([dockingInstructions objectForKey:@"station_id"])
 		{
-			primaryTarget = [dockingInstructions oo_intForKey:@"station_id"];
-			targetStation = primaryTarget;
+			targetStation = [dockingInstructions oo_intForKey:@"station_id"];
+			if (targetStation != NO_TARGET)  [self addTargetByID:targetStation];
+			else  [self removeTarget:[self primaryTarget]];
 		}
 		docking_match_rotation = [dockingInstructions oo_boolForKey:@"match_rotation"];
 	}
@@ -2175,10 +2173,12 @@ MA 02110-1301, USA.
 	[self setFuel:[self fuel] + [fuel_number intValue] * 10];
 }
 
+
 - (void) enterPlayerWormhole
 {
 	[self enterWormhole:[PLAYER wormhole] replacing:NO];
 }
+
 
 - (void) enterTargetWormhole
 {
@@ -2251,23 +2251,25 @@ MA 02110-1301, USA.
 // racing code TODO
 - (void) targetFirstBeaconWithCode:(NSString*) code
 {
-	NSArray			*all_beacons = [UNIVERSE listBeaconsWithCode: code];
-	if ([all_beacons count])
+	NSArray *beacons = [UNIVERSE listBeaconsWithCode: code];
+	if ([beacons count] > 0)
 	{
-		primaryTarget = [(ShipEntity*)[all_beacons objectAtIndex:0] universalID];
+		[self addTarget:[beacons objectAtIndex:0]];
 		[shipAI message:@"TARGET_FOUND"];
 	}
 	else
+	{
 		[shipAI message:@"NOTHING_FOUND"];
+	}
 }
 
 
 - (void) targetNextBeaconWithCode:(NSString*) code
 {
-	NSArray			*all_beacons = [UNIVERSE listBeaconsWithCode: code];
-	ShipEntity		*current_beacon = [UNIVERSE entityForUniversalID:primaryTarget];
+	NSArray			*beacons = [UNIVERSE listBeaconsWithCode: code];
+	ShipEntity		*currentBeacon = [self primaryTarget];
 	
-	if ((!current_beacon)||(![current_beacon isBeacon]))
+	if (![currentBeacon isBeacon])
 	{
 		[shipAI message:@"NO_CURRENT_BEACON"];
 		[shipAI message:@"NOTHING_FOUND"];
@@ -2275,7 +2277,7 @@ MA 02110-1301, USA.
 	}
 	
 	// find the current beacon in the list..
-	OOUInteger i = [all_beacons indexOfObject:current_beacon];
+	OOUInteger i = [beacons indexOfObject:currentBeacon];
 	
 	if (i == NSNotFound)
 	{
@@ -2285,10 +2287,10 @@ MA 02110-1301, USA.
 	
 	i++;	// next index
 	
-	if (i < [all_beacons count])
+	if (i < [beacons count])
 	{
 		// locate current target in list
-		primaryTarget = [(ShipEntity*)[all_beacons objectAtIndex:i] universalID];
+		[self addTarget:[beacons objectAtIndex:i]];
 		[shipAI message:@"TARGET_FOUND"];
 	}
 	else
@@ -2302,7 +2304,7 @@ MA 02110-1301, USA.
 - (void) setRacepointsFromTarget
 {
 	// two point - one at z - cr one at z + cr
-	ShipEntity *ship = [UNIVERSE entityForUniversalID:primaryTarget];
+	ShipEntity *ship = [self primaryTarget];
 	if (ship == nil)
 	{
 		[shipAI message:@"NOTHING_FOUND"];
@@ -2473,11 +2475,11 @@ MA 02110-1301, USA.
 {
 	if (self != [UNIVERSE station])  return;
 	
-	int old_target = primaryTarget;
-	primaryTarget = [[other primaryTarget] universalID];
+	OOWeakReference *temp = _primaryTarget;
+	_primaryTarget = [[[other primaryTarget] weakRetain] autorelease];
 	[(ShipEntity *)[other primaryTarget] markAsOffender:8];	// mark their card
 	[self launchDefenseShip];
-	primaryTarget = old_target;
+	_primaryTarget = temp;
 	
 }
 

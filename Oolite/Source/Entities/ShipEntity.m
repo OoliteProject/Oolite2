@@ -736,6 +736,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	[[self parentEntity] subEntityReallyDied:self];	// Will do nothing if we're not really a subentity
 	[self clearSubEntities];
 	
+	DESTROY(_primaryTarget);
 	DESTROY(_shipInfoDictionary);
 	DESTROY(shipAI);
 	DESTROY(cargo);
@@ -1521,11 +1522,11 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			Vector  rpos = make_vector(dot_product(dpos, v_right), dot_product(dpos, v_up), dot_product(dpos, v_forward));
 			[closeContactsInfo setObject:[NSString stringWithFormat:@"%f %f %f", rpos.x, rpos.y, rpos.z] forKey: other_key];
 			
-			// send AI a message about the touch
-			OOUniversalID	temp_id = primaryTarget;
-			primaryTarget = otherID;
+			// send AI a message about the touch.
+			OOWeakReference *temp = _primaryTarget;
+			_primaryTarget = [otherShip weakRetain];
 			[self doScriptEvent:OOJSID("shipCloseContact") withArgument:otherShip andReactToAIMessage:@"CLOSE CONTACT"];
-			primaryTarget = temp_id;
+			_primaryTarget = temp;
 		}
 	}
 	
@@ -1656,10 +1657,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	//
 	if (scanClass == CLASS_POLICE)
 	{
-		if (bounty > 0)
-			bounty = 0;
-		ShipEntity* target = [UNIVERSE entityForUniversalID:primaryTarget];
-		if ((target)&&([target scanClass] == CLASS_POLICE))
+		bounty = 0;
+		ShipEntity *target = [self primaryTarget];
+		if (target != nil && [target scanClass] == CLASS_POLICE)
 		{
 			[self noteLostTarget];
 		}
@@ -1673,7 +1673,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		foreachkey (other_key, closeContactsInfo)
 		{
 			ShipEntity* other = [UNIVERSE entityForUniversalID:[other_key intValue]];
-			if ((other != nil) && (other->isShip))
+			if ([other isShip])
 			{
 				if (distance2(position, other->position) > collision_radius * collision_radius)	// moved beyond our sphere!
 				{
@@ -1682,9 +1682,11 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 					Vector  pos1 = make_vector(dot_product(dpos, v_right), dot_product(dpos, v_up), dot_product(dpos, v_forward));
 					Vector	pos0 = {0, 0, 0};
 					ScanVectorFromString([closeContactsInfo objectForKey: other_key], &pos0);
-					// send AI messages about the contact
-					int	temp_id = primaryTarget;
-					primaryTarget = other->universalID;
+					
+					// Send AI messages about the contact.
+					OOWeakReference *temp = _primaryTarget;
+					_primaryTarget = [other weakRetain];
+					
 					if ((pos0.x < 0.0)&&(pos1.x > 0.0))
 					{
 						[self doScriptEvent:OOJSID("shipTraversePositiveX") withArgument:other andReactToAIMessage:@"POSITIVE X TRAVERSE"];
@@ -1709,13 +1711,14 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 					{
 						[self doScriptEvent:OOJSID("shipTraverseNegativeZ") withArgument:other andReactToAIMessage:@"NEGATIVE Z TRAVERSE"];
 					}
-					primaryTarget = temp_id;
-					[closeContactsInfo removeObjectForKey: other_key];
+					
+					_primaryTarget = temp;
+					[closeContactsInfo removeObjectForKey:other_key];
 				}
 			}
 			else
 			{
-				[closeContactsInfo removeObjectForKey: other_key];
+				[closeContactsInfo removeObjectForKey:other_key];
 			}
 		}
 	}
@@ -1846,7 +1849,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		else
 		{
 			// ignore behaviour just keep moving...
-			[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+			[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 			[self applyThrust:delta_t];
 			if (energy < maxEnergy)
 			{
@@ -1893,12 +1896,12 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		ShipEntity *target = [UNIVERSE entityForUniversalID:primaryTarget];
+		ShipEntity *target = [self primaryTarget];
 		
 		if (target == nil || [target scanClass] == CLASS_NO_DRAW || ![target isShip] || [target isCloaked])
 		{
 			 // It's no longer a parrot, it has ceased to be, it has joined the choir invisible...
-			if (primaryTarget != NO_TARGET)
+			if (_primaryTarget != nil)
 			{
 				if ([target isShip] && [target isCloaked])
 				{
@@ -2903,7 +2906,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		flightPitch += (flightPitch < -damping) ? damping : -flightPitch;
 	if (flightPitch > 0)
 		flightPitch -= (flightPitch > damping) ? damping : flightPitch;
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -2927,14 +2930,14 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		if (flightPitch > 0)
 			flightPitch -= (flightPitch > damping) ? damping : flightPitch;
 	}
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
 
 - (void) behaviour_tumble:(double) delta_t
 {
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3013,7 +3016,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			}
 		}
 	}
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	desired_speed = 0.0;
 	thrust = 25.0;	// used to damp velocity (must be less than hauler thrust)
 	[self applyThrust:delta_t];
@@ -3021,19 +3024,36 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
+- (id) proximateEntity
+{
+	return [UNIVERSE entityForUniversalID:proximity_alert];
+}
+
+
+- (void) avoidCollisionIfNecessary
+{
+	Entity *proximateEntity = [self proximateEntity];
+	if (proximateEntity != nil && proximateEntity != [self primaryTarget])
+	{
+		[self avoidCollision];
+	}
+}
+
+
 - (void) behaviour_track_target:(double) delta_t
 {
-	if (primaryTarget == NO_TARGET)
+	Entity *primaryTarget = [self primaryTarget];
+	
+	if (primaryTarget == nil)
 	{
 		[self noteLostTargetAndGoIdle];
 		return;
 	}
-	[self trackPrimaryTarget:delta_t:NO];
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-	{
-		[self avoidCollision];
-	}
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	
+	[self trackPrimaryTarget:delta_t :NO];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3105,9 +3125,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			}
 		}
 	}
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3135,7 +3155,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				The COMBAT_JINK_OFFSET intentionally over-compensates the range for collision radii to send ships towards
 				the target at low speeds.
 				*/
-				ShipEntity*	target = [UNIVERSE entityForUniversalID:primaryTarget];
+				ShipEntity*	target = [self primaryTarget];
 				float relativeSpeed = magnitude(vector_subtract([self velocity], [target velocity]));
 				jink.x = (ranrot_rand() % 256) - 128.0;
 				jink.y = (ranrot_rand() % 256) - 128.0;
@@ -3166,7 +3186,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		jink = kZeroVector;
 	}
 	frustration = 0.0;	// behaviour changed, so reset frustration
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3179,9 +3199,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (canBurn) max_available_speed *= [self afterburnerFactor];
 	
 	// deal with collisions and lost targets
-	if (proximity_alert != NO_TARGET)
+	Entity *proximateEntity = [self proximateEntity];
+	if (proximateEntity != nil)
 	{
-		if (proximity_alert == primaryTarget)
+		if (proximateEntity == [self primaryTarget])
 		{
 			behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET; // this behaviour will handle proximity_alert.
 			[self behaviour_attack_fly_from_target: delta_t]; // do it now.
@@ -3192,7 +3213,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		}
 		return;
 	}
-	if (range > SCANNER_MAX_RANGE || primaryTarget == NO_TARGET)
+	if (range > SCANNER_MAX_RANGE || [self primaryTarget] == nil)
 	{
 		[self noteLostTargetAndGoIdle];
 		return;
@@ -3201,7 +3222,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	// control speed
 	BOOL isUsingAfterburner = canBurn && (flightSpeed > maxFlightSpeed);
 	double	slow_down_range = weaponRange * COMBAT_WEAPON_RANGE_FACTOR * ((isUsingAfterburner)? 3.0 * [self afterburnerFactor] : 1.0);
-	ShipEntity*	target = [UNIVERSE entityForUniversalID:primaryTarget];
+	ShipEntity*	target = [self primaryTarget];
 	double target_speed = [target speed];
 		double last_success_factor = success_factor;
 	double distance = [self rangeToDestination];
@@ -3275,7 +3296,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	if (cloakAutomatic) [self activateCloakingDevice];
 	[self fireMainWeapon:range];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3283,60 +3304,69 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (void) behaviour_attack_mining_target:(double) delta_t
 {
 	double  range = [self rangeToPrimaryTarget];
-	if (primaryTarget == NO_TARGET || range > SCANNER_MAX_RANGE) 
+	if ([self primaryTarget] || range > SCANNER_MAX_RANGE) 
 	{
 		[self noteLostTargetAndGoIdle];
 		desired_speed = maxFlightSpeed * 0.375;
 		return;
 	}
-	else if ((range < 650) || (proximity_alert != NO_TARGET))
+	else
 	{
-		if (proximity_alert == NO_TARGET)
+		Entity *proximateEntity = [self proximateEntity];
+		if ((range < 650) || proximateEntity != nil)
 		{
-			desired_speed = range * maxFlightSpeed / (650.0 * 16.0);
+			if (proximateEntity == nil)
+			{
+				desired_speed = range * maxFlightSpeed / (650.0 * 16.0);
+			}
+			else
+			{
+				[self avoidCollision];
+			}
 		}
 		else
 		{
-			[self avoidCollision];
+			//we have a target, its within scanner range, and outside 650
+			desired_speed = maxFlightSpeed * 0.375;
 		}
-	}
-	else
-	{
-		//we have a target, its within scanner range, and outside 650
-		desired_speed = maxFlightSpeed * 0.375;
 	}
 
 	[self trackPrimaryTarget:delta_t:NO];
 	[self fireMainWeapon:range];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
 
 - (void) behaviour_attack_fly_to_target:(double) delta_t
 {
-	BOOL	canBurn = [self hasFuelInjection] && (fuel > MIN_FUEL);
-	float	max_available_speed = maxFlightSpeed;
-	double  range = [self rangeToPrimaryTarget];
-	if (canBurn) max_available_speed *= [self afterburnerFactor];
-	if (primaryTarget == NO_TARGET)
+	BOOL		canBurn = [self hasFuelInjection] && (fuel > MIN_FUEL);
+	float		max_available_speed = maxFlightSpeed;
+	if (canBurn)  max_available_speed *= [self afterburnerFactor];
+	double		range = [self rangeToPrimaryTarget];
+	ShipEntity	*target = [self primaryTarget];
+	
+	if (target == nil)
 	{
 		[self noteLostTargetAndGoIdle];
 		return;
 	}
-	ShipEntity*	target = [UNIVERSE entityForUniversalID:primaryTarget];
-	if ((range < COMBAT_IN_RANGE_FACTOR * weaponRange)||(proximity_alert != NO_TARGET))
+	Entity *proximateEntity = [self proximateEntity];
+	if (range < COMBAT_IN_RANGE_FACTOR * weaponRange || proximateEntity != nil)
 	{
-		if (proximity_alert == NO_TARGET || proximity_alert == primaryTarget)
+		if (proximateEntity == NO_TARGET || proximateEntity == target)
 		{
 			if (aft_weapon_type == WEAPON_NONE)
 			{
 				/*
-				jink.z has a great influence on the dogfight expecience at close range. Strongest jink behaviour for a frontal approaching
-				ship is achieved with a z-distance at the size of the actual distance. However, to allow fast flying ships avoiding collisions,
-				the jink point should be defined closer to the ship itself.
+					jink.z has a great influence on the dogfight expecience at
+					close range. Strongest jink behaviour for a frontal
+					approaching ship is achieved with a z-distance at the size
+					of the actual distance. However, to allow fast flying ships
+					avoiding collisions, the jink point should be defined
+					closer to the ship itself.
 				*/
-				float relativeSpeed = magnitude(vector_subtract([self velocity], [target velocity]));
+				float relativeSpeed = distance([self velocity], [target velocity]);
 				jink.x = (ranrot_rand() % 256) - 128.0;
 				jink.y = (ranrot_rand() % 256) - 128.0;
 				jink.z = range + COMBAT_JINK_OFFSET - relativeSpeed / max_flight_pitch; // range= ~440 for pulse weapon and ~1050 for military laser. 
@@ -3366,23 +3396,24 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		}
 	}
 
-	// control speed
-	//
+	// Control speed.
 	BOOL isUsingAfterburner = canBurn && (flightSpeed > maxFlightSpeed);
 	double slow_down_range = weaponRange * COMBAT_WEAPON_RANGE_FACTOR * ((isUsingAfterburner)? 3.0 * [self afterburnerFactor] : 1.0);
 	double target_speed = [target speed];
 	if (range <= slow_down_range)
+	{
 		desired_speed = fmax(target_speed, 0.25 * maxFlightSpeed);   // within the weapon's range match speed
+	}
 	else
+	{
 		desired_speed = max_available_speed; // use afterburner to approach
+	}
 
 	double last_success_factor = success_factor;
 	success_factor = [self trackPrimaryTarget:delta_t:NO];	// do the actual piloting
-	if ((success_factor > 0.999)||(success_factor > last_success_factor))
+	if (success_factor > 0.999 || success_factor > last_success_factor)
 	{
-		frustration -= delta_t;
-		if (frustration < 0.0)
-			frustration = 0.0;
+		frustration = fmaxf(00, frustration - delta_t);
 	}
 	else
 	{
@@ -3410,7 +3441,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	if (cloakAutomatic) [self activateCloakingDevice];
 	[self fireMainWeapon:range];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3421,7 +3452,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	double last_success_factor = success_factor;
 	success_factor = range;
 	
-	if (primaryTarget == NO_TARGET)
+	if ([self primaryTarget] == nil)
 	{
 		[self noteLostTargetAndGoIdle];
 		return;
@@ -3461,10 +3492,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	{
 		[self fireMissile];
 	}
-	if (cloakAutomatic) [self activateCloakingDevice];
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	if (cloakAutomatic)  [self activateCloakingDevice];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3480,10 +3511,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	[self trackPrimaryTarget:delta_t:YES];
 	[self fireAftWeapon:range];
-	if (cloakAutomatic) [self activateCloakingDevice];
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	if (cloakAutomatic)  [self activateCloakingDevice];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3538,7 +3569,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (([(ShipEntity *)[self primaryTarget] primaryTarget] == self)&&(missiles > missile_chance * hurt_factor))
 		[self fireMissile];
 	if (cloakAutomatic) [self activateCloakingDevice];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3555,12 +3586,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	{
 		behaviour = BEHAVIOUR_FLY_TO_DESTINATION;
 	}
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-	{
-		[self avoidCollision];
-	}
+	
+	[self avoidCollisionIfNecessary];
 	frustration = 0.0;
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3609,9 +3638,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		flightPitch += 0.5 * old_pitch; // damping with last pitch value.
 	}
 	
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3660,9 +3688,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			frustration = 0;
 		}
 	}
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3724,9 +3752,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			}
 		}
 	}
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3744,9 +3772,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 
 	[self trackDestination:delta_t:YES];
-	if ((proximity_alert != NO_TARGET)&&(proximity_alert != primaryTarget))
-		[self avoidCollision];
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	
+	[self avoidCollisionIfNecessary];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3771,7 +3799,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		// (tested with boa class cruiser on collisioncourse with buoy)
 		desired_speed = maxFlightSpeed * (0.5 * dq + 0.5);
 	}
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	[self applyThrust:delta_t];
 }
 
@@ -3872,7 +3900,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		}
 	}
 	
-	[self applyRoll:delta_t*flightRoll andClimb:delta_t*flightPitch];
+	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
 	GLfloat temp = desired_speed;
 	desired_speed *= v0 * v0;
 	[self applyThrust:delta_t];
@@ -4258,9 +4286,9 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		previousCondition = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
 		
 		[previousCondition oo_setInteger:behaviour forKey:@"behaviour"];
-		[previousCondition oo_setInteger:primaryTarget forKey:@"primaryTarget"];
-		[previousCondition oo_setFloat:desired_range forKey:@"desired_range"];
-		[previousCondition oo_setFloat:desired_speed forKey:@"desired_speed"];
+		[previousCondition setObject:_primaryTarget forKey:@"primaryTarget"];
+		[previousCondition oo_setFloat:desired_range forKey:@"desiredRange"];
+		[previousCondition oo_setFloat:desired_speed forKey:@"desiredSpeed"];
 		[previousCondition oo_setVector:destination forKey:@"destination"];
 		
 		destination = [prox_ship position];
@@ -4279,9 +4307,10 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 	if (!previousCondition)  return;
 	
 	behaviour =		[previousCondition oo_intForKey:@"behaviour"];
-	primaryTarget =	[previousCondition oo_intForKey:@"primaryTarget"];
-	desired_range =	[previousCondition oo_floatForKey:@"desired_range"];
-	desired_speed =	[previousCondition oo_floatForKey:@"desired_speed"];
+	[_primaryTarget release];
+	_primaryTarget = [[previousCondition objectForKey:@"primaryTarget"] retain];
+	desired_range =	[previousCondition oo_floatForKey:@"desiredRange"];
+	desired_speed =	[previousCondition oo_floatForKey:@"desiredSpeed"];
 	destination =	[previousCondition oo_vectorForKey:@"destination"];
 	
 	[previousCondition release];
@@ -4289,8 +4318,6 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 	frustration = 0.0;
 	
 	proximity_alert = NO_TARGET;
-	
-	//[shipAI message:@"RESTART_DOCKING"];	// if docking, start over, other AIs will ignore this message
 }
 
 
@@ -4674,7 +4701,7 @@ static BOOL IsBehaviourHostile(OOBehaviour behaviour)
 // Exposed to shaders.
 - (BOOL) hasHostileTarget
 {
-	if (primaryTarget == NO_TARGET)
+	if ([self primaryTarget] == nil)
 		return NO;
 	if ([self isMissile])
 		return YES;	// missiles are always fired against a hostile target
@@ -6443,6 +6470,17 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
+- (id) primaryAggressor
+{
+	id result = [UNIVERSE entityForUniversalID:primaryAggressor];
+	if (result == nil && primaryAggressor != NO_TARGET)
+	{
+		primaryAggressor = NO_TARGET;
+	}
+	return result;
+}
+
+
 - (void) setPrimaryAggressor:(Entity *) targetEntity
 {
 	if (targetEntity != nil)
@@ -6464,17 +6502,27 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) addTarget:(Entity *) targetEntity
 {
 	if (targetEntity == self)  return;
-	if (targetEntity != nil)  primaryTarget = [targetEntity universalID];
+	if (targetEntity != nil)
+	{
+		DESTROY(_primaryTarget);
+		_primaryTarget = [targetEntity weakRetain];
+	}
 	
 	[[self shipSubEntityEnumerator] makeObjectsPerformSelector:@selector(addTarget:) withObject:targetEntity];
 	if (![self isSubEntity])  [self doScriptEvent:OOJSID("shipTargetAcquired") withArgument:targetEntity];
 }
 
 
+- (void) addTargetByID:(OOUniversalID)uID
+{
+	[self addTarget:[UNIVERSE entityForUniversalID:uID]];
+}
+
+
 - (void) removeTarget:(Entity *) targetEntity
 {
 	if(targetEntity != nil) [self noteLostTarget];
-	else primaryTarget = NO_TARGET; 
+	else  DESTROY(_primaryTarget); 
 	// targetEntity == nil is currently only true for mounted player missiles. 
 	// we don't want to send lostTarget messages while the missile is mounted.
 	
@@ -6484,23 +6532,26 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (id) primaryTarget
 {
-	id result = [UNIVERSE entityForUniversalID:primaryTarget];
-	if (EXPECT_NOT(result == self))
+	id result = [_primaryTarget weakRefUnderlyingObject];
+	
+	// Clean up.
+	if (result == nil && _primaryTarget != nil)  DESTROY(_primaryTarget);
+	else if (EXPECT_NOT(result == self))
 	{
-		/*	Added in response to a crash report showing recursion in
-			[PlayerEntity hasHostileTarget].
-			-- Ahruman 2009-12-17
-		*/
+		// Sanity check.
+		DESTROY(_primaryTarget);
 		result = nil;
-		primaryTarget = NO_TARGET;
 	}
+	
 	return result;
 }
 
 
 - (OOUniversalID) primaryTargetID
 {
-	return primaryTarget;
+	id primaryTarget = [self primaryTarget];
+	if (primaryTarget != nil)  return [primaryTarget universalID];
+	else  return NO_TARGET;
 }
 
 
@@ -6522,16 +6573,12 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) noteLostTarget
 {
-	id target = nil;
-	if (primaryTarget != NO_TARGET)
-	{
-		ShipEntity* ship = [UNIVERSE entityForUniversalID:primaryTarget];
-		target = (ship && ship->isShip) ? (id)ship : nil;
-		primaryTarget = NO_TARGET;
-	}
+	id target = [self primaryTarget];
+	DESTROY(_primaryTarget);
+	
 	// always do target lost
 	[self doScriptEvent:OOJSID("shipTargetLost") withArgument:target];
-	if (target == nil) [shipAI message:@"TARGET_LOST"];	// stale target? no major urgency.
+	if (target == nil)  [shipAI message:@"TARGET_LOST"];	// stale target? no major urgency.
 	else [shipAI reactToMessage:@"TARGET_LOST" context:@"flight updates"];	// execute immediately otherwise.
 }
 
@@ -6542,6 +6589,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	frustration = 0.0;
 	[self noteLostTarget];
 }
+
 
 - (void) noteTargetDestroyed:(ShipEntity *)target
 {
@@ -8161,8 +8209,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			}
 			else if ([ent isWormhole])
 			{
-				if( [self isPlayer] ) [self enterWormhole:(WormholeEntity*)ent];
-				else [self enterWormhole:(WormholeEntity*)ent replacing:NO];
+				[self enterWormhole:(WormholeEntity*)ent replacing:NO];
 			}
 		}
 	}
@@ -8177,8 +8224,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (!other)
 		return NO;
 	
-	ShipEntity* otherParent = [other parentEntity];
-	BOOL otherIsStation = other == [UNIVERSE station];
+	ShipEntity *otherParent = [other parentEntity];
+	BOOL otherIsStation = (other == [UNIVERSE station]);
 	// calculate line of centers using centres
 	loc = vector_normal_or_zbasis(vector_subtract([other absolutePositionForSubentity], position));
 	
@@ -8880,15 +8927,15 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) enterWormhole:(WormholeEntity *) w_hole
+- (void) enterWormhole:(WormholeEntity *) wormhole
 {
-	[self enterWormhole:w_hole replacing:YES];
+	[self enterWormhole:wormhole replacing:YES];
 }
 
 
-- (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing
+- (void) enterWormhole:(WormholeEntity *) wormhole replacing:(BOOL)replacing
 {
-	if (w_hole == nil)  return;
+	if (wormhole == nil)  return;
 
 	if (replacing && ![[UNIVERSE sun] willGoNova] && [UNIVERSE sun] != nil)
 	{
@@ -8902,16 +8949,16 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	// MKW 2011.02.27 - Moved here from ShipEntityAI so escorts reliably follow
 	//                  mother in all wormhole cases, not just when the ship
 	//                  creates the wormhole.
-	primaryTarget = [w_hole universalID];
-	found_target = primaryTarget;
+	[self addTarget:wormhole];
+	found_target = [wormhole universalID];
 	[shipAI reactToMessage:@"WITCHSPACE OKAY" context:@"performHyperSpaceExit"];	// must be a reaction, the ship is about to disappear
 	
 	if ([self scriptedMisjump])
 	{
 		[self setScriptedMisjump:NO];
-		[w_hole setMisjump];
+		[wormhole setMisjump];
 	}
-	[w_hole suckInShip: self];	// removes ship from universe
+	[wormhole suckInShip: self];	// removes ship from universe
 }
 
 
@@ -9194,13 +9241,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if ([self group] == nil)  [self setGroup:escortGroup];
 	
-	if (primaryTarget == last_escort_target)
+	if ([self primaryTargetID] == last_escort_target)
 	{
 		// already deployed escorts onto this target!
 		return;
 	}
 	
-	last_escort_target = primaryTarget;
+	last_escort_target = [self primaryTargetID];
 	
 	// Find idle escorts
 	idleEscorts = [NSMutableSet set];
@@ -9270,8 +9317,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Entity		*mother = [[self group] leader];
 	if ([mother isStation])
 	{
-		primaryTarget = [mother universalID];
-		targetStation = primaryTarget;
+		[self addTarget:mother];
+		targetStation = [mother universalID];
 		return;	// head for mother!
 	}
 
@@ -9300,12 +9347,14 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		}
 	}
 	for (i = 0; i < station_count; i++)
+	{
 		[my_entities[i] release];		//	released
-	//
+	}
+	
 	if (station)
 	{
-		primaryTarget = [station universalID];
-		targetStation = primaryTarget;
+		[self addTarget:station];
+		targetStation = [station universalID];
 	}
 	else
 	{
@@ -9331,29 +9380,28 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 // Exposed to AI
 - (void) setTargetToSystemStation
 {
-	StationEntity* system_station = [UNIVERSE station];
+	StationEntity *systemStation = [UNIVERSE station];
 	
-	if (!system_station)
+	if (!systemStation)
 	{
 		[shipAI message:@"NOTHING_FOUND"];
 		[shipAI message:@"NO_STATION_FOUND"];
-		primaryTarget = NO_TARGET;
+		DESTROY(_primaryTarget);
 		targetStation = NO_TARGET;
 		return;
 	}
 	
-	if (!system_station->isStation)
+	if (![systemStation isStation])
 	{
 		[shipAI message:@"NOTHING_FOUND"];
 		[shipAI message:@"NO_STATION_FOUND"];
-		primaryTarget = NO_TARGET;
+		DESTROY(_primaryTarget);
 		targetStation = NO_TARGET;
 		return;
 	}
 	
-	primaryTarget = [system_station universalID];
-	targetStation = primaryTarget;
-	return;
+	[self addTarget:systemStation];
+	targetStation = [systemStation universalID];
 }
 
 
@@ -9383,7 +9431,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 								   parameter:nil
 									 inRange:-1
 									ofEntity:nil]
-			makeObjectsPerformSelector:@selector(abortDockingForShip:) withObject:self];
+	 makeObjectsPerformSelector:@selector(abortDockingForShip:) withObject:self];
 }
 
 
@@ -9602,16 +9650,21 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	if ([ms hasPrefix:AIMS_AGGRESSOR_SWITCHED_TARGET])
 	{
 		// if I'm under attack send a thank-you message to the rescuer
-		//
-		NSArray* tokens = ScanTokensFromString(ms);
-		int switcher_id = [(NSString*)[tokens objectAtIndex:1] intValue]; // Attacker that switched targets.
-		Entity* switcher = [UNIVERSE entityForUniversalID:switcher_id];
-		int rescuer_id = [(NSString*)[tokens objectAtIndex:2] intValue]; // New primary target of attacker. 
-		Entity* rescuer = [UNIVERSE entityForUniversalID:rescuer_id];
-		if ((switcher_id == primaryAggressor)&&(switcher_id == primaryTarget)&&(switcher)&&(rescuer)&&(rescuer->isShip)&&(thanked_ship_id != rescuer_id)&&(scanClass != CLASS_THARGOID))
+		NSArray *tokens = ScanTokensFromString(ms);
+		OOUniversalID switcherID = [tokens oo_intAtIndex:1];	// Attacker that switched targets.
+		Entity *switcher = [UNIVERSE entityForUniversalID:switcherID];
+		OOUniversalID rescuerID = [tokens oo_intAtIndex:2];	// New primary target of attacker. 
+		Entity *rescuer = [UNIVERSE entityForUniversalID:rescuerID];
+		
+		if (switcherID == primaryAggressor &&
+			switcher == [self primaryTarget] && 
+			switcher != nil &&
+			[rescuer isShip] &&
+			thanked_ship_id != rescuerID &&
+			scanClass != CLASS_THARGOID)
 		{
-			ShipEntity* rescueShip = (ShipEntity*)rescuer;
-			ShipEntity* switchingShip = (ShipEntity*)switcher;
+			ShipEntity *rescueShip = (ShipEntity *)rescuer;
+			ShipEntity *switchingShip = (ShipEntity *)switcher;
 			if (scanClass == CLASS_POLICE)
 			{
 				[self sendExpandedMessage:@"[police-thanks-for-assist]" toShip:rescueShip];
@@ -9621,7 +9674,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 			{
 				[self sendExpandedMessage:@"[thanks-for-assist]" toShip:rescueShip];
 			}
-			thanked_ship_id = rescuer_id;
+			thanked_ship_id = rescuerID;
 			// we don't want clean ships that change target from one pirate to the other pirate getting a bounty.
 			if ([switchingShip bounty] > 0 || [rescueShip bounty] == 0)
 			{	
@@ -9743,14 +9796,14 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 
 	// Set target to main station, and return now if it can't be found
 	[self setTargetToSystemStation];
-	if (primaryTarget == NO_TARGET)
+	if ([self primaryTarget] == nil)
 	{
 		OOLog(@"claimAsSalvage.failed.noStation", @"claimAsSalvage failed because did not find a station");
 		return;
 	}
 
 	// Get the station to launch a pilot boat to bring a pilot out to the hulk (use a viper for now)
-	StationEntity *station = (StationEntity *)[UNIVERSE entityForUniversalID:primaryTarget];
+	StationEntity *station = (StationEntity *)[self primaryTarget];
 	OOLog(@"claimAsSalvage.requestingPilot", @"claimAsSalvage asking station to launch a pilot boat");
 	[station launchShipWithRole:@"pilot"];
 	[self setReportAIMessages:YES];
@@ -9832,7 +9885,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	OOLog(@"dumpState.shipEntity", @"Script: %@", script);
 	OOLog(@"dumpState.shipEntity", @"Subentity count: %u", [self subEntityCount]);
 	OOLog(@"dumpState.shipEntity", @"Behaviour: %@", OOStringFromBehaviour(behaviour));
-	if (primaryTarget != NO_TARGET)  OOLog(@"dumpState.shipEntity", @"Target: %@", [self primaryTarget]);
+	if ([self primaryTarget] != nil)  OOLog(@"dumpState.shipEntity", @"Target: %@", [self primaryTarget]);
 	OOLog(@"dumpState.shipEntity", @"Destination: %@", OOVectorDescription(destination));
 	OOLog(@"dumpState.shipEntity", @"Other destination: %@", OOVectorDescription(coordinates));
 	OOLog(@"dumpState.shipEntity", @"Waypoint count: %u", number_of_navpoints);

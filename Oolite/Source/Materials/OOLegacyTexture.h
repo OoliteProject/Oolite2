@@ -1,6 +1,6 @@
 /*
 
-OOTexture.h
+OOLegacyTexture.h
 
 Load, track and manage textures. In general, this should be used through an
 OOMaterial.
@@ -33,10 +33,10 @@ SOFTWARE.
 
 #import <OoliteBase/OoliteBase.h>
 
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOPixMap.h"
 
-@class OOTextureLoader, OOTextureGenerator;
+@class OOLegacyTextureLoader, OOLegacyTextureGenerator;
 
 
 enum
@@ -103,7 +103,7 @@ typedef enum
 } OOTextureDataFormat;
 
 
-@interface OOTexture: OOWeakRefObject
+@interface OOLegacyTexture: OOWeakRefObject
 {
 @protected
 #ifndef NDEBUG
@@ -160,7 +160,7 @@ typedef enum
 
 /*	Load a texture from a generator.
 */
-+ (id) textureWithGenerator:(OOTextureGenerator *)generator;
++ (id) textureWithGenerator:(OOLegacyTextureGenerator *)generator;
 
 
 /*	Bind the texture to the current texture unit.

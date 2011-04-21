@@ -31,9 +31,9 @@ MA 02110-1301, USA.
 #import "OOMacroOpenGL.h"
 
 #if OO_SHADERS
-#import "OOMaterial.h"		// For kTangentAttributeIndex
-#import "OOShaderProgram.h"
-#import "OOShaderUniform.h"
+#import "OOLegacyMaterial.h"		// For kTangentAttributeIndex
+#import "OOLegacyShaderProgram.h"
+#import "OOLegacyShaderUniform.h"
 #endif
 
 #import "PlayerEntity.h"
@@ -173,7 +173,7 @@ enum
 
 
 #if OO_SHADERS
-- (OOShaderProgram *) shader
+- (OOLegacyShaderProgram *) shader
 {
 	if (shader == nil)
 	{
@@ -189,18 +189,18 @@ enum
 		NSDictionary *attributes = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kTangentAttributeIndex]
 															   forKey:@"aWarpiness"];
 		
-		shader = [[OOShaderProgram shaderProgramWithVertexShaderName:@"oolite-dust.vertex"
+		shader = [[OOLegacyShaderProgram shaderProgramWithVertexShaderName:@"oolite-dust.vertex"
 												  fragmentShaderName:@"oolite-dust.fragment"
 															  prefix:prefix
 												   attributeBindings:attributes] retain];
 		
 		DESTROY(uniforms);
-		OOShaderUniform *uWarp = [[OOShaderUniform alloc] initWithName:@"uWarp"
+		OOLegacyShaderUniform *uWarp = [[OOLegacyShaderUniform alloc] initWithName:@"uWarp"
 														 shaderProgram:shader
 														 boundToObject:self
 															  property:@selector(warpVector)
 														convertOptions:0];
-		OOShaderUniform *uOffsetPlayerPosition = [[OOShaderUniform alloc] initWithName:@"uOffsetPlayerPosition"
+		OOLegacyShaderUniform *uOffsetPlayerPosition = [[OOLegacyShaderUniform alloc] initWithName:@"uOffsetPlayerPosition"
 																   shaderProgram:shader
 																   boundToObject:self
 																		property:@selector(offsetPlayerPosition)
@@ -351,7 +351,7 @@ enum
 #if OO_SHADERS
 	if (useShader)
 	{
-		[OOShaderProgram applyNone];
+		[OOLegacyShaderProgram applyNone];
 	}
 	else
 #endif

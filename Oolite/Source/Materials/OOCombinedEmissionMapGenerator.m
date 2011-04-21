@@ -30,7 +30,7 @@ SOFTWARE.
 #import "OOColor.h"
 #import "OOPixMapChannelOperations.h"
 #import "OOTextureScaling.h"
-#import "OOMaterialSpecifier.h"
+#import "OOLegacyMaterialSpecifier.h"
 
 
 #define DUMP_COMBINER	0
@@ -42,11 +42,11 @@ static void ScaleToMatch(OOPixMap *pmA, OOPixMap *pmB);
 
 @interface OOCombinedEmissionMapGenerator (Private)
 
-- (id) initWithEmissionMap:(OOTextureLoader *)emissionMapLoader
+- (id) initWithEmissionMap:(OOLegacyTextureLoader *)emissionMapLoader
 			 emissionColor:(OOColor *)emissionColor
-				diffuseMap:(OOTexture *)diffuseMap
+				diffuseMap:(OOLegacyTexture *)diffuseMap
 			  diffuseColor:(OOColor *)diffuseColor
-		   illuminationMap:(OOTextureLoader *)illuminationMapLoader
+		   illuminationMap:(OOLegacyTextureLoader *)illuminationMapLoader
 		 illuminationColor:(OOColor *)illuminationColor
 			 isCombinedMap:(BOOL)isCombinedMap;
 
@@ -55,11 +55,11 @@ static void ScaleToMatch(OOPixMap *pmA, OOPixMap *pmB);
 
 @implementation OOCombinedEmissionMapGenerator
 
-- (id) initWithEmissionMap:(OOTextureLoader *)emissionMapLoader
+- (id) initWithEmissionMap:(OOLegacyTextureLoader *)emissionMapLoader
 			 emissionColor:(OOColor *)emissionColor
-				diffuseMap:(OOTexture *)diffuseMap
+				diffuseMap:(OOLegacyTexture *)diffuseMap
 			  diffuseColor:(OOColor *)diffuseColor
-		   illuminationMap:(OOTextureLoader *)illuminationMapLoader
+		   illuminationMap:(OOLegacyTextureLoader *)illuminationMapLoader
 		 illuminationColor:(OOColor *)illuminationColor
 {
 	return [self initWithEmissionMap:emissionMapLoader
@@ -72,8 +72,8 @@ static void ScaleToMatch(OOPixMap *pmA, OOPixMap *pmB);
 }
 
 
-- (id) initWithEmissionAndIlluminationMap:(OOTextureLoader *)emissionAndIlluminationMapLoader
-							   diffuseMap:(OOTexture *)diffuseMap
+- (id) initWithEmissionAndIlluminationMap:(OOLegacyTextureLoader *)emissionAndIlluminationMapLoader
+							   diffuseMap:(OOLegacyTexture *)diffuseMap
 							 diffuseColor:(OOColor *)diffuseColor
 							emissionColor:(OOColor *)emissionColor
 						illuminationColor:(OOColor *)illuminationColor
@@ -88,11 +88,11 @@ static void ScaleToMatch(OOPixMap *pmA, OOPixMap *pmB);
 }
 
 
-- (id) initWithEmissionMap:(OOTextureLoader *)emissionMapLoader
+- (id) initWithEmissionMap:(OOLegacyTextureLoader *)emissionMapLoader
 			 emissionColor:(OOColor *)emissionColor
-				diffuseMap:(OOTexture *)diffuseMap
+				diffuseMap:(OOLegacyTexture *)diffuseMap
 			  diffuseColor:(OOColor *)diffuseColor
-		   illuminationMap:(OOTextureLoader *)illuminationMapLoader
+		   illuminationMap:(OOLegacyTextureLoader *)illuminationMapLoader
 		 illuminationColor:(OOColor *)illuminationColor
 			 isCombinedMap:(BOOL)isCombinedMap
 {

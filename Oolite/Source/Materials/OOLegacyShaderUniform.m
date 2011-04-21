@@ -1,6 +1,6 @@
 /*
 
-OOShaderUniform.m
+OOLegacyShaderUniform.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -26,11 +26,11 @@ SOFTWARE.
 */
 
 
-#import "OOShaderUniform.h"
+#import "OOLegacyShaderUniform.h"
 
 #if OO_SHADERS
 
-#import "OOShaderProgram.h"
+#import "OOLegacyShaderProgram.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOGeometryGLHelpers.h"
 
@@ -41,9 +41,9 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-@interface OOShaderUniform (OOPrivate)
+@interface OOLegacyShaderUniform (OOPrivate)
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram;
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram;
 
 - (void)applySimple;
 - (void)applyBinding;
@@ -51,9 +51,9 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 @end
 
 
-@implementation OOShaderUniform
+@implementation OOLegacyShaderUniform
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram intValue:(GLint)constValue
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram intValue:(GLint)constValue
 {
 	self = [self initWithName:uniformName shaderProgram:shaderProgram];
 	if (self != nil)
@@ -66,7 +66,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram floatValue:(GLfloat)constValue
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram floatValue:(GLfloat)constValue
 {
 	self = [self initWithName:uniformName shaderProgram:shaderProgram];
 	if (self != nil)
@@ -79,7 +79,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram vectorValue:(Vector)constValue
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram vectorValue:(Vector)constValue
 {
 	self = [self initWithName:uniformName shaderProgram:shaderProgram];
 	if (self != nil)
@@ -95,7 +95,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram colorValue:(OOColor *)constValue
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram colorValue:(OOColor *)constValue
 {
 	if (EXPECT_NOT(constValue == nil))
 	{
@@ -117,7 +117,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram quaternionValue:(Quaternion)constValue asMatrix:(BOOL)asMatrix
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram quaternionValue:(Quaternion)constValue asMatrix:(BOOL)asMatrix
 {
 	self = [self initWithName:uniformName shaderProgram:shaderProgram];
 	if (self != nil)
@@ -141,7 +141,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 }
 
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram matrixValue:(OOMatrix)constValue
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram matrixValue:(OOMatrix)constValue
 {
 	self = [self initWithName:uniformName shaderProgram:shaderProgram];
 	if (self != nil)
@@ -155,7 +155,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 
 
 - (id)initWithName:(NSString *)uniformName
-	 shaderProgram:(OOShaderProgram *)shaderProgram
+	 shaderProgram:(OOLegacyShaderProgram *)shaderProgram
 	 boundToObject:(id<OOWeakReferenceSupport>)target
 		  property:(SEL)selector
 	convertOptions:(OOUniformConvertOptions)options
@@ -404,7 +404,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 
 
 // Designated initializer.
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram
 {
 	BOOL					OK = YES;
 	

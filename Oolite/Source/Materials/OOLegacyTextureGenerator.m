@@ -1,10 +1,6 @@
 /*
 
-OOShaderProgram.h
-
-Encapsulates a vertex + fragment shader combo. In general, this should only be
-used though OOShaderMaterial. The point of this separation is that more than
-one OOShaderMaterial can use the same OOShaderProgram.
+OOLegacyTextureGenerator.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -29,31 +25,39 @@ SOFTWARE.
 
 */
 
-
-#import <Foundation/Foundation.h>
-#import "OOOpenGL.h"
-#import "OOOpenGLExtensionManager.h"
-
-#if OO_SHADERS
+#import "OOLegacyTextureGenerator.h"
+#import "OOAsyncWorkManager.h"
 
 
-@interface OOShaderProgram: NSObject
+@implementation OOLegacyTextureGenerator
+
+- (uint32_t) textureOptions
 {
-	GLhandleARB						program;
-	NSString						*key;
+	return kOOTextureDefaultOptions;
 }
 
-// Loads a shader from a file, caching and sharing shader program instances.
-+ (id) shaderProgramWithVertexShaderName:(NSString *)vertexShaderName
-					  fragmentShaderName:(NSString *)fragmentShaderName
-								  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
-					   attributeBindings:(NSDictionary *)attributeBindings;	// Maps vertex attribute names to "locations".
 
-- (void) apply;
-+ (void) applyNone;
+- (GLfloat) anisotropy
+{
+	return kOOTextureDefaultAnisotropy;
+}
 
-- (GLhandleARB) program;
+
+- (GLfloat) lodBias
+{
+	return kOOTextureDefaultLODBias;
+}
+
+
+- (NSString *) cacheKey
+{
+	return nil;
+}
+
+
+- (BOOL) enqueue
+{
+	return [[OOAsyncWorkManager sharedAsyncWorkManager] addTask:self priority:kOOAsyncPriorityMedium];
+}
 
 @end
-
-#endif // OO_SHADERS

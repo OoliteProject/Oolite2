@@ -51,7 +51,7 @@ MA 02110-1301, USA.
 #import "OOCacheManager.h"
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OORoleSet.h"
 #import "HeadUpDisplay.h"
 #import "OOOpenGLExtensionManager.h"

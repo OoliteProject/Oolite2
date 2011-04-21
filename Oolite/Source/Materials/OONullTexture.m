@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OONullTexture.h"
-#import "OOTextureInternal.h"
+#import "OOLegacyTextureInternal.h"
 
 
 static OONullTexture *sSingleton = nil;
@@ -48,7 +48,7 @@ static OONullTexture *sSingleton = nil;
 
 - (void) apply
 {
-	[OOTexture applyNone];
+	[OOLegacyTexture applyNone];
 }
 
 

@@ -1,6 +1,6 @@
 /*
 	
-	OOTexture.m
+	OOLegacyTexture.m
 	
 	Copyright (C) 2007-2011 Jens Ayton and contributors
 	
@@ -24,13 +24,12 @@
 	
 */
 
-#import "OOTexture.h"
-#import "OOTextureInternal.h"
+#import "OOLegacyTextureInternal.h"
 #import "OOConcreteTexture.h"
 #import "OONullTexture.h"
 
-#import "OOTextureLoader.h"
-#import "OOTextureGenerator.h"
+#import "OOLegacyTextureLoader.h"
+#import "OOLegacyTextureGenerator.h"
 
 #import "Universe.h"
 #import "ResourceManager.h"
@@ -77,10 +76,10 @@ static BOOL					sCheckedExtensions;
 OOTextureInfo				gOOTextureInfo;
 
 
-@interface OOTexture (OOPrivate)
+@interface OOLegacyTexture (OOPrivate)
 
 - (void) addToCaches;
-+ (OOTexture *) existingTextureForKey:(NSString *)key;
++ (OOLegacyTexture *) existingTextureForKey:(NSString *)key;
 
 - (void) forceRebind;
 
@@ -105,7 +104,7 @@ static NSString *sGlobalTraceContext = nil;
 #define CLEAR_TRACE_CONTEXT() SET_TRACE_CONTEXT(nil)
 
 
-@implementation OOTexture
+@implementation OOLegacyTexture
 
 + (id)textureWithName:(NSString *)name
 			 inFolder:(NSString*)directory
@@ -114,7 +113,7 @@ static NSString *sGlobalTraceContext = nil;
 			  lodBias:(GLfloat)lodBias
 {
 	NSString				*key = nil;
-	OOTexture				*result = nil;
+	OOLegacyTexture				*result = nil;
 	NSString				*path = nil;
 	BOOL					noFNF;
 	
@@ -169,7 +168,7 @@ static NSString *sGlobalTraceContext = nil;
 	
 	// Look for existing texture
 	key = [NSString stringWithFormat:@"%@%@%@:0x%.4X/%g/%g", directory ? directory : (NSString *)@"", directory ? @"/" : @"", name, options, anisotropy, lodBias];
-	result = [OOTexture existingTextureForKey:key];
+	result = [OOLegacyTexture existingTextureForKey:key];
 	if (result == nil)
 	{
 		path = [ResourceManager pathForFileNamed:name inFolder:directory];
@@ -224,12 +223,12 @@ static NSString *sGlobalTraceContext = nil;
 }
 
 
-+ (id) textureWithGenerator:(OOTextureGenerator *)generator
++ (id) textureWithGenerator:(OOLegacyTextureGenerator *)generator
 {
 	if (generator == nil)  return nil;
 	
 #ifndef OOTEXTURE_NO_CACHE
-	OOTexture *existing = [OOTexture existingTextureForKey:[generator cacheKey]];
+	OOLegacyTexture *existing = [OOLegacyTexture existingTextureForKey:[generator cacheKey]];
 	if (existing != nil)  return [[existing retain] autorelease];
 #endif
 	
@@ -240,7 +239,7 @@ static NSString *sGlobalTraceContext = nil;
 	}
 	OOLog(@"texture.generator.queue", @"Queued texture generator %@", generator);
 	
-	OOTexture *result = [[[OOConcreteTexture alloc] initWithLoader:generator
+	OOLegacyTexture *result = [[[OOConcreteTexture alloc] initWithLoader:generator
 															   key:[generator cacheKey]
 														   options:[generator textureOptions]
 														anisotropy:[generator anisotropy]
@@ -483,12 +482,12 @@ static NSString *sGlobalTraceContext = nil;
 }
 
 
-+ (OOTexture *) existingTextureForKey:(NSString *)key
++ (OOLegacyTexture *) existingTextureForKey:(NSString *)key
 {
 #ifndef OOTEXTURE_NO_CACHE
 	if (key != nil)
 	{
-		return (OOTexture *)[[sLiveTextureCache objectForKey:key] pointerValue];
+		return (OOLegacyTexture *)[[sLiveTextureCache objectForKey:key] pointerValue];
 	}
 	return nil;
 #else

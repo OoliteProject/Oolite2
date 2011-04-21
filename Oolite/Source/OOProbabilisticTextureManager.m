@@ -27,7 +27,7 @@ SOFTWARE.
 
 #import "OOProbabilisticTextureManager.h"
 #import "ResourceManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
 @implementation OOProbabilisticTextureManager
@@ -57,7 +57,7 @@ SOFTWARE.
 	id					entry = nil;
 	NSString			*name = nil;
 	float				probability;
-	OOTexture			*texture = nil;
+	OOLegacyTexture			*texture = nil;
 	
 	self = [super init];
 	if (self == nil)  OK = NO;
@@ -101,11 +101,11 @@ SOFTWARE.
 			
 			if (name != nil && 0.0f < probability)
 			{
-				texture = [OOTexture textureWithName:name
-											inFolder:@"Textures"
-											 options:options
-										  anisotropy:anisotropy
-											 lodBias:lodBias];
+				texture = [OOLegacyTexture textureWithName:name
+												  inFolder:@"Textures"
+												   options:options
+												anisotropy:anisotropy
+												   lodBias:lodBias];
 				if (texture != nil)
 				{
 					_textures[_count] = [texture retain];
@@ -156,7 +156,7 @@ SOFTWARE.
 }
 
 
-- (OOTexture *)selectTexture
+- (OOLegacyTexture *)selectTexture
 {
 	float					selection;
 	unsigned				i;

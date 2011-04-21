@@ -1,6 +1,6 @@
 /*
 
-OOShaderProgram.m
+OOLegacyShaderProgram.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -29,7 +29,7 @@ SOFTWARE.
 
 #if OO_SHADERS
 
-#import "OOShaderProgram.h"
+#import "OOLegacyShaderProgram.h"
 #import "OOStringParsing.h"
 #import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
@@ -38,7 +38,7 @@ SOFTWARE.
 
 
 static NSMutableDictionary		*sShaderCache = nil;
-static OOShaderProgram			*sActiveProgram = nil;
+static OOLegacyShaderProgram			*sActiveProgram = nil;
 
 
 static BOOL GetShaderSource(NSString *fileName, NSString *shaderType, NSString *prefix, NSString **outResult);
@@ -46,7 +46,7 @@ static NSString *GetGLSLInfoLog(GLhandleARB shaderObject);
 static BOOL ValidateShaderObject(GLhandleARB object, NSString *name);
 
 
-@interface OOShaderProgram (OOPrivate)
+@interface OOLegacyShaderProgram (OOPrivate)
 
 - (id)initWithVertexShaderSource:(NSString *)vertexSource
 			fragmentShaderSource:(NSString *)fragmentSource
@@ -61,7 +61,7 @@ static BOOL ValidateShaderObject(GLhandleARB object, NSString *name);
 @end
 
 
-@implementation OOShaderProgram
+@implementation OOLegacyShaderProgram
 
 + (id)shaderProgramWithVertexShaderName:(NSString *)vertexShaderName
 					 fragmentShaderName:(NSString *)fragmentShaderName
@@ -69,7 +69,7 @@ static BOOL ValidateShaderObject(GLhandleARB object, NSString *name);
 					  attributeBindings:(NSDictionary *)attributeBindings
 {
 	NSString				*cacheKey = nil;
-	OOShaderProgram			*result = nil;
+	OOLegacyShaderProgram			*result = nil;
 	NSString				*vertexSource = nil;
 	NSString				*fragmentSource = nil;
 	
@@ -85,7 +85,7 @@ static BOOL ValidateShaderObject(GLhandleARB object, NSString *name);
 		// No cached program; create one...
 		if (!GetShaderSource(vertexShaderName, @"vertex", prefixString, &vertexSource))  return nil;
 		if (!GetShaderSource(fragmentShaderName, @"fragment", prefixString, &fragmentSource))  return nil;
-		result = [[OOShaderProgram alloc] initWithVertexShaderSource:vertexSource
+		result = [[OOLegacyShaderProgram alloc] initWithVertexShaderSource:vertexSource
 												fragmentShaderSource:fragmentSource
 														prefixString:prefixString
 														  vertexName:vertexShaderName
@@ -114,7 +114,7 @@ static BOOL ValidateShaderObject(GLhandleARB object, NSString *name);
 	if (EXPECT_NOT(sActiveProgram == self))
 	{
 		OOLog(@"shader.dealloc.imbalance", @"***** OOShaderProgram deallocated while active, indicating a retain/release imbalance. Expect imminent crash.");
-		[OOShaderProgram applyNone];
+		[OOLegacyShaderProgram applyNone];
 	}
 #endif
 	

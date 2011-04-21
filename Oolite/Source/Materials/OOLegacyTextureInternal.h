@@ -27,21 +27,21 @@ SOFTWARE.
 
 */
 
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOOpenGLExtensionManager.h"
 
 
-@interface OOTexture (SubclassInterface)
+@interface OOLegacyTexture (SubclassInterface)
 
 - (void) addToCaches;
 - (void) removeFromCaches;	// Must be called on -dealloc (while -cacheKey is still valid) for cacheable textures.
 
-+ (OOTexture *) existingTextureForKey:(NSString *)key;
++ (OOLegacyTexture *) existingTextureForKey:(NSString *)key;
 
 @end
 
 
-@interface OOTexture (SubclassResponsibilities)
+@interface OOLegacyTexture (SubclassResponsibilities)
 
 - (void)apply;
 - (NSSize)dimensions;
@@ -52,7 +52,7 @@ SOFTWARE.
 @end
 
 
-@interface OOTexture (SubclassOptional)
+@interface OOLegacyTexture (SubclassOptional)
 
 - (void)ensureFinishedLoading;					// Default: does nothing
 - (BOOL) isFinishedLoading;						// Default: YES

@@ -28,10 +28,10 @@ SOFTWARE.
 
 */
 
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
-@interface OONullTexture: OOTexture
+@interface OONullTexture: OOLegacyTexture
 
 + (id) sharedNullTexture;
 

@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOMacroOpenGL.h"
 #import "OOOpenGLExtensionManager.h"
 

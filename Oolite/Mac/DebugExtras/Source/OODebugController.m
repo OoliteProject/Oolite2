@@ -34,9 +34,9 @@ SOFTWARE.
 #import "ResourceManager.h"
 
 #import "OOGraphicsResetManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "Universe.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOCacheManager.h"
 #import "PlayerEntity.h"
 #import "OOJavaScriptEngine.h"
@@ -155,13 +155,13 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction)clearTextureCacheAction:sender
 {
-	[OOTexture clearCache];
+	[OOLegacyTexture clearCache];
 }
 
 
 - (IBAction)resetAndClearAction:sender
 {
-	[OOTexture clearCache];
+	[OOLegacyTexture clearCache];
 	[[OOGraphicsResetManager sharedManager] resetGraphicsState];
 }
 

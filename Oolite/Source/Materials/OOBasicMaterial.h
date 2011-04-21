@@ -30,11 +30,11 @@ SOFTWARE.
 
 */
 
-#import "OOMaterial.h"
+#import "OOLegacyMaterial.h"
 #import "OOColor.h"
 
 
-@interface OOBasicMaterial: OOMaterial
+@interface OOBasicMaterial: OOLegacyMaterial
 {
 	NSString				*materialName;
 	

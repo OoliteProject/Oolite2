@@ -23,9 +23,9 @@ MA 02110-1301, USA.
 */
 
 #import <OoliteBase/OoliteBase.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
-@class OOTexture;
+@class OOLegacyTexture;
 
 
 #define	OPEN_GL_SPRITE_MIN_WIDTH	64.0
@@ -34,13 +34,13 @@ MA 02110-1301, USA.
 
 @interface OOTextureSprite: NSObject
 {
-	OOTexture	*texture;
+	OOLegacyTexture	*texture;
 	NSSize		size;
 }
 
 
-- (id) initWithTexture:(OOTexture *)texture;
-- (id) initWithTexture:(OOTexture *)texture size:(NSSize)spriteSize;
+- (id) initWithTexture:(OOLegacyTexture *)texture;
+- (id) initWithTexture:(OOLegacyTexture *)texture size:(NSSize)spriteSize;
 
 - (NSSize) size;
 

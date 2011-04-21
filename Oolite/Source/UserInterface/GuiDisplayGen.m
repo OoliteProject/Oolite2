@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOSound.h"
 #import "OOStringParsing.h"
 #import "HeadUpDisplay.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOJavaScriptEngine.h"
 #import "OOColor.h"
 
@@ -800,9 +800,9 @@ OOINLINE BOOL RowInRange(OOGUIRow row, NSRange range)
 }
 
 
-static OOTexture *TextureForGUITexture(NSDictionary *descriptor)
+static OOLegacyTexture *TextureForGUITexture(NSDictionary *descriptor)
 {
-	return [OOTexture textureWithName:[descriptor oo_stringForKey:@"name"]
+	return [OOLegacyTexture textureWithName:[descriptor oo_stringForKey:@"name"]
 							 inFolder:@"Images"
 							  options:kOOTextureDefaultOptions | kOOTextureNoShrink
 						   anisotropy:kOOTextureDefaultAnisotropy
@@ -816,7 +816,7 @@ static OOTexture *TextureForGUITexture(NSDictionary *descriptor)
 */
 static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 {
-	OOTexture		*texture = nil;
+	OOLegacyTexture		*texture = nil;
 	NSSize			size;
 	
 	texture = TextureForGUITexture(descriptor);
@@ -1302,7 +1302,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 		}
 	}
 	
-	[OOTexture applyNone];
+	[OOLegacyTexture applyNone];
 }
 
 

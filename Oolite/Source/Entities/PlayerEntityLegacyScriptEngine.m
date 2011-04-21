@@ -36,7 +36,7 @@ MA 02110-1301, USA.
 #import "OOColor.h"
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOSound.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
@@ -1470,7 +1470,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 		if ([i_key isEqualToString:@"local-planet"] && [UNIVERSE sun])
 		{
 			OOPlanetEntity *mainPlanet = [UNIVERSE planet];
-			OOTexture *texture = [mainPlanet texture];
+			OOLegacyTexture *texture = [mainPlanet texture];
 			if (texture != nil)
 			{
 				[planetInfo setObject:texture forKey:@"_oo_textureObject"];

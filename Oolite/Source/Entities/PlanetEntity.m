@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "AI.h"
 #import "TextureStore.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOPixMapTextureLoader.h"
 #import "MyOpenGLView.h"
 #import "ShipEntityAI.h"
@@ -82,8 +82,8 @@ static GLfloat	texture_uv_array[MAX_PLANET_VERTICES * 2];
 - (void) setTextureColorForPlanet:(BOOL)isMain inSystem:(BOOL)isLocal;
 
 - (void) loadTexture:(NSDictionary *)configuration;
-- (OOTexture *) planetTextureWithInfo:(NSDictionary *)info;
-- (OOTexture *) cloudTextureWithCloudColor:(OOColor *)cloudColor cloudImpress:(GLfloat)cloud_impress cloudBias:(GLfloat)cloud_bias;
+- (OOLegacyTexture *) planetTextureWithInfo:(NSDictionary *)info;
+- (OOLegacyTexture *) cloudTextureWithCloudColor:(OOColor *)cloudColor cloudImpress:(GLfloat)cloud_impress cloudBias:(GLfloat)cloud_bias;
 
 - (void) deleteDisplayLists;
 
@@ -390,7 +390,7 @@ static const BaseFace kTexturedFaces[][3] =
 	else
 		planet_seed = p_seed.a * 7 + p_seed.c * 11 + p_seed.e * 13;	// pseudo-random set-up for vertex colours
 	
-	OOTexture *texture = [dict oo_objectOfClass:[OOTexture class] forKey:@"_oo_textureObject"];
+	OOLegacyTexture *texture = [dict oo_objectOfClass:[OOLegacyTexture class] forKey:@"_oo_textureObject"];
 	if (texture != nil)
 	{
 		_texture = [texture retain];
@@ -844,7 +844,7 @@ static const BaseFace kTexturedFaces[][3] =
 				else
 				{
 					OOGL(glDisable(GL_TEXTURE_2D));
-					[OOTexture applyNone];
+					[OOLegacyTexture applyNone];
 				}
 
 				OOGL(glShadeModel(GL_SMOOTH));
@@ -1467,7 +1467,7 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 }
 
 
-- (OOTexture *) texture
+- (OOLegacyTexture *) texture
 {
 	return _texture;
 }
@@ -1476,7 +1476,7 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 - (void) loadTexture:(NSDictionary *)configuration
 {
 	[_texture release];
-	_texture = [OOTexture textureWithConfiguration:configuration extraOptions:kOOTextureAllowCubeMap | kOOTextureRepeatS];
+	_texture = [OOLegacyTexture textureWithConfiguration:configuration extraOptions:kOOTextureAllowCubeMap | kOOTextureRepeatS];
 	[_texture retain];
 	
 	[_textureFileName release];
@@ -1492,7 +1492,7 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 	different objects.
 	-- Ahruman 2010-06-04
 */
-- (OOTexture *) planetTextureWithInfo:(NSDictionary *)info
+- (OOLegacyTexture *) planetTextureWithInfo:(NSDictionary *)info
 {
 	unsigned char *data;
 	GLuint width, height;
@@ -1507,16 +1507,16 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 	}
 	
 	OOPixMap pm = OOMakePixMap(data, width, height, kOOPixMapRGBA, 0, 0);
-	OOTextureGenerator *loader = [[OOPixMapTextureLoader alloc] initWithPixMap:pm
+	OOLegacyTextureGenerator *loader = [[OOPixMapTextureLoader alloc] initWithPixMap:pm
 																textureOptions:kOOTextureDefaultOptions | kOOTextureRepeatS
 																  freeWhenDone:YES];
 	[loader autorelease];
 	
-	return [OOTexture textureWithGenerator:loader];
+	return [OOLegacyTexture textureWithGenerator:loader];
 }
 
 
-- (OOTexture *) cloudTextureWithCloudColor:(OOColor *)cloudColor cloudImpress:(GLfloat)cloud_impress cloudBias:(GLfloat)cloud_bias
+- (OOLegacyTexture *) cloudTextureWithCloudColor:(OOColor *)cloudColor cloudImpress:(GLfloat)cloud_impress cloudBias:(GLfloat)cloud_bias
 {
 	unsigned char *data;
 	GLuint width, height;
@@ -1532,12 +1532,12 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 	}
 	
 	OOPixMap pm = OOMakePixMap(data, width, height, kOOPixMapRGBA, 0, 0);
-	OOTextureGenerator *loader = [[OOPixMapTextureLoader alloc] initWithPixMap:pm
+	OOLegacyTextureGenerator *loader = [[OOPixMapTextureLoader alloc] initWithPixMap:pm
 																textureOptions:kOOTextureDefaultOptions | kOOTextureRepeatS
 																  freeWhenDone:YES];
 	[loader autorelease];
 	
-	return [OOTexture textureWithGenerator:loader];
+	return [OOLegacyTexture textureWithGenerator:loader];
 }
 
 

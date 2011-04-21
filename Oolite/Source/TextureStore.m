@@ -39,7 +39,7 @@ MA 02110-1301, USA.
 static NSString * const kOOLogPlanetTextureGen			= @"texture.planet.generate";
 
 
-#import "OOTextureGenerator.h"	// For FloatRGB
+#import "OOLegacyTextureGenerator.h"	// For FloatRGB
 
 
 static FloatRGB FloatRGBFromDictColor(NSDictionary *dictionary, NSString *key)

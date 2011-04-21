@@ -1,8 +1,10 @@
 /*
 
-OOPNGTextureLoader.h
+OOLegacyShaderProgram.h
 
-It's a texture loader. Which loads PNGs.
+Encapsulates a vertex + fragment shader combo. In general, this should only be
+used though OOShaderMaterial. The point of this separation is that more than
+one OOShaderMaterial can use the same OOShaderProgram.
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -27,18 +29,31 @@ SOFTWARE.
 
 */
 
-#import <png.h>
-#import "OOTextureLoader.h"
+
+#import <Foundation/Foundation.h>
+#import "OOLegacyOpenGL.h"
+#import "OOOpenGLExtensionManager.h"
+
+#if OO_SHADERS
 
 
-@interface OOPNGTextureLoader: OOTextureLoader
+@interface OOLegacyShaderProgram: NSObject
 {
-	png_structp					png;
-	png_infop					pngInfo;
-	png_infop					pngEndInfo;
-	NSData						*fileData;
-	size_t						length;
-	size_t						offset;
+	GLhandleARB						program;
+	NSString						*key;
 }
 
+// Loads a shader from a file, caching and sharing shader program instances.
++ (id) shaderProgramWithVertexShaderName:(NSString *)vertexShaderName
+					  fragmentShaderName:(NSString *)fragmentShaderName
+								  prefix:(NSString *)prefixString			// String prepended to program source (both vs and fs)
+					   attributeBindings:(NSDictionary *)attributeBindings;	// Maps vertex attribute names to "locations".
+
+- (void) apply;
++ (void) applyNone;
+
+- (GLhandleARB) program;
+
 @end
+
+#endif // OO_SHADERS

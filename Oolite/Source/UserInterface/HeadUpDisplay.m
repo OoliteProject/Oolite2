@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #import "OOTrumble.h"
 #import "OOColor.h"
 #import "GuiDisplayGen.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOTextureSprite.h"
 #import "OOPolygonSprite.h"
 #import "OOEncodingConverter.h"
@@ -68,7 +68,7 @@ static void hudDrawReticleOnTarget(Entity* target, PlayerEntity* player1, GLfloa
 static void drawScannerGrid(double x, double y, double z, NSSize siz, int v_dir, GLfloat thickness, double zoom);
 
 
-static OOTexture			*sFontTexture = nil;
+static OOLegacyTexture			*sFontTexture = nil;
 static OOEncodingConverter	*sEncodingCoverter = nil;
 
 
@@ -372,7 +372,7 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 - (void) addLegend:(NSDictionary *) info
 {
 	NSString			*imageName = nil;
-	OOTexture			*texture = nil;
+	OOLegacyTexture			*texture = nil;
 	NSSize				imageSize;
 	OOTextureSprite		*legendSprite = nil;
 	NSMutableDictionary	*legendDict = nil;
@@ -380,11 +380,11 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 	imageName = [info oo_stringForKey:IMAGE_KEY];
 	if (imageName != nil)
 	{
-		texture = [OOTexture textureWithName:imageName
-									inFolder:@"Images"
-									 options:kOOTextureDefaultOptions | kOOTextureNoShrink
-								  anisotropy:kOOTextureDefaultAnisotropy
-									 lodBias:kOOTextureDefaultLODBias];
+		texture = [OOLegacyTexture textureWithName:imageName
+										  inFolder:@"Images"
+										   options:kOOTextureDefaultOptions | kOOTextureNoShrink
+										anisotropy:kOOTextureDefaultAnisotropy
+										   lodBias:kOOTextureDefaultLODBias];
 		if (texture == nil)
 		{
 			OOLog(kOOLogFileNotFound, @"***** ERROR: HeadUpDisplay couldn't get an image texture name for %@", imageName);
@@ -956,7 +956,7 @@ static BOOL hostiles;
 		drawCharacterQuad(49, cx + 0.3 * siz.width, cy, z1, siz);
 	OOGLEND();
 	
-	[OOTexture applyNone];
+	[OOLegacyTexture applyNone];
 	OOGL(glDisable(GL_TEXTURE_2D));
 }
 
@@ -2693,7 +2693,7 @@ static void InitTextEngine(void)
 												andMerge:NO];
 	
 	texName = [fontSpec oo_stringForKey:@"texture" defaultValue:@"oolite-font.png"];
-	sFontTexture = [OOTexture textureWithName:texName
+	sFontTexture = [OOLegacyTexture textureWithName:texName
 									 inFolder:@"Textures"
 									  options:kFontTextureOptions
 								   anisotropy:0.0f
@@ -2809,7 +2809,7 @@ void OODrawString(NSString *text, double x, double y, double z, NSSize siz)
 	}
 	OOGLEND();
 	
-	[OOTexture applyNone];
+	[OOLegacyTexture applyNone];
 	OOGL(glDisable(GL_TEXTURE_2D));
 }
 
@@ -2868,7 +2868,7 @@ void OODrawPlanetInfo(int gov, int eco, int tec, double x, double y, double z, N
 	
 	(void)cx;	// Suppress "value not used" analyzer issue.
 	
-	[OOTexture applyNone];
+	[OOLegacyTexture applyNone];
 	OOGL(glDisable(GL_TEXTURE_2D));
 }
 

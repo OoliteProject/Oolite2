@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOSingleTextureMaterial.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
 @implementation OOSingleTextureMaterial
@@ -45,12 +45,12 @@ SOFTWARE.
 	}
 	
 	return [self initWithName:name
-					  texture:[OOTexture textureWithConfiguration:texSpec]
+					  texture:[OOLegacyTexture textureWithConfiguration:texSpec]
 				configuration:configuration];
 }
 
 
-- (id) initWithName:(NSString *)name texture:(OOTexture *)texture configuration:(NSDictionary *)configuration
+- (id) initWithName:(NSString *)name texture:(OOLegacyTexture *)texture configuration:(NSDictionary *)configuration
 {
 	if (name != nil && texture != nil)
 	{
@@ -94,9 +94,9 @@ SOFTWARE.
 }
 
 
-- (void)unapplyWithNext:(OOMaterial *)next
+- (void)unapplyWithNext:(OOLegacyMaterial *)next
 {
-	if (![next isKindOfClass:[OOSingleTextureMaterial class]])  [OOTexture applyNone];
+	if (![next isKindOfClass:[OOSingleTextureMaterial class]])  [OOLegacyTexture applyNone];
 	[super unapplyWithNext:next];
 }
 

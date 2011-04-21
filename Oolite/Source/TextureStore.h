@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #if !NEW_PLANETS
 
 #import <OoliteBase/OoliteBase.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 
 @class OOColor;

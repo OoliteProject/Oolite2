@@ -28,7 +28,7 @@ SOFTWARE.
 */
 
 #import <OoliteBase/OoliteBase.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 @class Geometry;
 

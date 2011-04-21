@@ -30,13 +30,13 @@ SOFTWARE.
 */
 
 #import <Foundation/Foundation.h>
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
 @interface OOProbabilisticTextureManager: NSObject
 {
 	unsigned				_count;
-	OOTexture				**_textures;
+	OOLegacyTexture				**_textures;
 	float					*_prob;
 	float					_probMax;
 	RANROTSeed				_seed;
@@ -64,7 +64,7 @@ SOFTWARE.
 
 /*	Select a texture, weighted-randomly.
 */
-- (OOTexture *)selectTexture;
+- (OOLegacyTexture *)selectTexture;
 
 - (unsigned)textureCount;
 

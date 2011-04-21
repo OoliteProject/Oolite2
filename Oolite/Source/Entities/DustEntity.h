@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #define DUST_SCALE			2000
 #define DUST_N_PARTICLES	600
 
-@class OOColor, OOShaderProgram, OOShaderUniform;
+@class OOColor, OOLegacyShaderProgram, OOLegacyShaderUniform;
 
 
 @interface DustEntity: Entity
@@ -42,7 +42,7 @@ MA 02110-1301, USA.
 	
 #if OO_SHADERS
 	GLfloat				warpinessAttr[DUST_N_PARTICLES * 2];
-	OOShaderProgram		*shader;
+	OOLegacyShaderProgram		*shader;
 	NSArray				*uniforms;
 	uint8_t				shaderMode;
 #endif

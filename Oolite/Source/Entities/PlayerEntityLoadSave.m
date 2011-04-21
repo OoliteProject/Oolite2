@@ -37,7 +37,7 @@
 #import "StationEntity.h"
 #import "OOConstToString.h"
 #import "OOShipRegistry.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOJavaScriptEngine.h"
 #import "NSFileManagerOOExtensions.h"
 

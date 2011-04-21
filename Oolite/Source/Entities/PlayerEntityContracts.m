@@ -40,7 +40,7 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OOShipRegistry.h"
 #import "OOEquipmentType.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOJavaScriptEngine.h"
 
 

@@ -248,7 +248,7 @@ shaderBindingTarget:(id<OOWeakReferenceSupport>)object
 }
 
 
-+ (OOMaterial *)placeholderMaterial
++ (OOLegacyMaterial *)placeholderMaterial
 {
 	static OOBasicMaterial	*placeholderMaterial = nil;
 	
@@ -494,7 +494,7 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 	}
 #endif
 	
-	[OOMaterial applyNone];
+	[OOLegacyMaterial applyNone];
 	CheckOpenGLErrors(@"OOMesh after drawing %@", self);
 	
 #ifndef NDEBUG
@@ -529,17 +529,17 @@ static NSString *NormalModeDescription(OOMeshNormalMode mode)
 - (void) rebindMaterials
 {
 	OOMeshMaterialCount		i;
-	OOMaterial				*material = nil;
+	OOLegacyMaterial				*material = nil;
 	
 	if (materialCount != 0)
 	{
 		for (i = 0; i != materialCount; ++i)
 		{
-			OOMaterial *oldMaterial = materials[i];
+			OOLegacyMaterial *oldMaterial = materials[i];
 			
 			if (![materialKeys[i] isEqualToString:@"_oo_placeholder_material"])
 			{
-				material = [OOMaterial materialWithName:materialKeys[i]
+				material = [OOLegacyMaterial materialWithName:materialKeys[i]
 											   cacheKey:_cacheKey
 									 materialDictionary:_materialDict
 									  shadersDictionary:_shadersDict

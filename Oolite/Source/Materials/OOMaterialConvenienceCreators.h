@@ -27,12 +27,12 @@ SOFTWARE.
 
 */
 
-#import "OOMaterial.h"
+#import "OOLegacyMaterial.h"
 
 @class OOColor;
 
 
-@interface OOMaterial (OOConvenienceCreators)
+@interface OOLegacyMaterial (OOConvenienceCreators)
 
 /*	Get a material based on configuration. The result will be an
 	OOBasicMaterial, OOSingleTextureMaterial or OOShaderMaterial (the latter

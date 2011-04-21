@@ -30,12 +30,12 @@ SOFTWARE.
 */
 
 
-#import "OOTextureGenerator.h"
+#import "OOLegacyTextureGenerator.h"
 
 @class OOColor;
 
 
-@interface OOCombinedEmissionMapGenerator: OOTextureGenerator
+@interface OOCombinedEmissionMapGenerator: OOLegacyTextureGenerator
 {
 @private
 	NSString					*_cacheKey;
@@ -55,15 +55,15 @@ SOFTWARE.
 }
 
 // Note: these take ownership of diffuseMap's pixels.
-- (id) initWithEmissionMap:(OOTextureLoader *)emissionMapLoader
+- (id) initWithEmissionMap:(OOLegacyTextureLoader *)emissionMapLoader
 			 emissionColor:(OOColor *)emissionColor
-				diffuseMap:(OOTexture *)diffuseMap
+				diffuseMap:(OOLegacyTexture *)diffuseMap
 			  diffuseColor:(OOColor *)diffuseColor
-		   illuminationMap:(OOTextureLoader *)illuminationMapLoader
+		   illuminationMap:(OOLegacyTextureLoader *)illuminationMapLoader
 		 illuminationColor:(OOColor *)illuminationColor;
 
-- (id) initWithEmissionAndIlluminationMap:(OOTextureLoader *)emissionAndIlluminationMapLoader
-							   diffuseMap:(OOTexture *)diffuseMap
+- (id) initWithEmissionAndIlluminationMap:(OOLegacyTextureLoader *)emissionAndIlluminationMapLoader
+							   diffuseMap:(OOLegacyTexture *)diffuseMap
 							 diffuseColor:(OOColor *)diffuseColor
 							emissionColor:(OOColor *)emissionColor
 						illuminationColor:(OOColor *)illuminationColor;

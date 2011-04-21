@@ -1,6 +1,6 @@
 /*
 
-OOPNGTextureLoader.m
+OOLegacyPNGTextureLoader.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -25,7 +25,7 @@ SOFTWARE.
 
 */
 
-#import "OOPNGTextureLoader.h"
+#import "OOLegacyPNGTextureLoader.h"
 
 
 void png_error(png_structp, png_const_charp) NO_RETURN_FUNC;
@@ -36,7 +36,7 @@ static void PNGWarning(png_structp png, png_const_charp message);
 static void PNGRead(png_structp png, png_bytep bytes, png_size_t size);
 
 
-@interface OOPNGTextureLoader (OOPrivate)
+@interface OOLegacyPNGTextureLoader (OOPrivate)
 
 - (void)doLoadTexture;
 - (void)readBytes:(png_bytep)bytes count:(png_size_t)count;
@@ -44,7 +44,7 @@ static void PNGRead(png_structp png, png_bytep bytes, png_size_t size);
 @end
 
 
-@implementation OOPNGTextureLoader
+@implementation OOLegacyPNGTextureLoader
 
 - (void)loadTexture
 {
@@ -208,7 +208,7 @@ FAIL:
 
 static void PNGError(png_structp png, png_const_charp message)
 {
-	OOPNGTextureLoader *loader = png_get_io_ptr(png);
+	OOLegacyPNGTextureLoader *loader = png_get_io_ptr(png);
 	OOLog(@"texture.load.png.error", @"***** A PNG loading error occurred for %@: %s" MSG_TERMINATOR, [loader path], message);
 	
 #if PNG_LIBPNG_VER >= 10500
@@ -221,13 +221,13 @@ static void PNGError(png_structp png, png_const_charp message)
 
 static void PNGWarning(png_structp png, png_const_charp message)
 {
-	OOPNGTextureLoader *loader = png_get_io_ptr(png);
+	OOLegacyPNGTextureLoader *loader = png_get_io_ptr(png);
 	OOLog(@"texture.load.png.warning", @"----- A PNG loading warning occurred for %@: %s" MSG_TERMINATOR, [loader path], message);
 }
 
 
 static void PNGRead(png_structp png, png_bytep bytes, png_size_t size)
 {
-	OOPNGTextureLoader *loader = png_get_io_ptr(png);
+	OOLegacyPNGTextureLoader *loader = png_get_io_ptr(png);
 	[loader readBytes:bytes count:size];
 }

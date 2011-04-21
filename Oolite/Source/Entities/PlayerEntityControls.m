@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"
 #import "OOMusicController.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OODebugFlags.h"
 
 #import "OOJoystickManager.h"

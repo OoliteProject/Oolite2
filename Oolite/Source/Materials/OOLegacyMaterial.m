@@ -1,6 +1,6 @@
 /*
 
-OOMaterial.m
+OOLegacyMaterial.m
 
 
 Copyright (C) 2007-2011 Jens Ayton and contributors
@@ -25,13 +25,13 @@ SOFTWARE.
 
 */
 
-#import "OOMaterial.h"
+#import "OOLegacyMaterial.h"
 
 
-static OOMaterial *sActiveMaterial = nil;
+static OOLegacyMaterial *sActiveMaterial = nil;
 
 
-@implementation OOMaterial
+@implementation OOLegacyMaterial
 
 + (void)setUp
 {
@@ -83,7 +83,7 @@ static OOMaterial *sActiveMaterial = nil;
 }
 
 
-+ (OOMaterial *)current
++ (OOLegacyMaterial *)current
 {
 	return [[sActiveMaterial retain] autorelease];
 }
@@ -131,7 +131,7 @@ static OOMaterial *sActiveMaterial = nil;
 @end
 
 
-@implementation OOMaterial (OOSubclassInterface)
+@implementation OOLegacyMaterial (OOSubclassInterface)
 
 - (BOOL)doApply
 {
@@ -140,7 +140,7 @@ static OOMaterial *sActiveMaterial = nil;
 }
 
 
-- (void)unapplyWithNext:(OOMaterial *)next
+- (void)unapplyWithNext:(OOLegacyMaterial *)next
 {
 	// Do nothing.
 }

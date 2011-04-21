@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 
 #define GLVertexOOVector(v) do { Vector v_ = v; glVertex3f(v_.x, v_.y, v_.z); } while (0)

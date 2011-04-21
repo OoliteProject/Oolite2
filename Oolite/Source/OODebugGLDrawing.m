@@ -27,7 +27,7 @@ SOFTWARE.
 
 #import "OODebugGLDrawing.h"
 #import "OOMacroOpenGL.h"
-#import "OOMaterial.h"
+#import "OOLegacyMaterial.h"
 
 
 #ifndef OODEBUGLDRAWING_DISABLE
@@ -134,8 +134,8 @@ OODebugWFState OODebugBeginWireframe(BOOL ignoreZ)
 {
 	OO_ENTER_OPENGL();
 	
-	OODebugWFState state = { .material = [OOMaterial current] };
-	[OOMaterial applyNone];
+	OODebugWFState state = { .material = [OOLegacyMaterial current] };
+	[OOLegacyMaterial applyNone];
 	
 	OOGL(glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_LINE_BIT | GL_POINT_BIT | GL_CURRENT_BIT));
 	

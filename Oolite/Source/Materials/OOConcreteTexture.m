@@ -24,10 +24,10 @@
 	
 */
 
-#import "OOTextureInternal.h"
+#import "OOLegacyTextureInternal.h"
 #import "OOConcreteTexture.h"
 
-#import "OOTextureLoader.h"
+#import "OOLegacyTextureLoader.h"
 
 #import "Universe.h"
 #import "ResourceManager.h"
@@ -36,7 +36,7 @@
 #import "OOPixMap.h"
 
 #ifndef NDEBUG
-#import "OOTextureGenerator.h"
+#import "OOLegacyTextureGenerator.h"
 #endif
 
 
@@ -70,7 +70,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 @implementation OOConcreteTexture
 
-- (id) initWithLoader:(OOTextureLoader *)loader
+- (id) initWithLoader:(OOLegacyTextureLoader *)loader
 				  key:(NSString *)key
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy
@@ -94,7 +94,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	_lodBias = lodBias;
 	
 #ifndef NDEBUG
-	if ([loader isKindOfClass:[OOTextureGenerator class]])
+	if ([loader isKindOfClass:[OOLegacyTextureGenerator class]])
 	{
 		_name = [[NSString alloc] initWithFormat:@"<%@>", [loader class]];
 	}
@@ -114,7 +114,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 		anisotropy:(float)anisotropy
 		   lodBias:(GLfloat)lodBias
 {
-	OOTextureLoader *loader = [OOTextureLoader loaderWithPath:path options:options];
+	OOLegacyTextureLoader *loader = [OOLegacyTextureLoader loaderWithPath:path options:options];
 	if (loader == nil)
 	{
 		[self release];
@@ -615,7 +615,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 			_uploaded = NO;
 			_valid = NO;
 			
-			_loader = [[OOTextureLoader loaderWithPath:_path options:_options] retain];
+			_loader = [[OOLegacyTextureLoader loaderWithPath:_path options:_options] retain];
 		}
 #endif
 	}

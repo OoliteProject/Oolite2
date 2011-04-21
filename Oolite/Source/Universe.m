@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "Universe.h"
 #import "MyOpenGLView.h"
 #import "GameController.h"
@@ -37,8 +37,8 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOOpenGLExtensionManager.h"
-#import "OOMaterial.h"
-#import "OOTexture.h"
+#import "OOLegacyMaterial.h"
+#import "OOLegacyTexture.h"
 #import "OORoleSet.h"
 #import "OOShipGroup.h"
 
@@ -249,7 +249,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[self setShaderEffectsLevelDirectly:[prefs oo_intForKey:@"shader-mode"
 											   defaultValue:[[OOOpenGLExtensionManager sharedManager] defaultShaderSetting]]];
 	
-	[OOMaterial setUp];
+	[OOLegacyMaterial setUp];
 	
 	// Preload cache
 	[OOCacheManager sharedCache];
@@ -8329,7 +8329,7 @@ Entity *gOOJSPlayerIfStale = nil;
 	assert(player != nil);
 	
 	[self removeAllEntitiesExceptPlayer];
-	[OOTexture clearCache];
+	[OOLegacyTexture clearCache];
 	[self resetSystemDataCache];
 	
 	//[ResourceManager loadScripts]; // initialised inside [player setUp]!

@@ -1,6 +1,8 @@
 /*
 
-OOTextureGenerator.m
+OOLegacyPNGTextureLoader.h
+
+It's a texture loader. Which loads PNGs.
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -25,39 +27,18 @@ SOFTWARE.
 
 */
 
-#import "OOTextureGenerator.h"
-#import "OOAsyncWorkManager.h"
+#import <png.h>
+#import "OOLegacyTextureLoader.h"
 
 
-@implementation OOTextureGenerator
-
-- (uint32_t) textureOptions
+@interface OOLegacyPNGTextureLoader: OOLegacyTextureLoader
 {
-	return kOOTextureDefaultOptions;
-}
-
-
-- (GLfloat) anisotropy
-{
-	return kOOTextureDefaultAnisotropy;
-}
-
-
-- (GLfloat) lodBias
-{
-	return kOOTextureDefaultLODBias;
-}
-
-
-- (NSString *) cacheKey
-{
-	return nil;
-}
-
-
-- (BOOL) enqueue
-{
-	return [[OOAsyncWorkManager sharedAsyncWorkManager] addTask:self priority:kOOAsyncPriorityMedium];
+	png_structp					png;
+	png_infop					pngInfo;
+	png_infop					pngEndInfo;
+	NSData						*fileData;
+	size_t						length;
+	size_t						offset;
 }
 
 @end

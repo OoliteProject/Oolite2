@@ -28,9 +28,9 @@ SOFTWARE.
 #import "OOMultiTextureMaterial.h"
 #import "OOCombinedEmissionMapGenerator.h"
 #import "OOOpenGLExtensionManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOMacroOpenGL.h"
-#import "OOMaterialSpecifier.h"
+#import "OOLegacyMaterialSpecifier.h"
 
 #if OO_MULTITEXTURE
 
@@ -70,14 +70,14 @@ SOFTWARE.
 	{
 		if (diffuseSpec != nil)
 		{
-			_diffuseMap = [[OOTexture textureWithConfiguration:diffuseSpec] retain];
+			_diffuseMap = [[OOLegacyTexture textureWithConfiguration:diffuseSpec] retain];
 			if (_diffuseMap != nil)  _unitsUsed++;
 		}
 		
 		// Check for simplest cases, where we don't need to bake a derived emission map.
 		if (emissionSpec != nil && illuminationSpec == nil && emissionAndIlluminationSpec == nil && emissionColor == nil)
 		{
-			_emissionMap = [[OOTexture textureWithConfiguration:emissionSpec] retain];
+			_emissionMap = [[OOLegacyTexture textureWithConfiguration:emissionSpec] retain];
 			if (_emissionMap != nil)  _unitsUsed++;
 		}
 		else
@@ -86,7 +86,7 @@ SOFTWARE.
 			
 			if (emissionAndIlluminationSpec != nil)
 			{
-				OOTextureLoader *emissionAndIlluminationMap = [OOTextureLoader loaderWithTextureSpecifier:emissionAndIlluminationSpec
+				OOLegacyTextureLoader *emissionAndIlluminationMap = [OOLegacyTextureLoader loaderWithTextureSpecifier:emissionAndIlluminationSpec
 																							 extraOptions:0
 																								   folder:@"Textures"];
 				generator = [[OOCombinedEmissionMapGenerator alloc] initWithEmissionAndIlluminationMap:emissionAndIlluminationMap
@@ -97,10 +97,10 @@ SOFTWARE.
 			}
 			else
 			{
-				OOTextureLoader *emissionMap = [OOTextureLoader loaderWithTextureSpecifier:emissionSpec
+				OOLegacyTextureLoader *emissionMap = [OOLegacyTextureLoader loaderWithTextureSpecifier:emissionSpec
 																			  extraOptions:0
 																					folder:@"Textures"];
-				OOTextureLoader *illuminationMap = [OOTextureLoader loaderWithTextureSpecifier:illuminationSpec
+				OOLegacyTextureLoader *illuminationMap = [OOLegacyTextureLoader loaderWithTextureSpecifier:illuminationSpec
 																				  extraOptions:0
 																						folder:@"Textures"];
 				generator = [[OOCombinedEmissionMapGenerator alloc] initWithEmissionMap:emissionMap
@@ -111,7 +111,7 @@ SOFTWARE.
 																	  illuminationColor:illuminationColor];
 			}
 			
-			_emissionMap = [[OOTexture textureWithGenerator:[generator autorelease]] retain];
+			_emissionMap = [[OOLegacyTexture textureWithGenerator:[generator autorelease]] retain];
 			if (_emissionMap != nil)  _unitsUsed++;
 		}
 	}
@@ -195,7 +195,7 @@ SOFTWARE.
 }
 
 
-- (void) unapplyWithNext:(OOMaterial *)next
+- (void) unapplyWithNext:(OOLegacyMaterial *)next
 {
 	OO_ENTER_OPENGL();
 	
@@ -206,7 +206,7 @@ SOFTWARE.
 	for (; i != _unitsUsed; ++i)
 	{
 		OOGL(glActiveTextureARB(GL_TEXTURE0_ARB + i));
-		[OOTexture applyNone];
+		[OOLegacyTexture applyNone];
 		OOGL(glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE));
 	}
 	OOGL(glActiveTextureARB(GL_TEXTURE0_ARB));

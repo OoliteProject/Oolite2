@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "Entity.h"
 #import "OOTypes.h"
 
-@class OOTexture, OOColor;
+@class OOLegacyTexture, OOColor;
 
 
 enum

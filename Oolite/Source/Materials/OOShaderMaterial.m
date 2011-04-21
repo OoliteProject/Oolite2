@@ -31,9 +31,9 @@ SOFTWARE.
 #if OO_SHADERS
 
 #import "ResourceManager.h"
-#import "OOShaderUniform.h"
-#import "OOShaderProgram.h"
-#import "OOTexture.h"
+#import "OOLegacyShaderUniform.h"
+#import "OOLegacyShaderProgram.h"
+#import "OOLegacyTexture.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
 #import "Universe.h"
@@ -125,7 +125,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 			}
 			
 			OOLogIndent();
-			shaderProgram = [OOShaderProgram shaderProgramWithVertexShaderName:vertexShader
+			shaderProgram = [OOLegacyShaderProgram shaderProgramWithVertexShaderName:vertexShader
 															fragmentShaderName:fragmentShader
 																		prefix:macroString
 															 attributeBindings:attributeBindings];
@@ -145,7 +145,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 					macroString = MacrosToString(modifiedMacros);
 					
 					OOLogIndent();
-					shaderProgram = [OOShaderProgram shaderProgramWithVertexShaderName:vertexShader
+					shaderProgram = [OOLegacyShaderProgram shaderProgramWithVertexShaderName:vertexShader
 																	fragmentShaderName:fragmentShader
 																				prefix:macroString
 																	 attributeBindings:attributeBindings];
@@ -231,11 +231,11 @@ static NSString *MacrosToString(NSDictionary *macros);
 		   property:(SEL)selector
 	 convertOptions:(OOUniformConvertOptions)options
 {
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	
 	if (uniformName == nil) return NO;
 	
-	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+	uniform = [[OOLegacyShaderUniform alloc] initWithName:uniformName
 									  shaderProgram:shaderProgram
 									  boundToObject:source
 										   property:selector
@@ -283,11 +283,11 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void)setUniform:(NSString *)uniformName intValue:(int)value
 {
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	
 	if (uniformName == nil) return;
 	
-	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+	uniform = [[OOLegacyShaderUniform alloc] initWithName:uniformName
 									  shaderProgram:shaderProgram
 										   intValue:value];
 	if (uniform != nil)
@@ -306,11 +306,11 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void)setUniform:(NSString *)uniformName floatValue:(float)value
 {
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	
 	if (uniformName == nil) return;
 	
-	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+	uniform = [[OOLegacyShaderUniform alloc] initWithName:uniformName
 									  shaderProgram:shaderProgram
 										 floatValue:value];
 	if (uniform != nil)
@@ -329,11 +329,11 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void)setUniform:(NSString *)uniformName vectorValue:(Vector)value
 {
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	
 	if (uniformName == nil) return;
 	
-	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+	uniform = [[OOLegacyShaderUniform alloc] initWithName:uniformName
 									  shaderProgram:shaderProgram
 										vectorValue:value];
 	if (uniform != nil)
@@ -352,11 +352,11 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (void)setUniform:(NSString *)uniformName quaternionValue:(Quaternion)value asMatrix:(BOOL)asMatrix
 {
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	
 	if (uniformName == nil) return;
 	
-	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+	uniform = [[OOLegacyShaderUniform alloc] initWithName:uniformName
 									  shaderProgram:shaderProgram
 									quaternionValue:value
 										   asMatrix:asMatrix];
@@ -554,7 +554,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 - (BOOL)doApply
 {
 	NSEnumerator			*uniformEnum = nil;
-	OOShaderUniform			*uniform = nil;
+	OOLegacyShaderUniform			*uniform = nil;
 	uint32_t				i;
 	
 	OO_ENTER_OPENGL();
@@ -615,14 +615,14 @@ static NSString *MacrosToString(NSDictionary *macros);
 }
 
 
-- (void)unapplyWithNext:(OOMaterial *)next
+- (void)unapplyWithNext:(OOLegacyMaterial *)next
 {
 	uint32_t				i, count;
 	
 	if (![next isKindOfClass:[OOShaderMaterial class]])	// Avoid redundant state change
 	{
 		OO_ENTER_OPENGL();
-		[OOShaderProgram applyNone];
+		[OOLegacyShaderProgram applyNone];
 		
 		/*	BUG: unapplyWithNext: was failing to clear texture state. If a
 			shader material was followed by a basic material (with no texture),
@@ -636,7 +636,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 		for (i = 0; i != count; ++i)
 		{
 			OOGL(glActiveTextureARB(GL_TEXTURE0_ARB + i));
-			[OOTexture applyNone];
+			[OOLegacyTexture applyNone];
 		}
 		if (count != 1)  OOGL(glActiveTextureARB(GL_TEXTURE0_ARB));
 	}
@@ -673,8 +673,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 	for (i = 0; i < count; i++)
 	{
 		id textureSpec = [textureSpecs objectAtIndex:i];
-		OOTexture *texture = [OOTexture textureWithConfiguration:textureSpec];
-		if (texture == nil)  texture = [OOTexture nullTexture];
+		OOLegacyTexture *texture = [OOLegacyTexture textureWithConfiguration:textureSpec];
+		if (texture == nil)  texture = [OOLegacyTexture nullTexture];
 		[result addObject:texture];
 	}
 	

@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 
 @class GuiDisplayGen, OOTrumble, MyOpenGLView, HeadUpDisplay, ShipEntity;
 @class OOSound, OOSoundSource, OOSoundReferencePoint;
-@class OOJoystickManager, OOTexture, OOCamera;
+@class OOJoystickManager, OOLegacyTexture, OOCamera;
 
 
 #define GUI_ROW_INIT(GUI) /*int n_rows = [(GUI) rows]*/

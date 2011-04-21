@@ -30,7 +30,7 @@ SOFTWARE.
 
 
 #import <OoliteBase/OoliteBase.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOOpenGLExtensionManager.h"
 
 

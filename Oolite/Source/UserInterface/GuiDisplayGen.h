@@ -53,7 +53,7 @@ typedef enum
 #define GUI_KEY_SKIP			@"SKIP-ROW"
 
 
-@class OOSound, OOColor, OOTexture, OOTextureSprite, HeadUpDisplay;
+@class OOSound, OOColor, OOLegacyTexture, OOTextureSprite, HeadUpDisplay;
 
 
 typedef int OOGUIRow;	// -1 for none

@@ -1,6 +1,6 @@
 /*
 
-OOTextureLoader.m
+OOLegacyTextureLoader.m
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -25,8 +25,8 @@ SOFTWARE.
 
 */
 
-#import "OOPNGTextureLoader.h"
-#import "OOTextureLoader.h"
+#import "OOLegacyPNGTextureLoader.h"
+#import "OOLegacyTextureLoader.h"
 #import "Universe.h"
 #import "OOTextureScaling.h"
 #import "OOPixMapChannelOperations.h"
@@ -40,7 +40,7 @@ static BOOL					sReducedDetail;
 static BOOL					sHaveSetUp = NO;
 
 
-@interface OOTextureLoader (OOPrivate)
+@interface OOLegacyTextureLoader (OOPrivate)
 
 + (void)setUp;
 
@@ -51,7 +51,7 @@ static BOOL					sHaveSetUp = NO;
 @end
 
 
-@implementation OOTextureLoader
+@implementation OOLegacyTextureLoader
 
 + (id)loaderWithPath:(NSString *)inPath options:(uint32_t)options
 {
@@ -68,7 +68,7 @@ static BOOL					sHaveSetUp = NO;
 	extension = [[inPath pathExtension] lowercaseString];
 	if ([extension isEqualToString:@"png"])
 	{
-		result = [[[OOPNGTextureLoader alloc] initWithPath:inPath options:options] autorelease];
+		result = [[[OOLegacyPNGTextureLoader alloc] initWithPath:inPath options:options] autorelease];
 	}
 	else
 	{

@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOMaterialConvenienceCreators.h"
-#import "OOMaterialSpecifier.h"
+#import "OOLegacyMaterialSpecifier.h"
 
 #import "OOOpenGLExtensionManager.h"
 #import "OOShaderMaterial.h"
@@ -34,7 +34,7 @@ SOFTWARE.
 #import "OOMultiTextureMaterial.h"
 #import "Universe.h"
 #import "OOCacheManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OODebugFlags.h"
 
 
@@ -71,7 +71,7 @@ static void SynthNormalMap(OOMaterialSynthContext *context);
 static void SynthSpecular(OOMaterialSynthContext *context);
 
 
-@implementation OOMaterial (OOConvenienceCreators)
+@implementation OOLegacyMaterial (OOConvenienceCreators)
 
 + (NSDictionary *)synthesizeMaterialDictionaryWithName:(NSString *)name
 										 configuration:(NSDictionary *)configuration
@@ -126,7 +126,7 @@ static void SynthSpecular(OOMaterialSynthContext *context);
 }
 
 
-+ (OOMaterial *)defaultShaderMaterialWithName:(NSString *)name
++ (OOLegacyMaterial *)defaultShaderMaterialWithName:(NSString *)name
 									 cacheKey:(NSString *)cacheKey
 								configuration:(NSDictionary *)configuration
 									   macros:(NSDictionary *)macros
@@ -134,7 +134,7 @@ static void SynthSpecular(OOMaterialSynthContext *context);
 {
 	OOCacheManager			*cache = nil;
 	NSDictionary			*synthesizedConfig = nil;
-	OOMaterial				*result = nil;
+	OOLegacyMaterial				*result = nil;
 	
 	// Avoid looping (can happen if shader fails to compile).
 	if ([configuration objectForKey:@"_oo_is_synthesized_config"] != nil)
@@ -280,7 +280,7 @@ static void SynthSpecular(OOMaterialSynthContext *context);
 	{
 		// Use fallback material for non-existent simple texture.
 		// Texture caching means this won't be wasted in the general case.
-		OOTexture *texture = [OOTexture textureWithName:name inFolder:@"Textures"];
+		OOLegacyTexture *texture = [OOLegacyTexture textureWithName:name inFolder:@"Textures"];
 		if (texture == nil)  return nil;
 		
 		configuration = [NSDictionary dictionary];

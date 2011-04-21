@@ -25,10 +25,10 @@ MA 02110-1301, USA.
 */
 
 #import <Foundation/Foundation.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 
-@class PlayerEntity, AI, OOSound, OOTexture;
+@class PlayerEntity, AI, OOSound, OOLegacyTexture;
 
 #define TRUMBLE_MAX_ROTATION				15.0
 #define TRUMBLE_MAX_ROTATIONAL_VELOCITY		5.0
@@ -107,7 +107,7 @@ float	trumbleAppetiteAccumulator;
 	enum trumble_mouth		mouthFrame;	// which mouth position - determines what part of the texture to display
 	enum trumble_eyes		eyeFrame;	// which eye position - determines what part of the texture to display
 	//
-	OOTexture				*texture;
+	OOLegacyTexture				*texture;
 	//
 	GLfloat					saved_float1, saved_float2;
 	//

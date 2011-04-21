@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "PlayerEntity.h"
 #import "OOColor.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOGraphicsResetManager.h"
 
 
@@ -38,7 +38,7 @@ MA 02110-1301, USA.
 #define kLaserFlashInitialSize		1.0f
 
 
-static OOTexture *sFlashTexture = nil;
+static OOLegacyTexture *sFlashTexture = nil;
 
 
 @interface OOFlashEffectEntity (Private)
@@ -124,7 +124,7 @@ static OOTexture *sFlashTexture = nil;
 }
 
 
-- (OOTexture *) texture
+- (OOLegacyTexture *) texture
 {
 	if (sFlashTexture == nil)  [OOFlashEffectEntity	setUpTexture];
 	return sFlashTexture;
@@ -135,11 +135,11 @@ static OOTexture *sFlashTexture = nil;
 {
 	if (sFlashTexture == nil)
 	{
-		sFlashTexture = [[OOTexture textureWithName:@"oolite-particle-flash.png"
-										   inFolder:@"Textures"
-											options:kOOTextureMinFilterMipMap | kOOTextureMagFilterLinear | kOOTextureAlphaMask
-										 anisotropy:kOOTextureDefaultAnisotropy
-											lodBias:0.0] retain];
+		sFlashTexture = [[OOLegacyTexture textureWithName:@"oolite-particle-flash.png"
+												 inFolder:@"Textures"
+												  options:kOOTextureMinFilterMipMap | kOOTextureMagFilterLinear | kOOTextureAlphaMask
+											   anisotropy:kOOTextureDefaultAnisotropy
+												  lodBias:0.0] retain];
 		[[OOGraphicsResetManager sharedManager] registerClient:(id<OOGraphicsResetClient>)[OOFlashEffectEntity class]];
 	}
 }

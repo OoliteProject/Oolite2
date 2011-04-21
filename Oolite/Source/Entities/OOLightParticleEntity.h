@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import "Entity.h"
 
-@class OOTexture, OOColor;
+@class OOLegacyTexture, OOColor;
 
 
 @interface OOLightParticleEntity: Entity
@@ -50,9 +50,9 @@ MA 02110-1301, USA.
 	OOLightParticleEntity assumes the texture is twice as big as the nominal
 	size of the particle (with a black border for anti-aliasing purposes).
 */
-- (OOTexture *) texture;
+- (OOLegacyTexture *) texture;
 
 + (void) setUpTexture;
-+ (OOTexture *) defaultParticleTexture;
++ (OOLegacyTexture *) defaultParticleTexture;
 
 @end

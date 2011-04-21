@@ -27,11 +27,11 @@ SOFTWARE.
 
 */
 
-#import "OOTextureGenerator.h"
+#import "OOLegacyTextureGenerator.h"
 #import "OOPixMap.h"
 
 
-@interface OOPixMapTextureLoader: OOTextureGenerator
+@interface OOPixMapTextureLoader: OOLegacyTextureGenerator
 {
 @private
 	OOPixMap			_pixMap;

@@ -33,7 +33,7 @@ SOFTWARE.
 #if OO_SHADERS
 
 
-@class OOShaderProgram, OOTexture;
+@class OOLegacyShaderProgram, OOLegacyTexture;
 
 
 enum
@@ -51,11 +51,11 @@ typedef uint16_t OOUniformConvertOptions;
 
 @interface OOShaderMaterial: OOBasicMaterial
 {
-	OOShaderProgram					*shaderProgram;
+	OOLegacyShaderProgram					*shaderProgram;
 	NSMutableDictionary				*uniforms;
 	
 	uint32_t						texCount;
-	OOTexture						**textures;
+	OOLegacyTexture						**textures;
 	
 	OOWeakReference					*bindingTarget;
 }

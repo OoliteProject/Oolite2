@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 */
 
 #import <Foundation/Foundation.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 #import "OOTypes.h"
 #import "MyOpenGLView.h"

@@ -34,14 +34,14 @@ SOFTWARE.
 
 #import "OOBasicMaterial.h"
 
-@class OOTexture;
+@class OOLegacyTexture;
 
 
 @interface OOMultiTextureMaterial: OOBasicMaterial
 {
 @private
-	OOTexture			*_diffuseMap;
-	OOTexture			*_emissionMap;
+	OOLegacyTexture			*_diffuseMap;
+	OOLegacyTexture			*_emissionMap;
 	
 	OOUInteger			_unitsUsed;
 }

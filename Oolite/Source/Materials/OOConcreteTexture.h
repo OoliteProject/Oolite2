@@ -28,13 +28,13 @@ SOFTWARE.
 
 */
 
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
 #define OOTEXTURE_RELOADABLE		1
 
 
-@interface OOConcreteTexture: OOTexture
+@interface OOConcreteTexture: OOLegacyTexture
 {
 @private
 #if OOTEXTURE_RELOADABLE
@@ -50,7 +50,7 @@ SOFTWARE.
 							_valid: 1;
 	uint8_t					_mipLevels;
 	
-	OOTextureLoader			*_loader;
+	OOLegacyTextureLoader			*_loader;
 	
 	void					*_bytes;
 	GLuint					_textureName;
@@ -72,7 +72,7 @@ SOFTWARE.
 #endif
 }
 
-- (id) initWithLoader:(OOTextureLoader *)loader
+- (id) initWithLoader:(OOLegacyTextureLoader *)loader
 				  key:(NSString *)key
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy

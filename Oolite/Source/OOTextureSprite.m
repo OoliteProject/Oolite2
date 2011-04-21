@@ -23,18 +23,18 @@ MA 02110-1301, USA.
 */
 
 #import "OOTextureSprite.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 
 
 @implementation OOTextureSprite
 
-- (id)initWithTexture:(OOTexture *)inTexture
+- (id)initWithTexture:(OOLegacyTexture *)inTexture
 {
 	return [self initWithTexture:inTexture size:[inTexture originalDimensions]];
 }
 
 
-- (id)initWithTexture:(OOTexture *)inTexture size:(NSSize)spriteSize
+- (id)initWithTexture:(OOLegacyTexture *)inTexture size:(NSSize)spriteSize
 {
 	if (inTexture == nil)
 	{

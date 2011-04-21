@@ -38,7 +38,7 @@ SOFTWARE.
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSSpecialFunctions.h"
 
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOConcreteTexture.h"
 #import "OODrawable.h"
 #import "OOColor.h"
@@ -489,10 +489,10 @@ typedef struct
 	OOLogIndent();
 	
 	//	Get texture retain counts before the entity dumper starts messing with them.
-	NSSet *allTextures = [OOTexture allTextures];
+	NSSet *allTextures = [OOLegacyTexture allTextures];
 	NSMutableDictionary *textureRefCounts = [NSMutableDictionary dictionaryWithCapacity:[allTextures count]];
 	
-	OOTexture *tex = nil;
+	OOLegacyTexture *tex = nil;
 	NSEnumerator *texEnum = nil;
 	for (texEnum = [allTextures objectEnumerator]; (tex = [texEnum nextObject]); )
 	{
@@ -535,7 +535,7 @@ typedef struct
 	/*	Sort textures so that textures in the "recent cache" come first by age,
 		followed by others.
 	*/
-	NSMutableArray *textures = [[[OOTexture cachedTexturesByAge] mutableCopy] autorelease];
+	NSMutableArray *textures = [[[OOLegacyTexture cachedTexturesByAge] mutableCopy] autorelease];
 	
 	for (texEnum = [allTextures objectEnumerator]; (tex = [texEnum nextObject]); )
 	{

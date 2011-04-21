@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 
 #import "Entity.h"
 
-@class OOTexture, OOColor;
+@class OOLegacyTexture, OOColor;
 
 
 #define MAX_TRI_INDICES			3*(20+80+320+1280+5120+20480)
@@ -59,7 +59,7 @@ typedef struct
 	BOOL					useTexturedModel;
 	BOOL					isTextureImage;			// is the texture explicitly specified (as opposed to synthesized)?
 	NSString				*_textureFileName;
-	OOTexture				*_texture;
+	OOLegacyTexture				*_texture;
 	
 	int						planet_seed;
 	double					polar_color_factor;
@@ -95,7 +95,7 @@ typedef struct
 - (int) planet_seed;
 - (BOOL) isTextured;
 - (BOOL) isExplicitlyTextured;		// Specified texture, not synthesized.
-- (OOTexture *) texture;
+- (OOLegacyTexture *) texture;
 - (NSString *) textureFileName;
 
 - (double) polar_color_factor;

@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOGraphicsResetManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOOpenGLExtensionManager.h"
 
 
@@ -78,7 +78,7 @@ static OOGraphicsResetManager *sSingleton = nil;
 	OOLogIndentIf(@"rendering.reset.start");
 	
 	[[OOOpenGLExtensionManager sharedManager] reset];
-	[OOTexture rebindAllTextures];
+	[OOLegacyTexture rebindAllTextures];
 	
 	for (clientEnum = [clients objectEnumerator]; (client = [[clientEnum nextObject] pointerValue]); )
 	{

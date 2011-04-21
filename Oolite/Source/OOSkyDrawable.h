@@ -28,9 +28,9 @@ SOFTWARE.
 */
 
 #import "OODrawable.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
-@class OOColor, OOTexture;
+@class OOColor, OOLegacyTexture;
 
 
 @interface OOSkyDrawable: OODrawable

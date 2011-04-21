@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "Octree.h"
 #import "Entity.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OODebugGLDrawing.h"
 #import "OOMacroOpenGL.h"
 #import "OODebugFlags.h"

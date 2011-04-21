@@ -1,8 +1,8 @@
 /*
 
-OOShaderUniform.h
+OOLegacyShaderUniform.h
 
-Manages a uniform variable for OOShaderMaterial.
+Manages a uniform variable for OOLegacyShaderMaterial.
 
 
 Copyright (C) 2007-2011 Jens Ayton
@@ -34,7 +34,7 @@ SOFTWARE.
 @class OOColor;
 
 
-@interface OOShaderUniform: NSObject
+@interface OOLegacyShaderUniform: NSObject
 {
 	NSString					*name;
 	GLint						location;
@@ -61,12 +61,12 @@ SOFTWARE.
 	}							value;
 }
 
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram intValue:(GLint)constValue;
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram floatValue:(GLfloat)constValue;
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram vectorValue:(Vector)constValue;
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram colorValue:(OOColor *)constValue;	// Converted to vector
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram quaternionValue:(Quaternion)constValue asMatrix:(BOOL)asMatrix;	// Converted to vector (in xyzw order, not wxyz!) or rotation matrix.
-- (id)initWithName:(NSString *)uniformName shaderProgram:(OOShaderProgram *)shaderProgram matrixValue:(OOMatrix)constValue;
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram intValue:(GLint)constValue;
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram floatValue:(GLfloat)constValue;
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram vectorValue:(Vector)constValue;
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram colorValue:(OOColor *)constValue;	// Converted to vector
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram quaternionValue:(Quaternion)constValue asMatrix:(BOOL)asMatrix;	// Converted to vector (in xyzw order, not wxyz!) or rotation matrix.
+- (id)initWithName:(NSString *)uniformName shaderProgram:(OOLegacyShaderProgram *)shaderProgram matrixValue:(OOMatrix)constValue;
 
 /*	"Convert" has different meanings for different types.
 	For float and int types, it clamps to the range [0, 1].
@@ -74,7 +74,7 @@ SOFTWARE.
 	For quaternions, it converts to rotation matrix (instead of vec4).
 */
 - (id)initWithName:(NSString *)uniformName
-	 shaderProgram:(OOShaderProgram *)shaderProgram
+	 shaderProgram:(OOLegacyShaderProgram *)shaderProgram
 	 boundToObject:(id<OOWeakReferenceSupport>)target
 		  property:(SEL)selector
 	convertOptions:(OOUniformConvertOptions)options;

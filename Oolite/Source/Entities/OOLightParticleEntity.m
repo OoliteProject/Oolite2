@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOLightParticleEntity.h"
 #import "Universe.h"
 #import "PlayerEntity.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOColor.h"
 #import "OOMacroOpenGL.h"
 #import "OOGraphicsResetManager.h"
@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 #define PARTICLE_DISTANCE_SCALE_HIGH	36.0
 
 
-static OOTexture *sBlobTexture = nil;
+static OOLegacyTexture *sBlobTexture = nil;
 
 
 @interface OOLightParticleEntity (Private)
@@ -262,7 +262,7 @@ static OOTexture *sBlobTexture = nil;
 }
 
 
-- (OOTexture *) texture
+- (OOLegacyTexture *) texture
 {
 	return [OOLightParticleEntity defaultParticleTexture];
 }
@@ -272,17 +272,17 @@ static OOTexture *sBlobTexture = nil;
 {
 	if (sBlobTexture == nil)
 	{
-		sBlobTexture = [[OOTexture textureWithName:@"oolite-particle-blur.png"
-										  inFolder:@"Textures"
-										   options:kOOTextureMinFilterMipMap | kOOTextureMagFilterLinear | kOOTextureAlphaMask
-										anisotropy:kOOTextureDefaultAnisotropy / 2.0
-										   lodBias:0.0] retain];
+		sBlobTexture = [[OOLegacyTexture textureWithName:@"oolite-particle-blur.png"
+												inFolder:@"Textures"
+												 options:kOOTextureMinFilterMipMap | kOOTextureMagFilterLinear | kOOTextureAlphaMask
+											  anisotropy:kOOTextureDefaultAnisotropy / 2.0
+												 lodBias:0.0] retain];
 		[[OOGraphicsResetManager sharedManager] registerClient:(id<OOGraphicsResetClient>)[OOLightParticleEntity class]];
 	}
 }
 
 
-+ (OOTexture *) defaultParticleTexture
++ (OOLegacyTexture *) defaultParticleTexture
 {
 	if (sBlobTexture == nil)  [self setUpTexture];
 	return sBlobTexture;

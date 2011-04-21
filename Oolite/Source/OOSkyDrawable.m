@@ -27,7 +27,7 @@ SOFTWARE.
 
 #import "OOSkyDrawable.h"
 #import "ResourceManager.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "GameController.h"
 #import "OOColor.h"
 #import "OOProbabilisticTextureManager.h"
@@ -58,7 +58,7 @@ typedef struct OOSkyQuadDesc
 {
 	Vector				corners[4];
 	OOColor				*color;
-	OOTexture			*texture;
+	OOLegacyTexture			*texture;
 } OOSkyQuadDesc;
 
 
@@ -75,7 +75,7 @@ enum
 */
 @interface OOSkyQuadSet: NSObject
 {
-	OOTexture				*_texture;
+	OOLegacyTexture				*_texture;
 	unsigned				_count;
 	GLfloat					*_positions;	// 3 entries per vertex, 12 per quad
 	GLfloat					*_texCoords;	// 2 entries per vertex, 8 per quad
@@ -84,13 +84,13 @@ enum
 
 + (void)addQuads:(OOSkyQuadDesc *)quads count:(unsigned)count toArray:(NSMutableArray *)ioArray;
 
-- (id)initWithQuadsWithTexture:(OOTexture *)texture inArray:(OOSkyQuadDesc *)array count:(unsigned)totalCount;
+- (id)initWithQuadsWithTexture:(OOLegacyTexture *)texture inArray:(OOSkyQuadDesc *)array count:(unsigned)totalCount;
 
 - (void)render;
 
 #ifndef NDEBUG
 - (size_t) totalSize;
-- (OOTexture *) texture;
+- (OOLegacyTexture *) texture;
 #endif
 
 @end
@@ -503,7 +503,7 @@ static OOColor *DebugColor(Vector orientation)
 + (void)addQuads:(OOSkyQuadDesc *)quads count:(unsigned)count toArray:(NSMutableArray *)ioArray
 {
 	NSMutableSet			*seenTextures = nil;
-	OOTexture				*texture = nil;
+	OOLegacyTexture				*texture = nil;
 	OOSkyQuadSet			*quadSet = nil;
 	unsigned				i;
 	
@@ -532,7 +532,7 @@ static OOColor *DebugColor(Vector orientation)
 }
 
 
-- (id)initWithQuadsWithTexture:(OOTexture *)texture inArray:(OOSkyQuadDesc *)array count:(unsigned)totalCount
+- (id)initWithQuadsWithTexture:(OOLegacyTexture *)texture inArray:(OOSkyQuadDesc *)array count:(unsigned)totalCount
 {
 	BOOL					OK = YES;
 	unsigned				i, j, vertexCount;
@@ -670,7 +670,7 @@ static OOColor *DebugColor(Vector orientation)
 }
 
 
-- (OOTexture *) texture
+- (OOLegacyTexture *) texture
 {
 	return _texture;
 }

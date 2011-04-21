@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 #import "OOTrumble.h"
 #import "Universe.h"
 #import "PlayerEntity.h"
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "ResourceManager.h"
 #import "OOSound.h"
 #import "OOStringParsing.h"
@@ -195,7 +195,7 @@ static void PlayTrumbleSqueal(void);
 	animationTime = 0.0;
 	animationDuration = 1.5 + randf() * 3.0;	// time until next animation
 	//
-	texture = [OOTexture textureWithName:@"trumblekit.png"
+	texture = [OOLegacyTexture textureWithName:@"trumblekit.png"
 								inFolder:@"Textures"
 								 options:kOOTextureDefaultOptions | kOOTextureNoShrink
 							  anisotropy:0.0f

@@ -1,6 +1,6 @@
 /*
 
-OOMaterial.h
+OOLegacyMaterial.h
 
 A material which can be applied to an OpenGL object, or more accurately, to
 the current OpenGL render state.
@@ -34,11 +34,11 @@ SOFTWARE.
 */
 
 #import <Foundation/Foundation.h>
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOOpenGLExtensionManager.h"
 
 
-@interface OOMaterial: NSObject
+@interface OOLegacyMaterial: NSObject
 
 // Called once at startup (by -[Universe init]).
 + (void) setUp;
@@ -56,7 +56,7 @@ SOFTWARE.
 
 /*	Get current material.
 */
-+ (OOMaterial *) current;
++ (OOLegacyMaterial *) current;
 
 /*	Ensure material is ready to be used in a display list. This is not
 	required before using a material directly.
@@ -82,11 +82,11 @@ SOFTWARE.
 @end
 
 
-@interface OOMaterial (OOSubclassInterface)
+@interface OOLegacyMaterial (OOSubclassInterface)
 
 // Subclass responsibilities - don't call directly.
 - (BOOL) doApply;	// Override instead of -apply
-- (void) unapplyWithNext:(OOMaterial *)next;
+- (void) unapplyWithNext:(OOLegacyMaterial *)next;
 
 // Call at top of dealloc
 - (void) willDealloc;

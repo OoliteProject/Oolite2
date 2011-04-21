@@ -1,6 +1,6 @@
 /*
 
-OOTextureLoader.h
+OOLegacyTextureLoader.h
 
 Abstract base class for asynchronous texture loaders, which are dispatched by
 OOTextureLoadDispatcher. In general, this should be used through OOTexture.
@@ -31,12 +31,12 @@ SOFTWARE.
 
 */
 
-#import "OOTexture.h"
+#import "OOLegacyTexture.h"
 #import "OOPixMap.h"
 #import "OOAsyncWorkManager.h"
 
 
-@interface OOTextureLoader: NSObject <OOAsyncWorkTask>
+@interface OOLegacyTextureLoader: NSObject <OOAsyncWorkTask>
 {
 	NSString					*_path;
 	

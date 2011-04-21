@@ -32,7 +32,7 @@ SOFTWARE.
 */
 
 #import "OOTypes.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 
 
 // Core in 2.0.

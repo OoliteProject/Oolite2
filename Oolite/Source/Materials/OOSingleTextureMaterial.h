@@ -29,12 +29,12 @@ SOFTWARE.
 
 #import "OOBasicMaterial.h"
 
-@class OOTexture;
+@class OOLegacyTexture;
 
 
 @interface OOSingleTextureMaterial: OOBasicMaterial
 {
-	OOTexture				*_texture;
+	OOLegacyTexture				*_texture;
 }
 
 /*	In addition to OOBasicMateral configuration keys, an OOTexture
@@ -48,6 +48,6 @@ SOFTWARE.
 - (id)initWithName:(NSString *)name configuration:(NSDictionary *)configuration;
 
 // Designated initializer
-- (id) initWithName:(NSString *)name texture:(OOTexture *)texture configuration:(NSDictionary *)configuration;
+- (id) initWithName:(NSString *)name texture:(OOLegacyTexture *)texture configuration:(NSDictionary *)configuration;
 
 @end

@@ -27,8 +27,8 @@ SOFTWARE.
 
 #import "OOBasicMaterial.h"
 #import "Universe.h"
-#import "OOMaterialSpecifier.h"
-#import "OOTexture.h"
+#import "OOLegacyMaterialSpecifier.h"
+#import "OOLegacyTexture.h"
 
 
 static OOBasicMaterial *sDefaultMaterial = nil;
@@ -111,14 +111,14 @@ static OOBasicMaterial *sDefaultMaterial = nil;
 	OOGL(glMateriali(FACE, GL_SHININESS, shininess));
 	if ([self isMemberOfClass:[OOBasicMaterial class]])
 	{
-		[OOTexture applyNone];
+		[OOLegacyTexture applyNone];
 	}
 	
 	return YES;
 }
 
 
-- (void)unapplyWithNext:(OOMaterial *)next
+- (void)unapplyWithNext:(OOLegacyMaterial *)next
 {
 	if (![next isKindOfClass:[OOBasicMaterial class]])
 	{

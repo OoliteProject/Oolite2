@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"
-#import "OOMaterial.h"
+#import "OOLegacyMaterial.h"
 
 
 #define SKY_MAX_STARS			4800

@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "ResourceManager.h"
 #import "MyOpenGLView.h"
 #import "OOSound.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "PlayerEntityLoadSave.h"
 #import "OODebugFlags.h"
 #import "OOJSFrameCallbacks.h"

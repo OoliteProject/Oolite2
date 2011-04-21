@@ -35,10 +35,10 @@ MA 02110-1301, USA.
 */
 
 #import "OODrawable.h"
-#import "OOOpenGL.h"
+#import "OOLegacyOpenGL.h"
 #import "OOOpenGLExtensionManager.h"
 
-@class OOMaterial, Octree;
+@class OOLegacyMaterial, Octree;
 
 
 #define OOMESH_PROFILE	0
@@ -108,7 +108,7 @@ typedef struct
 	
 	NSRange					triangle_range[kOOMeshMaxMaterials];
 	NSString				*materialKeys[kOOMeshMaxMaterials];
-	OOMaterial				*materials[kOOMeshMaxMaterials];
+	OOLegacyMaterial				*materials[kOOMeshMaxMaterials];
 	GLuint					displayList0;
 	
 	GLfloat					collisionRadius;
@@ -143,7 +143,7 @@ materialDictionary:(NSDictionary *)materialDict
 	  shaderMacros:(NSDictionary *)macros
 shaderBindingTarget:(id<OOWeakReferenceSupport>)object;
 
-+ (OOMaterial *)placeholderMaterial;
++ (OOLegacyMaterial *)placeholderMaterial;
 
 - (NSString *) modelName;
 

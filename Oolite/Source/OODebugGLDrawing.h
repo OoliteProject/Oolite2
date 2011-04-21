@@ -39,11 +39,11 @@ SOFTWARE.
 
 #ifndef OODEBUGLDRAWING_DISABLE
 
-@class OOMaterial;
+@class OOLegacyMaterial;
 
 typedef struct
 {
-	OOMaterial			*material;
+	OOLegacyMaterial			*material;
 } OODebugWFState;
 
 

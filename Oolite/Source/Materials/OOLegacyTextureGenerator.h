@@ -1,6 +1,6 @@
 /*
 
-OOTextureGenerator.h
+OOLegacyTextureGenerator.h
 
 A texture "loader" which doesn't require an input file.
 
@@ -27,7 +27,7 @@ SOFTWARE.
 
 */
 
-#import "OOTextureLoader.h"
+#import "OOLegacyTextureLoader.h"
 
 
 typedef struct
@@ -42,7 +42,7 @@ typedef struct
 } FloatRGBA;
 
 
-@interface OOTextureGenerator: OOTextureLoader
+@interface OOLegacyTextureGenerator: OOLegacyTextureLoader
 
 // Generators, unlike normal loaders, get to specify their own flags and other settings.
 - (uint32_t) textureOptions;	// Default: kOOTextureDefaultOptions

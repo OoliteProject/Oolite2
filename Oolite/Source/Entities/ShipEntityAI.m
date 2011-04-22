@@ -1534,57 +1534,59 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 - (void) setPlanetPatrolCoordinates
 {
 	// check we've arrived near the last given coordinates
-	Vector r_pos = vector_subtract(position, coordinates);
-	if (magnitude2(r_pos) < 1000000 || patrol_counter == 0)
+	if (distance2(position, coordinates) < 1000000 || patrol_counter == 0)
 	{
-		Entity *the_sun = [UNIVERSE sun];
-		ShipEntity *the_station = [[self group] leader];
-		if(!the_station || ![the_station isStation]) the_station = [UNIVERSE station];
-		if ((!the_sun)||(!the_station))
-			return;
-		Vector sun_pos = the_sun->position;
-		Vector stn_pos = the_station->position;
-		Vector sun_dir =  make_vector(sun_pos.x - stn_pos.x, sun_pos.y - stn_pos.y, sun_pos.z - stn_pos.z);
-		Vector vSun = make_vector(0, 0, 1);
-		if (sun_dir.x||sun_dir.y||sun_dir.z)
-			vSun = vector_normal(sun_dir);
-		Vector v0 = [the_station forwardVector];
-		Vector v1 = cross_product(v0, vSun);
-		Vector v2 = cross_product(v0, v1);
+		Entity *sun = [UNIVERSE sun];
+		StationEntity *station = (StationEntity *)[[self group] leader];
+		if(!station || ![station isStation]) station = [UNIVERSE station];
+		
+		if (sun == nil || station == nil)  return;
+		
+		Vector stationPos = [station position];
+		Vector vSun = vector_normal_or_zbasis(vector_subtract([sun position], stationPos));
+		
+		Vector v0 = [station forwardVector];
+		Vector v1 = true_cross_product(v0, vSun);
+		Vector v2 = true_cross_product(v0, v1);
+		
+		OOMatrix stationSunMatrix = OOMatrixFromBasisVectorsAndPosition(v0, v1, v2, stationPos);
+		Vector relCoords;
+		
 		switch (patrol_counter)
 		{
 			case 0:		// first go to 5km ahead of the station
-				coordinates = make_vector(stn_pos.x + 5000 * v0.x, stn_pos.y + 5000 * v0.y, stn_pos.z + 5000 * v0.z);
-				desired_range = 250.0;
+				relCoords = (Vector){ 5000, 0, 0 };
 				break;
-			case 1:		// go to 25km N of the station
-				coordinates = make_vector(stn_pos.x + 25000 * v1.x, stn_pos.y + 25000 * v1.y, stn_pos.z + 25000 * v1.z);
-				desired_range = 250.0;
+				
+			case 1:		// go to 25km “N” (sunwards) of the station
+				relCoords = (Vector){ 0, 25000, 0 };
 				break;
+				
 			case 2:		// go to 25km E of the station
-				coordinates = make_vector(stn_pos.x + 25000 * v2.x, stn_pos.y + 25000 * v2.y, stn_pos.z + 25000 * v2.z);
-				desired_range = 250.0;
+				relCoords = (Vector){ 0, 0, 25000 };
 				break;
+				
 			case 3:		// go to 25km S of the station
-				coordinates = make_vector(stn_pos.x - 25000 * v1.x, stn_pos.y - 25000 * v1.y, stn_pos.z - 25000 * v1.z);
-				desired_range = 250.0;
+				relCoords = (Vector){ 0, -25000, 0 };
 				break;
+				
 			case 4:		// go to 25km W of the station
-				coordinates = make_vector(stn_pos.x - 25000 * v2.x, stn_pos.y - 25000 * v2.y, stn_pos.z - 25000 * v2.z);
-				desired_range = 250.0;
+				relCoords = (Vector){ 0, 0, -25000 };
 				break;
+				
 			default:	// We should never come here
-				coordinates = make_vector(stn_pos.x + 5000 * v0.x, stn_pos.y + 5000 * v0.y, stn_pos.z + 5000 * v0.z);
-				desired_range = 250.0;
-				break;
+				relCoords = (Vector){ 5000, 0, 0 };
 		}
+		coordinates = OOVectorMultiplyMatrix(relCoords, stationSunMatrix);
+		desired_range = 250.0;
+		
 		patrol_counter++;
 		if (patrol_counter > 4)
 		{
 			if (randf() < .25)
 			{
 				// consider docking
-				[self setTargetStation:(StationEntity *)the_station];
+				[self setTargetStation:station];
 				[self setAITo:@"dockingAI.plist"];
 				return;
 			}

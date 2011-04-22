@@ -3965,8 +3965,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			OODebugDrawColoredLine([self position], [pTarget position], [OOColor colorWithCalibratedRed:0.2 green:0.0 blue:0.0 alpha:1.0]);
 		}
 		
-		Entity *sTarget = [UNIVERSE entityForUniversalID:targetStation];
-		if (sTarget != pTarget && [sTarget isStation])
+		ShipEntity *sTarget = [self targetStation];
+		if (sTarget != pTarget)
 		{
 			OODebugDrawPoint([sTarget position], [OOColor cyanColor]);
 		}
@@ -4276,10 +4276,13 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 - (void) avoidCollision
 {
 	if (scanClass == CLASS_MISSILE)
-		return;						// missiles are SUPPOSED to collide!
+	{
+		// missiles are SUPPOSED to collide!
+		return;
+	}
 	
-	ShipEntity* prox_ship = [self proximity_alert];
-
+	ShipEntity *prox_ship = [self proximity_alert];
+	
 	if (prox_ship)
 	{
 		if (previousCondition)
@@ -4289,9 +4292,10 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		}
 
 		previousCondition = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
+		ShipEntity *primaryTarget = [self primaryTarget];
 		
 		[previousCondition oo_setInteger:behaviour forKey:@"behaviour"];
-		[previousCondition setObject:_primaryTarget forKey:@"primaryTarget"];
+		if (primaryTarget != nil)  [previousCondition setObject:[primaryTarget weakRetain] forKey:@"primaryTarget"];
 		[previousCondition oo_setFloat:desired_range forKey:@"desiredRange"];
 		[previousCondition oo_setFloat:desired_speed forKey:@"desiredSpeed"];
 		[previousCondition oo_setVector:destination forKey:@"destination"];
@@ -6507,12 +6511,25 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setTargetStation:(Entity *) targetEntity
+- (StationEntity *) targetStation
 {
-	if (targetEntity != nil)
-	{
-		targetStation = [targetEntity universalID];
-	}
+	StationEntity *result = [_targetStation weakRefUnderlyingObject];
+	if (result == nil)  DESTROY(_targetStation);
+	return result;
+}
+
+
+- (void) setTargetStation:(Entity *) target
+{
+	[_targetStation release];
+	_targetStation = [target weakRetain];
+}
+
+
+- (void) setTargetStationAndTarget:(StationEntity *)target
+{
+	[self addTarget:target];
+	[self setTargetStation:target];
 }
 
 
@@ -7226,22 +7243,22 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (we_are_docking && docking_match_rotation && (d_forward > max_cos))
 	{
 		/* we are docking and need to consider the rotation/orientation of the docking port */
-		StationEntity* station_for_docking = (StationEntity*)[UNIVERSE entityForUniversalID:targetStation];
-
-		if ((station_for_docking)&&(station_for_docking->isStation))
+		StationEntity *stationForDocking = [self targetStation];
+		
+		if (stationForDocking != nil)
 		{
-			stick_roll = [self rollToMatchUp:[station_for_docking portUpVectorForShipsBoundingBox: boundingBox] rotating:[station_for_docking flightRoll]];
+			stick_roll = [self rollToMatchUp:[stationForDocking portUpVectorForShipsBoundingBox: boundingBox] rotating:[stationForDocking flightRoll]];
 		}
 	}
-
+	
 	// end rule-of-thumb manoeuvres
-
+	
 	// apply 'quick-stop' to roll and pitch adjustments
 	if (((stick_roll > 0.0)&&(flightRoll < 0.0))||((stick_roll < 0.0)&&(flightRoll > 0.0)))
 		rate1 *= 4.0;	// much faster correction
 	if (((stick_pitch > 0.0)&&(flightPitch < 0.0))||((stick_pitch < 0.0)&&(flightPitch > 0.0)))
 		rate2 *= 4.0;	// much faster correction
-
+	
 	// apply stick movement limits
 	if (flightRoll < stick_roll - rate1)
 		stick_roll = flightRoll + rate1;
@@ -7255,16 +7272,16 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	// apply stick to attitude control
 	flightRoll = stick_roll;
 	flightPitch = stick_pitch;
-
+	
 	if (retreat)
 		d_forward *= d_forward;	// make positive AND decrease granularity
-
+	
 	if (d_forward < 0.0)
 		return 0.0;
-
+	
 	if ((!flightRoll)&&(!flightPitch))	// no correction
 		return 1.0;
-
+	
 	return d_forward;
 }
 
@@ -9331,7 +9348,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		// act individually now!
 		if ([escort group] == escortGroup)  [escort setGroup:nil];
 		if ([escort owner] == self)  [escort setOwner:nil];
-		if(target && [target isStation]) [escort setTargetStation:target];
+		if ([target isStation]) [escort setTargetStation:(StationEntity *)target];
 		
 		[ai setStateMachine:@"dockingAI.plist" afterDelay:delay];
 		[ai setState:@"ABORT" afterDelay:delay + 0.25];
@@ -9350,14 +9367,11 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Entity		*mother = [[self group] leader];
 	if ([mother isStation])
 	{
-		[self addTarget:mother];
-		targetStation = [mother universalID];
+		[self setTargetStationAndTarget:(StationEntity *)mother];
 		return;	// head for mother!
 	}
-
+	
 	/*- selects the nearest station it can find -*/
-	if (!UNIVERSE)
-		return;
 	int			ent_count = UNIVERSE->n_entities;
 	Entity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
 	Entity		*my_entities[ent_count];
@@ -9386,8 +9400,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if (station)
 	{
-		[self addTarget:station];
-		targetStation = [station universalID];
+		[self setTargetStationAndTarget:station];
 	}
 	else
 	{
@@ -9415,26 +9428,12 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	StationEntity *systemStation = [UNIVERSE station];
 	
-	if (!systemStation)
-	{
-		[shipAI message:@"NOTHING_FOUND"];
-		[shipAI message:@"NO_STATION_FOUND"];
-		DESTROY(_primaryTarget);
-		targetStation = NO_TARGET;
-		return;
-	}
-	
 	if (![systemStation isStation])
 	{
 		[shipAI message:@"NOTHING_FOUND"];
 		[shipAI message:@"NO_STATION_FOUND"];
-		DESTROY(_primaryTarget);
-		targetStation = NO_TARGET;
-		return;
 	}
-	
-	[self addTarget:systemStation];
-	targetStation = [systemStation universalID];
+	[self setTargetStationAndTarget:systemStation];
 }
 
 

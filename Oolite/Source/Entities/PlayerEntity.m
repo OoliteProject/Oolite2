@@ -1635,12 +1635,12 @@ static bool minShieldLevelPercentageInitialised = false;
 	if (stationForDocking == nil)   return NO;
 	if ([self isDocked])  return NO;
 	
-	if (autopilot_engaged && targetStation == [stationForDocking universalID])
+	if (autopilot_engaged && stationForDocking == [self targetStation])
 	{	
 		return YES;
 	}
-		
-	targetStation = [stationForDocking universalID];
+	
+	[self setTargetStation:stationForDocking];
 	DESTROY(_primaryTarget);
 	autopilot_engaged = YES;
 	ident_engaged = NO;
@@ -1673,7 +1673,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		frustration = 0.0;
 		autopilot_engaged = NO;
 		DESTROY(_primaryTarget);
-		targetStation = NO_TARGET;
+		[self setTargetStation:nil];
 		[self setStatus:STATUS_IN_FLIGHT];
 		[self playAutopilotOff];
 		[self setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_NONE];

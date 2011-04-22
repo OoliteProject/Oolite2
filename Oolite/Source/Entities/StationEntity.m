@@ -44,7 +44,7 @@ MA 02110-1301, USA.
 #define kOOLogUnconvertedNSLog @"unclassified.StationEntity"
 
 
-static NSDictionary* instructions(int station_id, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation);
+static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation);
 
 @interface StationEntity (private)
 
@@ -318,13 +318,13 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	[shipAI message:@"DOCKING_COMPLETE"];
 }
 
-static NSDictionary* instructions(int station_id, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation)
+static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation)
 {
-	NSMutableDictionary* acc = [NSMutableDictionary dictionaryWithCapacity:8];
+	NSMutableDictionary *acc = [NSMutableDictionary dictionaryWithCapacity:8];
 	[acc setObject:[NSString stringWithFormat:@"%.2f %.2f %.2f", coords.x, coords.y, coords.z] forKey:@"destination"];
 	[acc setObject:[NSNumber numberWithFloat:speed] forKey:@"speed"];
 	[acc setObject:[NSNumber numberWithFloat:range] forKey:@"range"];
-	[acc setObject:[NSNumber numberWithInt:station_id] forKey:@"station_id"];
+	[acc setObject:[station weakRetain] forKey:@"station"];
 	[acc setObject:[NSNumber numberWithBool:match_rotation] forKey:@"match_rotation"];
 	if (ai_message)
 		[acc setObject:ai_message forKey:@"ai_message"];
@@ -356,19 +356,19 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	if ((ship->isPlayer)&&([ship legalStatus] > 50))	// note: non-player fugitives dock as normal
 	{
 		// refuse docking to the fugitive player
-		return instructions(universalID, ship->position, 0, 100, @"DOCKING_REFUSED", @"[station-docking-refused-to-fugitive]", NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"DOCKING_REFUSED", @"[station-docking-refused-to-fugitive]", NO);
 	}
 	
 	if (no_docking_while_launching)
 	{
-		return instructions(universalID, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
 	}
 
 	OOBoundingBox bb = [ship boundingBox];
 	if ((port_dimensions.x < (bb.max.x - bb.min.x) || port_dimensions.y < (bb.max.y - bb.min.y)) && 
 		(port_dimensions.y < (bb.max.x - bb.min.x) || port_dimensions.x < (bb.max.y - bb.min.y)))
 	{
-		return instructions(universalID, ship->position, 0, 100, @"TOO_BIG_TO_DOCK", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"TOO_BIG_TO_DOCK", nil, NO);
 	}
 	
 	// If the ship is not on its docking approach and the player has
@@ -380,7 +380,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 			player && [player status] == STATUS_IN_FLIGHT &&
 			[player getDockingClearanceStatus] >= DOCKING_CLEARANCE_STATUS_REQUESTED)
 	{
-		return instructions(universalID, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
 	}
 	
 	[shipAI reactToMessage:@"DOCKING_REQUESTED" context:@"requestDockingCoordinates"];	// react to the request	
@@ -391,7 +391,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 			[self sendExpandedMessage: @"[station-acknowledges-hold-position]" toShip: ship];
 		[shipsOnHold setObject: shipID forKey: shipID];
 		//[self performStop]; // This should be handled by "DOCKING_REQUESTED" in the AI itself.
-		return instructions(universalID, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
 	}
 	
 	if	(fabs(flightPitch) > 0.01)		// no docking while pitching
@@ -400,7 +400,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 			[self sendExpandedMessage: @"[station-acknowledges-hold-position]" toShip: ship];
 		[shipsOnHold setObject: shipID forKey: shipID];
 		//[self performStop];
-		return instructions(universalID, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
 	}
 	
 	// rolling is okay for some
@@ -416,7 +416,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 				[self sendExpandedMessage: @"[station-acknowledges-hold-position]" toShip: ship];
 			[shipsOnHold setObject: shipID forKey: shipID];
 			//[self performStop];
-			return instructions(universalID, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
+			return DockingInstructions(self, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
 		}
 	}
 	
@@ -433,15 +433,15 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		float	ship_distance = magnitude(delta);
 
 		if (ship_distance > SCANNER_MAX_RANGE)	// too far away - don't claim a docking slot by not putting on approachlist for now.
-			return instructions(universalID, position, 0, 10000, @"APPROACH", nil, NO);
+			return DockingInstructions(self, position, 0, 10000, @"APPROACH", nil, NO);
 
 		[self addShipToShipsOnApproach: ship];
 		
 		if (ship_distance < 1000.0 + collision_radius + ship->collision_radius)	// too close - back off
-			return instructions(universalID, position, 0, 5000, @"BACK_OFF", nil, NO);
+			return DockingInstructions(self, position, 0, 5000, @"BACK_OFF", nil, NO);
 		
 		if (ship_distance > 12500.0)	// long way off - approach more closely
-			return instructions(universalID, position, 0, 10000, @"APPROACH", nil, NO);
+			return DockingInstructions(self, position, 0, 10000, @"APPROACH", nil, NO);
 	}
 	
 	if (![shipsOnApproach objectForKey:shipID])
@@ -449,7 +449,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		// some error has occurred - log it, and send the try-again message
 		OOLogERR(@"station.issueDockingInstructions.failed", @"couldn't addShipToShipsOnApproach:%@ in %@, retrying later -- shipsOnApproach:\n%@", ship, self, shipsOnApproach);
 		//
-		return instructions(universalID, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"TRY_AGAIN_LATER", nil, NO);
 	}
 
 
@@ -461,7 +461,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	{
 		OOLogERR(@"station.issueDockingInstructions.failed", @" -- coordinatesStack = %@", coordinatesStack);
 		
-		return instructions(universalID, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
+		return DockingInstructions(self, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
 	}
 	
 	// get the docking information from the instructions	
@@ -472,9 +472,9 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 	
 	// calculate world coordinates from relative coordinates
 	Vector rel_coords;
-	rel_coords.x = [(NSNumber *)[nextCoords objectForKey:@"rx"] floatValue];
-	rel_coords.y = [(NSNumber *)[nextCoords objectForKey:@"ry"] floatValue];
-	rel_coords.z = [(NSNumber *)[nextCoords objectForKey:@"rz"] floatValue];
+	rel_coords.x = [nextCoords oo_floatForKey:@"rx"];
+	rel_coords.y = [nextCoords oo_floatForKey:@"ry"];
+	rel_coords.z = [nextCoords oo_floatForKey:@"rz"];
 	coords = [self getPortPosition];
 	coords.x += rel_coords.x * vi.x + rel_coords.y * vj.x + rel_coords.z * vk.x;
 	coords.y += rel_coords.x * vi.y + rel_coords.y * vj.y + rel_coords.z * vk.y;
@@ -490,7 +490,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		if ((docking_stage == 1) &&(magnitude2(delta) < 1000000.0))	// 1km*1km
 			speedAdvised *= 0.5;	// half speed
 		
-		return instructions(universalID, coords, speedAdvised, rangeAdvised, @"APPROACH_COORDINATES", nil, NO);
+		return DockingInstructions(self, coords, speedAdvised, rangeAdvised, @"APPROACH_COORDINATES", nil, NO);
 	}
 	else
 	{
@@ -515,9 +515,9 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		}
 				
 		// calculate world coordinates from relative coordinates
-		rel_coords.x = [(NSNumber *)[nextCoords objectForKey:@"rx"] floatValue];
-		rel_coords.y = [(NSNumber *)[nextCoords objectForKey:@"ry"] floatValue];
-		rel_coords.z = [(NSNumber *)[nextCoords objectForKey:@"rz"] floatValue];
+		rel_coords.x = [nextCoords oo_floatForKey:@"rx"];
+		rel_coords.y = [nextCoords oo_floatForKey:@"ry"];
+		rel_coords.z = [nextCoords oo_floatForKey:@"rz"];
 		coords = [self getPortPosition];
 		coords.x += rel_coords.x * vi.x + rel_coords.y * vj.x + rel_coords.z * vk.x;
 		coords.y += rel_coords.x * vi.y + rel_coords.y * vj.y + rel_coords.z * vk.y;
@@ -542,7 +542,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 			//remove the previous stage from the stack
 			[coordinatesStack removeObjectAtIndex:0];
 			
-			return instructions(universalID, coords, speedAdvised, rangeAdvised, @"APPROACH_COORDINATES", nil, match_rotation);
+			return DockingInstructions(self, coords, speedAdvised, rangeAdvised, @"APPROACH_COORDINATES", nil, match_rotation);
 		}
 		else
 		{
@@ -558,12 +558,12 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 				[nextCoords setObject:@"YES" forKey:@"hold_message_given"];
 			}
 
-			return instructions(universalID, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
+			return DockingInstructions(self, ship->position, 0, 100, @"HOLD_POSITION", nil, NO);
 		}
 	}
 	
 	// we should never reach here.
-	return instructions(universalID, coords, 50, 10, @"APPROACH_COORDINATES", nil, NO);
+	return DockingInstructions(self, coords, 50, 10, @"APPROACH_COORDINATES", nil, NO);
 }
 
 

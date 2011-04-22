@@ -93,7 +93,7 @@ OOINLINE OOScalar magnitude2(Vector vec) INLINE_CONST_FUNC;
 
 /* Magnitude of vector */
 OOINLINE OOScalar magnitude(Vector vec) INLINE_CONST_FUNC;
-OOINLINE OOScalar fast_magnitude(Vector vec) INLINE_CONST_FUNC;
+OOINLINE OOScalar fast_magnitude(Vector vec) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* Normalize vector */
 OOINLINE Vector vector_normal(Vector vec) INLINE_CONST_FUNC;
@@ -104,21 +104,21 @@ OOINLINE Vector vector_normal_or_fallback(Vector vec, Vector fallback) INLINE_CO
 OOINLINE Vector vector_normal_or_xbasis(Vector vec) INLINE_CONST_FUNC;
 OOINLINE Vector vector_normal_or_ybasis(Vector vec) INLINE_CONST_FUNC;
 OOINLINE Vector vector_normal_or_zbasis(Vector vec) INLINE_CONST_FUNC;
-OOINLINE Vector fast_vector_normal_or_fallback(Vector vec, Vector fallback) INLINE_CONST_FUNC;
+OOINLINE Vector fast_vector_normal_or_fallback(Vector vec, Vector fallback) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* Square of distance between vectors */
 OOINLINE OOScalar distance2(Vector v1, Vector v2) INLINE_CONST_FUNC;
 
 /* Distance between vectors */
 OOINLINE OOScalar distance(Vector v1, Vector v2) INLINE_CONST_FUNC;
-OOINLINE OOScalar fast_distance(Vector v1, Vector v2) INLINE_CONST_FUNC;
+OOINLINE OOScalar fast_distance(Vector v1, Vector v2) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* Dot product */
 OOINLINE OOScalar dot_product(Vector first, Vector second) INLINE_CONST_FUNC;
 
 /* NORMALIZED cross product */
 OOINLINE Vector cross_product(Vector first, Vector second) INLINE_CONST_FUNC;
-OOINLINE Vector fast_cross_product(Vector first, Vector second) INLINE_CONST_FUNC;
+OOINLINE Vector fast_cross_product(Vector first, Vector second) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* General cross product */
 OOINLINE Vector true_cross_product(Vector first, Vector second) CONST_FUNC;
@@ -132,7 +132,7 @@ Vector2D clean_vector2D(Vector2D v)  CONST_FUNC;
 
 /* Given three points on a surface, returns the normal to the surface. */
 OOINLINE Vector normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;
-OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC;
+OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3) CONST_FUNC DEPRECATED_FUNC;
 
 #if __OBJC__
 NSString *OOVectorDescription(Vector vector);		// @"(x, y, z)"
@@ -242,12 +242,7 @@ OOINLINE OOScalar magnitude(Vector vec)
 
 OOINLINE OOScalar fast_magnitude(Vector vec)
 {
-	#if FASTINVSQRT_ENABLED || OO_PPC
-		OOScalar mag2 = magnitude2(vec);
-		return mag2 * OOFastInvSqrtf(mag2);	/* x = sqrt(x) * sqrt(x); x * 1/sqrt(x) = (sqrt(x) * sqrt(x))/sqrt(x) = sqrt(x). */
-	#else
-		return magnitude(vec);
-	#endif
+	return magnitude(vec);
 }
 
 
@@ -293,7 +288,7 @@ OOINLINE Vector fast_vector_normal_or_fallback(Vector vec, Vector fallback)
 
 OOINLINE Vector fast_vector_normal(Vector vec)
 {
-	return fast_vector_normal_or_fallback(vec, kZeroVector);
+	return vector_normal_or_fallback(vec, kZeroVector);
 }
 
 

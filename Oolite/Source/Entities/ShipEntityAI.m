@@ -1584,7 +1584,7 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 			if (randf() < .25)
 			{
 				// consider docking
-				targetStation = [the_station universalID];
+				[self setTargetStation:(StationEntity *)the_station];
 				[self setAITo:@"dockingAI.plist"];
 				return;
 			}
@@ -2003,35 +2003,31 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 
 - (void) requestDockingCoordinates
 {
-	/*-	requests coordinates from the target station
-		if the target station can't be found
-		then use the nearest it can find (which may be a rock hermit) -*/
+	/*	Requests coordinates from the target station
+		If the target station can't be found
+		then use the nearest it can find (which may be a rock hermit).
+	*/
 	
-	StationEntity	*station =  nil;
-	Entity			*targStation = nil;
-	NSString		*message = nil;
-	double		distanceToStation2 = 0.0;
-	
-	targStation = [UNIVERSE entityForUniversalID:targetStation];
-	if ([targStation isStation])
-	{
-		station = (StationEntity*)targStation;
-	}
-	else
+	StationEntity *station = [self targetStation];
+	if (station == nil)
 	{
 		station = [UNIVERSE nearestShipMatchingPredicate:IsStationPredicate
-												parameter:nil
-												relativeToEntity:self];
+											   parameter:nil
+										relativeToEntity:self];
 	}
 	
-	distanceToStation2 = distance2([station position], [self position]);
-	
-	// Player check for being inside the aegis already exists in PlayerEntityControls. We just
-	// check here that distance to station is less than 2.5 times scanner range to avoid problems with
-	// NPC ships getting stuck with a dockingAI while just outside the aegis - Nikos 20090630, as proposed by Eric
-	// On very busy systems (> 50 docking ships) docking ships can be sent to a hold position outside the range, 
-	// so also test for presence of dockingInstructions. - Eric 20091130
-	if (station != nil && (distanceToStation2 < SCANNER_MAX_RANGE2 * 6.25 || dockingInstructions != nil))
+	/*	Player check for being inside the aegis already exists in
+		PlayerEntityControls. We just check here that distance to station is
+		less than 2.5 times scanner range to avoid problems with NPC ships
+		getting stuck with a dockingAI while just outside the aegis
+		- Nikos 20090630, as proposed by Eric
+		
+		On very busy systems (> 50 docking ships) docking ships can be sent to
+		a hold position outside the range, so also test for presence of
+		dockingInstructions.
+		- Eric 20091130
+	*/
+	if (station != nil && (distance2([station position], [self position]) < SCANNER_MAX_RANGE2 * 6.25 || dockingInstructions != nil))
 	{
 		// remember the instructions
 		[dockingInstructions release];
@@ -2040,7 +2036,7 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 		{
 			[self recallDockingInstructions];
 			
-			message = [dockingInstructions objectForKey:@"ai_message"];
+			NSString *message = [dockingInstructions objectForKey:@"ai_message"];
 			if (message != nil)  [shipAI message:message];
 			message = [dockingInstructions objectForKey:@"comms_message"];
 			if (message != nil)  [station sendExpandedMessage:message toShip:self];
@@ -2066,12 +2062,9 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 		destination = [dockingInstructions oo_vectorForKey:@"destination"];
 		desired_speed = fminf([dockingInstructions oo_floatForKey:@"speed"], maxFlightSpeed);
 		desired_range = [dockingInstructions oo_floatForKey:@"range"];
-		if ([dockingInstructions objectForKey:@"station_id"])
-		{
-			targetStation = [dockingInstructions oo_intForKey:@"station_id"];
-			if (targetStation != NO_TARGET)  [self addTargetByID:targetStation];
-			else  [self removeTarget:[self primaryTarget]];
-		}
+		StationEntity *targetStation = [[dockingInstructions objectForKey:@"station"] weakRefUnderlyingObject];
+		if (targetStation != nil)  [self setTargetStationAndTarget:targetStation];
+		else  [self removeTarget:[self primaryTarget]];
 		docking_match_rotation = [dockingInstructions oo_boolForKey:@"match_rotation"];
 	}
 }

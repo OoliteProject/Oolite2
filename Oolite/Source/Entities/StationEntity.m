@@ -587,8 +587,8 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	// will select a direction for offset based on the entity personality (was ship ID)
 	int offset_id = [ship entityPersonalityInt] & 0xf;	// 16  point compass
-	double c = cos(offset_id * M_PI * ONE_EIGHTH);
-	double s = sin(offset_id * M_PI * ONE_EIGHTH);
+	double c = cos(offset_id * M_PI / 8.0);
+	double s = sin(offset_id * M_PI / 8.0);
 	
 	// test if this points at the ship
 	Vector point1 = [self getPortPosition];

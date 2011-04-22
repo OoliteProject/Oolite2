@@ -1665,7 +1665,13 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (NSArray *) launchPolice
 {
-	OOUniversalID	police_target = [self primaryTargetID];
+	Entity			*target = [self primaryTarget];
+	if (target == nil)
+	{
+		[self noteLostTarget];
+		return [NSArray array];
+	}
+	
 	unsigned		i;
 	NSMutableArray	*result = nil;
 	OOTechLevelID	techlevel = [self equivalentTechLevel];
@@ -1676,11 +1682,6 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	for (i = 0; (i < 4)&&(defenders_launched < max_police) ; i++)
 	{
 		ShipEntity  *police_ship = nil;
-		if (![UNIVERSE entityForUniversalID:police_target])
-		{
-			[self noteLostTarget];
-			return [NSArray array];
-		}
 		
 		if ((Ranrot() & 7) + 6 <= techlevel)
 		{
@@ -1702,7 +1703,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 			
 			[police_ship setGroup:[self stationGroup]];	// who's your Daddy
 			[police_ship setPrimaryRole:@"police"];
-			[police_ship addTarget:[UNIVERSE entityForUniversalID:police_target]];
+			[police_ship addTarget:target];
 			[police_ship setScanClass:CLASS_POLICE];
 			[police_ship setBounty:0];
 			[police_ship switchAITo:@"policeInterceptAI.plist"];
@@ -1720,12 +1721,18 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (ShipEntity *) launchDefenseShip
 {
-	OOUniversalID	defense_target = [self primaryTargetID];
-	ShipEntity	*defense_ship = nil;
-	NSString	*defense_ship_key = nil,
-				*defense_ship_role = nil,
-				*default_defense_ship_role = nil;
-	NSString	*defense_ship_ai = @"policeInterceptAI.plist";
+	Entity			*target = [self primaryTarget];
+	if (target == nil)
+	{
+		[self noteLostTarget];
+		return [NSArray array];
+	}
+	
+	ShipEntity		*defense_ship = nil;
+	NSString		*defense_ship_key = nil,
+					*defense_ship_role = nil,
+					*default_defense_ship_role = nil;
+	NSString		*defense_ship_ai = @"policeInterceptAI.plist";
 	
 	OOTechLevelID	techlevel;
 	
@@ -1738,12 +1745,6 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	if (defenders_launched >= max_defense_ships)   // shuttles are to rockhermits what police ships are to stations
 		return nil;
-	
-	if (![UNIVERSE entityForUniversalID:defense_target])
-	{
-		[self noteLostTarget];
-		return nil;
-	}
 	
 	defense_ship_key = [[self shipInfoDictionary] oo_stringForKey:@"defense_ship"];
 	if (defense_ship_key != nil)
@@ -1784,7 +1785,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	}
 	[defense_ship setGroup:[self stationGroup]];	// who's your Daddy
 	
-	[defense_ship addTarget:[UNIVERSE entityForUniversalID:defense_target]];
+	[defense_ship addTarget:target];
 
 	if ((scanClass != CLASS_ROCK)&&(scanClass != CLASS_STATION))
 		[defense_ship setScanClass: scanClass];	// same as self
@@ -1800,8 +1801,6 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (ShipEntity *) launchScavenger
 {
-	ShipEntity  *scavenger_ship;
-	
 	unsigned scavs = [UNIVERSE countShipsWithPrimaryRole:@"scavenger" inRange:SCANNER_MAX_RANGE ofEntity:self] + [self countShipsInLaunchQueueWithPrimaryRole:@"scavenger"];
 	
 	if (scavs >= max_scavengers)  return nil;
@@ -1809,8 +1808,8 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	scavengers_launched++;
 		
-	scavenger_ship = [UNIVERSE newShipWithRole:@"scavenger"];   // retain count = 1
-	if (scavenger_ship)
+	ShipEntity *scavenger_ship = [UNIVERSE newShipWithRole:@"scavenger"];   // retain count = 1
+	if (scavenger_ship != nil)
 	{
 		if (![scavenger_ship crew])
 			[scavenger_ship setCrew:[NSArray arrayWithObject:
@@ -1863,47 +1862,44 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (ShipEntity *) launchPirateShip
 {
-	//Pirate ships are launched from the same pool as defence ships.
-	OOUniversalID	defense_target = [self primaryTargetID];
-	ShipEntity		*pirate_ship = nil;
-	
-	if (defenders_launched >= max_defense_ships)  return nil;   // shuttles are to rockhermits what police ships are to stations
-	
-	if (![UNIVERSE entityForUniversalID:defense_target])
+	Entity			*target = [self primaryTarget];
+	if (target == nil)
 	{
 		[self noteLostTarget];
-		return nil;
+		return [NSArray array];
 	}
 	
+	//Pirate ships are launched from the same pool as defence ships.
+	if (defenders_launched >= max_defense_ships)  return nil;   // shuttles are to rockhermits what police ships are to stations
 	defenders_launched++;
 	
 	// Yep! The standard hermit defence ships, even if they're the aggressor.
-	pirate_ship = [UNIVERSE newShipWithRole:@"pirate"];   // retain count = 1
+	ShipEntity *pirateShip = [UNIVERSE newShipWithRole:@"pirate"];   // retain count = 1
 	// Nope, use standard pirates in a generic method.
 	
-	if (pirate_ship)
+	if (pirateShip)
 	{
-		if (![pirate_ship crew])
+		if (![pirateShip crew])
 		{
-			[pirate_ship setCrew:[NSArray arrayWithObject:
-				[OOCharacter randomCharacterWithRole: @"pirate"
-								   andOriginalSystem: [UNIVERSE systemSeed]]]];
+			[pirateShip setCrew:[NSArray arrayWithObject:
+								 [OOCharacter randomCharacterWithRole:@"pirate"
+													andOriginalSystem:[UNIVERSE systemSeed]]]];
 		}
-				
+		
 		// set the owner of the ship to the station so that it can check back for docking later
-		[pirate_ship setOwner:self];
-		[pirate_ship setGroup:[self stationGroup]];	// who's your Daddy
-		[pirate_ship setPrimaryRole:@"defense_ship"];
-		[pirate_ship addTarget:[UNIVERSE entityForUniversalID:defense_target]];
-		[pirate_ship setScanClass: CLASS_NEUTRAL];
+		[pirateShip setOwner:self];
+		[pirateShip setGroup:[self stationGroup]];	// who's your Daddy
+		[pirateShip setPrimaryRole:@"defense_ship"];
+		[pirateShip addTarget:target];
+		[pirateShip setScanClass: CLASS_NEUTRAL];
 		//**Lazygun** added 30 Nov 04 to put a bounty on those pirates' heads.
-		[pirate_ship setBounty: 10 + floor(randf() * 20)];	// modified for variety
+		[pirateShip setBounty: 10 + floor(randf() * 20)];	// modified for variety
 
-		[self addShipToLaunchQueue:pirate_ship :NO];
-		[pirate_ship autorelease];
+		[self addShipToLaunchQueue:pirateShip :NO];
+		[pirateShip autorelease];
 		[self abortAllDockings];
 	}
-	return pirate_ship;
+	return pirateShip;
 }
 
 

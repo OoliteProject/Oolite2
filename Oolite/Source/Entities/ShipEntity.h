@@ -297,7 +297,6 @@ typedef enum
 	
 	int						patrol_counter;				// keeps track of where the ship is along a patrol route
 	
-	OOUniversalID			proximity_alert;			// id of a ShipEntity within 2x collision_radius
 	NSMutableDictionary		*previousCondition;			// restored after collision avoidance
 	
 	// derived variables
@@ -326,8 +325,6 @@ typedef enum
 	double					messageTime;				// counts down the seconds a radio message is active for
 	
 	double					next_spark_time;			// time of next spark when throwing sparks
-	
-	OOUniversalID			thanked_ship_id;			// last ship thanked
 	
 	Vector					collision_vector;			// direction of colliding thing.
 	
@@ -391,6 +388,8 @@ typedef enum
 	OOWeakReference			*_foundTarget;				// from scans
 	OOWeakReference			*_primaryAggressor;			// recorded after an attack
 	OOWeakReference			*_targetStation;			// for docking
+	OOWeakReference			*_proximateShip;			// a ship within 2x collision_radius
+	OOWeakReference			*_thankedShip;				// last ship thanked
 	
 	OOShipGroup				*_group;
 	OOShipGroup				*_escortGroup;
@@ -603,9 +602,6 @@ typedef enum
 
 - (void) applyThrust:(double) delta_t;
 
-- (void) avoidCollision;
-- (void) resumePostProximityAlert;
-
 - (double) messageTime;
 - (void) setMessageTime:(double) value;
 
@@ -627,8 +623,8 @@ typedef enum
 - (uint8_t) pendingEscortCount;
 - (void) setPendingEscortCount:(uint8_t)count;
 
-- (ShipEntity *) proximity_alert;
-- (void) setProximity_alert:(ShipEntity*) other;
+- (ShipEntity *) proximateShip;
+- (void) notePotentialCollsion:(ShipEntity*) other;
 
 - (NSString *) identFromShip:(ShipEntity*) otherShip; // name displayed to other ships
 
@@ -814,10 +810,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (id) primaryAggressor;
 - (void) setPrimaryAggressor:(Entity *)targetEntity;
 - (void) addTarget:(Entity *)targetEntity;
-- (void) addTargetByID:(OOUniversalID)uID DEPRECATED_FUNC;
 - (void) removeTarget:(Entity *)targetEntity;
 - (id) primaryTarget;
-- (OOUniversalID) primaryTargetID;
+- (OOUniversalID) primaryTargetID DEPRECATED_FUNC;
 
 - (Entity *) lastEscortTarget;
 
@@ -828,6 +823,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (StationEntity *) targetStation;
 - (void) setTargetStation:(StationEntity *)target;
 - (void) setTargetStationAndTarget:(StationEntity *)target;
+
+- (ShipEntity *) thankedShip;
+- (void) setThankedShip:(ShipEntity *)thankedShip;
 
 - (ShipEntity *) shipHitByLaser;
 
@@ -957,7 +955,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) spawn:(NSString *)roles_number;
 
-- (int) checkShipsInVicinityForWitchJumpExit;
+- (ShipEntity *) shipBlockingHyperspaceJump;
 
 - (BOOL) trackCloseContacts;
 - (void) setTrackCloseContacts:(BOOL) value;

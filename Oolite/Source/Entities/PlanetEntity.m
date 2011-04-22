@@ -606,7 +606,7 @@ static const BaseFace kTexturedFaces[][3] =
 		default:
 			typeString = @"UNKNOWN";
 	}
-	return [NSString stringWithFormat:@"ID: %u position: %@ type: %@ radius: %.3fkm", [self universalID], OOVectorDescription([self position]), typeString, 0.001 * [self radius]];
+	return [NSString stringWithFormat:@"position: %@ type: %@ radius: %.3fkm", OOVectorDescription([self position]), typeString, 0.001 * [self radius]];
 }
 
 
@@ -648,8 +648,7 @@ static const BaseFace kTexturedFaces[][3] =
 #ifndef NDEBUG
 		if ([ship reportAIMessages])
 		{
-			Vector p1 = ship->position;
-			OOLog(@"planet.collide.shipHit", @"DEBUG: %@ %d collided with planet at (%.1f,%.1f,%.1f)",[ship name], [ship universalID], p1.x,p1.y,p1.z);
+			OOLog(@"planet.collide.shipHit", @"DEBUG: %@ collided with planet at %@",[ship shortDescription], OOVectorDescription([ship position]));
 		}
 #endif
 	}

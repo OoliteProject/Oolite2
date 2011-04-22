@@ -177,8 +177,8 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 	hudName = [hudFileName copy];
 	
 	// init arrays
-	dialArray = [[NSMutableArray alloc] initWithCapacity:16];   // alloc retains
-	legendArray = [[NSMutableArray alloc] initWithCapacity:16]; // alloc retains
+	dialArray = [[NSMutableArray alloc] initWithCapacity:16];
+	legendArray = [[NSMutableArray alloc] initWithCapacity:16];
 	
 	// populate arrays
 	NSArray *dials = [hudinfo oo_arrayForKey:DIALS_KEY];
@@ -213,7 +213,7 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 
 	cloakIndicatorOnStatusLight = [hudinfo oo_boolForKey:@"cloak_indicator_on_status_light" defaultValue:YES];
 	
-	last_transmitter = NO_TARGET;
+	DESTROY(_lastTransmitter);
 	
 	_crosshairOverrides = [[hudinfo oo_dictionaryForKey:@"crosshairs"] retain];
 	id crosshairColor = [hudinfo oo_objectForKey:@"crosshair_color" defaultValue:@"greenColor"];
@@ -232,6 +232,7 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 	DESTROY(hudName);
 	DESTROY(propertiesReticleTargetSensitive);
 	DESTROY(_crosshairOverrides);
+	DESTROY(_lastTransmitter);
 	
 	[super dealloc];
 }
@@ -753,14 +754,16 @@ static BOOL hostiles;
 				if (lim_dist > max_zoomed_range)
 					continue;
 				
-				// has it sent a recent message
-				//
-				if (drawthing->isShip) 
+				// Has it sent a recent message?
+				if ([drawthing isShip])
+				{
 					ms_blip = 2.0 * [(ShipEntity *)drawthing messageTime];
+				}
 				if (ms_blip > max_blip)
 				{
 					max_blip = ms_blip;
-					last_transmitter = [drawthing universalID];
+					[_lastTransmitter release];
+					_lastTransmitter = [drawthing weakRetain];
 				}
 				ms_blip -= floor(ms_blip);
 				
@@ -909,12 +912,13 @@ static BOOL hostiles;
 
 - (void) refreshLastTransmitter
 {
-	Entity* lt = [UNIVERSE entityForUniversalID:last_transmitter];
-	if ((lt == nil)||(!(lt->isShip)))
-		return;
-	ShipEntity* st = (ShipEntity*)lt;
-	if ([st messageTime] <= 0.0)
-		[st setMessageTime:2.5];
+	ShipEntity* lt = [_lastTransmitter weakRefUnderlyingObject];
+	if (![lt isShip])  return;
+	
+	if ([lt messageTime] <= 0.0)
+	{
+		[lt setMessageTime:2.5];
+	}
 }
 
 

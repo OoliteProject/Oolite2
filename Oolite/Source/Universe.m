@@ -5205,12 +5205,15 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 - (void) filterSortedLists
 {
 	/*
-	Eric, 17-10-2010: raised the area to be not filtered out, from the combined collision size to 2x this size.
-	This allows this filtered list to be used also for proximity_alert and not only for collisions. Before the
-	proximity_alert could only trigger when already very near a collision. To late for ships to react.
-	This does raise the number of entities in the collision chain with as result that the number of pairs to compair
-	becomes significant larger. However, almost all of these extra pairs are dealt with by a simple distance check.
-	I currently see no noticeable negative effect while playing, but this change might still give some trouble I missed.
+		Raised the area to be not filtered out, from the combined collision
+		size to 2x this size. This allows this filtered list to be used also
+		for collision avoidance and not only for collisions. This does raise
+		the number of entities in the collision chain with the result that the
+		number of pairs to compair becomes significant larger. However, almost
+		all of these extra pairs are dealt with by a simple distance check.
+		I currently see no noticeable negative effect while playing, but this
+		change might still give some trouble I missed.
+		-- Eric, 17-10-2010
 	*/
 	Entity	*e0, *next;
 	GLfloat start, finish, next_start, next_finish;

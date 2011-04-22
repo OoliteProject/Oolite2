@@ -712,6 +712,38 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
+- (BOOL) isInWorld
+{
+	switch (_status)
+	{
+		case STATUS_IN_FLIGHT:
+		case STATUS_AUTOPILOT_ENGAGED:
+		case STATUS_DOCKING:
+		case STATUS_LAUNCHING:
+		case STATUS_WITCHSPACE_COUNTDOWN:
+		case STATUS_ENTERING_WITCHSPACE:
+		case STATUS_EXITING_WITCHSPACE:
+		case STATUS_ESCAPE_SEQUENCE:
+		case STATUS_BEING_SCOOPED:
+		case STATUS_EFFECT:
+			return YES;
+			
+		case STATUS_START_GAME:
+		case STATUS_DEAD:
+		case STATUS_INACTIVE:
+		case STATUS_TEST:
+		case STATUS_COCKPIT_DISPLAY:
+		case STATUS_DOCKED:
+		case STATUS_IN_HOLD:
+		case STATUS_HANDLING_ERROR:
+			return NO;
+			
+		case STATUS_ACTIVE:
+			return [self isStellarObject];
+	}
+}
+
+
 - (void) setScanClass:(OOScanClass)sClass
 {
 	scanClass = sClass;
@@ -925,7 +957,6 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 	if (owner == self)  owner = @"self";
 	else if (owner == nil)  owner = @"none";
 	
-	OOLog(@"dumpState.entity", @"Universal ID: %u", universalID);
 	OOLog(@"dumpState.entity", @"Scan class: %@", OOStringFromScanClass(scanClass));
 	OOLog(@"dumpState.entity", @"Status: %@", OOStringFromEntityStatus([self status]));
 	OOLog(@"dumpState.entity", @"Position: %@", OOVectorDescription(position));

@@ -184,7 +184,7 @@ MA 02110-1301, USA.
 
 - (NSString*) descriptionComponents
 {
-	NSString *result = [NSString stringWithFormat:@"ID: %u position: %@ radius: %.3fkm", [self universalID], OOVectorDescription([self position]), 0.001 * [self radius]];
+	NSString *result = [NSString stringWithFormat:@"position: %@ radius: %.3fkm", OOVectorDescription([self position]), 0.001 * [self radius]];
 	if ([self goneNova])
 	{
 		result = [result stringByAppendingString:@" (gone nova)"];

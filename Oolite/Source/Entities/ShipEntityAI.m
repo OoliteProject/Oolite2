@@ -1188,8 +1188,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 				[self sendExpandedMessage:ExpandDescriptionForCurrentSystem(distress_message) toShip:ship];
 			}
 			
-			// reset the thanked_ship_id
-			thanked_ship_id = NO_TARGET;
+			[self setThankedShip:nil];
 		}
 		else if ([self bounty] == 0 && [ship crew] != nil)
 		{
@@ -1558,7 +1557,7 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 				relCoords = (Vector){ 5000, 0, 0 };
 				break;
 				
-			case 1:		// go to 25km “N” (sunwards) of the station
+			case 1:		// go to 25km N of the station
 				relCoords = (Vector){ 0, 25000, 0 };
 				break;
 				
@@ -2272,8 +2271,8 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 	}
 	
 	// check if we're clear of nearby masses
-	ShipEntity *blocker = [UNIVERSE entityForUniversalID:[self checkShipsInVicinityForWitchJumpExit]];
-	if (blocker)
+	ShipEntity *blocker = [self shipBlockingHyperspaceJump];
+	if (blocker != nil)
 	{
 		[self setFoundTarget:blocker];
 		[shipAI reactToMessage:@"WITCHSPACE BLOCKED" context:@"performHyperSpaceExit"];

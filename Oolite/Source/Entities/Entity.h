@@ -172,7 +172,7 @@ enum OOScanClass
 - (void) setCollisionRegion:(CollisionRegion*)region;
 
 - (void) setUniversalID:(OOUniversalID)uid;
-- (OOUniversalID) universalID;
+- (OOUniversalID) universalID DEPRECATED_FUNC;
 
 - (BOOL) throwingSparks;
 - (void) setThrowSparks:(BOOL)value;
@@ -213,6 +213,7 @@ enum OOScanClass
 
 - (void) setStatus:(OOEntityStatus)stat;
 - (OOEntityStatus) status;
+- (BOOL) isInWorld;
 
 - (void) setScanClass:(OOScanClass)sClass;
 - (OOScanClass) scanClass;

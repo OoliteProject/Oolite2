@@ -4097,8 +4097,8 @@ static bool minShieldLevelPercentageInitialised = false;
 	{
 		// check nearby masses
 		//UPDATE_STAGE(@"checking for mass blockage");
-		ShipEntity* blocker = [UNIVERSE entityForUniversalID:[self checkShipsInVicinityForWitchJumpExit]];
-		if (blocker)
+		ShipEntity* blocker = [self shipBlockingHyperspaceJump];
+		if (blocker != nil)
 		{
 			[UNIVERSE clearPreviousMessage];
 			[UNIVERSE addMessage:[NSString stringWithFormat:DESC(@"witch-blocked-by-@"), [blocker name]] forCount: 4.5];

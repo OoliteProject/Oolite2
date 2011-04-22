@@ -395,13 +395,7 @@ static AIStackElement *sStack;
 	static unsigned	recursionLimiter = 0;
 	AI				*previousRunning = sCurrentlyRunningAI;
 	
-	
-	/*	CRASH in _freedHandler when called via -setState: __NSFireDelayedPerform (1.69, OS X/x86).
-		Analysis: owner invalid.
-		Fix: make owner an OOWeakReference.
-		 -- Ahruman, 20070706
-	*/
-	if (message == nil || owner == nil || [owner universalID] == NO_TARGET)  return;
+	if (message == nil || owner == nil || ![owner isInWorld])  return;
 	
 #ifndef NDEBUG
 	// Push debug stack frame.
@@ -574,7 +568,7 @@ static AIStackElement *sStack;
 	NSArray			*ms_list = nil;
 	unsigned		i;
 	
-	if ([[self owner] universalID] == NO_TARGET || stateMachine == nil)  return;  // don't think until launched
+	if (![[self owner] isInWorld] || stateMachine == nil)  return;  // don't think until launched
 	
 	[self reactToMessage:@"UPDATE" context:@"periodic update"];
 
@@ -593,7 +587,7 @@ static AIStackElement *sStack;
 
 - (void) message:(NSString *) ms
 {
-	if ([[self owner] universalID] == NO_TARGET)  return;  // don't think until launched
+	if (![[self owner] isInWorld])  return;  // don't think until launched
 
 	if ([pendingMessages count] > 32)
 	{
@@ -755,7 +749,7 @@ static AIStackElement *sStack;
 	}
 	else if (owner != nil)
 	{
-		ownerDesc = [[NSString alloc] initWithFormat:@"%@ %d", [owner name], [owner universalID]];
+		ownerDesc = [[owner name] copy];
 	}
 	else
 	{

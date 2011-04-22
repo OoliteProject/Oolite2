@@ -67,22 +67,13 @@
 
 - (NSString *) inspDescription
 {
-	return [NSString stringWithFormat:@"%@ ID %u", [self class], [self universalID]];
+	return [NSString stringWithFormat:@"%@ %p", [self class], self];
 }
 
 
 - (NSString *) inspBasicIdentityLine
 {
-	OOUniversalID		myID = [self universalID];
-	
-	if (myID != NO_TARGET)
-	{
-		return [NSString stringWithFormat:@"%@ ID %u", [self class], myID];
-	}
-	else
-	{
-		return [self className];
-	}
+	return [self className];
 }
 
 
@@ -162,7 +153,7 @@
 
 - (NSString *) inspDescription
 {
-	return [NSString stringWithFormat:@"%@ ID %u", [self displayName], [self universalID]];
+	return [NSString stringWithFormat:@"%@ %u", [self displayName], [self entityPersonalityInt]];
 }
 
 

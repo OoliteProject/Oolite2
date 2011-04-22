@@ -185,8 +185,6 @@ MA 02110-1301, USA.
 #define BACKGROUND_RGBA_KEY		@"background_rgba"
 #define OVERALL_ALPHA_KEY		@"overall_alpha"
 
-#define Z1						[(MyOpenGLView *)[[player universe] gameView] display_z]
-
 #define ONE_EIGHTH				0.125
 
 #define MAX_ACCURACY_RANGE			7000   // 7.000km
@@ -222,7 +220,7 @@ MA 02110-1301, USA.
 	
 	BOOL				hudHidden;
 	
-	int					last_transmitter;
+	OOWeakReference		*_lastTransmitter;
 	
 	// Crosshairs
 	OOCrosshairs		*_crosshairs;

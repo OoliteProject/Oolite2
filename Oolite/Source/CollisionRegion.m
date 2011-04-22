@@ -334,7 +334,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 			[[e1 collisionArray] removeAllObjects];
 		e1->hasCollided = NO;
 		if (e1->isShip)
-			[(ShipEntity*)e1 setProximity_alert:nil];
+			[(ShipEntity*)e1 notePotentialCollsion:nil];
 		e1->collider = nil;
 	}
 	
@@ -387,8 +387,8 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 				{
 					if ((dist2 < PROXIMITY_WARN_DISTANCE2 * r2 * r2) || (dist2 < PROXIMITY_WARN_DISTANCE2 * r1 * r1))
 					{
-						[(ShipEntity*)e1 setProximity_alert:(ShipEntity*)e2];
-						[(ShipEntity*)e2 setProximity_alert:(ShipEntity*)e1];
+						[(ShipEntity*)e1 notePotentialCollsion:(ShipEntity*)e2];
+						[(ShipEntity*)e2 notePotentialCollsion:(ShipEntity*)e1];
 					}
 				}
 				if (dist2 < min_dist2)

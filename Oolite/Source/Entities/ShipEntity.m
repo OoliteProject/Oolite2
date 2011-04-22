@@ -155,6 +155,11 @@ static GLfloat calcFuelChargeRate (GLfloat my_mass, GLfloat base_mass)
 
 - (void) setLastEscortTarget:(Entity *)target;
 
+- (void) setProximateShip:(ShipEntity*) other;
+
+- (void) avoidCollision;
+- (void) resumePostProximityAlert;
+
 @end
 
 
@@ -767,6 +772,9 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	
 	DESTROY(_foundTarget);
 	DESTROY(_primaryAggressor);
+	DESTROY(_targetStation);
+	DESTROY(_proximateShip);
+	DESTROY(_thankedShip);
 	
 	DESTROY(_beaconCode);
 	DESTROY(_beaconDrawable);
@@ -1077,26 +1085,17 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 {
 	[super wasAddedToUniverse];
 	
-	// if we have a universal id then we can proceed to set up any
-	// stuff that happens when we get added to the UNIVERSE
-	if (universalID != NO_TARGET)
+	// set up escorts
+	if (self == [self rootShipEntity] &&
+		([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING) &&
+		_pendingEscortCount != 0)
 	{
-		// set up escorts
-		if (([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING) && _pendingEscortCount != 0)	// just popped into existence
-		{
-			[self setUpEscorts];
-		}
-		else
-		{
-			/*	Earlier there was a silly log message here because I thought
-				this would never happen, but wasn't entirely sure. Turns out
-				it did!
-				-- Ahruman 2009-09-13
-			*/
-			_pendingEscortCount = 0;
-		}
+		// just popped into existence
+		[self setUpEscorts];
 	}
-
+	
+	_pendingEscortCount = 0;
+	
 	//	Tell subentities, too
 	[subEntities makeObjectsPerformSelector:@selector(wasAddedToUniverse)];
 	
@@ -3029,16 +3028,25 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (id) proximateEntity
+- (ShipEntity *) proximateShip
 {
-	return [UNIVERSE entityForUniversalID:proximity_alert];
+	id result = [_proximateShip weakRefUnderlyingObject];
+	if (result == nil)  DESTROY(_proximateShip);
+	return result;
+}
+
+
+- (void) setProximateShip:(ShipEntity *)other
+{
+	DESTROY(_proximateShip);
+	_proximateShip = [other weakRetain];
 }
 
 
 - (void) avoidCollisionIfNecessary
 {
-	Entity *proximateEntity = [self proximateEntity];
-	if (proximateEntity != nil && proximateEntity != [self primaryTarget])
+	ShipEntity *proximateShip = [self proximateShip];
+	if (proximateShip != nil && proximateShip != [self primaryTarget])
 	{
 		[self avoidCollision];
 	}
@@ -3177,12 +3185,16 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		if (universalID & 1)	// 50% of ships are smart S.M.R.T. smart!
+		if ([self entityPersonalityInt] & 1)	// 50 % of ships are smart S.M.R.T. smart!
 		{
-			if (randf() < 0.75)
+			if (Ranrot() < 0xC000)	// 75 % chance.
+			{
 				behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET_SIX;
+			}
 			else
+			{
 				behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET_TWELVE;
+			}
 		}
 		else
 		{
@@ -3204,12 +3216,12 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (canBurn) max_available_speed *= [self afterburnerFactor];
 	
 	// deal with collisions and lost targets
-	Entity *proximateEntity = [self proximateEntity];
-	if (proximateEntity != nil)
+	ShipEntity *proximateShip = [self proximateShip];
+	if (proximateShip != nil)
 	{
-		if (proximateEntity == [self primaryTarget])
+		if (proximateShip == [self primaryTarget])
 		{
-			behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET; // this behaviour will handle proximity_alert.
+			behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET; // this behaviour will handle collision avoidance.
 			[self behaviour_attack_fly_from_target: delta_t]; // do it now.
 		}
 		else
@@ -3238,22 +3250,26 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		desired_speed = fmax(target_speed, 0.4 * maxFlightSpeed);
 		
 		// avoid head-on collision
-		if ((range < 0.5 * distance)&&(behaviour == BEHAVIOUR_ATTACK_FLY_TO_TARGET_SIX))
+		if (range < 0.5 * distance && behaviour == BEHAVIOUR_ATTACK_FLY_TO_TARGET_SIX)
+		{
 			behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET_TWELVE;
+		}
 	}
 	else
+	{
 		desired_speed = max_available_speed; // use afterburner to approach
-
-
+	}
+	
+	
 	// if within 0.75km of the target's six or twelve, or if target almost at standstill for 62.5% of non-thargoid ships (!),
 	// then vector in attack. 
-	if (distance < 750.0 || (target_speed < 0.2 && ![self isThargoid] && ([self universalID] & 14) > 4))
+	if (distance < 750.0 || (target_speed < 0.2 && ![self isThargoid] && ([self entityPersonalityInt] & 14) > 4))
  	{
 		behaviour = BEHAVIOUR_ATTACK_FLY_TO_TARGET;
 		frustration = 0.0;
 		desired_speed = fmax(target_speed, 0.4 * maxFlightSpeed);   // within the weapon's range don't use afterburner
 	}
-
+	
 	// target-six
 	if (behaviour == BEHAVIOUR_ATTACK_FLY_TO_TARGET_SIX)
 	{
@@ -3268,7 +3284,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		//
 		destination = [target distance_twelve:1250];
 	}
-
+	
 	double confidenceFactor = [self trackDestination:delta_t :NO];
 	
 	if(success_factor > last_success_factor || confidenceFactor < 0.85) frustration += delta_t;
@@ -3317,10 +3333,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		Entity *proximateEntity = [self proximateEntity];
-		if ((range < 650) || proximateEntity != nil)
+		ShipEntity *proximateShip = [self proximateShip];
+		if ((range < 650) || proximateShip != nil)
 		{
-			if (proximateEntity == nil)
+			if (proximateShip == nil)
 			{
 				desired_speed = range * maxFlightSpeed / (650.0 * 16.0);
 			}
@@ -3356,10 +3372,10 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		[self noteLostTargetAndGoIdle];
 		return;
 	}
-	Entity *proximateEntity = [self proximateEntity];
-	if (range < COMBAT_IN_RANGE_FACTOR * weaponRange || proximateEntity != nil)
+	ShipEntity *proximateShip = [self proximateShip];
+	if (range < COMBAT_IN_RANGE_FACTOR * weaponRange || proximateShip != nil)
 	{
-		if (proximateEntity == NO_TARGET || proximateEntity == target)
+		if (proximateShip == NO_TARGET || proximateShip == target)
 		{
 			if (aft_weapon_type == WEAPON_NONE)
 			{
@@ -3793,11 +3809,11 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		ShipEntity* prox_ship = [self proximity_alert];
-		if (prox_ship)
+		ShipEntity *proximateShip = [self proximateShip];
+		if (proximateShip != nil)
 		{
-			desired_range = prox_ship->collision_radius * PROXIMITY_AVOID_DISTANCE_FACTOR;
-			destination = prox_ship->position;
+			desired_range = [proximateShip collisionRadius] * PROXIMITY_AVOID_DISTANCE_FACTOR;
+			destination = [proximateShip position];
 		}
 		double dq = [self trackDestination:delta_t:YES]; // returns 0 when heading towards prox_ship
 		// Heading towards target with desired_speed > 0, avoids collisions better than setting desired_speed to zero.
@@ -4281,9 +4297,9 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		return;
 	}
 	
-	ShipEntity *prox_ship = [self proximity_alert];
+	ShipEntity *proximateShip = [self proximateShip];
 	
-	if (prox_ship)
+	if (proximateShip != nil)
 	{
 		if (previousCondition)
 		{
@@ -4300,10 +4316,9 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		[previousCondition oo_setFloat:desired_speed forKey:@"desiredSpeed"];
 		[previousCondition oo_setVector:destination forKey:@"destination"];
 		
-		destination = [prox_ship position];
-		destination = OOVectorInterpolate(position, [prox_ship position], 0.5);		// point between us and them
+		destination = OOVectorInterpolate(position, [proximateShip position], 0.5);		// point between us and them
 		
-		desired_range = prox_ship->collision_radius * PROXIMITY_AVOID_DISTANCE_FACTOR;
+		desired_range = [proximateShip collisionRadius] * PROXIMITY_AVOID_DISTANCE_FACTOR;
 		
 		behaviour = BEHAVIOUR_AVOID_COLLISION;
 		pitching_over = YES;
@@ -4326,7 +4341,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 	previousCondition = nil;
 	frustration = 0.0;
 	
-	proximity_alert = NO_TARGET;
+	[self setProximateShip:nil];
 }
 
 
@@ -4450,34 +4465,45 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 }
 
 
-- (ShipEntity*) proximity_alert
+- (void) notePotentialCollsion:(ShipEntity*) other
 {
-	return [UNIVERSE entityForUniversalID:proximity_alert];
-}
-
-
-- (void) setProximity_alert:(ShipEntity*) other
-{
-	if (!other)
+	if (other == nil)
 	{
-		proximity_alert = NO_TARGET;
+		[self setProximateShip:nil];
 		return;
 	}
 
-	if ([other mass] < 2000) // we are not alerted by small objects. (a cargopod has a mass of about 1000)
+	if ([other mass] < 2000)
+	{
+		// we are not alerted by small objects. (a cargopod has a mass of about 1000)
 		return;
+	}
 	
-	if (isStation) // don't be alarmed close to stations -- is this sensible? we dont mind crashing with carriers?
+	if (isStation)
+	{
+		/*	don't be alarmed close to stations -- is this sensible? we dont
+			mind crashing with carriers?
+			
+			FIXME: this doesn't do what the comment says, it stops carriers/stations
+			from being alerted.
+		*/
 		return;
+	}
 
-	if ((other->isStation) && (behaviour == BEHAVIOUR_FLY_RANGE_FROM_DESTINATION || 
-							   behaviour == BEHAVIOUR_FLY_TO_DESTINATION || 
-							   [self status] == STATUS_LAUNCHING || 
-							   dockingInstructions != nil))
-		return;  // Ships in BEHAVIOUR_FLY_TO_DESTINATION should have their own check for a clear flightpath.
-	
-	if (!crew) // Ships without pilot (cargo, rocks, missiles, buoys etc) will not get alarmed. (escape-pods have pilots)
+	if ([other isStation] && (behaviour == BEHAVIOUR_FLY_RANGE_FROM_DESTINATION || 
+							  behaviour == BEHAVIOUR_FLY_TO_DESTINATION || 
+							  [self status] == STATUS_LAUNCHING || 
+							  dockingInstructions != nil))
+	{
+		  // Ships in BEHAVIOUR_FLY_TO_DESTINATION should have their own check for a clear flightpath.
 		return;
+	}
+	
+	if (crew == nil)
+	{
+		// Ships without pilot (cargo, rocks, missiles, buoys etc) will not get alarmed. (escape-pods have pilots)
+		return;
+	}
 	
 	// check vectors
 	Vector vdiff = vector_between(position, other->position);
@@ -4494,16 +4520,16 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 	if (behaviour == BEHAVIOUR_AVOID_COLLISION)	//	already avoiding something
 	{
-		ShipEntity* prox = [UNIVERSE entityForUniversalID:proximity_alert];
-		if ((prox)&&(prox != other))
+		ShipEntity *proximateShip = [self proximateShip];
+		if (proximateShip != nil && proximateShip != other)
 		{
 			// check which subtends the greatest angle
-			GLfloat sa_prox = prox->collision_radius * prox->collision_radius / distance2(position, prox->position);
+			GLfloat sa_prox = proximateShip->collision_radius * proximateShip->collision_radius / distance2(position, proximateShip->position);
 			GLfloat sa_other = other->collision_radius *  other->collision_radius / distance2(position, other->position);
 			if (sa_prox < sa_other)  return;
 		}
 	}
-	proximity_alert = [other universalID];
+	[self setProximateShip:other];
 }
 
 
@@ -6533,6 +6559,21 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
+- (ShipEntity *) thankedShip
+{
+	StationEntity *result = [_thankedShip weakRefUnderlyingObject];
+	if (result == nil)  DESTROY(_thankedShip);
+	return result;
+}
+
+
+- (void) setThankedShip:(ShipEntity *)thankedShip
+{
+	[_thankedShip release];
+	_thankedShip = [thankedShip weakRetain];
+}
+
+
 - (void) addTarget:(Entity *) targetEntity
 {
 	if (targetEntity == self)  return;
@@ -6544,12 +6585,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	[[self shipSubEntityEnumerator] makeObjectsPerformSelector:@selector(addTarget:) withObject:targetEntity];
 	if (![self isSubEntity])  [self doScriptEvent:OOJSID("shipTargetAcquired") withArgument:targetEntity];
-}
-
-
-- (void) addTargetByID:(OOUniversalID)uID
-{
-	[self addTarget:[UNIVERSE entityForUniversalID:uID]];
 }
 
 
@@ -8273,10 +8308,11 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		[other scoopIn:self];
 		return NO;
 	}
-	if (universalID == NO_TARGET)
+	
+	if (![self isInWorld] || ![other isInWorld])
+	{
 		return NO;
-	if (other->universalID == NO_TARGET)
-		return NO;
+	}
 
 	// find velocity along line of centers
 	//
@@ -9690,9 +9726,9 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		
 		if (switcher == [self primaryAggressor] &&
 			switcher == [self primaryTarget] && 
-			switcher != nil &&
+			[switcher isShip] &&
 			[rescuer isShip] &&
-			thanked_ship_id != rescuerID &&
+			[self thankedShip] != rescuer &&
 			scanClass != CLASS_THARGOID)
 		{
 			ShipEntity *rescueShip = (ShipEntity *)rescuer;
@@ -9706,7 +9742,8 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 			{
 				[self sendExpandedMessage:@"[thanks-for-assist]" toShip:rescueShip];
 			}
-			thanked_ship_id = rescuerID;
+			
+			[self setThankedShip:rescueShip];
 			// we don't want clean ships that change target from one pirate to the other pirate getting a bounty.
 			if ([switchingShip bounty] > 0 || [rescueShip bounty] == 0)
 			{	
@@ -9747,43 +9784,46 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 }
 
 
-- (int) checkShipsInVicinityForWitchJumpExit
+- (ShipEntity *) shipBlockingHyperspaceJump
 {
-	// checks if there are any large masses close by
-	// since we want to place the space station at least 10km away
-	// the formula we'll use is K x m / d2 < 1.0
-	// (m = mass, d2 = distance squared)
-	// coriolis station is mass 455,223,200
-	// 10km is 10,000m,
-	// 10km squared is 100,000,000
-	// therefore K is 0.22 (approx)
-
-	int result = NO_TARGET;
-
-	GLfloat k = 0.1;
-
-	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	ShipEntity*	my_entities[ent_count];
-	int i;
-
-	int ship_count = 0;
-	for (i = 0; i < ent_count; i++)
-		if ((uni_entities[i]->isShip)&&(uni_entities[i] != self))
-			my_entities[ship_count++] = (ShipEntity*)[uni_entities[i] retain];		//	retained
-	//
-	for (i = 0; (i < ship_count)&&(result == NO_TARGET) ; i++)
+	/*
+		Checks if there are any large masses close by.
+		Since we want to place the space station at least 10 km away, the
+		formula we'll use is K x m / d2 < 1.0 (m = mass, d2 = distance squared)
+		
+		Coriolis station is mass 455,223,200
+		10km is 10,000m, 10km squared is 100,000,000
+		Therefore K is 0.22 (approx)
+	*/
+	
+	const GLfloat k = 0.1;
+	
+	unsigned	entityCount = UNIVERSE->n_entities, shipCount = 0;
+	Entity		**sortedEntities = UNIVERSE->sortedEntities;	// grab the public sorted list
+	ShipEntity	*ships[entityCount];
+	ShipEntity	*blocker = nil;
+	
+	for (unsigned i = 0; i < entityCount; i++)
 	{
-		ShipEntity* ship = my_entities[i];
-		Vector delta = vector_between(position, ship->position);
-		GLfloat d2 = magnitude2(delta);
-		if ((k * [ship mass] > d2)&&(d2 < SCANNER_MAX_RANGE2))	// if you go off scanner from a blocker - it ceases to block
-			result = [ship universalID];
+		if ([sortedEntities[i] isShip] && sortedEntities[i] != self)
+		{
+			ships[shipCount++] = (ShipEntity *)sortedEntities[i];
+		}
 	}
-	for (i = 0; i < ship_count; i++)
-		[my_entities[i] release];	//		released
-
-	return result;
+	
+	for (unsigned i = 0; i < shipCount && blocker == nil; i++)
+	{
+		ShipEntity *ship = ships[i];
+		GLfloat d2 = distance2(position, [ship position]);
+		
+		// if you go off scanner from a blocker - it ceases to block
+		if (k * [ship mass] > d2 && d2 < SCANNER_MAX_RANGE2)
+		{
+			blocker = ship;
+		}
+	}
+	
+	return blocker;
 }
 
 
@@ -9979,7 +10019,6 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	ADD_FLAG_IF_SET(isFrangible);
 	ADD_FLAG_IF_SET(cloaking_device_active);
 	ADD_FLAG_IF_SET(canFragment);
-	ADD_FLAG_IF_SET(proximity_alert);
 	flagsString = [flags count] ? [flags componentsJoinedByString:@", "] : (NSString *)@"none";
 	OOLog(@"dumpState.shipEntity", @"Flags: %@", flagsString);
 }

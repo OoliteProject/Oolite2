@@ -418,7 +418,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 // Used to draw subentities. Should be getting this from camera.
 - (OOMatrix) viewMatrix;
 
-- (id) entityForUniversalID:(OOUniversalID)u_id;
+- (id) entityForUniversalID:(OOUniversalID)u_id DEPRECATED_FUNC;
 
 - (BOOL) addEntity:(Entity *) entity;
 - (BOOL) removeEntity:(Entity *) entity;

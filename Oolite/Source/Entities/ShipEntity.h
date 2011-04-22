@@ -287,7 +287,6 @@ typedef enum
 	Vector					jink;						// x and y set factors for offsetting a pursuing ship's position
 	Vector					coordinates;				// for flying to/from a set point
 	Vector					reference;					// a direction vector of magnitude 1 (* turrets *)
-	OOUniversalID			primaryAggressor;			// recorded after an attack
 	OOUniversalID			targetStation;				// for docking
 	OOUInteger				_subIdx;					// serialisation index - used only if this ship is a subentity
 	OOUInteger				_maxShipSubIdx;				// serialisation index - the number of ship subentities inside the shipdata
@@ -391,6 +390,7 @@ typedef enum
 	OOWeakReference			*_lastAegisLock;			// remember last aegis planet/sun
 	
 	OOWeakReference			*_foundTarget;				// from scans
+	OOWeakReference			*_primaryAggressor;			// recorded after an attack
 	
 	OOShipGroup				*_group;
 	OOShipGroup				*_escortGroup;

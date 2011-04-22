@@ -455,7 +455,7 @@ MA 02110-1301, USA.
 	// Inform our old target of our new target.
 	if ([primaryTarget isShip])
 	{
-		[[(ShipEntity *)primaryTarget getAI] message:[NSString stringWithFormat:@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, universalID, primaryAggressor]];
+		[[(ShipEntity *)primaryTarget getAI] message:[NSString stringWithFormat:@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, universalID, [[self primaryAggressor] universalID]]];
 	}
 	
 	// okay, so let's now target the aggressor
@@ -1177,7 +1177,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 		// Tell it!
 		if ([ship isPlayer])
 		{
-			if (primaryAggressor == [ship universalID] && energy < 0.375 * maxEnergy && !isBuoy)
+			if (ship == [self primaryAggressor] && energy < 0.375 * maxEnergy && !isBuoy)
 			{
 				[self sendExpandedMessage:ExpandDescriptionForCurrentSystem(@"[beg-for-mercy]") toShip:ship];
 				[self ejectCargo];

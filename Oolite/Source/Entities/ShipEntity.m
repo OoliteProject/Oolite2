@@ -765,6 +765,9 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	
 	DESTROY(_lastAegisLock);
 	
+	DESTROY(_foundTarget);
+	DESTROY(_primaryAggressor);
+	
 	DESTROY(_beaconCode);
 	DESTROY(_beaconDrawable);
 	
@@ -6488,20 +6491,18 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (id) primaryAggressor
 {
-	id result = [UNIVERSE entityForUniversalID:primaryAggressor];
-	if (result == nil && primaryAggressor != NO_TARGET)
-	{
-		primaryAggressor = NO_TARGET;
-	}
+	Entity *result = [_primaryAggressor weakRefUnderlyingObject];
+	if (result == nil)  DESTROY(_primaryAggressor);
 	return result;
 }
 
 
-- (void) setPrimaryAggressor:(Entity *) targetEntity
+- (void) setPrimaryAggressor:(Entity *)targetEntity
 {
 	if (targetEntity != nil)
 	{
-		primaryAggressor = [targetEntity universalID];
+		[_primaryAggressor release];
+		_primaryAggressor = [targetEntity weakRetain];
 	}
 }
 
@@ -8690,7 +8691,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		
 		[self setLastEscortTarget:nil];	// we're being attacked, escorts can scramble!
 		
-		primaryAggressor = [hunter universalID];
+		[self setPrimaryAggressor:hunter];
 		[self setFoundTarget:hunter];
 
 		// firing on an innocent ship is an offence
@@ -9688,7 +9689,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		OOUniversalID rescuerID = [tokens oo_intAtIndex:2];	// New primary target of attacker. 
 		Entity *rescuer = [UNIVERSE entityForUniversalID:rescuerID];
 		
-		if (switcherID == primaryAggressor &&
+		if (switcher == [self primaryAggressor] &&
 			switcher == [self primaryTarget] && 
 			switcher != nil &&
 			[rescuer isShip] &&

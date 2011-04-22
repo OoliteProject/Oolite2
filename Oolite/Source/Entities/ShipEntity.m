@@ -153,6 +153,8 @@ static GLfloat calcFuelChargeRate (GLfloat my_mass, GLfloat base_mass)
 - (float) density;
 - (void) calculateMass;
 
+- (void) setLastEscortTarget:(Entity *)target;
+
 @end
 
 
@@ -1906,7 +1908,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				if ([target isShip] && [target isCloaked])
 				{
 					[self doScriptEvent:OOJSID("shipTargetCloaked") andReactToAIMessage:@"TARGET_CLOAKED"];
-					last_escort_target = NO_TARGET; // needed to deploy escorts again after decloaking.
+					[self setLastEscortTarget:nil]; // needed to deploy escorts again after decloaking.
 				}
 				[self noteLostTarget];
 			}
@@ -8672,7 +8674,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		BOOL iAmTheLaw = [self isPolice];
 		BOOL uAreTheLaw = [hunter isPolice];
 		
-		last_escort_target = NO_TARGET;	// we're being attacked, escorts can scramble!
+		[self setLastEscortTarget:nil];	// we're being attacked, escorts can scramble!
 		
 		primaryAggressor = [hunter universalID];
 		found_target = primaryAggressor;
@@ -9224,6 +9226,21 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
+- (Entity *) lastEscortTarget
+{
+	id result = [_lastEscortTarget weakRefUnderlyingObject];
+	if (result == nil && _lastEscortTarget != nil)  DESTROY(_lastEscortTarget);
+	return result;
+}
+
+
+- (void) setLastEscortTarget:(Entity *)target
+{
+	DESTROY(_lastEscortTarget);
+	_lastEscortTarget = [target weakRetain];
+}
+
+
 // Exposed to AI
 - (void) deployEscorts
 {
@@ -9232,8 +9249,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	ShipEntity		*target = nil;
 	NSMutableSet	*idleEscorts = nil;
 	unsigned		deployCount;
+	Entity			*primaryTarget = [self primaryTarget];
 	
-	if ([self primaryTarget] == nil || _escortGroup == nil)  return;
+	if (primaryTarget == nil || _escortGroup == nil)  return;
 	
 	OOShipGroup *escortGroup = [self escortGroup];
 	unsigned escortCount = [escortGroup count] - 1;  // escorts minus leader.
@@ -9241,13 +9259,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if ([self group] == nil)  [self setGroup:escortGroup];
 	
-	if ([self primaryTargetID] == last_escort_target)
+	if (primaryTarget == [self lastEscortTarget])
 	{
 		// already deployed escorts onto this target!
 		return;
 	}
 	
-	last_escort_target = [self primaryTargetID];
+	[self setLastEscortTarget:primaryTarget];
 	
 	// Find idle escorts
 	idleEscorts = [NSMutableSet set];

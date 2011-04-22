@@ -192,7 +192,7 @@ typedef enum
 	//docking instructions
 	NSDictionary			*dockingInstructions;
 	
-	OOUniversalID			last_escort_target;			// last target an escort was deployed after
+	OOWeakReference			*_lastEscortTarget;			// last target an escort was deployed after
 	
 	OOColor					*laser_color;
 	OOColor					*scanner_display_color1;
@@ -819,6 +819,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) removeTarget:(Entity *)targetEntity;
 - (id) primaryTarget;
 - (OOUniversalID) primaryTargetID;
+
+- (Entity *) lastEscortTarget;
 
 - (ShipEntity *) shipHitByLaser;
 

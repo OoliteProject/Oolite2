@@ -530,7 +530,7 @@ static GLfloat		sBaseMass = 0.0;
 	
 	scoopsActive = NO;
 	
-	target_memory_index = 0;
+	_targetMemoryIndex = 0;
 	
 	dockingReport = [[NSMutableString alloc] init];
 
@@ -907,6 +907,8 @@ static GLfloat		sBaseMass = 0.0;
 	
 	DESTROY(scannedWormholes);
 	DESTROY(wormhole);
+	
+	[self clearTargetMemory];
 	
 	int i;
 	for (i = 0; i < PLAYER_MAX_MISSILES; i++)  DESTROY(missile_entity[i]);
@@ -7086,8 +7088,8 @@ static NSString *last_outfitting_key=nil;
 }
 
 
-// override shipentity addTarget to implement target_memory
-- (void) addTarget:(Entity *) targetEntity
+// Override addTarget: to implement target memory.
+- (void) addTarget:(Entity *)targetEntity
 {
 	if ([self status] != STATUS_IN_FLIGHT && [self status] != STATUS_WITCHSPACE_COUNTDOWN)  return;
 	if (targetEntity == self)  return;
@@ -7102,16 +7104,19 @@ static NSString *last_outfitting_key=nil;
 	
 	if ([self hasEquipmentItem:@"EQ_TARGET_MEMORY"])
 	{
-		OOUniversalID primaryTarget = [self primaryTargetID];
+		Entity *primaryTarget = [self primaryTarget];
 		
 		int i = 0;
 		BOOL foundSlot = NO;
 		// if targeted previously use that memory space
 		for (i = 0; i < PLAYER_TARGET_MEMORY_SIZE; i++)
 		{
-			if (primaryTarget == target_memory[i])
+			Entity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
+			if (memSlot == nil)  DESTROY(_targetMemory[i]);	// Clean up invalid weakrefs.
+			
+			if (memSlot == primaryTarget)
 			{
-				target_memory_index = i;
+				_targetMemoryIndex = i;
 				foundSlot = YES;
 				break;
 			}
@@ -7122,20 +7127,24 @@ static NSString *last_outfitting_key=nil;
 			// find and use a blank space in memory
 			for (i = 0; i < PLAYER_TARGET_MEMORY_SIZE; i++)
 			{
-				if (target_memory[target_memory_index] == NO_TARGET)
+				Entity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
+				if (memSlot == nil)
 				{
-					target_memory[target_memory_index] = primaryTarget;
+					// No point cleaning up here, because we'll already have visited all slots in the first loop.
+					
+					_targetMemory[_targetMemoryIndex] = [primaryTarget weakRetain];
 					foundSlot = YES;
 					break;
 				}
-				target_memory_index = (target_memory_index + 1) % PLAYER_TARGET_MEMORY_SIZE;
+				_targetMemoryIndex = (_targetMemoryIndex + 1) % PLAYER_TARGET_MEMORY_SIZE;
 			}
 		}
 		if (!foundSlot)
 		{
 			// use the next memory space
-			target_memory_index = (target_memory_index + 1) % PLAYER_TARGET_MEMORY_SIZE;
-			target_memory[target_memory_index] = primaryTarget;
+			_targetMemoryIndex = (_targetMemoryIndex + 1) % PLAYER_TARGET_MEMORY_SIZE;
+			[_targetMemory[_targetMemoryIndex] release];
+			_targetMemory[_targetMemoryIndex] = [primaryTarget weakRetain];
 		}
 	}
 	
@@ -7167,8 +7176,10 @@ static NSString *last_outfitting_key=nil;
 {
 	int i = 0;
 	for (i = 0; i < PLAYER_TARGET_MEMORY_SIZE; i++)
-		target_memory[i] = NO_TARGET;
-	target_memory_index = 0;
+	{
+		DESTROY(_targetMemory[i]);
+	}
+	_targetMemoryIndex = 0;
 }
 
 
@@ -7177,23 +7188,28 @@ static NSString *last_outfitting_key=nil;
 	unsigned i = 0;
 	while (i++ < PLAYER_TARGET_MEMORY_SIZE)	// limit loops
 	{
-		target_memory_index += delta;
-		while (target_memory_index < 0)  target_memory_index += PLAYER_TARGET_MEMORY_SIZE;
-		while (target_memory_index >= PLAYER_TARGET_MEMORY_SIZE)  target_memory_index -= PLAYER_TARGET_MEMORY_SIZE;
-		
-		int targ_id = target_memory[target_memory_index];
-		ShipEntity* potential_target = [UNIVERSE entityForUniversalID: targ_id];
-		
-		if ((potential_target)&&(potential_target->isShip))
+		_targetMemoryIndex += delta;
+		while (_targetMemoryIndex < 0)
 		{
-			if (potential_target->zero_distance < SCANNER_MAX_RANGE2)
+			_targetMemoryIndex += PLAYER_TARGET_MEMORY_SIZE;
+		}
+		while (_targetMemoryIndex >= PLAYER_TARGET_MEMORY_SIZE)
+		{
+			_targetMemoryIndex -= PLAYER_TARGET_MEMORY_SIZE;
+		}
+		
+		ShipEntity *potentialTarget = [_targetMemory[_targetMemoryIndex] weakRefUnderlyingObject];
+		if (potentialTarget != nil)
+		{
+			if (potentialTarget->zero_distance < SCANNER_MAX_RANGE2)
 			{
-				[super addTarget:potential_target];
+				[super addTarget:potentialTarget];
+				
 				if (missile_status != MISSILE_STATUS_SAFE)
 				{
 					if( [missile_entity[activeMissile] isMissile])
 					{
-						[missile_entity[activeMissile] addTarget:potential_target];
+						[missile_entity[activeMissile] addTarget:potentialTarget];
 						missile_status = MISSILE_STATUS_TARGET_LOCKED;
 						[self printIdentLockedOnForMissile:YES];
 					}
@@ -7214,7 +7230,9 @@ static NSString *last_outfitting_key=nil;
 			}
 		}
 		else
-			target_memory[target_memory_index] = NO_TARGET;	// tidy up
+		{
+			DESTROY(_targetMemory[_targetMemoryIndex]);
+		}
 	}
 	
 	[self playNoTargetInMemory];

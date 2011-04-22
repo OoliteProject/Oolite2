@@ -443,8 +443,8 @@ typedef enum
 	GLfloat					scanner_zoom_rate;
 	
 	// target memory
-	int						target_memory[PLAYER_TARGET_MEMORY_SIZE];
-	int						target_memory_index;
+	int						_targetMemoryIndex;
+	OOWeakReference			*_targetMemory[PLAYER_TARGET_MEMORY_SIZE];
 	
 	// custom view points
 	Quaternion				customViewQuaternion;

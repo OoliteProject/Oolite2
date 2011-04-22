@@ -1365,7 +1365,10 @@ MA 02110-1301, USA.
 {
 	if ([self hasEscorts])
 	{
-		if (found_target == last_escort_target)
+		Entity *lastEscortTarget = [self lastEscortTarget];
+		OOUniversalID escortTargID = (lastEscortTarget != nil) ? [lastEscortTarget universalID] : NO_TARGET;
+		
+		if (found_target == escortTargID)
 		{
 			[shipAI message:@"FLEEING"];
 			return;

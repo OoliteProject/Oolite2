@@ -289,7 +289,6 @@ typedef enum
 	Vector					reference;					// a direction vector of magnitude 1 (* turrets *)
 	OOUniversalID			primaryAggressor;			// recorded after an attack
 	OOUniversalID			targetStation;				// for docking
-	OOUniversalID			found_target;				// from scans
 	OOUInteger				_subIdx;					// serialisation index - used only if this ship is a subentity
 	OOUInteger				_maxShipSubIdx;				// serialisation index - the number of ship subentities inside the shipdata
 	double					launch_time;				// time at which launched
@@ -390,6 +389,8 @@ typedef enum
 	float					_heatInsulation;
 	
 	OOWeakReference			*_lastAegisLock;			// remember last aegis planet/sun
+	
+	OOWeakReference			*_foundTarget;				// from scans
 	
 	OOShipGroup				*_group;
 	OOShipGroup				*_escortGroup;
@@ -810,7 +811,6 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (ShipEntity**) scannedShips;
 - (int) numberOfScannedShips;
 
-- (void) setFound_target:(Entity *)targetEntity;
 - (id) primaryAggressor;
 - (void) setPrimaryAggressor:(Entity *)targetEntity;
 - (void) setTargetStation:(Entity *)targetEntity;
@@ -821,6 +821,10 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (OOUniversalID) primaryTargetID;
 
 - (Entity *) lastEscortTarget;
+
+- (Entity *) foundTarget;
+- (void) setFoundTarget:(Entity *)targetEntity;
+- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity;	// Sends TARGET_FOUND or NOTHING_FOUND to AI as appropriate.
 
 - (ShipEntity *) shipHitByLaser;
 

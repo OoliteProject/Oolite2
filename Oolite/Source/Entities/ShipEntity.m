@@ -2110,7 +2110,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				//evict them from our group
 				[hunter setGroup:nil];
 				
-				[groupLeader setFound_target:other];
+				[groupLeader setFoundTarget:other];
 				[groupLeader setPrimaryAggressor:hunter];
 				[groupLeader respondToAttackFrom:from becauseOf:other];
 			}
@@ -3968,7 +3968,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			OODebugDrawPoint([sTarget position], [OOColor cyanColor]);
 		}
 		
-		Entity *fTarget = [UNIVERSE entityForUniversalID:found_target];
+		Entity *fTarget = [self foundTarget];
 		if (fTarget != nil && fTarget != pTarget && fTarget != sTarget)
 		{
 			OODebugDrawPoint([fTarget position], [OOColor magentaColor]);
@@ -6463,12 +6463,26 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setFound_target:(Entity *) targetEntity
+- (Entity *) foundTarget
 {
-	if (targetEntity != nil)
-	{
-		found_target = [targetEntity universalID];
-	}
+	Entity *result = [_foundTarget weakRefUnderlyingObject];
+	if (result == nil)  DESTROY(_foundTarget);
+	return result;
+}
+
+
+- (void) setFoundTarget:(Entity *)targetEntity
+{
+	[_foundTarget release];
+	_foundTarget = [targetEntity weakRetain];
+}
+
+
+- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity
+{
+	[self setFoundTarget:targetEntity];
+	if (targetEntity != nil)  [shipAI message:@"TARGET_FOUND"];
+	if (targetEntity != nil)  [shipAI message:@"NOTHING_FOUND"];
 }
 
 
@@ -8677,7 +8691,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		[self setLastEscortTarget:nil];	// we're being attacked, escorts can scramble!
 		
 		primaryAggressor = [hunter universalID];
-		found_target = primaryAggressor;
+		[self setFoundTarget:hunter];
 
 		// firing on an innocent ship is an offence
 		[self broadcastHitByLaserFrom: hunter];
@@ -8697,7 +8711,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 				ShipEntity *groupLeader = [group leader];
 				if (groupLeader != self)
 				{
-					[groupLeader setFound_target:hunter];
+					[groupLeader setFoundTarget:hunter];
 					[groupLeader setPrimaryAggressor:hunter];
 					[groupLeader respondToAttackFrom:ent becauseOf:hunter];
 					//unsetting group leader for carriers can break stuff
@@ -8712,7 +8726,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 				{
 					if (otherPirate != self && randf() < 0.5)	// 50% chance they'll help
 					{
-						[otherPirate setFound_target:hunter];
+						[otherPirate setFoundTarget:hunter];
 						[otherPirate setPrimaryAggressor:hunter];
 						[otherPirate respondToAttackFrom:ent becauseOf:hunter];
 					}
@@ -8727,7 +8741,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 				{
 					if (otherPolice != self)
 					{
-						[otherPolice setFound_target:hunter];
+						[otherPolice setFoundTarget:hunter];
 						[otherPolice setPrimaryAggressor:hunter];
 						[otherPolice respondToAttackFrom:ent becauseOf:hunter];
 					}
@@ -8952,7 +8966,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	//                  mother in all wormhole cases, not just when the ship
 	//                  creates the wormhole.
 	[self addTarget:wormhole];
-	found_target = [wormhole universalID];
+	[self setFoundTarget:wormhole];
 	[shipAI reactToMessage:@"WITCHSPACE OKAY" context:@"performHyperSpaceExit"];	// must be a reaction, the ship is about to disappear
 	
 	if ([self scriptedMisjump])
@@ -9510,7 +9524,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		authEnum = [authorities objectEnumerator];
 		while ((auth = [authEnum nextObject]))
 		{
-			[auth setFound_target:aggressor_ship];
+			[auth setFoundTarget:aggressor_ship];
 			[auth doScriptEvent:OOJSID("offenceCommittedNearby") withArgument:aggressor_ship andArgument:self];
 			[auth reactToAIMessage:@"OFFENCE_COMMITTED" context:@"combat update"];
 		}

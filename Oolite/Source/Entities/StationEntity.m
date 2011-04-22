@@ -1441,7 +1441,7 @@ static NSDictionary* instructions(int station_id, Vector coords, float speed, fl
 		[(ShipEntity*)other markAsOffender:b];
 		
 		[self setPrimaryAggressor:other];
-		found_target = primaryAggressor;
+		[self setFoundTarget:other];
 		[self launchPolice];
 
 		if (isEnergyMine) //don't blow up!

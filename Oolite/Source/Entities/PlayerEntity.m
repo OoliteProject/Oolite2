@@ -1357,10 +1357,10 @@ static bool minShieldLevelPercentageInitialised = false;
 			[self takeHeatDamage: delta_t * ship_temperature];
 	}
 	
-	if ((status == STATUS_ESCAPE_SEQUENCE)&&(shot_time > ESCAPE_SEQUENCE_TIME))
+	if (status == STATUS_ESCAPE_SEQUENCE && shot_time > ESCAPE_SEQUENCE_TIME)
 	{
 		UPDATE_STAGE(@"resetting after escape");
-		ShipEntity	*doppelganger = [UNIVERSE entityForUniversalID:found_target];
+		ShipEntity	*doppelganger = (ShipEntity *)[self foundTarget];	// FIXME: using foundTarget for this is begging for trouble. -- Ahruman 2011-04-22
 		// reset legal status again! Could have changed if a previously launched missile hit a clean NPC while in the escape pod.
 		legalStatus = 0;
 		bounty = 0;

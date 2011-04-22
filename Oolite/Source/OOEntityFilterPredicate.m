@@ -171,5 +171,8 @@ BOOL HasPrimaryRoleInSetPredicate(Entity *ship, void *parameter)
 
 BOOL IsHostileAgainstTargetPredicate(Entity *ship, void *parameter)
 {
-	return [(ShipEntity *)ship hasHostileTarget] && [(ShipEntity *)ship primaryTarget] == (ShipEntity *)parameter;
+	ShipEntity *self = (ShipEntity *)ship, *target = parameter;
+	
+	return ([self isThargoid] && ![target isThargoid]) ||
+	       (target == [self primaryTarget] && [self hasHostileTarget]);
 }

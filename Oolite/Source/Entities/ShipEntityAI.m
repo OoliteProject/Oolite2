@@ -47,8 +47,12 @@ MA 02110-1301, USA.
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace;
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace toSystem:(OOSystemID)systemID;
 
+- (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter andAnnounce:(BOOL)announce;
 - (void)scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
 - (void)scanForNearestShipWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
+- (void) scanForRandomShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
+- (void)scanForNearestNonCargoWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
+- (void)scanForNearestNonCargoWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
 
 - (void) acceptDistressMessageFrom:(ShipEntity *)other;
 
@@ -271,25 +275,8 @@ MA 02110-1301, USA.
 
 - (void) scanForHostiles
 {
-	/*-- Locates all the ships in range targeting the receiver and chooses the nearest --*/
-	found_target = NO_TARGET;
-	
-	[self checkScanner];
-	unsigned i;
-	GLfloat found_d2 = scannerRange * scannerRange;
-	for (i = 0; i < n_scanned_ships ; i++)
-	{
-		ShipEntity *thing = scanned_ships[i];
-		GLfloat d2 = distance2_scanned_ships[i];
-		if ((d2 < found_d2) && ([thing isThargoid] || (([thing primaryTarget] == self) && [thing hasHostileTarget])))
-		{
-			found_target = [thing universalID];
-			found_d2 = d2;
-		}
-	}
-	
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	// Locates all the ships in range targeting the receiver and chooses the nearest.
+	return [self scanForNearestShipWithPredicate:IsHostileAgainstTargetPredicate parameter:self];
 }
 
 
@@ -494,7 +481,7 @@ MA 02110-1301, USA.
 	[self checkScanner];
 	
 	found_d2 = scannerRange * scannerRange;
-	found_target = NO_TARGET;
+	Entity *target = NO_TARGET;
 	
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
@@ -510,41 +497,27 @@ MA 02110-1301, USA.
 			if (d2 < found_d2)
 			{
 				found_d2 = d2;
-				found_target = [ship universalID];
+				target = ship;
 			}
 		}
 	}
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	
+	[self setAndAnnounceFoundTarget:target];
+}
+
+
+static BOOL IsPirateVictimPredicate(Entity *entity, void *predicate)
+{
+	NSCParameterAssert([entity isShip]);
+	
+	return [(ShipEntity *)entity isPirateVictim];
 }
 
 
 - (void) scanForRandomMerchantman
 {
-	unsigned			n_found, i;
-	
-	//-- Locates one of the merchantman in range.
-	[self checkScanner];
-	OOUniversalID		ids_found[n_scanned_ships];
-	
-	n_found = 0;
-	found_target = NO_TARGET;
-	for (i = 0; i < n_scanned_ships ; i++)
-	{
-		ShipEntity *ship = scanned_ships[i];
-		if (([ship status] != STATUS_DEAD) && ([ship status] != STATUS_DOCKED) && [ship isPirateVictim])
-			ids_found[n_found++] = ship->universalID;
-	}
-	if (n_found == 0)
-	{
-		[shipAI message:@"NOTHING_FOUND"];
-	}
-	else
-	{
-		i = ranrot_rand() % n_found;	// pick a number from 0 -> (n_found - 1)
-		found_target = ids_found[i];
-		[shipAI message:@"TARGET_FOUND"];
-	}
+	// Locates one of the merchantman in range.
+	[self scanForRandomShipWithPredicate:IsPirateVictimPredicate parameter:NULL];
 }
 
 
@@ -567,6 +540,13 @@ MA 02110-1301, USA.
 	}
 	else
 	{
+		/*
+			FIXME: this only affects stations moving as a result of external
+			forces (such as being bumped), which isn't the apparent intention.
+			As part of my drive to reduce implicit behaviours, I suggest removing
+			this condition completely instead of fixing it.
+			-- Ahruman 2011-04-22
+		*/
 		if (magnitude2([self velocity]))
 		{
 			[shipAI message:@"NOTHING_FOUND"];		//can't collect loot if you're a moving station
@@ -576,83 +556,57 @@ MA 02110-1301, USA.
 	
 	[self checkScanner];
 	
-	double found_d2 = scannerRange * scannerRange;
-	found_target = NO_TARGET;
-	unsigned i;
+	GLfloat		found_d2 = scannerRange * scannerRange;
+	Entity		*target = nil;
+	unsigned	i;
+	
 	for (i = 0; i < n_scanned_ships; i++)
 	{
 		ShipEntity *other = (ShipEntity *)scanned_ships[i];
 		if ([other scanClass] == CLASS_CARGO && [other cargoType] != CARGO_NOT_CARGO && [other status] != STATUS_BEING_SCOOPED)
 		{
-			if ((![self isPolice]) || ([other commodityType] == 3)) // police only rescue lifepods and slaves
+			if (![self isPolice] || [other commodityType] == CARGO_SLAVES) // police only rescue lifepods and slaves
 			{
 				GLfloat d2 = distance2_scanned_ships[i];
 				if (d2 < found_d2)
 				{
 					found_d2 = d2;
-					found_target = other->universalID;
+					target = other;
 				}
 			}
 		}
 	}
-	if (found_target != NO_TARGET)
-	{
-		[shipAI message:@"TARGET_FOUND"];
-	}
-	else
-	{
-		[shipAI message:@"NOTHING_FOUND"];
-	}
+	
+	[self setAndAnnounceFoundTarget:target];
+}
+
+
+static BOOL IsLootPredicate(Entity *entity, void *predicate)
+{
+	NSCParameterAssert([entity isShip]);
+	ShipEntity *ship = (ShipEntity *)entity;
+	
+	return [ship scanClass] == CLASS_CARGO && [ship cargoType] != CARGO_NOT_CARGO && [ship status] != STATUS_BEING_SCOOPED;
 }
 
 
 - (void) scanForRandomLoot
 {
-	/*-- Locates the all debris in range and chooses a piece at random from the first sixteen found --*/
-	if (![self isStation] && ![self hasScoop])
-	{
-		[shipAI message:@"NOTHING_FOUND"];		//can't collect loot if you have no scoop!
-		return;
-	}
-	//
-	[self checkScanner];
-	//
-	OOUniversalID thing_uids_found[16];
-	unsigned things_found = 0;
-	found_target = NO_TARGET;
-	unsigned i;
-	for (i = 0; (i < n_scanned_ships)&&(things_found < 16) ; i++)
-	{
-		ShipEntity *other = scanned_ships[i];
-		if ([other scanClass] == CLASS_CARGO && [other cargoType] != CARGO_NOT_CARGO && [other status] != STATUS_BEING_SCOOPED)
-		{
-			found_target = [other universalID];
-			thing_uids_found[things_found++] = found_target;
-		}
-	}
-	
-	if (things_found != 0)
-	{
-		found_target = thing_uids_found[ranrot_rand() % things_found];
-		[shipAI message:@"TARGET_FOUND"];
-	}
-	else
-		[shipAI message:@"NOTHING_FOUND"];
+	[self scanForRandomShipWithPredicate:IsLootPredicate parameter:NULL];
 }
 
 
 - (void) setTargetToFoundTarget
 {
-	if ([UNIVERSE entityForUniversalID:found_target])
-		[self addTarget:[UNIVERSE entityForUniversalID:found_target]];
-	else
-		[shipAI message:@"TARGET_LOST"]; // to prefent the ship going for a wrong, previous target. Should not be a reactToMessage.
+	Entity *target = [self foundTarget];
+	if (target != nil)	[self addTarget:target];
+	else  [shipAI message:@"TARGET_LOST"];	// to prevent the ship going for a wrong, previous target. Should not be a reactToMessage.
 }
 
 
 - (void) checkForFullHold
 {
-	if (!max_cargo)
+	if (max_cargo == 0)
 	{
 		[shipAI message:@"NO_CARGO_BAY"];
 	}
@@ -800,7 +754,7 @@ MA 02110-1301, USA.
 		
 		for (policeEnum = [[self group] mutationSafeEnumerator]; (police = [policeEnum nextObject]); )
 		{
-			[police setFound_target:hunter];
+			[police setFoundTarget:hunter];
 			[police setPrimaryAggressor:hunter];
 		}
 	}
@@ -810,7 +764,7 @@ MA 02110-1301, USA.
 		// use the ECM and battle on
 		
 		[self setPrimaryAggressor:hunter];	// lets get them now for that!
-		found_target = primaryAggressor;
+		[self setFoundTarget:hunter];
 		
 		// if I'm a copper and you're not, then mark the other as an offender!
 		if ([self isPolice] && ![hunter isPolice])  [hunter markAsOffender:64];
@@ -1047,14 +1001,12 @@ MA 02110-1301, USA.
 	/*-- Locates all the ships in range and compares their legal status or bounty against ranrot_rand() & 255 - chooses the worst offender --*/
 	NSDictionary		*systeminfo = [UNIVERSE currentSystemData];
 	float gov_factor =	0.4 * [(NSNumber *)[systeminfo objectForKey:KEY_GOVERNMENT] intValue]; // 0 .. 7 (0 anarchic .. 7 most stable) --> [0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8]
-	//
-	if ([UNIVERSE sun] == nil)
-		gov_factor = 1.0;
-	//
-	found_target = NO_TARGET;
-
-	// find the worst offender on the scanner
-	//
+	
+	if ([UNIVERSE sun] == nil)  gov_factor = 1.0;
+	
+	Entity				*target = nil;
+	 
+	// Find the worst offender on the scanner.
 	[self checkScanner];
 	unsigned i;
 	float	worst_legal_factor = 0;
@@ -1072,17 +1024,14 @@ MA 02110-1301, USA.
 			{
 				if (group == nil || group != [ship group])  // fellows with bounty can't be offenders
 				{
-					found_target = [ship universalID];
+					target = ship;
 					worst_legal_factor = legal_factor;
 				}
 			}
 		}
 	}
 	
-	if (found_target != NO_TARGET)
-		[shipAI message:@"TARGET_FOUND"];
-	else
-		[shipAI message:@"NOTHING_FOUND"];
+	[self setAndAnnounceFoundTarget:target];
 }
 
 
@@ -1196,56 +1145,70 @@ MA 02110-1301, USA.
 	/*-- Locates all the stations, bounty hunters and police ships in range and tells them that you are under attack --*/
 
 	[self checkScanner];
-	//
-	GLfloat d2;
-	NSString* distress_message;
-	found_target = NO_TARGET;
-	BOOL	is_buoy = (scanClass == CLASS_BUOY);
-	ShipEntity*	aggressor_ship = [UNIVERSE entityForUniversalID:primaryAggressor];
 	
-	if (!primaryAggressor) return;
+	GLfloat			d2;
+	NSString		*distress_message;
+	BOOL			isBuoy = (scanClass == CLASS_BUOY);
+	ShipEntity		*aggressorShip = [self primaryAggressor];
+	
+	[self setFoundTarget:nil];
+	if (aggressorShip == nil)  return;
 	
 	if (messageTime > 2.0 * randf())
-		return;					// don't send too many distress messages at once, space them out semi-randomly
-	
-	if (is_buoy)
-		distress_message = @"[buoy-distress-call]";
-	else
-		distress_message = @"[distress-call]";
-	
-	unsigned i;
-	for (i = 0; i < n_scanned_ships; i++)
 	{
-		ShipEntity*	ship = scanned_ships[i];
+		// Don't send too many distress messages at once, space them out semi-randomly.
+		return;
+	}
+	
+	if (isBuoy)
+	{
+		distress_message = @"[buoy-distress-call]";
+	}
+	else
+	{
+		distress_message = @"[distress-call]";
+	}
+	
+	for (unsigned i = 0; i < n_scanned_ships; i++)
+	{
+		ShipEntity	*ship = scanned_ships[i];
 		d2 = distance2_scanned_ships[i];
 	
-		// tell it! //
-		if (ship->isPlayer)
+		// Tell it!
+		if ([ship isPlayer])
 		{
-			if ((primaryAggressor == [ship universalID])&&(energy < 0.375 * maxEnergy)&&(!is_buoy))
+			if (primaryAggressor == [ship universalID] && energy < 0.375 * maxEnergy && !isBuoy)
 			{
 				[self sendExpandedMessage:ExpandDescriptionForCurrentSystem(@"[beg-for-mercy]") toShip:ship];
 				[self ejectCargo];
 				[self performFlee];
 			}
 			else
+			{
 				[self sendExpandedMessage:ExpandDescriptionForCurrentSystem(distress_message) toShip:ship];
+			}
+			
 			// reset the thanked_ship_id
-			//
 			thanked_ship_id = NO_TARGET;
 		}
-		else if ([self bounty] == 0 && [ship crew]) // Only clean ships can have their distress calls accepted
+		else if ([self bounty] == 0 && [ship crew] != nil)
 		{
-			[ship doScriptEvent:OOJSID("distressMessageReceived") withArgument:aggressor_ship andArgument:self];
+			// Only clean ships can have their distress calls accepted.
+			[ship doScriptEvent:OOJSID("distressMessageReceived") withArgument:aggressorShip andArgument:self];
 			
-			// we only can send distressMessages to ships that are known to have a "ACCEPT_DISTRESS_CALL" reaction
-			// in their AI, or they might react wrong on the added found_target.
-			if (ship->isStation)
+			/*	We only can send distressMessages to ships that are known to
+				have a "ACCEPT_DISTRESS_CALL" reaction in their AI, or they
+				might react wrong on the added foundTarget.
+			 
+				FIXME: What does that mean? Do we actually know that these ships
+				have "ACCEPT_DISTRESS_CALL"? (Trick question: no, we don't.)
+				For 2.0, is it OK to punt this decision to scripts?
+				-- Ahruman 2011-04-22
+			*/
+			if ([ship isStation] || [ship hasPrimaryRole:@"police"] || [ship hasPrimaryRole:@"hunter"])
+			{
 				[ship acceptDistressMessageFrom:self];
-			if ([ship hasPrimaryRole:@"police"])
-				[ship acceptDistressMessageFrom:self];
-			if ([ship hasPrimaryRole:@"hunter"])
-				[ship acceptDistressMessageFrom:self];
+			}
 		}
 	}
 }
@@ -1282,39 +1245,29 @@ MA 02110-1301, USA.
 }
 
 
+static BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
+{
+	NSCParameterAssert([entity isShip]);
+	ShipEntity *ship = (ShipEntity *)entity;
+	
+	return [ship scanClass] != CLASS_CARGO && [ship status] != STATUS_DOCKED && ![ship isThargoid] && ![ship isCloaked];
+}
+
+
 - (void) scanForNonThargoid
 {
-	/*-- Locates all the non thargoid ships in range and chooses the nearest --*/
-	found_target = NO_TARGET;
-	
-	[self checkScanner];
-	unsigned i;
-	GLfloat	found_d2 = scannerRange * scannerRange;
-	for (i = 0; i < n_scanned_ships ; i++)
-	{
-		ShipEntity *thing = scanned_ships[i];
-		GLfloat d2 = distance2_scanned_ships[i];
-		if (([thing scanClass] != CLASS_CARGO) && ([thing status] != STATUS_DOCKED) && ![thing isThargoid] && ![thing isCloaked] && (d2 < found_d2))
-		{
-			found_target = [thing universalID];
-			if ([thing isPlayer]) d2 = 0.0;   // prefer the player
-			found_d2 = d2;
-		}
-	}
-	
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	[self scanForNearestShipWithPredicate:IsNonThargoidPredicate parameter:NULL];
 }
 
 
 - (void) thargonCheckMother
 {
 	ShipEntity   *mother = [self owner];
-	if (mother == nil && [self group])  mother = [[self group] leader];
+	if (mother == nil && [self group] != nil)  mother = [[self group] leader];
 	
-	double	maxRange2 = scannerRange * scannerRange;
+	const double maxRange2 = scannerRange * scannerRange;
 	
-	if (mother && mother != self && magnitude2(vector_subtract(mother->position, position)) < maxRange2)
+	if (mother && mother != self && distance2([mother position], [self position]) < maxRange2)
 	{
 		[shipAI message:@"TARGET_FOUND"]; // no need for scanning, we still have our mother.
 	}
@@ -1322,10 +1275,11 @@ MA 02110-1301, USA.
 	{
 		// we lost the old mother, search for a new one
 		[self scanForNearestShipHavingRole:@"thargoid-mothership"]; // the scan will send further AI messages.
-		if (found_target != NO_TARGET && [UNIVERSE entityForUniversalID:found_target])
+		mother = (ShipEntity *)[self foundTarget];
+		if (mother != nil)
 		{
-			[self setOwner:[UNIVERSE entityForUniversalID:found_target]];
-			[self setGroup:[[self owner] group]];
+			[self setOwner:mother];
+			[self setGroup:[mother group]];
 		};
 	}
 }
@@ -1363,19 +1317,20 @@ MA 02110-1301, USA.
 
 - (void) fightOrFleeHostiles
 {
+	Entity *foundTarget = [self foundTarget];
+	
 	if ([self hasEscorts])
 	{
 		Entity *lastEscortTarget = [self lastEscortTarget];
-		OOUniversalID escortTargID = (lastEscortTarget != nil) ? [lastEscortTarget universalID] : NO_TARGET;
 		
-		if (found_target == escortTargID)
+		if (foundTarget == lastEscortTarget)
 		{
 			[shipAI message:@"FLEEING"];
 			return;
 		}
 		
-		primaryAggressor = found_target;
-		[self addTargetByID:found_target];
+		[self setPrimaryAggressor:foundTarget];
+		[self addTarget:foundTarget];
 		[self deployEscorts];
 		[shipAI message:@"DEPLOYING_ESCORTS"];
 		[shipAI message:@"FLEEING"];
@@ -1387,8 +1342,8 @@ MA 02110-1301, USA.
 	{
 		if (randf() < 0.50)
 		{
-			primaryAggressor = found_target;
-			[self addTargetByID:found_target];
+			[self setPrimaryAggressor:foundTarget];
+			[self addTarget:foundTarget];
 			[self fireMissile];
 			[shipAI message:@"FLEEING"];
 			return;
@@ -1398,7 +1353,7 @@ MA 02110-1301, USA.
 	// consider fighting
 	if (energy > maxEnergy * 0.80)
 	{
-		primaryAggressor = found_target;
+		[self setPrimaryAggressor:foundTarget];
 		//[self performAttack];
 		[shipAI message:@"FIGHTING"];
 		return;
@@ -1501,24 +1456,22 @@ MA 02110-1301, USA.
 - (void) groupAttackTarget
 {
 	NSEnumerator		*shipEnum = nil;
-	ShipEntity			*target = nil, *ship = nil;
+	ShipEntity			*target = [self primaryTarget], *ship = nil;
 	
-	if ([self primaryTarget] == nil) return;
+	if (target == nil) return;
 	
 	if ([self group] == nil)		// ship is alone!
 	{
-		found_target = [self primaryTargetID];
+		[self setFoundTarget:target];
 		[shipAI reactToMessage:@"GROUP_ATTACK_TARGET" context:@"groupAttackTarget"];
 		return;
 	}
-	
-	target = [self primaryTarget];
 	
 	// -memberArray creates a new collection, which is needed because the group might be mutated by the members' AIs.
 	NSArray *groupMembers = [[self group] memberArray];
 	for (shipEnum = [groupMembers objectEnumerator]; (ship = [shipEnum nextObject]); )
 	{
-		[ship setFound_target:target];
+		[ship setFoundTarget:target];
 		[ship reactToAIMessage:@"GROUP_ATTACK_TARGET" context:@"groupAttackTarget"];
 		if ([ship escortGroup] != [ship group] && [[ship escortGroup] count] > 1) // Ship has a seperate escort group.
 		{
@@ -1527,7 +1480,7 @@ MA 02110-1301, USA.
 			NSArray			*escortMembers = [[ship escortGroup] memberArrayExcludingLeader];
 			for (shipEnum = [escortMembers objectEnumerator]; (escort = [shipEnum nextObject]); )
 			{
-				[escort setFound_target:target];
+				[escort setFoundTarget:target];
 				[escort reactToAIMessage:@"GROUP_ATTACK_TARGET" context:@"groupAttackTarget"];
 			}
 		}
@@ -1535,39 +1488,26 @@ MA 02110-1301, USA.
 }
 
 
+static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
+{
+	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
+	ShipEntity *ship = (ShipEntity *)entity, *self = parameter;
+	
+	return ship != self && ![ship isPlayer] && [ship scanClass] == [self scanClass] && [ship primaryTarget] != self;
+}
+
+
 - (void) scanForFormationLeader
 {
-	//-- Locates the nearest suitable formation leader in range --//
-	found_target = NO_TARGET;
-	[self checkScanner];
-	unsigned i;
-	GLfloat	found_d2 = scannerRange * scannerRange;
-	for (i = 0; i < n_scanned_ships; i++)
-	{
-		ShipEntity *ship = scanned_ships[i];
-		if ((ship != self) && (!ship->isPlayer) && (ship->scanClass == scanClass) && [ship primaryTarget] != self)	// look for alike
-		{
-			GLfloat d2 = distance2_scanned_ships[i];
-			if ((d2 < found_d2) && [ship canAcceptEscort:self])
-			{
-				found_d2 = d2;
-				found_target = ship->universalID;
-			}
-		}
-	}
+	// Locates the nearest suitable formation leader in range.
+	[self scanForNearestShipWithPredicate:IsFormationLeaderCandidatePredicate parameter:self];
 	
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else
+	if ([self isPolice] && [self foundTarget] == nil)
 	{
-		[shipAI message:@"NOTHING_FOUND"];
-		if ([self isPolice])
-		{
-			// become free-lance police :)
-			[shipAI setStateMachine:@"route1patrolAI.plist"];	// use this to avoid referencing a released AI
-			[self setPrimaryRole:@"police"]; // other wingman can now select this ship as leader.
-		}
+		// become free-lance police :)
+		[shipAI setStateMachine:@"route1patrolAI.plist"];
+		[self setPrimaryRole:@"police"]; // other wingman can now select this ship as leader.
 	}
-
 }
 
 
@@ -1771,45 +1711,14 @@ MA 02110-1301, USA.
 - (void) scanForRocks
 {
 	/*-- Locates the all boulders and asteroids in range and selects nearest --*/
-
-	// find boulders then asteroids within range
-	//
-	found_target = NO_TARGET;
-	[self checkScanner];
-	unsigned i;
-	GLfloat found_d2 = scannerRange * scannerRange;
-	for (i = 0; i < n_scanned_ships; i++)
+	
+	[self scanForNearestShipWithPredicate:HasRolePredicate parameter:@"boulder" andAnnounce:NO];
+	if ([self foundTarget] == nil)
 	{
-		ShipEntity *thing = scanned_ships[i];
-		if ([thing isBoulder])
-		{
-			GLfloat d2 = distance2_scanned_ships[i];
-			if (d2 < found_d2)
-			{
-				found_target = thing->universalID;
-				found_d2 = d2;
-			}
-		}
+		[self scanForNearestShipWithPredicate:HasRolePredicate parameter:@"asteroid" andAnnounce:NO];
 	}
-	if (found_target == NO_TARGET)
-	{
-		for (i = 0; i < n_scanned_ships; i++)
-		{
-			ShipEntity *thing = scanned_ships[i];
-			if ([thing hasRole:@"asteroid"])
-			{
-				GLfloat d2 = distance2_scanned_ships[i];
-				if (d2 < found_d2)
-				{
-					found_target = thing->universalID;
-					found_d2 = d2;
-				}
-			}
-		}
-	}
-
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	
+	[self setAndAnnounceFoundTarget:[self foundTarget]];
 }
 
 
@@ -1839,6 +1748,8 @@ MA 02110-1301, USA.
 
 - (void) requestNewTarget
 {
+	// Locates all the ships in range targeting the mother ship and chooses the nearest/biggest.
+	
 	ShipEntity *mother = [[self group] leader];
 	if (mother == nil)
 	{
@@ -1846,8 +1757,7 @@ MA 02110-1301, USA.
 		return;
 	}
 	
-	/*-- Locates all the ships in range targeting the mother ship and chooses the nearest/biggest --*/
-	found_target = NO_TARGET;
+	Entity *target = NO_TARGET;
 	[self checkScanner];
 	unsigned i;
 	GLfloat found_d2 = scannerRange * scannerRange;
@@ -1857,18 +1767,15 @@ MA 02110-1301, USA.
 		ShipEntity *thing = scanned_ships[i];
 		GLfloat d2 = distance2_scanned_ships[i];
 		GLfloat e1 = [thing energy];
-		if ((d2 < found_d2) && (([thing isThargoid] && ![mother isThargoid]) || (([thing primaryTarget] == mother) && [thing hasHostileTarget])))
+		if (d2 < found_d2 && e1 > max_e &&
+			(([thing isThargoid] && ![mother isThargoid]) || ([thing primaryTarget] == mother && [thing hasHostileTarget])))
 		{
-			if (e1 > max_e)
-			{
-				found_target = thing->universalID;
-				max_e = e1;
-			}
+			target = thing;
+			max_e = e1;
 		}
 	}
-		
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	
+	[self setAndAnnounceFoundTarget:target];
 }
 
 
@@ -1890,27 +1797,27 @@ MA 02110-1301, USA.
 
 - (void) scanForNearestShipWithPrimaryRole:(NSString *)scanRole
 {
-	[self scanForNearestShipWithPredicate:HasPrimaryRolePredicate parameter:scanRole];
+	[self scanForNearestNonCargoWithPredicate:HasPrimaryRolePredicate parameter:scanRole];
 }
 
 
 - (void) scanForNearestShipHavingRole:(NSString *)scanRole
 {
-	[self scanForNearestShipWithPredicate:HasRolePredicate parameter:scanRole];
+	[self scanForNearestNonCargoWithPredicate:HasRolePredicate parameter:scanRole];
 }
 
 
 - (void) scanForNearestShipWithAnyPrimaryRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestShipWithPredicate:HasPrimaryRoleInSetPredicate parameter:set];
+	[self scanForNearestNonCargoWithPredicate:HasPrimaryRoleInSetPredicate parameter:set];
 }
 
 
 - (void) scanForNearestShipHavingAnyRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestShipWithPredicate:HasRoleInSetPredicate parameter:set];
+	[self scanForNearestNonCargoWithPredicate:HasRoleInSetPredicate parameter:set];
 }
 
 
@@ -1923,34 +1830,34 @@ MA 02110-1301, USA.
 
 - (void) scanForNearestShipWithoutPrimaryRole:(NSString *)scanRole
 {
-	[self scanForNearestShipWithNegatedPredicate:HasPrimaryRolePredicate parameter:scanRole];
+	[self scanForNearestNonCargoWithNegatedPredicate:HasPrimaryRolePredicate parameter:scanRole];
 }
 
 
 - (void) scanForNearestShipNotHavingRole:(NSString *)scanRole
 {
-	[self scanForNearestShipWithNegatedPredicate:HasRolePredicate parameter:scanRole];
+	[self scanForNearestNonCargoWithNegatedPredicate:HasRolePredicate parameter:scanRole];
 }
 
 
 - (void) scanForNearestShipWithoutAnyPrimaryRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestShipWithNegatedPredicate:HasPrimaryRoleInSetPredicate parameter:set];
+	[self scanForNearestNonCargoWithNegatedPredicate:HasPrimaryRoleInSetPredicate parameter:set];
 }
 
 
 - (void) scanForNearestShipNotHavingAnyRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestShipWithNegatedPredicate:HasRoleInSetPredicate parameter:set];
+	[self scanForNearestNonCargoWithNegatedPredicate:HasRoleInSetPredicate parameter:set];
 }
 
 
 - (void) scanForNearestShipWithoutScanClass:(NSString *)scanScanClass
 {
 	NSNumber *parameter = [NSNumber numberWithInt:OOScanClassFromString(scanScanClass)];
-	[self scanForNearestShipWithNegatedPredicate:HasScanClassPredicate parameter:parameter];
+	[self scanForNearestNonCargoWithNegatedPredicate:HasScanClassPredicate parameter:parameter];
 }
 
 
@@ -2043,8 +1950,7 @@ MA 02110-1301, USA.
 		}
 		
 		// Select nothing
-		found_target = NO_TARGET;
-		[[self getAI] message:@"NOTHING_FOUND"];
+		[self setAndAnnounceFoundTarget:nil];
 	}
 	
 	JS_ReportPendingException(context);
@@ -2374,7 +2280,7 @@ MA 02110-1301, USA.
 	ShipEntity *blocker = [UNIVERSE entityForUniversalID:[self checkShipsInVicinityForWitchJumpExit]];
 	if (blocker)
 	{
-		found_target = [blocker universalID];
+		[self setFoundTarget:blocker];
 		[shipAI reactToMessage:@"WITCHSPACE BLOCKED" context:@"performHyperSpaceExit"];
 		return NO;
 	}
@@ -2420,29 +2326,35 @@ MA 02110-1301, USA.
 
 - (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
 {
+	[self scanForNearestShipWithPredicate:predicate parameter:parameter andAnnounce:YES];
+}
+
+
+- (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter andAnnounce:(BOOL)announce
+{
 	// Locates all the ships in range for which predicate returns YES, and chooses the nearest.
 	unsigned		i;
-	ShipEntity		*candidate;
-	float			d2, found_d2 = scannerRange * scannerRange;
-	
-	found_target = NO_TARGET;
-	[self checkScanner];
+	ShipEntity		*target = nil;
+	float			found_d2 = scannerRange * scannerRange;
 	
 	if (predicate == NULL)  return;
 	
+	[self checkScanner];
+	
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		candidate = scanned_ships[i];
-		d2 = distance2_scanned_ships[i];
-		if ((d2 < found_d2) && (candidate->scanClass != CLASS_CARGO) && ([candidate status] != STATUS_DOCKED) && predicate(candidate, parameter))
+		ShipEntity *ship = scanned_ships[i];
+		float d2 = distance2_scanned_ships[i];
+		OOEntityStatus status = [ship status];
+		if (d2 < found_d2 && [ship scanClass] != CLASS_CARGO && status != STATUS_DOCKED && status != STATUS_DEAD && predicate(ship, parameter))
 		{
-			found_target = candidate->universalID;
+			target = ship;
 			found_d2 = d2;
 		}
 	}
 	
-	if (found_target != NO_TARGET)  [shipAI message:@"TARGET_FOUND"];
-	else  [shipAI message:@"NOTHING_FOUND"];
+	if (announce)  [self setAndAnnounceFoundTarget:target];
+	else  [self setFoundTarget:target];
 }
 
 
@@ -2453,20 +2365,83 @@ MA 02110-1301, USA.
 }
 
 
+- (void) scanForRandomShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+{
+	[self checkScanner];
+	
+	unsigned		i, count = 0;
+	ShipEntity		*shipsFound[n_scanned_ships];
+	float			found_d2 = scannerRange * scannerRange;
+	
+	for (i = 0; i < n_scanned_ships ; i++)
+	{
+		ShipEntity *ship = scanned_ships[i];
+		float d2 = distance2_scanned_ships[i];
+		OOEntityStatus status = [ship status];
+		if (d2 < found_d2 && [ship scanClass] != CLASS_CARGO && status != STATUS_DOCKED && status != STATUS_DEAD && predicate(ship, parameter))
+		{
+			shipsFound[count++] = ship;
+		}
+	}
+	
+	if (count != 0)
+	{
+		i = Ranrot() % count;	// pick a number from 0 -> (n_found - 1)
+		[self setFoundTarget:shipsFound[i]];
+		[shipAI message:@"TARGET_FOUND"];
+	}
+	else
+	{
+		[self setFoundTarget:nil];
+		[shipAI message:@"NOTHING_FOUND"];
+	}
+}
+
+
+- (void) scanForNearestNonCargoWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+{
+	/*
+		In Oolite 1.7x, -scanForNearestShipWithPredicate: excludes cargo, but
+		we want to use it to implement methods that do scan for cargo.
+		TODO: audit clients and switch them to -scanForNearestShipWithPredicate:
+		if possible.
+	*/
+	ChainedEntityPredicateParameter notParam =
+	{
+		HasScanClassPredicate,
+		[NSNumber numberWithInt:CLASS_CARGO]
+	};
+	BinaryOperationPredicateParameter param =
+	{
+		HasScanClassPredicate, &notParam,
+		predicate, parameter
+	};
+	return [self scanForNearestShipWithPredicate:ANDPredicate parameter:&param];
+}
+
+
+- (void) scanForNearestNonCargoWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+{
+	ChainedEntityPredicateParameter param = { predicate, parameter };
+	[self scanForNearestNonCargoWithPredicate:NOTPredicate parameter:&param];
+}
+
+
 - (void) acceptDistressMessageFrom:(ShipEntity *)other
 {
-	found_target = [[other primaryTarget] universalID];
+	ShipEntity *perp = [other primaryTarget];
+	[self setFoundTarget:perp];
+	
 	if ([self isPolice])
 	{
-		[[UNIVERSE entityForUniversalID:found_target] markAsOffender:8];  // you have been warned!!
+		[perp markAsOffender:8];  // you have been warned!!
 	}
 	
 	NSString *context = nil;
 #ifndef NDEBUG
-	context = [NSString stringWithFormat:@"%@ broadcastDistressMessage", [other shortDescription]];
+	context = $sprintf(@"%@ broadcastDistressMessage", [other shortDescription]);
 #endif
 	[shipAI reactToMessage:@"ACCEPT_DISTRESS_CALL" context:context];
-
 }
 
 @end

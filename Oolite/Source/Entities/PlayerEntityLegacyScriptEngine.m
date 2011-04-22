@@ -1617,12 +1617,12 @@ OOINLINE NSString *CurrentScriptDesc(void)
 - (void) targetNearestIncomingMissile
 {
 	[self scanForNearestIncomingMissile];
-	Entity *ent = [UNIVERSE entityForUniversalID:found_target];
-	if (ent != nil)
+	Entity *foundTarget = [self foundTarget];
+	if (foundTarget != nil)
 	{
 		ident_engaged = YES;
 		missile_status = MISSILE_STATUS_TARGET_LOCKED;
-		[self addTarget:ent];
+		[self addTarget:foundTarget];
 	}
 }
 

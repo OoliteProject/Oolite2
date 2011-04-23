@@ -63,6 +63,7 @@ OoliteBase_OBJC_FILES		=	$(OOBASE_CORE_FILES) \
 
 OoliteBase_HEADER_FILES		=	JAPropertyListRepresentation.h \
 								MYCollectionUtilities.h \
+								NSData+DDGZip.h \
 								NSDataOOExtensions.h \
 								NSDictionaryOOExtensions.h \
 								NSMapTableOOExtensions.h \
@@ -86,6 +87,7 @@ OoliteBase_HEADER_FILES		=	JAPropertyListRepresentation.h \
 								OODeepCopy.h \
 								OOExcludeObjectEnumerator.h \
 								OOFastArithmetic.h \
+								OOFileResolving.h \
 								OOFilteringEnumerator.h \
 								OOFunctionAttributes.h \
 								OOGarbageCollectionSupport.h \

@@ -117,16 +117,6 @@ MA 02110-1301, USA.
 #define OOLITE_LINUX			1
 #endif
 
-
-#if 0	// DELETE ME IF POSSIBLE
-
-#define Boolean unsigned char
-#define Byte unsigned char
-#define true 1
-#define false 0
-
-#endif
-
 #if !defined(MAX)
 	#define MAX(A,B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a > __b ? __a : __b; })
 #endif
@@ -134,6 +124,24 @@ MA 02110-1301, USA.
 #if !defined(MIN)
 	#define MIN(A,B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
 #endif
+
+
+/*
+	These enums have been renamed in Mac OS X, but the new names aren’t in
+	GNUstep-base 1.20.1.
+	-- Ahruman 2011-03-08
+*/
+enum
+{
+	NSDataReadingMapped = NSMappedRead,
+	NSDataReadingUncached = NSUncachedRead,
+	NSDataWritingAtomic = NSAtomicWrite
+};
+
+#endif
+
+
+#if !OOLITE_HAVE_APPKIT
 
 #define IBOutlet /**/
 #define IBAction void
@@ -216,19 +224,6 @@ enum {
   NSFindFunctionKey = 0xF745,
   NSHelpFunctionKey = 0xF746,
   NSModeSwitchFunctionKey = 0xF747
-};
-
-
-/*
-	These enums have been renamed in Mac OS X, but the new names aren’t in
-	GNUstep-base 1.20.1.
-	-- Ahruman 2011-03-08
-*/
-enum
-{
-	NSDataReadingMapped = NSMappedRead,
-	NSDataReadingUncached = NSUncachedRead,
-	NSDataWritingAtomic = NSAtomicWrite
 };
 
 #endif

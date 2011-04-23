@@ -26,7 +26,7 @@
 #import "JAPropertyListRepresentation.h"
 
 #ifndef NDEBUG
-#include <OoliteBase/OoliteBase.h>
+#include "OoliteBase.h"
 #endif
 
 

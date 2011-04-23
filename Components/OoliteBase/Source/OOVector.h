@@ -97,7 +97,7 @@ OOINLINE OOScalar fast_magnitude(Vector vec) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* Normalize vector */
 OOINLINE Vector vector_normal(Vector vec) INLINE_CONST_FUNC;
-OOINLINE Vector fast_vector_normal(Vector vec) INLINE_CONST_FUNC;
+OOINLINE Vector fast_vector_normal(Vector vec) INLINE_CONST_FUNC DEPRECATED_FUNC;
 
 /* Normalize vector, returning fallback if zero vector. */
 OOINLINE Vector vector_normal_or_fallback(Vector vec, Vector fallback) INLINE_CONST_FUNC;
@@ -280,15 +280,13 @@ OOINLINE Vector vector_normal(Vector vec)
 
 OOINLINE Vector fast_vector_normal_or_fallback(Vector vec, Vector fallback)
 {
-	OOScalar mag2 = magnitude2(vec);
-	if (EXPECT_NOT(mag2 == 0.0f))  return fallback;
-	return vector_multiply_scalar(vec, OOFastInvSqrtf(mag2));
+	return vector_normal_or_fallback(vec, fallback);
 }
 
 
 OOINLINE Vector fast_vector_normal(Vector vec)
 {
-	return vector_normal_or_fallback(vec, kZeroVector);
+	return vector_normal(vec);
 }
 
 
@@ -306,7 +304,7 @@ OOINLINE OOScalar distance(Vector v1, Vector v2)
 
 OOINLINE OOScalar fast_distance(Vector v1, Vector v2)
 {
-	return fast_magnitude(vector_subtract(v1, v2));
+	return distance(v1, v2);
 }
 
 
@@ -328,7 +326,7 @@ OOINLINE Vector cross_product(Vector first, Vector second)
 
 OOINLINE Vector fast_cross_product(Vector first, Vector second)
 {
-	return fast_vector_normal(true_cross_product(first, second));
+	return cross_product(first, second);
 }
 
 
@@ -355,10 +353,7 @@ OOINLINE Vector normal_to_surface(Vector v1, Vector v2, Vector v3)
 
 OOINLINE Vector fast_normal_to_surface(Vector v1, Vector v2, Vector v3)
 {
-	Vector d0, d1;
-	d0 = vector_subtract(v2, v1);
-	d1 = vector_subtract(v3, v2);
-	return fast_cross_product(d0, d1);
+	return normal_to_surface(v1, v2, v3);
 }
 
 

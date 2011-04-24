@@ -6511,11 +6511,17 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
+- (void) announceFoundTarget
+{
+	if (_foundTarget != nil)  [shipAI message:@"TARGET_FOUND"];
+	else  [shipAI message:@"NOTHING_FOUND"];
+}
+
+
 - (void) setAndAnnounceFoundTarget:(Entity *)targetEntity
 {
 	[self setFoundTarget:targetEntity];
-	if (targetEntity != nil)  [shipAI message:@"TARGET_FOUND"];
-	if (targetEntity != nil)  [shipAI message:@"NOTHING_FOUND"];
+	[self announceFoundTarget];
 }
 
 

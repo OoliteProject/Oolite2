@@ -47,20 +47,6 @@ MA 02110-1301, USA.
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace;
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace toSystem:(OOSystemID)systemID;
 
-- (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter andAnnounce:(BOOL)announce;
-- (void)scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
-- (void)scanForNearestShipWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
-- (void) scanForRandomShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
-- (void)scanForNearestNonCargoWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
-- (void)scanForNearestNonCargoWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter;
-
-- (void) acceptDistressMessageFrom:(ShipEntity *)other;
-
-@end
-
-
-@interface StationEntity (OOAIPrivate)
-
 - (void) acceptDistressMessageFrom:(ShipEntity *)other;
 
 @end
@@ -257,6 +243,13 @@ MA 02110-1301, USA.
 @end
 
 
+OOINLINE void ScanForNearestShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForRandomShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestNonDerelict(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+
+
 @implementation ShipEntity (AI)
 
 
@@ -276,7 +269,7 @@ MA 02110-1301, USA.
 - (void) scanForHostiles
 {
 	// Locates all the ships in range targeting the receiver and chooses the nearest.
-	return [self scanForNearestShipWithPredicate:IsHostileAgainstTargetPredicate parameter:self];
+	ScanForNearestShip(self, IsHostileAgainstTargetPredicate, self);
 }
 
 
@@ -303,14 +296,18 @@ MA 02110-1301, USA.
 }
 
 
+OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
+{
+	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
+	ShipEntity *ship = (ShipEntity *)entity, *self = (ShipEntity *)parameter;
+	
+	return ship->scanClass == CLASS_MISSILE && [ship primaryTarget] == self;
+}
+
+
 - (void) scanForNearestIncomingMissile
 {
-	BinaryOperationPredicateParameter param =
-	{
-		HasScanClassPredicate, [NSNumber numberWithInt:CLASS_MISSILE],
-		IsHostileAgainstTargetPredicate, self
-	};
-	[self scanForNearestShipWithPredicate:ANDPredicate parameter:&param];
+	ScanForNearestShip(self, IsIncomingMissilePredicate, self);
 }
 
 @end
@@ -517,7 +514,7 @@ static BOOL IsPirateVictimPredicate(Entity *entity, void *predicate)
 - (void) scanForRandomMerchantman
 {
 	// Locates one of the merchantman in range.
-	[self scanForRandomShipWithPredicate:IsPirateVictimPredicate parameter:NULL];
+	ScanForRandomShip(self, IsPirateVictimPredicate, NULL);
 }
 
 
@@ -586,13 +583,13 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 	NSCParameterAssert([entity isShip]);
 	ShipEntity *ship = (ShipEntity *)entity;
 	
-	return [ship scanClass] == CLASS_CARGO && [ship cargoType] != CARGO_NOT_CARGO && [ship status] != STATUS_BEING_SCOOPED;
+	return ship->scanClass == CLASS_CARGO && [ship cargoType] != CARGO_NOT_CARGO && [ship status] != STATUS_BEING_SCOOPED;
 }
 
 
 - (void) scanForRandomLoot
 {
-	[self scanForRandomShipWithPredicate:IsLootPredicate parameter:NULL];
+	ScanForRandomShip(self, IsLootPredicate, NULL);
 }
 
 
@@ -1244,18 +1241,18 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 }
 
 
-static BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
+OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip]);
 	ShipEntity *ship = (ShipEntity *)entity;
 	
-	return [ship scanClass] != CLASS_CARGO && [ship status] != STATUS_DOCKED && ![ship isThargoid] && ![ship isCloaked];
+	return ship->scanClass != CLASS_CARGO && [ship status] != STATUS_DOCKED && ![ship isThargoid] && ![ship isCloaked];
 }
 
 
 - (void) scanForNonThargoid
 {
-	[self scanForNearestShipWithPredicate:IsNonThargoidPredicate parameter:NULL];
+	ScanForNearestShip(self, IsNonThargoidPredicate, NULL);
 }
 
 
@@ -1487,19 +1484,19 @@ static BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 }
 
 
-static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
+OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
 	ShipEntity *ship = (ShipEntity *)entity, *self = parameter;
 	
-	return ship != self && ![ship isPlayer] && [ship scanClass] == [self scanClass] && [ship primaryTarget] != self;
+	return ship != self && ship->scanClass == self->scanClass && ![ship isPlayer] && [ship primaryTarget] != self;
 }
 
 
 - (void) scanForFormationLeader
 {
 	// Locates the nearest suitable formation leader in range.
-	[self scanForNearestShipWithPredicate:IsFormationLeaderCandidatePredicate parameter:self];
+	ScanForNearestShip(self, IsFormationLeaderCandidatePredicate, self);
 	
 	if ([self isPolice] && [self foundTarget] == nil)
 	{
@@ -1713,13 +1710,13 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 {
 	/*-- Locates the all boulders and asteroids in range and selects nearest --*/
 	
-	[self scanForNearestShipWithPredicate:HasRolePredicate parameter:@"boulder" andAnnounce:NO];
+	ScanForNearestShipNoAnnounce(self, HasRolePredicate, @"boulder");
 	if ([self foundTarget] == nil)
 	{
-		[self scanForNearestShipWithPredicate:HasRolePredicate parameter:@"asteroid" andAnnounce:NO];
+		ScanForNearestShipNoAnnounce(self, HasRolePredicate, @"asteroid");
 	}
 	
-	[self setAndAnnounceFoundTarget:[self foundTarget]];
+	[self announceFoundTarget];
 }
 
 
@@ -1798,67 +1795,65 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 
 - (void) scanForNearestShipWithPrimaryRole:(NSString *)scanRole
 {
-	[self scanForNearestNonCargoWithPredicate:HasPrimaryRolePredicate parameter:scanRole];
+	ScanForNearestNonDerelict(self, HasPrimaryRolePredicate, scanRole);
 }
 
 
 - (void) scanForNearestShipHavingRole:(NSString *)scanRole
 {
-	[self scanForNearestNonCargoWithPredicate:HasRolePredicate parameter:scanRole];
+	ScanForNearestNonDerelict(self, HasRolePredicate, scanRole);
 }
 
 
 - (void) scanForNearestShipWithAnyPrimaryRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestNonCargoWithPredicate:HasPrimaryRoleInSetPredicate parameter:set];
+	ScanForNearestNonDerelict(self, HasPrimaryRoleInSetPredicate, set);
 }
 
 
 - (void) scanForNearestShipHavingAnyRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestNonCargoWithPredicate:HasRoleInSetPredicate parameter:set];
+	ScanForNearestNonDerelict(self, HasRoleInSetPredicate, set);
 }
 
 
 - (void) scanForNearestShipWithScanClass:(NSString *)scanScanClass
 {
-	NSNumber *parameter = [NSNumber numberWithInt:OOScanClassFromString(scanScanClass)];
-	[self scanForNearestShipWithPredicate:HasScanClassPredicate parameter:parameter];
+	ScanForNearestShip(self, HasScanClassPredicate, $int(OOScanClassFromString(scanScanClass)));
 }
 
 
 - (void) scanForNearestShipWithoutPrimaryRole:(NSString *)scanRole
 {
-	[self scanForNearestNonCargoWithNegatedPredicate:HasPrimaryRolePredicate parameter:scanRole];
+	ScanForNearestNonDerelictNegated(self, HasPrimaryRolePredicate, scanRole);
 }
 
 
 - (void) scanForNearestShipNotHavingRole:(NSString *)scanRole
 {
-	[self scanForNearestNonCargoWithNegatedPredicate:HasRolePredicate parameter:scanRole];
+	ScanForNearestNonDerelictNegated(self, HasRolePredicate, scanRole);
 }
 
 
 - (void) scanForNearestShipWithoutAnyPrimaryRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestNonCargoWithNegatedPredicate:HasPrimaryRoleInSetPredicate parameter:set];
+	ScanForNearestNonDerelictNegated(self, HasPrimaryRoleInSetPredicate, set);
 }
 
 
 - (void) scanForNearestShipNotHavingAnyRole:(NSString *)scanRoles
 {
 	NSSet *set = [NSSet setWithArray:ScanTokensFromString(scanRoles)];
-	[self scanForNearestNonCargoWithNegatedPredicate:HasRoleInSetPredicate parameter:set];
+	ScanForNearestNonDerelictNegated(self, HasRoleInSetPredicate, set);
 }
 
 
 - (void) scanForNearestShipWithoutScanClass:(NSString *)scanScanClass
 {
-	NSNumber *parameter = [NSNumber numberWithInt:OOScanClassFromString(scanScanClass)];
-	[self scanForNearestNonCargoWithNegatedPredicate:HasScanClassPredicate parameter:parameter];
+	ScanForNearestNonDerelictNegated(self, HasScanClassPredicate, $int(OOScanClassFromString(scanScanClass)));
 }
 
 
@@ -1936,7 +1931,8 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 			.function = [function functionValue],
 			.jsThis = OOJSObjectFromNativeObject(context, self)
 		};
-		[self scanForNearestShipWithPredicate:JSFunctionPredicate parameter:&param];
+		ScanForNearestShip(self, JSFunctionPredicate, &param);
+		[self announceFoundTarget];
 	}
 	else
 	{
@@ -2318,63 +2314,63 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 }
 
 
-- (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
-{
-	[self scanForNearestShipWithPredicate:predicate parameter:parameter andAnnounce:YES];
-}
-
-
-- (void) scanForNearestShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter andAnnounce:(BOOL)announce
+OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	// Locates all the ships in range for which predicate returns YES, and chooses the nearest.
-	unsigned		i;
-	ShipEntity		*target = nil;
-	float			found_d2 = scannerRange * scannerRange;
-	
-	if (predicate == NULL)  return;
+	NSCParameterAssert(self != nil && predicate != NULL);
 	
 	[self checkScanner];
 	
-	for (i = 0; i < n_scanned_ships ; i++)
+	unsigned	i, scannedCount = self->n_scanned_ships;
+	ShipEntity	*target = nil;
+	ShipEntity	**scannedShips = self->scanned_ships;
+	OOScalar	*distances = self->distance2_scanned_ships;
+	OOScalar	found_d2 = self->scannerRange;
+	found_d2 *= found_d2;
+	
+	for (i = 0; i < scannedCount; i++)
 	{
-		ShipEntity *ship = scanned_ships[i];
-		float d2 = distance2_scanned_ships[i];
-		OOEntityStatus status = [ship status];
-		if (d2 < found_d2 && [ship scanClass] != CLASS_CARGO && status != STATUS_DOCKED && status != STATUS_DEAD && predicate(ship, parameter))
+		ShipEntity *ship = scannedShips[i];
+		OOScalar d2 = distances[i];
+		
+		if (d2 < found_d2 && ship->scanClass != CLASS_CARGO)
 		{
-			target = ship;
-			found_d2 = d2;
+			OOEntityStatus status = [ship status];
+			if (status != STATUS_DOCKED && status != STATUS_DEAD &&
+				predicate(ship, parameter))
+			{
+				target = ship;
+				found_d2 = d2;
+			}
 		}
 	}
 	
-	if (announce)  [self setAndAnnounceFoundTarget:target];
-	else  [self setFoundTarget:target];
+	[self setFoundTarget:target];
 }
 
 
-- (void) scanForNearestShipWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
-{
-	ChainedEntityPredicateParameter param = { predicate, parameter };
-	[self scanForNearestShipWithPredicate:NOTPredicate parameter:&param];
-}
-
-
-- (void) scanForRandomShipWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+OOINLINE void ScanForRandomShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	[self checkScanner];
 	
-	unsigned		i, count = 0;
-	ShipEntity		*shipsFound[n_scanned_ships];
-	float			found_d2 = scannerRange * scannerRange;
+	unsigned	i, count = 0, scannedCount = self->n_scanned_ships;
+	ShipEntity	*shipsFound[scannedCount];
+	ShipEntity	**scannedShips = self->scanned_ships;
+	OOScalar	*distances = self->distance2_scanned_ships;
+	OOScalar	found_d2 = self->scannerRange;
+	found_d2 *= found_d2;
 	
-	for (i = 0; i < n_scanned_ships ; i++)
+	for (i = 0; i < scannedCount; i++)
 	{
-		ShipEntity *ship = scanned_ships[i];
-		float d2 = distance2_scanned_ships[i];
-		OOEntityStatus status = [ship status];
-		if (d2 < found_d2 && [ship scanClass] != CLASS_CARGO && status != STATUS_DOCKED && status != STATUS_DEAD && predicate(ship, parameter))
+		ShipEntity *ship = scannedShips[i];
+		float d2 = distances[i];
+		if (d2 < found_d2)
 		{
-			shipsFound[count++] = ship;
+			OOEntityStatus status = [ship status];
+			if (status != STATUS_DOCKED && status != STATUS_DEAD && predicate(ship, parameter))
+			{
+				shipsFound[count++] = ship;
+			}
 		}
 	}
 	
@@ -2382,42 +2378,42 @@ static BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
 	{
 		i = Ranrot() % count;	// pick a number from 0 -> (n_found - 1)
 		[self setFoundTarget:shipsFound[i]];
-		[shipAI message:@"TARGET_FOUND"];
 	}
 	else
 	{
 		[self setFoundTarget:nil];
-		[shipAI message:@"NOTHING_FOUND"];
 	}
+	[self announceFoundTarget];
 }
 
 
-- (void) scanForNearestNonCargoWithPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+OOINLINE void ScanForNearestShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
-	/*
-		In Oolite 1.7x, -scanForNearestShipWithPredicate: excludes cargo, but
-		we want to use it to implement methods that do scan for cargo.
-		TODO: audit clients and switch them to -scanForNearestShipWithPredicate:
-		if possible.
-	*/
-	ChainedEntityPredicateParameter notParam =
-	{
-		HasScanClassPredicate,
-		[NSNumber numberWithInt:CLASS_CARGO]
-	};
-	BinaryOperationPredicateParameter param =
-	{
-		HasScanClassPredicate, &notParam,
-		predicate, parameter
-	};
-	return [self scanForNearestShipWithPredicate:ANDPredicate parameter:&param];
+	ScanForNearestShipNoAnnounce(self, predicate, parameter);
+	[self announceFoundTarget];
 }
 
 
-- (void) scanForNearestNonCargoWithNegatedPredicate:(EntityFilterPredicate)predicate parameter:(void *)parameter
+OOINLINE BOOL NonDerelictAndPredicate(Entity *entity, void *parameter)
+{
+	NSCParameterAssert([entity isShip] && parameter != NULL);
+	ChainedEntityPredicateParameter *param = parameter;
+	
+	return ![(ShipEntity *)entity isHulk] && param->predicate(entity, param->parameter);
+}
+
+
+OOINLINE void ScanForNearestNonDerelict(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+{
+	ChainedEntityPredicateParameter param = { predicate, parameter, };
+	ScanForNearestShip(self, NonDerelictAndPredicate, &param);
+}
+
+
+OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	ChainedEntityPredicateParameter param = { predicate, parameter };
-	[self scanForNearestNonCargoWithPredicate:NOTPredicate parameter:&param];
+	ScanForNearestNonDerelict(self, NOTPredicate, &param);
 }
 
 

@@ -350,7 +350,7 @@ typedef enum
 	
 	// for advanced scanning etc.
 	ShipEntity*				scanned_ships[MAX_SCAN_NUMBER + 1];
-	GLfloat					distance2_scanned_ships[MAX_SCAN_NUMBER + 1];
+	OOScalar				distance2_scanned_ships[MAX_SCAN_NUMBER + 1];
 	unsigned				n_scanned_ships;
 	
 	// advanced navigation
@@ -818,7 +818,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (Entity *) foundTarget;
 - (void) setFoundTarget:(Entity *)targetEntity;
-- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity;	// Sends TARGET_FOUND or NOTHING_FOUND to AI as appropriate.
+- (void) announceFoundTarget;	// Sends TARGET_FOUND or NOTHING_FOUND to AI as appropriate.
+- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity;
 
 - (StationEntity *) targetStation;
 - (void) setTargetStation:(StationEntity *)target;

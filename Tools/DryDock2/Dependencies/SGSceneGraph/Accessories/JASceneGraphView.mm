@@ -559,6 +559,14 @@ static const GLuint kFallbackAttributes[] =
 }
 
 
+- (void) magnifyWithEvent:(NSEvent *)event
+{
+	float factor = 1.0 + [event magnification];
+	[self setCameraDistance:_cameraDistance * factor];
+	
+}
+
+
 - (void)handleCameraZoomDragDeltaX:(float)inDeltaX deltaY:(float)inDeltaY
 {
 	[self setCameraDistance:_cameraDistance * (1.0 - (inDeltaY * 0.01f))];

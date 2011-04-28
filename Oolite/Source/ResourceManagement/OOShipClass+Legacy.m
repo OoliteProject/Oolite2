@@ -257,7 +257,7 @@
 
 static NSString *UniqueRoleForShipKey(NSString *key)
 {
-	return $sprintf(@"_oo_unique_role_for_%@", key);
+	return $sprintf(@"[%@]", key);
 }
 
 

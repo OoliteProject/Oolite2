@@ -191,7 +191,7 @@ Quaternion quaternion_rotation_between(Vector v0, Vector v1)
 {
 	Quaternion q;
 	OOScalar s = sqrtf((1.0f + v0.x * v1.x + v0.y * v1.y + v0.z * v1.z) * 2.0f);
-	if (EXPECT(s))
+	if (EXPECT(s != 0.0f))
 	{
 		OOScalar is = 1.0f / s;
 		q.x = (v0.y * v1.z - v0.z * v1.y) * is;
@@ -246,9 +246,9 @@ Quaternion quaternion_limited_rotation_between(Vector v0, Vector v1, float maxAr
 void quaternion_rotate_about_x(Quaternion *quat, OOScalar angle)
 {
 	Quaternion result;
-	OOScalar a = angle * 0.5;
-	OOScalar w = cos(a);
-	OOScalar scale = sin(a);
+	OOScalar a = angle * 0.5f;
+	OOScalar w = cosf(a);
+	OOScalar scale = sinf(a);
 	
 	result.w = quat->w * w - quat->x * scale;
 	result.x = quat->w * scale + quat->x * w;

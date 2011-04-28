@@ -193,7 +193,7 @@ typedef enum OODATLexerEndMode
 	memcpy(buffer, _cursor, _tokenLength);
 	buffer[_tokenLength] = '\0';
 	
-	*outReal = strtod(buffer, NULL);
+	*outReal = strtof(buffer, NULL);
 	
 	return YES;
 }

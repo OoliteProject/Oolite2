@@ -50,8 +50,7 @@ MA 02110-1301, USA.
 	if (OK && 2 <= length && (length % sizeof(unichar)) == 0)
 	{
 		// Could be UTF-16
-		unichar firstChar = bytes[0];
-		firstChar = (firstChar << 8) | bytes[1];	// Endianism doesn't matter, because we test both orders of BOM.
+		unichar firstChar = (bytes[0] << 8) | bytes[1];	// Endianism doesn't matter, because we test both orders of BOM.
 		if (firstChar == 0xFFFE || firstChar == 0xFEFF)
 		{
 			// Consider it to be UTF-16.
@@ -152,7 +151,7 @@ MA 02110-1301, USA.
 - (NSString *) oo_escapedForJavaScriptLiteral
 {
 	NSMutableString			*result = nil;
-	unsigned				i, length;
+	NSUInteger				i, length;
 	unichar					c;
 	NSAutoreleasePool		*pool = nil;
 	

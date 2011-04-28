@@ -485,7 +485,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 - (void) setBoxedParallaxScale:(NSNumber *)value
 {
 	if (EXPECT_NOT(![value respondsToSelector:@selector(doubleValue)]))  return;
-	return [self setParallaxScale:[value doubleValue]];
+	return [self setParallaxScale:[value floatValue]];
 }
 
 
@@ -510,7 +510,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 - (void) setBoxedParallaxBias:(NSNumber *)value
 {
 	if (EXPECT_NOT(![value respondsToSelector:@selector(doubleValue)]))  return;
-	return [self setParallaxBias:[value doubleValue]];
+	return [self setParallaxBias:[value floatValue]];
 }
 
 

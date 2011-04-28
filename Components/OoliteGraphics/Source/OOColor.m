@@ -71,7 +71,7 @@ static OOColor *sClearColor;
 	if (h < 0.0) h += 360.0f;
 	h /= 60.0f;
 	
-	i = floor(h);
+	i = floorf(h);
 	f = h - i;
 	p = b * (1.0f - s);
 	q = b * (1.0f - (s * f));
@@ -105,7 +105,7 @@ static OOColor *sClearColor;
 + (OOColor *)colorWithHue:(float)hue saturation:(float)saturation brightness:(float)brightness alpha:(float)alpha
 {
 	OOColor* result = [[OOColor alloc] init];
-	[result setHSBA: 360.0 * hue : saturation : brightness : alpha];
+	[result setHSBA: 360.0f * hue : saturation : brightness : alpha];
 	return [result autorelease];
 }
 
@@ -246,17 +246,17 @@ static OOColor *sClearColor;
 
 
 // find a point on the sea->land scale
-+ (OOColor *) planetTextureColor:(float) q:(OOColor *) seaColor:(OOColor *) paleSeaColor:(OOColor *) landColor:(OOColor *) paleLandColor
++ (OOColor *) planetTextureColor:(float)q :(OOColor *)seaColor :(OOColor *)paleSeaColor :(OOColor *)landColor :(OOColor *)paleLandColor
 {
-	float hi = 0.33;
-	float oh = 1.0 / hi;
-	float ih = 1.0 / (1.0 - hi);
-	if (q <= 0.0)
+	float hi = 0.33f;
+	float oh = 1.0f / hi;
+	float ih = 1.0f / (1.0f - hi);
+	if (q <= 0.0f)
 		return seaColor;
-	if (q > 1.0)
+	if (q > 1.0f)
 		return [OOColor whiteColor];
-	if (q < 0.01)
-		return [paleSeaColor blendedColorWithFraction: q * 100.0 ofColor: landColor];
+	if (q < 0.01f)
+		return [paleSeaColor blendedColorWithFraction: q * 100.0f ofColor: landColor];
 	if (q > hi)
 		return [paleLandColor blendedColorWithFraction: (q - hi) * ih ofColor: [OOColor whiteColor]];	// snow capped peaks
 	return [paleLandColor blendedColorWithFraction: (hi - q) * oh ofColor: landColor];
@@ -264,20 +264,20 @@ static OOColor *sClearColor;
 
 
 // find a point on the sea->land scale given impress and bias
-+ (OOColor *) planetTextureColor:(float) q:(float) impress:(float) bias :(OOColor *) seaColor:(OOColor *) paleSeaColor:(OOColor *) landColor:(OOColor *) paleLandColor
++ (OOColor *) planetTextureColor:(float)q :(float)impress :(float)bias :(OOColor *)seaColor :(OOColor *)paleSeaColor :(OOColor *)landColor :(OOColor *)paleLandColor
 {
 	float maxq = impress + bias;
 	
-	float hi = 0.66667 * maxq;
-	float oh = 1.0 / hi;
-	float ih = 1.0 / (1.0 - hi);
+	float hi = 0.66667f * maxq;
+	float oh = 1.0f / hi;
+	float ih = 1.0f / (1.0f - hi);
 	
-	if (q <= 0.0)
+	if (q <= 0.0f)
 		return seaColor;
-	if (q > 1.0)
+	if (q > 1.0f)
 		return [OOColor whiteColor];
-	if (q < 0.01)
-		return [paleSeaColor blendedColorWithFraction: q * 100.0 ofColor: landColor];
+	if (q < 0.01f)
+		return [paleSeaColor blendedColorWithFraction: q * 100.0f ofColor: landColor];
 	if (q > hi)
 		return [paleLandColor blendedColorWithFraction: (q - hi) * ih ofColor: [OOColor whiteColor]];	// snow capped peaks
 	return [paleLandColor blendedColorWithFraction: (hi - q) * oh ofColor: landColor];
@@ -362,17 +362,17 @@ static OOColor *sClearColor;
 	float maxrgb = (_rgba[0] > _rgba[1])? ((_rgba[0] > _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] > _rgba[2])? _rgba[1]:_rgba[2]);
 	float minrgb = (_rgba[0] < _rgba[1])? ((_rgba[0] < _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] < _rgba[2])? _rgba[1]:_rgba[2]);
 	if (maxrgb == minrgb)
-		return 0.0;
+		return 0.0f;
 	float delta = maxrgb - minrgb;
-	float hue = 0.0;
+	float hue = 0.0f;
 	if (_rgba[0] == maxrgb)
 		hue = (_rgba[1] - _rgba[2]) / delta;
 	else if (_rgba[1] == maxrgb)
-		hue = 2.0 + (_rgba[2] - _rgba[0]) / delta;
+		hue = 2.0f + (_rgba[2] - _rgba[0]) / delta;
 	else if (_rgba[2] == maxrgb)
-		hue = 4.0 + (_rgba[0] - _rgba[1]) / delta;
-	hue *= 60.0;
-	while (hue < 0.0) hue += 360.0;
+		hue = 4.0f + (_rgba[0] - _rgba[1]) / delta;
+	hue *= 60.0f;
+	while (hue < 0.0f) hue += 360.0f;
 	return hue;
 }
 
@@ -380,18 +380,18 @@ static OOColor *sClearColor;
 {
 	float maxrgb = (_rgba[0] > _rgba[1])? ((_rgba[0] > _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] > _rgba[2])? _rgba[1]:_rgba[2]);
 	float minrgb = (_rgba[0] < _rgba[1])? ((_rgba[0] < _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] < _rgba[2])? _rgba[1]:_rgba[2]);
-	float brightness = 0.5 * (maxrgb + minrgb);
+	float brightness = 0.5f * (maxrgb + minrgb);
 	if (maxrgb == minrgb)
 		return 0.0;
 	float delta = maxrgb - minrgb;
-	return (brightness <= 0.5)? (delta / (maxrgb + minrgb)) : (delta / (2.0 - (maxrgb + minrgb)));
+	return (brightness <= 0.5f) ? (delta / (maxrgb + minrgb)) : (delta / (2.0f - (maxrgb + minrgb)));
 }
 
 - (float)brightnessComponent
 {
 	float maxrgb = (_rgba[0] > _rgba[1])? ((_rgba[0] > _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] > _rgba[2])? _rgba[1]:_rgba[2]);
 	float minrgb = (_rgba[0] < _rgba[1])? ((_rgba[0] < _rgba[2])? _rgba[0]:_rgba[2]):((_rgba[1] < _rgba[2])? _rgba[1]:_rgba[2]);
-	return 0.5 * (maxrgb + minrgb);
+	return 0.5f * (maxrgb + minrgb);
 }
 
 - (void)getHue:(float *)hue saturation:(float *)saturation brightness:(float *)brightness alpha:(float *)alpha
@@ -400,24 +400,24 @@ static OOColor *sClearColor;
 	
 	int maxrgb = (_rgba[0] > _rgba[1])? ((_rgba[0] > _rgba[2])? 0:2):((_rgba[1] > _rgba[2])? 1:2);
 	int minrgb = (_rgba[0] < _rgba[1])? ((_rgba[0] < _rgba[2])? 0:2):((_rgba[1] < _rgba[2])? 1:2);
-	*brightness = 0.5 * (_rgba[maxrgb] + _rgba[minrgb]);
+	*brightness = 0.5f * (_rgba[maxrgb] + _rgba[minrgb]);
 	if (_rgba[maxrgb] == _rgba[minrgb])
 	{
-		*saturation = 0.0;
-		*hue = 0.0;
+		*saturation = 0.0f;
+		*hue = 0.0f;
 		return;
 	}
 	float delta = _rgba[maxrgb] - _rgba[minrgb];
-	*saturation = (*brightness <= 0.5)? (delta / (_rgba[maxrgb] + _rgba[minrgb])) : (delta / (2.0 - (_rgba[maxrgb] + _rgba[minrgb])));
+	*saturation = (*brightness <= 0.5f) ? (delta / (_rgba[maxrgb] + _rgba[minrgb])) : (delta / (2.0f - (_rgba[maxrgb] + _rgba[minrgb])));
 
 	if (maxrgb==0)
 		*hue = (_rgba[1] - _rgba[2]) / delta;
 	else if (maxrgb==1)
-		*hue = 2.0 + (_rgba[2] - _rgba[0]) / delta;
+		*hue = 2.0f + (_rgba[2] - _rgba[0]) / delta;
 	else if (maxrgb==2)
-		*hue = 4.0 + (_rgba[0] - _rgba[1]) / delta;
-	*hue *= 60.0;
-	while (*hue < 0.0) *hue += 360.0;
+		*hue = 4.0f + (_rgba[0] - _rgba[1]) / delta;
+	*hue *= 60.0f;
+	while (*hue < 0.0f) *hue += 360.0f;
 }
 
 

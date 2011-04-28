@@ -1163,7 +1163,7 @@ unsigned long long OOUnsignedLongLongFromObject(id object, unsigned long long de
 	if ([object respondsToSelector:@selector(unsignedLongLongValue)])  ullValue = [object unsignedLongLongValue];
 	else if ([object respondsToSelector:@selector(unsignedLongValue)])  ullValue = [object unsignedLongValue];
 	else if ([object respondsToSelector:@selector(unsignedIntValue)])  ullValue = [object unsignedIntValue];
-	else if ([object respondsToSelector:@selector(intValue)])  ullValue = [object intValue];
+	else if ([object respondsToSelector:@selector(intValue)])  ullValue = (unsigned)[object intValue];
 	else ullValue = defaultValue;
 	
 	return ullValue;
@@ -1299,7 +1299,7 @@ float OOFloatFromObject(id object, float defaultValue)
 		result = [object floatValue];
 		if (result == 0.0f && [object isKindOfClass:[NSString class]] && !IsZeroString(object))  result = defaultValue;
 	}
-	else if ([object respondsToSelector:@selector(doubleValue)])  result = [object doubleValue];
+	else if ([object respondsToSelector:@selector(doubleValue)])  result = (float)[object doubleValue];
 	else if ([object respondsToSelector:@selector(intValue)])  result = [object intValue];
 	else result = defaultValue;
 	
@@ -1329,7 +1329,7 @@ float OONonNegativeFloatFromObject(id object, float defaultValue)
 	float result;
 	
 	if ([object respondsToSelector:@selector(floatValue)])  result = [object floatValue];
-	else if ([object respondsToSelector:@selector(doubleValue)])  result = [object doubleValue];
+	else if ([object respondsToSelector:@selector(doubleValue)])  result = (float)[object doubleValue];
 	else if ([object respondsToSelector:@selector(intValue)])  result = [object intValue];
 	else return defaultValue;	// Don't clamp default
 	

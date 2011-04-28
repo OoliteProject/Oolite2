@@ -30,10 +30,10 @@ MA 02110-1301, USA.
 
 - (BOOL) ooliteScanCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value
 {
-	unsigned int	currentLocation = [self scanLocation];
+	NSUInteger		currentLocation = [self scanLocation];
 	NSRange			matchedRange = NSMakeRange( currentLocation, 0);
-	NSString*		scanString = [self string];
-	unsigned int	scanLength = [scanString length];
+	NSString		*scanString = [self string];
+	NSUInteger		scanLength = [scanString length];
 	
 	while ((currentLocation < scanLength)&&([set characterIsMember:[scanString characterAtIndex:currentLocation]]))
 	{
@@ -57,10 +57,10 @@ MA 02110-1301, USA.
 
 - (BOOL) ooliteScanUpToCharactersFromSet:(NSCharacterSet *)set intoString:(NSString **)value
 {
-	unsigned int	currentLocation = [self scanLocation];
+	NSUInteger		currentLocation = [self scanLocation];
 	NSRange			matchedRange = NSMakeRange( currentLocation, 0);
-	NSString*		scanString = [self string];
-	unsigned int	scanLength = [scanString length];
+	NSString		*scanString = [self string];
+	NSUInteger		scanLength = [scanString length];
 	
 	while ((currentLocation < scanLength)&&(![set characterIsMember:[scanString characterAtIndex:currentLocation]]))
 	{

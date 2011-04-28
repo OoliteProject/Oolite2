@@ -44,7 +44,7 @@ static OOBoolean *sOOBooleanTrue, *sOOBooleanFalse;
 - (BOOL) oo_isFloatingPointNumber
 {
 #if OO_USE_CFBOOLEAN
-	return CFNumberIsFloatType((CFNumberRef)self);
+	return (BOOL)CFNumberIsFloatType((CFNumberRef)self);
 #else
 	/*	This happily assumes the compiler will inline strcmp() where one
 		argument is a single-character constant string. Verified under

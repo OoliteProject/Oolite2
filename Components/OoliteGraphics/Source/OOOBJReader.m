@@ -766,8 +766,8 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	[_materials setObject:_currentMaterial forKey:name];
 	
 	//	Set silly OBJ defaults, which will presumably be overriden with sane values.
-	[_currentMaterial setAmbientColor:[OOColor colorWithWhite:0.2 alpha:1.0]];
-	[_currentMaterial setDiffuseColor:[OOColor colorWithWhite:0.8 alpha:1.0]];
+	[_currentMaterial setAmbientColor:[OOColor colorWithWhite:0.2f alpha:1.0f]];
+	[_currentMaterial setDiffuseColor:[OOColor colorWithWhite:0.8f alpha:1.0f]];
 	
 	[_currentMaterial setSpecularExponent:0];
 	

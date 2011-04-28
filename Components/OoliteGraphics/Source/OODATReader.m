@@ -838,7 +838,7 @@ enum
 		float a2 = distance2(v0, v1);
 		float b2 = distance2(v1, v2);
 		float c2 = distance2(v2, v0);
-		triangle->area = sqrtf(2.0 * (a2 * b2 + b2 * c2 + c2 * a2) - 0.25 * (a2 * a2 + b2 * b2 +c2 * c2));
+		triangle->area = sqrtf(2.0f * (a2 * b2 + b2 * c2 + c2 * a2) - 0.25f * (a2 * a2 + b2 * b2 +c2 * c2));
 	}
 }
 

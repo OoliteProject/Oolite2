@@ -382,7 +382,7 @@ OOINLINE long long OOClampInteger(long long value, long long minValue, long long
 #define OO_DEFINE_CLAMP(type, typeName, min, max) \
 	OOINLINE type OO ## typeName ## FromObject(id object, type defaultValue) \
 	{ \
-		return OOClampInteger(OOLongLongFromObject(object, defaultValue), min, max); \
+		return (type)OOClampInteger(OOLongLongFromObject(object, defaultValue), min, max); \
 	}
 
 #define OO_DEFINE_CLAMP_PAIR(type, typeName, minMaxSymb) \
@@ -402,7 +402,7 @@ OO_DEFINE_CLAMP_PAIR(short, Short, SHRT)
 #define OO_ALIAS_CLAMP_LONG_LONG(type, typeName) \
 static inline type OO##typeName##FromObject(id object, type defaultValue) \
 { \
-	return OOLongLongFromObject(object, defaultValue); \
+	return (type)OOLongLongFromObject(object, (long long)defaultValue); \
 }
 #define OO_ALIAS_CLAMP_PAIR_LONG_LONG(type, typeName) \
 OO_ALIAS_CLAMP_LONG_LONG(type, typeName) \
@@ -428,7 +428,7 @@ OOINLINE NSInteger OOIntegerFromObject(id object, NSInteger defaultValue)
 	return OOLongLongFromObject(object, defaultValue);
 }
 
-OOINLINE NSInteger OOUIntegerFromObject(id object, NSUInteger defaultValue)
+OOINLINE NSUInteger OOUIntegerFromObject(id object, NSUInteger defaultValue)
 {
 	return OOUnsignedLongLongFromObject(object, defaultValue);
 }
@@ -438,7 +438,7 @@ OOINLINE NSInteger OOIntegerFromObject(id object, NSInteger defaultValue)
 	return OOLongLongFromObject(object, defaultValue);
 }
 
-OOINLINE NSInteger OOUIntegerFromObject(id object, NSUInteger defaultValue)
+OOINLINE NSUInteger OOUIntegerFromObject(id object, NSUInteger defaultValue)
 {
 	return OOUnsignedLongLongFromObject(object, defaultValue);
 }

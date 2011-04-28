@@ -210,7 +210,7 @@
 		
 		do
 		{
-			char c = *str++;
+			uint8_t c = *str++;
 			if (EXPECT('0' <= c && c <= '9'))
 			{
 				result = result * 10 + c - '0';

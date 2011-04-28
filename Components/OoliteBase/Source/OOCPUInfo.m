@@ -50,7 +50,7 @@ MA 02110-1301, USA.
 static BOOL				sInited = NO;
 
 
-static unsigned			sNumberOfCPUs = 0;	// Yes, really 0.
+static NSUInteger		sNumberOfCPUs = 0;	// Yes, really 0.
 
 
 void OOCPUInfoInit(void)
@@ -107,7 +107,7 @@ void OOCPUInfoInit(void)
 }
 
 
-unsigned OOCPUCount(void)
+NSUInteger OOCPUCount(void)
 {
 	if (!sInited)  OOCPUInfoInit();
 	return (sNumberOfCPUs != 0) ? sNumberOfCPUs : 1;

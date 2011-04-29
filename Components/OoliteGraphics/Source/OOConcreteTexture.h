@@ -33,7 +33,8 @@ SOFTWARE.
 @class OOGraphicsContext;
 
 
-#define OOTEXTURE_RELOADABLE		1
+// FIXME: need to rethink loading based on file resolvers.
+#define OOTEXTURE_RELOADABLE		0
 
 
 @interface OOConcreteTexture: OOTexture
@@ -41,12 +42,10 @@ SOFTWARE.
 @private
 #ifndef NDEBUG
 	OOGraphicsContext		*_context;
-	NSString				*_name;
 #endif
 	
-#if OOTEXTURE_RELOADABLE
-	NSString				*_path;
-#endif
+	NSString				*_name;
+	
 	uint8_t					_loaded: 1,
 							_uploaded: 1,
 #if GL_EXT_texture_rectangle
@@ -81,10 +80,5 @@ SOFTWARE.
 			  options:(uint32_t)options
 		   anisotropy:(GLfloat)anisotropy
 			  lodBias:(GLfloat)lodBias;
-
-- (id)initWithPath:(NSString *)path
-		   options:(uint32_t)options
-		anisotropy:(float)anisotropy
-		   lodBias:(GLfloat)lodBias;
 
 @end

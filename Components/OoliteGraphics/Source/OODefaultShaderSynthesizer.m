@@ -41,6 +41,7 @@ SOFTWARE.
 	
 	NSString					*_vertexShader;
 	NSString					*_fragmentShader;
+	NSMutableArray				*_textures;
 	
 	NSMutableString				*_attributes;
 	NSMutableString				*_varyings;
@@ -51,8 +52,8 @@ SOFTWARE.
 	NSMutableString				*_vertexBody;
 	NSMutableString				*_fragmentBody;
 	
-	// _textures: dictionary mapping texture file names to texture specifications.
-	NSMutableDictionary			*_textures;
+	// _texturesByName: dictionary mapping texture file names to texture specifications.
+	NSMutableDictionary			*_texturesByName;
 	// _textureIDs: dictionary mapping texture file names to numerical IDs used to name variables.
 	NSMutableDictionary			*_textureIDs;
 }
@@ -65,6 +66,7 @@ SOFTWARE.
 
 - (NSString *) vertexShader;
 - (NSString *) fragmentShader;
+- (NSArray *) textureSpecifications;
 
 - (void) createTemporaries;
 - (void) destroyTemporaries;
@@ -72,7 +74,7 @@ SOFTWARE.
 @end
 
 
-BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, id <OOProblemReporting> problemReporter)
+BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, NSArray **outTextureSpecs, id <OOProblemReporting> problemReporter)
 {
 	NSCParameterAssert(materialSpec != nil && outVertexShader != NULL && outFragmentShader != NULL);
 	
@@ -89,6 +91,7 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 	{
 		*outVertexShader = [[synthesizer vertexShader] retain];
 		*outFragmentShader = [[synthesizer fragmentShader] retain];
+		*outTextureSpecs = [[synthesizer textureSpecifications] retain];
 	}
 	else
 	{
@@ -99,6 +102,7 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 	
 	[*outVertexShader autorelease];
 	[*outFragmentShader autorelease];
+	[*outTextureSpecs autorelease];
 	
 	return YES;
 }
@@ -129,6 +133,7 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 	DESTROY(_problemReporter);
 	DESTROY(_vertexShader);
 	DESTROY(_fragmentShader);
+	DESTROY(_textures);
 	
     [super dealloc];
 }
@@ -143,6 +148,16 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 - (NSString *) fragmentShader
 {
 	return _fragmentShader;
+}
+
+
+- (NSArray *) textureSpecifications
+{
+#ifndef NDEBUG
+	return [NSArray arrayWithArray:_textures];
+#else
+	return _texturs;
+#endif
 }
 
 
@@ -200,11 +215,12 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	}
 	
 	NSString *name = [spec textureMapName];
-	OOTextureSpecification *existing = [_textures objectForKey:name];
+	OOTextureSpecification *existing = [_texturesByName objectForKey:name];
 	if (existing == nil)
 	{
-		[_textures setObject:spec forKey:name];
-		[_textureIDs setObject:$int([_textures count]) forKey:name];
+		[_textures addObject:spec];
+		[_texturesByName setObject:spec forKey:name];
+		[_textureIDs setObject:$int([_texturesByName count]) forKey:name];
 	}
 	else
 	{
@@ -218,7 +234,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) setUpTextures
 {
-	_textures = [[NSMutableDictionary alloc] init];
+	_textures = [[NSMutableArray alloc] init];
+	_texturesByName = [[NSMutableDictionary alloc] init];
 	_textureIDs = [[NSMutableDictionary alloc] init];
 	
 	[self setUpOneTexture:[_spec diffuseMap]];
@@ -231,7 +248,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self setUpOneTexture:[_spec parallaxMap]];
 #endif
 	
-	if ([_textures count] == 0)  return;
+	if ([_texturesByName count] == 0)  return;
 	
 	// Ensure we have valid texture coordinates.
 	NSUInteger texCoordsSize = [_mesh attributeSizeForKey:kOOTexCoordsAttributeKey];
@@ -452,7 +469,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	DESTROY(_vertexBody);
 	DESTROY(_fragmentBody);
 	
-	DESTROY(_textures);
+	DESTROY(_texturesByName);
 	DESTROY(_textureIDs);
 }
 

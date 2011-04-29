@@ -53,15 +53,22 @@ OOTextureInfo				gOOTextureInfo;
 
 @implementation OOTexture
 
-+ (id) textureFromFile:(NSString *)path
-			   options:(uint32_t)options
-			anisotropy:(GLfloat)anisotropy
-			   lodBias:(GLfloat)lodBias
++ (id) textureWithSpecification:(OOTextureSpecification *)spec
+				   fileResolver:(id <OOFileResolving>)resolver
+				problemReporter:(id <OOProblemReporting>)problemReporter
 {
-	if (EXPECT_NOT(path == nil))  return nil;
-	if (EXPECT_NOT(!sCheckedExtensions))  [self checkExtensions];
+	NSParameterAssert(spec != nil && resolver != nil);
 	
-	// Default is no longer handled in OOTexture.
+	// Load the data.
+	NSString *name = [spec textureMapName];
+	NSData *data = OOLoadFile(@"Textures", name, resolver, problemReporter);
+	if (data == nil)  return nil;
+	
+	OOTextureOptionFlags options = [spec optionFlags];
+	GLfloat anisotropy = [spec anisotropy];
+	GLfloat lodBias = [spec lodBias];
+	
+	// Default is no longer handled in OOTexture. FIXME: in that case, where?
 	NSParameterAssert((options & kOOTextureMinFilterMask) != kOOTextureMinFilterDefault);
 	
 	options &= kOOTextureDefinedFlags;
@@ -74,8 +81,15 @@ OOTextureInfo				gOOTextureInfo;
 	{
 		lodBias = 0.0f;
 	}
+	OOTextureLoader *loader = [OOTextureLoader loaderWithFileData:data
+															 name:name
+														  options:options
+												  problemReporter:problemReporter];
 	
-	return [[[OOConcreteTexture alloc] initWithPath:path options:options anisotropy:anisotropy lodBias:lodBias] autorelease];
+	return [[[OOConcreteTexture alloc] initWithLoader:loader
+											  options:options
+										   anisotropy:anisotropy
+											  lodBias:lodBias] autorelease];
 }
 
 

@@ -97,7 +97,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 	
 	// Synthesize material. FIXME: support custom shaders.
 	NSString *vertexShader = nil, *fragmentShader = nil;
-	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, nil);
+	NSArray *textures = nil;
+	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, &textures, nil);
 	
 	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader);
 	
@@ -113,6 +114,31 @@ static NSString *MacrosToString(NSDictionary *macros);
 													  attributeBindings:attributeBindings];
 		OK = (_shaderProgram != nil);
 		[_shaderProgram retain];
+	}
+	
+	NSUInteger textureIter, textureCount = [textures count];
+	if (OK && textureCount > 0)
+	{
+		_textureCount = textureCount;
+		_textures = calloc(sizeof *_textures, _textureCount);
+		if (_textures == NULL)  OK = NO;
+		
+		if (OK)
+		{
+			for (textureIter = 0; textureIter < textureCount; textureIter++)
+			{
+				OOTextureSpecification *spec = [textures objectAtIndex:textureIter];
+				_textures[textureIter] = [[OOTexture textureWithSpecification:spec
+																 fileResolver:resolver
+															  problemReporter:problemReporter] retain];
+				
+				if (_textures[textureIter] == nil)
+				{
+					OK = NO;
+					break;
+				}
+			}
+		}
 	}
 	
 	// FIXME: uniforms and textures.

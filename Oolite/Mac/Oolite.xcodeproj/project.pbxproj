@@ -229,7 +229,7 @@
 		1A1F2D561318415F00D06C6C /* OoliteLogOutputHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2D551318415F00D06C6C /* OoliteLogOutputHandler.m */; };
 		1A1F2DCD13184C2000D06C6C /* OOBasicMaterial.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DA513184C2000D06C6C /* OOBasicMaterial.m */; };
 		1A1F2DCE13184C2000D06C6C /* OOCombinedEmissionMapGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DA713184C2000D06C6C /* OOCombinedEmissionMapGenerator.m */; };
-		1A1F2DCF13184C2000D06C6C /* OOConcreteTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DA913184C2000D06C6C /* OOConcreteTexture.m */; };
+		1A1F2DCF13184C2000D06C6C /* OOLegacyConcreteTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DA913184C2000D06C6C /* OOLegacyConcreteTexture.m */; };
 		1A1F2DD013184C2000D06C6C /* OOLegacyMaterial.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DAB13184C2000D06C6C /* OOLegacyMaterial.m */; };
 		1A1F2DD113184C2000D06C6C /* OOMaterialConvenienceCreators.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DAD13184C2000D06C6C /* OOMaterialConvenienceCreators.m */; };
 		1A1F2DD213184C2000D06C6C /* OOLegacyMaterialSpecifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2DAF13184C2000D06C6C /* OOLegacyMaterialSpecifier.m */; };
@@ -1261,8 +1261,8 @@
 		1A1F2DA513184C2000D06C6C /* OOBasicMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOBasicMaterial.m; path = Materials/OOBasicMaterial.m; sourceTree = "<group>"; };
 		1A1F2DA613184C2000D06C6C /* OOCombinedEmissionMapGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOCombinedEmissionMapGenerator.h; path = Materials/OOCombinedEmissionMapGenerator.h; sourceTree = "<group>"; };
 		1A1F2DA713184C2000D06C6C /* OOCombinedEmissionMapGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOCombinedEmissionMapGenerator.m; path = Materials/OOCombinedEmissionMapGenerator.m; sourceTree = "<group>"; };
-		1A1F2DA813184C2000D06C6C /* OOConcreteTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOConcreteTexture.h; path = Materials/OOConcreteTexture.h; sourceTree = "<group>"; };
-		1A1F2DA913184C2000D06C6C /* OOConcreteTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOConcreteTexture.m; path = Materials/OOConcreteTexture.m; sourceTree = "<group>"; };
+		1A1F2DA813184C2000D06C6C /* OOLegacyConcreteTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; name = OOLegacyConcreteTexture.h; path = Materials/OOLegacyConcreteTexture.h; sourceTree = "<group>"; };
+		1A1F2DA913184C2000D06C6C /* OOLegacyConcreteTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyConcreteTexture.m; path = Materials/OOLegacyConcreteTexture.m; sourceTree = "<group>"; };
 		1A1F2DAA13184C2000D06C6C /* OOLegacyMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOLegacyMaterial.h; path = Materials/OOLegacyMaterial.h; sourceTree = "<group>"; };
 		1A1F2DAB13184C2000D06C6C /* OOLegacyMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OOLegacyMaterial.m; path = Materials/OOLegacyMaterial.m; sourceTree = "<group>"; };
 		1A1F2DAC13184C2000D06C6C /* OOMaterialConvenienceCreators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OOMaterialConvenienceCreators.h; path = Materials/OOMaterialConvenienceCreators.h; sourceTree = "<group>"; };
@@ -2029,8 +2029,8 @@
 				1A1F2DA513184C2000D06C6C /* OOBasicMaterial.m */,
 				1A1F2DA613184C2000D06C6C /* OOCombinedEmissionMapGenerator.h */,
 				1A1F2DA713184C2000D06C6C /* OOCombinedEmissionMapGenerator.m */,
-				1A1F2DA813184C2000D06C6C /* OOConcreteTexture.h */,
-				1A1F2DA913184C2000D06C6C /* OOConcreteTexture.m */,
+				1A1F2DA813184C2000D06C6C /* OOLegacyConcreteTexture.h */,
+				1A1F2DA913184C2000D06C6C /* OOLegacyConcreteTexture.m */,
 				1A1F2DAA13184C2000D06C6C /* OOLegacyMaterial.h */,
 				1A1F2DAB13184C2000D06C6C /* OOLegacyMaterial.m */,
 				1A1F2DAC13184C2000D06C6C /* OOMaterialConvenienceCreators.h */,
@@ -2918,7 +2918,7 @@
 				1A1F2D561318415F00D06C6C /* OoliteLogOutputHandler.m in Sources */,
 				1A1F2DCD13184C2000D06C6C /* OOBasicMaterial.m in Sources */,
 				1A1F2DCE13184C2000D06C6C /* OOCombinedEmissionMapGenerator.m in Sources */,
-				1A1F2DCF13184C2000D06C6C /* OOConcreteTexture.m in Sources */,
+				1A1F2DCF13184C2000D06C6C /* OOLegacyConcreteTexture.m in Sources */,
 				1A1F2DD013184C2000D06C6C /* OOLegacyMaterial.m in Sources */,
 				1A1F2DD113184C2000D06C6C /* OOMaterialConvenienceCreators.m in Sources */,
 				1A1F2DD213184C2000D06C6C /* OOLegacyMaterialSpecifier.m in Sources */,

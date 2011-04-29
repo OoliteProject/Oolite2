@@ -77,15 +77,10 @@ typedef enum
 #endif
 }
 
-/*	Load a texture.
-	
-	NOTE: anisotropy is normalized to the range [0, 1]. 1 means as high an
-	anisotropy setting as the hardware supports.
-*/
-+ (id)textureFromFile:(NSString *)name
-			  options:(uint32_t)options
-		   anisotropy:(GLfloat)anisotropy
-			  lodBias:(GLfloat)lodBias;
+//	Load a texture.
++ (id) textureWithSpecification:(OOTextureSpecification *)spec
+				   fileResolver:(id <OOFileResolving>)resolver
+				problemReporter:(id <OOProblemReporting>)problemReporter;
 
 /*	Return the "null texture", a texture object representing an empty texture.
 	Applying the null texture is equivalent to calling [OOTexture applyNone].

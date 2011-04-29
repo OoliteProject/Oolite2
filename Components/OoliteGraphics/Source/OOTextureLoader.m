@@ -44,10 +44,10 @@ static BOOL					sHaveSetUp = NO;
 
 @interface OOTextureLoader (OOPrivate)
 
-+ (void)setUp;
++ (void) setUp;
 
-- (void)applySettings;
-- (void)getDesiredWidth:(uint32_t *)outDesiredWidth andHeight:(uint32_t *)outDesiredHeight;
+- (void) applySettings;
+- (void) getDesiredWidth:(uint32_t *)outDesiredWidth andHeight:(uint32_t *)outDesiredHeight;
 
 
 @end
@@ -55,23 +55,26 @@ static BOOL					sHaveSetUp = NO;
 
 @implementation OOTextureLoader
 
-+ (id)loaderWithPath:(NSString *)inPath options:(uint32_t)options
++ (id) loaderWithFileData:(NSData *)data
+					 name:(NSString *)name
+				  options:(uint32_t)options
+		  problemReporter:(id <OOProblemReporting>)problemReporter
 {
-	NSString				*extension = nil;
-	id						result = nil;
+	NSParameterAssert(data != nil);
 	
-	if (EXPECT_NOT(inPath == nil)) return nil;
 	if (EXPECT_NOT(!sHaveSetUp))  [self setUp];
 	
-	// Get a suitable loader. FIXME -- this should sniff the data instead of relying on extensions.
-	extension = [[inPath pathExtension] lowercaseString];
-	if ([extension isEqualToString:@"png"])
+	OOTextureLoader *result = nil;
+	if ([OOPNGTextureLoader canLoadData:data])
 	{
-		result = [[[OOPNGTextureLoader alloc] initWithPath:inPath options:options] autorelease];
+		result = [[[OOPNGTextureLoader alloc] initWithData:data
+													  name:name
+												   options:options
+										   problemReporter:problemReporter] autorelease];
 	}
 	else
 	{
-		OOLog(@"texture.load.unknownType", @"Can't use %@ as a texture - extension \"%@\" does not identify a known type.", inPath, extension);
+		OOReportError(problemReporter, @"Can't use %@ as a texture (unknown file type).", name);
 	}
 	
 	if (result != nil)
@@ -83,19 +86,17 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (id)initWithPath:(NSString *)inPath options:(uint32_t)options
+- (id) initWithData:(NSData *)data
+			   name:(NSString *)name
+			options:(uint32_t)options
+	problemReporter:(id <OOProblemReporting>)problemReporter
 {
 	self = [super init];
 	if (self == nil)  return nil;
 	
-	_path = [inPath copy];
-	if (EXPECT_NOT(_path == nil))
-	{
-		[self release];
-		return nil;
-	}
-	
+	_name = [name copy];
 	_options = options;
+	_problemReporter = [problemReporter retain];
 	
 	_generateMipMaps = (options & kOOTextureMinFilterMask) == kOOTextureMinFilterMipMap;
 	_shrinkIfLarge = (options & kOOTextureShrinkIfLarge) != 0;
@@ -136,10 +137,11 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
-	[_path autorelease];
-	_path = NULL;
+	[_name autorelease];
+	_name = NULL;
+	DESTROY(_problemReporter);
 	free(_data);
 	_data = NULL;
 	
@@ -147,7 +149,7 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (NSString *)descriptionComponents
+- (NSString *) descriptionComponents
 {
 	NSString			*state = nil;
 	
@@ -164,23 +166,23 @@ static BOOL					sHaveSetUp = NO;
 #endif
 	}
 	
-	return [NSString stringWithFormat:@"{%@ -- %@}", _path, state];
+	return [NSString stringWithFormat:@"%@ -- %@", _name, state];
 }
 
 
-- (NSString *)shortDescriptionComponents
+- (NSString *) shortDescriptionComponents
 {
-	return [_path lastPathComponent];
+	return _name;
 }
 
 
-- (NSString *)path
+- (NSString *) name
 {
-	return _path;
+	return _name;
 }
 
 
-- (BOOL)isReady
+- (BOOL) isReady
 {
 	return _ready;
 }
@@ -225,18 +227,26 @@ static BOOL					sHaveSetUp = NO;
 
 - (NSString *) cacheKey
 {
-	return [NSString stringWithFormat:@"%@:0x%.4X", [[self path] lastPathComponent], _options];
+	return [NSString stringWithFormat:@"%@:0x%.4X", _name, _options];
 }
 
 
-- (void)loadTexture
+- (void) loadTexture
 {
 	OOLogGenericSubclassResponsibility();
 }
 
 
-+ (void)setUp
++ (BOOL) canLoadData:(NSData *)data
 {
+	OOLogGenericSubclassResponsibility();
+	return NO;
+}
+
+
++ (void) setUp
+{
+	// FIXME: settings should be per-OOGraphicsContext.
 	// Load two maximum sizes - graphics hardware limit and user-specified limit.
 	GLint maxSize;
 	OOGL(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize));
@@ -255,18 +265,18 @@ static BOOL					sHaveSetUp = NO;
 
 /*** Methods performed on the loader thread. ***/
 
-- (void)performAsyncTask
+- (void) performAsyncTask
 {
 	@try
 	{
-		OOLog(@"texture.load.asyncLoad", @"Loading texture %@", [_path lastPathComponent]);
+		OOLog(@"texture.load.asyncLoad", @"Loading texture %@", _name);
 		
 		[self loadTexture];
 		
 		// Catch an error I've seen but not diagnosed yet.
 		if (_data != NULL && OOTextureComponentsForFormat(_format) == 0)
 		{
-			OOLog(@"texture.load.failed.internalError", @"Texture loader internal error for %@: data is non-null but data format is invalid (%u).", _path, _format);
+			OOLog(@"texture.load.failed.internalError", @"Texture loader internal error for %@: data is non-null but data format is invalid (%u).", _name, _format);
 			free(_data);
 			_data = NULL;
 		}
@@ -278,7 +288,7 @@ static BOOL					sHaveSetUp = NO;
 	}
 	@catch (NSException *localException)
 	{
-		OOLog(@"texture.load.asyncLoad.exception", @"***** Exception loading texture %@: %@ (%@).", _path, [localException name], [localException reason]);
+		OOLog(@"texture.load.asyncLoad.exception", @"***** Exception loading texture %@: %@ (%@).", _name, [localException name], [localException reason]);
 		
 		// Be sure to signal load failure
 		if (_data != NULL)
@@ -323,7 +333,7 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (void)applySettings
+- (void) applySettings
 {
 	uint32_t			desiredWidth, desiredHeight;
 	BOOL				rescale;
@@ -349,7 +359,7 @@ static BOOL					sHaveSetUp = NO;
 		}
 		else
 		{
-			OOLogWARN(@"texture.load.extractChannel.invalid", @"Cannot extract channel from texture \"%@\"", [_path lastPathComponent]);
+			OOLogWARN(@"texture.load.extractChannel.invalid", @"Cannot extract channel from texture \"%@\"", _name);
 		}
 	}
 	
@@ -362,7 +372,7 @@ static BOOL					sHaveSetUp = NO;
 		BOOL leaveSpaceForMipMaps = _generateMipMaps;
 		if (_isCubeMap)  leaveSpaceForMipMaps = NO;
 		
-		OOLog(@"texture.load.rescale", @"Rescaling texture \"%@\" from %u x %u to %u x %u.", [_path lastPathComponent], pixMap.width, pixMap.height, desiredWidth, desiredHeight);
+		OOLog(@"texture.load.rescale", @"Rescaling texture \"%@\" from %u x %u to %u x %u.", _name, pixMap.width, pixMap.height, desiredWidth, desiredHeight);
 		
 		pixMap = OOScalePixMap(pixMap, desiredWidth, desiredHeight, leaveSpaceForMipMaps);
 		if (EXPECT_NOT(!OOIsValidPixMap(pixMap)))  return;
@@ -404,7 +414,7 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (void)getDesiredWidth:(uint32_t *)outDesiredWidth andHeight:(uint32_t *)outDesiredHeight
+- (void) getDesiredWidth:(uint32_t *)outDesiredWidth andHeight:(uint32_t *)outDesiredHeight
 {
 	uint32_t			desiredWidth, desiredHeight;
 	

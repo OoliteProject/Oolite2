@@ -31,9 +31,6 @@
 	
 	GLuint						_normalVectorVBO;
 	GLuint						_normalVBO;
-	
-	// TEMP
-	OOLegacyTexture					*_testTexture;
 }
 
 - (id) initWithMesh:(DDMesh *)mesh;

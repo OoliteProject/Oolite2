@@ -37,7 +37,8 @@ SOFTWARE.
 
 @interface OOTextureLoader: NSOperation
 {
-	NSString					*_path;
+@private
+	NSString					*_name;
 	
 	uint32_t					_options;
 	uint8_t						_generateMipMaps: 1,
@@ -50,20 +51,25 @@ SOFTWARE.
 								_isCubeMap: 1,
 								_ready: 1;
 	uint8_t						_extractChannelIndex;
-	OOTextureDataFormat			_format;
 	NSCondition					*_completionSignal;
 	
+@protected
+	id <OOProblemReporting>		_problemReporter;
 	void						*_data;
 	uint32_t					_width,
 								_height,
 								_rowBytes,
 								_originalWidth,
 								_originalHeight;
+	OOTextureDataFormat			_format;
 }
 
-+ (id)loaderWithPath:(NSString *)path options:(uint32_t)options;
++ (id) loaderWithFileData:(NSData *)data
+					 name:(NSString *)name
+				  options:(uint32_t)options
+		  problemReporter:(id <OOProblemReporting>)problemReporter;
 
-- (BOOL)isReady;
+- (BOOL) isReady;
 
 /*	Return value indicates success. This may only be called once (subsequent
 	attempts will return failure), and only on the main thread.
@@ -78,14 +84,20 @@ SOFTWARE.
 */
 - (NSString *) cacheKey;
 
+- (NSString *) name;
+
 
 
 /*** Subclass interface; do not use on pain of pain. Unless you're subclassing. ***/
 
-// Subclasses shouldn't do much on init, because of the whole asynchronous thing.
-- (id)initWithPath:(NSString *)path options:(uint32_t)options;
+// Content sniffing.
++ (BOOL) canLoadData:(NSData *)data;
 
-- (NSString *)path;
+// Subclasses shouldn't do much on init, because of the whole asynchronous thing.
+- (id) initWithData:(NSData *)data
+			   name:(NSString *)name
+			options:(uint32_t)options
+	problemReporter:(id <OOProblemReporting>)problemReporter;
 
 
 /*	Load data, setting up _data, _format, _width, and _height; also _rowBytes
@@ -100,6 +112,6 @@ SOFTWARE.
 	Superclass will handle scaling and mip-map generation. Data must be
 	allocated with malloc() family.
 */
-- (void)loadTexture;
+- (void) loadTexture;
 
 @end

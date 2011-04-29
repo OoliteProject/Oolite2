@@ -95,38 +95,17 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	_lodBias = lodBias;
 #endif
 	
+	_name = [[loader name] retain];
+	
 #ifndef NDEBUG
 	_context = [OOCurrentGraphicsContext() retain];
 	NSAssert(_context != nil, @"Can't create texture with no graphics context.");
 	
-	if ([loader isKindOfClass:[OOTextureGenerator class]])
+	if (_name == nil && [loader isKindOfClass:[OOTextureGenerator class]])
 	{
 		_name = [[NSString alloc] initWithFormat:@"<%@>", [loader class]];
 	}
 #endif
-	
-	return self;
-}
-
-
-- (id)initWithPath:(NSString *)path
-		   options:(uint32_t)options
-		anisotropy:(float)anisotropy
-		   lodBias:(GLfloat)lodBias
-{
-	OOTextureLoader *loader = [OOTextureLoader loaderWithPath:path options:options];
-	if (loader == nil)
-	{
-		[self release];
-		return nil;
-	}
-	
-	if ((self = [self initWithLoader:loader options:options anisotropy:anisotropy lodBias:lodBias]))
-	{
-#if OOTEXTURE_RELOADABLE
-		_path = [path retain];
-#endif
-	}
 	
 	return self;
 }
@@ -158,10 +137,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	}
 	
 	DESTROY(_loader);
-	
-#ifndef NDEBUG
 	DESTROY(_name);
-#endif
 	
 	[super dealloc];
 }
@@ -173,16 +149,16 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 	{
 		if (_valid)
 		{
-			return [NSString stringWithFormat:@"%u x %u", _width, _height];
+			return $sprintf(@"%@ (%u x %u)", _name, _width, _height);
 		}
 		else
 		{
-			return @"LOAD ERROR";
+			return $sprintf(@"%@ - LOAD ERROR", _name);
 		}
 	}
 	else
 	{
-		return @"loading";
+		return $sprintf(@"%@, loading", _name);
 	}
 }
 
@@ -190,9 +166,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #ifndef NDEBUG
 - (NSString *) name
 {
-	if (_name != nil)  return _name;
-	
-	NSString *name = [_path lastPathComponent];
+	NSString *name = _name;
 	
 	NSString *channelSuffix = nil;
 	switch (_options & kOOTextureExtractChannelMask)

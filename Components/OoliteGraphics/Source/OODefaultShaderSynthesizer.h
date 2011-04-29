@@ -33,4 +33,4 @@ SOFTWARE.
 @class OOMaterialSpecification, OORenderMesh;
 
 
-BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, id <OOProblemReporting> problemReporter);
+BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, NSArray **outTextureSpecs, id <OOProblemReporting> problemReporter);

@@ -39,7 +39,7 @@ SOFTWARE.
 #import "OOJSSpecialFunctions.h"
 
 #import "OOLegacyTexture.h"
-#import "OOConcreteTexture.h"
+#import "OOLegacyConcreteTexture.h"
 #import "OODrawable.h"
 #import "OOColor.h"
 

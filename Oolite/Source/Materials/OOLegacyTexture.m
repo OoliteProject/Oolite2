@@ -25,7 +25,7 @@
 */
 
 #import "OOLegacyTextureInternal.h"
-#import "OOConcreteTexture.h"
+#import "OOLegacyConcreteTexture.h"
 #import "OONullTexture.h"
 
 #import "OOLegacyTextureLoader.h"
@@ -179,7 +179,7 @@ static NSString *sGlobalTraceContext = nil;
 		}
 		
 		// No existing texture, load texture.
-		result = [[[OOConcreteTexture alloc] initWithPath:path key:key options:options anisotropy:anisotropy lodBias:lodBias] autorelease];
+		result = [[[OOLegacyConcreteTexture alloc] initWithPath:path key:key options:options anisotropy:anisotropy lodBias:lodBias] autorelease];
 	}
 	
 	
@@ -239,7 +239,7 @@ static NSString *sGlobalTraceContext = nil;
 	}
 	OOLog(@"texture.generator.queue", @"Queued texture generator %@", generator);
 	
-	OOLegacyTexture *result = [[[OOConcreteTexture alloc] initWithLoader:generator
+	OOLegacyTexture *result = [[[OOLegacyConcreteTexture alloc] initWithLoader:generator
 															   key:[generator cacheKey]
 														   options:[generator textureOptions]
 														anisotropy:[generator anisotropy]

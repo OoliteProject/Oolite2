@@ -34,7 +34,7 @@ SOFTWARE.
 #define OOTEXTURE_RELOADABLE		1
 
 
-@interface OOConcreteTexture: OOLegacyTexture
+@interface OOLegacyConcreteTexture: OOLegacyTexture
 {
 @private
 #if OOTEXTURE_RELOADABLE

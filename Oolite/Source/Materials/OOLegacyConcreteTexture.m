@@ -25,7 +25,7 @@
 */
 
 #import "OOLegacyTextureInternal.h"
-#import "OOConcreteTexture.h"
+#import "OOLegacyConcreteTexture.h"
 
 #import "OOLegacyTextureLoader.h"
 
@@ -49,7 +49,7 @@
 #endif
 
 
-@interface OOConcreteTexture (Private)
+@interface OOLegacyConcreteTexture (Private)
 
 - (void)setUpTexture;
 - (void)uploadTexture;
@@ -68,7 +68,7 @@
 static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *outFormat, GLenum *outInternalFormat, GLenum *outType);
 
 
-@implementation OOConcreteTexture
+@implementation OOLegacyConcreteTexture
 
 - (id) initWithLoader:(OOLegacyTextureLoader *)loader
 				  key:(NSString *)key
@@ -400,7 +400,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 @end
 
 
-@implementation OOConcreteTexture (Private)
+@implementation OOLegacyConcreteTexture (Private)
 
 - (void)setUpTexture
 {

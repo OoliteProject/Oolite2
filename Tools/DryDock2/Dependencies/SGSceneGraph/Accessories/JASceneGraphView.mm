@@ -561,7 +561,7 @@ static const GLuint kFallbackAttributes[] =
 
 - (void) magnifyWithEvent:(NSEvent *)event
 {
-	float factor = 1.0 + [event magnification];
+	float factor = 1.0 - [event magnification];
 	[self setCameraDistance:_cameraDistance * factor];
 }
 

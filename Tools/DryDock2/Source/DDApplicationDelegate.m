@@ -32,7 +32,7 @@
 		excluded =
 		$set(
 			 @"rendering.opengl",
-			 @"materials.synthesize.dump",
+		//	 @"materials.synthesize.dump",
 			 @"texture.load.asyncLoad",
 			 @"texture.load.rescale",
 			 @"texture.upload"

@@ -366,13 +366,25 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeDiffuseLighting
 {
-	// Simple placeholder lighting; light is always at y = ∞ (in model space).
+	// Simple placeholder lighting based on legacy OpenGL lighting.
 	[self addAttribute:@"aNormal" ofType:@"vec3"];
 	[self addVarying:@"vNormal" ofType:@"vec3"];
+	[self addVarying:@"vLightVector" ofType:@"vec3"];
+	[self addVarying:@"vPosition" ofType:@"vec4"];
 	
-	[_vertexBody appendString:@"\tvNormal = aNormal;\n\n"];
+	[_vertexBody appendString:
+	@"\tvPosition = position;\n"
+	 "\tvNormal = normalize(gl_NormalMatrix * aNormal);\n"
+	 "\tvLightVector = gl_LightSource[0].position.xyz;\n\t\n"];
 	
-	[_fragmentBody appendString:@"\t// Placeholder diffuse light\n\tvec4 diffuseLight = vec4(vec3(max(0.0, normalize(vNormal).y)), 1.0);\n\n"];
+//	[_fragmentBody appendString:@"\t// Placeholder diffuse light\n\tvec4 diffuseLight = vec4(vec3(max(0.0, normalize(vNormal).y)), 1.0);\n\n"];
+	[_fragmentBody appendString:
+	@"\t// Placeholder lighting\n"
+	 "\tvec3 eyeVector = normalize(-vPosition.xyz);\n"
+	 "\tvec3 lightVector = normalize(vLightVector);\n"
+	 "\tvec3 normal = normalize(vNormal);\n"
+	 "\tfloat intensity = 0.8 * dot(normal, lightVector) + 0.2;\n"
+	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n\t\n"];
 }
 
 
@@ -380,18 +392,26 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 {
 	[self addAttribute:@"aPosition" ofType:@"vec3"];
 	
-	[_vertexBody appendString:@"\tgl_Position = gl_ModelViewProjectionMatrix * vec4(aPosition, 1.0);\n"];
+	[_vertexBody appendString:
+	@"\tvec4 position = gl_ModelViewProjectionMatrix * vec4(aPosition, 1.0);\n"
+	 "\tgl_Position = position;\n\t\n"];
 }
 
 
 - (void) writeFinalColorComposite
 {
-	[_fragmentBody appendString:@"\tgl_FragColor = diffuseColor * diffuseLight;\n"];
+	[_fragmentBody appendString:@"\tgl_FragColor = diffuseColor * diffuseLight;\n\t\n"];
 }
 
 
 - (void) composeVertexShader
 {
+	while ([_vertexBody hasSuffix:@"\t\n"])
+	{
+		[_vertexBody deleteCharactersInRange:(NSRange){ [_vertexBody length] - 2, 2 }];
+	}
+	[_vertexBody appendString:@"}"];
+	
 	NSMutableString *vertexShader = [NSMutableString string];
 	AppendIfNotEmpty(vertexShader, _attributes, @"Attributes");
 	AppendIfNotEmpty(vertexShader, _vertexUniforms, @"Uniforms");
@@ -404,6 +424,12 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) composeFragmentShader
 {
+	while ([_fragmentBody hasSuffix:@"\t\n"])
+	{
+		[_fragmentBody deleteCharactersInRange:(NSRange){ [_fragmentBody length] - 2, 2 }];
+	}
+	[_fragmentBody appendString:@"}"];
+	
 	NSMutableString *fragmentShader = [NSMutableString string];
 	AppendIfNotEmpty(fragmentShader, _fragmentUniforms, @"Uniforms");
 	AppendIfNotEmpty(fragmentShader, _varyings, @"Varyings");
@@ -421,14 +447,11 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	@try
 	{
+		[self writePosition];
 		[self setUpTextures];
 		[self writeDiffuseColorTerm];
 		[self writeDiffuseLighting];
 		[self writeFinalColorComposite];
-		[self writePosition];
-		
-		[_vertexBody appendString:@"}"];
-		[_fragmentBody appendString:@"}"];
 		
 		[self composeVertexShader];
 		[self composeFragmentShader];

@@ -60,6 +60,7 @@
 		1A8A287B11F393C400775894 /* MAFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287211F393C300775894 /* MAFuture.m */; };
 		1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287511F393C300775894 /* MAMethodSignatureCache.m */; };
 		1A8A287D11F393C400775894 /* MAProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287711F393C300775894 /* MAProxy.m */; };
+		1A950925136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */; };
 		1ADB31FE122AF87B00F890B8 /* Placeholder Texture.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */; };
 		1ADB321C122AF99D00F890B8 /* DDApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */; };
 		1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* DDDocument.xib */; };
@@ -216,6 +217,8 @@
 		1A8A287611F393C300775894 /* MAProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAProxy.h; sourceTree = "<group>"; };
 		1A8A287711F393C300775894 /* MAProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAProxy.m; sourceTree = "<group>"; };
 		1A8A287811F393C300775894 /* tester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tester.m; sourceTree = "<group>"; };
+		1A950923136C1702000E18CF /* OOMaterial+DryDockPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOMaterial+DryDockPlaceholder.h"; sourceTree = "<group>"; };
+		1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOMaterial+DryDockPlaceholder.m"; sourceTree = "<group>"; };
 		1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Placeholder Texture.png"; sourceTree = "<group>"; };
 		1ADB321A122AF99D00F890B8 /* DDApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDApplicationDelegate.h; sourceTree = "<group>"; };
 		1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDApplicationDelegate.m; sourceTree = "<group>"; };
@@ -380,6 +383,8 @@
 				1A17D26B11C18F7200F96041 /* DDMainDocumentView.mm */,
 				1A17D3A911C19F2E00F96041 /* DDMeshSceneNode.h */,
 				1A17D3AA11C19F2E00F96041 /* DDMeshSceneNode.mm */,
+				1A950923136C1702000E18CF /* OOMaterial+DryDockPlaceholder.h */,
+				1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -715,6 +720,7 @@
 				1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */,
 				1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */,
 				1ADB321C122AF99D00F890B8 /* DDApplicationDelegate.m in Sources */,
+				1A950925136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

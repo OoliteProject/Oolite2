@@ -17,6 +17,8 @@
 @interface DDMesh: NSObject
 {
 @private
+	NSURL						*_baseURL;
+	
 	SGMatrix4x4					_transform;
 	OOAbstractMesh				*_abstractMesh;
 	OORenderMesh				*_renderMesh;
@@ -30,7 +32,9 @@
 	BOOL						_pendingRenderMeshUpdate;
 }
 
-- (id) initWithReader:(id<OOMeshReading>)reader issues:(id <OOProblemReporting>)issues;
+- (id) initWithURL:(NSURL *)url reader:(id<OOMeshReading>)reader issues:(id <OOProblemReporting>)issues;
+
+@property (readonly) NSURL *baseURL;
 
 @property (readwrite, assign) OOAbstractMesh *abstractMesh;
 @property (readonly) NSArray *materialSpecifications;

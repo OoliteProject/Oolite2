@@ -180,6 +180,21 @@ static NSString *MacrosToString(NSDictionary *macros);
 }
 
 
++ (OOMaterial *) fallbackMaterialWithName:(NSString *)name forMesh:(OORenderMesh *)mesh
+{
+	OOMaterialSpecification *spec = [[[OOMaterialSpecification alloc] initWithMaterialKey:name ?: @"<anonymous>"] autorelease];
+	
+	[spec setDiffuseColor:[OOColor colorWithRed:1 green:0 blue:0 alpha:1]];
+	
+	return [[[OOMaterial alloc] initWithSpecification:spec
+												 mesh:mesh
+											   macros:nil
+										bindingTarget:nil
+										 fileResolver:nil
+									  problemReporter:nil] autorelease];
+}
+
+
 - (NSString *)descriptionComponents
 {
 	return [NSString stringWithFormat:@"\"%@\"", [self name]];

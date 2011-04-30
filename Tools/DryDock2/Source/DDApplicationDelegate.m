@@ -26,16 +26,19 @@
 
 - (BOOL) shouldShowMessageInClass:(NSString *)messageClass
 {
-	if ([messageClass hasPrefix:@"rendering.opengl"])  return NO;
-//	if ([messageClass hasPrefix:@"texture.load"])  return NO;
+	static NSSet *excluded = nil;
+	if (EXPECT_NOT(excluded == nil))
+	{
+		excluded = $set(@"rendering.opengl", @"materials.synthesize.dump");
+	}
 	
-	return YES;
+	return ![excluded containsObject:messageClass];
 }
 
 
 - (BOOL) showMessageClass
 {
-	return NO;//YES;
+	return NO;
 }
 
 

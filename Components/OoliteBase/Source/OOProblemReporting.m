@@ -260,3 +260,45 @@ void OOReportNSError(id <OOProblemReporting> probMgr, NSString *context, NSError
 }
 
 @end
+
+
+@implementation OOErrorToWarningProblemConverter
+
+- (id) initWithProblemReporter:(id <OOProblemReporting>)problemReporter
+{
+	if ((self = [super init]))
+	{
+		_underlyingProblemReporter = [problemReporter retain];
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_underlyingProblemReporter release];
+	
+	[super dealloc];
+}
+
+
++ (id) converterWithProblemReporter:(id <OOProblemReporting>)problemReporter
+{
+	return [[[self alloc] initWithProblemReporter:problemReporter] autorelease];
+}
+
+
+- (void) addProblemOfType:(OOProblemReportType)type message:(NSString *)message
+{
+	if (type == kOOProblemTypeError)  type = kOOProblemTypeWarning;
+	[_underlyingProblemReporter addProblemOfType:type message:message];
+}
+
+
+- (NSString *) localizedProblemStringForKey:(NSString *)string
+{
+	return [_underlyingProblemReporter localizedProblemStringForKey:string];
+}
+
+@end

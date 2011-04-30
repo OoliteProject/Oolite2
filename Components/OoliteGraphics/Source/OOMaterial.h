@@ -58,6 +58,8 @@ SOFTWARE.
 			   fileResolver:(id <OOFileResolving>)resolver
 			problemReporter:(id <OOProblemReporting>)problemReporter;
 
++ (OOMaterial *) fallbackMaterialWithName:(NSString *)name forMesh:(OORenderMesh *)mesh;
+
 - (NSString *) name;
 
 // Make this the current material.

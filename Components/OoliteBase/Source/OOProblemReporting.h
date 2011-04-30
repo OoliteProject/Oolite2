@@ -81,7 +81,7 @@ NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *str
 @end
 
 
-/*	Implementation of OOProblemReporting that converts the first reported
+/*	Implementation of OOProblemReporting which converts the first reported
 	kOOProblemTypeError problem into an NSError.
 */
 @interface OOErrorConvertingProblemReporter: NSObject <OOProblemReporting>
@@ -103,6 +103,21 @@ NSString *OOLocalizeProblemString(id <OOProblemReporting> probMgr, NSString *str
 
 - (NSInteger) code;
 - (void) setCode:(NSInteger)value;
+
+@end
+
+
+/*	Implementation of OOProblemReporting which converts all errors into
+	warnings. (This can be useful when loading ancillary items, for example.)
+*/
+@interface OOErrorToWarningProblemConverter : NSObject <OOProblemReporting>
+{
+@private
+    id <OOProblemReporting>	_underlyingProblemReporter;
+}
+
+- (id) initWithProblemReporter:(id <OOProblemReporting>)problemReporter;
++ (id) converterWithProblemReporter:(id <OOProblemReporting>)problemReporter;
 
 @end
 

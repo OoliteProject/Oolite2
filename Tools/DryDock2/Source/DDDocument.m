@@ -95,7 +95,7 @@
 	Class readerClass = OOSelectMeshReaderForUTI(typeName);
 	id <OOMeshReading> reader = [[readerClass alloc] initWithPath:path progressReporter:progressReporter issues:issues];
 	
-	DDMesh *mesh = [[DDMesh alloc] initWithReader:reader issues:issues];
+	DDMesh *mesh = [[DDMesh alloc] initWithURL:absoluteURL reader:reader issues:issues];
 	if (mesh != nil)  [self addMesh:mesh];
 	
 	BOOL success = [issues showReportApplicationModal] && mesh != nil;

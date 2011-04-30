@@ -1,5 +1,5 @@
 //
-//  DDMesh.m
+//  DDMesh.mm
 //  DryDock2
 //
 //  Created by Jens Ayton on 2010-06-11.
@@ -15,11 +15,13 @@ extern "C" {
 #import "DDApplicationDelegate.h"
 
 
-@interface DDMesh ()
+@interface DDMesh () <OOFileResolving>
 
 - (void) priv_abstractMeshChanged:(NSNotification *)notification;
 - (void) priv_noteAbstractMeshSet;
 - (void) priv_deferredUpdateRenderMesh;
+
+- (void) priv_setUpRenderMaterialsWithProblemReporter:(id <OOProblemReporting>)problemReporter;
 
 @end
 
@@ -29,29 +31,32 @@ extern "C" {
 @synthesize renderMesh = _renderMesh;
 @synthesize materialSpecifications = _materialSpecs;
 @synthesize transform = _transform;
+@synthesize baseURL = _baseURL;
 
 
-- (id) initWithReader:(id<OOMeshReading>)reader issues:(id <OOProblemReporting>)issues
+- (id) initWithURL:(NSURL *)url reader:(id<OOMeshReading>)reader issues:(id <OOProblemReporting>)issues
 {
 	if (reader == nil)  return nil;
 	
 	if ((self = [super init]))
 	{
+		_baseURL = url;
+		
 		BOOL hasNormals;
 		
 		if (reader.prefersAbstractMesh)
 		{
 			/*
 				If the reader is abstract mesh-oriented, load the abstract mesh
-				and let the render mesh be created lazily.
-				We can't use a future in this case unless we make a complete
-				copy of the abstract mesh, since it's mutable. In any case,
-				the render mesh will be generated almost immediately, so there
-				wouldn't be much time for it to be generated in the background.
+				directly. We still need to load the render mesh up front to be
+				able to render, and also to get any problem reports related to
+				materials.
 			*/
 			OOAbstractMesh *mesh = reader.abstractMesh;
 			self.abstractMesh = mesh;
 			hasNormals = [mesh.vertexSchema objectForKey:kOONormalAttributeKey] != nil;
+			
+			
 		}
 		else
 		{
@@ -197,8 +202,30 @@ extern "C" {
 
 - (NSArray *) materialSpecifications
 {
-	if (_renderMesh == nil)  [self.abstractMesh getRenderMesh:&_renderMesh andMaterialSpecs:&_materialSpecs];
+	[self renderMesh];	// Force load.
 	return _materialSpecs;
+}
+
+
+- (void) priv_setUpRenderMaterialsWithProblemReporter:(id <OOProblemReporting>)problemReporter
+{
+	OORenderMesh *mesh = self.renderMesh;
+	NSArray *materialSpecs = self.materialSpecifications;
+	
+	NSMutableArray *renderMaterials = [NSMutableArray arrayWithCapacity:materialSpecs.count];
+	for (OOMaterialSpecification *spec in materialSpecs)
+	{
+		OOMaterial *material = [[OOMaterial alloc] initWithSpecification:spec
+																	mesh:mesh
+																  macros:nil	// ?
+														   bindingTarget:nil
+															fileResolver:self
+														 problemReporter:problemReporter];
+		
+		if (material == nil)  material = [OOMaterial fallbackMaterialWithName:[spec materialKey] forMesh:mesh];
+		if (material != nil)  [renderMaterials addObject:material];
+	}
+	_renderMaterials = [renderMaterials copy];
 }
 
 
@@ -206,28 +233,10 @@ extern "C" {
 {
 	if (_renderMaterials == nil)
 	{
-		OORenderMesh *mesh = self.renderMesh;
-		NSArray *materialSpecs = self.materialSpecifications;
-		
-		// FIXME: should do this during init and use main problem reporter.
+		// FIXME: should have some sort of problem list in the window, with ability to replace problems when updating materials.
 		OOSimpleProblemReportManager *problemReporter = [[OOSimpleProblemReportManager alloc] initWithContextString:$sprintf(@"Loading materials for %@:", self.name) messageClassPrefix:@"material.load.error"];
 		
-		// FIXME: need to be able to load built-in shaders and shaders relative to mesh file.
-		id <OOFileResolving> resolver = [DDApplicationDelegate applicationDelegate].applicationResourceResolver;
-		
-		NSMutableArray *renderMaterials = [NSMutableArray arrayWithCapacity:materialSpecs.count];
-		for (OOMaterialSpecification *spec in materialSpecs)
-		{
-			OOMaterial *material = [[OOMaterial alloc] initWithSpecification:spec
-																		mesh:mesh
-																	  macros:nil	// ?
-															   bindingTarget:nil
-																fileResolver:resolver
-															 problemReporter:problemReporter];
-			// FIXME: deal with failure.
-			if (material != nil)  [renderMaterials addObject:material];
-		}
-		_renderMaterials = [renderMaterials copy];
+		[self priv_setUpRenderMaterialsWithProblemReporter:problemReporter];
 	}
 	
 	return _renderMaterials;
@@ -243,7 +252,7 @@ extern "C" {
 - (void) setBoxedTransform:(NSValue *)value
 {
 	SGMatrix4x4 matrix = [value sg_matrix4x4Value];
-	// Apple-clang 1.7 raises a nonsense error here if using property syntax. -- Ahruman 2011-03-13
+	// LLVM-gcc raises a nonsense error here if using property syntax. -- Ahruman 2011-03-13
 //	self.transform = matrix;
 	[self setTransform:matrix];
 }
@@ -368,6 +377,41 @@ extern "C" {
 			_pendingRenderMeshUpdate = NO;
 		});
 	}
+}
+
+
+OOINLINE BOOL IsFileNotFound(NSError *error)
+{
+	return ([error.domain isEqualToString:NSCocoaErrorDomain] && error.code == NSFileReadNoSuchFileError) ||
+	([error.domain isEqualToString:NSPOSIXErrorDomain] && error.code == ENOENT);
+}
+
+
+- (NSData *) contentsOfFileFileNamed:(NSString *)name
+							inFolder:(NSString *)folder
+					 problemReporter:(id <OOProblemReporting>)problemReporter
+{
+	NSURL *baseURL = self.baseURL;
+	NSArray *formats = $array(@"%@", @"Textures/%@", @"../Textures/%@");
+	
+	for (NSString *format in formats)
+	{
+		NSError *error = nil;
+		NSURL *url = [NSURL URLWithString:$sprintf(format, name) relativeToURL:baseURL];
+		NSData *data = [NSData dataWithContentsOfURL:url options:NSMappedRead error:&error];
+		
+		if (data != nil)  return data;
+		
+		if (!IsFileNotFound(error))
+		{
+			OOReportNSError(problemReporter, nil, error);
+			return nil;
+		}
+	}
+	
+	OOReportError(problemReporter, @"Texture file %@ could not be found.", name);
+	
+	return nil;
 }
 
 @end

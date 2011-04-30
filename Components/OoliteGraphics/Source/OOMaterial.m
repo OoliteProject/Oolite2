@@ -259,6 +259,20 @@ static NSString *MacrosToString(NSDictionary *macros);
 		if (_textureCount > 1)  OOGL(glActiveTexture(GL_TEXTURE0));
 	}
 	
+	@try
+	{
+		id key = nil;
+		foreachkey (key, _uniforms)
+		{
+			OOShaderUniform *uniform = [_uniforms objectForKey:key];
+			[uniform apply];
+		}
+	}
+	@catch (...)
+	{
+		// Supress exceptions during application of bound uniforms.
+	}
+	
 	return YES;
 }
 

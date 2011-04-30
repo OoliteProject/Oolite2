@@ -49,21 +49,6 @@ typedef enum
 } OOTextureMagFilter;
 
 
-/*	FIXME: this should be replaced with an equivalent of GLSL swizzling, for
-	example { texture = "foo.png"; extract = "bg"; }. When using the default
-	material, this will be converted to actual swizzles instead of creating
-	extra textures.
-*/
-typedef enum
-{
-	kOOTextureExtractChannelNone	= 0x00000000UL,
-	kOOTextureExtractChannelR		= 0x00001000UL,	// 001
-	kOOTextureExtractChannelG		= 0x00003000UL,	// 011
-	kOOTextureExtractChannelB		= 0x00005000UL,	// 101
-	kOOTextureExtractChannelA		= 0x00007000UL	// 111
-} OOTextureChannelExtractMode;
-
-
 enum
 {
 	kOOTextureShrinkIfLarge			= 0x00000010UL,
@@ -78,7 +63,6 @@ enum
 	
 	kOOTextureMinFilterMask			= 0x00000003UL,
 	kOOTextureMagFilterMask			= 0x00000004UL,
-	kOOTextureExtractChannelMask	= 0x00007000UL,
 	
 	kOOTextureDefaultOptions		= kOOTextureMinFilterDefault | kOOTextureMagFilterLinear
 };
@@ -99,6 +83,7 @@ typedef uint32_t OOTextureOptionFlags;
 	float							_lodBias;
 	
 	OOTextureOptionFlags			_optionFlags;
+	NSString						*_extractMode;
 }
 
 + (id) textureSpecWithName:(NSString *)name;
@@ -113,8 +98,19 @@ typedef uint32_t OOTextureOptionFlags;
 - (OOTextureMagFilter) magFilter;
 - (void) setMagFilter:(OOTextureMagFilter)value;
 
-- (OOTextureChannelExtractMode) extractChannelMode;
-- (void) setExtractChannelMode:(OOTextureChannelExtractMode)value;
+/*
+	extractMode: a string of one to four characters in the set {r, g, b, a}
+	(lowercase) specifying which channels of the texture image to use.
+	-setExtractMode: fails if its parameter does not match this format, and
+	-extractMode will never return an invalid value.
+	The default is “rgba”, the identity swizzle.
+	
+	NOTE: extraction is actually handled by the default material synthesizer
+	(and can’t be used with custom textures). It’s attached to the texture
+	specifier to simplify manangement both in code and in material specs.
+*/
+- (NSString *) extractMode;
+- (BOOL) setExtractMode:(NSString *)value;
 
 - (BOOL) allowShrink;
 - (void) setAllowShrink:(BOOL)value;
@@ -167,7 +163,4 @@ extern NSString * const kOOTextureAnisotropyKey;
 extern NSString * const kOOTextureLODBiasKey;
 
 extern NSString * const kOOTextureExtractChannelKey;
-extern NSString * const kOOTextureRedChannelName;
-extern NSString * const kOOTextureGreenChannelName;
-extern NSString * const kOOTextureBlueChannelName;
-extern NSString * const kOOTextureAlphaChannelName;
+extern NSString * const kOOTextureExtractChannelIdentity;	// "rgba"

@@ -46,10 +46,8 @@ SOFTWARE.
 								_avoidShrinking: 1,
 								_shrinkIfLarge: 1,
 								_noScalingWhatsoever: 1,
-								_extractChannel: 1,
 								_allowCubeMap: 1,
 								_isCubeMap: 1;
-	uint8_t						_extractChannelIndex;
 	
 @protected
 	id <OOProblemReporting>		_problemReporter;
@@ -64,7 +62,7 @@ SOFTWARE.
 
 + (id) loaderWithFileData:(NSData *)data
 					 name:(NSString *)name
-				  options:(uint32_t)options
+				  options:(OOTextureOptionFlags)options
 		  problemReporter:(id <OOProblemReporting>)problemReporter;
 
 /*	Return value indicates success. This may only be called once (subsequent
@@ -92,7 +90,7 @@ SOFTWARE.
 // Subclasses shouldn't do much on init, because of the whole asynchronous thing.
 - (id) initWithData:(NSData *)data
 			   name:(NSString *)name
-			options:(uint32_t)options
+			options:(OOTextureOptionFlags)options
 	problemReporter:(id <OOProblemReporting>)problemReporter;
 
 

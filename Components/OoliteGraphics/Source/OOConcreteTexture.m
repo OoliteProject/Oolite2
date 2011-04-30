@@ -168,31 +168,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #ifndef NDEBUG
 - (NSString *) name
 {
-	NSString *name = _name;
-	
-	NSString *channelSuffix = nil;
-	switch (_options & kOOTextureExtractChannelMask)
-	{
-		case kOOTextureExtractChannelR:
-			channelSuffix = @":r";
-			break;
-			
-		case kOOTextureExtractChannelG:
-			channelSuffix = @":g";
-			break;
-			
-		case kOOTextureExtractChannelB:
-			channelSuffix = @":b";
-			break;
-			
-		case kOOTextureExtractChannelA:
-			channelSuffix = @":a";
-			break;
-	}
-	
-	if (channelSuffix != nil)  name = [name stringByAppendingString:channelSuffix];
-	
-	return name;
+	return _name;
 }
 #endif
 

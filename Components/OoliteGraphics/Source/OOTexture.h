@@ -51,8 +51,7 @@ enum
 									| kOOTextureRepeatS
 									| kOOTextureRepeatT
 									| kOOTextureNoFNFMessage
-									| kOOTextureAlphaMask
-									| kOOTextureExtractChannelMask,
+									| kOOTextureAlphaMask,
 	
 	kOOTextureFlagsAllowedForCubeMap =
 									kOOTextureDefinedFlags & ~(kOOTextureRepeatS | kOOTextureRepeatT)

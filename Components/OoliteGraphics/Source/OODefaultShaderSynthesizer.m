@@ -313,14 +313,22 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 {
 	NSParameterAssert(spec != nil && outCount != NULL);
 	
-	NSString *key = [spec textureMapName];
-	NSUInteger texID = [_textureIDs oo_unsignedIntegerForKey:key];
+	NSString	*key = [spec textureMapName];
+	NSUInteger	texID = [_textureIDs oo_unsignedIntegerForKey:key];
+	NSString	*swizzle = [spec extractMode];
+	NSUInteger	channelCount = [swizzle length];
 	
-	// FIXME: Support swizzling (generalization of extract_channel to support multiple channels).
-	// FIXME: Support different channel counts.
+	NSAssert(1 <= channelCount && channelCount <= 4, @"Contract violation: texture specification extract mode does not meet requirements.");
+	*outCount = channelCount;
 	
-	*outCount = 4;
-	return $sprintf(@"tex%uSample", texID);
+	if ([swizzle isEqualToString:kOOTextureExtractChannelIdentity])
+	{
+		return $sprintf(@"tex%uSample", texID);
+	}
+	else
+	{
+		return $sprintf(@"tex%uSample.%@", texID, swizzle);
+	}
 }
 
 
@@ -400,7 +408,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	 "\tvNormal = normalize(gl_NormalMatrix * aNormal);\n"
 	 "\tvLightVector = gl_LightSource[0].position.xyz;\n\t\n"];
 	
-//	[_fragmentBody appendString:@"\t// Placeholder diffuse light\n\tvec4 diffuseLight = vec4(vec3(max(0.0, normalize(vNormal).y)), 1.0);\n\n"];
 	[_fragmentBody appendString:
 	@"\t// Placeholder lighting\n"
 	 "\tvec3 eyeVector = normalize(-vPosition.xyz);\n"

@@ -57,7 +57,7 @@ static BOOL					sHaveSetUp = NO;
 
 + (id) loaderWithFileData:(NSData *)data
 					 name:(NSString *)name
-				  options:(uint32_t)options
+				  options:(OOTextureOptionFlags)options
 		  problemReporter:(id <OOProblemReporting>)problemReporter
 {
 	NSParameterAssert(data != nil);
@@ -88,7 +88,7 @@ static BOOL					sHaveSetUp = NO;
 
 - (id) initWithData:(NSData *)data
 			   name:(NSString *)name
-			options:(uint32_t)options
+			options:(OOTextureOptionFlags)options
 	problemReporter:(id <OOProblemReporting>)problemReporter
 {
 	self = [super init];
@@ -103,33 +103,6 @@ static BOOL					sHaveSetUp = NO;
 	_avoidShrinking = (options & kOOTextureNoShrink) != 0;
 	_noScalingWhatsoever = (options & kOOTextureNeverScale) != 0;
 	_allowCubeMap = (options & kOOTextureCubeMap) != 0;
-	
-	if (options & kOOTextureExtractChannelMask)
-	{
-		_extractChannel = YES;
-		switch (options & kOOTextureExtractChannelMask)
-		{
-			case kOOTextureExtractChannelR:
-				_extractChannelIndex = 0;
-				break;
-				
-			case kOOTextureExtractChannelG:
-				_extractChannelIndex = 1;
-				break;
-				
-			case kOOTextureExtractChannelB:
-				_extractChannelIndex = 2;
-				break;
-				
-			case kOOTextureExtractChannelA:
-				_extractChannelIndex = 3;
-				break;
-				
-			default:
-				OOLogERR(@"texture.load.unknownExtractChannelMask", @"Unknown texture extract channel mask (0x%.4X). This is an internal error, please report it.", options & kOOTextureExtractChannelMask);
-				_extractChannel =  NO;
-		}
-	}
 	
 	return self;
 }
@@ -339,19 +312,6 @@ static BOOL					sHaveSetUp = NO;
 	if (_rowBytes == 0)  _rowBytes = _width * components;
 	
 	pixMap = OOMakePixMap(_data, _width, _height, components, _rowBytes, 0);
-	
-	if (_extractChannel)
-	{
-		if (OOExtractPixMapChannel(&pixMap, _extractChannelIndex, NO))
-		{
-			_format = kOOTextureDataGrayscale;
-			components = 1;
-		}
-		else
-		{
-			OOLogWARN(@"texture.load.extractChannel.invalid", @"Cannot extract channel from texture \"%@\"", _name);
-		}
-	}
 	
 	[self getDesiredWidth:&desiredWidth andHeight:&desiredHeight];
 	

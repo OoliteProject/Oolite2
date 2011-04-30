@@ -44,10 +44,7 @@ NSString * const kOOTextureAnisotropyKey		= @"anisotropy";
 NSString * const kOOTextureLODBiasKey			= @"lodBias";
 
 NSString * const kOOTextureExtractChannelKey	= @"extract";
-NSString * const kOOTextureRedChannelName		= @"r";
-NSString * const kOOTextureGreenChannelName		= @"g";
-NSString * const kOOTextureBlueChannelName		= @"b";
-NSString * const kOOTextureAlphaChannelName		= @"a";
+NSString * const kOOTextureExtractChannelIdentity = @"rgba";
 
 
 @implementation OOTextureSpecification
@@ -79,8 +76,17 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		
 		[result setTextureMapName:name];
 		
+		NSString *stringValue = [rep oo_stringForKey:kOOTextureExtractChannelKey];
+		if (stringValue != nil)
+		{
+			if (![result setExtractMode:stringValue])
+			{
+				OOReportWarning(issues, @"Unknown texture channel extract key \"%@\" for texture \"%@\", ignoring.", stringValue, name);
+			}
+		}
+		
 		OOTextureOptionFlags options = kOOTextureDefaultOptions;
-		NSString *stringValue = [rep oo_stringForKey:kOOTextureMinFilterKey];
+		stringValue = [rep oo_stringForKey:kOOTextureMinFilterKey];
 		if (stringValue != nil)
 		{
 			if ([stringValue isEqualToString:kOOTextureNearestFilterName])  options |= kOOTextureMinFilterNearest;
@@ -104,19 +110,6 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 				}
 				
 				options |= kOOTextureMagFilterLinear;
-			}
-		}
-		
-		stringValue = [rep oo_stringForKey:kOOTextureExtractChannelKey];
-		if (stringValue != nil)
-		{
-			if ([stringValue isEqualToString:kOOTextureRedChannelName])  options |= kOOTextureExtractChannelR;
-			else if ([stringValue isEqualToString:kOOTextureGreenChannelName])  options |= kOOTextureExtractChannelG;
-			else if ([stringValue isEqualToString:kOOTextureBlueChannelName])  options |= kOOTextureExtractChannelB;
-			else if ([stringValue isEqualToString:kOOTextureAlphaChannelName])  options |= kOOTextureExtractChannelA;
-			else
-			{
-				OOReportWarning(issues, @"Unknown texture channel extract key \"%@\" for texture \"%@\", ignoring.", stringValue, name);
 			}
 		}
 		
@@ -147,6 +140,9 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		_optionFlags = kOOTextureDefaultOptions;
 		_anisotropy = kOOTextureDefaultAnisotropy;
 		_lodBias = kOOTextureDefaultLODBias;
+		_extractMode = kOOTextureExtractChannelIdentity;
+		
+		if (_extractMode == nil)  DESTROY(self);
 	}
 	
 	return self;
@@ -156,6 +152,7 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 - (void) dealloc
 {
 	DESTROY(_name);
+	DESTROY(_extractMode);
 	
 	[super dealloc];
 }
@@ -209,15 +206,30 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 }
 
 
-- (OOTextureChannelExtractMode) extractChannelMode
+- (NSString *) extractMode
 {
-	return _optionFlags & kOOTextureExtractChannelMask;
+	return [[_extractMode retain] autorelease];
 }
 
 
-- (void) setExtractChannelMode:(OOTextureChannelExtractMode)value
+- (BOOL) setExtractMode:(NSString *)value
 {
-	SET_BITS(kOOTextureExtractChannelMask, value);
+	if (value == _extractMode)  return YES;
+	NSUInteger length = [value length];
+	if (length < 1 || length > 4)  return NO;
+	
+	static NSCharacterSet *rgbaCharset = nil;
+	if (rgbaCharset == nil)
+	{
+		rgbaCharset = [[[NSCharacterSet characterSetWithCharactersInString:@"rgba"] invertedSet] retain];
+	}
+	
+	if ([value rangeOfCharacterFromSet:rgbaCharset].location != NSNotFound)  return NO;
+	
+	[_extractMode release];
+	_extractMode = [value copy];
+	
+	return YES;
 }
 
 
@@ -387,27 +399,10 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		if (_anisotropy != kOOTextureDefaultAnisotropy)  [result oo_setFloat:_anisotropy forKey:kOOTextureAnisotropyKey];
 		if (_lodBias != kOOTextureDefaultLODBias)  [result oo_setFloat:_lodBias forKey:kOOTextureLODBiasKey];
 		
-		if ((_optionFlags & kOOTextureExtractChannelMask) != kOOTextureExtractChannelNone)
+		stringValue = [self extractMode];
+		if (![stringValue isEqualToString:kOOTextureExtractChannelIdentity])
 		{
-			switch (_optionFlags & kOOTextureExtractChannelMask)
-			{
-				case kOOTextureExtractChannelR:
-					stringValue = kOOTextureRedChannelName;
-					break;
-					
-				case kOOTextureExtractChannelG:
-					stringValue = kOOTextureGreenChannelName;
-					break;
-					
-				case kOOTextureExtractChannelB:
-					stringValue = kOOTextureBlueChannelName;
-					break;
-					
-				case kOOTextureExtractChannelA:
-					stringValue = kOOTextureAlphaChannelName;
-					break;
-			}
-			if (stringValue != nil)  [result setObject:stringValue forKey:kOOTextureExtractChannelKey];
+			[result setObject:stringValue forKey:kOOTextureExtractChannelKey];
 		}
 		
 		return result;

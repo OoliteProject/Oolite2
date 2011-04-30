@@ -182,6 +182,18 @@
 }
 
 
+- (IBAction) zoomIn:(id)sender
+{
+	[self.mainView zoomIn:sender];
+}
+
+
+- (IBAction) zoomOut:(id)sender
+{
+	[self.mainView zoomOut:sender];
+}
+
+
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
 //- (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {

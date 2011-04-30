@@ -9,7 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class DDMesh;
+@class DDMesh, DDSceneView;
 
 
 @interface DDDocument: NSDocument

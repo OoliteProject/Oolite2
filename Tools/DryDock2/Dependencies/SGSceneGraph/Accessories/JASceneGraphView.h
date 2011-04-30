@@ -88,6 +88,8 @@ typedef enum
 - (IBAction) resetPan:(id)sender;
 - (IBAction) resetZoom:(id)sender;
 - (IBAction) resetCamera:(id)sender;
+- (IBAction) zoomIn:sender;
+- (IBAction) zoomOut:sender;
 
 // Subclass stuff
 - (unsigned) dragActionForEvent:(NSEvent *)inEvent;
@@ -100,9 +102,6 @@ typedef enum
 - (NSColor *) backgroundColor;	// Default: blackColor
 
 - (void) displaySettingsChanged;
-
-- (IBAction) zoomInAction:sender;
-- (IBAction) zoomOutAction:sender;
 
 @property (readonly) BOOL shadersSupported;
 

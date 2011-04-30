@@ -33,7 +33,7 @@ NSString *kNotificationDDSceneViewSceneChanged = @"se.ayton.jens.SGSceneGraph kN
 NSString *kNotificationDDSceneViewCameraChanged = @"se.ayton.jens.SGSceneGraph kNotificationDDSceneViewCameraChanged";
 
 
-#define kButtonZoomRatio		1.5f
+#define kButtonZoomRatio		1.2f
 
 
 #define USE_MULTISAMPLE 1
@@ -563,7 +563,6 @@ static const GLuint kFallbackAttributes[] =
 {
 	float factor = 1.0 + [event magnification];
 	[self setCameraDistance:_cameraDistance * factor];
-	
 }
 
 
@@ -651,13 +650,13 @@ static const GLuint kFallbackAttributes[] =
 }
 
 
-- (IBAction)zoomInAction:sender
+- (IBAction)zoomIn:sender
 {
 	[self setCameraDistance:_cameraDistance / kButtonZoomRatio];
 }
 
 
-- (IBAction)zoomOutAction:sender
+- (IBAction)zoomOut:sender
 {
 	[self setCameraDistance:_cameraDistance * kButtonZoomRatio];
 }

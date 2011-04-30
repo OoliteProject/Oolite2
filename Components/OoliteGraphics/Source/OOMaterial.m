@@ -120,7 +120,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 	if (OK && textureCount > 0)
 	{
 		_textureCount = textureCount;
-		_textures = calloc(sizeof *_textures, _textureCount);
+		_textures = OOAllocObjectArray(textureCount);
 		if (_textures == NULL)  OK = NO;
 		
 		if (OK)
@@ -135,13 +135,14 @@ static NSString *MacrosToString(NSDictionary *macros);
 				if (_textures[textureIter] == nil)
 				{
 					OK = NO;
+					_textureCount = textureIter;	// For safe cleanup.
 					break;
 				}
 			}
 		}
 	}
 	
-	// FIXME: uniforms and textures.
+	// FIXME: uniforms.
 	
 	if (!OK)  DESTROY(self);
 	return self;

@@ -68,6 +68,6 @@ OOINLINE void *OOAllocScanned(size_t size) { return malloc(size); }
 #endif
 
 
-#define OOFreeScanned free
+OOINLINE void OOFreeScanned(void *ptr) { free(ptr); }
 
 OOINLINE id *OOAllocObjectArray(size_t count) { return (id *)OOAllocScanned(count * sizeof (id)); }

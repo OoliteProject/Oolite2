@@ -26,7 +26,6 @@ extern "C" {
 
 #import "OOMaterial.h"
 #import "OOTexture.h"
-//#import "OOShaderProgram.h"
 
 // I/O
 #import "OODATReader.h"

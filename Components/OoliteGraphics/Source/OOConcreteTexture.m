@@ -113,6 +113,8 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (void)dealloc
 {
+	[_loader cancel];	// Avoid loading if it hasn’t happened yet.
+	
 #ifndef NDEBUG
 	OOLog(_trace ? @"texture.allocTrace.dealloc" : @"texture.dealloc", @"Deallocating and uncaching texture %p", self);
 	
@@ -195,7 +197,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #endif
 
 
-- (void)apply
+- (void) apply
 {
 	OOAssertGraphicsContext(_context);
 	
@@ -211,7 +213,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 }
 
 
-- (void)ensureFinishedLoading
+- (void) ensureFinishedLoading
 {
 	if (!_loaded)  [self setUpTexture];
 }
@@ -219,7 +221,7 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 
 - (BOOL) isFinishedLoading
 {
-	return _loaded || [_loader isReady];
+	return _loaded || [_loader isFinished];
 }
 
 

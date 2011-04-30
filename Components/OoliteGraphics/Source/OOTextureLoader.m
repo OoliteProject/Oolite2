@@ -131,8 +131,6 @@ static BOOL					sHaveSetUp = NO;
 		}
 	}
 	
-	_completionSignal = [[NSCondition alloc] init];
-	
 	return self;
 }
 
@@ -153,17 +151,14 @@ static BOOL					sHaveSetUp = NO;
 {
 	NSString			*state = nil;
 	
-	if (_ready)
+	if ([self isFinished])
 	{
-		if (_data != NULL)  state = @"ready";
+		if (_data != NULL)  state = @"loaded";
 		else  state = @"failed";
 	}
 	else
 	{
 		state = @"loading";
-#if INSTRUMENT_TEXTURE_LOADING
-		if (debugHasLoaded)  state = @"loaded";
-#endif
 	}
 	
 	return [NSString stringWithFormat:@"%@ -- %@", _name, state];
@@ -182,12 +177,6 @@ static BOOL					sHaveSetUp = NO;
 }
 
 
-- (BOOL) isReady
-{
-	return _ready;
-}
-
-
 - (BOOL) getResult:(OOPixMap *)result
 			format:(OOTextureDataFormat *)outFormat
 	 originalWidth:(uint32_t *)outWidth
@@ -197,11 +186,7 @@ static BOOL					sHaveSetUp = NO;
 	
 	BOOL		OK = YES;
 	
-	if (_completionSignal != nil)
-	{
-		[_completionSignal wait];
-		DESTROY(_completionSignal);
-	}
+	[self waitUntilFinished];
 	
 	if (_data == NULL)  OK = NO;
 	
@@ -265,13 +250,19 @@ static BOOL					sHaveSetUp = NO;
 
 /*** Methods performed on the loader thread. ***/
 
-- (void) performAsyncTask
+- (void) main
 {
 	@try
 	{
 		OOLog(@"texture.load.asyncLoad", @"Loading texture %@", _name);
 		
 		[self loadTexture];
+		
+		if ([self isCancelled])
+		{
+			free(_data);
+			_data = NULL;
+		}
 		
 		// Catch an error I've seen but not diagnosed yet.
 		if (_data != NULL && OOTextureComponentsForFormat(_format) == 0)
@@ -284,7 +275,6 @@ static BOOL					sHaveSetUp = NO;
 		if (_data != NULL)  [self applySettings];
 		
 		OOLog(@"texture.load.asyncLoad.done", @"Loading complete.");
-		[_completionSignal signal];
 	}
 	@catch (NSException *localException)
 	{
@@ -474,12 +464,6 @@ static BOOL					sHaveSetUp = NO;
 	
 	if (outDesiredWidth != NULL)  *outDesiredWidth = desiredWidth;
 	if (outDesiredHeight != NULL)  *outDesiredHeight = desiredHeight;
-}
-
-
-- (void) completeAsyncTask
-{
-	_ready = YES;
 }
 
 @end

@@ -29,10 +29,24 @@
 	static NSSet *excluded = nil;
 	if (EXPECT_NOT(excluded == nil))
 	{
-		excluded = $set(@"rendering.opengl", @"materials.synthesize.dump");
+		excluded =
+		$set(
+			 @"rendering.opengl",
+			 @"materials.synthesize.dump",
+			 @"texture.load.asyncLoad",
+			 @"texture.load.rescale",
+			 @"texture.upload"
+		);
 	}
 	
-	return ![excluded containsObject:messageClass];
+	if ([excluded containsObject:messageClass])  return NO;
+	
+	for (NSString *prefix in excluded)
+	{
+		if ([messageClass hasPrefix:prefix])  return NO;
+	}
+	
+	return YES;
 }
 
 

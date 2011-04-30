@@ -48,10 +48,8 @@ SOFTWARE.
 								_noScalingWhatsoever: 1,
 								_extractChannel: 1,
 								_allowCubeMap: 1,
-								_isCubeMap: 1,
-								_ready: 1;
+								_isCubeMap: 1;
 	uint8_t						_extractChannelIndex;
-	NSCondition					*_completionSignal;
 	
 @protected
 	id <OOProblemReporting>		_problemReporter;
@@ -68,8 +66,6 @@ SOFTWARE.
 					 name:(NSString *)name
 				  options:(uint32_t)options
 		  problemReporter:(id <OOProblemReporting>)problemReporter;
-
-- (BOOL) isReady;
 
 /*	Return value indicates success. This may only be called once (subsequent
 	attempts will return failure), and only on the main thread.

@@ -381,6 +381,10 @@ BOOL OOInterpretTextureSpecifier(id specifier, NSString **outName, uint32_t *out
 NSOperationQueue *OOTextureOperationQueue(void)
 {
 	static NSOperationQueue *sOpQueue = nil;
-	if (EXPECT_NOT(sOpQueue == nil))  sOpQueue = [[NSOperationQueue alloc] init];
+	if (EXPECT_NOT(sOpQueue == nil))
+	{
+		sOpQueue = [[NSOperationQueue alloc] init];
+		[sOpQueue setName:@"Texture loading queue"];
+	}
 	return sOpQueue;
 }

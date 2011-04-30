@@ -347,14 +347,6 @@ static BOOL DecodeFormat(OOTextureDataFormat format, uint32_t options, GLenum *o
 #endif
 }
 
-
-- (GLint)glTextureName
-{
-	[self ensureFinishedLoading];
-	
-	return _textureName;
-}
-
 @end
 
 

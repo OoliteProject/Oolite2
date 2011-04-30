@@ -131,11 +131,6 @@ typedef enum
 */
 - (BOOL) isCubeMap;
 
-/*	OpenGL texture name.
-	Not reccomended, but required for legacy TextureStore.
-*/
-- (GLint) glTextureName;
-
 #ifndef NDEBUG
 - (void) setTrace:(BOOL)trace;
 
@@ -147,23 +142,4 @@ typedef enum
 @end
 
 
-@interface NSDictionary (OOTextureConveniences)
-- (NSDictionary *) oo_textureSpecifierForKey:(id)key defaultName:(NSString *)name;
-@end
-
-@interface NSArray (OOTextureConveniences)
-- (NSDictionary *) oo_textureSpecifierAtIndex:(unsigned)index defaultName:(NSString *)name;
-@end
-
-NSDictionary *OOTextureSpecFromObject(id object, NSString *defaultName);
-
-
 uint8_t OOTextureComponentsForFormat(OOTextureDataFormat format);
-
-
-/*	OOInterpretTextureSpecifier()
-	
-	Interpret a texture specifier (string or dictionary). All out parameters
-	may be NULL.
-*/
-BOOL OOInterpretTextureSpecifier(id specifier, NSString **outName, uint32_t *outOptions, float *outAnisotropy, float *outLODBias);

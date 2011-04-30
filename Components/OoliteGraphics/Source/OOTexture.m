@@ -172,13 +172,6 @@ OOTextureInfo				gOOTextureInfo;
 }
 
 
-- (GLint)glTextureName
-{
-	OOLogGenericSubclassResponsibility();
-	return 0;
-}
-
-
 #ifndef NDEBUG
 - (void) setTrace:(BOOL)trace
 {
@@ -251,44 +244,6 @@ OOTextureInfo				gOOTextureInfo;
 @end
 
 
-@implementation NSDictionary (OOTextureConveniences)
-
-- (NSDictionary *) oo_textureSpecifierForKey:(id)key defaultName:(NSString *)name
-{
-	return OOTextureSpecFromObject([self objectForKey:key], name);
-}
-
-@end
-
-@implementation NSArray (OOTextureConveniences)
-
-- (NSDictionary *) oo_textureSpecifierAtIndex:(unsigned)index defaultName:(NSString *)name
-{
-	return OOTextureSpecFromObject([self objectAtIndex:index], name);
-}
-
-@end
-
-NSDictionary *OOTextureSpecFromObject(id object, NSString *defaultName)
-{
-	if (object == nil)  object = defaultName;
-	if ([object isKindOfClass:[NSString class]])
-	{
-		if ([object isEqualToString:@""])  return nil;
-		return [NSDictionary dictionaryWithObject:object forKey:@"name"];
-	}
-	if (![object isKindOfClass:[NSDictionary class]])  return nil;
-	
-	// If we're here, it's a dictionary.
-	if (defaultName == nil || [object oo_stringForKey:@"name"] != nil)  return object;
-	
-	// If we get here, there's no "name" key and there is a default, so we fill it in:
-	NSMutableDictionary *mutableResult = [NSMutableDictionary dictionaryWithDictionary:object];
-	[mutableResult setObject:[[defaultName copy] autorelease] forKey:@"name"];
-	return mutableResult;
-}
-
-
 uint8_t OOTextureComponentsForFormat(OOTextureDataFormat format)
 {
 	switch (format)
@@ -307,74 +262,6 @@ uint8_t OOTextureComponentsForFormat(OOTextureDataFormat format)
 	}
 	
 	return 0;
-}
-
-
-BOOL OOInterpretTextureSpecifier(id specifier, NSString **outName, uint32_t *outOptions, float *outAnisotropy, float *outLODBias)
-{
-	NSString			*name = nil;
-	uint32_t			options = kOOTextureDefaultOptions;
-	float				anisotropy = kOOTextureDefaultAnisotropy;
-	float				lodBias = kOOTextureDefaultLODBias;
-	
-	if ([specifier isKindOfClass:[NSString class]])
-	{
-		name = specifier;
-	}
-	else if ([specifier isKindOfClass:[NSDictionary class]])
-	{
-		name = [specifier oo_stringForKey:@"name"];
-		if (name == nil)
-		{
-			OOLog(@"texture.load.noName", @"Invalid texture configuration dictionary (must specify name):\n%@", specifier);
-			return NO;
-		}
-		
-		NSString *filterString = [specifier oo_stringForKey:@"min_filter" defaultValue:@"default"];
-		if ([filterString isEqualToString:@"nearest"])  options |= kOOTextureMinFilterNearest;
-		else if ([filterString isEqualToString:@"linear"])  options |= kOOTextureMinFilterLinear;
-		else if ([filterString isEqualToString:@"mipmap"])  options |= kOOTextureMinFilterMipMap;
-		else  options |= kOOTextureMinFilterDefault;	// Covers "default"
-		
-		filterString = [specifier oo_stringForKey:@"mag_filter" defaultValue:@"default"];
-		if ([filterString isEqualToString:@"nearest"])  options |= kOOTextureMagFilterNearest;
-		else  options |= kOOTextureMagFilterLinear;	// Covers "default" and "linear"
-		
-		if ([specifier oo_boolForKey:@"no_shrink" defaultValue:NO])  options |= kOOTextureNoShrink;
-		if ([specifier oo_boolForKey:@"repeat_s" defaultValue:NO])  options |= kOOTextureRepeatS;
-		if ([specifier oo_boolForKey:@"repeat_t" defaultValue:NO])  options |= kOOTextureRepeatT;
-		if ([specifier oo_boolForKey:@"cube_map" defaultValue:NO])  options |= kOOTextureCubeMap;
-		anisotropy = [specifier oo_floatForKey:@"anisotropy" defaultValue:kOOTextureDefaultAnisotropy];
-		lodBias = [specifier oo_floatForKey:@"texture_LOD_bias" defaultValue:kOOTextureDefaultLODBias];
-		
-		NSString *extractChannel = [specifier oo_stringForKey:@"extract_channel"];
-		if (extractChannel != nil)
-		{
-			if ([extractChannel isEqualToString:@"r"])  options |= kOOTextureExtractChannelR;
-			else if ([extractChannel isEqualToString:@"g"])  options |= kOOTextureExtractChannelG;
-			else if ([extractChannel isEqualToString:@"b"])  options |= kOOTextureExtractChannelB;
-			else if ([extractChannel isEqualToString:@"a"])  options |= kOOTextureExtractChannelA;
-			else
-			{
-				OOLogWARN(@"texture.load.extractChannel.invalid", @"Unknown value \"%@\" for extract_channel (should be \"r\", \"g\", \"b\" or \"a\").", extractChannel);
-			}
-		}
-	}
-	else
-	{
-		// Bad type
-		if (specifier != nil)  OOLog(kOOLogParameterError, @"%s: expected string or dictionary, got %@.", __PRETTY_FUNCTION__, [specifier class]);
-		return NO;
-	}
-	
-	if ([name length] == 0)  return NO;
-	
-	if (outName != NULL)  *outName = name;
-	if (outOptions != NULL)  *outOptions = options;
-	if (outAnisotropy != NULL)  *outAnisotropy = anisotropy;
-	if (outLODBias != NULL)  *outLODBias = lodBias;
-	
-	return YES;
 }
 
 

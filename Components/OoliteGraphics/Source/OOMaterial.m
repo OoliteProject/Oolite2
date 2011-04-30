@@ -84,6 +84,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 	{
 		// Set up name.
 		_name = [[specification materialKey] retain];
+		_uniforms = [[NSMutableDictionary alloc] init];
 	}
 	
 	if (OK)
@@ -146,7 +147,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 		}
 	}
 	
-	// FIXME: uniforms.
+	[self addUniformsFromDictionary:uniformSpecs withBindingTarget:target];
 	
 	if (!OK)  DESTROY(self);
 	return self;

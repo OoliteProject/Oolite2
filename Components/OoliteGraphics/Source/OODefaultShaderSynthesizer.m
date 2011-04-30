@@ -309,33 +309,43 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+- (void) getSampleName:(NSString **)outSampleName andSwizzleOp:(NSString **)outSwizzleOp forTextureSpec:(OOTextureSpecification *)spec
+{
+	NSParameterAssert(outSampleName != NULL && outSwizzleOp != NULL && spec != nil);
+	
+	NSString	*key = [spec textureMapName];
+	NSUInteger	texID = [_textureIDs oo_unsignedIntegerForKey:key];
+	
+	*outSampleName = $sprintf(@"tex%uSample", texID);
+	*outSwizzleOp = [spec extractMode];
+}
+
+
 - (NSString *) readForTextureSpec:(OOTextureSpecification *)spec gettingChannelCount:(NSUInteger *)outCount
 {
 	NSParameterAssert(spec != nil && outCount != NULL);
 	
-	NSString	*key = [spec textureMapName];
-	NSUInteger	texID = [_textureIDs oo_unsignedIntegerForKey:key];
-	NSString	*swizzle = [spec extractMode];
-	NSUInteger	channelCount = [swizzle length];
+	NSString *sampleName, *swizzleOp;
 	
-	NSAssert(1 <= channelCount && channelCount <= 4, @"Contract violation: texture specification extract mode does not meet requirements.");
-	*outCount = channelCount;
+	[self getSampleName:&sampleName andSwizzleOp:&swizzleOp forTextureSpec:spec];
 	
-	if ([swizzle isEqualToString:kOOTextureExtractChannelIdentity])
+	*outCount = [swizzleOp length];
+	
+	if ([swizzleOp isEqualToString:kOOTextureExtractChannelIdentity])
 	{
-		return $sprintf(@"tex%uSample", texID);
+		return sampleName;
 	}
 	else
 	{
-		return $sprintf(@"tex%uSample.%@", texID, swizzle);
+		return $sprintf(@"%@.%@", sampleName, swizzleOp);
 	}
 }
 
 
 - (void) writeDiffuseColorTerm
 {
-	OOTextureSpecification *diffuseMap = [_spec diffuseMap];
-	OOColor *diffuseColor = [_spec diffuseColor];
+	OOTextureSpecification	*diffuseMap = [_spec diffuseMap];
+	OOColor					*diffuseColor = [_spec diffuseColor];
 	
 	if ([diffuseColor isBlack])  return;
 	
@@ -369,10 +379,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		 haveDiffuseColor = YES;
 	}
 	
-	if (![diffuseColor isWhite])
+	if (!haveDiffuseColor || ![diffuseColor isWhite])
 	{
 		float rgba[4];
-		[[_spec diffuseColor] getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
+		[diffuseColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
 		NSString *format = nil;
 		if (haveDiffuseColor)
 		{
@@ -384,11 +394,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			haveDiffuseColor = YES;
 		}
 		[_fragmentBody appendFormat:format, rgba[0], rgba[1], rgba[2], rgba[3]];
-	}
-	else if (!haveDiffuseColor)
-	{
-		[_fragmentBody appendString:@"const vec4 diffuseColor = vec4(1.0);\n"];
-		haveDiffuseColor = YES;
 	}
 	
 	[_fragmentBody appendString:@"\ttotalColor += diffuseColor * diffuseLight;\n\t\n"];
@@ -414,13 +419,70 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	 "\tvec3 lightVector = normalize(vLightVector);\n"
 	 "\tvec3 normal = normalize(vNormal);\n"
 	 "\tfloat intensity = 0.8 * dot(normal, lightVector) + 0.2;\n"
-	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n"];
+	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n\t\n"];
 }
 
 
 - (void) writeEmission
 {
+	OOTextureSpecification	*emissionMap = [_spec emissionMap];
+	OOColor					*emissionColor = [_spec emissionColor];
 	
+	if ([emissionColor isBlack])  return;
+	
+	[_fragmentBody appendString:@"\t// Emission (glow)\n"];
+	
+	BOOL haveEmissionColor = NO;
+	if (emissionMap != nil)
+	{
+		// Convert to vec3, discarding alpha in rgba case.
+		NSString *readInstr = nil, *sample, *swizzle;
+		[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:emissionMap];
+		
+		NSUInteger channelCount = [swizzle length];
+		if ([swizzle isEqualToString:kOOTextureExtractChannelIdentity])
+		{
+			swizzle = @"rgb";
+		}
+		
+		switch (channelCount)
+		{
+			case 1:
+				readInstr = $sprintf(@"%@.%@%@%@", sample, swizzle, swizzle, swizzle);
+				break;
+				
+			case 3:
+				readInstr = sample;
+				break;
+				
+			default:
+				OOReportWarning(_problemReporter, @"The emission map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", [_spec materialKey], [_mesh name], channelCount);
+				[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+				return;
+		}
+		
+		[_fragmentBody appendFormat:@"\tvec3 emissionColor = %@;\n", readInstr];
+		haveEmissionColor = YES;
+	}
+	
+	if (!haveEmissionColor || ![emissionColor isWhite])
+	{
+		float rgba[4];
+		[emissionColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
+		NSString *format = nil;
+		if (haveEmissionColor)
+		{
+			format = @"\temissionColor *= vec3(%g, %g, %g);\n";
+		}
+		else
+		{
+			format = @"\tconst vec3 emissionColor = vec3(%g, %g, %g);\n";
+			haveEmissionColor = YES;
+		}
+		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
+	}
+	
+	[_fragmentBody appendString:@"\ttotalColor += vec4(emissionColor, 0.0);\n\t\n"];
 }
 
 

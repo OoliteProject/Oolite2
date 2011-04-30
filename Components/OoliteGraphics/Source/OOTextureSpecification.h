@@ -76,7 +76,7 @@ enum
 	kOOTextureAlphaMask				= 0x00000200UL,	// Single-channel texture should be GL_ALPHA, not GL_LUMINANCE. No effect for multi-channel textures.
 	kOOTextureCubeMap				= 0x00000400UL,
 	
-	kOOTextureMinFilterMask			= 0x00000007UL,
+	kOOTextureMinFilterMask			= 0x00000003UL,
 	kOOTextureMagFilterMask			= 0x00000004UL,
 	kOOTextureExtractChannelMask	= 0x00007000UL,
 	
@@ -87,7 +87,7 @@ typedef uint32_t OOTextureOptionFlags;
 
 
 #define kOOTextureDefaultAnisotropy		0.5f
-#define kOOTextureDefaultLODBias		0.0f
+#define kOOTextureDefaultLODBias		-0.1f
 
 
 @interface OOTextureSpecification: NSObject <JAPropertyListRepresentation>

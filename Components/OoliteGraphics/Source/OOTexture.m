@@ -59,6 +59,8 @@ OOTextureInfo				gOOTextureInfo;
 {
 	NSParameterAssert(spec != nil && resolver != nil);
 	
+	if (!sCheckedExtensions)  [OOTexture checkExtensions];
+	
 	// Load the data.
 	NSString *name = [spec textureMapName];
 	NSData *data = OOLoadFile(@"Textures", name, resolver, problemReporter);
@@ -68,8 +70,11 @@ OOTextureInfo				gOOTextureInfo;
 	GLfloat anisotropy = [spec anisotropy];
 	GLfloat lodBias = [spec lodBias];
 	
-	// Default is no longer handled in OOTexture. FIXME: in that case, where?
-	NSParameterAssert((options & kOOTextureMinFilterMask) != kOOTextureMinFilterDefault);
+	// FIXME: either make the default variable, or remove the extra value.
+	if ((options & kOOTextureMinFilterMask) == kOOTextureMinFilterDefault)
+	{
+		options = (options & ~kOOTextureMinFilterMask) | kOOTextureMinFilterMipMap;
+	}
 	
 	options &= kOOTextureDefinedFlags;
 	

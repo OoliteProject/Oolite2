@@ -88,3 +88,24 @@ SOFTWARE.
 #endif
 
 @end
+
+
+/*
+	Informal protocol for binding targets.
+ 
+	-allowBindingMethodAsShaderUniform:
+	Filter for shader bindings. If not implemented, no bindings are permitted.
+	The caller will first check that the reciever responds to the specified
+	selector.
+	
+	-randomSeedForShaders
+	Optionally specifies a fixed seed for "random" uniforms.
+*/
+@interface NSObject (OOShaderMaterialTargetOptional)
+
+- (BOOL) allowBindingMethodAsShaderUniform:(NSString *)methodName;
+
+- (unsigned) randomSeedForShaders;
+
+
+@end

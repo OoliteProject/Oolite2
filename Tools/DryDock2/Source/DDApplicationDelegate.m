@@ -31,7 +31,7 @@
 	{
 		excluded =
 		$set(
-			 @"rendering.opengl",
+		//	 @"rendering.opengl",
 		//	 @"materials.synthesize.dump",
 			 @"texture.load.asyncLoad",
 			 @"texture.load.rescale",

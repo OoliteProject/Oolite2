@@ -51,11 +51,11 @@ typedef uint16_t OOUniformConvertOptions;
 
 @interface OOShaderMaterial: OOBasicMaterial
 {
-	OOLegacyShaderProgram					*shaderProgram;
+	OOLegacyShaderProgram			*shaderProgram;
 	NSMutableDictionary				*uniforms;
 	
 	uint32_t						texCount;
-	OOLegacyTexture						**textures;
+	OOLegacyTexture					**textures;
 	
 	OOWeakReference					*bindingTarget;
 }

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1A062E9B11B2F64E00727C1D /* OODATWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A062E9911B2F64E00727C1D /* OODATWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A062E9C11B2F64E00727C1D /* OODATWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A062E9A11B2F64E00727C1D /* OODATWriter.m */; };
+		1A0E3777136BF2EE00D07C7F /* OOShaderUniform.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A0E3775136BF2ED00D07C7F /* OOShaderUniform.h */; };
+		1A0E3778136BF2EE00D07C7F /* OOShaderUniform.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E3776136BF2ED00D07C7F /* OOShaderUniform.m */; };
+		1A0E377A136BF43D00D07C7F /* OOGeometryGLHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A0E3779136BF43D00D07C7F /* OOGeometryGLHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A35D711C2F7570086265F /* OoliteBase.framework */; };
 		1A5BA1BB135B394E00FC93C2 /* OOGraphicsContextInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A5BA1BA135B394E00FC93C2 /* OOGraphicsContextInternal.h */; };
 		1A64DC9F11B111EC001D8850 /* OOMeshWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64DC9D11B111EC001D8850 /* OOMeshWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -142,6 +145,9 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A062E9911B2F64E00727C1D /* OODATWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODATWriter.h; sourceTree = "<group>"; };
 		1A062E9A11B2F64E00727C1D /* OODATWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODATWriter.m; sourceTree = "<group>"; };
+		1A0E3775136BF2ED00D07C7F /* OOShaderUniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShaderUniform.h; sourceTree = "<group>"; };
+		1A0E3776136BF2ED00D07C7F /* OOShaderUniform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShaderUniform.m; sourceTree = "<group>"; };
+		1A0E3779136BF43D00D07C7F /* OOGeometryGLHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGeometryGLHelpers.h; sourceTree = "<group>"; };
 		1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A5BA1BA135B394E00FC93C2 /* OOGraphicsContextInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGraphicsContextInternal.h; sourceTree = "<group>"; };
 		1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -390,6 +396,7 @@
 		1A7D37C211B16BF400857CEF /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				1A0E3779136BF43D00D07C7F /* OOGeometryGLHelpers.h */,
 				1AC98DB411BC58910034572F /* OOProgressReporting.h */,
 				1AF426EC11A939F8008E883C /* OOFloatArray.h */,
 				1AF426ED11A939F8008E883C /* OOFloatArray.m */,
@@ -432,6 +439,8 @@
 				1ACFE0FD135E3BCC006326F5 /* OODefaultShaderSynthesizer.m */,
 				1A663E3D11F25C2D0049AE20 /* OOShaderProgram.h */,
 				1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */,
+				1A0E3775136BF2ED00D07C7F /* OOShaderUniform.h */,
+				1A0E3776136BF2ED00D07C7F /* OOShaderUniform.m */,
 				1AD841921229212000FC382A /* Textures */,
 			);
 			name = Materials;
@@ -518,6 +527,7 @@
 				1AD8418D1229211E00FC382A /* OOTexture.h in Headers */,
 				1AD8418F1229211E00FC382A /* OOTextureInternal.h in Headers */,
 				1AD841901229211E00FC382A /* OOTextureLoader.h in Headers */,
+				1A0E377A136BF43D00D07C7F /* OOGeometryGLHelpers.h in Headers */,
 				1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */,
 				1AD841951229214100FC382A /* OOConcreteTexture.h in Headers */,
 				1AD841991229214F00FC382A /* OONullTexture.h in Headers */,
@@ -527,6 +537,7 @@
 				1AD842BD1229234200FC382A /* OOTextureGenerator.h in Headers */,
 				1A5BA1BB135B394E00FC93C2 /* OOGraphicsContextInternal.h in Headers */,
 				1ACFE0FE135E3BCC006326F5 /* OODefaultShaderSynthesizer.h in Headers */,
+				1A0E3777136BF2EE00D07C7F /* OOShaderUniform.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +700,7 @@
 				1A748B4A1358FB290037AA38 /* OOGraphicsContext.m in Sources */,
 				1ADE98AB135B3827003385AB /* OOMaterial.m in Sources */,
 				1ACFE0FF135E3BCC006326F5 /* OODefaultShaderSynthesizer.m in Sources */,
+				1A0E3778136BF2EE00D07C7F /* OOShaderUniform.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

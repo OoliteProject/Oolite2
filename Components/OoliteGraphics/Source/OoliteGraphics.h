@@ -12,6 +12,7 @@ extern "C" {
 // Utilities
 #import "OOOpenGLUtilities.h"
 #import "OOProgressReporting.h"
+#import "OOGeometryGLHelpers.h"
 
 #if !OOLITE_LEAN
 // Abstract representations

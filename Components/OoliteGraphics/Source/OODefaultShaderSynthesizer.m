@@ -42,6 +42,7 @@ SOFTWARE.
 	NSString					*_vertexShader;
 	NSString					*_fragmentShader;
 	NSMutableArray				*_textures;
+	NSMutableDictionary			*_uniforms;
 	
 	NSMutableString				*_attributes;
 	NSMutableString				*_varyings;
@@ -67,6 +68,7 @@ SOFTWARE.
 - (NSString *) vertexShader;
 - (NSString *) fragmentShader;
 - (NSArray *) textureSpecifications;
+- (NSDictionary *) uniformSpecifications;
 
 - (void) createTemporaries;
 - (void) destroyTemporaries;
@@ -74,7 +76,7 @@ SOFTWARE.
 @end
 
 
-BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, NSArray **outTextureSpecs, id <OOProblemReporting> problemReporter)
+BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, NSArray **outTextureSpecs, NSDictionary **outUniformSpecs, id <OOProblemReporting> problemReporter)
 {
 	NSCParameterAssert(materialSpec != nil && outVertexShader != NULL && outFragmentShader != NULL);
 	
@@ -92,17 +94,21 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 		*outVertexShader = [[synthesizer vertexShader] retain];
 		*outFragmentShader = [[synthesizer fragmentShader] retain];
 		*outTextureSpecs = [[synthesizer textureSpecifications] retain];
+		*outUniformSpecs = [[synthesizer uniformSpecifications] retain];
 	}
 	else
 	{
 		*outVertexShader = nil;
 		*outFragmentShader = nil;
+		*outTextureSpecs = nil;
+		*outUniformSpecs = nil;
 	}
 	[pool release];
 	
 	[*outVertexShader autorelease];
 	[*outFragmentShader autorelease];
 	[*outTextureSpecs autorelease];
+	[*outUniformSpecs autorelease];
 	
 	return YES;
 }
@@ -156,7 +162,17 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 #ifndef NDEBUG
 	return [NSArray arrayWithArray:_textures];
 #else
-	return _texturs;
+	return _textures;
+#endif
+}
+
+
+- (NSDictionary *) uniformSpecifications
+{
+#ifndef NDEBUG
+	return [NSDictionary dictionaryWithDictionary:_uniforms];
+#else
+	return _uniforms;
 #endif
 }
 
@@ -218,9 +234,11 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	OOTextureSpecification *existing = [_texturesByName objectForKey:name];
 	if (existing == nil)
 	{
+		NSNumber *texID = $int([_texturesByName count]);
 		[_textures addObject:spec];
 		[_texturesByName setObject:spec forKey:name];
-		[_textureIDs setObject:$int([_texturesByName count]) forKey:name];
+		[_textureIDs setObject:texID forKey:name];
+		[_uniforms setObject:$dict(@"type", @"texture", @"value", texID) forKey:$sprintf(@"uTexture%@", texID)];
 	}
 	else
 	{
@@ -276,13 +294,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	// FIXME: texCoords will need to be handled differently if parallax mapping.
 	[_fragmentBody appendString:@"\t// Texture reads\n\tvec2 texCoords = vTexCoords;\n"];
 	
-	NSString *name = nil;
-	foreachkey(name, _textureIDs)
+	OOTextureSpecification *spec = nil;
+	foreach (spec, _textures)
 	{
+		NSString *name = [spec textureMapName];
 		NSUInteger texID = [_textureIDs oo_unsignedIntegerForKey:name];
 		
 		[_fragmentBody appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, name];
 		[self addFragmentUniform:$sprintf(@"uTexture%u", texID) ofType:@"sampler2D"];
+		
 	}
 	
 	[_fragmentBody appendString:@"\t\n"];
@@ -306,10 +326,14 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeDiffuseColorTerm
 {
+	OOTextureSpecification *diffuseMap = [_spec diffuseMap];
+	OOColor *diffuseColor = [_spec diffuseColor];
+	
+	if ([diffuseColor isBlack])  return;
+	
 	[_fragmentBody appendString:@"\t// Diffuse colour\n"];
 	
 	BOOL haveDiffuseColor = NO;
-	OOTextureSpecification *diffuseMap = [_spec diffuseMap];
 	if (diffuseMap != nil)
 	{
 		NSUInteger channelCount;
@@ -337,7 +361,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		 haveDiffuseColor = YES;
 	}
 	
-	OOColor *diffuseColor = [_spec diffuseColor];
 	if (![diffuseColor isWhite])
 	{
 		float rgba[4];
@@ -360,7 +383,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		haveDiffuseColor = YES;
 	}
 	
-	[_fragmentBody appendString:@"\t\n"];
+	[_fragmentBody appendString:@"\ttotalColor += diffuseColor * diffuseLight;\n\t\n"];
 }
 
 
@@ -384,7 +407,13 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	 "\tvec3 lightVector = normalize(vLightVector);\n"
 	 "\tvec3 normal = normalize(vNormal);\n"
 	 "\tfloat intensity = 0.8 * dot(normal, lightVector) + 0.2;\n"
-	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n\t\n"];
+	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n"];
+}
+
+
+- (void) writeEmission
+{
+	
 }
 
 
@@ -400,7 +429,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeFinalColorComposite
 {
-	[_fragmentBody appendString:@"\tgl_FragColor = diffuseColor * diffuseLight;\n\t\n"];
+	[_fragmentBody appendString:@"\tgl_FragColor = totalColor;\n\t\n"];
 }
 
 
@@ -442,15 +471,19 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 - (BOOL) run
 {
 	[self createTemporaries];
+	_uniforms = [[NSMutableDictionary alloc] init];
 	[_vertexBody appendString:@"void main(void)\n{\n"];
 	[_fragmentBody appendString:@"void main(void)\n{\n"];
 	
 	@try
 	{
+		[_fragmentBody appendString:@"\tvec4 totalColor = vec4(0.0);\n\t\n"];
+		
 		[self writePosition];
 		[self setUpTextures];
-		[self writeDiffuseColorTerm];
 		[self writeDiffuseLighting];
+		[self writeDiffuseColorTerm];
+		[self writeEmission];
 		[self writeFinalColorComposite];
 		
 		[self composeVertexShader];

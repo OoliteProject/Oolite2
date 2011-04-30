@@ -93,15 +93,18 @@ NSString * const kOOTextureAlphaChannelName		= @"a";
 		}
 		
 		stringValue = [rep oo_stringForKey:kOOTextureMagFilterKey];
-		if ([stringValue isEqualToString:kOOTextureNearestFilterName])  options |= kOOTextureMagFilterNearest;
-		else
+		if (stringValue != nil)
 		{
-			if (![stringValue isEqualToString:kOOTextureLinearFilterName] && ![stringValue isEqualToString:kOOTextureDefaultFilterName])
+			if ([stringValue isEqualToString:kOOTextureNearestFilterName])  options |= kOOTextureMagFilterNearest;
+			else
 			{
-				OOReportWarning(issues, @"Unknown texture magnification mode key \"%@\" for texture \"%@\", ignoring.", stringValue, name);
+				if (![stringValue isEqualToString:kOOTextureLinearFilterName] && ![stringValue isEqualToString:kOOTextureDefaultFilterName])
+				{
+					OOReportWarning(issues, @"Unknown texture magnification mode key \"%@\" for texture \"%@\", ignoring.", stringValue, name);
+				}
+				
+				options |= kOOTextureMagFilterLinear;
 			}
-			
-			options |= kOOTextureMagFilterLinear;
 		}
 		
 		stringValue = [rep oo_stringForKey:kOOTextureExtractChannelKey];

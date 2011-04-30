@@ -36,6 +36,7 @@ SOFTWARE.
 
 #import "OOGraphicsContextInternal.h"
 #import "OOShaderProgram.h"
+#import "OOShaderUniform.h"
 #import "OOTexture.h"
 #import "OORenderMesh.h"
 
@@ -47,6 +48,8 @@ static NSString *MacrosToString(NSDictionary *macros);
 
 - (BOOL) doApply;
 - (void) unapplyWithNext:(OOMaterial *)next;
+
+-(void) addUniformsFromDictionary:(NSDictionary *)uniformDefs withBindingTarget:(id<OOWeakReferenceSupport>)target;
 
 @end
 
@@ -98,9 +101,10 @@ static NSString *MacrosToString(NSDictionary *macros);
 	// Synthesize material. FIXME: support custom shaders.
 	NSString *vertexShader = nil, *fragmentShader = nil;
 	NSArray *textures = nil;
-	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, &textures, nil);
+	NSDictionary *uniformSpecs = nil;
+	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, &textures, &uniformSpecs, nil);
 	
-	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader);
+	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@\n\n// Uniforms:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader, uniformSpecs);
 	
 	NSDictionary *attributeBindings = [mesh prefixedAttributeIndices];
 	
@@ -252,7 +256,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 			OOGL(glActiveTexture(GL_TEXTURE0 + i));
 			[_textures[i] apply];
 		}
-		if (_textureCount > 1)  OOGL(glActiveTexture(0));
+		if (_textureCount > 1)  OOGL(glActiveTexture(GL_TEXTURE0));
 	}
 	
 	return YES;
@@ -313,6 +317,329 @@ static NSString *MacrosToString(NSDictionary *macros);
 	return [NSSet setWithObjects:_textures count:_textureCount];
 }
 #endif
+
+
+- (BOOL)bindUniform:(NSString *)uniformName
+		   toObject:(id<OOWeakReferenceSupport>)source
+		   property:(SEL)selector
+	 convertOptions:(OOUniformConvertOptions)options
+{
+	OOShaderUniform			*uniform = nil;
+	
+	if (uniformName == nil) return NO;
+	
+	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+									  shaderProgram:_shaderProgram
+									  boundToObject:source
+										   property:selector
+									 convertOptions:options];
+	if (uniform != nil)
+	{
+		[_uniforms setObject:uniform forKey:uniformName];
+		[uniform release];
+		return YES;
+	}
+	else
+	{
+		[_uniforms removeObjectForKey:uniformName];
+		return NO;
+	}
+}
+
+
+OOINLINE BOOL UniformBindingPermitted(NSString *property, SEL selector, id <OOWeakReferenceSupport> target)
+{
+	if (property == nil || selector == NULL || target == nil)  return NO;
+	if (![target respondsToSelector:selector])  return NO;
+	if (![target respondsToSelector:@selector(allowBindingMethodAsShaderUniform:)])  return NO;
+	if (![(id)target allowBindingMethodAsShaderUniform:property])  return NO;
+	
+	return YES;
+}
+
+
+- (BOOL) bindSafeUniform:(NSString *)uniformName
+				toObject:(id <OOWeakReferenceSupport>)target
+		   propertyNamed:(NSString *)property
+		  convertOptions:(OOUniformConvertOptions)options
+{
+	SEL selector = NSSelectorFromString(property);
+	if (UniformBindingPermitted(property, selector, target))
+	{
+		return [self bindUniform:uniformName
+						toObject:target
+						property:selector
+				  convertOptions:options];
+	}
+	else
+	{
+		OOLog(@"shader.uniform.unpermittedMethod", @"Did not bind uniform \"%@\" to property -[%@ %@] - unpermitted method.", uniformName, [target class], property);
+	}
+	
+	return NO;
+}
+
+
+- (void) setUniform:(NSString *)uniformName intValue:(int)value
+{
+	OOShaderUniform			*uniform = nil;
+	
+	if (uniformName == nil) return;
+	
+	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+									  shaderProgram:_shaderProgram
+										   intValue:value];
+	if (uniform != nil)
+	{
+		[_uniforms setObject:uniform forKey:uniformName];
+		[uniform release];
+	}
+	else
+	{
+		[_uniforms removeObjectForKey:uniformName];
+	}
+}
+
+
+- (void) setUniform:(NSString *)uniformName floatValue:(float)value
+{
+	OOShaderUniform			*uniform = nil;
+	
+	if (uniformName == nil) return;
+	
+	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+									  shaderProgram:_shaderProgram
+										 floatValue:value];
+	if (uniform != nil)
+	{
+		[_uniforms setObject:uniform forKey:uniformName];
+		[uniform release];
+	}
+	else
+	{
+		[_uniforms removeObjectForKey:uniformName];
+	}
+}
+
+
+- (void) setUniform:(NSString *)uniformName vectorValue:(Vector)value
+{
+	OOShaderUniform			*uniform = nil;
+	
+	if (uniformName == nil) return;
+	
+	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+									  shaderProgram:_shaderProgram
+										vectorValue:value];
+	if (uniform != nil)
+	{
+		[_uniforms setObject:uniform forKey:uniformName];
+		[uniform release];
+	}
+	else
+	{
+		[_uniforms removeObjectForKey:uniformName];
+	}
+}
+
+
+- (void) setUniform:(NSString *)uniformName quaternionValue:(Quaternion)value asMatrix:(BOOL)asMatrix
+{
+	OOShaderUniform			*uniform = nil;
+	
+	if (uniformName == nil) return;
+	
+	uniform = [[OOShaderUniform alloc] initWithName:uniformName
+									  shaderProgram:_shaderProgram
+									quaternionValue:value
+										   asMatrix:asMatrix];
+	if (uniform != nil)
+	{
+		[_uniforms setObject:uniform forKey:uniformName];
+		[uniform release];
+	}
+	else
+	{
+		[_uniforms removeObjectForKey:uniformName];
+	}
+}
+
+
+-(void) addUniformsFromDictionary:(NSDictionary *)uniformDefs withBindingTarget:(id<OOWeakReferenceSupport>)target
+{
+	NSEnumerator			*uniformEnum = nil;
+	NSString				*name = nil;
+	id						definition = nil;
+	id						value = nil;
+	NSString				*binding = nil;
+	NSString				*type = nil;
+	GLfloat					floatValue;
+	BOOL					gotValue;
+	OOUniformConvertOptions	convertOptions;
+	BOOL					quatAsMatrix = YES;
+	GLfloat					scale = 1.0;
+	unsigned				randomSeed;
+	RANROTSeed				savedSeed;
+	NSArray					*keys = nil;
+	
+	if ([target respondsToSelector:@selector(randomSeedForShaders)])
+	{
+		randomSeed = [(id)target randomSeedForShaders];
+	}
+	else
+	{
+		randomSeed = (unsigned int)(uintptr_t)self;
+	}
+	savedSeed = RANROTGetFullSeed();
+	ranrot_srand(randomSeed);
+	
+	keys = [[uniformDefs allKeys] sortedArrayUsingSelector:@selector(compare:)];
+	for (uniformEnum = [keys objectEnumerator]; (name = [uniformEnum nextObject]); )
+	{
+		gotValue = NO;
+		definition = [uniformDefs objectForKey:name];
+		
+		type = nil;
+		value = nil;
+		binding = nil;
+		
+		if ([definition isKindOfClass:[NSDictionary class]])
+		{
+			value = [(NSDictionary *)definition objectForKey:@"value"];
+			binding = [(NSDictionary *)definition oo_stringForKey:@"binding"];
+			type = [(NSDictionary *)definition oo_stringForKey:@"type"];
+			scale = [(NSDictionary *)definition oo_floatForKey:@"scale" defaultValue:1.0];
+			if (type == nil)
+			{
+				if (value == nil && binding != nil)  type = @"binding";
+				else  type = @"float";
+			}
+		}
+		else if ([definition isKindOfClass:[NSNumber class]])
+		{
+			value = definition;
+			type = @"float";
+		}
+		else if ([definition isKindOfClass:[NSString class]])
+		{
+			if (OOIsNumberLiteral(definition, NO))
+			{
+				value = definition;
+				type = @"float";
+			}
+			else
+			{
+				binding = definition;
+				type = @"binding";
+			}
+		}
+		else if ([definition isKindOfClass:[NSArray class]])
+		{
+			binding = definition;
+			type = @"vector";
+		}
+		
+		// Transform random values to concrete values
+		if ([type isEqualToString:@"randomFloat"])
+		{
+			type = @"float";
+			value = [NSNumber numberWithFloat:randf() * scale];
+		}
+		else if ([type isEqualToString:@"randomUnitVector"])
+		{
+			type = @"vector";
+			value = OOPropertyListFromVector(vector_multiply_scalar(OORandomUnitVector(), scale));
+		}
+		else if ([type isEqualToString:@"randomVectorSpatial"])
+		{
+			type = @"vector";
+			value = OOPropertyListFromVector(OOVectorRandomSpatial(scale));
+		}
+		else if ([type isEqualToString:@"randomVectorRadial"])
+		{
+			type = @"vector";
+			value = OOPropertyListFromVector(OOVectorRandomRadial(scale));
+		}
+		else if ([type isEqualToString:@"randomQuaternion"])
+		{
+			type = @"quaternion";
+			value = OOPropertyListFromQuaternion(OORandomQuaternion());
+		}
+		
+		if ([type isEqualToString:@"float"] || [type isEqualToString:@"real"])
+		{
+			gotValue = YES;
+			if ([value respondsToSelector:@selector(floatValue)])  floatValue = [value floatValue];
+			else if ([value respondsToSelector:@selector(doubleValue)])  floatValue = [value doubleValue];
+			else if ([value respondsToSelector:@selector(intValue)])  floatValue = [value intValue];
+			else gotValue = NO;
+			
+			if (gotValue)
+			{
+				[self setUniform:name floatValue:floatValue];
+			}
+		}
+		else if ([type isEqualToString:@"int"] || [type isEqualToString:@"integer"] || [type isEqualToString:@"texture"])
+		{
+			/*	"texture" is allowed as a synonym for "int" because shader
+				uniforms are mapped to texture units by specifying an integer
+				index.
+				uniforms = { diffuseMap = { type = texture; value = 0; }; };
+				means "bind uniform diffuseMap to texture unit 0" (which will
+				have the first texture in the textures array).
+			*/
+			if ([value respondsToSelector:@selector(intValue)])
+			{
+				[self setUniform:name intValue:[value intValue]];
+				gotValue = YES;
+			}
+		}
+		else if ([type isEqualToString:@"vector"])
+		{
+			[self setUniform:name vectorValue:OOVectorFromObject(value, kZeroVector)];
+			gotValue = YES;
+		}
+		else if ([type isEqualToString:@"quaternion"])
+		{
+			if ([definition isKindOfClass:[NSDictionary class]])
+			{
+				quatAsMatrix = [definition oo_boolForKey:@"asMatrix" defaultValue:quatAsMatrix];
+			}
+			[self setUniform:name
+			 quaternionValue:OOQuaternionFromObject(value, kIdentityQuaternion)
+					asMatrix:quatAsMatrix];
+			gotValue = YES;
+		}
+		else if (target != nil && [type isEqualToString:@"binding"])
+		{
+			if ([definition isKindOfClass:[NSDictionary class]])
+			{
+				convertOptions = 0;
+				if ([definition oo_boolForKey:@"clamped" defaultValue:NO])  convertOptions |= kOOUniformConvertClamp;
+				if ([definition oo_boolForKey:@"normalized" defaultValue:[definition oo_boolForKey:@"normalised" defaultValue:NO]])
+				{
+					convertOptions |= kOOUniformConvertNormalize;
+				}
+				if ([definition oo_boolForKey:@"asMatrix" defaultValue:YES])  convertOptions |= kOOUniformConvertToMatrix;
+				if (![definition oo_boolForKey:@"bindToSubentity" defaultValue:NO])  convertOptions |= kOOUniformBindToSuperTarget;
+			}
+			else
+			{
+				convertOptions = kOOUniformConvertDefaults;
+			}
+			
+			[self bindSafeUniform:name toObject:target propertyNamed:binding convertOptions:convertOptions];
+			gotValue = YES;
+		}
+		
+		if (!gotValue)
+		{
+			OOLog(@"shader.uniform.badDescription", @"----- Warning: could not bind uniform \"%@\" for target %@ -- could not interpret definition:\n%@", name, target, definition);
+		}
+	}
+	
+	RANROTSetFullSeed(savedSeed);
+}
 
 @end
 

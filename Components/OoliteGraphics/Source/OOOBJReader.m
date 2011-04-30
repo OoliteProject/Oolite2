@@ -832,14 +832,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		[_lexer readReal:&a];	// Ignore failure.
 	}
 	
-	/*	The distinction between specular colour and specular modulate colour
-		does not exist in OBJ. It is not clear whether Ks should be used as
-		modulate colour when there's a specular map, or ignored.
-		
-		This interpretation produces default results if Ks = 1,1,1,1.
-	 */
-	[_currentMaterial setSpecularColor:[OOColor colorWithRed:r * 0.2f green:g * 0.2f blue:b * 0.2f alpha:a]];
-	[_currentMaterial setSpecularModulateColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	[_currentMaterial setSpecularColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
 	return YES;
 }
 

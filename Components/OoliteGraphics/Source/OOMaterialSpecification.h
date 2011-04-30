@@ -40,14 +40,13 @@
 	OOTextureSpecification		*_diffuseMap;
 	
 	OOColor						*_specularColor;
-	OOColor						*_specularModulateColor;
 	OOTextureSpecification		*_specularMap;
 	int							_specularExponent;
 	
 	OOColor						*_emissionColor;
-	OOColor						*_emissionModulateColor;
 	OOTextureSpecification		*_emissionMap;
-	OOColor						*_illuminationModulateColor;
+	
+	OOColor						*_illuminationColor;
 	OOTextureSpecification		*_illuminationMap;
 	
 	OOTextureSpecification		*_normalMap;
@@ -77,8 +76,6 @@
 
 - (OOColor *) specularColor;
 - (void) setSpecularColor:(OOColor *)color;
-- (OOColor *) specularModulateColor;
-- (void) setSpecularModulateColor:(OOColor *)color;
 - (OOTextureSpecification *) specularMap;
 - (void) setSpecularMap:(OOTextureSpecification *)texture;
 - (unsigned) specularExponent;
@@ -86,12 +83,11 @@
 
 - (OOColor *) emissionColor;
 - (void) setEmissionColor:(OOColor *)color;
-- (OOColor *) emissionModulateColor;
-- (void) setEmissionModulateColor:(OOColor *)color;
 - (OOTextureSpecification *) emissionMap;
 - (void) setEmissionMap:(OOTextureSpecification *)texture;
-- (OOColor *) illuminationModulateColor;
-- (void) setIlluminationModulateColor:(OOColor *)color;
+
+- (OOColor *) illuminationColor;
+- (void) setIlluminationColor:(OOColor *)color;
 - (OOTextureSpecification *) illuminationMap;
 - (void) setIlluminationMap:(OOTextureSpecification *)texture;
 
@@ -115,14 +111,12 @@ extern NSString * const kOOMaterialAmbientColorName;
 extern NSString * const kOOMaterialDiffuseMapName;
 
 extern NSString * const kOOMaterialSpecularColorName;
-extern NSString * const kOOMaterialSpecularModulateColorName;
 extern NSString * const kOOMaterialSpecularMapName;
 extern NSString * const kOOMaterialSpecularExponentName;
 
 extern NSString * const kOOMaterialEmissionColorName;
-extern NSString * const kOOMaterialEmissionModulateColorName;
-extern NSString * const kOOMaterialIlluminationModulateColorName;
 extern NSString * const kOOMaterialEmissionMapName;
+extern NSString * const kOOMaterialIlluminationColorName;
 extern NSString * const kOOMaterialIlluminationMapName;
 
 extern NSString * const kOOMaterialNormalMapName;

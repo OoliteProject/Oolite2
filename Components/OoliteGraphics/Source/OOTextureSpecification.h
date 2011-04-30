@@ -106,7 +106,7 @@ typedef uint32_t OOTextureOptionFlags;
 	The default is “rgba”, the identity swizzle.
 	
 	NOTE: extraction is actually handled by the default material synthesizer
-	(and can’t be used with custom textures). It’s attached to the texture
+	(and can’t be used with custom shaders). It’s attached to the texture
 	specifier to simplify manangement both in code and in material specs.
 */
 - (NSString *) extractMode;

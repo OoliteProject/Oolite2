@@ -32,14 +32,13 @@ NSString * const kOOMaterialAmbientColorName				= @"ambientColor";
 NSString * const kOOMaterialDiffuseMapName					= @"diffuseMap";
 
 NSString * const kOOMaterialSpecularColorName				= @"specularColor";
-NSString * const kOOMaterialSpecularModulateColorName		= @"specularModulateColor";
 NSString * const kOOMaterialSpecularMapName					= @"specularMap";
 NSString * const kOOMaterialSpecularExponentName			= @"specularExponent";
 
 NSString * const kOOMaterialEmissionColorName				= @"emissionColor";
-NSString * const kOOMaterialEmissionModulateColorName		= @"emissionModulateColor";
-NSString * const kOOMaterialIlluminationModulateColorName	= @"illuminationModulateColor";
 NSString * const kOOMaterialEmissionMapName					= @"emissionMap";
+
+NSString * const kOOMaterialIlluminationColorName			= @"illuminationColor";
 NSString * const kOOMaterialIlluminationMapName				= @"illuminationMap";
 
 NSString * const kOOMaterialNormalMapName					= @"normalMap";
@@ -105,13 +104,12 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 	DESTROY(_diffuseMap);
 	
 	DESTROY(_specularColor);
-	DESTROY(_specularModulateColor);
 	DESTROY(_specularMap);
 	
 	DESTROY(_emissionColor);
-	DESTROY(_emissionModulateColor);
 	DESTROY(_emissionMap);
-	DESTROY(_illuminationModulateColor);
+	
+	DESTROY(_illuminationColor);
 	DESTROY(_illuminationMap);
 	
 	DESTROY(_normalMap);
@@ -166,7 +164,6 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 	GetTexture(plist, kOOMaterialDiffuseMapName, &_diffuseMap, issues);
 	
 	GetColor(plist, kOOMaterialSpecularColorName, &_specularColor);
-	GetColor(plist, kOOMaterialSpecularModulateColorName, &_specularModulateColor);
 	GetTexture(plist, kOOMaterialSpecularMapName, &_specularMap, issues);
 	if ([plist objectForKey:kOOMaterialSpecularExponentName] != nil)
 	{
@@ -176,9 +173,9 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 	}
 	
 	GetColor(plist, kOOMaterialEmissionColorName, &_emissionColor);
-	GetColor(plist, kOOMaterialEmissionModulateColorName, &_emissionModulateColor);
-	GetColor(plist, kOOMaterialIlluminationModulateColorName, &_illuminationModulateColor);
 	GetTexture(plist, kOOMaterialEmissionMapName, &_emissionMap, issues);
+	
+	GetColor(plist, kOOMaterialIlluminationColorName, &_illuminationColor);
 	GetTexture(plist, kOOMaterialIlluminationMapName, &_illuminationMap, issues);
 	
 	GetTexture(plist, kOOMaterialNormalMapName, &_normalMap, issues);
@@ -286,24 +283,6 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (OOColor *) specularModulateColor
-{
-	if (_specularModulateColor == nil)  return [OOColor whiteColor];
-	return _specularModulateColor;
-}
-
-
-- (void) setSpecularModulateColor:(OOColor *)color
-{
-	if ([color isWhite])  color = nil;
-	if (color != _specularModulateColor)
-	{
-		[_specularModulateColor release];
-		_specularModulateColor = [color copy];
-	}
-}
-
-
 - (OOTextureSpecification *) specularMap
 {
 	return _specularMap;
@@ -364,24 +343,6 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (OOColor *) emissionModulateColor
-{
-	if (_emissionModulateColor == nil)  return [OOColor whiteColor];
-	return _emissionModulateColor;
-}
-
-
-- (void) setEmissionModulateColor:(OOColor *)color
-{
-	if ([color isWhite])  color = nil;
-	if (color != _emissionModulateColor)
-	{
-		[_emissionModulateColor release];
-		_emissionModulateColor = [color copy];
-	}
-}
-
-
 - (OOTextureSpecification *) emissionMap
 {
 	return _emissionMap;
@@ -398,20 +359,20 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (OOColor *) illuminationModulateColor
+- (OOColor *) illuminationColor
 {
-	if (_illuminationModulateColor == nil)  return [OOColor whiteColor];
-	return _illuminationModulateColor;
+	if (_illuminationColor == nil)  return [OOColor whiteColor];
+	return _illuminationColor;
 }
 
 
-- (void) setIlluminationModulateColor:(OOColor *)color
+- (void) setIlluminationColor:(OOColor *)color
 {
 	if ([color isWhite])  color = nil;
-	if (color != _illuminationModulateColor)
+	if (color != _illuminationColor)
 	{
-		[_illuminationModulateColor release];
-		_illuminationModulateColor = [color copy];
+		[_illuminationColor release];
+		_illuminationColor = [color copy];
 	}
 }
 
@@ -555,14 +516,12 @@ static OOTextureSpecification *TextureSpec(id value)
 	if ([key isEqualToString:kOOMaterialDiffuseMapName])  [self setDiffuseMap:TextureSpec(value)];
 	
 	if ([key isEqualToString:kOOMaterialSpecularColorName])  [self setSpecularColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialSpecularModulateColorName])  [self setSpecularModulateColor:Color(value)];
 	if ([key isEqualToString:kOOMaterialSpecularMapName])  [self setSpecularMap:TextureSpec(value)];
 	if ([key isEqualToString:kOOMaterialSpecularExponentName])  [self setBoxedSpecularExponent:value];
 	
 	if ([key isEqualToString:kOOMaterialEmissionColorName])  [self setEmissionColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialEmissionModulateColorName])  [self setEmissionModulateColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialIlluminationModulateColorName])  [self setIlluminationModulateColor:Color(value)];
 	if ([key isEqualToString:kOOMaterialEmissionMapName])  [self setEmissionMap:TextureSpec(value)];
+	if ([key isEqualToString:kOOMaterialIlluminationColorName])  [self setIlluminationColor:Color(value)];
 	if ([key isEqualToString:kOOMaterialIlluminationMapName])  [self setIlluminationMap:TextureSpec(value)];
 	
 	if ([key isEqualToString:kOOMaterialNormalMapName])  [self setNormalMap:TextureSpec(value)];
@@ -603,46 +562,20 @@ static OOTextureSpecification *TextureSpec(id value)
 	
 	OOColor *defaultSpecular = (_specularExponent > 0.0f) ? [OOColor colorWithWhite:0.2f alpha:1.0f] : [OOColor blackColor];
 	ADD_COLOR(kOOMaterialSpecularColorName, _specularColor, defaultSpecular);
-	ADD_COLOR(kOOMaterialSpecularModulateColorName, _specularModulateColor, white);
 	ADD_TEXTURE(kOOMaterialSpecularMapName, _specularMap);
 	unsigned defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
 	if ([self specularExponent] != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
 	
 	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);
-	ADD_COLOR(kOOMaterialEmissionModulateColorName, _emissionModulateColor, white);
-	ADD_COLOR(kOOMaterialIlluminationModulateColorName, _illuminationModulateColor, white);
 	ADD_TEXTURE(kOOMaterialEmissionMapName, _emissionMap);
+	
+	ADD_COLOR(kOOMaterialIlluminationColorName, _illuminationColor, white);
 	ADD_TEXTURE(kOOMaterialIlluminationMapName, _illuminationMap);
 	
 	ADD_TEXTURE(kOOMaterialNormalMapName, _normalMap);
 	ADD_TEXTURE(kOOMaterialParallaxMapName, _parallaxMap);
 	if (_parallaxScale != kDefaultParallaxScale)  [result oo_setFloat:_parallaxScale forKey:kOOMaterialParallaxScale];
 	if (_parallaxBias != kDefaultParallaxBias)  [result oo_setFloat:_parallaxBias forKey:kOOMaterialParallaxBias];
-	
-	
-#if 0
-	// Test data
-	[result setObject:$int(42) forKey:@"test-int"];
-	[result setObject:$float(42.17) forKey:@"test-float"];
-	
-	[result setObject:$dict(
-							@"empty-.array", [NSArray array],
-							@"short_array", $array(@"", @"\""),
-							@"longer array", $array(@"a", @"b", @" c ", @"d" , @"e")
-						)
-			   forKey:@"test-arrays"];
-	
-	[result setObject:$dict(@"a", @"A", @"b", @"slightly longer string") forKey:@"simple-dict"];
-	[result setObject:$dict(@"a", @"A", @"b", @"B", @"c", @"C", @"d", @"D") forKey:@"non-simple-dict"];
-	[result setObject:
-	 $dict(@"nested",
-		   $dict(@"nested",
-				 $dict(@"nested", [NSDictionary dictionary]),
-				 @"array", $array($int(1), @"string")
-			)
-	) forKey:@"nested-dict"];
-	[result setObject:$array(@"This would be a simple array if it weren't for the fact that this long, rambling string is really rather long and rambling.") forKey:@"non-simple-array"];
-#endif
 	
 	return  result;
 }

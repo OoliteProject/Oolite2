@@ -453,7 +453,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				break;
 				
 			default:
-				OOReportWarning(_problemReporter, @"The emission map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", [_spec materialKey], [_mesh name], channelCount);
+				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", @"emission", [_spec materialKey], [_mesh name], channelCount);
 				[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
 				return;
 		}
@@ -480,6 +480,66 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	}
 	
 	[_fragmentBody appendString:@"\ttotalColor += vec4(emissionColor, 0.0);\n\t\n"];
+}
+
+
+- (void) writeIllumination
+{
+	OOTextureSpecification	*illuminationMap = [_spec illuminationMap];
+	OOColor					*illuminationColor = [_spec illuminationColor];
+	
+	if ([illuminationColor isBlack])  return;
+	
+	[_fragmentBody appendString:@"\t// Illumination\n"];
+	
+	BOOL haveIlluminationColor = NO;
+	if (illuminationMap != nil)
+	{
+		// Convert to vec3, discarding alpha in rgba case.
+		NSString *readInstr = nil, *sample, *swizzle;
+		[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:illuminationMap];
+		
+		if (swizzle == nil)  swizzle = @"rgb";
+		NSUInteger channelCount = [swizzle length];
+		
+		switch (channelCount)
+		{
+			case 1:
+				readInstr = $sprintf(@"%@.%@%@%@", sample, swizzle, swizzle, swizzle);
+				break;
+				
+			case 3:
+				readInstr = $sprintf(@"%@.%@", sample, swizzle);
+				break;
+				
+			default:
+				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", @"illumination", [_spec materialKey], [_mesh name], channelCount);
+				[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+				return;
+		}
+		
+		[_fragmentBody appendFormat:@"\tvec3 illuminationColor = %@;\n", readInstr];
+		haveIlluminationColor = YES;
+	}
+	
+	if (!haveIlluminationColor || ![illuminationColor isWhite])
+	{
+		float rgba[4];
+		[illuminationColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
+		NSString *format = nil;
+		if (haveIlluminationColor)
+		{
+			format = @"\tilluminationColor *= vec3(%g, %g, %g);\n";
+		}
+		else
+		{
+			format = @"\tconst vec3 illuminationColor = vec3(%g, %g, %g);\n";
+			haveIlluminationColor = YES;
+		}
+		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
+	}
+	
+	[_fragmentBody appendString:@"\ttotalColor += vec4(illuminationColor, 0.0) * diffuseColor;\n\t\n"];
 }
 
 
@@ -550,6 +610,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[self writeDiffuseLighting];
 		[self writeDiffuseColorTerm];
 		[self writeEmission];
+		[self writeIllumination];
 		[self writeFinalColorComposite];
 		
 		[self composeVertexShader];

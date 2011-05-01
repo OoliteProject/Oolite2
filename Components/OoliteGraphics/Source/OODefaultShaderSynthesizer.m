@@ -473,6 +473,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			}
 			
 			[_vertexBody appendString:@"\t\n"];
+			break;
 			
 		case kLightingNormalTangent:
 			[self addAttribute:@"aNormal" ofType:@"vec3"];
@@ -511,16 +512,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[self addVarying:@"vEyeVector" ofType:@"vec3"];
 		
 		[_vertexBody appendString:
-		@"\tmat3 TBN = mat3(t, b, n);\n\t\n"
-		 "\tvec3 eyeVector = -position.xyz;\n"];
+		@"\tmat3 TBN = mat3(t, b, n);\n\t\n"];
 		
 		if (needFragEyeVector)
 		{
-			[_vertexBody appendString:@"\tvEyeVector = eyeVector * TBN;\n\t\n"];
+			[_vertexBody appendString:@"\tvEyeVector = -position.xyz * TBN;\n\t\n"];
 		}
 		
 		[_vertexBody appendString:
-		@"\tvec3 lightVector = gl_LightSource[0].position.xyz + eyeVector;\n"
+		@"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
 		 "\tvLightVector = lightVector * TBN;\n\t\n"];
 	}
 	

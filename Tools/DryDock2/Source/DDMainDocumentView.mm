@@ -89,9 +89,11 @@
 	[self.contentHolderNode removeChild:self.contentNode];
 	[self.contentHolderNode addChild:node];
 	
+#if 0
 	NSString *path = [[NSHomeDirectory() stringByAppendingPathComponent:@"Desktop"] stringByAppendingPathComponent:@"scene dump.dot"];
 	[self.sceneGraph writeGraphVizToPath:path];
 	CSBackupSetItemExcluded((CFURLRef)[NSURL fileURLWithPath:path], YES, NO);
+#endif
 }
 
 

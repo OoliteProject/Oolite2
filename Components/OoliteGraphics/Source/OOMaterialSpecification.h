@@ -40,7 +40,8 @@
 	OOTextureSpecification		*_diffuseMap;
 	
 	OOColor						*_specularColor;
-	OOTextureSpecification		*_specularMap;
+	OOTextureSpecification		*_specularColorMap;
+	OOTextureSpecification		*_specularExponentMap;
 	int							_specularExponent;
 	
 	OOColor						*_emissionColor;
@@ -76,10 +77,12 @@
 
 - (OOColor *) specularColor;
 - (void) setSpecularColor:(OOColor *)color;
-- (OOTextureSpecification *) specularMap;
-- (void) setSpecularMap:(OOTextureSpecification *)texture;
+- (OOTextureSpecification *) specularColorMap;
+- (void) setSpecularColorMap:(OOTextureSpecification *)texture;
 - (unsigned) specularExponent;
 - (void) setSpecularExponent:(unsigned)value;
+- (OOTextureSpecification *) specularExponentMap;
+- (void) setSpecularExponentMap:(OOTextureSpecification *)texture;
 
 - (OOColor *) emissionColor;
 - (void) setEmissionColor:(OOColor *)color;
@@ -111,8 +114,9 @@ extern NSString * const kOOMaterialAmbientColorName;
 extern NSString * const kOOMaterialDiffuseMapName;
 
 extern NSString * const kOOMaterialSpecularColorName;
-extern NSString * const kOOMaterialSpecularMapName;
+extern NSString * const kOOMaterialSpecularColorMapName;
 extern NSString * const kOOMaterialSpecularExponentName;
+extern NSString * const kOOMaterialSpecularExponentMapName;
 
 extern NSString * const kOOMaterialEmissionColorName;
 extern NSString * const kOOMaterialEmissionMapName;

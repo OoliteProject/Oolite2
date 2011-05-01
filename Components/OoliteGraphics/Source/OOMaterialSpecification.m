@@ -32,8 +32,9 @@ NSString * const kOOMaterialAmbientColorName				= @"ambientColor";
 NSString * const kOOMaterialDiffuseMapName					= @"diffuseMap";
 
 NSString * const kOOMaterialSpecularColorName				= @"specularColor";
-NSString * const kOOMaterialSpecularMapName					= @"specularMap";
+NSString * const kOOMaterialSpecularColorMapName			= @"specularColorMap";
 NSString * const kOOMaterialSpecularExponentName			= @"specularExponent";
+NSString * const kOOMaterialSpecularExponentMapName			= @"specularExponentMap";
 
 NSString * const kOOMaterialEmissionColorName				= @"emissionColor";
 NSString * const kOOMaterialEmissionMapName					= @"emissionMap";
@@ -104,7 +105,8 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 	DESTROY(_diffuseMap);
 	
 	DESTROY(_specularColor);
-	DESTROY(_specularMap);
+	DESTROY(_specularColorMap);
+	DESTROY(_specularExponentMap);
 	
 	DESTROY(_emissionColor);
 	DESTROY(_emissionMap);
@@ -164,13 +166,14 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 	GetTexture(plist, kOOMaterialDiffuseMapName, &_diffuseMap, issues);
 	
 	GetColor(plist, kOOMaterialSpecularColorName, &_specularColor);
-	GetTexture(plist, kOOMaterialSpecularMapName, &_specularMap, issues);
+	GetTexture(plist, kOOMaterialSpecularColorMapName, &_specularColorMap, issues);
 	if ([plist objectForKey:kOOMaterialSpecularExponentName] != nil)
 	{
 		_specularExponent = [plist oo_unsignedIntForKey:kOOMaterialSpecularExponentName];
 		[plist removeObjectForKey:kOOMaterialSpecularExponentName];
 		 if (_specularExponent < 0)  _specularExponent = 0;
 	}
+	GetTexture(plist, kOOMaterialSpecularExponentMapName, &_specularExponentMap, issues);
 	
 	GetColor(plist, kOOMaterialEmissionColorName, &_emissionColor);
 	GetTexture(plist, kOOMaterialEmissionMapName, &_emissionMap, issues);
@@ -283,18 +286,18 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (OOTextureSpecification *) specularMap
+- (OOTextureSpecification *) specularColorMap
 {
-	return _specularMap;
+	return _specularColorMap;
 }
 
 
-- (void) setSpecularMap:(OOTextureSpecification *)texture
+- (void) setSpecularColorMap:(OOTextureSpecification *)texture
 {
-	if (_specularMap != texture)
+	if (_specularColorMap != texture)
 	{
-		[_specularMap release];
-		_specularMap = [texture retain];
+		[_specularColorMap release];
+		_specularColorMap = [texture retain];
 	}
 }
 
@@ -302,13 +305,29 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 - (unsigned) specularExponent
 {
 	if (_specularExponent >= 0)  return _specularExponent;
-	else  return (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+	else  return (_specularExponentMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
 }
 
 
 - (void) setSpecularExponent:(unsigned)value
 {
 	_specularExponent = value;
+}
+
+
+- (OOTextureSpecification *) specularExponentMap
+{
+	return _specularExponentMap;
+}
+
+
+- (void) setSpecularExponentMap:(OOTextureSpecification *)texture
+{
+	if (_specularExponentMap != texture)
+	{
+		[_specularExponentMap release];
+		_specularExponentMap = [texture retain];
+	}
 }
 
 
@@ -515,8 +534,9 @@ static OOTextureSpecification *TextureSpec(id value)
 	if ([key isEqualToString:kOOMaterialDiffuseMapName])  [self setDiffuseMap:TextureSpec(value)];
 	
 	if ([key isEqualToString:kOOMaterialSpecularColorName])  [self setSpecularColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialSpecularMapName])  [self setSpecularMap:TextureSpec(value)];
+	if ([key isEqualToString:kOOMaterialSpecularColorMapName])  [self setSpecularColorMap:TextureSpec(value)];
 	if ([key isEqualToString:kOOMaterialSpecularExponentName])  [self setBoxedSpecularExponent:value];
+	if ([key isEqualToString:kOOMaterialSpecularExponentMapName])  [self setSpecularExponentMap:TextureSpec(value)];
 	
 	if ([key isEqualToString:kOOMaterialEmissionColorName])  [self setEmissionColor:Color(value)];
 	if ([key isEqualToString:kOOMaterialEmissionMapName])  [self setEmissionMap:TextureSpec(value)];
@@ -561,9 +581,10 @@ static OOTextureSpecification *TextureSpec(id value)
 	
 	OOColor *defaultSpecular = (_specularExponent > 0.0f) ? [OOColor colorWithWhite:0.2f alpha:1.0f] : [OOColor blackColor];
 	ADD_COLOR(kOOMaterialSpecularColorName, _specularColor, defaultSpecular);
-	ADD_TEXTURE(kOOMaterialSpecularMapName, _specularMap);
-	unsigned defaultSpecExp = (_specularMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
+	ADD_TEXTURE(kOOMaterialSpecularColorMapName, _specularColorMap);
+	unsigned defaultSpecExp = (_specularExponentMap == nil) ? kDefaultSpecularExponentNoMap : kDefaultSpecularExponentWithMap;
 	if ([self specularExponent] != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
+	ADD_TEXTURE(kOOMaterialSpecularExponentMapName, _specularExponentMap);
 	
 	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);
 	ADD_TEXTURE(kOOMaterialEmissionMapName, _emissionMap);

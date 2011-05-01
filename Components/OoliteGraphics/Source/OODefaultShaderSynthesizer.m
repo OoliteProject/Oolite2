@@ -90,6 +90,7 @@ typedef enum
 - (void) destroyTemporaries;
 
 - (LightingMode) lightingMode;
+- (BOOL) tangentSpaceLighting;
 
 @end
 
@@ -275,7 +276,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	_textureIDs = [[NSMutableDictionary alloc] init];
 	
 	[self setUpOneTexture:[_spec diffuseMap]];
-	[self setUpOneTexture:[_spec specularMap]];
+	[self setUpOneTexture:[_spec specularColorMap]];
+	[self setUpOneTexture:[_spec specularExponentMap]];
 	[self setUpOneTexture:[_spec emissionMap]];
 	[self setUpOneTexture:[_spec illuminationMap]];
 	[self setUpOneTexture:[_spec normalMap]];
@@ -361,7 +363,30 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		return $sprintf(@"%@.%@", sample, swizzle);
 	}
 	
-	OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", mapName, [_spec materialKey], [_mesh name], channelCount);
+	OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", mapName, [_spec materialKey], [_mesh name], channelCount, @"1 or 3");
+	return nil;
+}
+
+
+// Generate a read for a single channel.
+- (NSString *) readOneChannelForTextureSpec:(OOTextureSpecification *)textureSpec mapName:(NSString *)mapName
+{
+	NSString *sample, *swizzle;
+	[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:textureSpec];
+	
+	if (swizzle == nil)
+	{
+		return [sample stringByAppendingString:@".r"];
+	}
+	
+	NSUInteger channelCount = [swizzle length];
+	
+	if (channelCount == 1)
+	{
+		return $sprintf(@"%@.%@", sample, swizzle);
+	}
+	
+	OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", mapName, [_spec materialKey], [_mesh name], channelCount, @"1");
 	return nil;
 }
 
@@ -448,9 +473,22 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+- (BOOL) tangentSpaceLighting
+{
+	LightingMode mode = [self lightingMode];
+	return mode == kLightingTangentBitangent || mode == kLightingNormalTangent;
+}
+
+
 - (void) writeDiffuseLighting
 {
-	BOOL needFragEyeVector = NO;	// Will be needed for specular light and parallax mapping.
+	BOOL needFragEyeVector = NO;
+	
+	if ([_spec specularExponent] >= 1 && ![[_spec specularColor] isBlack])
+	{
+		// Will also be needed for parallax mapping. It's also going to need to be further up the fragment shader...
+		needFragEyeVector = YES;
+	}
 	
 	// Simple placeholder lighting based on legacy OpenGL lighting.
 	BOOL tangentSpace = NO;
@@ -505,6 +543,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			return;
 	}
 	
+	NSString *normalDotLight = @"dot(normal, lightVector)";
+	
 	if (tangentSpace)
 	{
 		// Shared code for kLightingNormalTangent and kLightingTangentBitangent.
@@ -522,14 +562,25 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_vertexBody appendString:
 		@"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
 		 "\tvLightVector = lightVector * TBN;\n\t\n"];
+		
+		if (!_usesNormalMap)
+		{
+			// dot(vec3(0, 0, 1), lightVector) == lightVector.z.
+			normalDotLight = @"lightVector.z";
+		}
 	}
 	
 	// Shared code for all lighting modes.
-	[_fragmentBody appendString:
+	[_fragmentBody appendFormat:
 	@"\t// Placeholder lighting\n"
 	@"\tvec3 lightVector = normalize(vLightVector);\n"
-	 "\tfloat intensity = 0.8 * max(0.0, dot(normal, lightVector)) + 0.2;"
-	 "\tvec3 diffuseLight = vec3(intensity);\n\t\n"];
+	 "\tvec3 diffuseLight = vec3(0.8 * max(0.0, %@) + 0.2);\n\t\n",
+	 normalDotLight];
+	
+	if (needFragEyeVector)
+	{
+		[_fragmentBody appendString:@"\tvec3 eyeVector = normalize(vEyeVector);\n\t\n"];
+	}
 }
 
 
@@ -571,9 +622,86 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				}
 			}
 			
-			[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
+			// If we get to this point, normal won’t be used.
+		//	[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
 			break;
 	}
+}
+
+
+- (void) writeSpecularLighting
+{
+	float specularExponent = [_spec specularExponent];
+	if (specularExponent <= 0)  return;
+	OOColor *specularColor = [_spec specularColor];
+	if ([specularColor isBlack])  return;
+	[_fragmentBody appendString:@"\t// Placeholder specular lighting\n"];
+	
+	BOOL haveSpecularColor = NO;
+	OOTextureSpecification *specularColorMap = [_spec specularColorMap];
+	if (specularColorMap != nil)
+	{
+		NSString *readInstr = [self readRGBForTextureSpec:specularColorMap mapName:@"specular colour"];
+		if (EXPECT_NOT(readInstr == nil))
+		{
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+			return;
+		}
+		
+		[_fragmentBody appendFormat:@"\tvec3 specularColor = %@;\n", readInstr];
+		haveSpecularColor = YES;
+	}
+	
+	if (!haveSpecularColor || ![specularColor isWhite])
+	{
+		float rgba[4];
+		[specularColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
+		NSString *format = nil;
+		if (haveSpecularColor)
+		{
+			format = @"\tspecularColor *= vec3(%g, %g, %g);\n";
+		}
+		else
+		{
+			format = @"\tconst vec3 specularColor = vec3(%g, %g, %g);\n";
+			haveSpecularColor = YES;
+		}
+		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
+	}
+	
+	OOTextureSpecification *specularExponentMap = [_spec specularExponentMap];
+	if (specularExponentMap != nil)
+	{
+		NSString *readInstr = [self readOneChannelForTextureSpec:specularExponentMap mapName:@"specular exponent"];
+		if (EXPECT_NOT(readInstr == nil))
+		{
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+			return;
+		}
+		
+		[_fragmentBody appendFormat:@"\tfloat specularExponent = %@ * %.1f;\n", readInstr, specularExponent];
+	}
+	else
+	{
+		[_fragmentBody appendFormat:@"\tconst float specularExponent = %.1f;\n", specularExponent];
+	}
+	
+	if (_usesNormalMap || ![self tangentSpaceLighting])
+	{
+		[_fragmentBody appendFormat:@"\tvec3 reflection = reflect(lightVector, normal);\n"];
+	}
+	else
+	{
+		/*	reflect(I, N) is defined as I - 2 * dot(N, I) * N
+			If N is (0,0,1), this becomes (I.x,I.y,-I.z).
+		*/
+		[_fragmentBody appendFormat:@"\tvec3 reflection = vec3(lightVector.x, lightVector.y, -lightVector.z);\n"];
+	}
+	
+	[_fragmentBody appendFormat:
+	@"\tfloat specIntensity = dot(reflection, eyeVector);\n"
+	 "\tspecIntensity = pow(max(specIntensity, 0.0), specularExponent);\n"
+	 "\ttotalColor += specIntensity * specularColor;\n\t\n"];
 }
 
 
@@ -732,6 +860,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[self writeNormal];
 		[self writeDiffuseLighting];
 		[self writeDiffuseColorTerm];
+		[self writeSpecularLighting];
 		[self writeEmission];
 		[self writeIllumination];
 		[self writeFinalColorComposite];

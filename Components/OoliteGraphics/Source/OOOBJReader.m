@@ -58,7 +58,7 @@
 - (BOOL) priv_readMaterialSpecularColor;
 - (BOOL) priv_readMaterialEmissionColor;
 - (BOOL) priv_readMaterialDiffuseMap;
-- (BOOL) priv_readMaterialSpecularMap;
+- (BOOL) priv_readMaterialSpecularColorMap;
 - (BOOL) priv_readMaterialEmissionMap;
 - (BOOL) priv_readMaterialSpecularExponent;
 - (BOOL) priv_readMaterialOverallAlpha;
@@ -631,7 +631,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		else if ([keyword isEqualToString:@"Ks"])  OK = [self priv_readMaterialSpecularColor];
 		else if ([keyword isEqualToString:@"Ke"])  OK = [self priv_readMaterialEmissionColor];
 		else if ([keyword isEqualToString:@"map_Kd"])  OK = [self priv_readMaterialDiffuseMap];
-		else if ([keyword isEqualToString:@"map_Ks"])  OK = [self priv_readMaterialSpecularMap];
+		else if ([keyword isEqualToString:@"map_Ks"])  OK = [self priv_readMaterialSpecularColorMap];
 		else if ([keyword isEqualToString:@"map_Ke"])  OK = [self priv_readMaterialEmissionMap];
 		else if ([keyword isEqualToString:@"Ns"])  OK = [self priv_readMaterialSpecularExponent];
 		else if ([keyword isEqualToString:@"d"] || [keyword isEqualToString:@"Tr"])  OK = [self priv_readMaterialOverallAlpha];
@@ -854,7 +854,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	
 	/*	The distinction between emission colour and emission modulate colour
 		does not exist in OBJ. It is not clear whether Ks should be used as
-		modulate colour when there's a nemission map, or ignored.
+		modulate colour when there's an emission map, or ignored.
 		
 		This interpretation produces default results if Ks = 0,0,0,1.
 	 */
@@ -878,7 +878,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 }
 
 
-- (BOOL) priv_readMaterialSpecularMap
+- (BOOL) priv_readMaterialSpecularColorMap
 {
 	NSString *name = nil;
 	[_lexer readUntilNewline:&name];
@@ -888,7 +888,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return NO;
 	}
 	
-	[_currentMaterial setSpecularMap:[OOTextureSpecification textureSpecWithName:name]];
+	[_currentMaterial setSpecularColorMap:[OOTextureSpecification textureSpecWithName:name]];
 	return YES;
 }
 

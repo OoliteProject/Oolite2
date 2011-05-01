@@ -23,6 +23,8 @@
 {
 	[self.graphicsContext makeCurrent];
 	[super prepareOpenGL];
+	OOGL(glFrontFace(GL_CW));
+	OOGL(glEnable(GL_CULL_FACE));
 }
 
 

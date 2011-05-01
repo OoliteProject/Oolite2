@@ -94,6 +94,7 @@
 
 - (void) renderWithState:(NSDictionary *)state
 {
+	OOGL(glScalef(1, 1, -1));
 	
 	if ([state oo_boolForKey:@"show normals"])  [self priv_renderNormalsWithScale:1.0f];
 	if ([state oo_boolForKey:@"show wireframe"])
@@ -106,6 +107,8 @@
 		if ([state oo_boolForKey:@"use white shader"])  [self priv_renderFilledWhite];
 		else  [self priv_renderFilledNormal];
 	}
+	
+	OOGL(glScalef(1, 1, -1));
 	
 	[OOMaterial applyNone];
 	OOCheckOpenGLErrors(@"After rendering DDMeshSceneNode");

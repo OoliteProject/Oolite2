@@ -29,6 +29,7 @@
 NSString * const kOOPositionAttributeKey	= @"position";
 NSString * const kOONormalAttributeKey		= @"normal";
 NSString * const kOOTangentAttributeKey		= @"tangent";
+NSString * const kOOBitangentAttributeKey	= @"bitangent";
 NSString * const kOOTexCoordsAttributeKey	= @"texCoords";
 NSString * const kOOSmoothGroupAttributeKey	= @"_smoothGroup";
 
@@ -435,6 +436,12 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 }
 
 
+- (Vector) bitangent
+{
+	return [self attributeAsVectorForKey:kOOBitangentAttributeKey];
+}
+
+
 - (Vector2D) texCoords
 {
 	return [self attributeAsVector2DForKey:kOOTexCoordsAttributeKey];
@@ -614,6 +621,12 @@ static inline NSDictionary *AttributesDictFromVector(NSString *key, Vector v)
 - (void) setTangent:(Vector)value
 {
 	[self setAttributeAsVector:value forKey:kOOTangentAttributeKey];
+}
+
+
+- (void) setBitangent:(Vector)value
+{
+	[self setAttributeAsVector:value forKey:kOOBitangentAttributeKey];
 }
 
 

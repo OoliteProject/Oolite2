@@ -104,6 +104,7 @@
 - (Vector) position;		// kOOPositionAttributeKey
 - (Vector) normal;			// kOONormalAttributeKey
 - (Vector) tangent;			// kOOTangentAttributeKey
+- (Vector) bitangent;		// kOOBitangentAttributeKey
 - (Vector2D) texCoords;		// kOOTexCoordsAttributeKey
 - (Vector) texCoords3D;		// Also kOOTexCoordsAttributeKey
 
@@ -136,6 +137,7 @@
 - (void) setPosition:(Vector)value;		// kOOPositionAttributeKey
 - (void) setNormal:(Vector)value;		// kOONormalAttributeKey
 - (void) setTangent:(Vector)value;		// kOOTangentAttributeKey
+- (void) setBitangent:(Vector)value;	// kOOBitangentAttributeKey
 - (void) setTexCoords:(Vector2D)value;	// kOOTexCoordsAttributeKey
 - (void) setTexCoords3D:(Vector)value;	// Also kOOTexCoordsAttributeKey
 
@@ -177,5 +179,6 @@ Vector OOVectorFromArray(NSArray *array);
 extern NSString * const kOOPositionAttributeKey;	// "position"
 extern NSString * const kOONormalAttributeKey;		// "normal"
 extern NSString * const kOOTangentAttributeKey;		// "tangent"
+extern NSString * const kOOBitangentAttributeKey;	// "bitangent"
 extern NSString * const kOOTexCoordsAttributeKey;	// "texCoords"
 extern NSString * const kOOSmoothGroupAttributeKey;	// "_smoothGroup" -- not saved in oomesh.

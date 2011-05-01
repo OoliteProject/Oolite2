@@ -32,6 +32,16 @@ SOFTWARE.
 #import "OOAbstractVertex.h"
 
 
+typedef enum
+{
+	kLightingUndetermined,
+	kLightingUniform,			// No normals can be determined
+	kLightingNormalOnly,		// No tangents, so no normal mapping possible
+	kLightingNormalTangent,		// Normal and tangent defined, bitangent determined by cross product
+	kLightingTangentBitangent	// Tangent and bitangent defined, normal determined by cross product
+} LightingMode;
+
+
 @interface OODefaultShaderSynthesizer: NSObject
 {
 @private
@@ -57,6 +67,11 @@ SOFTWARE.
 	NSMutableDictionary			*_texturesByName;
 	// _textureIDs: dictionary mapping texture file names to numerical IDs used to name variables.
 	NSMutableDictionary			*_textureIDs;
+	
+	LightingMode				_lightingMode;
+	uint8_t						_normalAttrSize;
+	uint8_t						_tangentAttrSize;
+	uint8_t						_bitangentAttrSize;
 }
 
 - (id) initWithMaterialSpecifiction:(OOMaterialSpecification *)spec
@@ -72,6 +87,8 @@ SOFTWARE.
 
 - (void) createTemporaries;
 - (void) destroyTemporaries;
+
+- (LightingMode) lightingMode;
 
 @end
 
@@ -289,7 +306,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	[self addAttribute:@"aTexCoords" ofType:@"vec2"];
 	[self addVarying:@"vTexCoords" ofType:@"vec2"];
-	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n"];
+	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n\t\n"];
 	
 	// FIXME: texCoords will need to be handled differently if parallax mapping.
 	[_fragmentBody appendString:@"\t// Texture reads\n\tvec2 texCoords = vTexCoords;\n"];
@@ -393,25 +410,134 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+- (LightingMode) lightingMode
+{
+	if (_lightingMode == kLightingUndetermined)
+	{
+		_normalAttrSize = [_mesh attributeSizeForKey:kOONormalAttributeKey];
+		_tangentAttrSize = [_mesh attributeSizeForKey:kOOTangentAttributeKey];
+		_bitangentAttrSize = [_mesh attributeSizeForKey:kOOBitangentAttributeKey];
+		
+		if (_tangentAttrSize >= 3)
+		{
+			if (_bitangentAttrSize >= 3)
+			{
+				_lightingMode = kLightingTangentBitangent;
+			}
+			else if (_normalAttrSize >= 3)
+			{
+				_lightingMode = kLightingNormalTangent;
+			}
+		}
+		else
+		{
+			if (_normalAttrSize >= 3)
+			{
+				_lightingMode = kLightingNormalOnly;
+			}
+		}
+		
+		if (_lightingMode == kLightingUndetermined)
+		{
+			_lightingMode = kLightingUniform;
+			OOReportWarning(_problemReporter, @"Mesh \"%@\" does not provide normals or tangents and bitangents, so no lighting is possible.", [_mesh name]);
+		}
+	}
+	return _lightingMode;
+}
+
+
 - (void) writeDiffuseLighting
 {
+	BOOL needFragEyeVector = NO;	// Will be needed for specular light and parallax mapping.
+	
 	// Simple placeholder lighting based on legacy OpenGL lighting.
-	[self addAttribute:@"aNormal" ofType:@"vec3"];
-	[self addVarying:@"vNormal" ofType:@"vec3"];
-	[self addVarying:@"vLightVector" ofType:@"vec3"];
-	[self addVarying:@"vPosition" ofType:@"vec4"];
+	BOOL tangentSpace = NO;
+	switch ([self lightingMode])
+	{
+		case kLightingNormalOnly:
+			[self addAttribute:@"aNormal" ofType:@"vec3"];
+			[self addVarying:@"vLightVector" ofType:@"vec3"];
+			[self addVarying:@"vNormal" ofType:@"vec3"];
+			
+			// FIXME: do we really need to normalize here?
+			[_vertexBody appendString:
+			@"\tvNormal = normalize(gl_NormalMatrix * aNormal);\n"
+			 "\tvLightVector = gl_LightSource[0].position.xyz;\n"];
+			
+			if (needFragEyeVector)
+			{
+				[self addVarying:@"vEyeVector" ofType:@"vec3"];
+				[_vertexBody appendString:@"\tvEyeVector = -position.xyz;\n"];
+			}
+			
+			[_vertexBody appendString:@"\t\n"];
+			
+			[_fragmentBody appendString:
+			@"\t// Placeholder lighting (world space)\n"
+			 "\tvec3 normal = normalize(vNormal);\n"];
+			break;
+			
+		case kLightingNormalTangent:
+			[self addAttribute:@"aNormal" ofType:@"vec3"];
+			[self addAttribute:@"aTangent" ofType:@"vec3"];
+			tangentSpace = YES;
+			// FIXME: do we really need to normalize here?
+			[_vertexBody appendString:
+			@"\t// Build tangent space basis\n"
+			 "\tvec3 n = normalize(gl_NormalMatrix * aNormal);\n"
+			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
+			 "\tvec3 b = cross(n, t);\n"];
+			break;
+			
+		case kLightingTangentBitangent:
+			[self addAttribute:@"aTangent" ofType:@"vec3"];
+			[self addAttribute:@"aBitangent" ofType:@"vec3"];
+			tangentSpace = YES;
+			// FIXME: do we really need to normalize here?
+			[_vertexBody appendString:
+			@"\t// Build tangent space basis\n"
+			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
+			 "\tvec3 b = normalize(gl_NormalMatrix * aBitangent);\n"
+			 "\tvec3 n = cross(t, b);\n"];
+			break;
+		
+		case kLightingUniform:
+		case kLightingUndetermined:
+			[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n\tconst vec3 diffuseLight = vec3(1.0);\n\t\n"];
+			return;
+	}
 	
-	[_vertexBody appendString:
-	@"\tvPosition = position;\n"
-	 "\tvNormal = normalize(gl_NormalMatrix * aNormal);\n"
-	 "\tvLightVector = gl_LightSource[0].position.xyz;\n\t\n"];
+	if (tangentSpace)
+	{
+		// Shared code for kLightingNormalTangent and kLightingTangentBitangent.
+		[self addVarying:@"vLightVector" ofType:@"vec3"];
+		[self addVarying:@"vEyeVector" ofType:@"vec3"];
+		
+		[_vertexBody appendString:
+		@"\tmat3 TBN = mat3(t, b, n);\n\t\n"
+		 "\tvec3 eyeVector = -position.xyz;\n"];
+		
+		if (needFragEyeVector)
+		{
+			[_vertexBody appendString:@"\tvEyeVector = eyeVector * TBN;\n\t\n"];
+		}
+		
+		[_vertexBody appendString:
+		@"\tvec3 lightVector = gl_LightSource[0].position.xyz + eyeVector;\n"
+		 "\tvLightVector = lightVector * TBN;\n\t\n"];
+		
+		// FIXME: normal mapping.
+		[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
+		
+		[_fragmentBody appendString:
+		@"\t// Placeholder lighting (tangent space)\n"];
+	}
 	
+	// Shared code for all lighting modes.
 	[_fragmentBody appendString:
-	@"\t// Placeholder lighting\n"
-	 "\tvec3 eyeVector = normalize(-vPosition.xyz);\n"
-	 "\tvec3 lightVector = normalize(vLightVector);\n"
-	 "\tvec3 normal = normalize(vNormal);\n"
-	 "\tfloat intensity = 0.8 * dot(normal, lightVector) + 0.2;\n"
+	@"\tvec3 lightVector = normalize(vLightVector);\n"
+	 "\tfloat intensity = 0.8 * max(0.0, dot(normal, lightVector)) + 0.2;"
 	 "\tvec3 diffuseLight = vec3(intensity);\n\t\n"];
 }
 
@@ -509,8 +635,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self addAttribute:@"aPosition" ofType:@"vec3"];
 	
 	[_vertexBody appendString:
-	@"\tvec4 position = gl_ModelViewProjectionMatrix * vec4(aPosition, 1.0);\n"
-	 "\tgl_Position = position;\n\t\n"];
+	@"\tvec4 position = gl_ModelViewMatrix * vec4(aPosition, 1.0);\n"
+	 "\tgl_Position = gl_ProjectionMatrix * position;\n\t\n"];
 }
 
 

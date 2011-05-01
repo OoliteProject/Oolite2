@@ -217,7 +217,7 @@
 		1A8A287611F393C300775894 /* MAProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAProxy.h; sourceTree = "<group>"; };
 		1A8A287711F393C300775894 /* MAProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAProxy.m; sourceTree = "<group>"; };
 		1A8A287811F393C300775894 /* tester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tester.m; sourceTree = "<group>"; };
-		1A950923136C1702000E18CF /* OOMaterial+DryDockPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOMaterial+DryDockPlaceholder.h"; sourceTree = "<group>"; };
+		1A950923136C1702000E18CF /* OOMaterial+DryDockPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOMaterial+DryDockPlaceholder.h"; sourceTree = "<group>"; };
 		1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOMaterial+DryDockPlaceholder.m"; sourceTree = "<group>"; };
 		1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Placeholder Texture.png"; sourceTree = "<group>"; };
 		1ADB321A122AF99D00F890B8 /* DDApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDApplicationDelegate.h; sourceTree = "<group>"; };

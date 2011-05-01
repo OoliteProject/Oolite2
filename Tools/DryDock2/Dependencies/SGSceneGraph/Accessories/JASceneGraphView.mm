@@ -3,7 +3,7 @@
 	Map Viewer for Redline
 	Adapted from Dry Dock for Oolite.
 	
-	Copyright © 2006-2007 Jens Ayton
+	Copyright © 2006-2011 Jens Ayton
 
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),

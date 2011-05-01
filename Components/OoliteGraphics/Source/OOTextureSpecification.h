@@ -100,10 +100,11 @@ typedef uint32_t OOTextureOptionFlags;
 
 /*
 	extractMode: a string of one to four characters in the set {r, g, b, a}
-	(lowercase) specifying which channels of the texture image to use.
+	(lowercase) specifying which channels of the texture image to use, or nil
+	indicating that the default (which depends on context) should be used.
+	
 	-setExtractMode: fails if its parameter does not match this format, and
 	-extractMode will never return an invalid value.
-	The default is “rgba”, the identity swizzle.
 	
 	NOTE: extraction is actually handled by the default material synthesizer
 	(and can’t be used with custom shaders). It’s attached to the texture

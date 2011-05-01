@@ -331,7 +331,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	*outCount = [swizzleOp length];
 	
-	if ([swizzleOp isEqualToString:kOOTextureExtractChannelIdentity])
+	if ([swizzleOp isEqualToString:kOOTextureExtractChannelIdentity] || swizzleOp == nil)
 	{
 		return sampleName;
 	}
@@ -439,11 +439,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		NSString *readInstr = nil, *sample, *swizzle;
 		[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:emissionMap];
 		
+		if (swizzle == nil)  swizzle = @"rgb";
 		NSUInteger channelCount = [swizzle length];
-		if ([swizzle isEqualToString:kOOTextureExtractChannelIdentity])
-		{
-			swizzle = @"rgb";
-		}
 		
 		switch (channelCount)
 		{
@@ -452,7 +449,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				break;
 				
 			case 3:
-				readInstr = sample;
+				readInstr = $sprintf(@"%@.%@", sample, swizzle);
 				break;
 				
 			default:

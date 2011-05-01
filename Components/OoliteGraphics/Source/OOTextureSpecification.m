@@ -140,9 +140,6 @@ NSString * const kOOTextureExtractChannelIdentity = @"rgba";
 		_optionFlags = kOOTextureDefaultOptions;
 		_anisotropy = kOOTextureDefaultAnisotropy;
 		_lodBias = kOOTextureDefaultLODBias;
-		_extractMode = kOOTextureExtractChannelIdentity;
-		
-		if (_extractMode == nil)  DESTROY(self);
 	}
 	
 	return self;
@@ -215,16 +212,20 @@ NSString * const kOOTextureExtractChannelIdentity = @"rgba";
 - (BOOL) setExtractMode:(NSString *)value
 {
 	if (value == _extractMode)  return YES;
-	NSUInteger length = [value length];
-	if (length < 1 || length > 4)  return NO;
 	
-	static NSCharacterSet *rgbaCharset = nil;
-	if (rgbaCharset == nil)
+	if (value != nil)
 	{
-		rgbaCharset = [[[NSCharacterSet characterSetWithCharactersInString:@"rgba"] invertedSet] retain];
+		NSUInteger length = [value length];
+		if (length < 1 || length > 4)  return NO;
+		
+		static NSCharacterSet *rgbaCharset = nil;
+		if (rgbaCharset == nil)
+		{
+			rgbaCharset = [[[NSCharacterSet characterSetWithCharactersInString:@"rgba"] invertedSet] retain];
+		}
+		
+		if ([value rangeOfCharacterFromSet:rgbaCharset].location != NSNotFound)  return NO;
 	}
-	
-	if ([value rangeOfCharacterFromSet:rgbaCharset].location != NSNotFound)  return NO;
 	
 	[_extractMode release];
 	_extractMode = [value copy];

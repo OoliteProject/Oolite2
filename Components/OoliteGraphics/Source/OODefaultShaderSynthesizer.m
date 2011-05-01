@@ -321,24 +321,30 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (NSString *) readForTextureSpec:(OOTextureSpecification *)spec gettingChannelCount:(NSUInteger *)outCount
+// Generate a read for an RGB value, or a single channel splatted across RGB.
+- (NSString *) readRGBForTextureSpec:(OOTextureSpecification *)textureSpec mapName:(NSString *)mapName
 {
-	NSParameterAssert(spec != nil && outCount != NULL);
+	NSString *sample, *swizzle;
+	[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:textureSpec];
 	
-	NSString *sampleName, *swizzleOp;
-	
-	[self getSampleName:&sampleName andSwizzleOp:&swizzleOp forTextureSpec:spec];
-	
-	*outCount = [swizzleOp length];
-	
-	if ([swizzleOp isEqualToString:kOOTextureExtractChannelIdentity] || swizzleOp == nil)
+	if (swizzle == nil)
 	{
-		return sampleName;
+		return [sample stringByAppendingString:@".rgb"];
 	}
-	else
+	
+	NSUInteger channelCount = [swizzle length];
+	
+	if (channelCount == 1)
 	{
-		return $sprintf(@"%@.%@", sampleName, swizzleOp);
+		return $sprintf(@"%@.%@%@%@", sample, swizzle, swizzle, swizzle);
 	}
+	else if (channelCount == 3)
+	{
+		return $sprintf(@"%@.%@", sample, swizzle);
+	}
+	
+	OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", mapName, [_spec materialKey], [_mesh name], channelCount);
+	return nil;
 }
 
 
@@ -354,29 +360,16 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	BOOL haveDiffuseColor = NO;
 	if (diffuseMap != nil)
 	{
-		NSUInteger channelCount;
-		NSString *readInstr = [self readForTextureSpec:diffuseMap gettingChannelCount:&channelCount];
-		switch (channelCount)
+		NSString *readInstr = [self readRGBForTextureSpec:diffuseMap mapName:@"diffuse"];
+		if (EXPECT_NOT(readInstr == nil))
 		{
-			case 1:
-				// Grey -> RGB, A = 1
-				readInstr = $sprintf(@"vec4(vec3(%@), 1.0)", readInstr);
-				break;
-				
-			case 2:
-				// Grey + alpha -> RGB + A
-				readInstr = $sprintf(@"(%@).xxxy", readInstr);
-				
-			case 3:
-				// RGB -> RGB, A = 1
-				readInstr = $sprintf(@"vec4(%@, 1.0)", readInstr);
-				
-			case 4:
-				readInstr = readInstr;
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
 		}
-		
-		[_fragmentBody appendFormat:@"\tvec4 diffuseColor = %@;\n", readInstr];
-		 haveDiffuseColor = YES;
+		else
+		{
+			[_fragmentBody appendFormat:@"\tvec3 diffuseColor = %@;\n", readInstr];
+			 haveDiffuseColor = YES;
+		}
 	}
 	
 	if (!haveDiffuseColor || ![diffuseColor isWhite])
@@ -386,14 +379,14 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		NSString *format = nil;
 		if (haveDiffuseColor)
 		{
-			format = @"\tdiffuseColor *= vec4(%g, %g, %g, %g);\n";
+			format = @"\tdiffuseColor *= vec3(%g, %g, %g);\n";
 		}
 		else
 		{
-			format = @"\tconst vec4 diffuseColor = vec4(%g, %g, %g, %g);\n";
+			format = @"\tconst vec3 diffuseColor = vec3(%g, %g, %g);\n";
 			haveDiffuseColor = YES;
 		}
-		[_fragmentBody appendFormat:format, rgba[0], rgba[1], rgba[2], rgba[3]];
+		[_fragmentBody appendFormat:format, rgba[0], rgba[1], rgba[2]];
 	}
 	
 	[_fragmentBody appendString:@"\ttotalColor += diffuseColor * diffuseLight;\n\t\n"];
@@ -419,7 +412,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	 "\tvec3 lightVector = normalize(vLightVector);\n"
 	 "\tvec3 normal = normalize(vNormal);\n"
 	 "\tfloat intensity = 0.8 * dot(normal, lightVector) + 0.2;\n"
-	 "\tvec4 diffuseLight = vec4(vec3(intensity), 1.0);\n\t\n"];
+	 "\tvec3 diffuseLight = vec3(intensity);\n\t\n"];
 }
 
 
@@ -435,27 +428,11 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	BOOL haveEmissionColor = NO;
 	if (emissionMap != nil)
 	{
-		// Convert to vec3, discarding alpha in rgba case.
-		NSString *readInstr = nil, *sample, *swizzle;
-		[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:emissionMap];
-		
-		if (swizzle == nil)  swizzle = @"rgb";
-		NSUInteger channelCount = [swizzle length];
-		
-		switch (channelCount)
+		NSString *readInstr = [self readRGBForTextureSpec:emissionMap mapName:@"emission"];
+		if (EXPECT_NOT(readInstr == nil))
 		{
-			case 1:
-				readInstr = $sprintf(@"%@.%@%@%@", sample, swizzle, swizzle, swizzle);
-				break;
-				
-			case 3:
-				readInstr = $sprintf(@"%@.%@", sample, swizzle);
-				break;
-				
-			default:
-				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", @"emission", [_spec materialKey], [_mesh name], channelCount);
-				[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
-				return;
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+			return;
 		}
 		
 		[_fragmentBody appendFormat:@"\tvec3 emissionColor = %@;\n", readInstr];
@@ -479,7 +456,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
 	}
 	
-	[_fragmentBody appendString:@"\ttotalColor += vec4(emissionColor, 0.0);\n\t\n"];
+	[_fragmentBody appendString:@"\ttotalColor += emissionColor;\n\t\n"];
 }
 
 
@@ -495,27 +472,11 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	BOOL haveIlluminationColor = NO;
 	if (illuminationMap != nil)
 	{
-		// Convert to vec3, discarding alpha in rgba case.
-		NSString *readInstr = nil, *sample, *swizzle;
-		[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:illuminationMap];
-		
-		if (swizzle == nil)  swizzle = @"rgb";
-		NSUInteger channelCount = [swizzle length];
-		
-		switch (channelCount)
+		NSString *readInstr = [self readRGBForTextureSpec:illuminationMap mapName:@"illumination"];
+		if (EXPECT_NOT(readInstr == nil))
 		{
-			case 1:
-				readInstr = $sprintf(@"%@.%@%@%@", sample, swizzle, swizzle, swizzle);
-				break;
-				
-			case 3:
-				readInstr = $sprintf(@"%@.%@", sample, swizzle);
-				break;
-				
-			default:
-				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 1 or 3 may be used.", @"illumination", [_spec materialKey], [_mesh name], channelCount);
-				[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
-				return;
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
+			return;
 		}
 		
 		[_fragmentBody appendFormat:@"\tvec3 illuminationColor = %@;\n", readInstr];
@@ -539,7 +500,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
 	}
 	
-	[_fragmentBody appendString:@"\ttotalColor += vec4(illuminationColor, 0.0) * diffuseColor;\n\t\n"];
+	[_fragmentBody appendString:@"\ttotalColor += illuminationColor * diffuseColor;\n\t\n"];
 }
 
 
@@ -555,7 +516,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeFinalColorComposite
 {
-	[_fragmentBody appendString:@"\tgl_FragColor = totalColor;\n\t\n"];
+	[_fragmentBody appendString:@"\tgl_FragColor = vec4(totalColor, 1.0);\n\t\n"];
 }
 
 
@@ -603,7 +564,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	@try
 	{
-		[_fragmentBody appendString:@"\tvec4 totalColor = vec4(0.0);\n\t\n"];
+		[_fragmentBody appendString:@"\tvec3 totalColor = vec3(0.0);\n\t\n"];
 		
 		[self writePosition];
 		[self setUpTextures];

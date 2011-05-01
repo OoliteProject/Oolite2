@@ -327,7 +327,7 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) emissionColor
 {
-	if (_emissionColor == nil)  return [OOColor blackColor];
+	if (_emissionColor == nil)  return _emissionMap ? [OOColor whiteColor] : [OOColor blackColor];
 	return _emissionColor;
 }
 
@@ -361,14 +361,13 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 
 - (OOColor *) illuminationColor
 {
-	if (_illuminationColor == nil)  return [OOColor whiteColor];
+	if (_illuminationColor == nil)  return _illuminationMap ? [OOColor whiteColor] : [OOColor blackColor];
 	return _illuminationColor;
 }
 
 
 - (void) setIlluminationColor:(OOColor *)color
 {
-	if ([color isWhite])  color = nil;
 	if (color != _illuminationColor)
 	{
 		[_illuminationColor release];

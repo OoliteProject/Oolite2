@@ -72,6 +72,7 @@ typedef enum
 	uint8_t						_normalAttrSize;
 	uint8_t						_tangentAttrSize;
 	uint8_t						_bitangentAttrSize;
+	BOOL						_usesNormalMap;
 }
 
 - (id) initWithMaterialSpecifiction:(OOMaterialSpecification *)spec
@@ -473,11 +474,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			
 			[_vertexBody appendString:@"\t\n"];
 			
-			[_fragmentBody appendString:
-			@"\t// Placeholder lighting (world space)\n"
-			 "\tvec3 normal = normalize(vNormal);\n"];
-			break;
-			
 		case kLightingNormalTangent:
 			[self addAttribute:@"aNormal" ofType:@"vec3"];
 			[self addAttribute:@"aTangent" ofType:@"vec3"];
@@ -526,19 +522,58 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_vertexBody appendString:
 		@"\tvec3 lightVector = gl_LightSource[0].position.xyz + eyeVector;\n"
 		 "\tvLightVector = lightVector * TBN;\n\t\n"];
-		
-		// FIXME: normal mapping.
-		[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
-		
-		[_fragmentBody appendString:
-		@"\t// Placeholder lighting (tangent space)\n"];
 	}
 	
 	// Shared code for all lighting modes.
 	[_fragmentBody appendString:
+	@"\t// Placeholder lighting\n"
 	@"\tvec3 lightVector = normalize(vLightVector);\n"
 	 "\tfloat intensity = 0.8 * max(0.0, dot(normal, lightVector)) + 0.2;"
 	 "\tvec3 diffuseLight = vec3(intensity);\n\t\n"];
+}
+
+
+- (void) writeNormal
+{
+	LightingMode lightingMode = [self lightingMode];
+	OOTextureSpecification *normalMap = [_spec normalMap];
+	
+	switch (lightingMode)
+	{
+		case kLightingNormalOnly:
+			[_fragmentBody appendString:@"\tvec3 normal = normalize(vNormal);\n"];
+			// Fall through.
+			
+		case kLightingUndetermined:
+		case kLightingUniform:
+			if (normalMap != nil)
+			{
+				OOReportWarning(_problemReporter, @"Material \"%@\" of mesh \"%@\" specifies a normal map, but it cannot be used because the mesh does not provide vertex tangents.", [_spec materialKey], [_mesh name]);
+			}
+			break;
+			
+		case kLightingNormalTangent:
+		case kLightingTangentBitangent:
+			if (normalMap != nil)
+			{
+				NSString *sample, *swizzle;
+				[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:normalMap];
+				if (swizzle == nil)  swizzle = @"rgb";
+				if ([swizzle length] == 3)
+				{
+					[_fragmentBody appendFormat:@"\tvec3 normal = normalize(%@.%@);\n\t\n", sample, swizzle];
+					_usesNormalMap = YES;
+					return;
+				}
+				else
+				{
+					OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 3 may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length]);
+				}
+			}
+			
+			[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
+			break;
+	}
 }
 
 
@@ -694,6 +729,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		
 		[self writePosition];
 		[self setUpTextures];
+		[self writeNormal];
 		[self writeDiffuseLighting];
 		[self writeDiffuseColorTerm];
 		[self writeEmission];

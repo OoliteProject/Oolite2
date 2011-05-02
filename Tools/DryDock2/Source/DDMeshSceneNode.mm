@@ -30,7 +30,8 @@
 
 - (void) priv_renderImmediateMode;
 
-- (OOShaderProgram *) priv_whiteShader;
+@property (readonly, getter=priv_whiteMaterial) OOMaterial *whiteMaterial;
+
 - (OOShaderProgram *) priv_shadedWireframeShader;
 - (OOShaderProgram *) priv_solidWireframeShader;
 - (OOShaderProgram *) priv_loadShaderNamed:(NSString *)name attributeMap:(NSDictionary *)attributeMap;
@@ -74,7 +75,7 @@
 	[self becomeDirty];
 	
 	// Shader attribute indices may need rebinding. This is wasteful, but gets the job done:
-	_whiteShader = nil;
+	_whiteMaterial = nil;
 	_shadedWireframeShader = nil;
 	_solidWireframeShader = nil;
 	
@@ -124,7 +125,7 @@
 
 - (void) priv_renderFilledWhite
 {
-	[[self priv_whiteShader] apply];
+	[self.whiteMaterial apply];
 	
 	OOGL(glEnable(GL_CULL_FACE));
 	[self.renderMesh renderWithMaterials:nil];
@@ -244,13 +245,23 @@
 }
 
 
-- (OOShaderProgram *) priv_whiteShader
+- (OOMaterial *) priv_whiteMaterial
 {
-	if (_whiteShader == nil)
+	if (_whiteMaterial == nil)
 	{
-		_whiteShader = [self priv_loadShaderNamed:@"PreviewShader" attributeMap:nil];
+		OOMaterialSpecification *whiteSpec = [[OOMaterialSpecification alloc] initWithMaterialKey:@"<white>"];
+		whiteSpec.diffuseColor = [OOColor whiteColor];
+		whiteSpec.specularExponent = 0;
+		
+		_whiteMaterial = [[OOMaterial alloc] initWithSpecification:whiteSpec
+															  mesh:self.renderMesh
+															macros:nil
+													 bindingTarget:nil
+													  fileResolver:nil
+												   problemReporter:nil];
 	}
-	return _whiteShader;
+	
+	return _whiteMaterial;
 }
 
 

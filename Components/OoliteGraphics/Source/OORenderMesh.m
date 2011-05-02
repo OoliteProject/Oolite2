@@ -318,6 +318,12 @@
 }
 
 
+- (NSUInteger) groupCount
+{
+	return _groupCount;
+}
+
+
 #ifndef NDEBUG
 - (NSString *) name
 {

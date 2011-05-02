@@ -8,7 +8,7 @@
 
 #import "SGSceneNode.h"
 
-@class DDMesh, OORenderMesh, OOShaderProgram, OOLegacyTexture;
+@class DDMesh, OORenderMesh, OOShaderProgram, OOMaterial;
 
 
 @interface DDMeshSceneNode: SGSceneNode
@@ -22,8 +22,9 @@
 	OORenderMesh				*_renderMesh;
 	NSArray						*_materials;
 	
+	OOMaterial					*_whiteMaterial;
+	
 	// TEMP
-	OOShaderProgram				*_whiteShader;
 	OOShaderProgram				*_shadedWireframeShader;
 	OOShaderProgram				*_solidWireframeShader;
 	GLint						_shadedWireframeColorUniform;

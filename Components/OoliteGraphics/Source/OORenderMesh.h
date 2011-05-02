@@ -76,6 +76,7 @@
 - (NSDictionary *) attributeIndices;
 - (NSDictionary *) prefixedAttributeIndices;	// Converts "attribute" to "aAttribute".
 - (NSUInteger) vertexCount;
+- (NSUInteger) groupCount;
 
 #ifndef NDEBUG
 - (NSString *) name;

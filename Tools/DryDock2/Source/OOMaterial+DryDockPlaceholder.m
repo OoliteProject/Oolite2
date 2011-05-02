@@ -19,6 +19,7 @@
 	
 	OOMaterialSpecification *spec = [[OOMaterialSpecification alloc] initWithMaterialKey:name ?: @"<anonymous>"];
 	spec.diffuseMap = texture;
+	spec.specularExponent = 0;
 	
 	return [[OOMaterial alloc] initWithSpecification:spec
 												mesh:mesh

@@ -193,7 +193,7 @@ static void GetLightMap(OOMaterialSpecification *self, id plist, id <OOProblemRe
 			GetLightMap(self, lightMapPList, issues);
 		}
 	}
-	else
+	else if (lightMaps != nil)
 	{
 		GetLightMap(self, lightMaps, issues);
 	}

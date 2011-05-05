@@ -409,6 +409,20 @@ OOINLINE BOOL IsFileNotFound(NSError *error)
 		}
 	}
 	
+	NSURL *internalURL = [[NSBundle mainBundle] URLForResource:name withExtension:nil subdirectory:folder];
+	if (internalURL != nil)
+	{
+		NSError *error = nil;
+		NSData *data = [NSData dataWithContentsOfURL:internalURL options:NSMappedRead error:&error];
+		if (data != nil)  return data;
+		
+		if (!IsFileNotFound(error))
+		{
+			OOReportNSError(problemReporter, nil, error);
+			return nil;
+		}
+	}
+	
 	OOReportError(problemReporter, @"Texture file %@ could not be found.", name);
 	
 	return nil;

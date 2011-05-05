@@ -688,7 +688,7 @@ static OOTextureSpecification *TextureSpec(id value)
 	BOOL premul = [self isPremultiplied];
 	if (!premul)
 	{
-		result = [result stringByAppendingString:@" x diffuse"];
+		result = [result stringByAppendingString:@" * diffuse"];
 	}
 	
 	return result;
@@ -697,7 +697,7 @@ static OOTextureSpecification *TextureSpec(id value)
 
 - (OOColor *) color
 {
-	return [_color autorelease];
+	return _color ? [_color autorelease] : [OOColor whiteColor];
 }
 
 

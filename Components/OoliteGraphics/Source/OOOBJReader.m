@@ -62,6 +62,7 @@
 - (BOOL) priv_readMaterialEmissionMap;
 - (BOOL) priv_readMaterialSpecularExponent;
 - (BOOL) priv_readMaterialOverallAlpha;
+- (void) priv_endMaterial;
 
 - (BOOL) priv_notifyIgnoredKeyword:(NSString *)keyword;
 - (BOOL) priv_notifyIgnoredMaterialKeyword:(NSString *)keyword;
@@ -647,6 +648,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	}
 	
 	_lexer = savedLexer;
+	[self priv_endMaterial];
 	_currentMaterial = nil;
 	_currentMaterialLibraryName = nil;
 	
@@ -746,6 +748,8 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 
 - (BOOL) priv_readMaterialNewMaterial
 {
+	[self priv_endMaterial];
+	
 	NSString *name = nil;
 	[_lexer readUntilNewline:&name];
 	if (name == nil)
@@ -852,13 +856,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		[_lexer readReal:&a];	// Ignore failure.
 	}
 	
-	/*	The distinction between emission colour and emission modulate colour
-		does not exist in OBJ. It is not clear whether Ks should be used as
-		modulate colour when there's an emission map, or ignored.
-		
-		This interpretation produces default results if Ks = 0,0,0,1.
-	 */
-	[_currentMaterial setEmissionColor:[OOColor colorWithRed:r green:g blue:b alpha:a]];
+	_materialEmissionColor = [OOColor colorWithRed:r green:g blue:b alpha:a];
 	return YES;
 }
 
@@ -903,7 +901,7 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 		return NO;
 	}
 	
-	[_currentMaterial setEmissionMap:[OOTextureSpecification textureSpecWithName:name]];
+	_materialEmissionMap = [OOTextureSpecification textureSpecWithName:name];
 	return YES;
 }
 
@@ -927,6 +925,36 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	}
 	
 	return YES;
+}
+
+
+- (void) priv_endMaterial
+{
+	// Deal with deferred emission color & map.
+	OOLightMapSpecification *lightMap = nil;
+	if (_materialEmissionMap != nil)
+	{
+		lightMap = [[OOLightMapSpecification alloc] initWithColor:_materialEmissionColor
+													   textureMap:_materialEmissionMap
+													premultiplied:YES];
+	}
+	else if (_materialEmissionColor != nil)
+	{
+		OOTextureSpecification *whiteSpec = [OOTextureSpecification textureSpecWithName:@"oolite-plain-white.png"];
+		lightMap = [[OOLightMapSpecification alloc] initWithColor:_materialEmissionColor
+													   textureMap:whiteSpec
+													premultiplied:YES];
+	}
+	
+	if (lightMap != nil)
+	{
+		[_currentMaterial addLightMap:lightMap];
+		[lightMap release];
+	}
+	
+	_materialEmissionColor = nil;
+	_materialEmissionMap = nil;
+	_currentMaterial = nil;
 }
 
 

@@ -278,13 +278,16 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self setUpOneTexture:[_spec diffuseMap]];
 	[self setUpOneTexture:[_spec specularColorMap]];
 	[self setUpOneTexture:[_spec specularExponentMap]];
-	[self setUpOneTexture:[_spec emissionMap]];
-	[self setUpOneTexture:[_spec illuminationMap]];
 	[self setUpOneTexture:[_spec normalMap]];
 #if 0
 	// Parallax map needs to be handled separately.
 	[self setUpOneTexture:[_spec parallaxMap]];
 #endif
+	OOLightMapSpecification *lightMap = nil;
+	foreach (lightMap, [_spec lightMaps])
+	{
+		[self setUpOneTexture:[lightMap textureMap]];
+	}
 	
 	if ([_texturesByName count] == 0)  return;
 	
@@ -507,7 +510,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			if (needFragEyeVector)
 			{
 				[self addVarying:@"vEyeVector" ofType:@"vec3"];
-				[_vertexBody appendString:@"\tvEyeVector = -position.xyz;\n"];
+				[_vertexBody appendString:@"\tvEyeVector = position.xyz;\n"];
 			}
 			
 			[_vertexBody appendString:@"\t\n"];
@@ -556,7 +559,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		
 		if (needFragEyeVector)
 		{
-			[_vertexBody appendString:@"\tvEyeVector = -position.xyz * TBN;\n\t\n"];
+			[_vertexBody appendString:@"\tvEyeVector = position.xyz * TBN;\n\t\n"];
 		}
 		
 		[_vertexBody appendString:
@@ -705,91 +708,56 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) writeEmission
+- (void) writeLightMaps
 {
-	OOTextureSpecification	*emissionMap = [_spec emissionMap];
-	OOColor					*emissionColor = [_spec emissionColor];
+	NSArray *lightMaps = [_spec lightMaps];
+	NSUInteger idx = 0, count = [lightMaps count];
 	
-	if ([emissionColor isBlack])  return;
+	if (count == 0)  return;
 	
-	[_fragmentBody appendString:@"\t// Emission (glow)\n"];
+	[_fragmentBody appendString:@"\tvec3 lightMapColor;\n"];
 	
-	BOOL haveEmissionColor = NO;
-	if (emissionMap != nil)
+	OOLightMapSpecification *lightMap = nil;
+	foreach (lightMap, lightMaps)
 	{
-		NSString *readInstr = [self readRGBForTextureSpec:emissionMap mapName:@"emission"];
-		if (EXPECT_NOT(readInstr == nil))
+		[_fragmentBody appendFormat:@"\t// Light map #%lu\n", idx++];
+		
+		OOTextureSpecification	*map = [lightMap textureMap];
+		OOColor					*color = [lightMap color];
+		float					rgba[4];
+		
+		[color getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
+		rgba[0] *= rgba[3]; rgba[1] *= rgba[3]; rgba[2] *= rgba[3];
+		
+		if (EXPECT_NOT(rgba[0] == 0.0f && rgba[1] == 0.0f && rgba[2] == 0.0f))
 		{
-			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
-			return;
+			[_fragmentBody appendString:@"\t// Light map tinted black has no effect.\n"];
+			continue;
 		}
 		
-		[_fragmentBody appendFormat:@"\tvec3 emissionColor = %@;\n", readInstr];
-		haveEmissionColor = YES;
-	}
-	
-	if (!haveEmissionColor || ![emissionColor isWhite])
-	{
-		float rgba[4];
-		[emissionColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
-		NSString *format = nil;
-		if (haveEmissionColor)
+		NSString *readInstr = [self readRGBForTextureSpec:map mapName:@"light"];
+		if (EXPECT_NOT(readInstr == nil))
 		{
-			format = @"\temissionColor *= vec3(%g, %g, %g);\n";
+			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n"];
+			continue;
+		}
+		
+		[_fragmentBody appendFormat:@"\tlightMapColor = %@;\n", readInstr];
+		
+		if (rgba[0] != 1.0f || rgba[1] != 1.0f || rgba[2] != 1.0f)
+		{
+			[_fragmentBody appendFormat:@"\tlightMapColor *= vec3(%g, %g, %g);\n", rgba[0], rgba[1], rgba[2]];
+		}
+		
+		if ([lightMap isPremultiplied])
+		{
+			[_fragmentBody appendString:@"\ttotalColor += lightMapColor;\n\t\n"];
 		}
 		else
 		{
-			format = @"\tconst vec3 emissionColor = vec3(%g, %g, %g);\n";
-			haveEmissionColor = YES;
+			[_fragmentBody appendString:@"\ttotalColor += lightMapColor * diffuseColor;\n\t\n"];
 		}
-		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
 	}
-	
-	[_fragmentBody appendString:@"\ttotalColor += emissionColor;\n\t\n"];
-}
-
-
-- (void) writeIllumination
-{
-	OOTextureSpecification	*illuminationMap = [_spec illuminationMap];
-	OOColor					*illuminationColor = [_spec illuminationColor];
-	
-	if ([illuminationColor isBlack])  return;
-	
-	[_fragmentBody appendString:@"\t// Illumination\n"];
-	
-	BOOL haveIlluminationColor = NO;
-	if (illuminationMap != nil)
-	{
-		NSString *readInstr = [self readRGBForTextureSpec:illuminationMap mapName:@"illumination"];
-		if (EXPECT_NOT(readInstr == nil))
-		{
-			[_fragmentBody appendString:@"\t// INVALID EXTRACTION KEY\n\t\n"];
-			return;
-		}
-		
-		[_fragmentBody appendFormat:@"\tvec3 illuminationColor = %@;\n", readInstr];
-		haveIlluminationColor = YES;
-	}
-	
-	if (!haveIlluminationColor || ![illuminationColor isWhite])
-	{
-		float rgba[4];
-		[illuminationColor getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
-		NSString *format = nil;
-		if (haveIlluminationColor)
-		{
-			format = @"\tilluminationColor *= vec3(%g, %g, %g);\n";
-		}
-		else
-		{
-			format = @"\tconst vec3 illuminationColor = vec3(%g, %g, %g);\n";
-			haveIlluminationColor = YES;
-		}
-		[_fragmentBody appendFormat:format, rgba[0] * rgba[3], rgba[1] * rgba[3], rgba[2] * rgba[3]];
-	}
-	
-	[_fragmentBody appendString:@"\ttotalColor += illuminationColor * diffuseColor;\n\t\n"];
 }
 
 
@@ -861,8 +829,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[self writeDiffuseLighting];
 		[self writeDiffuseColorTerm];
 		[self writeSpecularLighting];
-		[self writeEmission];
-		[self writeIllumination];
+		[self writeLightMaps];
 		[self writeFinalColorComposite];
 		
 		[self composeVertexShader];

@@ -36,11 +36,7 @@ NSString * const kOOMaterialSpecularColorMapName			= @"specularColorMap";
 NSString * const kOOMaterialSpecularExponentName			= @"specularExponent";
 NSString * const kOOMaterialSpecularExponentMapName			= @"specularExponentMap";
 
-NSString * const kOOMaterialEmissionColorName				= @"emissionColor";
-NSString * const kOOMaterialEmissionMapName					= @"emissionMap";
-
-NSString * const kOOMaterialIlluminationColorName			= @"illuminationColor";
-NSString * const kOOMaterialIlluminationMapName				= @"illuminationMap";
+NSString * const kOOMaterialLightMaps						= @"lightMaps";
 
 NSString * const kOOMaterialNormalMapName					= @"normalMap";
 NSString * const kOOMaterialParallaxMapName					= @"parallaxMap";
@@ -48,12 +44,17 @@ NSString * const kOOMaterialParallaxMapName					= @"parallaxMap";
 NSString * const kOOMaterialParallaxScale					= @"parallaxScale";
 NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 
+NSString * const kOOMaterialLightMapColor					= @"color";
+NSString * const kOOMaterialLightMapTextureMapName			= @"map";
+NSString * const kOOMaterialLightMapIsPremultiplied			= @"premultiplied";
+
 
 #define kDefaultSpecularIntensity		(0.2f)
 #define kDefaultSpecularExponentWithMap	(128)
 #define kDefaultSpecularExponentNoMap	(10)
 #define kDefaultParallaxScale			(0.01f)
 #define kDefaultParallaxBias			(0.0f)
+#define kDefaultLightMapPremultiplied	(YES)
 
 
 @implementation OOMaterialSpecification
@@ -108,11 +109,7 @@ NSString * const kOOMaterialParallaxBias					= @"parallaxBias";
 	DESTROY(_specularColorMap);
 	DESTROY(_specularExponentMap);
 	
-	DESTROY(_emissionColor);
-	DESTROY(_emissionMap);
-	
-	DESTROY(_illuminationColor);
-	DESTROY(_illuminationMap);
+	DESTROY(_lightMaps);
 	
 	DESTROY(_normalMap);
 	DESTROY(_parallaxMap);
@@ -155,6 +152,18 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
+static void GetLightMap(OOMaterialSpecification *self, id plist, id <OOProblemReporting> issues)
+{
+	OOLightMapSpecification *lightMapSpec = [[OOLightMapSpecification alloc] initWithPropertyListRepresentation:plist
+																										 issues:issues];
+	if (lightMapSpec != nil)
+	{
+		[self addLightMap:lightMapSpec];
+		[lightMapSpec release];
+	}
+}
+
+
 - (BOOL) loadPropertyListRepresentation:(NSDictionary *)propertyList issues:(id <OOProblemReporting>)issues
 {
 	if (propertyList == nil)  return NO;
@@ -175,11 +184,19 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 	}
 	GetTexture(plist, kOOMaterialSpecularExponentMapName, &_specularExponentMap, issues);
 	
-	GetColor(plist, kOOMaterialEmissionColorName, &_emissionColor);
-	GetTexture(plist, kOOMaterialEmissionMapName, &_emissionMap, issues);
-	
-	GetColor(plist, kOOMaterialIlluminationColorName, &_illuminationColor);
-	GetTexture(plist, kOOMaterialIlluminationMapName, &_illuminationMap, issues);
+	id lightMaps = [plist objectForKey:kOOMaterialLightMaps];
+	if ([lightMaps isKindOfClass:[NSArray class]])
+	{
+		id lightMapPList = nil;
+		foreach (lightMapPList, lightMaps)
+		{
+			GetLightMap(self, lightMapPList, issues);
+		}
+	}
+	else
+	{
+		GetLightMap(self, lightMaps, issues);
+	}
 	
 	GetTexture(plist, kOOMaterialNormalMapName, &_normalMap, issues);
 	GetTexture(plist, kOOMaterialParallaxMapName, &_parallaxMap, issues);
@@ -344,70 +361,42 @@ static void GetTexture(NSMutableDictionary *plist, NSString *key, OOTextureSpeci
 }
 
 
-- (OOColor *) emissionColor
+- (NSArray *) lightMaps
 {
-	if (_emissionColor == nil)  return _emissionMap ? [OOColor whiteColor] : [OOColor blackColor];
-	return _emissionColor;
-}
-
-
-- (void) setEmissionColor:(OOColor *)color
-{
-	if ([color isBlack])  color = nil;
-	if (color != _emissionColor)
+	if (_lightMaps != nil)
 	{
-		[_emissionColor release];
-		_emissionColor = [color copy];
+		return [[_lightMaps copy] autorelease];
+	}
+	else
+	{
+		return [NSArray array];
 	}
 }
 
 
-- (OOTextureSpecification *) emissionMap
+- (void) addLightMap:(OOLightMapSpecification *)lightMap
 {
-	return _emissionMap;
+	[self insertLightMap:lightMap atIndex:[[self lightMaps] count]];
 }
 
 
-- (void) setEmissionMap:(OOTextureSpecification *)texture
+- (void) insertLightMap:(OOLightMapSpecification *)lightMap atIndex:(NSUInteger)index
 {
-	if (_emissionMap != texture)
-	{
-		[_emissionMap release];
-		_emissionMap = [texture retain];
-	}
+	if (_lightMaps == nil)  _lightMaps = [[NSMutableArray alloc] initWithCapacity:1];
+	
+	[_lightMaps insertObject:lightMap atIndex:index];
 }
 
 
-- (OOColor *) illuminationColor
+- (void) removeLightMapAtIndex:(NSUInteger)index
 {
-	if (_illuminationColor == nil)  return _illuminationMap ? [OOColor whiteColor] : [OOColor blackColor];
-	return _illuminationColor;
+	[_lightMaps removeObjectAtIndex:index];
 }
 
 
-- (void) setIlluminationColor:(OOColor *)color
+- (void) replaceLightMapAtIndex:(NSUInteger)index withLightMap:(OOLightMapSpecification *)lightMap
 {
-	if (color != _illuminationColor)
-	{
-		[_illuminationColor release];
-		_illuminationColor = [color copy];
-	}
-}
-
-
-- (OOTextureSpecification *) illuminationMap
-{
-	return _illuminationMap;
-}
-
-
-- (void) setIlluminationMap:(OOTextureSpecification *)texture
-{
-	if (_illuminationMap != texture)
-	{
-		[_illuminationMap release];
-		_illuminationMap = [texture retain];
-	}
+	[_lightMaps replaceObjectAtIndex:index withObject:lightMap];
 }
 
 
@@ -538,11 +527,6 @@ static OOTextureSpecification *TextureSpec(id value)
 	if ([key isEqualToString:kOOMaterialSpecularExponentName])  [self setBoxedSpecularExponent:value];
 	if ([key isEqualToString:kOOMaterialSpecularExponentMapName])  [self setSpecularExponentMap:TextureSpec(value)];
 	
-	if ([key isEqualToString:kOOMaterialEmissionColorName])  [self setEmissionColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialEmissionMapName])  [self setEmissionMap:TextureSpec(value)];
-	if ([key isEqualToString:kOOMaterialIlluminationColorName])  [self setIlluminationColor:Color(value)];
-	if ([key isEqualToString:kOOMaterialIlluminationMapName])  [self setIlluminationMap:TextureSpec(value)];
-	
 	if ([key isEqualToString:kOOMaterialNormalMapName])  [self setNormalMap:TextureSpec(value)];
 	if ([key isEqualToString:kOOMaterialParallaxMapName])  [self setParallaxMap:TextureSpec(value)];
 	
@@ -586,11 +570,8 @@ static OOTextureSpecification *TextureSpec(id value)
 	if ([self specularExponent] != defaultSpecExp)  [result oo_setUnsignedInteger:_specularExponent forKey:kOOMaterialSpecularExponentName];
 	ADD_TEXTURE(kOOMaterialSpecularExponentMapName, _specularExponentMap);
 	
-	ADD_COLOR(kOOMaterialEmissionColorName, _emissionColor, [OOColor blackColor]);
-	ADD_TEXTURE(kOOMaterialEmissionMapName, _emissionMap);
-	
-	ADD_COLOR(kOOMaterialIlluminationColorName, _illuminationColor, white);
-	ADD_TEXTURE(kOOMaterialIlluminationMapName, _illuminationMap);
+	NSArray *lightMaps = [self lightMaps];
+	if ([lightMaps count] > 0)  [result setObject:[lightMaps ja_propertyListRepresentationWithContext:context] forKey:kOOMaterialLightMaps];
 	
 	ADD_TEXTURE(kOOMaterialNormalMapName, _normalMap);
 	ADD_TEXTURE(kOOMaterialParallaxMapName, _parallaxMap);
@@ -598,6 +579,166 @@ static OOTextureSpecification *TextureSpec(id value)
 	if (_parallaxBias != kDefaultParallaxBias)  [result oo_setFloat:_parallaxBias forKey:kOOMaterialParallaxBias];
 	
 	return  result;
+}
+
+@end
+
+
+@implementation OOLightMapSpecification
+
+
+- (id) initWithColor:(OOColor *)color
+		  textureMap:(OOTextureSpecification *)texture
+	   premultiplied:(BOOL)premultiplied
+{
+	NSParameterAssert(texture != nil);
+	
+	if ((self == [super init]))
+	{
+		_color = [color retain];
+		_textureMap = [texture retain];
+		_isPremultiplied = !!premultiplied;
+	}
+	
+	return self;
+}
+
+- (id) initWithPropertyListRepresentation:(id)plist
+								   issues:(id <OOProblemReporting>)issues
+{
+	NSParameterAssert(plist != nil);
+	
+	BOOL					OK = YES;
+	OOColor					*color = nil;
+	id						texturePList;
+	OOTextureSpecification	*texture = nil;
+	BOOL					premul = kDefaultLightMapPremultiplied;
+	
+	if ([plist isKindOfClass:[NSString class]])
+	{
+		// Just a string: treat as texture name.
+		texturePList = plist;
+	}
+	else if ([plist isKindOfClass:[NSDictionary class]])
+	{
+		texturePList = [plist objectForKey:kOOMaterialLightMapTextureMapName];
+		if (texturePList == nil)
+		{
+			// No "map" key: it may be a texture dictionary.
+			texturePList = plist;
+		}
+		else
+		{
+			color = [OOColor colorWithDescription:[plist objectForKey:kOOMaterialLightMapColor]];
+			premul = [plist oo_boolForKey:kOOMaterialLightMapIsPremultiplied
+							 defaultValue:kDefaultLightMapPremultiplied];
+		}
+	}
+	else
+	{
+		OOReportError(issues, @"Light map specification must be a dictionary or a string, got %@.", [plist class]);
+	}
+	
+	if (OK)
+	{
+		texture = [OOTextureSpecification textureSpecWithPropertyListRepresentation:texturePList issues:issues];
+		OK = (texture != nil);
+	}
+	
+	if (OK)
+	{
+		return [self initWithColor:color
+						textureMap:texture
+					 premultiplied:premul];
+	}
+	else
+	{
+		[self release];
+		return nil;
+	}
+}
+
+
+- (void) dealloc
+{
+	DESTROY(_color);
+	DESTROY(_textureMap);
+	
+	[self dealloc];
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	// Immutable FTW.
+	return [self retain];
+}
+
+
+- (NSString *) descriptionComponents
+{
+	NSString *result = [[self textureMap] shortDescription];
+	
+	OOColor *color = [self color];
+	if (color != nil)
+	{
+		result = [result stringByAppendingFormat:@" * %@", color];
+	}
+	
+	BOOL premul = [self isPremultiplied];
+	if (!premul)
+	{
+		result = [result stringByAppendingString:@" x diffuse"];
+	}
+	
+	return result;
+}
+
+
+- (OOColor *) color
+{
+	return [_color autorelease];
+}
+
+
+- (OOTextureSpecification *) textureMap
+{
+	return [_textureMap autorelease];
+}
+
+
+- (BOOL) isPremultiplied
+{
+	return _isPremultiplied;
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	OOColor		*color = [self color];
+	BOOL		isWhite = [color isWhite];
+	id			textureSpec = [[self textureMap] ja_propertyListRepresentationWithContext:context];
+	BOOL		premul = [self isPremultiplied];
+	
+	// Boil the whole thing down to just texture name if possible.
+	if (isWhite && premul == kDefaultLightMapPremultiplied && [textureSpec isKindOfClass:[NSString class]])
+	{
+		return textureSpec;
+	}
+	
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:3];
+	
+	[result setObject:textureSpec forKey:kOOMaterialLightMapTextureMapName];
+	if (!isWhite)
+	{
+		[result setObject:color forKey:kOOMaterialLightMapColor];
+	}
+	if (premul != kDefaultLightMapPremultiplied)
+	{
+		[result oo_setBool:premul forKey:kOOMaterialLightMapIsPremultiplied];
+	}
+	
+	return result;
 }
 
 @end

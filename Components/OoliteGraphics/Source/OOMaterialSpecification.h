@@ -29,6 +29,8 @@
 #import "OOTextureSpecification.h"
 #import "OOColor.h"
 
+@class OOLightMapSpecification;	// Declared below
+
 
 @interface OOMaterialSpecification: NSObject <JAPropertyListRepresentation>
 {
@@ -44,11 +46,7 @@
 	OOTextureSpecification		*_specularExponentMap;
 	int							_specularExponent;
 	
-	OOColor						*_emissionColor;
-	OOTextureSpecification		*_emissionMap;
-	
-	OOColor						*_illuminationColor;
-	OOTextureSpecification		*_illuminationMap;
+	NSMutableArray				*_lightMaps;
 	
 	OOTextureSpecification		*_normalMap;
 	OOTextureSpecification		*_parallaxMap;
@@ -84,15 +82,11 @@
 - (OOTextureSpecification *) specularExponentMap;
 - (void) setSpecularExponentMap:(OOTextureSpecification *)texture;
 
-- (OOColor *) emissionColor;
-- (void) setEmissionColor:(OOColor *)color;
-- (OOTextureSpecification *) emissionMap;
-- (void) setEmissionMap:(OOTextureSpecification *)texture;
-
-- (OOColor *) illuminationColor;
-- (void) setIlluminationColor:(OOColor *)color;
-- (OOTextureSpecification *) illuminationMap;
-- (void) setIlluminationMap:(OOTextureSpecification *)texture;
+- (NSArray *) lightMaps;
+- (void) addLightMap:(OOLightMapSpecification *)lightMap;
+- (void) insertLightMap:(OOLightMapSpecification *)lightMap atIndex:(NSUInteger)index;
+- (void) removeLightMapAtIndex:(NSUInteger)index;
+- (void) replaceLightMapAtIndex:(NSUInteger)index withLightMap:(OOLightMapSpecification *)lightMap;
 
 - (OOTextureSpecification *) normalMap;
 - (void) setNormalMap:(OOTextureSpecification *)texture;
@@ -109,6 +103,37 @@
 @end
 
 
+/*
+	OOLightMapSpecification
+	Immutable specification for a single light map.
+*/
+@interface OOLightMapSpecification: NSObject <JAPropertyListRepresentation, NSCopying>
+{
+@private
+	OOColor						*_color;
+	OOTextureSpecification		*_textureMap;
+	BOOL						_isPremultiplied;
+}
+
+- (id) initWithColor:(OOColor *)color
+		  textureMap:(OOTextureSpecification *)texture	// May not be nil.
+	   premultiplied:(BOOL)premuptiplied;
+
+- (id) initWithPropertyListRepresentation:(id)propertyList
+								   issues:(id <OOProblemReporting>)issues;
+
+- (OOColor *) color;
+- (OOTextureSpecification *) textureMap;
+- (BOOL) isPremultiplied;
+
+#if OOLITE_MAC_OS_X
+@property (readonly, getter=isPremultiplied) BOOL premultiplied;
+#endif
+
+@end
+
+
+// OOMaterialSpecification property list keys.
 extern NSString * const kOOMaterialDiffuseColorName;
 extern NSString * const kOOMaterialAmbientColorName;
 extern NSString * const kOOMaterialDiffuseMapName;
@@ -118,13 +143,16 @@ extern NSString * const kOOMaterialSpecularColorMapName;
 extern NSString * const kOOMaterialSpecularExponentName;
 extern NSString * const kOOMaterialSpecularExponentMapName;
 
-extern NSString * const kOOMaterialEmissionColorName;
-extern NSString * const kOOMaterialEmissionMapName;
-extern NSString * const kOOMaterialIlluminationColorName;
-extern NSString * const kOOMaterialIlluminationMapName;
+extern NSString * const kOOMaterialLightMaps;
 
 extern NSString * const kOOMaterialNormalMapName;
 extern NSString * const kOOMaterialParallaxMapName;
 
 extern NSString * const kOOMaterialParallaxScale;
 extern NSString * const kOOMaterialParallaxBias;
+
+
+// OOLightMapSpecification keys.
+extern NSString * const kOOMaterialLightMapColor;
+extern NSString * const kOOMaterialLightMapTextureMapName;
+extern NSString * const kOOMaterialLightMapIsPremultiplied;

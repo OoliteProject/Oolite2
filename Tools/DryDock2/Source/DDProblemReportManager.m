@@ -85,7 +85,6 @@ enum
 	if (_problems == nil)  _problems = [NSMutableArray array];
 	[_problems addObject:[[DDProblemReportIssue alloc] initWithType:type message:message]];
 	if (_highestType < type)  _highestType = type;
-	NSLog(@"Problems: %@", _problems);
 }
 
 

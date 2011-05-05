@@ -30,7 +30,7 @@
 #import "OOMeshReading.h"
 
 @protocol OOOBJMaterialLibraryResolving;
-@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification, OOFloatArray;
+@class OOOBJLexer, OOAbstractMesh, OOAbstractFaceGroup, OOMaterialSpecification, OOFloatArray, OOColor, OOTextureSpecification;
 
 
 @interface OOOBJReader: NSObject <OOMeshReading>
@@ -75,6 +75,8 @@
 	// ivars used only during material library parsing.
 	OOMaterialSpecification				*_currentMaterial;
 	NSString							*_currentMaterialLibraryName;
+	OOColor								*_materialEmissionColor;
+	OOTextureSpecification				*_materialEmissionMap;
 }
 
 - (id) initWithPath:(NSString *)path

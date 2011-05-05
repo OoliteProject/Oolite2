@@ -42,6 +42,8 @@
 		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; };
 		1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */; };
 		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
+		1A52CC211372CF1D00BD6C75 /* oolite-plain-white.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A52CC201372CF1B00BD6C75 /* oolite-plain-white.png */; };
+		1A52CC221372CF3400BD6C75 /* Placeholder Texture.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */; };
 		1A55BBBA130B229B006C38DE /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB82130B227B006C38DE /* OoliteBase.framework */; };
 		1A55BBBB130B229D006C38DE /* OoliteGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB94130B2289006C38DE /* OoliteGraphics.framework */; };
 		1A55BBBC130B22AC006C38DE /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A55BB82130B227B006C38DE /* OoliteBase.framework */; };
@@ -61,7 +63,6 @@
 		1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287511F393C300775894 /* MAMethodSignatureCache.m */; };
 		1A8A287D11F393C400775894 /* MAProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287711F393C300775894 /* MAProxy.m */; };
 		1A950925136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */; };
-		1ADB31FE122AF87B00F890B8 /* Placeholder Texture.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */; };
 		1ADB321C122AF99D00F890B8 /* DDApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */; };
 		1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* DDDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
@@ -114,6 +115,18 @@
 				1A55BBBD130B22AF006C38DE /* OoliteGraphics.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1A52CC1F1372CEE900BD6C75 /* Copy Textures */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Textures;
+			dstSubfolderSpec = 7;
+			files = (
+				1A52CC211372CF1D00BD6C75 /* oolite-plain-white.png in Copy Textures */,
+				1A52CC221372CF3400BD6C75 /* Placeholder Texture.png in Copy Textures */,
+			);
+			name = "Copy Textures";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -191,6 +204,7 @@
 		1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CarbonFSRefCreation.m"; sourceTree = "<group>"; };
 		1A4CC2D411F4E58700D7144C /* DDSceneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDSceneView.h; sourceTree = "<group>"; };
 		1A4CC2D511F4E58700D7144C /* DDSceneView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DDSceneView.mm; sourceTree = "<group>"; };
+		1A52CC201372CF1B00BD6C75 /* oolite-plain-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oolite-plain-white.png"; path = "../../../Oolite/Resources/Textures/oolite-plain-white.png"; sourceTree = "<group>"; };
 		1A55BB7A130B227A006C38DE /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = "<group>"; };
 		1A55BB83130B2289006C38DE /* OoliteGraphics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteGraphics.xcodeproj; path = OoliteGraphics/Mac/OoliteGraphics.xcodeproj; sourceTree = "<group>"; };
 		1A5838EB1205E83200118F45 /* SolidWireframeShader.fs */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = SolidWireframeShader.fs; sourceTree = "<group>"; };
@@ -436,6 +450,15 @@
 			path = IconFamily;
 			sourceTree = "<group>";
 		};
+		1A52CC231372CF3900BD6C75 /* Textures */ = {
+			isa = PBXGroup;
+			children = (
+				1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */,
+				1A52CC201372CF1B00BD6C75 /* oolite-plain-white.png */,
+			);
+			name = Textures;
+			sourceTree = "<group>";
+		};
 		1A55BB77130B2265006C38DE /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -554,7 +577,7 @@
 				1DDD58280DA1D0D100B32029 /* DDDocument.xib */,
 				1DDD582A0DA1D0D100B32029 /* MainMenu.xib */,
 				1A2F86E211F73D5800435A2E /* DDProblemReportManager.xib */,
-				1ADB31FD122AF87B00F890B8 /* Placeholder Texture.png */,
+				1A52CC231372CF3900BD6C75 /* Textures */,
 				1A7392BA11C3CE5C002F405C /* Shaders */,
 				1A2F86B311F7335E00435A2E /* Icons */,
 			);
@@ -580,6 +603,7 @@
 			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "DryDock2" */;
 			buildPhases = (
 				8D15AC2B0486D014006FF6A4 /* Resources */,
+				1A52CC1F1372CEE900BD6C75 /* Copy Textures */,
 				1A17CF7111C16C7000F96041 /* Copy Frameworks */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
@@ -669,7 +693,6 @@
 				1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */,
 				1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */,
 				1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */,
-				1ADB31FE122AF87B00F890B8 /* Placeholder Texture.png in Resources */,
 				1A649F451323B87900C2FDDB /* oolite-enduser-configuration.xcconfig in Resources */,
 				1A5BA1C2135B415D00FC93C2 /* oolite-default.fs in Resources */,
 				1A5BA1C3135B415D00FC93C2 /* oolite-default.vs in Resources */,

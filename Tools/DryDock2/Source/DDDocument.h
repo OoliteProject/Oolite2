@@ -16,6 +16,7 @@
 {
 @private
 	NSMutableArray						*_meshes;
+	NSURL								*_realTargetURL;
 	
 #if !__OBJC2__
 	float								_loadingProgress;

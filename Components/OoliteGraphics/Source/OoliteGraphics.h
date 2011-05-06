@@ -31,8 +31,9 @@ extern "C" {
 // I/O
 #import "OODATReader.h"
 #import "OODATWriter.h"
-
+	
 #import "OOOBJReader.h"
+#import "OOOBJWriter.h"
 
 #import "OOMeshReader.h"
 #import "OOMeshWriter.h"

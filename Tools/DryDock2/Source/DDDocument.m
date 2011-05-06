@@ -49,10 +49,23 @@
 }
 
 
+- (BOOL) writeSafelyToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation error:(NSError **)outError
+{
+	// HACK: stash away the real save URL so we can write the MTL file next to it if it’s an OBJ file. Urgh.
+	_realTargetURL = absoluteURL;
+	BOOL result = [super writeSafelyToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation error:outError];
+	_realTargetURL = nil;
+	
+	return result;
+}
+
+
 - (BOOL) writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
-	DDProblemReportManager *issues = [[DDProblemReportManager alloc] initWithContext:kDDPRContextSave fileURL:absoluteURL];
-	NSData *data = nil;
+	DDProblemReportManager	*issues = [[DDProblemReportManager alloc] initWithContext:kDDPRContextSave fileURL:absoluteURL];
+	NSData					*data = nil;
+	NSData					*mtlData = nil;
+	NSURL					*mtlURL = nil;
 	
 	if ([typeName isEqualToString:@"org.oolite.oomesh"])
 	{
@@ -61,6 +74,14 @@
 	else if ([typeName isEqualToString:@"org.aegidian.oolite.mesh"])
 	{
 		data = OODATDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], issues);
+	}
+	else if ([typeName isEqualToString:@"com.newtek.lightwave.obj"] && _realTargetURL != nil)
+	{
+		NSString *mtlName = [[absoluteURL path] lastPathComponent];
+		data = OOOBJDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], mtlName, &mtlData, &mtlName, issues);
+		
+		mtlURL = [NSURL URLWithString:mtlName relativeToURL:_realTargetURL];
+		NSLog(@"%@", [mtlURL absoluteString]);
 	}
 	else
 	{
@@ -72,6 +93,11 @@
 		{
 			NSError *error = nil;
 			BOOL OK = [data writeToURL:absoluteURL options:NSDataWritingAtomic error:&error];
+			if (OK && mtlData != nil)
+			{
+				// Write MTL file in case of OBJ export.
+				OK = [mtlData writeToURL:mtlURL options:NSDataWritingAtomic error:&error];
+			}
 			if (!OK)
 			{
 				[self presentError:error];
@@ -80,6 +106,12 @@
 	}];
 	
 	return YES;	// Don’t want NSDocument’s error messages.
+}
+
+
+- (NSString *)autosavingFileType
+{
+	return @"org.oolite.oomesh";
 }
 
 

@@ -297,7 +297,7 @@ static inline Class ClassForNormalArrayOfSize(OOUInteger size)
 	if (count != [other count])  return NO;
 	
 	const float *mine = [self priv_floatArray];
-	const float *theirs = [self priv_floatArray];
+	const float *theirs = [other priv_floatArray];
 	for (NSUInteger i = 0; i < count; i++)
 	{
 		if (*mine++ != *theirs++)  return NO;

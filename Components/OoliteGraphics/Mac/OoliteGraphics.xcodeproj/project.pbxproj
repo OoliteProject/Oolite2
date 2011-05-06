@@ -20,6 +20,8 @@
 		1A663E4011F25C2D0049AE20 /* OOShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A663E3E11F25C2D0049AE20 /* OOShaderProgram.m */; };
 		1A663E5411F25C970049AE20 /* OOMacroOpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A663E5311F25C970049AE20 /* OOMacroOpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713DDE11B55E96009A9197 /* OoliteGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713DDD11B55E96009A9197 /* OoliteGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A72BD3F1373377B00BAC601 /* OOOBJWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A72BD3D1373377B00BAC601 /* OOOBJWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A72BD401373377B00BAC601 /* OOOBJWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A72BD3E1373377B00BAC601 /* OOOBJWriter.m */; };
 		1A748B491358FB290037AA38 /* OOGraphicsContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A748B471358FB290037AA38 /* OOGraphicsContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A748B4A1358FB290037AA38 /* OOGraphicsContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A748B481358FB290037AA38 /* OOGraphicsContext.m */; };
 		1A7D35B811B138A100857CEF /* OOIndexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A7D35B611B138A100857CEF /* OOIndexArray.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -166,6 +168,8 @@
 		1A6C20961334CB4500821B1D /* GNUmakefile.postamble */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = GNUmakefile.postamble; path = ../GNUmakefile.postamble; sourceTree = SOURCE_ROOT; };
 		1A713DC611B55E05009A9197 /* OoliteGraphics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OoliteGraphics-Info.plist"; sourceTree = "<group>"; };
 		1A713DDD11B55E96009A9197 /* OoliteGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OoliteGraphics.h; path = ../Source/OoliteGraphics.h; sourceTree = SOURCE_ROOT; };
+		1A72BD3D1373377B00BAC601 /* OOOBJWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOOBJWriter.h; sourceTree = "<group>"; };
+		1A72BD3E1373377B00BAC601 /* OOOBJWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOOBJWriter.m; sourceTree = "<group>"; };
 		1A748B471358FB290037AA38 /* OOGraphicsContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGraphicsContext.h; sourceTree = "<group>"; };
 		1A748B481358FB290037AA38 /* OOGraphicsContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGraphicsContext.m; sourceTree = "<group>"; };
 		1A7D35B611B138A100857CEF /* OOIndexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOIndexArray.h; sourceTree = "<group>"; };
@@ -389,6 +393,8 @@
 				1A64DC9E11B111EC001D8850 /* OOMeshWriter.m */,
 				1A062E9911B2F64E00727C1D /* OODATWriter.h */,
 				1A062E9A11B2F64E00727C1D /* OODATWriter.m */,
+				1A72BD3D1373377B00BAC601 /* OOOBJWriter.h */,
+				1A72BD3E1373377B00BAC601 /* OOOBJWriter.m */,
 			);
 			name = Writers;
 			sourceTree = "<group>";
@@ -527,6 +533,7 @@
 				1AD8418D1229211E00FC382A /* OOTexture.h in Headers */,
 				1AD8418F1229211E00FC382A /* OOTextureInternal.h in Headers */,
 				1AD841901229211E00FC382A /* OOTextureLoader.h in Headers */,
+				1A72BD3F1373377B00BAC601 /* OOOBJWriter.h in Headers */,
 				1A0E377A136BF43D00D07C7F /* OOGeometryGLHelpers.h in Headers */,
 				1A7D37C511B16C1500857CEF /* OOOBJLexer.h in Headers */,
 				1AD841951229214100FC382A /* OOConcreteTexture.h in Headers */,
@@ -701,6 +708,7 @@
 				1ADE98AB135B3827003385AB /* OOMaterial.m in Sources */,
 				1ACFE0FF135E3BCC006326F5 /* OODefaultShaderSynthesizer.m in Sources */,
 				1A0E3778136BF2EE00D07C7F /* OOShaderUniform.m in Sources */,
+				1A72BD401373377B00BAC601 /* OOOBJWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

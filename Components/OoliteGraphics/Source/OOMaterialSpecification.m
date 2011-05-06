@@ -731,7 +731,7 @@ static OOTextureSpecification *TextureSpec(id value)
 	[result setObject:textureSpec forKey:kOOMaterialLightMapTextureMapName];
 	if (!isWhite)
 	{
-		[result setObject:color forKey:kOOMaterialLightMapColor];
+		[result setObject:[color normalizedArray] forKey:kOOMaterialLightMapColor];
 	}
 	if (premul != kDefaultLightMapPremultiplied)
 	{

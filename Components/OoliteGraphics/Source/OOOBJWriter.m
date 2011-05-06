@@ -73,7 +73,14 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 	NSString *meshName = [mesh name];
 	if (name == nil)  name = meshName;
 	if (name == nil)  name = @"untitled";
-	if (meshName == nil)  meshName = name;
+	if (meshName == nil)
+	{
+		meshName = name;
+		if ([[meshName pathExtension] caseInsensitiveCompare:@"obj"] == NSOrderedSame)
+		{
+			meshName = [meshName stringByDeletingPathExtension];
+		}
+	}
 	
 	NSString *mtlName = [[name stringByDeletingPathExtension] stringByAppendingPathExtension:@"mtl"];
 	if (outMtlName != NULL)  *outMtlName = mtlName;
@@ -86,6 +93,7 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 	
 	
 	NSMutableString *obj = [NSMutableString stringWithFormat:@"# %@\n# Written by OoliteGraphics " OOLITE_VERSION "\n\n", meshName];
+	if (mtlName != nil)  [obj appendFormat:@"mtllib %@\n", mtlName];
 	
 	NSMutableDictionary *posIndicies = [NSMutableDictionary dictionary];
 	NSMutableDictionary *normIndicies = [NSMutableDictionary dictionary];
@@ -94,6 +102,8 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 	NSUInteger nextPosIdx = 1;
 	NSUInteger nextNormIdx = 1;
 	NSUInteger nextTexIdx = 1;
+	
+	[obj appendFormat:@"o %@\n\n", meshName];
 	
 	/*
 		Iterate over groups and faces and write uniqued vertex attributes.
@@ -160,7 +170,7 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 		NSString *groupName = [group name];
 		if (groupName == nil)  groupName = $sprintf(@"group_%lu", groupIdx);
 		
-		[obj appendFormat:@"\ng %@", groupName];
+		[obj appendFormat:@"\ng %@\nusemtl %@", groupName, [[group material] materialKey]];
 		
 		OOAbstractFace *face = nil;
 		foreach (face, group)
@@ -335,8 +345,11 @@ static void WriteMTLTexture(NSMutableString *mtl, OOTextureSpecification *textur
 	
 	NSString *options = @"";
 	
-	// FIXME: no point writing an option that we can’t read back properly.
 #if 0
+	/*
+		In principle, repeat settings can be represented in MTL files, but
+		neither OoliteGraphics nor Wings3D can read them.
+	*/
 	BOOL repeatS = [texture repeatS], repeatT = [texture repeatT];
 	if (!repeatS && !repeatT)
 	{

@@ -300,8 +300,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			[NSException raise:NSGenericException format:@"Invalid material"];
 			
 		case 1:
-		OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the mesh has no %@ attribute.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
-		[NSException raise:NSGenericException format:@"Invalid material"];
+			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the %@ attribute in the mesh is only one-dimensional.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
+			[NSException raise:NSGenericException format:@"Invalid material"];
 			
 		case 2:
 			break;	// Perfect!
@@ -399,7 +399,11 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	OOTextureSpecification	*diffuseMap = [_spec diffuseMap];
 	OOColor					*diffuseColor = [_spec diffuseColor];
 	
-	if ([diffuseColor isBlack])  return;
+	if ([diffuseColor isBlack])
+	{
+		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);\n\t\n"];
+		return;
+	}
 	
 	[_fragmentBody appendString:@"\t// Diffuse colour\n"];
 	
@@ -542,7 +546,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		
 		case kLightingUniform:
 		case kLightingUndetermined:
-			[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n\tconst vec3 diffuseLight = vec3(1.0);\n\t\n"];
+			[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n"
+										 "\tconst vec3 diffuseLight = vec3(1.0);\n\t\n"];
 			return;
 	}
 	
@@ -576,7 +581,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	// Shared code for all lighting modes.
 	[_fragmentBody appendFormat:
 	@"\t// Placeholder lighting\n"
-	@"\tvec3 lightVector = normalize(vLightVector);\n"
+	 "\tvec3 lightVector = normalize(vLightVector);\n"
 	 "\tvec3 diffuseLight = vec3(0.8 * max(0.0, %@) + 0.2);\n\t\n",
 	 normalDotLight];
 	
@@ -621,7 +626,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				}
 				else
 				{
-					OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only 3 may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length]);
+					OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length], @"3");
 				}
 			}
 			
@@ -673,6 +678,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	}
 	
 	OOTextureSpecification *specularExponentMap = [_spec specularExponentMap];
+	BOOL haveSpecularExponent = NO;
 	if (specularExponentMap != nil)
 	{
 		NSString *readInstr = [self readOneChannelForTextureSpec:specularExponentMap mapName:@"specular exponent"];
@@ -683,8 +689,9 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		}
 		
 		[_fragmentBody appendFormat:@"\tfloat specularExponent = %@ * %.1f;\n", readInstr, specularExponent];
+		haveSpecularExponent = YES;
 	}
-	else
+	if (!haveSpecularExponent)
 	{
 		[_fragmentBody appendFormat:@"\tconst float specularExponent = %.1f;\n", specularExponent];
 	}
@@ -731,7 +738,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		
 		if (EXPECT_NOT(rgba[0] == 0.0f && rgba[1] == 0.0f && rgba[2] == 0.0f))
 		{
-			[_fragmentBody appendString:@"\t// Light map tinted black has no effect.\n"];
+			[_fragmentBody appendString:@"\t// Light map tinted black has no effect.\n\t\n"];
 			continue;
 		}
 		
@@ -819,12 +826,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self createTemporaries];
 	_uniforms = [[NSMutableDictionary alloc] init];
 	[_vertexBody appendString:@"void main(void)\n{\n"];
-	[_fragmentBody appendString:@"void main(void)\n{\n"];
+	[_fragmentBody appendString:@"void main(void)\n{\n\tvec3 totalColor = vec3(0.0);\n\t\n"];
 	
 	@try
 	{
-		[_fragmentBody appendString:@"\tvec3 totalColor = vec3(0.0);\n\t\n"];
-		
 		[self writePosition];
 		[self setUpTextures];
 		[self writeNormal];

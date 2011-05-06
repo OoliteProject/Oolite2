@@ -56,7 +56,6 @@ NSString * const kOOMaterialLightMapTypeValueIllumination	= @"illumination";
 #define kDefaultSpecularExponentNoMap	(10)
 #define kDefaultParallaxScale			(0.01f)
 #define kDefaultParallaxBias			(0.0f)
-#define kDefaultLightMapPremultiplied	(YES)
 
 
 @implementation OOMaterialSpecification

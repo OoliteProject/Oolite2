@@ -172,15 +172,6 @@
 							<string key="NSTitle">File</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMenuItem" id="705341025">
-									<reference key="NSMenu" ref="720053764"/>
-									<string key="NSTitle">New</string>
-									<string key="NSKeyEquiv">n</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="1033313550"/>
-									<reference key="NSMixedImage" ref="310636482"/>
-								</object>
 								<object class="NSMenuItem" id="722745758">
 									<reference key="NSMenu" ref="720053764"/>
 									<string key="NSTitle">Open…</string>
@@ -1272,14 +1263,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">newDocument:</string>
-						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="705341025"/>
-					</object>
-					<int key="connectionID">371</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">openDocument:</string>
 						<reference key="source" ref="1014"/>
 						<reference key="destination" ref="722745758"/>
@@ -1628,7 +1611,6 @@
 							<reference ref="1023925487"/>
 							<reference ref="117038363"/>
 							<reference ref="722745758"/>
-							<reference ref="705341025"/>
 							<reference ref="1025936716"/>
 							<reference ref="776162233"/>
 							<reference ref="425164168"/>
@@ -1649,11 +1631,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">72</int>
 						<reference key="object" ref="722745758"/>
-						<reference key="parent" ref="720053764"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">82</int>
-						<reference key="object" ref="705341025"/>
 						<reference key="parent" ref="720053764"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -2514,8 +2491,6 @@
 					<string>81.IBPluginDependency</string>
 					<string>81.ImportedFromIB2</string>
 					<string>81.editorWindowContentRectSynchronizationRect</string>
-					<string>82.IBPluginDependency</string>
-					<string>82.ImportedFromIB2</string>
 					<string>83.IBPluginDependency</string>
 					<string>83.ImportedFromIB2</string>
 					<string>92.IBPluginDependency</string>
@@ -2720,8 +2695,6 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{155, 774}, {199, 203}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2987,11 +2960,15 @@
 							<string>resetPan:</string>
 							<string>resetRotation:</string>
 							<string>resetZoom:</string>
+							<string>zoomIn:</string>
 							<string>zoomInAction:</string>
+							<string>zoomOut:</string>
 							<string>zoomOutAction:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3008,7 +2985,9 @@
 							<string>resetPan:</string>
 							<string>resetRotation:</string>
 							<string>resetZoom:</string>
+							<string>zoomIn:</string>
 							<string>zoomInAction:</string>
+							<string>zoomOut:</string>
 							<string>zoomOutAction:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -3030,7 +3009,15 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
+								<string key="name">zoomIn:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
 								<string key="name">zoomInAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">zoomOut:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

@@ -32,14 +32,14 @@
 }
 
 
-- (id) init
+- (id)initWithType:(NSString *)typeName error:(NSError **)outError
 {
-    self = [super init];
-    if ((self = [super init]))
+	// No blank documents for us.
+	if (outError != NULL)
 	{
-		
-    }
-    return self;
+		*outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
+	}
+	return nil;
 }
 
 
@@ -67,6 +67,8 @@
 	NSData					*mtlData = nil;
 	NSURL					*mtlURL = nil;
 	
+	if (outError != NULL)  *outError = nil;
+	
 	if ([typeName isEqualToString:@"org.oolite.oomesh"])
 	{
 		data = OOMeshDataFromMesh([[self.meshes objectAtIndex:0] abstractMesh], kOOMeshWriteWithAnnotations | kOOMeshWriteWithExtendedAnnotations /*| kOOMeshWriteJSONCompatible*/, issues);
@@ -88,24 +90,25 @@
 		OOReportError(issues, @"The file format \"%@\" is currently not supported for saving.", [[NSWorkspace sharedWorkspace] localizedDescriptionForType:typeName]);
 	}
 	
+	__block BOOL OK = NO;
 	[issues runReportModalForWindow:[self windowForSheet] completionHandler:^(BOOL continueFlag){
 		if (continueFlag)
 		{
-			NSError *error = nil;
-			BOOL OK = [data writeToURL:absoluteURL options:NSDataWritingAtomic error:&error];
+		//	NSError *error = nil;
+			OK = [data writeToURL:absoluteURL options:NSDataWritingAtomic error:outError];
 			if (OK && mtlData != nil)
 			{
 				// Write MTL file in case of OBJ export.
-				OK = [mtlData writeToURL:mtlURL options:NSDataWritingAtomic error:&error];
+				OK = [mtlData writeToURL:mtlURL options:NSDataWritingAtomic error:outError];
 			}
-			if (!OK)
-			{
-				[self presentError:error];
-			}
+		}
+		else
+		{
+			if (outError != NULL)  *outError = [NSError errorWithDomain:NSCocoaErrorDomain code:NSUserCancelledError userInfo:nil];
 		}
 	}];
 	
-	return YES;	// Don’t want NSDocument’s error messages.
+	return OK;
 }
 
 
@@ -117,6 +120,8 @@
 
 - (BOOL) readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
 {
+	if (outError != NULL)  *outError = nil;
+	
 	if (![absoluteURL isFileURL])  return NO;
 	
 	NSString *path = [absoluteURL path];

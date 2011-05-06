@@ -125,7 +125,8 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 					OOFloatArray *pos = [verts[i] attributeForKey:kOOPositionAttributeKey];
 					if ([posIndicies objectForKey:pos] == nil)
 					{
-						[obj appendFormat:@"v  %g %g %g\n", [pos floatAtIndex:0], [pos floatAtIndex:1], [pos floatAtIndex:2]];
+						// Flip for left-handed Oolite coordinate system.
+						[obj appendFormat:@"v  %g %g %g\n", -[pos floatAtIndex:0], [pos floatAtIndex:1], [pos floatAtIndex:2]];
 						[posIndicies setObject:$int(nextPosIdx++) forKey:pos];
 					}
 				}

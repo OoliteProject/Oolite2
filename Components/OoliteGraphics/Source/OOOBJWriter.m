@@ -364,7 +364,7 @@ static void WriteMTLTexture(NSMutableString *mtl, OOTextureSpecification *textur
 	NSString *swizzle = [texture extractMode];
 	if (swizzle != nil && ![swizzle isEqualToString:defaultSwizzle])
 	{
-		OOReportWarning(issues, @"The material \"%@\" uses a %@ map with extract mode \"%@\", which cannot be represented in the OBJ format.", key, name, swizzle);
+		OOReportWarning(issues, @"The material \"%@\" uses a %@ map with extract mode \"%@\", which cannot be represented in the OBJ format.", mtlKey, name, swizzle);
 	}
 	
 	// FIXME: file name restrictions?

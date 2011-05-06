@@ -934,16 +934,16 @@ static BOOL ReadFaceTriple(OOOBJReader *self, OOOBJLexer *lexer, NSInteger *v, N
 	OOLightMapSpecification *lightMap = nil;
 	if (_materialEmissionMap != nil)
 	{
-		lightMap = [[OOLightMapSpecification alloc] initWithColor:_materialEmissionColor
-													   textureMap:_materialEmissionMap
-													premultiplied:YES];
+		lightMap = [[OOLightMapSpecification alloc] initWithType:kOOLightMapTypeEmission
+														   color:_materialEmissionColor
+														 texture:_materialEmissionMap];
 	}
 	else if (_materialEmissionColor != nil)
 	{
 		OOTextureSpecification *whiteSpec = [OOTextureSpecification textureSpecWithName:@"oolite-plain-white.png"];
-		lightMap = [[OOLightMapSpecification alloc] initWithColor:_materialEmissionColor
-													   textureMap:whiteSpec
-													premultiplied:YES];
+		lightMap = [[OOLightMapSpecification alloc] initWithType:kOOLightMapTypeEmission
+														   color:_materialEmissionColor
+														 texture:whiteSpec];
 	}
 	
 	if (lightMap != nil)

@@ -103,6 +103,14 @@
 @end
 
 
+typedef enum OOLightMapType
+{
+	kOOLightMapTypeEmission,
+	kOOLightMapTypeIllumination,
+	
+	kOOLightMapTypeDefault = kOOLightMapTypeEmission
+} OOLightMapType;
+
 /*
 	OOLightMapSpecification
 	Immutable specification for a single light map.
@@ -110,25 +118,24 @@
 @interface OOLightMapSpecification: NSObject <JAPropertyListRepresentation, NSCopying>
 {
 @private
+	OOLightMapType				_type;
 	OOColor						*_color;
 	OOTextureSpecification		*_textureMap;
-	BOOL						_isPremultiplied;
 }
 
-- (id) initWithColor:(OOColor *)color
-		  textureMap:(OOTextureSpecification *)texture	// May not be nil.
-	   premultiplied:(BOOL)premuptiplied;
+- (id) initWithType:(OOLightMapType)type
+			  color:(OOColor *)color
+			texture:(OOTextureSpecification *)texture;	// May not be nil.
 
 - (id) initWithPropertyListRepresentation:(id)propertyList
 								   issues:(id <OOProblemReporting>)issues;
 
+- (OOLightMapType) type;
 - (OOColor *) color;
 - (OOTextureSpecification *) textureMap;
-- (BOOL) isPremultiplied;
 
-#if OOLITE_MAC_OS_X
-@property (readonly, getter=isPremultiplied) BOOL premultiplied;
-#endif
++ (NSString *) stringFromType:(OOLightMapType)type;
++ (BOOL) getType:(OOLightMapType *)type fromString:(NSString *)string;	// For invalid strings, sets *type to kOOLightMapTypeDefault and returns NO.
 
 @end
 
@@ -155,4 +162,6 @@ extern NSString * const kOOMaterialParallaxBias;
 // OOLightMapSpecification keys.
 extern NSString * const kOOMaterialLightMapColor;
 extern NSString * const kOOMaterialLightMapTextureMapName;
-extern NSString * const kOOMaterialLightMapIsPremultiplied;
+extern NSString * const kOOMaterialLightMapType;
+extern NSString * const kOOMaterialLightMapTypeValueEmission;
+extern NSString * const kOOMaterialLightMapTypeValueIllumination;

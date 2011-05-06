@@ -749,13 +749,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			[_fragmentBody appendFormat:@"\tlightMapColor *= vec3(%g, %g, %g);\n", rgba[0], rgba[1], rgba[2]];
 		}
 		
-		if ([lightMap isPremultiplied])
+		switch ([lightMap type])
 		{
-			[_fragmentBody appendString:@"\ttotalColor += lightMapColor;\n\t\n"];
-		}
-		else
-		{
-			[_fragmentBody appendString:@"\ttotalColor += lightMapColor * diffuseColor;\n\t\n"];
+			case kOOLightMapTypeEmission:
+				[_fragmentBody appendString:@"\ttotalColor += lightMapColor;\n\t\n"];
+				break;
+				
+			case kOOLightMapTypeIllumination:
+				[_fragmentBody appendString:@"\ttotalColor += lightMapColor * diffuseColor;\n\t\n"];
+				break;
 		}
 	}
 }

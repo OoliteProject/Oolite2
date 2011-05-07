@@ -72,7 +72,28 @@ typedef enum
 	uint8_t						_normalAttrSize;
 	uint8_t						_tangentAttrSize;
 	uint8_t						_bitangentAttrSize;
-	BOOL						_usesNormalMap;
+	
+	NSUInteger					_usesNormalMap: 1,
+								_usesDiffuseTerm: 1,
+								_constZNormal: 1,
+	
+	// Completion flags for various generation stages.
+								_completed_writeFinalColorComposite: 1,
+								_completed_writeDiffuseColorTerm: 1,
+								_completed_writeSpecularLighting: 1,
+								_completed_writeLightMaps: 1,
+								_completed_writeDiffuseLighting: 1,
+								_completed_writeDiffuseColorTermIfNeeded: 1,
+								_completed_writeVertexPosition: 1,
+								_completed_writeNormalIfNeeded: 1,
+								_completed_writeNormal: 1,
+								_completed_writeFragmentLightVector: 1,
+								_completed_writeFragmentEyeVector: 1, 
+								_completed_writeTotalColor: 1;
+	
+#ifndef NDEBUG
+	NSHashTable					*_stagesInProgress;
+#endif
 }
 
 - (id) initWithMaterialSpecifiction:(OOMaterialSpecification *)spec
@@ -91,6 +112,69 @@ typedef enum
 
 - (LightingMode) lightingMode;
 - (BOOL) tangentSpaceLighting;
+
+/*	Stages. These should only be called through the REQUIRE_STAGE macro to
+	avoid duplicated code and ensure data depedencies are met.
+*/
+
+/*	writeFinalColorComposite
+	This stage writes the final fragment shader. It also pulls in other stages
+	through dependencies.
+*/
+- (void) writeFinalColorComposite;
+
+/*	writeDiffuseColorTermIfNeeded
+	Generates and populates the fragment shader value vec3 diffuseColor, unless
+	the diffuse term is black. If a diffuseColor is generated, _usesDiffuseTerm
+	is set. The value will be const if possible.
+	See also: writeDiffuseColorTerm.
+*/
+- (void) writeDiffuseColorTermIfNeeded;
+
+/*	writeDiffuseColorTerm
+	Generates vec3 diffuseColor unconditionally – that is, even if the diffuse
+	term is black.
+	See also: writeDiffuseColorTermIfNeeded.
+*/
+- (void) writeDiffuseColorTerm;
+
+/*	writeNormalIfNeeded
+	Writes fragment variable vec3 normal if necessary. Otherwise, it sets
+	_constZNormal, indicating that the normal is always (0, 0, 1).
+	
+	This stage also has other, tightly interwoven effects. If tangent space
+	lighting is in effect, it sets up the TBN (tangent-bitangent-normal) matrix
+	in the vertex shader.
+	
+	See also: writeNormal.
+*/
+- (void) writeNormalIfNeeded;
+
+/*	writeNormal
+	Generates vec3 normal unconditionally – if _constZNormal is set, normal will
+	be const vec3 normal = vec3 (0.0, 0.0, 1.0).
+*/
+- (void) writeNormal;
+
+/*	writeFragmentLightVector
+	Generate the fragment variable vec3 lightVector (unit vector) for temporary
+	lighting. Calling this if lighting mode is kLightingUniform will cause an
+	exception.
+*/
+- (void) writeFragmentLightVector;
+
+/*	writeTotalColor
+	Generate vec3 totalColor, the accumulator for output colour values.
+*/
+- (void) writeTotalColor;
+
+
+#ifndef NDEBUG
+#define REQUIRE_STAGE(NAME) if (!_completed_##NAME) { [self performStage:@selector(NAME)]; _completed_##NAME = YES; }
+- (void) performStage:(SEL)stage;
+#else
+#define REQUIRE_STAGE(NAME) if (!_completed_##NAME) { [self NAME]; _completed_##NAME = YES; }
+#endif
 
 @end
 
@@ -394,18 +478,13 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) writeDiffuseColorTerm
+- (void) writeDiffuseColorTermIfNeeded
 {
 	OOTextureSpecification	*diffuseMap = [_spec diffuseMap];
 	OOColor					*diffuseColor = [_spec diffuseColor];
 	
-	if ([diffuseColor isBlack])
-	{
-		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);\n\t\n"];
-		return;
-	}
-	
-	[_fragmentBody appendString:@"\t// Diffuse colour\n"];
+	if ([diffuseColor isBlack])  return;
+	_usesDiffuseTerm = YES;
 	
 	BOOL haveDiffuseColor = NO;
 	if (diffuseMap != nil)
@@ -439,7 +518,18 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_fragmentBody appendFormat:format, rgba[0], rgba[1], rgba[2]];
 	}
 	
-	[_fragmentBody appendString:@"\ttotalColor += diffuseColor * diffuseLight;\n\t\n"];
+	[_fragmentBody appendString:@"\t\n"];
+}
+
+
+- (void) writeDiffuseColorTerm
+{
+	REQUIRE_STAGE(writeDiffuseColorTermIfNeeded);
+	
+	if (!_usesDiffuseTerm)
+	{
+		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);\n\t\n"];
+	}
 }
 
 
@@ -489,35 +579,108 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeDiffuseLighting
 {
-	BOOL needFragEyeVector = NO;
+	REQUIRE_STAGE(writeDiffuseColorTerm);
+	if (!_usesDiffuseTerm)  return;
 	
-	if ([_spec specularExponent] >= 1 && ![[_spec specularColor] isBlack])
+	if ([self lightingMode] == kLightingUniform)
 	{
-		// Will also be needed for parallax mapping. It's also going to need to be further up the fragment shader...
-		needFragEyeVector = YES;
+		[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n"
+		 "\ttotalColor += diffuseColor;\n\t\n"];
+		return;
 	}
 	
+	REQUIRE_STAGE(writeTotalColor);
+	REQUIRE_STAGE(writeVertexPosition);
+	REQUIRE_STAGE(writeNormalIfNeeded);
+	REQUIRE_STAGE(writeFragmentLightVector);
+	
 	// Simple placeholder lighting based on legacy OpenGL lighting.
-	BOOL tangentSpace = NO;
+	NSString *normalDotLight = _constZNormal ? @"lightVector.z" : @"dot(normal, lightVector)";
+	
+	// Shared code for all lighting modes.
+	[_fragmentBody appendFormat:
+	@"\t// Placeholder diffuse lighting\n"
+	 "\tvec3 diffuseLight = vec3(0.8 * max(0.0, %@) + 0.2);\n"
+	 "\ttotalColor += diffuseColor * diffuseLight;\n\t\n",
+	 normalDotLight];
+}
+
+
+- (void) writeFragmentLightVector
+{
+	REQUIRE_STAGE(writeVertexPosition);
+	REQUIRE_STAGE(writeNormalIfNeeded);
+	
+	[self addVarying:@"vLightVector" ofType:@"vec3"];
+	
 	switch ([self lightingMode])
 	{
 		case kLightingNormalOnly:
+			[_vertexBody appendString:@"\tvLightVector = gl_LightSource[0].position.xyz;\n\t\n"];
+			break;
+			
+		case kLightingNormalTangent:
+		case kLightingTangentBitangent:
+			[_vertexBody appendString:
+			 @"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
+			 "\tvLightVector = lightVector * TBN;\n\t\n"];
+			break;
+			
+		case kLightingUndetermined:
+		case kLightingUniform:
+			OOReportError(_problemReporter, @"Internal error in shader synthesizer: writeFragmentLightVector was called in uniform lighting mode.");
+			[NSException raise:NSInternalInconsistencyException format:@"lighting logic error"];
+			break;
+	}
+	
+	[_fragmentBody appendFormat:
+	@"\tvec3 lightVector = normalize(vLightVector);\n\t\n"];
+}
+
+
+- (void) writeFragmentEyeVector
+{
+	REQUIRE_STAGE(writeVertexPosition);
+	REQUIRE_STAGE(writeNormalIfNeeded);
+	
+	[self addVarying:@"vEyeVector" ofType:@"vec3"];
+	
+	switch ([self lightingMode])
+	{
+		case kLightingUndetermined:
+		case kLightingUniform:
+		case kLightingNormalOnly:
+			[_vertexBody appendString:@"\tvEyeVector = position.xyz;\n"];
+			break;
+			
+		case kLightingNormalTangent:
+		case kLightingTangentBitangent:
+			[_vertexBody appendString:@"\tvEyeVector = position.xyz * TBN;\n\t\n"];
+			break;
+	}
+	
+	[_fragmentBody appendString:@"\tvec3 eyeVector = normalize(vEyeVector);\n\t\n"];
+}
+
+
+- (void) writeNormalIfNeeded
+{
+	LightingMode			lightingMode = [self lightingMode];
+	OOTextureSpecification	*normalMap = [_spec normalMap];
+	BOOL					canNormalMap = NO;
+	BOOL					tangentSpace = NO;
+	
+	REQUIRE_STAGE(writeVertexPosition);
+	
+	switch (lightingMode)
+	{
+		case kLightingNormalOnly:
 			[self addAttribute:@"aNormal" ofType:@"vec3"];
-			[self addVarying:@"vLightVector" ofType:@"vec3"];
 			[self addVarying:@"vNormal" ofType:@"vec3"];
 			
 			// FIXME: do we really need to normalize here?
-			[_vertexBody appendString:
-			@"\tvNormal = normalize(gl_NormalMatrix * aNormal);\n"
-			 "\tvLightVector = gl_LightSource[0].position.xyz;\n"];
-			
-			if (needFragEyeVector)
-			{
-				[self addVarying:@"vEyeVector" ofType:@"vec3"];
-				[_vertexBody appendString:@"\tvEyeVector = position.xyz;\n"];
-			}
-			
-			[_vertexBody appendString:@"\t\n"];
+			[_vertexBody appendString:@"\tvNormal = normalize(gl_NormalMatrix * aNormal);\n\t\n"];
+			[_fragmentBody appendString:@"\tvec3 normal = normalize(vNormal);\n"];
 			break;
 			
 		case kLightingNormalTangent:
@@ -526,7 +689,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			tangentSpace = YES;
 			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
-			@"\t// Build tangent space basis\n"
+			 @"\t// Build tangent space basis\n"
 			 "\tvec3 n = normalize(gl_NormalMatrix * aNormal);\n"
 			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
 			 "\tvec3 b = cross(n, t);\n"];
@@ -538,111 +701,75 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			tangentSpace = YES;
 			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
-			@"\t// Build tangent space basis\n"
+			 @"\t// Build tangent space basis\n"
 			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
 			 "\tvec3 b = normalize(gl_NormalMatrix * aBitangent);\n"
 			 "\tvec3 n = cross(t, b);\n"];
 			break;
-		
-		case kLightingUniform:
+			
 		case kLightingUndetermined:
-			[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n"
-										 "\tconst vec3 diffuseLight = vec3(1.0);\n\t\n"];
-			return;
+		case kLightingUniform:
+			break;
 	}
-	
-	NSString *normalDotLight = @"dot(normal, lightVector)";
 	
 	if (tangentSpace)
 	{
 		// Shared code for kLightingNormalTangent and kLightingTangentBitangent.
-		[self addVarying:@"vLightVector" ofType:@"vec3"];
-		[self addVarying:@"vEyeVector" ofType:@"vec3"];
+		[_vertexBody appendString:@"\tmat3 TBN = mat3(t, b, n);\n\t\n"];
 		
-		[_vertexBody appendString:
-		@"\tmat3 TBN = mat3(t, b, n);\n\t\n"];
-		
-		if (needFragEyeVector)
+		if (normalMap != nil)
 		{
-			[_vertexBody appendString:@"\tvEyeVector = position.xyz * TBN;\n\t\n"];
+			NSString *sample, *swizzle;
+			[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:normalMap];
+			if (swizzle == nil)  swizzle = @"rgb";
+			if ([swizzle length] == 3)
+			{
+				[_fragmentBody appendFormat:@"\tvec3 normal = normalize(%@.%@);\n\t\n", sample, swizzle];
+				_usesNormalMap = YES;
+				return;
+			}
+			else
+			{
+				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length], @"3");
+			}
 		}
-		
-		[_vertexBody appendString:
-		@"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
-		 "\tvLightVector = lightVector * TBN;\n\t\n"];
-		
-		if (!_usesNormalMap)
+		else
 		{
-			// dot(vec3(0, 0, 1), lightVector) == lightVector.z.
-			normalDotLight = @"lightVector.z";
+			_constZNormal = YES;
 		}
 	}
 	
-	// Shared code for all lighting modes.
-	[_fragmentBody appendFormat:
-	@"\t// Placeholder lighting\n"
-	 "\tvec3 lightVector = normalize(vLightVector);\n"
-	 "\tvec3 diffuseLight = vec3(0.8 * max(0.0, %@) + 0.2);\n\t\n",
-	 normalDotLight];
-	
-	if (needFragEyeVector)
+	if (!canNormalMap && normalMap != nil)
 	{
-		[_fragmentBody appendString:@"\tvec3 eyeVector = normalize(vEyeVector);\n\t\n"];
+		OOReportWarning(_problemReporter, @"Material \"%@\" of mesh \"%@\" specifies a normal map, but it cannot be used because the mesh does not provide vertex tangents.", [_spec materialKey], [_mesh name]);
 	}
 }
 
 
 - (void) writeNormal
 {
-	LightingMode lightingMode = [self lightingMode];
-	OOTextureSpecification *normalMap = [_spec normalMap];
+	REQUIRE_STAGE(writeNormalIfNeeded);
 	
-	switch (lightingMode)
+	if (_constZNormal)
 	{
-		case kLightingNormalOnly:
-			[_fragmentBody appendString:@"\tvec3 normal = normalize(vNormal);\n"];
-			// Fall through.
-			
-		case kLightingUndetermined:
-		case kLightingUniform:
-			if (normalMap != nil)
-			{
-				OOReportWarning(_problemReporter, @"Material \"%@\" of mesh \"%@\" specifies a normal map, but it cannot be used because the mesh does not provide vertex tangents.", [_spec materialKey], [_mesh name]);
-			}
-			break;
-			
-		case kLightingNormalTangent:
-		case kLightingTangentBitangent:
-			if (normalMap != nil)
-			{
-				NSString *sample, *swizzle;
-				[self getSampleName:&sample andSwizzleOp:&swizzle forTextureSpec:normalMap];
-				if (swizzle == nil)  swizzle = @"rgb";
-				if ([swizzle length] == 3)
-				{
-					[_fragmentBody appendFormat:@"\tvec3 normal = normalize(%@.%@);\n\t\n", sample, swizzle];
-					_usesNormalMap = YES;
-					return;
-				}
-				else
-				{
-					OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length], @"3");
-				}
-			}
-			
-			// If we get to this point, normal won’t be used.
-		//	[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
-			break;
+		[_fragmentBody appendString:@"\tconst vec3 normal = vec3(0.0, 0.0, 1.0);\n\t\n"];
 	}
 }
 
 
 - (void) writeSpecularLighting
 {
+	if ([self lightingMode] == kLightingUniform)  return;
 	float specularExponent = [_spec specularExponent];
 	if (specularExponent <= 0)  return;
 	OOColor *specularColor = [_spec specularColor];
 	if ([specularColor isBlack])  return;
+	
+	REQUIRE_STAGE(writeTotalColor);
+	REQUIRE_STAGE(writeNormalIfNeeded);
+	REQUIRE_STAGE(writeFragmentEyeVector);
+	REQUIRE_STAGE(writeFragmentLightVector);
+	
 	[_fragmentBody appendString:@"\t// Placeholder specular lighting\n"];
 	
 	BOOL haveSpecularColor = NO;
@@ -722,9 +849,21 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	if (count == 0)  return;
 	
+	REQUIRE_STAGE(writeTotalColor);
+	
+	// Illumination maps require diffuse term.
+	OOLightMapSpecification *lightMap = nil;
+	foreach (lightMap, lightMaps)
+	{
+		if ([lightMap type] == kOOLightMapTypeIllumination)
+		{
+			REQUIRE_STAGE(writeDiffuseColorTermIfNeeded);
+			break;
+		}
+	}
+	
 	[_fragmentBody appendString:@"\tvec3 lightMapColor;\n"];
 	
-	OOLightMapSpecification *lightMap = nil;
 	foreach (lightMap, lightMaps)
 	{
 		[_fragmentBody appendFormat:@"\t// Light map #%lu\n", idx++];
@@ -736,7 +875,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[color getRed:&rgba[0] green:&rgba[1] blue:&rgba[2] alpha:&rgba[3]];
 		rgba[0] *= rgba[3]; rgba[1] *= rgba[3]; rgba[2] *= rgba[3];
 		
-		if (EXPECT_NOT(rgba[0] == 0.0f && rgba[1] == 0.0f && rgba[2] == 0.0f))
+		if (EXPECT_NOT((rgba[0] == 0.0f && rgba[1] == 0.0f && rgba[2] == 0.0f) ||
+					   (!_usesDiffuseTerm && [lightMap type] == kOOLightMapTypeIllumination)))
 		{
 			[_fragmentBody appendString:@"\t// Light map tinted black has no effect.\n\t\n"];
 			continue;
@@ -763,14 +903,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				break;
 				
 			case kOOLightMapTypeIllumination:
-				[_fragmentBody appendString:@"\ttotalColor += lightMapColor * diffuseColor;\n\t\n"];
+				[_fragmentBody appendString:@"\ttotalColor += lightMapColor * diffuseColor;\n\t\n"]
+					;
 				break;
 		}
 	}
 }
 
 
-- (void) writePosition
+- (void) writeVertexPosition
 {
 	[self addAttribute:@"aPosition" ofType:@"vec3"];
 	
@@ -780,8 +921,19 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+- (void) writeTotalColor
+{
+	[_fragmentBody appendString:@"\tvec3 totalColor = vec3(0.0);\n\t\n"];
+}
+
+
 - (void) writeFinalColorComposite
 {
+	REQUIRE_STAGE(writeTotalColor);
+	REQUIRE_STAGE(writeDiffuseLighting);
+	REQUIRE_STAGE(writeSpecularLighting);
+	REQUIRE_STAGE(writeLightMaps);
+	
 	[_fragmentBody appendString:@"\tgl_FragColor = vec4(totalColor, 1.0);\n\t\n"];
 }
 
@@ -826,18 +978,12 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self createTemporaries];
 	_uniforms = [[NSMutableDictionary alloc] init];
 	[_vertexBody appendString:@"void main(void)\n{\n"];
-	[_fragmentBody appendString:@"void main(void)\n{\n\tvec3 totalColor = vec3(0.0);\n\t\n"];
+	[_fragmentBody appendString:@"void main(void)\n{\n"];
 	
 	@try
 	{
-		[self writePosition];
 		[self setUpTextures];
-		[self writeNormal];
-		[self writeDiffuseLighting];
-		[self writeDiffuseColorTerm];
-		[self writeSpecularLighting];
-		[self writeLightMaps];
-		[self writeFinalColorComposite];
+		REQUIRE_STAGE(writeFinalColorComposite);
 		
 		[self composeVertexShader];
 		[self composeFragmentShader];
@@ -856,6 +1002,29 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+#ifndef NDEBUG
+- (void) performStage:(SEL)stage
+{
+	// Ensure that we aren’t recursing.
+	if (_stagesInProgress == NULL)
+	{
+		
+	}
+	if (NSHashGet(_stagesInProgress, stage) != NULL)
+	{
+		OOReportError(_problemReporter, @"Shader synthesis recursion for stage %@.", NSStringFromSelector(stage));
+		[NSException raise:NSInternalInconsistencyException format:@"stage recursion"];
+	}
+	
+	NSHashInsertKnownAbsent(_stagesInProgress, stage);
+	
+	[self performSelector:stage];
+	
+	NSHashRemove(_stagesInProgress, stage);
+}
+#endif
+
+
 - (void) createTemporaries
 {
 	_attributes = [NSMutableString string];
@@ -864,6 +1033,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	_fragmentUniforms = [NSMutableString string];
 	_vertexBody = [NSMutableString string];
 	_fragmentBody = [NSMutableString string];
+	
+#ifndef NDEBUG
+	_stagesInProgress = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
+#endif
 }
 
 
@@ -880,6 +1053,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	DESTROY(_texturesByName);
 	DESTROY(_textureIDs);
+	
+#ifndef NDEBUG
+	DESTROY(_stagesInProgress);
+#endif
 }
 
 @end

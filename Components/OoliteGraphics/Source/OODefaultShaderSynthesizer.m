@@ -89,8 +89,8 @@ typedef enum
 								_completed_writeVertexPosition: 1,
 								_completed_writeNormalIfNeeded: 1,
 								_completed_writeNormal: 1,
-								_completed_writeFragmentLightVector: 1,
-								_completed_writeFragmentEyeVector: 1, 
+								_completed_writeLightVector: 1,
+								_completed_writeEyeVector: 1, 
 								_completed_writeTotalColor: 1,
 								_completed_writeTextureCoordRead: 1;
 	
@@ -159,12 +159,12 @@ typedef enum
 */
 - (void) writeNormal;
 
-/*	writeFragmentLightVector
+/*	writeLightVector
 	Generate the fragment variable vec3 lightVector (unit vector) for temporary
 	lighting. Calling this if lighting mode is kLightingUniform will cause an
 	exception.
 */
-- (void) writeFragmentLightVector;
+- (void) writeLightVector;
 
 /*	writeTotalColor
 	Generate vec3 totalColor, the accumulator for output colour values.
@@ -559,12 +559,13 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeDiffuseLighting
 {
-	REQUIRE_STAGE(writeDiffuseColorTerm);
+	REQUIRE_STAGE(writeDiffuseColorTermIfNeeded);
 	if (!_usesDiffuseTerm)  return;
 	
 	if ([self lightingMode] == kLightingUniform)
 	{
-		[_fragmentBody appendString:@"\t// No lighting because the mesh has no normals.\n"
+		[_fragmentBody appendString:
+		@"\t// No lighting because the mesh has no normals.\n"
 		 "\ttotalColor += diffuseColor;\n\t\n"];
 		return;
 	}
@@ -572,7 +573,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	REQUIRE_STAGE(writeTotalColor);
 	REQUIRE_STAGE(writeVertexPosition);
 	REQUIRE_STAGE(writeNormalIfNeeded);
-	REQUIRE_STAGE(writeFragmentLightVector);
+	REQUIRE_STAGE(writeLightVector);
 	
 	// Simple placeholder lighting based on legacy OpenGL lighting.
 	NSString *normalDotLight = _constZNormal ? @"lightVector.z" : @"dot(normal, lightVector)";
@@ -586,7 +587,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) writeFragmentLightVector
+- (void) writeLightVector
 {
 	REQUIRE_STAGE(writeVertexPosition);
 	REQUIRE_STAGE(writeNormalIfNeeded);
@@ -608,17 +609,16 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			
 		case kLightingUndetermined:
 		case kLightingUniform:
-			OOReportError(_problemReporter, @"Internal error in shader synthesizer: writeFragmentLightVector was called in uniform lighting mode.");
+			OOReportError(_problemReporter, @"Internal error in shader synthesizer: writeNormalIfNeeded was called in uniform lighting mode.");
 			[NSException raise:NSInternalInconsistencyException format:@"lighting logic error"];
 			break;
 	}
 	
-	[_fragmentBody appendFormat:
-	@"\tvec3 lightVector = normalize(vLightVector);\n\t\n"];
+	[_fragmentBody appendFormat:@"\tvec3 lightVector = normalize(vLightVector);\n\t\n"];
 }
 
 
-- (void) writeFragmentEyeVector
+- (void) writeEyeVector
 {
 	REQUIRE_STAGE(writeVertexPosition);
 	REQUIRE_STAGE(writeNormalIfNeeded);
@@ -645,21 +645,15 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeNormalIfNeeded
 {
-	LightingMode			lightingMode = [self lightingMode];
-	OOTextureSpecification	*normalMap = [_spec normalMap];
-	BOOL					canNormalMap = NO;
-	BOOL					tangentSpace = NO;
-	
 	REQUIRE_STAGE(writeVertexPosition);
 	
-	switch (lightingMode)
+	BOOL canNormalMap = NO, tangentSpace = NO;
+	switch ([self lightingMode])
 	{
 		case kLightingNormalOnly:
 			[self addAttribute:@"aNormal" ofType:@"vec3"];
 			[self addVarying:@"vNormal" ofType:@"vec3"];
-			
-			// FIXME: do we really need to normalize here?
-			[_vertexBody appendString:@"\tvNormal = normalize(gl_NormalMatrix * aNormal);\n\t\n"];
+			[_vertexBody appendString:@"\tvNormal = gl_NormalMatrix * aNormal;\n\t\n"];
 			[_fragmentBody appendString:@"\tvec3 normal = normalize(vNormal);\n"];
 			break;
 			
@@ -667,11 +661,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			[self addAttribute:@"aNormal" ofType:@"vec3"];
 			[self addAttribute:@"aTangent" ofType:@"vec3"];
 			tangentSpace = YES;
-			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
 			@"\t// Build tangent space basis\n"
-			 "\tvec3 n = normalize(gl_NormalMatrix * aNormal);\n"
-			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
+			 "\tvec3 n = gl_NormalMatrix * aNormal;\n"
+			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
 			 "\tvec3 b = cross(n, t);\n"];
 			break;
 			
@@ -679,11 +672,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			[self addAttribute:@"aTangent" ofType:@"vec3"];
 			[self addAttribute:@"aBitangent" ofType:@"vec3"];
 			tangentSpace = YES;
-			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
 			@"\t// Build tangent space basis\n"
-			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
-			 "\tvec3 b = normalize(gl_NormalMatrix * aBitangent);\n"
+			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
+			 "\tvec3 b = gl_NormalMatrix * aBitangent;\n"
 			 "\tvec3 n = cross(t, b);\n"];
 			break;
 			
@@ -692,6 +684,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			break;
 	}
 	
+	OOTextureSpecification *normalMap = [_spec normalMap];
 	if (tangentSpace)
 	{
 		// Shared code for kLightingNormalTangent and kLightingTangentBitangent.
@@ -713,10 +706,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", @"normal", [_spec materialKey], [_mesh name], [swizzle length], @"3");
 			}
 		}
-		else
-		{
-			_constZNormal = YES;
-		}
+		_constZNormal = YES;
 	}
 	
 	if (!canNormalMap && normalMap != nil)
@@ -747,8 +737,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	REQUIRE_STAGE(writeTotalColor);
 	REQUIRE_STAGE(writeNormalIfNeeded);
-	REQUIRE_STAGE(writeFragmentEyeVector);
-	REQUIRE_STAGE(writeFragmentLightVector);
+	REQUIRE_STAGE(writeEyeVector);
+	REQUIRE_STAGE(writeLightVector);
 	
 	[_fragmentBody appendString:@"\t// Placeholder specular lighting\n"];
 	
@@ -909,7 +899,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeFinalColorComposite
 {
-	REQUIRE_STAGE(writeTotalColor);
+	REQUIRE_STAGE(writeTotalColor);	// Needed even if none of the following stages does anything.
 	REQUIRE_STAGE(writeDiffuseLighting);
 	REQUIRE_STAGE(writeSpecularLighting);
 	REQUIRE_STAGE(writeLightMaps);

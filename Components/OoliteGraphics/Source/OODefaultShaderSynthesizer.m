@@ -113,8 +113,12 @@ typedef enum
 - (void) createTemporaries;
 - (void) destroyTemporaries;
 
+- (void) composeVertexShader;
+- (void) composeFragmentShader;
+
 - (LightingMode) lightingMode;
 - (BOOL) tangentSpaceLighting;
+
 
 /*	Stages. These should only be called through the REQUIRE_STAGE macro to
 	avoid duplicated code and ensure data depedencies are met.
@@ -283,6 +287,36 @@ BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderM
 }
 
 
+- (BOOL) run
+{
+	[self createTemporaries];
+	_uniforms = [[NSMutableDictionary alloc] init];
+	[_vertexBody appendString:@"void main(void)\n{\n"];
+	[_fragmentPreTextures appendString:@"void main(void)\n{\n"];
+	
+	@try
+	{
+		REQUIRE_STAGE(writeFinalColorComposite);
+		
+		[self composeVertexShader];
+		[self composeFragmentShader];
+	}
+	@catch (NSException *exception)
+	{
+		// Error should have been reported already.
+		return NO;
+	}
+	@finally
+	{
+		[self destroyTemporaries];
+	}
+	
+	return YES;
+}
+
+
+// MARK: - Utilities
+
 static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSString *name)
 {
 	if ([segment length] > 0)
@@ -326,33 +360,99 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) writeTextureCoordRead
+- (LightingMode) lightingMode
 {
-	// Ensure we have valid texture coordinates.
-	NSUInteger texCoordsSize = [_mesh attributeSizeForKey:kOOTexCoordsAttributeKey];
-	switch (texCoordsSize)
+	if (_lightingMode == kLightingUndetermined)
 	{
-		case 0:
-			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the mesh has no %@ attribute.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
-			[NSException raise:NSGenericException format:@"Invalid material"];
-			
-		case 1:
-			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the %@ attribute in the mesh is only one-dimensional.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
-			[NSException raise:NSGenericException format:@"Invalid material"];
-			
-		case 2:
-			break;	// Perfect!
-			
-		default:
-			OOReportWarning(_problemReporter, @"The mesh \"%@\" has a %@ attribute with %u values per vertex. Only the first two will be used by standard materials.", [_mesh name], kOOTexCoordsAttributeKey, texCoordsSize);
+		_normalAttrSize = [_mesh attributeSizeForKey:kOONormalAttributeKey];
+		_tangentAttrSize = [_mesh attributeSizeForKey:kOOTangentAttributeKey];
+		_bitangentAttrSize = [_mesh attributeSizeForKey:kOOBitangentAttributeKey];
+		
+		if (_tangentAttrSize >= 3)
+		{
+			if (_bitangentAttrSize >= 3)
+			{
+				_lightingMode = kLightingTangentBitangent;
+			}
+			else if (_normalAttrSize >= 3)
+			{
+				_lightingMode = kLightingNormalTangent;
+			}
+		}
+		else
+		{
+			if (_normalAttrSize >= 3)
+			{
+				_lightingMode = kLightingNormalOnly;
+			}
+		}
+		
+		if (_lightingMode == kLightingUndetermined)
+		{
+			_lightingMode = kLightingUniform;
+			OOReportWarning(_problemReporter, @"Mesh \"%@\" does not provide normals or tangents and bitangents, so no lighting is possible.", [_mesh name]);
+		}
+	}
+	return _lightingMode;
+}
+
+
+- (BOOL) tangentSpaceLighting
+{
+	LightingMode mode = [self lightingMode];
+	return mode == kLightingTangentBitangent || mode == kLightingNormalTangent;
+}
+
+
+- (void) composeVertexShader
+{
+	while ([_vertexBody hasSuffix:@"\t\n"])
+	{
+		[_vertexBody deleteCharactersInRange:(NSRange){ [_vertexBody length] - 2, 2 }];
+	}
+	[_vertexBody appendString:@"}"];
+	
+	NSMutableString *vertexShader = [NSMutableString string];
+	AppendIfNotEmpty(vertexShader, _attributes, @"Attributes");
+	AppendIfNotEmpty(vertexShader, _vertexUniforms, @"Uniforms");
+	AppendIfNotEmpty(vertexShader, _varyings, @"Varyings");
+	AppendIfNotEmpty(vertexShader, _vertexHelpers, @"Helper functions");
+	AppendIfNotEmpty(vertexShader, _vertexBody, nil);
+	
+#ifndef NDEBUG
+	_vertexShader = [vertexShader copy];
+#else
+	_vertexShader = [vertexShader retain];
+#endif
+}
+
+
+- (void) composeFragmentShader
+{
+	while ([_fragmentBody hasSuffix:@"\t\n"])
+	{
+		[_fragmentBody deleteCharactersInRange:(NSRange){ [_fragmentBody length] - 2, 2 }];
 	}
 	
-	[self addAttribute:@"aTexCoords" ofType:@"vec2"];
-	[self addVarying:@"vTexCoords" ofType:@"vec2"];
-	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n\t\n"];
+	NSMutableString *fragmentShader = [NSMutableString string];
+	AppendIfNotEmpty(fragmentShader, _fragmentUniforms, @"Uniforms");
+	AppendIfNotEmpty(fragmentShader, _varyings, @"Varyings");
+	AppendIfNotEmpty(fragmentShader, _fragmentHelpers, @"Helper functions");
+	AppendIfNotEmpty(fragmentShader, _fragmentPreTextures, nil);
+	if ([_fragmentTextureLoukups length] > 0)
+	{
+		[fragmentShader appendString:@"\t\n\t// Texture lookups\n"];
+		[fragmentShader appendString:_fragmentTextureLoukups];
+	}
+	[fragmentShader appendString:@"\t\n"];
+	[fragmentShader appendString:_fragmentBody];
+	[fragmentShader appendString:@"}"];
 	
-	// FIXME: parallax mapping.
-	[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords;\n"];
+#ifndef NDEBUG
+	_fragmentShader = [fragmentShader copy];
+#else
+	_fragmentShader = [fragmentShader retain];
+#endif
 }
 
 
@@ -458,6 +558,104 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
+#ifndef NDEBUG
+- (void) performStage:(SEL)stage
+{
+	// Ensure that we aren’t recursing.
+	if (_stagesInProgress == NULL)
+	{
+		
+	}
+	if (NSHashGet(_stagesInProgress, stage) != NULL)
+	{
+		OOReportError(_problemReporter, @"Shader synthesis recursion for stage %@.", NSStringFromSelector(stage));
+		[NSException raise:NSInternalInconsistencyException format:@"stage recursion"];
+	}
+	
+	NSHashInsertKnownAbsent(_stagesInProgress, stage);
+	
+	[self performSelector:stage];
+	
+	NSHashRemove(_stagesInProgress, stage);
+}
+#endif
+
+
+- (void) createTemporaries
+{
+	_attributes = [NSMutableString string];
+	_varyings = [NSMutableString string];
+	_vertexUniforms = [NSMutableString string];
+	_fragmentUniforms = [NSMutableString string];
+	_vertexBody = [NSMutableString string];
+	_fragmentPreTextures = [NSMutableString string];
+	_fragmentTextureLoukups = [NSMutableString string];
+	_fragmentBody = [NSMutableString string];
+	
+	_textures = [[NSMutableArray alloc] init];
+	_texturesByName = [[NSMutableDictionary alloc] init];
+	_textureIDs = [[NSMutableDictionary alloc] init];
+	
+#ifndef NDEBUG
+	_stagesInProgress = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
+#endif
+}
+
+
+- (void) destroyTemporaries
+{
+	DESTROY(_attributes);
+	DESTROY(_varyings);
+	DESTROY(_vertexUniforms);
+	DESTROY(_fragmentUniforms);
+	DESTROY(_vertexHelpers);
+	DESTROY(_fragmentHelpers);
+	DESTROY(_vertexBody);
+	DESTROY(_fragmentPreTextures);
+	DESTROY(_fragmentTextureLoukups);
+	DESTROY(_fragmentBody);
+	
+	DESTROY(_texturesByName);
+	DESTROY(_textureIDs);
+	
+#ifndef NDEBUG
+	DESTROY(_stagesInProgress);
+#endif
+}
+
+
+// MARK: - Synthesis stages
+
+- (void) writeTextureCoordRead
+{
+	// Ensure we have valid texture coordinates.
+	NSUInteger texCoordsSize = [_mesh attributeSizeForKey:kOOTexCoordsAttributeKey];
+	switch (texCoordsSize)
+	{
+		case 0:
+			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the mesh has no %@ attribute.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
+			[NSException raise:NSGenericException format:@"Invalid material"];
+			
+		case 1:
+			OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" uses textures, but the %@ attribute in the mesh is only one-dimensional.", [_spec materialKey], [_mesh name], kOOTexCoordsAttributeKey);
+			[NSException raise:NSGenericException format:@"Invalid material"];
+			
+		case 2:
+			break;	// Perfect!
+			
+		default:
+			OOReportWarning(_problemReporter, @"The mesh \"%@\" has a %@ attribute with %u values per vertex. Only the first two will be used by standard materials.", [_mesh name], kOOTexCoordsAttributeKey, texCoordsSize);
+	}
+	
+	[self addAttribute:@"aTexCoords" ofType:@"vec2"];
+	[self addVarying:@"vTexCoords" ofType:@"vec2"];
+	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n\t\n"];
+	
+	// FIXME: parallax mapping.
+	[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords;\n"];
+}
+
+
 - (void) writeDiffuseColorTermIfNeeded
 {
 	OOTextureSpecification	*diffuseMap = [_spec diffuseMap];
@@ -510,50 +708,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	{
 		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);\n\t\n"];
 	}
-}
-
-
-- (LightingMode) lightingMode
-{
-	if (_lightingMode == kLightingUndetermined)
-	{
-		_normalAttrSize = [_mesh attributeSizeForKey:kOONormalAttributeKey];
-		_tangentAttrSize = [_mesh attributeSizeForKey:kOOTangentAttributeKey];
-		_bitangentAttrSize = [_mesh attributeSizeForKey:kOOBitangentAttributeKey];
-		
-		if (_tangentAttrSize >= 3)
-		{
-			if (_bitangentAttrSize >= 3)
-			{
-				_lightingMode = kLightingTangentBitangent;
-			}
-			else if (_normalAttrSize >= 3)
-			{
-				_lightingMode = kLightingNormalTangent;
-			}
-		}
-		else
-		{
-			if (_normalAttrSize >= 3)
-			{
-				_lightingMode = kLightingNormalOnly;
-			}
-		}
-		
-		if (_lightingMode == kLightingUndetermined)
-		{
-			_lightingMode = kLightingUniform;
-			OOReportWarning(_problemReporter, @"Mesh \"%@\" does not provide normals or tangents and bitangents, so no lighting is possible.", [_mesh name]);
-		}
-	}
-	return _lightingMode;
-}
-
-
-- (BOOL) tangentSpaceLighting
-{
-	LightingMode mode = [self lightingMode];
-	return mode == kLightingTangentBitangent || mode == kLightingNormalTangent;
 }
 
 
@@ -905,152 +1059,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	REQUIRE_STAGE(writeLightMaps);
 	
 	[_fragmentBody appendString:@"\tgl_FragColor = vec4(totalColor, 1.0);\n\t\n"];
-}
-
-
-- (void) composeVertexShader
-{
-	while ([_vertexBody hasSuffix:@"\t\n"])
-	{
-		[_vertexBody deleteCharactersInRange:(NSRange){ [_vertexBody length] - 2, 2 }];
-	}
-	[_vertexBody appendString:@"}"];
-	
-	NSMutableString *vertexShader = [NSMutableString string];
-	AppendIfNotEmpty(vertexShader, _attributes, @"Attributes");
-	AppendIfNotEmpty(vertexShader, _vertexUniforms, @"Uniforms");
-	AppendIfNotEmpty(vertexShader, _varyings, @"Varyings");
-	AppendIfNotEmpty(vertexShader, _vertexHelpers, @"Helper functions");
-	AppendIfNotEmpty(vertexShader, _vertexBody, nil);
-	
-#ifndef NDEBUG
-	_vertexShader = [vertexShader copy];
-#else
-	_vertexShader = [vertexShader retain];
-#endif
-}
-
-
-- (void) composeFragmentShader
-{
-	while ([_fragmentBody hasSuffix:@"\t\n"])
-	{
-		[_fragmentBody deleteCharactersInRange:(NSRange){ [_fragmentBody length] - 2, 2 }];
-	}
-	
-	NSMutableString *fragmentShader = [NSMutableString string];
-	AppendIfNotEmpty(fragmentShader, _fragmentUniforms, @"Uniforms");
-	AppendIfNotEmpty(fragmentShader, _varyings, @"Varyings");
-	AppendIfNotEmpty(fragmentShader, _fragmentHelpers, @"Helper functions");
-	AppendIfNotEmpty(fragmentShader, _fragmentPreTextures, nil);
-	if ([_fragmentTextureLoukups length] > 0)
-	{
-		[fragmentShader appendString:@"\t\n\t// Texture lookups\n"];
-		[fragmentShader appendString:_fragmentTextureLoukups];
-	}
-	[fragmentShader appendString:@"\t\n"];
-	[fragmentShader appendString:_fragmentBody];
-	[fragmentShader appendString:@"}"];
-	
-#ifndef NDEBUG
-	_fragmentShader = [fragmentShader copy];
-#else
-	_fragmentShader = [fragmentShader retain];
-#endif
-}
-
-
-- (BOOL) run
-{
-	[self createTemporaries];
-	_uniforms = [[NSMutableDictionary alloc] init];
-	[_vertexBody appendString:@"void main(void)\n{\n"];
-	[_fragmentPreTextures appendString:@"void main(void)\n{\n"];
-	
-	@try
-	{
-		REQUIRE_STAGE(writeFinalColorComposite);
-		
-		[self composeVertexShader];
-		[self composeFragmentShader];
-	}
-	@catch (NSException *exception)
-	{
-		// Error should have been reported already.
-		return NO;
-	}
-	@finally
-	{
-		[self destroyTemporaries];
-	}
-	
-	return YES;
-}
-
-
-#ifndef NDEBUG
-- (void) performStage:(SEL)stage
-{
-	// Ensure that we aren’t recursing.
-	if (_stagesInProgress == NULL)
-	{
-		
-	}
-	if (NSHashGet(_stagesInProgress, stage) != NULL)
-	{
-		OOReportError(_problemReporter, @"Shader synthesis recursion for stage %@.", NSStringFromSelector(stage));
-		[NSException raise:NSInternalInconsistencyException format:@"stage recursion"];
-	}
-	
-	NSHashInsertKnownAbsent(_stagesInProgress, stage);
-	
-	[self performSelector:stage];
-	
-	NSHashRemove(_stagesInProgress, stage);
-}
-#endif
-
-
-- (void) createTemporaries
-{
-	_attributes = [NSMutableString string];
-	_varyings = [NSMutableString string];
-	_vertexUniforms = [NSMutableString string];
-	_fragmentUniforms = [NSMutableString string];
-	_vertexBody = [NSMutableString string];
-	_fragmentPreTextures = [NSMutableString string];
-	_fragmentTextureLoukups = [NSMutableString string];
-	_fragmentBody = [NSMutableString string];
-	
-	_textures = [[NSMutableArray alloc] init];
-	_texturesByName = [[NSMutableDictionary alloc] init];
-	_textureIDs = [[NSMutableDictionary alloc] init];
-	
-#ifndef NDEBUG
-	_stagesInProgress = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
-#endif
-}
-
-
-- (void) destroyTemporaries
-{
-	DESTROY(_attributes);
-	DESTROY(_varyings);
-	DESTROY(_vertexUniforms);
-	DESTROY(_fragmentUniforms);
-	DESTROY(_vertexHelpers);
-	DESTROY(_fragmentHelpers);
-	DESTROY(_vertexBody);
-	DESTROY(_fragmentPreTextures);
-	DESTROY(_fragmentTextureLoukups);
-	DESTROY(_fragmentBody);
-	
-	DESTROY(_texturesByName);
-	DESTROY(_textureIDs);
-	
-#ifndef NDEBUG
-	DESTROY(_stagesInProgress);
-#endif
 }
 
 @end

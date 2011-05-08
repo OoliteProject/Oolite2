@@ -61,6 +61,8 @@ typedef enum
 	NSMutableString				*_vertexHelpers;
 	NSMutableString				*_fragmentHelpers;
 	NSMutableString				*_vertexBody;
+	NSMutableString				*_fragmentPreTextures;
+	NSMutableString				*_fragmentTextureLoukups;
 	NSMutableString				*_fragmentBody;
 	
 	// _texturesByName: dictionary mapping texture file names to texture specifications.
@@ -89,7 +91,8 @@ typedef enum
 								_completed_writeNormal: 1,
 								_completed_writeFragmentLightVector: 1,
 								_completed_writeFragmentEyeVector: 1, 
-								_completed_writeTotalColor: 1;
+								_completed_writeTotalColor: 1,
+								_completed_writeTextureCoordRead: 1;
 	
 #ifndef NDEBUG
 	NSHashTable					*_stagesInProgress;
@@ -323,58 +326,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) setUpOneTexture:(OOTextureSpecification *)spec
+- (void) writeTextureCoordRead
 {
-	if (spec == nil)  return;
-	
-	if ([spec isCubeMap])
-	{
-		OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" specifies a cube map texture, but doesn't have custom shaders. Cube map textures are not supported with the default shaders.", [_spec materialKey], [_mesh name]);
-		[NSException raise:NSGenericException format:@"Invalid material"];
-	}
-	
-	NSString *name = [spec textureMapName];
-	OOTextureSpecification *existing = [_texturesByName objectForKey:name];
-	if (existing == nil)
-	{
-		NSNumber *texID = $int([_texturesByName count]);
-		[_textures addObject:spec];
-		[_texturesByName setObject:spec forKey:name];
-		[_textureIDs setObject:texID forKey:name];
-		[_uniforms setObject:$dict(@"type", @"texture", @"value", texID) forKey:$sprintf(@"uTexture%@", texID)];
-	}
-	else
-	{
-		if (![spec isEqual:existing])
-		{
-			OOReportWarning(_problemReporter, @"The texture map \"%@\" is used more than once in material \"%@\" of \"%@\", and the options specified are not consistent. Only one set of options will be used.", name, [_spec materialKey], [_mesh name]);
-		}
-	}
-}
-
-
-- (void) setUpTextures
-{
-	_textures = [[NSMutableArray alloc] init];
-	_texturesByName = [[NSMutableDictionary alloc] init];
-	_textureIDs = [[NSMutableDictionary alloc] init];
-	
-	[self setUpOneTexture:[_spec diffuseMap]];
-	[self setUpOneTexture:[_spec specularColorMap]];
-	[self setUpOneTexture:[_spec specularExponentMap]];
-	[self setUpOneTexture:[_spec normalMap]];
-#if 0
-	// Parallax map needs to be handled separately.
-	[self setUpOneTexture:[_spec parallaxMap]];
-#endif
-	OOLightMapSpecification *lightMap = nil;
-	foreach (lightMap, [_spec lightMaps])
-	{
-		[self setUpOneTexture:[lightMap textureMap]];
-	}
-	
-	if ([_texturesByName count] == 0)  return;
-	
 	// Ensure we have valid texture coordinates.
 	NSUInteger texCoordsSize = [_mesh attributeSizeForKey:kOOTexCoordsAttributeKey];
 	switch (texCoordsSize)
@@ -398,27 +351,54 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self addVarying:@"vTexCoords" ofType:@"vec2"];
 	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n\t\n"];
 	
-	// FIXME: texCoords will need to be handled differently if parallax mapping.
-	[_fragmentBody appendString:@"\t// Texture reads\n\tvec2 texCoords = vTexCoords;\n"];
+	// FIXME: parallax mapping.
+	[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords;\n"];
+}
+
+
+- (void) setUpOneTexture:(OOTextureSpecification *)spec
+{
+	if (spec == nil)  return;
 	
-	OOTextureSpecification *spec = nil;
-	foreach (spec, _textures)
+	if ([spec isCubeMap])
 	{
-		NSString *name = [spec textureMapName];
-		NSUInteger texID = [_textureIDs oo_unsignedIntegerForKey:name];
-		
-		[_fragmentBody appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, name];
-		[self addFragmentUniform:$sprintf(@"uTexture%u", texID) ofType:@"sampler2D"];
-		
+		OOReportError(_problemReporter, @"The material \"%@\" of \"%@\" specifies a cube map texture, but doesn't have custom shaders. Cube map textures are not supported with the default shaders.", [_spec materialKey], [_mesh name]);
+		[NSException raise:NSGenericException format:@"Invalid material"];
 	}
 	
-	[_fragmentBody appendString:@"\t\n"];
+	REQUIRE_STAGE(writeTextureCoordRead);
+	
+	NSString *name = [spec textureMapName];
+	OOTextureSpecification *existing = [_texturesByName objectForKey:name];
+	if (existing == nil)
+	{
+		NSUInteger	texID = [_texturesByName count];
+		NSNumber	*texIDObj = $int(texID);
+		NSString	*texUniform = $sprintf(@"uTexture%u", texID);
+		
+		[_textures addObject:spec];
+		[_texturesByName setObject:spec forKey:name];
+		[_textureIDs setObject:texIDObj forKey:name];
+		[_uniforms setObject:$dict(@"type", @"texture", @"value", texIDObj) forKey:texUniform];
+		
+		[_fragmentTextureLoukups appendFormat:@"\tvec4 tex%uSample = texture2D(%@, texCoords);  // %@\n", texID, texUniform, name];
+		[self addFragmentUniform:texUniform ofType:@"sampler2D"];
+	}
+	else
+	{
+		if (![spec isEqual:existing])
+		{
+			OOReportWarning(_problemReporter, @"The texture map \"%@\" is used more than once in material \"%@\" of \"%@\", and the options specified are not consistent. Only one set of options will be used.", name, [_spec materialKey], [_mesh name]);
+		}
+	}
 }
 
 
 - (void) getSampleName:(NSString **)outSampleName andSwizzleOp:(NSString **)outSwizzleOp forTextureSpec:(OOTextureSpecification *)spec
 {
 	NSParameterAssert(outSampleName != NULL && outSwizzleOp != NULL && spec != nil);
+	
+	[self setUpOneTexture:spec];
 	
 	NSString	*key = [spec textureMapName];
 	NSUInteger	texID = [_textureIDs oo_unsignedIntegerForKey:key];
@@ -622,7 +602,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		case kLightingNormalTangent:
 		case kLightingTangentBitangent:
 			[_vertexBody appendString:
-			 @"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
+			@"\tvec3 lightVector = gl_LightSource[0].position.xyz;\n"
 			 "\tvLightVector = lightVector * TBN;\n\t\n"];
 			break;
 			
@@ -689,7 +669,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			tangentSpace = YES;
 			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
-			 @"\t// Build tangent space basis\n"
+			@"\t// Build tangent space basis\n"
 			 "\tvec3 n = normalize(gl_NormalMatrix * aNormal);\n"
 			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
 			 "\tvec3 b = cross(n, t);\n"];
@@ -701,7 +681,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			tangentSpace = YES;
 			// FIXME: do we really need to normalize here?
 			[_vertexBody appendString:
-			 @"\t// Build tangent space basis\n"
+			@"\t// Build tangent space basis\n"
 			 "\tvec3 t = normalize(gl_NormalMatrix * aTangent);\n"
 			 "\tvec3 b = normalize(gl_NormalMatrix * aBitangent);\n"
 			 "\tvec3 n = cross(t, b);\n"];
@@ -923,7 +903,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 
 - (void) writeTotalColor
 {
-	[_fragmentBody appendString:@"\tvec3 totalColor = vec3(0.0);\n\t\n"];
+	[_fragmentPreTextures appendString:@"\tvec3 totalColor = vec3(0.0);\n\t\n"];
 }
 
 
@@ -952,7 +932,12 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	AppendIfNotEmpty(vertexShader, _varyings, @"Varyings");
 	AppendIfNotEmpty(vertexShader, _vertexHelpers, @"Helper functions");
 	AppendIfNotEmpty(vertexShader, _vertexBody, nil);
+	
+#ifndef NDEBUG
 	_vertexShader = [vertexShader copy];
+#else
+	_vertexShader = [vertexShader retain];
+#endif
 }
 
 
@@ -962,14 +947,26 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	{
 		[_fragmentBody deleteCharactersInRange:(NSRange){ [_fragmentBody length] - 2, 2 }];
 	}
-	[_fragmentBody appendString:@"}"];
 	
 	NSMutableString *fragmentShader = [NSMutableString string];
 	AppendIfNotEmpty(fragmentShader, _fragmentUniforms, @"Uniforms");
 	AppendIfNotEmpty(fragmentShader, _varyings, @"Varyings");
 	AppendIfNotEmpty(fragmentShader, _fragmentHelpers, @"Helper functions");
-	AppendIfNotEmpty(fragmentShader, _fragmentBody, nil);
+	AppendIfNotEmpty(fragmentShader, _fragmentPreTextures, nil);
+	if ([_fragmentTextureLoukups length] > 0)
+	{
+		[fragmentShader appendString:@"\t\n\t// Texture lookups\n"];
+		[fragmentShader appendString:_fragmentTextureLoukups];
+	}
+	[fragmentShader appendString:@"\t\n"];
+	[fragmentShader appendString:_fragmentBody];
+	[fragmentShader appendString:@"}"];
+	
+#ifndef NDEBUG
 	_fragmentShader = [fragmentShader copy];
+#else
+	_fragmentShader = [fragmentShader retain];
+#endif
 }
 
 
@@ -978,11 +975,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self createTemporaries];
 	_uniforms = [[NSMutableDictionary alloc] init];
 	[_vertexBody appendString:@"void main(void)\n{\n"];
-	[_fragmentBody appendString:@"void main(void)\n{\n"];
+	[_fragmentPreTextures appendString:@"void main(void)\n{\n"];
 	
 	@try
 	{
-		[self setUpTextures];
 		REQUIRE_STAGE(writeFinalColorComposite);
 		
 		[self composeVertexShader];
@@ -1032,7 +1028,13 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	_vertexUniforms = [NSMutableString string];
 	_fragmentUniforms = [NSMutableString string];
 	_vertexBody = [NSMutableString string];
+	_fragmentPreTextures = [NSMutableString string];
+	_fragmentTextureLoukups = [NSMutableString string];
 	_fragmentBody = [NSMutableString string];
+	
+	_textures = [[NSMutableArray alloc] init];
+	_texturesByName = [[NSMutableDictionary alloc] init];
+	_textureIDs = [[NSMutableDictionary alloc] init];
 	
 #ifndef NDEBUG
 	_stagesInProgress = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
@@ -1049,6 +1051,8 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	DESTROY(_vertexHelpers);
 	DESTROY(_fragmentHelpers);
 	DESTROY(_vertexBody);
+	DESTROY(_fragmentPreTextures);
+	DESTROY(_fragmentTextureLoukups);
 	DESTROY(_fragmentBody);
 	
 	DESTROY(_texturesByName);

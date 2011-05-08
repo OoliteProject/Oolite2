@@ -105,7 +105,7 @@ static NSString *MacrosToString(NSDictionary *macros);
 	NSDictionary *uniformSpecs = nil;
 	OOSynthesizeMaterialShader(specification, mesh, &vertexShader, &fragmentShader, &textures, &uniformSpecs, nil);
 	
-	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@\n\n// Uniforms:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader, uniformSpecs);
+	OOLog(@"materials.synthesize.dump", @"Sythesized shaders for material \"%@\" of mesh \"%@\":\n// Vertex shader:\n%@\n\n// Fragment shader:\n%@\n\n// Uniforms:\n%@", [specification materialKey], [mesh name], vertexShader, fragmentShader, [uniformSpecs ooConfStringWithOptions:kOOConfGenerationDefault error:NULL]);
 	
 	NSDictionary *attributeBindings = [mesh prefixedAttributeIndices];
 	

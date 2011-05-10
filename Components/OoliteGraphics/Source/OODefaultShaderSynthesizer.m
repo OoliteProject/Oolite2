@@ -69,6 +69,8 @@ typedef enum
 	NSMutableDictionary			*_texturesByName;
 	// _textureIDs: dictionary mapping texture file names to numerical IDs used to name variables.
 	NSMutableDictionary			*_textureIDs;
+	// _sampledTextures: hash of integer texture IDs for which we’ve set up a sample.
+	NSHashTable					*_sampledTextures;
 	
 	LightingMode				_lightingMode;
 	uint8_t						_normalAttrSize;
@@ -92,7 +94,8 @@ typedef enum
 								_completed_writeLightVector: 1,
 								_completed_writeEyeVector: 1, 
 								_completed_writeTotalColor: 1,
-								_completed_writeTextureCoordRead: 1;
+								_completed_writeTextureCoordRead: 1,
+								_completed_writeVertexTangentBasis: 1;
 	
 #ifndef NDEBUG
 	NSHashTable					*_stagesInProgress;
@@ -145,13 +148,15 @@ typedef enum
 */
 - (void) writeDiffuseColorTerm;
 
+/*	writeVertexTangentBasis
+	Generates tangent space basis matrix (TBN) in vertex shader, if in tangent-
+	space lighting mode. If not, an exeception is raised.
+*/
+- (void) writeVertexTangentBasis;
+
 /*	writeNormalIfNeeded
 	Writes fragment variable vec3 normal if necessary. Otherwise, it sets
 	_constZNormal, indicating that the normal is always (0, 0, 1).
-	
-	This stage also has other, tightly interwoven effects. If tangent space
-	lighting is in effect, it sets up the TBN (tangent-bitangent-normal) matrix
-	in the vertex shader.
 	
 	See also: writeNormal.
 */
@@ -456,9 +461,9 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 }
 
 
-- (void) setUpOneTexture:(OOTextureSpecification *)spec
+- (NSUInteger) assignIDForTexture:(OOTextureSpecification *)spec
 {
-	if (spec == nil)  return;
+	NSParameterAssert(spec != nil);
 	
 	if ([spec isCubeMap])
 	{
@@ -466,13 +471,12 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[NSException raise:NSGenericException format:@"Invalid material"];
 	}
 	
-	REQUIRE_STAGE(writeTextureCoordRead);
-	
+	NSUInteger texID;
 	NSString *name = [spec textureMapName];
 	OOTextureSpecification *existing = [_texturesByName objectForKey:name];
 	if (existing == nil)
 	{
-		NSUInteger	texID = [_texturesByName count];
+		texID = [_texturesByName count];
 		NSNumber	*texIDObj = $int(texID);
 		NSString	*texUniform = $sprintf(@"uTexture%u", texID);
 		
@@ -480,8 +484,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_texturesByName setObject:spec forKey:name];
 		[_textureIDs setObject:texIDObj forKey:name];
 		[_uniforms setObject:$dict(@"type", @"texture", @"value", texIDObj) forKey:texUniform];
-		
-		[_fragmentTextureLoukups appendFormat:@"\tvec4 tex%uSample = texture2D(%@, texCoords);  // %@\n", texID, texUniform, name];
 		[self addFragmentUniform:texUniform ofType:@"sampler2D"];
 	}
 	else
@@ -490,6 +492,23 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		{
 			OOReportWarning(_problemReporter, @"The texture map \"%@\" is used more than once in material \"%@\" of \"%@\", and the options specified are not consistent. Only one set of options will be used.", name, [_spec materialKey], [_mesh name]);
 		}
+		texID = [_textureIDs oo_unsignedIntegerForKey:name];
+	}
+	return texID;
+}
+
+
+- (void) setUpOneTexture:(OOTextureSpecification *)spec
+{
+	if (spec == nil)  return;
+	
+	REQUIRE_STAGE(writeTextureCoordRead);
+	
+	NSUInteger texID = [self assignIDForTexture:spec];
+	if ((NSUInteger)NSHashGet(_sampledTextures, (const void *)(texID + 1)) == 0)
+	{
+		NSHashInsertKnownAbsent(_sampledTextures, (const void *)(texID + 1));
+		[_fragmentTextureLoukups appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, [spec textureMapName]];
 	}
 }
 
@@ -562,10 +581,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 - (void) performStage:(SEL)stage
 {
 	// Ensure that we aren’t recursing.
-	if (_stagesInProgress == NULL)
-	{
-		
-	}
 	if (NSHashGet(_stagesInProgress, stage) != NULL)
 	{
 		OOReportError(_problemReporter, @"Shader synthesis recursion for stage %@.", NSStringFromSelector(stage));
@@ -595,6 +610,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	_textures = [[NSMutableArray alloc] init];
 	_texturesByName = [[NSMutableDictionary alloc] init];
 	_textureIDs = [[NSMutableDictionary alloc] init];
+	_sampledTextures = NSCreateHashTable(NSIntegerHashCallBacks, 0);
 	
 #ifndef NDEBUG
 	_stagesInProgress = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
@@ -617,6 +633,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	DESTROY(_texturesByName);
 	DESTROY(_textureIDs);
+	NSFreeHashTable(_sampledTextures);
 	
 #ifndef NDEBUG
 	DESTROY(_stagesInProgress);
@@ -651,8 +668,53 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	[self addVarying:@"vTexCoords" ofType:@"vec2"];
 	[_vertexBody appendString:@"\tvTexCoords = aTexCoords;\n\t\n"];
 	
-	// FIXME: parallax mapping.
-	[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords;\n"];
+	BOOL haveTexCoords = NO;
+	OOTextureSpecification *parallaxMap = [_spec parallaxMap];
+	if (parallaxMap != nil)
+	{
+		float parallaxScale = [_spec parallaxScale];
+		if (parallaxScale != 0.0f)
+		{
+			/*
+				We can’t call -getSampleName:... here because the standard
+				texture loading mechanism has to occur after determining
+				texture coordinates (duh).
+			*/
+			NSString *swizzle = [parallaxMap extractMode] ?: @"a";
+			NSUInteger channelCount = [swizzle length];
+			if (channelCount == 1)
+			{
+				haveTexCoords = YES;
+				
+				REQUIRE_STAGE(writeEyeVector);
+				
+				NSUInteger texID = [self assignIDForTexture:parallaxMap];
+				[_fragmentPreTextures appendFormat:@"\tfloat parallax = texture2D(uTexture%u, vTexCoords).%@;\n", texID, swizzle];
+				
+				if (parallaxScale != 1.0f)
+				{
+					[_fragmentPreTextures appendFormat:@"\tparallax *= %g;\n", parallaxScale];
+				}
+				
+				float parallaxBias = [_spec parallaxBias];
+				if (parallaxBias != 0.0)
+				{
+					[_fragmentPreTextures appendFormat:@"\tparallax += %g;\n", parallaxBias];
+				}
+				
+				[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords - parallax * eyeVector.xy * vec2(-1.0, 1.0);\n"];
+			}
+			else
+			{
+				OOReportWarning(_problemReporter, @"The %@ map for material \"%@\" of \"%@\" specifies %u channels to extract, but only %@ may be used.", @"parallax", [_spec materialKey], [_mesh name], channelCount, @"1");
+			}
+		}
+	}
+	
+	if (!haveTexCoords)
+	{
+		[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords;\n"];
+	}
 }
 
 
@@ -775,7 +837,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 - (void) writeEyeVector
 {
 	REQUIRE_STAGE(writeVertexPosition);
-	REQUIRE_STAGE(writeNormalIfNeeded);
+	REQUIRE_STAGE(writeVertexTangentBasis);
 	
 	[self addVarying:@"vEyeVector" ofType:@"vec3"];
 	
@@ -789,11 +851,47 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			
 		case kLightingNormalTangent:
 		case kLightingTangentBitangent:
+			REQUIRE_STAGE(writeVertexTangentBasis);
 			[_vertexBody appendString:@"\tvEyeVector = position.xyz * TBN;\n\t\n"];
 			break;
 	}
 	
-	[_fragmentBody appendString:@"\tvec3 eyeVector = normalize(vEyeVector);\n\t\n"];
+	[_fragmentPreTextures appendString:@"\tvec3 eyeVector = normalize(vEyeVector);\n\t\n"];
+}
+
+
+- (void) writeVertexTangentBasis
+{
+	switch ([self lightingMode])
+	{
+		case kLightingNormalTangent:
+			[self addAttribute:@"aNormal" ofType:@"vec3"];
+			[self addAttribute:@"aTangent" ofType:@"vec3"];
+			[_vertexBody appendString:
+			 @"\t// Build tangent space basis\n"
+			 "\tvec3 n = gl_NormalMatrix * aNormal;\n"
+			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
+			 "\tvec3 b = cross(n, t);\n"];
+			break;
+			
+		case kLightingTangentBitangent:
+			[self addAttribute:@"aTangent" ofType:@"vec3"];
+			[self addAttribute:@"aBitangent" ofType:@"vec3"];
+			[_vertexBody appendString:
+			 @"\t// Build tangent space basis\n"
+			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
+			 "\tvec3 b = gl_NormalMatrix * aBitangent;\n"
+			 "\tvec3 n = cross(t, b);\n"];
+			break;
+			
+		case kLightingUndetermined:
+		case kLightingUniform:
+		case kLightingNormalOnly:
+			OOReportError(_problemReporter, @"Internal error in shader synthesizer: writeVertexTangentBasis was called in non-tangent-space lighting mode.");
+			[NSException raise:NSInternalInconsistencyException format:@"lighting logic error"];
+	}
+	
+	[_vertexBody appendString:@"\tmat3 TBN = mat3(t, b, n);\n\t\n"];
 }
 
 
@@ -812,25 +910,9 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 			break;
 			
 		case kLightingNormalTangent:
-			[self addAttribute:@"aNormal" ofType:@"vec3"];
-			[self addAttribute:@"aTangent" ofType:@"vec3"];
-			tangentSpace = YES;
-			[_vertexBody appendString:
-			@"\t// Build tangent space basis\n"
-			 "\tvec3 n = gl_NormalMatrix * aNormal;\n"
-			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
-			 "\tvec3 b = cross(n, t);\n"];
-			break;
-			
 		case kLightingTangentBitangent:
-			[self addAttribute:@"aTangent" ofType:@"vec3"];
-			[self addAttribute:@"aBitangent" ofType:@"vec3"];
+			REQUIRE_STAGE(writeVertexTangentBasis);
 			tangentSpace = YES;
-			[_vertexBody appendString:
-			@"\t// Build tangent space basis\n"
-			 "\tvec3 t = gl_NormalMatrix * aTangent;\n"
-			 "\tvec3 b = gl_NormalMatrix * aBitangent;\n"
-			 "\tvec3 n = cross(t, b);\n"];
 			break;
 			
 		case kLightingUndetermined:
@@ -841,9 +923,6 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	OOTextureSpecification *normalMap = [_spec normalMap];
 	if (tangentSpace)
 	{
-		// Shared code for kLightingNormalTangent and kLightingTangentBitangent.
-		[_vertexBody appendString:@"\tmat3 TBN = mat3(t, b, n);\n\t\n"];
-		
 		if (normalMap != nil)
 		{
 			NSString *sample, *swizzle;

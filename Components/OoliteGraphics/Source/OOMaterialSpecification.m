@@ -203,12 +203,12 @@ static void GetLightMap(OOMaterialSpecification *self, id plist, id <OOProblemRe
 	GetTexture(plist, kOOMaterialParallaxMapName, &_parallaxMap, issues);
 	if ([plist objectForKey:kOOMaterialParallaxScale] != nil)
 	{
-		_parallaxScale = [plist oo_unsignedIntForKey:kOOMaterialParallaxScale];
+		_parallaxScale = [plist oo_floatForKey:kOOMaterialParallaxScale];
 		[plist removeObjectForKey:kOOMaterialParallaxScale];
 	}
 	if ([plist objectForKey:kOOMaterialParallaxBias] != nil)
 	{
-		_parallaxBias = [plist oo_unsignedIntForKey:kOOMaterialParallaxBias];
+		_parallaxBias = [plist oo_floatForKey:kOOMaterialParallaxBias];
 		[plist removeObjectForKey:kOOMaterialParallaxBias];
 	}
 	

@@ -62,7 +62,7 @@ typedef enum
 	NSMutableString				*_fragmentHelpers;
 	NSMutableString				*_vertexBody;
 	NSMutableString				*_fragmentPreTextures;
-	NSMutableString				*_fragmentTextureLoukups;
+	NSMutableString				*_fragmentTextureLookups;
 	NSMutableString				*_fragmentBody;
 	
 	// _texturesByName: dictionary mapping texture file names to texture specifications.
@@ -444,10 +444,10 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	AppendIfNotEmpty(fragmentShader, _varyings, @"Varyings");
 	AppendIfNotEmpty(fragmentShader, _fragmentHelpers, @"Helper functions");
 	AppendIfNotEmpty(fragmentShader, _fragmentPreTextures, nil);
-	if ([_fragmentTextureLoukups length] > 0)
+	if ([_fragmentTextureLookups length] > 0)
 	{
 		[fragmentShader appendString:@"\t\n\t// Texture lookups\n"];
-		[fragmentShader appendString:_fragmentTextureLoukups];
+		[fragmentShader appendString:_fragmentTextureLookups];
 	}
 	[fragmentShader appendString:@"\t\n"];
 	[fragmentShader appendString:_fragmentBody];
@@ -484,6 +484,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 		[_texturesByName setObject:spec forKey:name];
 		[_textureIDs setObject:texIDObj forKey:name];
 		[_uniforms setObject:$dict(@"type", @"texture", @"value", texIDObj) forKey:texUniform];
+		
 		[self addFragmentUniform:texUniform ofType:@"sampler2D"];
 	}
 	else
@@ -508,7 +509,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	if ((NSUInteger)NSHashGet(_sampledTextures, (const void *)(texID + 1)) == 0)
 	{
 		NSHashInsertKnownAbsent(_sampledTextures, (const void *)(texID + 1));
-		[_fragmentTextureLoukups appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, [spec textureMapName]];
+		[_fragmentTextureLookups appendFormat:@"\tvec4 tex%uSample = texture2D(uTexture%u, texCoords);  // %@\n", texID, texID, [spec textureMapName]];
 	}
 }
 
@@ -604,7 +605,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	_fragmentUniforms = [NSMutableString string];
 	_vertexBody = [NSMutableString string];
 	_fragmentPreTextures = [NSMutableString string];
-	_fragmentTextureLoukups = [NSMutableString string];
+	_fragmentTextureLookups = [NSMutableString string];
 	_fragmentBody = [NSMutableString string];
 	
 	_textures = [[NSMutableArray alloc] init];
@@ -628,7 +629,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	DESTROY(_fragmentHelpers);
 	DESTROY(_vertexBody);
 	DESTROY(_fragmentPreTextures);
-	DESTROY(_fragmentTextureLoukups);
+	DESTROY(_fragmentTextureLookups);
 	DESTROY(_fragmentBody);
 	
 	DESTROY(_texturesByName);
@@ -1040,7 +1041,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	[_fragmentBody appendFormat:
 	@"\tfloat specIntensity = dot(reflection, eyeVector);\n"
-	 "\tspecIntensity = pow(max(specIntensity, 0.0), specularExponent);\n"
+	 "\tspecIntensity = pow(max(0.0, specIntensity), specularExponent);\n"
 	 "\ttotalColor += specIntensity * specularColor;\n\t\n"];
 }
 

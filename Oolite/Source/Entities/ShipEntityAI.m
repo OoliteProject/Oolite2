@@ -1600,9 +1600,15 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 
 - (void) setSunSkimStartCoordinates
 {
+	if ([UNIVERSE sun] == nil)
+	{
+		[shipAI message:@"NO_SUN_FOUND"];
+		return;
+	}
+	
 	Vector v0 = [UNIVERSE getSunSkimStartPositionForShip:self];
 	
-	if ((v0.x != 0.0)||(v0.y != 0.0)||(v0.z != 0.0))
+	if (!vector_equal(v0, kZeroVector))
 	{
 		coordinates = v0;
 		[shipAI message:@"APPROACH_COORDINATES"];
@@ -1616,6 +1622,12 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 
 - (void) setSunSkimEndCoordinates
 {
+	if ([UNIVERSE sun] == nil)
+	{
+		[shipAI message:@"NO_SUN_FOUND"];
+		return;
+	}
+	
 	coordinates = [UNIVERSE getSunSkimEndPositionForShip:self];
 	[shipAI message:@"APPROACH_COORDINATES"];
 }

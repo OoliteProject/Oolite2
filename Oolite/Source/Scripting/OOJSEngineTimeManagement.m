@@ -305,7 +305,7 @@ void OOJSBeginProfiling(BOOL trace)
 	
 	if (trace)
 	{
-		OOLog(@"script.javaScript.trace", @">>>> Beginning trace.");
+		OOLog(@"script.trace", @">>>> Beginning trace.");
 		OOLogIndent();
 	}
 }
@@ -339,7 +339,7 @@ OOTimeProfile *OOJSEndProfiling(void)
 	if (sTracing)
 	{
 		OOLogOutdent();
-		OOLog(@"script.javaScript.trace", @"<<<< End of trace.");
+		OOLog(@"script.trace", @"<<<< End of trace.");
 		sTracing = NO;
 	}
 	
@@ -427,12 +427,12 @@ static void TraceEnterJSFunction(JSContext *context, JSFunction *function, OOTim
 		sProfiling = YES;
 		
 		frameTag = @"JS";	// JavaScript
-		logMsgClass = @"script.javaScript.trace.JS";
+		logMsgClass = @"script.trace.JS";
 	}
 	else
 	{
 		frameTag = @"NW";	// Native Wrapper
-		logMsgClass = @"script.javaScript.trace.NW";
+		logMsgClass = @"script.trace.NW";
 	}
 	
 	[name appendString:@")"];
@@ -511,7 +511,7 @@ void OOJSProfileEnter(OOJSProfileStackFrame *frame, const char *function)
 	if (EXPECT_NOT(sTracing))
 	{
 		// We use EXPECT_NOT here because profiles are time-critical and traces are not.
-		OOLog(@"script.javaScript.trace.ON", @">> %s [ON]", function);
+		OOLog(@"script.trace.ON", @">> %s [ON]", function);
 		OOLogIndent();
 	}
 	

@@ -305,13 +305,8 @@
 	script.load.unnamed						= $scriptError;
 	script.load.world.listAll				= $troubleShootingDump;	// List names and versions of all loaded world scripts at startup.
 	
-	script.plist.run.badTarget				= $error;
-	
-	script.trace							= no;
-	script.trace.runWorld					= inherit;
-	script.trace.plist.run					= inherit;
-	script.trace.javaScript.call			= inherit;				// Prints selector and parameter string on foo.callObjC()
-	script.trace.javaScript.event			= inherit;				// Log event handler calls.
+	script.traceCalls						= no;					// Log every entry point (i.e., places where Oolite calls into JavaScript methods).
+	script.trace							= yes;					// Detailed, selective trace controlled by debug console.
 	
 	script.deprecated.scriptActionOnTarget	= $scriptError;			// Warning not to use scriptActionOnTarget:
 	

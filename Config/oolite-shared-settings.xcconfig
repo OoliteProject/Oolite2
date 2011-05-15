@@ -22,7 +22,8 @@ GCC_VERSION								= com.apple.compilers.llvm.clang.1_0
 ALWAYS_SEARCH_USER_PATHS				= NO
 
 
-WARNING_CFLAGS							= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces -Wreturn-type -Wunused-variable
+OOLITE_DEFAULT_WARNINGS					= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces -Wreturn-type -Wunused-variable
+WARNING_CFLAGS							= $OOLITE_DEFAULT_WARNINGS
 GCC_TREAT_WARNINGS_AS_ERRORS			= YES
 
 

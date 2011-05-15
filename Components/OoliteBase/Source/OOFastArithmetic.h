@@ -80,7 +80,7 @@ OOINLINE float OOFastInvSqrtf(float x)
 #endif
 
 
-OOINLINE BOOL OOIsPowerOf2(uint32_t value)
+OOINLINE bool OOIsPowerOf2(uint32_t value)
 {
 	return value == OORoundUpToPowerOf2(value);
 }

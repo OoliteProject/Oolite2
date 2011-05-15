@@ -93,7 +93,8 @@ SOFTWARE.
 																							diffuseMap:_diffuseMap
 																						  diffuseColor:diffuseColor
 																						 emissionColor:emissionColor
-																					 illuminationColor:illuminationColor];
+																					 illuminationColor:illuminationColor
+																					  optionsSpecifier:emissionAndIlluminationSpec];
 			}
 			else
 			{
@@ -108,7 +109,8 @@ SOFTWARE.
 																			 diffuseMap:_diffuseMap
 																		   diffuseColor:diffuseColor
 																		illuminationMap:illuminationMap
-																	  illuminationColor:illuminationColor];
+																	  illuminationColor:illuminationColor
+																	   optionsSpecifier:emissionSpec ?: illuminationSpec];
 			}
 			
 			_emissionMap = [[OOLegacyTexture textureWithGenerator:[generator autorelease]] retain];

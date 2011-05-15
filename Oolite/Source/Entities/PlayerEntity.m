@@ -156,6 +156,22 @@ static GLfloat		sBaseMass = 0.0;
 
 - (GLfloat) baseMass
 {
+	if (sBaseMass <= 0.0)
+	{
+		// First call with initialised mass (in [UNIVERSE setUpInitialUniverse]) is always to the cobra 3, even when starting with a savegame.
+		if ([self mass] > 0.0)	// bootstrap the base mass.
+		{
+			OOLog(@"fuelPrices", @"Setting Cobra3 base mass to: %.2f ", [self mass]);
+			sBaseMass = [self mass];
+		}
+		else 
+		{
+			// This happened on startup when [UNIVERSE setUpSpace] was called before player init, inside [UNIVERSE setUpInitialUniverse].
+			OOLog(@"fuelPrices", @"Player ship not initialised properly yet, using precalculated base mass.");
+			return 185580.0;
+		}
+	}
+	
 	return sBaseMass;
 }
 
@@ -653,6 +669,7 @@ static GLfloat		sBaseMass = 0.0;
 	credits					= 1000;
 	fuel					= PLAYER_MAX_FUEL;
 	fuel_accumulator		= 0.0f;
+	fuel_leak_rate			= 0.0f;
 	
 	galaxy_number			= 0;
 	forward_weapon_type		= WEAPON_PULSE_LASER;
@@ -779,12 +796,6 @@ static GLfloat		sBaseMass = 0.0;
 	compassTarget = nil;
 	[UNIVERSE setBlockJSPlayerShipProps:NO];	// full access to player.ship properties!
 	
-	// boostrap base mass at program startup!
-	if (sBaseMass == 0.0 && [[self shipDataKey] isEqualTo:PLAYER_SHIP_DESC])
-	{
-		sBaseMass = [self mass];
-	}
-	
 	// Player-only settings.
 	//
 	// set control factors..
@@ -805,8 +816,6 @@ static GLfloat		sBaseMass = 0.0;
 	
 	[self resetHud];
 	[hud setHidden:NO];
-	
-	// fuel_charge_rate is calculated inside the shipEntity method.
 	
 	// set up missiles
 	// sanity check the number of missiles...
@@ -915,6 +924,13 @@ static GLfloat		sBaseMass = 0.0;
 	for (i = 0; i < PLAYER_MAX_TRUMBLES; i++)  DESTROY(trumble[i]);
 	
 	[super dealloc];
+}
+
+
+- (OOUInteger) sessionID
+{
+	// The player ship always belongs to the current session.
+	return [UNIVERSE sessionID];
 }
 
 
@@ -1809,7 +1825,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		if ([UNIVERSE planet])
 			[UNIVERSE addMessage:[NSString stringWithFormat:@" %@. ",[UNIVERSE getSystemName:system_seed]] forCount:3.0];
 		else
-			if ([UNIVERSE inInterstellarSpace])  [UNIVERSE addMessage:DESC(@"witch-engine-malfunction") forCount:3.0]; // if sun gone nova, print nothing
+			if ([UNIVERSE isInInterstellarSpace])  [UNIVERSE addMessage:DESC(@"witch-engine-malfunction") forCount:3.0]; // if sun gone nova, print nothing
 		
 		[self setStatus:STATUS_IN_FLIGHT];
 		
@@ -2711,6 +2727,12 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
+- (void) setIdentEngaged:(BOOL)newValue
+{
+	ident_engaged = !!newValue;
+}
+
+
 - (NSString *) specialCargo
 {
 	return specialCargo;
@@ -3547,6 +3569,15 @@ static bool minShieldLevelPercentageInitialised = false;
 	flightPitch = 0.2f * (randf() - 0.5f);
 	flightRoll = 0.2f * (randf() - 0.5f);
 	
+	/*	Add an impulse upwards and backwards to the escape pod. This avoids
+		flying straight through the doppelganger in interstellar space or when
+		facing the main station/escape target, and generally looks cool.
+		-- Ahruman 2011-04-02
+	*/
+	Vector launchVector = vector_add(vector_multiply_scalar(v_up, 60.0f),
+									 vector_multiply_scalar(v_forward, -10.0f));
+	[self adjustVelocity:launchVector];
+	
 	float sheight = (float)(boundingBox.max.y - boundingBox.min.y);
 	position = vector_subtract(position, vector_multiply_scalar(v_up, sheight));
 	
@@ -3948,7 +3979,9 @@ static bool minShieldLevelPercentageInitialised = false;
 	// apply any pending fines. (No need to check gui_screen as fines is no longer an on-screen message).
 	if (being_fined && ![[UNIVERSE sun] willGoNova] && ![dockedStation suppressArrivalReports]) [self getFined];
 	
+	OOJSStartTimeLimiterWithTimeLimit(kOOJSLongTimeLimit);
 	[self doScriptEvent:OOJSID("shipDockedWithStation") withArgument:dockedStation];
+	OOJSStopTimeLimiter();
 
 	// if we've not switched to the mission screen yet then proceed normally..
 	if (gui_screen != GUI_SCREEN_MISSION)
@@ -4116,7 +4149,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	}
 
 	// Check we're not jumping into the current system
-	if (!([UNIVERSE inInterstellarSpace]) && equal_seeds(system_seed,target_system_seed))
+	if (!([UNIVERSE isInInterstellarSpace]) && equal_seeds(system_seed,target_system_seed))
 	{
 		//dont allow player to hyperspace to current location.
 		//Note interstellar space will have a system_seed place we came from
@@ -4272,11 +4305,17 @@ static bool minShieldLevelPercentageInitialised = false;
 // If the wormhole generator misjumped, the player's ship misjumps too. Kaks 20110211
 - (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing
 {
-	BOOL misjump = [self scriptedMisjump] || [w_hole withMisjump] || flightPitch == max_flight_pitch || randf() > 0.995;
 	wormhole = [w_hole retain];
 	[self addScannedWormhole:wormhole];
 	[self setStatus:STATUS_ENTERING_WITCHSPACE];
 	ShipScriptEventNoCx(self, "shipWillEnterWitchspace", OOJSSTR("wormhole"));
+	
+	// Must be after script execution:
+	BOOL misjump = [self scriptedMisjump] ||
+	               [w_hole withMisjump] ||
+	               flightPitch == max_flight_pitch ||
+	               randf() > 0.995;
+	
 	[self witchJumpTo:[w_hole destination] misjump:misjump];
 }
 
@@ -4397,7 +4436,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	wormhole = nil;
 
 	position = pos;
-	orientation = [UNIVERSE getWitchspaceExitRotation];
+	[self setOrientation:[UNIVERSE getWitchspaceExitRotation]];
 	flightRoll = 0.0f;
 	flightPitch = 0.0f;
 	flightYaw = 0.0f;
@@ -4431,7 +4470,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	// Both system_seed & target_system_seed are != nil at all times when this function is called.
 	
-	systemName = [UNIVERSE inInterstellarSpace] ? DESC(@"interstellar-space") : [UNIVERSE getSystemName:system_seed];
+	systemName = [UNIVERSE isInInterstellarSpace] ? DESC(@"interstellar-space") : [UNIVERSE getSystemName:system_seed];
 	if ([self isDocked] && dockedStation != [UNIVERSE station])
 	{
 		systemName = [NSString stringWithFormat:@"%@ : %@", systemName, [dockedStation displayName]];
@@ -5480,6 +5519,7 @@ static NSString *last_outfitting_key=nil;
 				[gui setArray:[NSArray arrayWithObjects:DESC(@"gui-back"), @" <-- ", nil] forRow:row];
 				row++;
 			}
+			
 			for (i = skip; i < count && (row - start_row < (OOGUIRow)n_rows); i++)
 			{
 				NSString			*eqKey = [equipmentAllowed oo_stringAtIndex:i];
@@ -5497,23 +5537,20 @@ static NSString *last_outfitting_key=nil;
 				{
 					price = cunningFee(0.1 * [UNIVERSE tradeInValueForCommanderDictionary:[self legacyCommanderDataDictionary]]);
 					price += price * (0.1 * [self missingSubEntitiesAdjustment]);
+					[gui setColor:[OOColor orangeColor] forRow:row];  // Colour renovation in orange.
 				}
 				else price = pricePerUnit;
 				
-				price *= priceFactor;  // increased prices at some stations
+				price *= priceFactor;  // Increased prices at some stations.
 				
-				// color repairs and renovation items orange
+				// Is this item damaged?
 				if ([self hasEquipmentItem:eq_key_damaged])
 				{
 					desc = [NSString stringWithFormat:DESC(@"equip-repair-@"), desc];
 					price /= 2.0;
-					[gui setColor:[OOColor orangeColor] forRow:row];
+					[gui setColor:[OOColor orangeColor] forRow:row];  // Colour repair items in orange.
 				}
-				if ([eqKey isEqualToString:@"EQ_RENOVATION"])
-				{
-					[gui setColor:[OOColor orangeColor] forRow:row];
-				}
-
+				
 				NSString *priceString = [NSString stringWithFormat:@" %@ ", OOCredits(price)];
 				
 				if ([eqKeyForSelectFacing isEqualToString:eqKey])
@@ -6122,10 +6159,12 @@ static NSString *last_outfitting_key=nil;
 	unsigned i;
 	for (i = 0; i < missiles; i++)
 	{
-		NSString* weapon_key = [missile_list[i] identifier];
+		NSString *weapon_key = [missile_list[i] identifier];
 		
 		if (weapon_key != nil)
+		{
 			tradeIn += (int)[UNIVERSE getEquipmentPriceForKey:weapon_key];
+		}
 	}
 	
 	for (i = 0; i < max_missiles; i++)
@@ -6768,7 +6807,7 @@ static NSString *last_outfitting_key=nil;
 	if (legalStatus == 0)  return;		// nothing to pay for
 	
 	OOGovernmentID local_gov = [[UNIVERSE currentSystemData] oo_intForKey:KEY_GOVERNMENT];
-	if ([UNIVERSE inInterstellarSpace])  local_gov = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
+	if ([UNIVERSE isInInterstellarSpace])  local_gov = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
 	OOCreditsQuantity fine = 500 + ((local_gov < 2)||(local_gov > 5))? 500:0;
 	fine *= legalStatus;
 	if (fine > credits)
@@ -7535,6 +7574,27 @@ static NSString *last_outfitting_key=nil;
 	scoopOverride = !!newValue;
 	[self setScoopsActive];
 }
+
+
+#if MASS_DEPENDENT_FUEL_PRICES
+- (GLfloat) fuelChargeRate
+{
+	GLfloat		rate = 1.0; // Standard (& strict play) charge rate.
+	
+	rate = [super fuelChargeRate];
+#if REPAIR_DEPENDENT_FUEL_PRICES
+	// post-NMSR fuelPrices	- the state of repair to affect the rate? 
+	// state of repair never lower than 75, but added the check just in case. -- Kaks 20110429
+	if (ship_trade_in_factor <= 90 && ship_trade_in_factor >= 75)
+	{
+		rate *= 2.0 - (ship_trade_in_factor / 100); // between 1.1x and 1.25x
+		OOLog(@"fuelPrices", @"\"%@\" - repair status: %d%%, adjusted rate to:%.2f)", [self shipDataKey], ship_trade_in_factor, rate);
+	}
+#endif
+	
+	return rate;
+}
+#endif
 
 
 - (void) setEscapePodDestination:(ShipEntity *)entity

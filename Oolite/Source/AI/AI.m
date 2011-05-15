@@ -404,8 +404,8 @@ static AIStackElement *sStack;
 	{
 		.back = sStack,
 		.owner = owner,
-		.aiName = stateMachineName,
-		.state = currentState,
+		.aiName = [[stateMachineName retain] autorelease],
+		.state = [[currentState retain] autorelease],
 		.message = message,
 		.context = debugContext
 	};
@@ -413,7 +413,7 @@ static AIStackElement *sStack;
 #endif
 	
 	/*	CRASH when calling reactToMessage: FOO in state FOO causes infinite
-		recursion.
+		recursion. (NB: there are other ways of triggering this.)
 		FIX: recursion limiter. Alternative is to explicitly catch this case
 		in takeAction:, but that could potentially miss indirect recursion via
 		scripts.
@@ -432,7 +432,7 @@ static AIStackElement *sStack;
 		}
 		
 		// unwind.
-		sStack = sStack->back;
+		if (sStack != NULL)  sStack = sStack->back;
 #endif
 		
 		return;
@@ -483,7 +483,7 @@ static AIStackElement *sStack;
 	sCurrentlyRunningAI = previousRunning;
 #ifndef NDEBUG
 	// Unwind stack.
-	sStack = sStack->back;
+	if (sStack != NULL)  sStack = sStack->back;
 #endif
 	
 #ifdef OO_BRAIN_AI

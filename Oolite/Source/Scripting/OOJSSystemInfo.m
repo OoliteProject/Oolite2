@@ -203,7 +203,7 @@ DEFINE_JS_OBJECT_GETTER(JSSystemInfoGetSystemInfo, &sSystemInfoClass, sSystemInf
 
 - (id) valueForKey:(NSString *)key
 {
-	if ([UNIVERSE inInterstellarSpace] && _system == -1) 
+	if ([UNIVERSE isInInterstellarSpace] && _system == -1) 
 	{
 		return [[UNIVERSE currentSystemData] objectForKey:key];
 	}
@@ -219,7 +219,7 @@ DEFINE_JS_OBJECT_GETTER(JSSystemInfoGetSystemInfo, &sSystemInfoClass, sSystemInf
 
 - (NSArray *) allKeys
 {
-	if ([UNIVERSE inInterstellarSpace] && _system == -1) 
+	if ([UNIVERSE isInInterstellarSpace] && _system == -1) 
 	{
 		return [[UNIVERSE currentSystemData] allKeys];
 	}
@@ -248,7 +248,7 @@ DEFINE_JS_OBJECT_GETTER(JSSystemInfoGetSystemInfo, &sSystemInfoClass, sSystemInf
 
 - (NSPoint) coordinates
 {
-	if ([UNIVERSE inInterstellarSpace] && _system == -1) 
+	if ([UNIVERSE isInInterstellarSpace] && _system == -1) 
 	{
 		return [PLAYER galaxy_coordinates];
 	}
@@ -409,7 +409,7 @@ static JSBool SystemInfoGetProperty(JSContext *context, JSObject *this, jsid pro
 	
 	OOSystemInfo	*info = OOJSNativeObjectOfClassFromJSObject(context, this, [OOSystemInfo class]);
 	// What if we're trying to access a saved witchspace systemInfo object?
-	BOOL savedInterstellarInfo = ![UNIVERSE inInterstellarSpace] && [info system] == -1;
+	BOOL savedInterstellarInfo = ![UNIVERSE isInInterstellarSpace] && [info system] == -1;
 	BOOL sameGalaxy = [PLAYER currentGalaxyID] == [info galaxy];
 	
 	

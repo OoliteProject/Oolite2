@@ -1002,13 +1002,12 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 - (BOOL) dockingCorridorIsEmpty
 {
-	if (!UNIVERSE)
-		return NO;
-	
 	double unitime = [UNIVERSE gameTime];
 	
 	if (unitime < last_launch_time + STATION_DELAY_BETWEEN_LAUNCHES)	// leave sufficient pause between launches
+	{
 		return NO;
+	}
 	
 	// check against all ships
 	BOOL		isEmpty = YES;
@@ -1047,7 +1046,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 				if (vdp > 0.86)
 				{
 					isEmpty = NO;
-					last_launch_time = unitime;
+					last_launch_time = unitime - STATION_DELAY_BETWEEN_LAUNCHES + STATION_LAUNCH_RETRY_INTERVAL;
 				}
 			}
 		}
@@ -1144,7 +1143,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	{
 		if ([player getDockingClearanceStatus] >= DOCKING_CLEARANCE_STATUS_GRANTED)
 		{
-			if (last_launch_time-30 < unitime && [player getDockingClearanceStatus] != DOCKING_CLEARANCE_STATUS_TIMING_OUT)
+			if (last_launch_time - 30 < unitime && [player getDockingClearanceStatus] != DOCKING_CLEARANCE_STATUS_TIMING_OUT)
 			{
 				[self sendExpandedMessage:DESC(@"station-docking-clearance-about-to-expire") toShip:player];
 				[player setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_TIMING_OUT];

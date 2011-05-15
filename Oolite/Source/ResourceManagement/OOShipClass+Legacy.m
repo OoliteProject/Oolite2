@@ -78,7 +78,6 @@
 #define kKey_energyCapacity					@"max_energy"
 #define kKey_energyRechargeRate				@"energy_recharge_rate"
 #define kKey_initialFuel					@"fuel"
-#define kKey_fuelChargeRate					@"fuel_charge_rate"
 #define kKey_heatInsulation					@"heat_insulation"
 #define kKey_maxFlightSpeed					@"max_flight_speed"
 #define kKey_maxFlightRoll					@"max_flight_roll"
@@ -599,7 +598,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	// Note: as per 1.x, fuel defaults to 0.
 	READ_UINT	(initialFuel);
-	READ_PFLOAT	(fuelChargeRate);
 	_fuelCapacity = MAX(70U, _initialFuel);		// 1.x has no explicit fuel capacity.
 	
 	/*

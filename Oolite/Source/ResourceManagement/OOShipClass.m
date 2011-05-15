@@ -443,12 +443,6 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 }
 
 
-- (float) fuelChargeRate
-{
-	return _fuelChargeRate;
-}
-
-
 - (float) heatInsulation
 {
 	return _heatInsulation;

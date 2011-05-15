@@ -449,14 +449,15 @@ OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
 			break;
 	}
 	
-	// Inform our old target of our new target.
-	if ([primaryTarget isShip])
+	// React only if the primary aggressor is not a friendly ship, else ignore it.
+	if ([aggressor isShip] && [primaryTarget isShip] && ![(ShipEntity *)aggressor isFriendlyTo:self])
 	{
-		[[(ShipEntity *)primaryTarget getAI] message:[NSString stringWithFormat:@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, universalID, [[self primaryAggressor] universalID]]];
+		// Inform our old target of our new target.
+		[[(ShipEntity *)primaryTarget getAI] message:$sprintf(@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, [self universalID], [aggressor universalID])];
+		
+		// Okay, so let's now target the aggressor.
+		[self addTarget:aggressor];
 	}
-	
-	// okay, so let's now target the aggressor
-	[self addTarget:aggressor];
 }
 
 

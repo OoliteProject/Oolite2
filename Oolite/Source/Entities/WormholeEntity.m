@@ -236,11 +236,10 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 		if( now > expiry_time )
 			return NO;
 	}
-
-	[shipsInTransit addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-						ship, @"ship",
-						[NSNumber numberWithDouble: now + travel_time - arrival_time], @"time",
-						nil]];
+	
+	[shipsInTransit addObject:$dict(@"ship", ship,
+									@"time", $float(now + travel_time - arrival_time),
+									@"shipBeacon", [ship beaconCode])];
 	witch_mass += [ship mass];
 	expiry_time = now + (witch_mass / WORMHOLE_SHRINK_RATE / shrink_factor);
 	collision_radius = 0.5 * M_PI * pow(witch_mass, 1.0/3.0);
@@ -268,8 +267,11 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	int i;
 	for (i = 0; i < n_ships; i++)
 	{
-		ShipEntity* ship = (ShipEntity*)[(NSDictionary*)[shipsInTransit objectAtIndex:i] objectForKey:@"ship"];
-		double	ship_arrival_time = arrival_time + [(NSNumber*)[(NSDictionary*)[shipsInTransit objectAtIndex:i] objectForKey:@"time"] doubleValue];
+		NSDictionary *shipDesc = [shipsInTransit oo_dictionaryAtIndex:i];
+		
+		ShipEntity *ship = [shipDesc objectForKey:@"ship"];
+		NSString *shipBeacon = [shipDesc oo_stringForKey:@"shipBeacon"];
+		double	ship_arrival_time = arrival_time + [shipDesc oo_doubleForKey:@"time"];
 		double	time_passed = now - ship_arrival_time;
 
 		if (ship_arrival_time > now)
@@ -282,33 +284,50 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 			if (!hasExitPosition)
 			{
 				position = [UNIVERSE getWitchspaceExitPosition];	// no need to reset PRNG.
-				Quaternion	q1;
+				double			d1 = SCANNER_MAX_RANGE*((ranrot_rand() % 256)/256.0 - 0.5);
+				const double	minD = 750.0;
+				Quaternion		q1;
 				quaternion_set_random(&q1);
-				double		d1 = SCANNER_MAX_RANGE*((ranrot_rand() % 256)/256.0 - 0.5);
-				if (abs(d1) < 500.0)	// no closer than 500m
-					d1 += ((d1 > 0.0)? 500.0: -500.0);
-				Vector		v1 = vector_forward_from_quaternion(q1);
-				position.x += v1.x * d1; // randomise exit position
-				position.y += v1.y * d1;
-				position.z += v1.z * d1;
+				Vector			v1 = vector_forward_from_quaternion(q1);
+				
+				if (abs(d1) < minD)	// no closer than 750m
+				{
+					d1 += copysign(minD, d1);
+				}
+				
+				// randomise exit position
+				position = vector_add(position, vector_multiply_scalar(v1, d1));
 			}
-			[ship setPosition: position];
-			[ship setOrientation: [UNIVERSE getWitchspaceExitRotation]];
-			[ship setPitch: 0.0];
-			[ship setRoll: 0.0];
-	
+			[ship setPosition:position];
+			
+			if (shipBeacon != nil)  [ship setBeaconCode:shipBeacon];
+			
 			// Don't reduce bounty on misjump. Fixes #17992
 			// - MKW 2011.03.10	
-			if (!_misjump) [ship setBounty:[ship bounty]/2];	// adjust legal status for new system
-		
+			if (!_misjump)  [ship setBounty:[ship bounty]/2];	// adjust legal status for new system
+			
 			if ([ship cargoFlag] == CARGO_FLAG_FULL_PLENTIFUL)
-				[ship setCargoFlag: CARGO_FLAG_FULL_SCARCE];
-		
-			[UNIVERSE addEntity:ship];
-		
+			{
+				[ship setCargoFlag:CARGO_FLAG_FULL_SCARCE];
+			}
+			
+			if (now - ship_arrival_time < 2.0)
+			{
+				[ship witchspaceLeavingEffects]; // adds the ship to the universe with effects.
+			}
+			else
+			{
+				// arrived 2 seconds or more before the player. Rings have faded out.
+				[ship setOrientation:[UNIVERSE getWitchspaceExitRotation]];
+				[ship setPitch:0.0];
+				[ship setRoll:0.0];
+				[ship setSpeed:[ship maxFlightSpeed] * 0.25];
+				[UNIVERSE addEntity:ship];	// AI and status get initialised here
+			}
+			
 			// Should probably pass the wormhole, but they have no JS representation
 			[ship doScriptEvent:OOJSID("shipExitedWormhole") andReactToAIMessage:@"EXITED WITCHSPACE"];
-		
+			
 			// update the ships's position
 			if (!hasExitPosition)
 			{
@@ -319,7 +338,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 			else if (now - ship_arrival_time > 1) // Only update the ship position if it was some time ago, otherwise we're in 'real time'.
 			{
 				// only update the time delay to the lead ship. Sign is not correct but updating gives a small spacial distribution.
-				[ship update: (ship_arrival_time - arrival_time)];
+				[ship update:(ship_arrival_time - arrival_time)];
 			}
 		}
 	}

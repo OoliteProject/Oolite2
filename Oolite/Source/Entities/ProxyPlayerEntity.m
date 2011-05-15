@@ -55,7 +55,7 @@ MA 02110-1301, USA.
 	[self setDialMissileStatus:[player dialMissileStatus]];
 	[self setDialFuelScoopStatus:[player dialFuelScoopStatus]];
 	[self setCompassMode:[player compassMode]];
-	[self setDialIdentEngaged:[player dialIdentEngaged]];
+	[self setIdentEngaged:[player dialIdentEngaged]];
 	[self setAlertCondition:[player alertCondition]];
 	[self setTrumbleCount:[player trumbleCount]];
 }
@@ -160,7 +160,7 @@ MA 02110-1301, USA.
 	return _dialIdentEngaged;
 }
 
-- (void) setDialIdentEngaged:(BOOL)value
+- (void) setIdentEngaged:(BOOL)value
 {
 	_dialIdentEngaged = !!value;
 }

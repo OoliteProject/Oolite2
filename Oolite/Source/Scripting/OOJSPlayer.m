@@ -448,7 +448,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 				[PLAYER setEscapePodDestination:NULL];
 				
 				double rescueRange = 7.0;	// reach at least 1 other system!
-				if ([UNIVERSE inInterstellarSpace])
+				if ([UNIVERSE isInInterstellarSpace])
 				{
 					// Set 3.5 ly as the limit, enough to reach at least 2 systems!
 					rescueRange = 3.5;

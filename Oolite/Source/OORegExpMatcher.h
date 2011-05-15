@@ -32,7 +32,7 @@ SOFTWARE.
 */
 
 #import <OoliteBase/OoliteBase.h>
-#import	<jsapi.h>
+#include <jsapi.h>
 
 @class OOJSFunction, OOJSValue;
 

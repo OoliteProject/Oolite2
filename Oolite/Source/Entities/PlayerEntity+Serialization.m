@@ -429,7 +429,6 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	*/
 	[result oo_setFloat:credits				forKey:@"credits"];
 	[result oo_setUnsignedInteger:fuel		forKey:@"fuel"];
-	[result oo_setFloat:fuel_charge_rate	forKey:@"fuel_charge_rate"]; // ## fuel charge testing
 	
 	[result oo_setInteger:galaxy_number	forKey:@"galaxy_number"];
 	
@@ -747,7 +746,6 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	credits = OODeciCreditsFromObject([dict objectForKey:@"credits"]);
 	
 	fuel = [dict oo_unsignedIntForKey:@"fuel" defaultValue:fuel];
-	fuel_charge_rate = [dict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate]; // ## fuel charge testing
 	
 	galaxy_number = [dict oo_intForKey:@"galaxy_number"];
 	forward_weapon_type = [dict oo_intForKey:@"forward_weapon"];

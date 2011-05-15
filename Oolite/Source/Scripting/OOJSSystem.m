@@ -224,7 +224,7 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 			return YES;
 			
 		case kSystem_isInterstellarSpace:
-			*value = OOJSValueFromBOOL([UNIVERSE inInterstellarSpace]);
+			*value = OOJSValueFromBOOL([UNIVERSE isInInterstellarSpace]);
 			return YES;
 			
 		case kSystem_mainStation:
@@ -295,7 +295,7 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 				
 			case kSystem_governmentDescription:
 				result = OODisplayStringFromGovernmentID([systemData oo_intForKey:KEY_GOVERNMENT]);
-				if (result == nil && [UNIVERSE inInterstellarSpace])  result = DESC(@"not-applicable");
+				if (result == nil && [UNIVERSE isInInterstellarSpace])  result = DESC(@"not-applicable");
 				break;
 				
 			case kSystem_economy:
@@ -304,7 +304,7 @@ static JSBool SystemGetProperty(JSContext *context, JSObject *this, jsid propID,
 				
 			case kSystem_economyDescription:
 				result = OODisplayStringFromEconomyID([systemData oo_intForKey:KEY_ECONOMY]);
-				if (result == nil && [UNIVERSE inInterstellarSpace])  result = DESC(@"not-applicable");
+				if (result == nil && [UNIVERSE isInInterstellarSpace])  result = DESC(@"not-applicable");
 				break;
 			
 			case kSystem_techLevel:

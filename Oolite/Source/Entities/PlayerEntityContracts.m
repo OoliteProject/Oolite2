@@ -64,7 +64,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	NSMutableString	*result = [NSMutableString string];
 	NSMutableArray	*rescuees = [NSMutableArray array];
 	OOGovernmentID	government = [[[UNIVERSE currentSystemData] objectForKey:KEY_GOVERNMENT] intValue];
-	if ([UNIVERSE inInterstellarSpace])  government = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
+	if ([UNIVERSE isInInterstellarSpace])  government = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
 	
 	// step through the cargo removing crew from any escape pods
 	// No enumerator because we're mutating the array -- Ahruman

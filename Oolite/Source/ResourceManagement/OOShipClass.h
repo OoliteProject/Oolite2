@@ -88,7 +88,6 @@ MA 02110-1301, USA.
 	float				_energyRechargeRate;
 	OOFuelQuantity		_fuelCapacity;
 	OOFuelQuantity		_initialFuel;
-	float				_fuelChargeRate;
 	
 	float				_heatInsulation;
 	
@@ -234,7 +233,6 @@ MA 02110-1301, USA.
 - (float) energyRechargeRate;
 - (OOFuelQuantity) fuelCapacity;
 - (OOFuelQuantity) initialFuel;
-- (float) fuelChargeRate;	// NOTE: this is the value in the config file, not adjusted for mass-dependent rules.
 
 - (float) heatInsulation;
 

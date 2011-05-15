@@ -38,6 +38,7 @@ typedef enum
 #define STATION_MAX_POLICE				8
 
 #define STATION_DELAY_BETWEEN_LAUNCHES  6.0
+#define STATION_LAUNCH_RETRY_INTERVAL	2.0
 
 #define MAX_DOCKING_STAGES				16
 
@@ -45,11 +46,11 @@ typedef enum
 
 @interface StationEntity: ShipEntity
 {
-	
+@private
 	NSMutableDictionary		*shipsOnApproach;
 	NSMutableDictionary		*shipsOnHold;
 	NSMutableArray			*launchQueue;
-	double					last_launch_time;
+	double					last_launch_time;			// FIXME: should track next permitted time instead.
 	double					approach_spacing;
 	OOStationAlertLevel		alertLevel;
 	

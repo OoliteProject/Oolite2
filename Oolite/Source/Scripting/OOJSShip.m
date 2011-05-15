@@ -770,6 +770,8 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 			break;
 		
 		case kShip_heatInsulation:
+			if (EXPECT_NOT([entity isPlayer]))  goto playerReadOnly;
+			
 			if (JS_ValueToNumber(context, *value, &fValue))
 			{
 				fValue = fmax(fValue, 0.125);
@@ -1364,7 +1366,7 @@ static JSBool ShipAbandonShip(JSContext *context, uintN argc, jsval *vp)
 }
 
 
-// canAwardEquipment(type : equipmentInfoExpression)
+// canAwardEquipment(type : equipmentInfoExpression) : Boolean
 static JSBool ShipCanAwardEquipment(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)

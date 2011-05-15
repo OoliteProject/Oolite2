@@ -183,7 +183,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 - (BOOL) doRemoveEntity:(Entity *)entity;
 - (void) preloadSounds;
 - (void) setUpSettings;
-- (void) setUpPlayerSettings;
+- (void) setUpInitialUniverse;
 - (ShipEntity *) spawnPatrolShipAt:(Vector)launchPos alongRoute:(Vector)v_route withOffset:(double)ship_location;
 - (Vector) fractionalPositionFrom:(Vector)point0 to:(Vector)point1 withFraction:(double)routeFraction;
 
@@ -213,6 +213,11 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 - (void) setFirstBeacon:(ShipEntity *)beacon;
 - (void) setLastBeacon:(ShipEntity *)beacon;
+
+- (void) verifyDescriptions;
+- (void) loadDescriptions;
+
+- (void) verifyEntitySessionIDs;
 
 @end
 
@@ -258,7 +263,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[ResourceManager paths];
 	
 	// Set up the internal game strings
-	descriptions = [[ResourceManager dictionaryFromFilesNamed:@"descriptions.plist" inFolder:@"Config" andMerge:YES] retain];
+	[self loadDescriptions];
 	// DESC expansion is now possible!
 	
 	reducedDetail = [prefs oo_boolForKey:@"reduced-detail-graphics" defaultValue:NO];
@@ -312,7 +317,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[player setStatus:STATUS_START_GAME];
 	[player setShowDemoShips: YES];
 	
-	[self setUpPlayerSettings];
+	[self setUpInitialUniverse];
 	
 	universeRegion = [[CollisionRegion alloc] initAsUniverse];
 	entitiesDeadThisUpdate = [[NSMutableSet alloc] init];
@@ -351,7 +356,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[commodityData release];
 	
 	[illegalGoods release];
-	[descriptions release];
+	[_descriptions release];
 	[characters release];
 	[customSounds release];
 	[planetInfo release];
@@ -387,6 +392,12 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 #endif
 	
 	[super dealloc];
+}
+
+
+- (OOUInteger) sessionID
+{
+	return _sessionID;
 }
 
 
@@ -3164,7 +3175,7 @@ static const OOMatrix	starboard_matrix =
 				OOGL([self useGUILightSource:demoShipMode]);
 				
 				// HACK: store view matrix for absolute drawing of active subentities (i.e., turrets).
-				OOGL(viewMatrix = OOMatrixLoadGLMatrix(GL_MODELVIEW));
+				OOGL(viewMatrix = OOMatrixLoadGLMatrix(GL_MODELVIEW_MATRIX));
 				
 				int			furthest = draw_count - 1;
 				int			nearest = 0;
@@ -4939,11 +4950,14 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 	_realTime += inDeltaT;	// PRIOR to TAF scaling.
 	
 	volatile OOTimeDelta delta_t = inDeltaT * [self timeAccelerationFactor];
+	NSUInteger sessionID = _sessionID;
 	
 	if (!no_update)
 	{
 		unsigned	i, ent_count = n_entities;
 		Entity		*my_entities[ent_count];
+		
+		[self verifyEntitySessionIDs];
 		
 		// use a retained copy so this can't be changed under us.
 		for (i = 0; i < ent_count; i++)
@@ -5070,6 +5084,11 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 				}
 				
 				[thing update:delta_t];
+				if (sessionID != _sessionID)
+				{
+					// Game was reset (in player update); end this update: cycle.
+					break;
+				}
 				
 #ifndef NDEBUG
 				update_stage = @"update:list maintenance [%@]";
@@ -5562,15 +5581,83 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 
 - (NSDictionary *) descriptions
 {
-	if (descriptions == nil)
+	NSAssert(_descriptions != nil, @"Attempt to use descriptions before they're loaded.");
+	
+	return _descriptions;
+}
+
+
+static void VerifyDesc(NSString *key, id desc);
+
+
+static void VerifyDescString(NSString *key, NSString *desc)
+{
+	if ([desc rangeOfString:@"%n"].location != NSNotFound)
 	{
-		// Load internal descriptions.plist for use in early init, OXP verifier etc.
-		// It will be replaced by merged version later if running the game normally.
-		descriptions = [NSDictionary dictionaryWithContentsOfFile:[[[ResourceManager builtInPath]
-																	stringByAppendingPathComponent:@"Config"]
-																   stringByAppendingPathComponent:@"descriptions.plist"]];
+		OOLog(@"descriptions.verify.percentN", @"***** FATAL: descriptions.plist entry \"%@\" contains the dangerous control sequence %%n.", key);
+		exit(EXIT_FAILURE);
 	}
-	return descriptions;
+}
+
+
+static void VerifyDescArray(NSString *key, NSArray *desc)
+{
+	id subDesc = nil;
+	foreach (subDesc, desc)
+	{
+		VerifyDesc(key, subDesc);
+	}
+}
+
+
+static void VerifyDesc(NSString *key, id desc)
+{
+	if ([desc isKindOfClass:[NSString class]])
+	{
+		VerifyDescString(key, desc);
+	}
+	else if ([desc isKindOfClass:[NSArray class]])
+	{
+		VerifyDescArray(key, desc);
+	}
+	else if ([desc isKindOfClass:[NSNumber class]])
+	{
+		// No verification needed.
+	}
+	else
+	{
+		OOLogERR(@"descriptions.verify.badType", @"***** FATAL: descriptions.plist entry for \"%@\" is neither a string nor an array.", key);
+		exit(EXIT_FAILURE);
+	}
+}
+
+
+- (void) verifyDescriptions
+{
+	/*
+		Ensure that no descriptions.plist entries contain the %n format code,
+		which can be used to smash the stack and potentially call arbitrary
+		functions.
+		
+		%n is deliberately not supported in Foundation/CoreFoundation under
+		Mac OS X, but unfortunately GNUstep implements it.
+		-- Ahruman 2011-05-05
+	*/
+	
+	NSDictionary *descriptions = [self descriptions];
+	NSString *key = nil;
+	foreachkey (key, descriptions)
+	{
+		VerifyDesc(key, [descriptions objectForKey:key]);
+	}
+}
+
+
+- (void) loadDescriptions
+{
+	[_descriptions autorelease];
+	_descriptions = [[ResourceManager dictionaryFromFilesNamed:@"descriptions.plist" inFolder:@"Config" andMerge:YES] retain];
+	[self verifyDescriptions];
 }
 
 
@@ -5738,7 +5825,7 @@ static NSDictionary	*sCachedSystemData = nil;
 {
 	OOJS_PROFILE_ENTER
 	
-	if (![self inInterstellarSpace])
+	if (![self isInInterstellarSpace])
 	{
 		return [self generateSystemData:system_seed];
 	}
@@ -5771,7 +5858,7 @@ static NSDictionary	*sCachedSystemData = nil;
 }
 
 
-- (BOOL) inInterstellarSpace
+- (BOOL) isInInterstellarSpace
 {
 	return [self sun] == nil;
 }
@@ -6159,7 +6246,7 @@ static NSDictionary	*sCachedSystemData = nil;
 	{
 		Random_Seed system = systems[i];
 		double dist = distanceBetweenPlanetPositions(here.x, here.y, system.d, system.b);
-		if (dist <= range && !equal_seeds(system, hereSeed))	
+		if (dist <= range && (!equal_seeds(system, hereSeed) || [self isInInterstellarSpace]))	
 		{
 			[result addObject: [NSDictionary dictionaryWithObjectsAndKeys:
 								StringFromRandomSeed(system), @"system_seed",
@@ -8296,8 +8383,7 @@ Entity *gOOJSPlayerIfStale = nil;
 	[illegalGoods autorelease];
 	illegalGoods = [[ResourceManager dictionaryFromFilesNamed:@"illegal_goods.plist" inFolder:@"Config" andMerge:YES] retain];
 	
-	[descriptions autorelease];
-	descriptions = [[ResourceManager dictionaryFromFilesNamed:@"descriptions.plist" inFolder:@"Config" andMerge:YES] retain];
+	[self loadDescriptions];
 	
 	[characters autorelease];
 	characters = [[ResourceManager dictionaryFromFilesNamed:@"characters.plist" inFolder:@"Config" andMerge:YES] retain];
@@ -8324,6 +8410,32 @@ Entity *gOOJSPlayerIfStale = nil;
 }
 
 
+- (void) verifyEntitySessionIDs
+{
+#ifndef NDEBUG
+	NSMutableArray *badEntities = nil;
+	Entity *entity = nil;
+	
+	unsigned i;
+	for (i = 0; i < n_entities; i++)
+	{
+		entity = sortedEntities[i];
+		if ([entity sessionID] != _sessionID)
+		{
+			OOLogERR(@"universe.sessionIDs.verify.failed", @"Invalid entity %@ (came from session %lu, current session is %lu).", [entity shortDescription], [entity sessionID], _sessionID);
+			if (badEntities == nil)  badEntities = [NSMutableArray array];
+			[badEntities addObject:entity];
+		}
+	}
+	
+	foreach (entity, badEntities)
+	{
+		[self removeEntity:entity];
+	}
+#endif
+}
+
+
 // FIXME: needs less redundancy.
 - (void) reinitAndShowDemo:(BOOL)showDemo
 {
@@ -8334,6 +8446,8 @@ Entity *gOOJSPlayerIfStale = nil;
 	[self removeAllEntitiesExceptPlayer];
 	[OOLegacyTexture clearCache];
 	[self resetSystemDataCache];
+	
+	_sessionID++;
 	
 	//[ResourceManager loadScripts]; // initialised inside [player setUp]!
 	
@@ -8365,7 +8479,7 @@ Entity *gOOJSPlayerIfStale = nil;
 	demo_ship = nil;
 	[[gameView gameController] setPlayerFileToLoad:nil];		// reset Quicksave
 	
-	[self setUpPlayerSettings];
+	[self setUpInitialUniverse];
 	autoSaveNow = NO;	// don't autosave immediately after loading / restarting game!
 	
 	[[self station] initialiseLocalMarketWithRandomFactor:[player random_factor]];
@@ -8387,13 +8501,14 @@ Entity *gOOJSPlayerIfStale = nil;
 		[player setGuiToStatusScreen];
 		[player doWorldEventUntilMissionScreen:OOJSID("missionScreenOpportunity")];
 	}
+	
+	[self verifyEntitySessionIDs];
 		
 	no_update = NO;
 }
 
 
-// FIXME: how is this stuff "player settings"?
-- (void) setUpPlayerSettings
+- (void) setUpInitialUniverse
 {
 	PlayerEntity* player = PLAYER;
 	
@@ -8413,13 +8528,15 @@ Entity *gOOJSPlayerIfStale = nil;
 	[self setGalaxySeed: [player galaxy_seed] andReinit:YES];
 	system_seed = [self findSystemAtCoords:[player galaxy_coordinates] withGalaxySeed:galaxy_seed];
 	OO_DEBUG_POP_PROGRESS();
-	[self setUpSpace];
 	
 	OO_DEBUG_PUSH_PROGRESS(@"Player ship setup", __PRETTY_FUNCTION__);
 	OOShipClass *shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:[player shipDataKey]];
 	NSDictionary *shipInfo = [[OOShipRegistry sharedRegistry] shipInfoForKey:[player shipDataKey]];
-	[player setUpShipWithShipClass:shipClass andDictionary:shipInfo];	// the standard cobra at this point
+	[player setUpShipWithShipClass:shipClass andDictionary:shipInfo];	// The standard cobra at this point.
+	[player baseMass]; // Bootstrap the base mass used in all fuel charge calculations.
 	OO_DEBUG_POP_PROGRESS();
+	
+	[self setUpSpace];	// Must be after [player baseMass].
 	
 	[self setViewDirection:VIEW_GUI_DISPLAY];
 	[player setPosition:[[self station] position]];

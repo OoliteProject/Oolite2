@@ -138,11 +138,15 @@ enum
 
 
 #ifndef OO_LOCALIZATION_TOOLS
-#define OO_LOCALIZATION_TOOLS		0
+#define OO_LOCALIZATION_TOOLS				0
 #endif
 
 #ifndef MASS_DEPENDENT_FUEL_PRICES
-#define MASS_DEPENDENT_FUEL_PRICES	1
+#define MASS_DEPENDENT_FUEL_PRICES			1
+#endif
+
+#ifndef REPAIR_DEPENDENT_FUEL_PRICES
+#define REPAIR_DEPENDENT_FUEL_PRICES		1
 #endif
 
 
@@ -166,6 +170,8 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	GLfloat					stars_ambient[4];
 	
 @private
+	OOUInteger				_sessionID;
+	
 	// colors
 	GLfloat					sun_diffuse[4];
 	GLfloat					sun_specular[4];
@@ -226,7 +232,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	NSArray					*commodityData;			// holds data on commodities extracted from commodityLists
 	
 	NSDictionary			*illegalGoods;			// holds the legal penalty for illicit commodities, loaded at initialisation
-	NSDictionary			*descriptions;			// holds descriptive text for lots of stuff, loaded at initialisation
+	NSDictionary			*_descriptions;			// holds descriptive text for lots of stuff, loaded at initialisation
 	NSDictionary			*customSounds;			// holds descriptive audio for lots of stuff, loaded at initialisation
 	NSDictionary			*characters;			// holds descriptons of characters
 	NSDictionary			*planetInfo;			// holds overrides for individual planets, keyed by "g# p#" where g# is the galaxy number 0..7 and p# the planet number 0..255
@@ -300,6 +306,9 @@ typedef uint8_t		OOEconomyID;		// 0..7
 }
 
 - (id)initWithGameView:(MyOpenGLView *)gameView;
+
+// SessionID: a value that's incremented when the game is reset.
+- (OOUInteger) sessionID;
 
 - (BOOL) doProcedurallyTexturedPlanets;
 - (void) setDoProcedurallyTexturedPlanets:(BOOL) value;
@@ -531,7 +540,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (NSDictionary *) generateSystemData:(Random_Seed) system_seed;
 - (NSDictionary *) generateSystemData:(Random_Seed) s_seed useCache:(BOOL) useCache;
 - (NSDictionary *) currentSystemData;	// Same as generateSystemData:systemSeed unless in interstellar space.
-- (BOOL) inInterstellarSpace;
+- (BOOL) isInInterstellarSpace;
 
 - (void)setObject:(id)object forKey:(NSString *)key forPlanetKey:(NSString *)planetKey;
 

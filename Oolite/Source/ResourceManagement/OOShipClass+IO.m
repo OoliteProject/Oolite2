@@ -503,7 +503,6 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 	
 	WRIT_UINT	(fuelCapacity);
 	WRIT_UINT	(initialFuel);
-	WRIT_PFLOAT	(fuelChargeRate);
 	
 	WRIT_PFLOAT	(heatInsulation);
 	

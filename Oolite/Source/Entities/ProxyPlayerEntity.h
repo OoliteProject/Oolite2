@@ -82,7 +82,7 @@ MA 02110-1301, USA.
 
 // Default: NO
 - (BOOL) dialIdentEngaged;
-- (void) setDialIdentEngaged:(BOOL)value;
+- (void) setIdentEngaged:(BOOL)value;
 
 // Default: ALERT_CONDITION_DOCKED
 - (OOAlertCondition) alertCondition;

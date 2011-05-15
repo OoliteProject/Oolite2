@@ -96,18 +96,25 @@ static NSString * const kOOLogEntityBehaviourChanged	= @"entity.behaviour.change
 
 
 #if MASS_DEPENDENT_FUEL_PRICES
-static GLfloat calcFuelChargeRate (GLfloat my_mass, GLfloat base_mass)
+static GLfloat calcFuelChargeRate (GLfloat myMass)
 {
 #define kMassCharge 0.65				// the closer to 1 this number is, the more the fuel price changes from ship to ship.
 #define kBaseCharge (1.0 - kMassCharge)	// proportion of price that doesn't change with ship's mass.
+
+	GLfloat baseMass = [PLAYER baseMass];
+	// if anything is wrong, use 1 (the default  charge rate).
+	if (myMass <= 0.0 || baseMass <=0.0) return 1.0;
 	
-	// if anything is wrong, default to cobra3 value.
-	if (my_mass <= 0.0 || base_mass <= 0.0) return 1.0;
-	
-	GLfloat result = (kMassCharge * my_mass / base_mass) + kBaseCharge;
+	GLfloat result = (kMassCharge * myMass / baseMass) + kBaseCharge;
 	
 	// round the result to the second decimal digit.
-	return (roundf ((float) (result * 100.0)) / 100.0);
+	result = roundf ((float) (result * 100.0)) / 100.0;
+	
+	// Make sure that the rate is clamped to between three times and a third of the standard charge rate.
+	if (result > 3.0) result = 3.0;
+	else if (result < 0.33) result = 0.33;
+	
+	return result;
 	
 #undef kMassCharge
 #undef kBaseCharge
@@ -301,31 +308,6 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	}
 	
 	[self setBaseHeatInsulation:[shipClass heatInsulation]];
-	
-	// set up fuel scooping & charging
-#if 0
-// Temporary fix for mass-dependent fuel prices.
-// See [ShipEntity fuelChargeRate] for more information.
-// - MKW 2011.03.11
-	GLfloat rate = 1.0;
-	if (PLAYER != nil)
-	{
-		rate = calcFuelChargeRate (mass, [PLAYER baseMass]);
-	}
-	fuel_charge_rate = (rate > 0.0) ? rate : 1.0;
-	
-	rate = [shipDict oo_floatForKey:@"fuel_charge_rate" defaultValue:fuel_charge_rate];
-	if (rate != fuel_charge_rate)
-	{
-		// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
-		if (rate < 0.33 * fuel_charge_rate) fuel_charge_rate *= 0.33;
-		else if (rate > 3 * fuel_charge_rate) fuel_charge_rate *= 3;
-		else fuel_charge_rate = rate;
-	}
-#else
-	fuel_charge_rate = [shipClass fuelChargeRate];
-#endif
-	
 	[self setLaserColor:[shipClass laserColor]];
 	
 	[self clearSubEntities];
@@ -1345,7 +1327,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 				cruiseSpeed = [escorter maxFlightSpeed] * 0.99;  // adapt patrolSpeed to the slowest escort but ignore the very slow ones.
 
 		[escortAI setState:@"FLYING_ESCORT"];	// Begin escort flight. (If the AI doesn't define FLYING_ESCORT, this has no effect.)
-		[escorter doScriptEvent:OOJSID("spawnedAsEscort") withArgument:self];
+		[escorter doScriptEvent:OOJSID("spawnedAsEscort") withArgument:self andReactToAIMessage:@"ACCEPTED_ESCORT"];
 		
 		if (bounty)
 		{
@@ -1632,7 +1614,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		OOLog(@"shipEntity.notDict", @"Ship %@ was not set up from dictionary.", self);
 		return NO;
 	}
-	return YES;
+	return [super validForAddToUniverse];
 }
 
 
@@ -1821,20 +1803,24 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 
 	// check outside factors
-	//
 	aegis_status = [self checkForAegis];   // is a station or something nearby??
 
-	//scripting
+	// scripting
 	if (!haveExecutedSpawnAction)
 	{
-		// we only want shipSpawned to be triggered if this is a ship (including carriers and cargo pods), not for a stationary err... station!
 		// When crashing into a boulder, STATUS_LAUNCHING is sometimes skipped on scooping the resulting splinters.
-		// FIXME: do we want shipSpawned to work for asteroids / rock hermits too ? if not:
-		//if (script != nil && [self scanClass] != CLASS_ROCK && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING))
-		if (script != nil && ([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_LAUNCHING|| [self status] == STATUS_BEING_SCOOPED))
+		OOEntityStatus status = [self status];
+		if (script != nil && (status == STATUS_IN_FLIGHT ||
+							  status == STATUS_LAUNCHING ||
+							  status == STATUS_BEING_SCOOPED ||
+							  (status == STATUS_ACTIVE && self == [UNIVERSE station])
+							  ))
 		{
 			[self doScriptEvent:OOJSID("shipSpawned")];
-			if ([self status] != STATUS_DEAD)  [PLAYER doScriptEvent:OOJSID("shipSpawned") withArgument:self];
+			if ([self status] != STATUS_DEAD)
+			{
+				[PLAYER doScriptEvent:OOJSID("shipSpawned") withArgument:self];
+			}
 		}
 		haveExecutedSpawnAction = YES;
 	}
@@ -5290,33 +5276,20 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 
 - (GLfloat) fuelChargeRate
 {
+	GLfloat		rate = 1.0; // Standard (& strict play) charge rate.
+	
 #if MASS_DEPENDENT_FUEL_PRICES
-	// Interim mass-dependent fuel price fix.  The current implentation
-	// in setUpShipBase…: is no longer working because at player
-	// ship setup time, it is only partially configured and has no mass.
-	// - MKW 2011.03.11
-	GLfloat rate = 1.0f;
-
-	if ([self mass] > 0.0)
+	// Fuel scooping and prices are relative to the mass of the cobra3.
+	// Post MNSR it's also going to be affected by missing subents, and possibly repair status. 
+	
+	if (EXPECT(PLAYER != nil && mass> 0 && mass != [PLAYER baseMass]))
 	{
-
-#define kCobra3Mass (185580)     // the base mass of a Cobra Mk III
-		rate = calcFuelChargeRate([self mass], kCobra3Mass);
-		if (rate <= 0.0f) rate = 1.0f;
-#undef kCobra3Mass
-
-		// clamp the charge rate at no more than three times, and no less than about a third of the calculated value.
-		if ((fuel_charge_rate != 1.0f) && (fuel_charge_rate != rate))
-		{
-			if (fuel_charge_rate < 0.33f * rate) rate *= 0.33f;
-			else if (fuel_charge_rate > 3.0f * rate) rate *= 3.0f;
-			else rate = fuel_charge_rate;
-		}
+		rate = calcFuelChargeRate(mass);	// post-MNSR fuelPrices will be affected by missing subents. see  [self subEntityDied]
 	}
-	return rate;
-#else
-	return fuel_charge_rate;
+	OOLog(@"fuelPrices", @"\"%@\" fuel charge rate: %.2f (mass ratio: %.2f/%.2f)", [self shipDataKey], rate, mass, [PLAYER baseMass]);
 #endif
+	
+	return rate;
 }
 
 
@@ -6165,8 +6138,12 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	if ([self subEntityTakingDamage] == sub)  [self setSubEntityTakingDamage:nil];
 	
 	[sub setOwner:nil];
+	
+	// TODO? Recalculating collision radius should increase collision testing efficiency,
+	// but for most ship models the difference would be marginal. -- Kaks 20110429
+	mass -= [sub mass];
+	
 	[subEntities removeObject:sub];
-	// TODO: recalculate parent ship mass & collision radius!
 }
 
 
@@ -6627,6 +6604,25 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	id primaryTarget = [self primaryTarget];
 	if (primaryTarget != nil)  return [primaryTarget universalID];
 	else  return NO_TARGET;
+}
+
+
+- (BOOL) isFriendlyTo:(ShipEntity *)otherShip
+{
+	BOOL isFriendly = NO;
+	OOShipGroup	*myGroup = [self group];
+	OOShipGroup	*otherGroup = [otherShip group];
+	
+	if ((otherShip == self) ||
+		([self isPolice] && [otherShip isPolice]) ||
+		([self isThargoid] && [otherShip isThargoid]) ||
+		(myGroup != nil && otherGroup != nil && (myGroup == otherGroup || [otherGroup leader] == self)) ||
+		([self scanClass] == CLASS_MILITARY && [otherShip scanClass] == CLASS_MILITARY))
+	{
+		isFriendly = YES;
+	}
+	
+	return isFriendly;
 }
 
 
@@ -7587,10 +7583,10 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (victim != nil)
 	{
 		ShipEntity *subent = [victim subEntityTakingDamage];
-		if (subent && [victim isFrangible])
+		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
-			[victim takeEnergyDamage: 0.01 * weapon_damage from:subent becauseOf: parent];
+			[victim takeEnergyDamage: 0.01 * weapon_damage from:self becauseOf: parent];
 			victim = subent;
 		}
 
@@ -7652,7 +7648,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
-			[victim takeEnergyDamage: 0.01 * weapon_damage from:subent becauseOf:self];
+			[victim takeEnergyDamage: 0.01 * weapon_damage from:self becauseOf:self];
 			victim = subent;
 		}
 
@@ -7729,7 +7725,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
-			[victim takeEnergyDamage: 0.01 * weapon_damage from:subent becauseOf:self];
+			[victim takeEnergyDamage: 0.01 * weapon_damage from:self becauseOf:self];
 			victim = subent;
 		}
 
@@ -9003,13 +8999,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) enterWormhole:(WormholeEntity *) wormhole
+- (void) enterWormhole:(WormholeEntity *)wormhole
 {
 	[self enterWormhole:wormhole replacing:YES];
 }
 
 
-- (void) enterWormhole:(WormholeEntity *) wormhole replacing:(BOOL)replacing
+- (void) enterWormhole:(WormholeEntity *)wormhole replacing:(BOOL)replacing
 {
 	if (wormhole == nil)  return;
 
@@ -9513,7 +9509,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	[[UNIVERSE findShipsMatchingPredicate:HasRolePredicate
 							   parameter:@"tharglet"
-								 inRange:SCANNER_MAX_RANGE2
+								 inRange:SCANNER_MAX_RANGE
 								ofEntity:self]
 			makeObjectsPerformSelector:@selector(sendAIMessage:) withObject:@"THARGOID_DESTROYED"];
 }

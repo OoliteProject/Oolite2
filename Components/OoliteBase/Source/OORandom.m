@@ -119,9 +119,17 @@ RANROTSeed MakeRanrotSeed(unsigned seed)
 }
 
 
+OOINLINE void AssertValidRNGSeed(RNG_Seed seed)
+{
+	NSCParameterAssert(seed.a <= 0xFF && seed.b <= 0xFF && seed.c <= 0xFF && seed.d <= 0xFF);
+}
+
+
 RANROTSeed RanrotSeedFromRNGSeed(RNG_Seed seed)
 {
-	return MakeRanrotSeed(rnd_seed.a * 0x1000000 + rnd_seed.b * 0x10000 + rnd_seed.c * 0x100 + rnd_seed.d);
+	AssertValidRNGSeed(seed);
+	
+	return MakeRanrotSeed(((uint32_t)seed.a) * 0x1000000 + ((uint32_t)seed.b) * 0x10000 + ((uint32_t)seed.c) * 0x100 + ((uint32_t)seed.d));
 }
 
 
@@ -210,6 +218,7 @@ RNG_Seed currentRandomSeed (void)
 
 void setRandomSeed (RNG_Seed a_seed)
 {
+	AssertValidRNGSeed(a_seed);
 	rnd_seed = a_seed;
 }
 
@@ -217,6 +226,7 @@ void setRandomSeed (RNG_Seed a_seed)
 int gen_rnd_number (void)
 {
 	int a,x;
+	AssertValidRNGSeed(rnd_seed);
 
 	x = (rnd_seed.a * 2) & 0xFF;
 	a = x + rnd_seed.c;

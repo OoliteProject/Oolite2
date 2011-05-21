@@ -58,8 +58,8 @@ static int base_terrain_array[MAX_PLANET_VERTICES];
 static OOUInteger next_free_vertex;
 static NSMapTable *sEdgeToVertex;
 
-static int n_triangles[MAX_SUBDIVIDE];
-static int triangle_start[MAX_SUBDIVIDE];
+static unsigned n_triangles[MAX_SUBDIVIDE];
+static unsigned triangle_start[MAX_SUBDIVIDE];
 static GLuint vertex_index_array[3*(20+80+320+1280+5120+20480)];
 
 static GLfloat	texture_uv_array[MAX_PLANET_VERTICES * 2];
@@ -1220,16 +1220,16 @@ static const BaseFace kTexturedFaces[][3] =
 			triangle_start[newlevel] = triangle_start[sublevel] + n_triangles[sublevel] * 3;
 			n_triangles[newlevel] = n_triangles[sublevel] * 4;
 
-			int tri;
+			unsigned tri;
 			for (tri = 0; tri < n_triangles[sublevel]; tri++)
 			{
 				// get the six vertices for this group of four triangles
-				int v0 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 0];
-				int v1 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 1];
-				int v2 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 2];
-				int v01 = baseVertexIndexForEdge(v0, v1, isTextured);	// sets it up if required
-				int v12 = baseVertexIndexForEdge(v1, v2, isTextured);	// ..
-				int v20 = baseVertexIndexForEdge(v2, v0, isTextured);	// ..
+				unsigned v0 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 0];
+				unsigned v1 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 1];
+				unsigned v2 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 2];
+				unsigned v01 = baseVertexIndexForEdge(v0, v1, isTextured);	// sets it up if required
+				unsigned v12 = baseVertexIndexForEdge(v1, v2, isTextured);	// ..
+				unsigned v20 = baseVertexIndexForEdge(v2, v0, isTextured);	// ..
 				// v0 v01 v20
 				vertex_index_array[triangle_start[newlevel] + tri * 12 + 0] = v0;
 				vertex_index_array[triangle_start[newlevel] + tri * 12 + 1] = v01;
@@ -1329,24 +1329,24 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 	int sublevel;
 	for (sublevel = 0; sublevel < MAX_SUBDIVIDE - 1; sublevel++)
 	{
-		int tri;
+		unsigned tri;
 		for (tri = 0; tri < n_triangles[sublevel]; tri++)
 		{
 			// get the six vertices for this group of four triangles
-			int v0 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 0];
-			int v1 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 1];
-			int v2 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 2];
-			int v01 = baseVertexIndexForEdge(v0, v1, isTextured);	// sets it up if required
-			int v12 = baseVertexIndexForEdge(v1, v2, isTextured);	// ..
-			int v20 = baseVertexIndexForEdge(v2, v0, isTextured);	// ..
+			unsigned v0 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 0];
+			unsigned v1 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 1];
+			unsigned v2 = vertex_index_array[triangle_start[sublevel] + tri * 3 + 2];
+			unsigned v01 = baseVertexIndexForEdge(v0, v1, isTextured);	// sets it up if required
+			unsigned v12 = baseVertexIndexForEdge(v1, v2, isTextured);	// ..
+			unsigned v20 = baseVertexIndexForEdge(v2, v0, isTextured);	// ..
 			// v01
 			if (base_terrain_array[v0] == base_terrain_array[v1])
 				base_terrain_array[v01] = base_terrain_array[v0];
 			else
 			{
-				int s1 = 0xffff0000 * base_vertex_array[v01].x;
-				int s2 = 0x00ffff00 * base_vertex_array[v01].y;
-				int s3 = 0x0000ffff * base_vertex_array[v01].z;
+				unsigned s1 = 0xffff0000 * base_vertex_array[v01].x;
+				unsigned s2 = 0x00ffff00 * base_vertex_array[v01].y;
+				unsigned s3 = 0x0000ffff * base_vertex_array[v01].z;
 				ranrot_srand(s1+s2+s3);
 				base_terrain_array[v01] = (ranrot_rand() & 4) *25;
 			}
@@ -1355,9 +1355,9 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 				base_terrain_array[v12] = base_terrain_array[v1];
 			else
 			{
-				int s1 = 0xffff0000 * base_vertex_array[v12].x;
-				int s2 = 0x00ffff00 * base_vertex_array[v12].y;
-				int s3 = 0x0000ffff * base_vertex_array[v12].z;
+				unsigned s1 = 0xffff0000 * base_vertex_array[v12].x;
+				unsigned s2 = 0x00ffff00 * base_vertex_array[v12].y;
+				unsigned s3 = 0x0000ffff * base_vertex_array[v12].z;
 				ranrot_srand(s1+s2+s3);
 				base_terrain_array[v12] = (ranrot_rand() & 4) *25;
 			}
@@ -1366,9 +1366,9 @@ static unsigned baseVertexIndexForEdge(GLushort va, GLushort vb, BOOL textured)
 				base_terrain_array[v20] = base_terrain_array[v2];
 			else
 			{
-				int s1 = 0xffff0000 * base_vertex_array[v20].x;
-				int s2 = 0x00ffff00 * base_vertex_array[v20].y;
-				int s3 = 0x0000ffff * base_vertex_array[v20].z;
+				unsigned s1 = 0xffff0000 * base_vertex_array[v20].x;
+				unsigned s2 = 0x00ffff00 * base_vertex_array[v20].y;
+				unsigned s3 = 0x0000ffff * base_vertex_array[v20].z;
 				ranrot_srand(s1+s2+s3);
 				base_terrain_array[v20] = (ranrot_rand() & 4) *25;
 			}

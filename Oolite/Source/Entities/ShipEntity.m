@@ -3654,45 +3654,63 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (void) behaviour_formation_form_up:(double) delta_t
 {
 	// destination for each escort is set in update() from owner.
-	ShipEntity* leadShip = [self owner];
-	double distance = [self rangeToDestination];
-	double eta = (distance - desired_range) / flightSpeed;
-	if(eta < 0) eta = 0;
-	if ((eta < 5.0)&&(leadShip)&&(leadShip->isShip))
-		desired_speed = [leadShip flightSpeed] * (1 + eta * 0.05);
+	ShipEntity	*leadShip = [self owner];
+	GLfloat		distance = [self rangeToDestination];
+	GLfloat		eta;
+	
+	if (flightSpeed != 0.0)
+	{
+		eta = fabsf((distance - desired_range) / flightSpeed);
+	}
 	else
+	{
+		eta = OODAYS(1.0f);	// Ridiculously large, but finite for simplicity.
+	}
+	
+	if (eta < 5.0f && [leadShip isShip])
+	{
+		desired_speed = [leadShip flightSpeed] * (1.0f + eta * 0.05f);
+	}
+	else
+	{
 		desired_speed = maxFlightSpeed;
+	}
 
 	double last_distance = success_factor;
 	success_factor = distance;
 
 	// do the actual piloting!!
-	[self trackDestination:delta_t: NO];
-
-	eta = eta / 0.51;	// 2% safety margin assuming an average of half current speed
-	GLfloat slowdownTime = (thrust > 0.0)? flightSpeed / thrust : 4.0;
-	GLfloat minTurnSpeedFactor = 0.05 * max_flight_pitch * max_flight_roll;	// faster turning implies higher speeds
-
-	if ((eta < slowdownTime)&&(flightSpeed > maxFlightSpeed * minTurnSpeedFactor))
-		desired_speed = flightSpeed * 0.50;   // cut speed by 50% to a minimum minTurnSpeedFactor of speed
+	[self trackDestination:delta_t :NO];
+	
+	eta *= 1.96f;	// 4 % safety margin assuming an average of half current speed
+	GLfloat slowdownTime = (thrust > 0.0f) ? flightSpeed / thrust : 4.0f;
+	GLfloat minTurnSpeedFactor = 0.05f * max_flight_pitch * max_flight_roll;	// faster turning implies higher speeds
+	
+	if (eta < slowdownTime && flightSpeed > maxFlightSpeed * minTurnSpeedFactor)
+	{
+		desired_speed = flightSpeed * 0.50f;   // cut speed by 50% to a minimum minTurnSpeedFactor of speed
+	}
 		
 	if (distance < last_distance)	// improvement
 	{
-		frustration -= 0.25 * delta_t;
-		if (frustration < 0.0)
-			frustration = 0.0;
+		frustration -= 0.25f * delta_t;
+		frustration = fmaxf(0.0f, frustration);
 	}
 	else
 	{
 		frustration += delta_t;
-		if (frustration > 15.0)
+		if (frustration > 15.0f)
 		{
-			if (!leadShip) [shipAI reactToMessage:@"FRUSTRATED" context:@"BEHAVIOUR_FORMATION_FORM_UP"]; // escorts never reach their destination when following leader.
-			else if (distance > 0.5 * scannerRange && !pitching_over) 
+			if (leadShip == nil)
+			{
+				// Escorts never reach their destination when following leader.
+				[shipAI reactToMessage:@"FRUSTRATED" context:@"BEHAVIOUR_FORMATION_FORM_UP"];
+			}
+			else if (distance > 0.5f * scannerRange && !pitching_over) 
 			{
 				pitching_over = YES; // Force the ship in a 180 degree turn. Do it here to allow escorts to break out formation for some seconds.
 			}
-			frustration = 0;
+			frustration = 0.0f;
 		}
 	}
 	

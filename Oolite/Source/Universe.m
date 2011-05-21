@@ -3181,12 +3181,15 @@ static const OOMatrix	starboard_matrix =
 				int			nearest = 0;
 				BOOL		fogging, bpHide = [self breakPatternHide];
 				BOOL		inAtmosphere = airResistanceFactor > 0.01;
-				GLfloat		fogFactor = 0.5 / airResistanceFactor;
-				double 		fog_scale, half_scale;
+				GLfloat		fog_scale, half_scale;
+				GLfloat		fogFactor;
 				GLfloat 	flat_ambdiff[4]	= {1.0, 1.0, 1.0, 1.0};   // for alpha
 				GLfloat 	mat_no[4]		= {0.0, 0.0, 0.0, 1.0};   // nothing
-				OOSunEntity *the_sun;
-				the_sun = [self sun];				
+				
+				if (inAtmosphere)
+				{
+					fogFactor = 0.5f / airResistanceFactor;
+				}
 				
 				OOGL(glHint(GL_FOG_HINT, [self reducedDetail] ? GL_FASTEST : GL_NICEST));
 				

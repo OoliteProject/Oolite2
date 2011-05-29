@@ -77,7 +77,7 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 	DESTROY(_exhaustDefinitions);
 	DESTROY(_scannerColors);
 	DESTROY(_roles);
-	DESTROY(_subentityDefinitions);
+	DESTROY(_subEntityDefinitions);
 	DESTROY(_escortRoles);
 	DESTROY(_customViews);
 	DESTROY(_cargoCarried);
@@ -306,9 +306,9 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 }
 
 
-- (NSArray *) subentityDefinitions
+- (NSArray *) subEntityDefinitions
 {
-	return _subentityDefinitions;
+	return _subEntityDefinitions;
 }
 
 
@@ -930,3 +930,394 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 }
 
 @end
+
+
+@interface OOSolidSubEntityDefinition: OOShipSubEntityDefinition <JAPropertyListRepresentation>
+{
+@private
+	OOSubEntityType		_type;
+	NSString			*_shipKey;
+	Quaternion			_orientation;
+}
+
+- (id) initWithType:(OOSubEntityType)type
+			shipKey:(NSString *)key
+		   position:(Vector)position
+		orientation:(Quaternion)orientation;
+
+@end
+
+
+@interface OOBallTurretSubEntityDefinition: OOSolidSubEntityDefinition
+{
+@private
+	float				_fireRate;
+}
+
+- (id) initWithShipKey:(NSString *)shipKey
+			  position:(Vector)position
+		   orientation:(Quaternion)orientation
+			  fireRate:(float)fireRate;
+
+@end
+
+
+@interface OOFlasherSubEntityDefinition: OOShipSubEntityDefinition <JAPropertyListRepresentation>
+{
+@private
+	NSArray				*_colors;
+	float				_frequency;
+	float				_phase;
+	float				_size;
+	BOOL				_initiallyOn;
+}
+
+- (id) initWithPosition:(Vector)position
+				 colors:(NSArray *)colors
+			  frequency:(float)frequency
+				  phase:(float)phase
+				   size:(float)size
+			initiallyOn:(BOOL)initiallyOn;
+
+@end
+
+
+@implementation OOShipSubEntityDefinition
+
++ (id) definitionWithType:(OOSubEntityType)type shipKey:(NSString *)key position:(Vector)position orientation:(Quaternion)orientation
+{
+	if (type == kOOSubEntityBallTurret)
+	{
+		return [[[OOBallTurretSubEntityDefinition alloc] initWithShipKey:key position:position orientation:orientation fireRate:kOOBallTurretDefaultFireRate] autorelease];
+	}
+	else
+	{
+		return [[[OOSolidSubEntityDefinition alloc] initWithType:type shipKey:key position:position orientation:orientation] autorelease];
+	}
+}
+
+
++ (id) definitionForBallTurretWithShipKey:(NSString *)key position:(Vector)position orientation:(Quaternion)orientation fireRate:(float)fireRate
+{
+	return [[[OOBallTurretSubEntityDefinition alloc] initWithShipKey:key position:position orientation:orientation fireRate:fireRate] autorelease];
+}
+
+
++ (id) definitionForFlasherWithPosition:(Vector)position colors:(NSArray *)colors frequency:(float)frequency phase:(float)phase size:(float)size initiallyOn:(BOOL)initiallyOn
+{
+	return [[[OOFlasherSubEntityDefinition alloc] initWithPosition:position colors:colors frequency:frequency phase:phase size:size initiallyOn:initiallyOn] autorelease];
+}
+
+
+- (id) initWithPosition:(Vector)position
+{
+	if ((self = [super init]))
+	{
+		_position = position;
+	}
+	
+	return self;
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
+}
+
+
+static NO_RETURN_FUNC void RaiseNotApplicable(const char *function)
+{
+	[NSException raise:NSInternalInconsistencyException format:@"%s is not applicable.", function];
+	OO_UNREACHABLE();
+}
+
+
+- (Vector) position
+{
+	return _position;
+}
+
+
+- (OOSubEntityType) type
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (NSString *) shipKey
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (OOShipClass *) shipClass
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (Quaternion) orientation
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (float) fireRate
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (NSArray *) colors
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (float) frequency
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (float) phase
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (float) size
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+
+- (BOOL) initiallyOn
+{
+	RaiseNotApplicable(__FUNCTION__);
+}
+
+@end
+
+
+@implementation OOSolidSubEntityDefinition
+
+- (id) initWithType:(OOSubEntityType)type
+			shipKey:(NSString *)key
+		   position:(Vector)position
+		orientation:(Quaternion)orientation
+{
+	NSParameterAssert(type == kOOSubEntityNormal || type == kOOSubEntityBallTurret || type == kOOSubEntityDock);
+	NSParameterAssert(key != nil);
+	
+	if ((self = [super initWithPosition:position]))
+	{
+		_type = type;
+		_shipKey = [key copy];
+		if (!quaternion_equal(orientation, kZeroQuaternion))
+		{
+			_orientation = orientation;
+		}
+		else
+		{
+			_orientation = kIdentityQuaternion;
+		}
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	DESTROY(_shipKey);
+	
+	[super dealloc];
+}
+
+
+- (NSString *) shipKey
+{
+	return _shipKey;
+}
+
+
+- (OOShipClass *) shipClass
+{
+	return [[OOShipRegistry sharedRegistry] shipClassForKey:_shipKey];
+}
+
+
+- (Quaternion) orientation
+{
+	return _orientation;
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	
+	if (_type != kOOSubEntityNormal)
+	{
+		[result setObject:OOStringFromSubEntityType(_type) forKey:@"type"];
+	}
+	if (!vector_equal([self position], kZeroVector))
+	{
+		[result oo_setVector:[self position] forKey:@"position"];
+	}
+	
+	if (!quaternion_equal(_orientation, kIdentityQuaternion))
+	{
+		[result oo_setQuaternion:_orientation forKey:@"orientation"];
+	}
+	
+	[result setObject:[self shipKey] forKey:@"shipKey"];
+	
+	if (_type == kOOSubEntityBallTurret)
+	{
+		float fireRate = [self fireRate];
+		if (fireRate != kOOBallTurretDefaultFireRate)
+		{
+			[result oo_setFloat:fireRate forKey:@"fireRate"];
+		}
+	}
+	
+	return result;
+}
+
+@end
+
+
+@implementation OOFlasherSubEntityDefinition
+
+- (id) initWithPosition:(Vector)position
+				 colors:(NSArray *)colors
+			  frequency:(float)frequency
+				  phase:(float)phase
+				   size:(float)size
+			initiallyOn:(BOOL)initiallyOn
+{
+#ifndef NDEBUG
+	NSParameterAssert([colors count] >= 1);
+	id color = nil;
+	foreach (color, colors)
+	{
+		NSParameterAssert([color isKindOfClass:[OOColor class]]);
+	}
+#endif
+	
+	if ((self = [super initWithPosition:position]))
+	{
+		_colors = [colors copy];
+		_frequency = frequency;
+		_phase = phase;
+		_size = size;
+		_initiallyOn = initiallyOn;
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	DESTROY(_colors);
+	
+	[super dealloc];
+}
+
+
+- (OOSubEntityType) type
+{
+	return kOOSubEntityFlasher;
+}
+
+
+- (NSArray *) colors
+{
+	return _colors;
+}
+
+
+- (float) frequency
+{
+	return _frequency;
+}
+
+
+- (float) phase
+{
+	return _phase;
+}
+
+
+- (float) size
+{
+	return _size;
+}
+
+
+- (BOOL) initiallyOn
+{
+	return _initiallyOn;
+}
+
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionary];
+	
+	[result setObject:OOStringFromSubEntityType([self type]) forKey:@"type"];
+	[result oo_setVector:[self position] forKey:@"position"];
+	
+	[result setObject:[_colors ja_propertyListRepresentationWithContext:context] forKey:@"colors"];
+	
+	[result oo_setFloat:_frequency forKey:@"frequency"];
+	if (_phase != 0)  [result oo_setFloat:_phase forKey:@"phase"];
+	[result oo_setFloat:_size forKey:@"size"];
+	
+	if (!_initiallyOn)  [result oo_setBool:_initiallyOn forKey:@"initiallyOn"];
+	
+	return result;
+}
+
+@end
+
+
+@implementation OOBallTurretSubEntityDefinition
+
+- (id) initWithShipKey:(NSString *)shipKey
+			  position:(Vector)position
+		   orientation:(Quaternion)orientation
+			  fireRate:(float)fireRate
+{
+	if ((self = [super initWithType:kOOSubEntityBallTurret shipKey:shipKey position:position orientation:orientation]))
+	{
+		_fireRate = fmax(fireRate, kOOBallTurretMinimumFireRate);
+	}
+	
+	return self;
+}
+
+@end
+
+
+NSString *OOStringFromSubEntityType(OOSubEntityType type)
+{
+	switch (type)
+	{
+		case kOOSubEntityNormal:
+			return @"normal";
+			
+		case kOOSubEntityBallTurret:
+			return @"ballTurret";
+			
+		case kOOSubEntityDock:
+			return @"dock";
+			
+		case kOOSubEntityFlasher:
+			return @"flasher";
+	}
+}

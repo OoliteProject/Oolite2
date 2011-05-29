@@ -17,13 +17,39 @@
 @interface OOShipClass (LegacyPrivate)
 
 - (BOOL) priv_loadFromLegacyPList:(NSDictionary *)legacyPList
-				  problemReporter:(id<OOProblemReporting>)issues;
+				   legacyShipData:(NSDictionary *)legacyShipData
+				  problemReporter:(id <OOProblemReporting>)issues;
 
-- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues;
-
+- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id <OOProblemReporting>)issues;
 
 - (NSArray *) priv_parseLegacyExhaustDefinitions:(NSArray *)definitions
-								 problemReporter:(id<OOProblemReporting>)issues;
+								 problemReporter:(id <OOProblemReporting>)issues;
+
+
+- (NSArray *) priv_parseLegacySubEntityDefinitions:(NSArray *)definitions
+										  shipData:(NSDictionary *)shipData
+								   problemReporter:(id <OOProblemReporting>)issues;
+
+- (OOShipSubEntityDefinition *) priv_parseOneLegacySubEntityDeclaration:(id)declaration
+															   shipData:(NSDictionary *)shipData
+														problemReporter:(id <OOProblemReporting>)issues;
+
+- (OOShipSubEntityDefinition *) priv_parseNewStyleLegacySubEntityDeclaration:(NSDictionary *)declaration
+															 problemReporter:(id <OOProblemReporting>)issues;
+
+- (OOShipSubEntityDefinition *) priv_parseNewStyleLegacyFlasherDeclaration:(NSDictionary *)declaration
+														   problemReporter:(id <OOProblemReporting>)issues;
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleLegacySubEntityDeclaration:(NSString *)declaration
+																	shipData:(NSDictionary *)shipData
+															 problemReporter:(id <OOProblemReporting>)issues;
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleFlasherDeclaration:(NSArray *)tokens;
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleBasicSubentityDeclaration:(NSArray *)tokens
+																   shipData:(NSDictionary *)shipData;
+
+- (BOOL) shipIsBallTurretForKey:(NSString *)shipKey inShipData:(NSDictionary *)shipData;
 
 @end
 
@@ -65,7 +91,7 @@
 #define kKey_bounty							@"bounty"
 #define kKey_density						@"density"
 #define kKey_roles							@"roles"
-#define kKey_subentityDefinitions			@"subentities"
+#define kKey_subEntityDefinitions			@"subentities"
 #define kKey_isFrangible					@"frangible"
 #define kKey_escortCount					@"escorts"
 #define kKey_escortShip						@"escort_ship"
@@ -362,7 +388,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 - (id) initWithKey:(NSString *)key
 	   legacyPList:(NSDictionary *)legacyPList
-   problemReporter:(id<OOProblemReporting>)issues
+	legacyShipData:(NSDictionary *)legacyShipData
+   problemReporter:(id <OOProblemReporting>)issues
 {
 	NSParameterAssert(key != nil);
 	
@@ -371,7 +398,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
 		_shipKey = [key copy];
-		if (![self priv_loadFromLegacyPList:legacyPList problemReporter:issues])
+		if (![self priv_loadFromLegacyPList:legacyPList legacyShipData:legacyShipData problemReporter:issues])
 		{
 			DESTROY(self);
 		}
@@ -384,7 +411,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 
 - (BOOL) priv_loadFromLegacyPList:(NSDictionary *)shipdata
-				  problemReporter:(id<OOProblemReporting>)issues
+				   legacyShipData:(NSDictionary *)legacyShipData
+				  problemReporter:(id <OOProblemReporting>)issues
 {
 	NSString *shipKey = [self shipKey];
 	
@@ -507,13 +535,16 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		}
 	}
 	
-	/*	FIXME: we probably want a more direct representation for exhaust
-		parameters. Current format is a string with six numbers, of which one
-		is ignored.
-		-- Ahruman 2011-03-18
-	*/
-	NSArray *exhaustDefinitions = [shipdata oo_arrayForKey:kKey_exhaustDefinitions];
-	_exhaustDefinitions = [[self priv_parseLegacyExhaustDefinitions:exhaustDefinitions problemReporter:issues] retain];
+	// Load sub-entities.
+	NSArray *subEntityDeclarations = [shipdata oo_arrayForKey:kKey_subEntityDefinitions];
+	_subEntityDefinitions = [[self priv_parseLegacySubEntityDefinitions:subEntityDeclarations
+															   shipData:legacyShipData
+														problemReporter:issues] retain];
+	
+	
+	// Load exhaust plumes.
+	NSArray *exhaustDeclarations = [shipdata oo_arrayForKey:kKey_exhaustDefinitions];
+	_exhaustDefinitions = [[self priv_parseLegacyExhaustDefinitions:exhaustDeclarations problemReporter:issues] retain];
 	
 	//	Load scanner lollipop colours.
 	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:kKey_scannerColor1]];
@@ -559,10 +590,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	_roles = [[OORoleSet roleSetWithString:roleString] retain];
 #endif
 	
-	/*	FIXME: convert to canonical subentity representation.
-		-- Ahruman 2011-03-18
-	*/
-	READ_ARRAY	(subentityDefinitions);
 	READ_BOOL	(isFrangible);
 	
 	READ_UINT	(escortCount);
@@ -837,7 +864,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 }
 
 
-- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues
+- (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id <OOProblemReporting>)issues
 {
 	float weaponDamage = 0;
 	float weaponRechargeRate = 0;
@@ -901,7 +928,7 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 
 
 - (NSArray *) priv_parseLegacyExhaustDefinitions:(NSArray *)definitions
-								 problemReporter:(id<OOProblemReporting>)issues
+								 problemReporter:(id <OOProblemReporting>)issues
 {
 	NSMutableArray	*result = [NSMutableArray arrayWithCapacity:[definitions count]];
 	NSString		*legacyDef = nil;
@@ -927,6 +954,270 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	}
 	
 	return [NSArray arrayWithArray:result];
+}
+
+
+- (NSArray *) priv_parseLegacySubEntityDefinitions:(NSArray *)definitions
+										  shipData:(NSDictionary *)shipData
+								   problemReporter:(id <OOProblemReporting>)issues
+{
+	NSMutableArray	*result = [NSMutableArray arrayWithCapacity:[definitions count]];
+	id				legacyDef = nil;
+	
+	foreach (legacyDef, definitions)
+	{
+		OOShipSubEntityDefinition *def = [self priv_parseOneLegacySubEntityDeclaration:legacyDef
+																			  shipData:shipData
+																	   problemReporter:issues];
+		if (def != nil)
+		{
+			[result addObject:def];
+		}
+	}
+	
+	return [NSArray arrayWithArray:result];
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseOneLegacySubEntityDeclaration:(id)declaration
+															   shipData:(NSDictionary *)shipData
+														problemReporter:(id <OOProblemReporting>)issues
+{
+	if ([declaration isKindOfClass:[NSString class]])
+	{
+		// Update old-style string-based declaration.
+		return [self priv_parseOldStyleLegacySubEntityDeclaration:declaration
+														 shipData:shipData
+												  problemReporter:issues];
+	}
+	else if ([declaration isKindOfClass:[NSDictionary class]])
+	{
+		return [self priv_parseNewStyleLegacySubEntityDeclaration:declaration
+												  problemReporter:issues];
+	}
+	else
+	{
+		OOReportWarning(issues, @"Subentity declaration for ship %@ should be string or dictionary, found %@.", [self shipKey], [declaration class]);
+		return nil;
+	}
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseNewStyleLegacySubEntityDeclaration:(NSDictionary *)declaration
+															 problemReporter:(id <OOProblemReporting>)issues
+{
+	NSString *typeStr = [declaration oo_stringForKey:@"type" defaultValue:@"standard"];
+	
+	if ([typeStr isEqualToString:@"flasher"])
+	{
+		return [self priv_parseNewStyleLegacyFlasherDeclaration:declaration problemReporter:issues];
+	}
+	
+	NSString *subEntityKey = [declaration oo_stringForKey:@"subentity_key"];
+	
+	OOSubEntityType type = kOOSubEntityNormal;
+	if ([typeStr isEqualToString:@"ball_turret"])
+	{
+		type = kOOSubEntityBallTurret;
+	}
+	else if ([declaration oo_boolForKey:@"is_dock"])
+	{
+		type = kOOSubEntityDock;
+	}
+	
+	Vector position = [declaration oo_vectorForKey:@"position"];
+	Quaternion orientation = [declaration oo_quaternionForKey:@"orientation"];
+	if (quaternion_equal(orientation, kZeroQuaternion))
+	{
+		orientation = kIdentityQuaternion;
+	}
+	quaternion_normalize(&orientation);
+	
+	float fireRate = 0.0f;
+	if (type == kOOSubEntityBallTurret)
+	{
+		fireRate = [declaration oo_floatForKey:@"fire_rate" defaultValue:kOOBallTurretDefaultFireRate];
+		if (fireRate < kOOBallTurretMinimumFireRate)
+		{
+			OOReportWarning(issues, @"Ball turret fire rate of %g for subentity of ship %@ is invalid, using %g.", fireRate, [self shipKey], kOOBallTurretMinimumFireRate);
+			fireRate = kOOBallTurretMinimumFireRate;
+		}
+		
+		return [OOShipSubEntityDefinition definitionForBallTurretWithShipKey:subEntityKey
+																	position:position
+																 orientation:orientation
+																	fireRate:fireRate];
+	}
+	
+	return [OOShipSubEntityDefinition definitionWithType:type
+												 shipKey:subEntityKey
+												position:position
+											 orientation:orientation];
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseNewStyleLegacyFlasherDeclaration:(NSDictionary *)declaration
+														   problemReporter:(id <OOProblemReporting>)issues
+{
+	NSArray *colors = [declaration oo_arrayForKey:@"colors"];
+	NSUInteger count = [colors count];
+	if (count == 0)
+	{
+		id colorDesc = [declaration objectForKey:@"color"];
+		if (colorDesc == nil) colorDesc = @"redColor";
+		if ([colorDesc isKindOfClass:[NSArray class]])
+		{
+			colors = colorDesc;
+		}
+		else
+		{
+			colors = [NSArray arrayWithObject:colorDesc];
+		}
+	}
+	
+	NSMutableArray *reifiedColors = [NSMutableArray arrayWithCapacity:count];
+	id colorSpec = nil;
+	foreach (colorSpec, colors)
+	{
+		OOColor *color = [OOColor colorWithDescription:colorSpec saturationFactor:0.75f];
+		if (color != nil)  [reifiedColors addObject:color];
+	}
+	
+	Vector position = [declaration oo_vectorForKey:@"position"];
+	
+	float size = [declaration oo_floatForKey:@"size" defaultValue:8.0];
+	if (size <= 0)
+	{
+		OOReportWarning(issues, @"skipping flasher of invalid size %g for ship %@.", size, [self shipKey]);
+		return nil;
+	}
+	
+	float frequency = [declaration oo_floatForKey:@"frequency" defaultValue:2.0];
+	float phase = [declaration oo_floatForKey:@"phase" defaultValue:0.0];
+	
+	BOOL initiallyOn = [declaration oo_boolForKey:@"initially_on" defaultValue:YES];
+	
+	return [OOShipSubEntityDefinition definitionForFlasherWithPosition:position
+																colors:reifiedColors
+															 frequency:frequency
+																 phase:phase
+																  size:size
+														   initiallyOn:initiallyOn];
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleLegacySubEntityDeclaration:(NSString *)declaration
+																	shipData:(NSDictionary *)shipData
+															 problemReporter:(id <OOProblemReporting>)issues
+{
+	NSArray					*tokens = nil;
+	NSString				*subentityKey = nil;
+	BOOL					isFlasher;
+	
+	tokens = ScanTokensFromString(declaration);
+	
+	subentityKey = [tokens objectAtIndex:0];
+	isFlasher = [subentityKey isEqualToString:@"*FLASHER*"];
+	
+	// Sanity check: require eight tokens.
+	if ([tokens count] != 8)
+	{
+		OOReportWarning(issues, @"Subentity declaration for ship %@ should have 8 elements, but has %lu. It will be ignored.", [self shipKey], [tokens count]);
+		return nil;
+	}
+	
+	if (isFlasher)
+	{
+		return [self priv_parseOldStyleFlasherDeclaration:tokens];
+	}
+	else
+	{
+		return [self priv_parseOldStyleBasicSubentityDeclaration:tokens shipData:shipData];
+	}
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleFlasherDeclaration:(NSArray *)tokens
+{
+	Vector position;
+	position.x = [tokens oo_floatAtIndex:1];
+	position.y = [tokens oo_floatAtIndex:2];
+	position.z = [tokens oo_floatAtIndex:3];
+	
+	OOColor *color = [OOColor colorWithCalibratedHue:[tokens oo_floatAtIndex:4]
+										  saturation:1.0f
+										  brightness:1.0f
+											   alpha:1.0f];
+	
+	float frequency = [tokens oo_floatAtIndex:5];
+	float phase = [tokens oo_floatAtIndex:6];
+	float size = [tokens oo_floatAtIndex:7];
+	
+	return [OOShipSubEntityDefinition definitionForFlasherWithPosition:position
+																colors:$array(color)
+															 frequency:frequency
+																 phase:phase
+																  size:size
+														   initiallyOn:YES];
+}
+
+
+- (OOShipSubEntityDefinition *) priv_parseOldStyleBasicSubentityDeclaration:(NSArray *)tokens
+																   shipData:(NSDictionary *)shipData
+{
+	NSString				*subentityKey = nil;
+	Vector					position;
+	Quaternion				orientation;
+	OOSubEntityType			type = kOOSubEntityNormal;
+	
+	subentityKey = [tokens oo_stringAtIndex:0];
+	
+	if ([self shipIsBallTurretForKey:subentityKey inShipData:shipData])
+	{
+		type = kOOSubEntityBallTurret;
+	}
+	else if ([subentityKey rangeOfString:@"dock"].location != NSNotFound)
+	{
+		type = kOOSubEntityDock;
+	}
+	
+	position.x = [tokens oo_floatAtIndex:1];
+	position.y = [tokens oo_floatAtIndex:2];
+	position.z = [tokens oo_floatAtIndex:3];
+	
+	orientation.w = [tokens oo_floatAtIndex:4];
+	orientation.x = [tokens oo_floatAtIndex:5];
+	orientation.y = [tokens oo_floatAtIndex:6];
+	orientation.z = [tokens oo_floatAtIndex:7];
+	
+	if (quaternion_equal(orientation, kZeroQuaternion))
+	{
+		orientation = kIdentityQuaternion;
+	}
+	
+	quaternion_normalize(&orientation);
+	
+	return [OOShipSubEntityDefinition definitionWithType:type
+												 shipKey:subentityKey
+												position:position
+											 orientation:orientation];
+}
+
+
+- (BOOL) shipIsBallTurretForKey:(NSString *)shipKey inShipData:(NSDictionary *)shipData
+{
+	// Test for presence of setup_actions containing initialiseTurret.
+	NSArray					*setupActions = nil;
+	NSString				*action = nil;
+	
+	setupActions = [[shipData oo_dictionaryForKey:shipKey] oo_arrayForKey:@"setup_actions"];
+	
+	foreach (action, setupActions)
+	{
+		if ([[ScanTokensFromString(action) objectAtIndex:0] isEqualToString:@"initialiseTurret"])  return YES;
+	}
+	
+	return NO;
 }
 
 @end

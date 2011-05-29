@@ -60,7 +60,7 @@ MA 02110-1301, USA.
 #define kKey_bounty							@"bounty"
 #define kKey_density						@"density"
 #define kKey_roles							@"roleWeights"
-#define kKey_subentityDefinitions			@"subentities"
+#define kKey_subEntityDefinitions			@"subentities"
 #define kKey_isFrangible					@"isFrangible"
 #define kKey_escortCount					@"escortCount"
 #define kKey_escortRoles					@"escortRoles"
@@ -159,7 +159,7 @@ MA 02110-1301, USA.
 #define kDefault_density					1
 #define kDefault_roles						nil
 
-#define kDefault_subentityDefinitions		nil
+#define kDefault_subEntityDefinitions		nil
 #define kDefault_isFrangible				YES
 #define kDefault_escortCount				0
 #define kDefault_escortRoles				@"escort"
@@ -483,7 +483,10 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 	
 	WRIT_ROLES	(roles);
 	
-	WRIT_ARRAY	(subentityDefinitions);	// FIXME: definitely needs item-by-item defaulting.
+	if ([_subEntityDefinitions count] > 0)
+	{
+		WRIT_ARRAY	(subEntityDefinitions);
+	}
 	WRIT_BOOL	(isFrangible);
 	
 	WRIT_UINT	(escortCount);

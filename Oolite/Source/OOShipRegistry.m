@@ -877,6 +877,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	{
 		OOShipClass *shipClass = [[OOShipClass alloc] initWithKey:shipKey
 													  legacyPList:[ioData oo_dictionaryForKey:shipKey]
+												   legacyShipData:ioData
 												  problemReporter:issues];
 		if (shipClass == nil)  return NO;
 		

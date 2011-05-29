@@ -66,7 +66,7 @@ MA 02110-1301, USA.
 	OOCreditsQuantity	_bounty;
 	float				_density;
 	OORoleSet			*_roles;
-	NSArray				*_subentityDefinitions;
+	NSArray				*_subEntityDefinitions;
 	
 	OOUInteger			_escortCount;
 	OORoleSet			*_escortRoles;
@@ -205,7 +205,7 @@ MA 02110-1301, USA.
 - (OOCreditsQuantity) bounty;
 - (float) density;
 - (OORoleSet *) roles;
-- (NSArray *) subentityDefinitions;
+- (NSArray *) subEntityDefinitions;
 - (BOOL) isFrangible;			// FIXME: make subentity isBreakable attribute instead.
 
 - (OOUInteger) escortCount;
@@ -338,6 +338,60 @@ MA 02110-1301, USA.
 @end
 
 
+typedef enum
+{
+	kOOSubEntityNormal,
+	kOOSubEntityBallTurret,
+	kOOSubEntityDock,
+	kOOSubEntityFlasher
+} OOSubEntityType;
+
+
+NSString *OOStringFromSubEntityType(OOSubEntityType type);
+
+
+@interface OOShipSubEntityDefinition: NSObject <NSCopying>
+{
+@private
+	Vector				_position;
+}
+
+// Create a normal, ball turret or dock definition.
++ (id) definitionWithType:(OOSubEntityType)type shipKey:(NSString *)key position:(Vector)position orientation:(Quaternion)orientation;
+
+// Create a ball turret definition.
++ (id) definitionForBallTurretWithShipKey:(NSString *)key position:(Vector)position orientation:(Quaternion)orientation fireRate:(float)fireRate;
+
+// Create a flasher definition.
++ (id) definitionForFlasherWithPosition:(Vector)position
+								 colors:(NSArray *)colors
+							  frequency:(float)frequency
+								  phase:(float)phase
+								   size:(float)size
+							initiallyOn:(BOOL)initiallyOn;
+
+- (OOSubEntityType) type;
+
+- (Vector) position;
+
+// Apply to non-flashers.
+- (NSString *) shipKey;
+- (OOShipClass *) shipClass;
+- (Quaternion) orientation;
+
+// Applies to ball turrets.
+- (float) fireRate;	// Actually delay between shots, in seconds.
+
+// Apply to flashers.
+- (NSArray *) colors;
+- (float) frequency;
+- (float) phase;
+- (float) size;
+- (BOOL) initiallyOn;
+
+@end
+
+
 extern NSString * const kOODefaultHUDName;
 extern NSString * const kOODefaultEscapePodRole;
 extern NSString * const kOODefaultShipScriptName;
@@ -347,3 +401,6 @@ extern NSString * const kOODefaultDebrisRole;
 
 extern NSString * const kOOShipClassEquipmentKeyKey;
 extern NSString * const kOOShipClassEquipmentChanceKey;
+
+#define kOOBallTurretDefaultFireRate		(0.5f)
+#define kOOBallTurretMinimumFireRate		(0.25f)

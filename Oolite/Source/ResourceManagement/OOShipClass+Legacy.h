@@ -35,9 +35,11 @@ MA 02110-1301, USA.
 	
 	key: the shipdata.plist key.
 	legacyPList: the shipdata.plist value, with like_ship stuff folded in.
+	legacyShipData: the original shipdata.plist.
 */
 - (id) initWithKey:(NSString *)key
 	   legacyPList:(NSDictionary *)legacyPList
+	legacyShipData:(NSDictionary *)legacyShipData
    problemReporter:(id<OOProblemReporting>)issues;
 
 @end

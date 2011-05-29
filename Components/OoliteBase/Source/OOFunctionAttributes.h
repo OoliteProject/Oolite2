@@ -72,11 +72,7 @@
 #endif
 
 // OO_UNREACHABLE(): a statement that should never be executed (Clang optimization hint).
-#if __has_feature(__builtin_unreachable)
-	#define OO_UNREACHABLE() __builtin_unreachable()
-#else
-	#define OO_UNREACHABLE() do {} while (0)
-#endif
+#define OO_UNREACHABLE() __builtin_unreachable()
 
 
 #if __OBJC__

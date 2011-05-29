@@ -24,6 +24,9 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipClass+IO.h"
+
+#if !OOLITE_LEAN
+
 #import "OORoleSet.h"
 #import "OOConstToString.h"
 
@@ -235,7 +238,6 @@ MA 02110-1301, USA.
 
 
 // MARK: Export
-#if !OOLITE_LEAN
 
 OOINLINE BOOL ObjectIsOverride(id value, OOShipClass *likeShip, SEL likeSelector, id defaultValue)
 {
@@ -624,7 +626,23 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 {
 	return OOStringFromWeaponType(_starboardWeaponType);
 }
-
-#endif
 				 
 @end
+
+
+#define kKey_position						@"position"
+#define kKey_width							@"width"
+#define kKey_height							@"height"
+
+@implementation OOShipExhaustDefinition (IO)
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	return $dict(kKey_position, OOPropertyListFromVector([self position]),
+				 kKey_width, $float([self width]),
+				 kKey_height, $float([self height]));
+}
+
+@end
+
+#endif	// !OOLITE_LEAN

@@ -21,6 +21,10 @@
 
 - (void) priv_adjustLegacyWeaponStatsWithProblemReporter:(id<OOProblemReporting>)issues;
 
+
+- (NSArray *) priv_parseLegacyExhaustDefinitions:(NSArray *)definitions
+								 problemReporter:(id<OOProblemReporting>)issues;
+
 @end
 
 
@@ -508,7 +512,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		is ignored.
 		-- Ahruman 2011-03-18
 	*/
-	READ_ARRAY	(exhaustDefinitions);
+	NSArray *exhaustDefinitions = [shipdata oo_arrayForKey:kKey_exhaustDefinitions];
+	_exhaustDefinitions = [[self priv_parseLegacyExhaustDefinitions:exhaustDefinitions problemReporter:issues] retain];
 	
 	//	Load scanner lollipop colours.
 	OOColor *scannerColor1 = [OOColor colorWithDescription:[shipdata objectForKey:kKey_scannerColor1]];
@@ -532,7 +537,12 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 		We want to add a unique role for each ship, to simplify cases where 1.x
 		allows ships to be referenced by key but 2.x doesn’t (like specifying
 		esorts).
+		
+		TODO: generate these roles on loading, and reject anything that uses
+		an explicit role with brackets. (The brackets could be handled at
+		lookup time, but that would be pointless overhead.)
 	*/
+#if 0
 	NSString *uniqueRole = UniqueRoleForShipKey(shipKey);
 	NSString *roleString = [shipdata oo_stringForKey:kKey_roles];
 	if (roleString != nil)
@@ -544,6 +554,10 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	{
 		_roles = [[OORoleSet alloc] initWithRole:uniqueRole probability:1];
 	}
+#else
+	NSString *roleString = [shipdata oo_stringForKey:kKey_roles];
+	_roles = [[OORoleSet roleSetWithString:roleString] retain];
+#endif
 	
 	/*	FIXME: convert to canonical subentity representation.
 		-- Ahruman 2011-03-18
@@ -883,6 +897,36 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 			_weaponEnergy = 50;
 		}
 	}
+}
+
+
+- (NSArray *) priv_parseLegacyExhaustDefinitions:(NSArray *)definitions
+								 problemReporter:(id<OOProblemReporting>)issues
+{
+	NSMutableArray	*result = [NSMutableArray arrayWithCapacity:[definitions count]];
+	NSString		*legacyDef = nil;
+	
+	foreach (legacyDef, definitions)
+	{
+		NSArray *components = ScanTokensFromString(legacyDef);
+		if ([components count] != 6)
+		{
+			OOReportWarning(issues, @"Ship %@ has invalid exhuast specifier \"%@\"", [self shipKey], legacyDef);
+			continue;
+		}
+		
+		Vector pos = {[components oo_floatAtIndex:0], [components oo_floatAtIndex:1], [components oo_floatAtIndex:2]};
+		float width = [components oo_floatAtIndex:3];
+		float height = [components oo_floatAtIndex:4];
+		
+		OOShipExhaustDefinition *newDef = [[OOShipExhaustDefinition alloc] initWithPosition:pos
+																					  width:width
+																					 height:height];
+		[result addObject:newDef];
+		[newDef release];
+	}
+	
+	return [NSArray arrayWithArray:result];
 }
 
 @end

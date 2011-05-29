@@ -2,7 +2,7 @@
 
 OOCollectionExtractors.m
 
-Copyright © 2007-2009 Jens Ayton and contributors
+Copyright © 2007-2011 Jens Ayton and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
@@ -26,6 +26,7 @@ SOFTWARE.
 
 #import "OOCollectionExtractors.h"
 #import "OOBaseStringParsing.h"
+#import "MYCollectionUtilities.h"
 
 
 static NSSet *SetForObject(id object, NSSet *defaultValue);
@@ -1425,22 +1426,13 @@ Quaternion OOQuaternionFromObject(id object, Quaternion defaultValue)
 
 NSDictionary *OOPropertyListFromVector(Vector value)
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithFloat:value.x], @"x",
-			[NSNumber numberWithFloat:value.y], @"y",
-			[NSNumber numberWithFloat:value.z], @"z",
-			nil];
+	return $array($float(value.x), $float(value.y), $float(value.z));
 }
 
 
 NSDictionary *OOPropertyListFromQuaternion(Quaternion value)
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithFloat:value.w], @"w",
-			[NSNumber numberWithFloat:value.x], @"x",
-			[NSNumber numberWithFloat:value.y], @"y",
-			[NSNumber numberWithFloat:value.z], @"z",
-			nil];
+	return $array($float(value.w), $float(value.x), $float(value.y), $float(value.z));
 }
 
 

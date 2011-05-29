@@ -28,6 +28,7 @@ MA 02110-1301, USA.
 #import "ShipEntity.h"
 #import "Universe.h"
 #import "OOMacroOpenGL.h"
+#import "OOShipClass.h"
 
 
 #define kOverallAlpha		0.5f
@@ -44,27 +45,20 @@ MA 02110-1301, USA.
 
 @implementation OOExhaustPlumeEntity
 
-+ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(NSArray *)definition
++ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
 {
 	return [[[self alloc] initForShip:ship withDefinition:definition] autorelease];
 }
 
 
-- (id) initForShip:(ShipEntity *)ship withDefinition:(NSArray *)definition
+- (id) initForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
 {
-	if ([definition count] == 0)
-	{
-		[self release];
-		return nil;
-	}
-	
 	if ((self = [super init]))
 	{
 		[self setOwner:ship];
-		Vector pos = { [definition oo_floatAtIndex:0], [definition oo_floatAtIndex:1], [definition oo_floatAtIndex:2] };
-		[self setPosition:pos];
-		Vector scale = { [definition oo_floatAtIndex:3], [definition oo_floatAtIndex:4], [definition oo_floatAtIndex:5] };
-		_exhaustScale = scale;
+		[self setPosition:[definition position]];
+		_width = [definition width];
+		_height = [definition height];
 	}
 	
 	return self;
@@ -193,8 +187,8 @@ MA 02110-1301, USA.
 	
 	f01.position = vector_subtract(zero.position, vk); // 1m out from zero
 	
-	i1.x *= _exhaustScale.x;	i1.y *= _exhaustScale.x;	i1.z *= _exhaustScale.x;
-	j1.x *= _exhaustScale.y;	j1.y *= _exhaustScale.y;	j1.z *= _exhaustScale.y;
+	i1.x *= _width;	i1.y *= _width;	i1.z *= _width;
+	j1.x *= _height;	j1.y *= _height;	j1.z *= _height;
 	for (i = 0; i < 8; i++)
 	{
 		_vertices[iv++] = f01.position.x + b01.x + s1[i] * i1.x + c1[i] * j1.x;
@@ -210,8 +204,8 @@ MA 02110-1301, USA.
 	ex_emissive[1] = 0.6 * green_factor;	// diminish green part towards rear of exhaust
 	ex_emissive[0] = 0.6 * red_factor;		// diminish red part towards rear of exhaust
 	k1 = f03.k;
-	i1 = vector_multiply_scalar(cross_product(j1, k1), _exhaustScale.x);
-	j1 = vector_multiply_scalar(cross_product(master_i, k1), _exhaustScale.y);
+	i1 = vector_multiply_scalar(cross_product(j1, k1), _width);
+	j1 = vector_multiply_scalar(cross_product(master_i, k1), _height);
 	for (i = 0; i < 8; i++)
 	{
 		r1 = randf();
@@ -228,8 +222,8 @@ MA 02110-1301, USA.
 	ex_emissive[1] = 0.4 * green_factor;	// diminish green part towards rear of exhaust
 	ex_emissive[0] = 0.4 * red_factor;		// diminish red part towards rear of exhaust
 	k1 = f06.k;
-	i1 = vector_multiply_scalar(cross_product(j1, k1), 0.8f * _exhaustScale.x);
-	j1 = vector_multiply_scalar(cross_product(master_i, k1), 0.8f * _exhaustScale.y);
+	i1 = vector_multiply_scalar(cross_product(j1, k1), 0.8f * _width);
+	j1 = vector_multiply_scalar(cross_product(master_i, k1), 0.8f * _height);
 	for (i = 0; i < 8; i++)
 	{
 		r1 = randf();
@@ -246,8 +240,8 @@ MA 02110-1301, USA.
 	ex_emissive[1] = 0.2 * green_factor;	// diminish green part towards rear of exhaust
 	ex_emissive[0] = 0.2 * red_factor;		// diminish red part towards rear of exhaust
 	k1 = f08.k;
-	i1 = vector_multiply_scalar(cross_product(j1, k1), 0.5f * _exhaustScale.x);
-	j1 = vector_multiply_scalar(cross_product(master_i, k1), 0.5f * _exhaustScale.y);
+	i1 = vector_multiply_scalar(cross_product(j1, k1), 0.5f * _width);
+	j1 = vector_multiply_scalar(cross_product(master_i, k1), 0.5f * _height);
 	for (i = 0; i < 8; i++)
 	{
 		r1 = randf();
@@ -421,7 +415,8 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 
 - (void) rescaleBy:(GLfloat)factor
 {
-	_exhaustScale = vector_multiply_scalar(_exhaustScale, factor);
+	_width *= factor;
+	_height *= factor;
 }
 
 @end

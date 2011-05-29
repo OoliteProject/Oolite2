@@ -321,6 +321,23 @@ MA 02110-1301, USA.
 @end
 
 
+@interface OOShipExhaustDefinition: NSObject <NSCopying>
+{
+@private
+	Vector				_position;
+	float				_width;
+	float				_height;
+}
+
+- (id) initWithPosition:(Vector)position width:(float)width height:(float)height;
+
+- (Vector) position;
+- (float) width;
+- (float) height;
+
+@end
+
+
 extern NSString * const kOODefaultHUDName;
 extern NSString * const kOODefaultEscapePodRole;
 extern NSString * const kOODefaultShipScriptName;

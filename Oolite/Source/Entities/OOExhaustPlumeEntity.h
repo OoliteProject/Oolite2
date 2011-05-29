@@ -25,6 +25,8 @@ MA 02110-1301, USA.
 
 #import "ShipEntity.h"
 
+@class OOShipExhaustDefinition;
+
 
 typedef struct
 {
@@ -44,7 +46,7 @@ enum
 @interface OOExhaustPlumeEntity: Entity <OOSubEntity>
 {
 @private
-	Vector			_exhaustScale;
+	GLfloat			_width, _height;
 	GLfloat			_vertices[34 * 3];
 	GLfloat			_exhaustBaseColors[34 * 4];
 	Frame			_track[kExhaustFrameCount];
@@ -52,8 +54,8 @@ enum
 	uint8_t			_nextFrame;
 }
 
-+ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(NSArray *)definition;
-- (id) initForShip:(ShipEntity *)ship withDefinition:(NSArray *)definition;
++ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
+- (id) initForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
 
 - (void) resetPlume;
 

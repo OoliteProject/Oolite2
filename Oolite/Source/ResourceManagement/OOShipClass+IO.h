@@ -27,10 +27,13 @@ MA 02110-1301, USA.
 
 #import "OOShipClass.h"
 
-
-@interface OOShipClass (IO)
 #if !OOLITE_LEAN
-<JAPropertyListRepresentation>
-#endif
 
+
+@interface OOShipClass (IO) <JAPropertyListRepresentation>
 @end
+
+@interface OOShipExhaustDefinition (IO) <JAPropertyListRepresentation>
+@end
+
+#endif

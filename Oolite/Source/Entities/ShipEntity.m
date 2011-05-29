@@ -601,15 +601,16 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	OOJS_PROFILE_ENTER
 	
 	unsigned int	i;
+	OOShipClass		*shipClass = [self shipClass];
 	NSDictionary	*shipDict = [self shipInfoDictionary];
-	NSArray			*plumes = [shipDict oo_arrayForKey:@"exhaust"];
+	NSArray			*plumes = [shipClass exhaustDefinitions];
 	
 	_profileRadius = collision_radius;
 	_maxShipSubIdx = 0;
 	
 	for (i = 0; i < [plumes count]; i++)
 	{
-		NSArray *definition = ScanTokensFromString([plumes oo_stringAtIndex:i]);
+		OOShipExhaustDefinition *definition = [plumes objectAtIndex:i];
 		OOExhaustPlumeEntity *exhaust = [OOExhaustPlumeEntity exhaustForShip:self withDefinition:definition];
 		[self addSubEntity:exhaust];
 	}

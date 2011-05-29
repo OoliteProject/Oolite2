@@ -889,3 +889,44 @@ NSString * const kOOShipClassEquipmentChanceKey = @"chance";
 }
 
 @end
+
+
+@implementation OOShipExhaustDefinition
+
+- (id) initWithPosition:(Vector)position width:(float)width height:(float)height
+{
+	if ((self = [super init]))
+	{
+		_position = position;
+		_width = width;
+		_height = height;
+	}
+	
+	return self;
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
+}
+
+
+- (Vector) position
+{
+	return _position;
+}
+
+
+- (float) width
+{
+	return _width;
+}
+
+
+- (float) height
+{
+	return _height;
+}
+
+@end

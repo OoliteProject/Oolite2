@@ -1309,16 +1309,16 @@ NSString *OOStringFromSubEntityType(OOSubEntityType type)
 	switch (type)
 	{
 		case kOOSubEntityNormal:
-			return @"normal";
+			return @"NORMAL";
 			
 		case kOOSubEntityBallTurret:
-			return @"ballTurret";
+			return @"BALL_TURRET";
 			
 		case kOOSubEntityDock:
-			return @"dock";
+			return @"DOCK";
 			
 		case kOOSubEntityFlasher:
-			return @"flasher";
+			return @"FLASHER";
 	}
 }
 

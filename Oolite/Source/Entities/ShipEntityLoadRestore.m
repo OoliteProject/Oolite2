@@ -168,8 +168,9 @@ static OOShipGroup *GroupForGroupID(OOUInteger groupID, NSMutableDictionary *con
 	
 	ShipEntity *ship = nil;
 	
-	NSString *shipKey = [dict oo_stringForKey:KEY_SHIP_KEY];
-	NSDictionary *shipData = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];
+	NSString		*shipKey = [dict oo_stringForKey:KEY_SHIP_KEY];
+	NSDictionary	*shipData = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];
+	OOShipClass		*shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:shipKey];
 	
 	if (shipData != nil)
 	{
@@ -182,8 +183,8 @@ static OOShipGroup *GroupForGroupID(OOUInteger groupID, NSMutableDictionary *con
 		[mergedData oo_setBool:NO forKey:@"auto_ai"];
 		[mergedData oo_setUnsignedInteger:0 forKey:@"escorts"];
 		
-		Class shipClass = [UNIVERSE shipClassForShipDictionary:mergedData];
-		ship = [[[shipClass alloc] initWithKey:shipKey definition:mergedData] autorelease];
+		Class entityClass = [UNIVERSE classForShipClass:shipClass usePlayerProxy:NO];
+		ship = [[[entityClass alloc] initWithKey:shipKey definition:mergedData] autorelease];
 		
 		// FIXME: restore AI.
 		[[ship getAI] setStateMachine:[dict oo_stringForKey:KEY_AI defaultValue:@"nullAI.plist"]];

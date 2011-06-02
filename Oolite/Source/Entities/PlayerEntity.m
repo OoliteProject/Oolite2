@@ -2284,10 +2284,11 @@ static bool minShieldLevelPercentageInitialised = false;
 
 - (void) resetHud
 {
-	// set up defauld HUD for the ship
-	NSDictionary *shipDict = [[OOShipRegistry sharedRegistry] shipInfoForKey:[self shipDataKey]];
-	NSString *hud_desc = [shipDict oo_stringForKey:@"hud" defaultValue:@"hud.plist"];
-	if (![self switchHudTo:hud_desc])  [self switchHudTo:@"hud.plist"];	// ensure we have a HUD to fall back to
+	if (![self switchHudTo:[[self shipClass] HUDName]])
+	{
+		// If there's a problem with the custom HUD, fall back to the default.
+		[self switchHudTo:kOODefaultHUDName];
+	}
 }
 
 

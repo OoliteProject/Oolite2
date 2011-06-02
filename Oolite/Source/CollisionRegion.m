@@ -462,6 +462,12 @@ static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_
 		return NO;	// you are nearer the sun than the potential occluder, so it can't shade you
 	//
 	GLfloat d2_e2 = distance2( e1->position, e2->position);
+	if (d2_e2 == 0)
+	{
+		// Same position, e.g. player in last frame of docing.
+		return e2->collision_radius > e1->collision_radius;
+	}
+	
 	GLfloat cr_sun = the_sun->collision_radius;
 	GLfloat cr_e2 = e2->collision_radius;
 	if (e2->isShip)

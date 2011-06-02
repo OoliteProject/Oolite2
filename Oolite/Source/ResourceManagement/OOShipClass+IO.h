@@ -39,3 +39,12 @@ MA 02110-1301, USA.
 @end
 
 #endif
+
+
+@interface OOShipClass (Reading)
+
+- (id) initWithKey:(NSString *)key
+		properties:(NSDictionary *)properties
+   problemReporter:(id<OOProblemReporting>)issues;
+
+@end

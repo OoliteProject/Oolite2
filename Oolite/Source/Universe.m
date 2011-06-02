@@ -50,6 +50,7 @@ MA 02110-1301, USA.
 
 #import "OOCharacter.h"
 #import "OOShipRegistry.h"
+#import "OOShipClass.h"
 #import "OOEquipmentType.h"
 #import "OOGeometryGLHelpers.h"
 
@@ -2464,21 +2465,17 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 {
 	OOJS_PROFILE_ENTER
 	
-	NSDictionary	*shipDict = nil;
-	ShipEntity		*ship = nil;
+	ShipEntity  *ship = nil;
+	OOShipClass *shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:shipKey];
+	if (shipClass == nil)  return nil;
 	
-	shipDict = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];
-	if (shipDict == nil)  return nil;
-	
-	volatile Class shipClass = [self shipClassForShipDictionary:shipDict];
-	if (usePlayerProxy && shipClass == [ShipEntity class])
+	@try
 	{
-		shipClass = [ProxyPlayerEntity class];
+		Class entityClass = [self classForShipClass:shipClass usePlayerProxy:usePlayerProxy];
+		ship = [[entityClass alloc] initWithKey:shipKey];
 	}
-	
-	NS_DURING
-		ship =[[shipClass alloc] initWithKey:shipKey definition:shipDict];
-	NS_HANDLER
+	@catch (NSException *localException)
+	{
 		[ship release];
 		ship = nil;
 		
@@ -2487,7 +2484,7 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 			OOLog(kOOLogException, @"***** Oolite Exception : '%@' in [Universe newShipWithName: %@ ] *****", [localException reason], shipKey);
 		}
 		else  [localException raise];
-	NS_ENDHANDLER
+	}
 	
 	// Set primary role to same as ship name, if ship name is also a role.
 	// Otherwise, if caller doesn't set a role, one will be selected randomly.
@@ -2506,26 +2503,22 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 }
 
 
-- (Class) shipClassForShipDictionary:(NSDictionary *)dict
+- (Class) classForShipClass:(OOShipClass *)shipClass usePlayerProxy:(BOOL)usePlayerProxy
 {
 	OOJS_PROFILE_ENTER
 	
-	if (dict == nil)  return Nil;
-	
-	BOOL		isStation = NO;
-	NSString	*shipRoles = [dict oo_stringForKey:@"roles"];
-	
-	if (shipRoles != nil)
+	if ([shipClass isCarrier])
 	{
-		isStation = [shipRoles rangeOfString:@"station"].location != NSNotFound ||
-		[shipRoles rangeOfString:@"carrier"].location != NSNotFound;
+		return [StationEntity class];
 	}
-	
-	// Note priority here: is_carrier overrides isCarrier which overrides roles.
-	isStation = [dict oo_boolForKey:@"isCarrier" defaultValue:isStation];
-	isStation = [dict oo_boolForKey:@"is_carrier" defaultValue:isStation];
-	
-	return isStation ? [StationEntity class] : [ShipEntity class];
+	else if (usePlayerProxy)
+	{
+		return [ProxyPlayerEntity class];
+	}
+	else
+	{
+		return [ShipEntity class];
+	}
 	
 	OOJS_PROFILE_EXIT
 }
@@ -5019,22 +5012,10 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 								
 								NSString		*shipDesc = nil;
 								NSString		*shipName = nil;
-								NSDictionary	*shipDict = nil;
 								
 								demo_ship_index = (demo_ship_index + 1) % [demo_ships count];
 								shipDesc = [demo_ships oo_stringAtIndex:demo_ship_index];
-								shipDict = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipDesc];
-								if (shipDict != nil)
-								{
-									// Failure means we don't change demo_stage, so we'll automatically try again.
-									demo_ship = [[ShipEntity alloc] initWithKey:shipDesc definition:shipDict];
-								}
-								else
-								{
-									OOLog(@"demo.loadShip.failed", @"Could not load ship \"%@\" for demo screen.", shipDesc);
-									demo_ship = [[ShipEntity alloc] initWithDictionary:[[OOShipRegistry sharedRegistry] shipInfoForKey:@"oolite-unknown-ship"]];
-									shipName=[NSString stringWithFormat:DESC(@"unknown-ship-@"),shipDesc];
-								}
+								demo_ship = [[ShipEntity alloc] initWithKey:shipDesc];
 								
 								if (demo_ship != nil)
 								{

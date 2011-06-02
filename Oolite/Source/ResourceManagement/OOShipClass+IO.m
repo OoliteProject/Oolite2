@@ -24,9 +24,6 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipClass+IO.h"
-
-#if !OOLITE_LEAN
-
 #import "OORoleSet.h"
 #import "OOConstToString.h"
 
@@ -131,6 +128,20 @@ MA 02110-1301, USA.
 #define kKey_dockingTunnelAspectRatio		@"dockingTunnelAspectRatio"
 #define kKey_equipment						@"equipment"
 
+#define kKey_position						@"position"
+#define kKey_width							@"width"
+#define kKey_height							@"height"
+
+#define kKey_name							@"name"
+#define kKey_orientation					@"orientation"
+#define kKey_weaponFacing					@"weaponFacing"
+
+// NOTE: not table-based since this is only a subset of OOViewID.
+#define kFacingForward						@"FORWARD"
+#define kFacingAft							@"AFT"
+#define kFacingPort							@"PORT"
+#define kFacingStarboard					@"STARBOARD"
+
 
 // MARK: Defaults
 
@@ -233,11 +244,15 @@ MA 02110-1301, USA.
 #define kDefault_equipment					[NSArray array]
 
 
+#define STRINGIZE_VAL(v)	#v
+#define STRINGIZE_TOK(t)	STRINGIZE_VAL(t)
+
+
+#if !OOLITE_LEAN
+
+// MARK: - Export
+
 @implementation OOShipClass (Writing)
-
-
-
-// MARK: Export
 
 OOINLINE BOOL ObjectIsOverride(id value, OOShipClass *likeShip, SEL likeSelector, id defaultValue)
 {
@@ -420,10 +435,6 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 {
 	WriteObject(result, key, [ship performSelector:selector], likeShip, selector, defaultValue);
 }
-
-
-#define STRINGIZE_VAL(v)	#v
-#define STRINGIZE_TOK(t)	STRINGIZE_VAL(t)
 
 #define WRIT_OBJECT(NAME)	WriteObject(result, kKey_##NAME, _##NAME, likeShip, @selector(NAME), kDefault_##NAME)
 #define WRIT_ARRAY(NAME)	WRIT_OBJECT(NAME)
@@ -630,10 +641,6 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 @end
 
 
-#define kKey_position						@"position"
-#define kKey_width							@"width"
-#define kKey_height							@"height"
-
 @implementation OOShipExhaustDefinition (Writing)
 
 - (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
@@ -644,17 +651,6 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 }
 
 @end
-
-
-#define kKey_name							@"name"
-#define kKey_orientation					@"orientation"
-#define kKey_weaponFacing					@"weaponFacing"
-
-// NOTE: not table-based since this is only a subset of OOViewID.
-#define kFacingForward						@"FORWARD"
-#define kFacingAft							@"AFT"
-#define kFacingPort							@"PORT"
-#define kFacingStarboard					@"STARBOARD"
 
 @implementation OOShipViewDescription (Writing)
 
@@ -699,3 +695,158 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 @end
 
 #endif	// !OOLITE_LEAN
+
+
+#if 0
+#define READ_STRING(NAME)	_##NAME = [[properties oo_stringForKey:kKey_##NAME defaultValue:kDefault_##NAME] copy]
+
+
+@implementation OOShipClass (Reading)
+
+- (id) initWithKey:(NSString *)key
+		properties:(NSDictionary *)properties
+   problemReporter:(id<OOProblemReporting>)issues
+{
+	if (!(self = [super init]))  return nil;
+	
+	READ_STRING	(name);
+	
+	READ_ENUM	(scanClass);
+	
+	READ_STRING	(beaconCode);
+	READ_BOOL	(isHulk);
+	READ_STRING	(HUDName);
+	
+	READ_STRING	(pilotKey);
+	READ_FUZZY	(unpilotedChance);
+	READ_UINT	(escapePodCount);
+	READ_ROLES	(escapePodRoles);
+	READ_BOOL	(countsAsKill);
+	
+	READ_STRING	(scriptName);
+	READ_DICT	(scriptInfo);
+	READ_STRING	(AIName);
+	READ_BOOL	(trackCloseContacts);
+	
+	READ_STRING	(modelName);
+	READ_BOOL	(smooth);
+	READ_DICT	(materialDefinitions);
+	
+	READ_ARRAY	(exhaustDefinitions);
+	READ_ARRAY	(scannerColors);
+	
+	READ_UINT	(bounty);
+	READ_FLOAT	(density);
+	
+	READ_ROLES	(roles);
+	
+	READ_ARRAY	(subEntityDefinitions);
+	READ_BOOL	(isFrangible);
+	
+	READ_UINT	(escortCount);
+	READ_ROLES	(escortRoles);
+	
+	READ_VECTOR	(forwardViewPosition);
+	READ_VECTOR	(aftViewPosition);
+	READ_VECTOR	(portViewPosition);
+	READ_VECTOR	(starboardViewPosition);
+	READ_ARRAY	(customViews);
+	
+	READ_UINT	(cargoSpaceCapacity);
+	READ_RANGE	(cargoSpaceUsed);
+	READ_UINT	(cargoBayExpansionSize);
+	READ_ENUM	(cargoType);
+	
+	READ_PFLOAT	(energyCapacity);
+	READ_PFLOAT	(energyRechargeRate);
+	
+	READ_UINT	(fuelCapacity);
+	READ_UINT	(initialFuel);
+	
+	READ_PFLOAT	(heatInsulation);
+	
+	READ_PFLOAT	(maxFlightSpeed);
+	READ_PFLOAT	(maxFlightRoll);
+	READ_PFLOAT	(maxFlightPitch);
+	READ_PFLOAT	(maxFlightYaw);
+	READ_PFLOAT	(maxThrust);
+	READ_BOOL	(hasHyperspaceMotor);
+	READ_PFLOAT	(hyperspaceMotorSpinTime);
+	
+	READ_FLOAT	(accuracy);
+	READ_ENUM	(forwardWeaponType);
+	READ_ENUM	(aftWeaponType);
+	READ_ENUM	(portWeaponType);
+	READ_ENUM	(starboardWeaponType);
+	READ_VECTOR	(forwardWeaponPosition);
+	READ_VECTOR	(aftWeaponPosition);
+	READ_VECTOR	(portWeaponPosition);
+	READ_VECTOR	(starboardWeaponPosition);
+	READ_PFLOAT	(weaponEnergy);
+	READ_PFLOAT	(turretRange);
+	READ_OBJECT	(laserColor);
+	
+	READ_RANGE	(missileCount);
+	READ_UINT	(missileCapacity);
+	READ_ROLES	(missileRoles);
+	
+	READ_BOOL	(isSubmunition);
+	
+	READ_BOOL	(cloakIsPassive);
+	READ_BOOL	(cloakIsAutomatic);
+	
+	READ_FUZZY	(fragmentChance);
+	READ_FUZZY	(noBouldersChance);	// Needs change, see OOShipClass.h
+	READ_ROLES	(debrisRoles);
+	READ_VECTOR	(scoopPosition);
+	READ_VECTOR	(aftEjectPosition);
+	
+	READ_QUAT	(rotationalVelocity);
+	
+	READ_BOOL	(isCarrier);
+	if (_isCarrier)
+	{
+		READ_FLOAT	(stationRoll);
+		
+		READ_FUZZY	(hasNPCTrafficChance);
+		READ_FUZZY	(hasPatrolShipsChance);
+		READ_UINT	(maxScavengers);
+		READ_UINT	(maxPolice);
+		READ_UINT	(maxDefenseShips);
+		READ_ROLES	(defenseShipRoles);
+		
+		READ_UINT	(equivalentTechLevel);
+		READ_FLOAT	(equipmentPriceFactor);
+		READ_STRING	(marketKey);
+		
+		READ_BOOL	(hasShipyard);
+		
+		READ_BOOL	(requiresDockingClearance);
+		READ_BOOL	(allowsInterstellarUndocking);
+		READ_BOOL	(allowsAutoDocking);
+		READ_BOOL	(allowsFastDocking);
+		READ_UINT	(dockingTunnelCorners);
+		READ_FLOAT	(dockingTunnelStartAngle);
+		READ_PFLOAT	(dockingTunnelAspectRatio);
+	}
+	
+	NSMutableArray	*equipment = [NSMutableArray arrayWithCapacity:[_equipment count]];
+	NSDictionary	*eqSpec = nil;
+	foreach (eqSpec, _equipment)
+	{
+		if ([eqSpec oo_floatForKey:kOOShipClassEquipmentChanceKey] == 1.0f)
+		{
+			[equipment addObject:[eqSpec oo_stringForKey:kOOShipClassEquipmentKeyKey]];
+		}
+		else
+		{
+			[equipment addObject:eqSpec];
+		}
+	}
+	WriteObject(result, kKey_equipment, equipment, likeShip, @selector(equipment), kDefault_equipment);
+	
+	return result;
+}
+
+@end
+#endif

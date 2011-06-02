@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
 		Entity, ShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
-		PlayerEntity, OORoleSet, OOColor;
+		PlayerEntity, OORoleSet, OOColor, OOShipClass;
 
 
 typedef BOOL (*EntityFilterPredicate)(Entity *entity, void *parameter);
@@ -391,7 +391,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (ShipEntity *) newShipWithName:(NSString *)shipKey;	// Does not apply auto_ai or respect conditions
 - (ShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy;	// If usePlayerProxy, non-carriers are instantiated as ProxyPlayerEntity.
 
-- (Class) shipClassForShipDictionary:(NSDictionary *)dict;
+- (Class) classForShipClass:(OOShipClass *)shipClass usePlayerProxy:(BOOL)usePlayerProxy;
 
 - (NSString *)defaultAIForRole:(NSString *)role;		// autoAImap.plist lookup
 

@@ -408,7 +408,8 @@ typedef enum
 	id <OOHUDBeaconIcon>	_beaconDrawable;
 }
 
-- (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict;
+- (id)initWithKey:(NSString *)key;
+- (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict DEPRECATED_FUNC;
 
 - (OOShipClass *) shipClass;
 

@@ -289,6 +289,9 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	if (![self applyLikeShips:result])  return;
 	OOLog(@"shipData.load.done", @"Finished resolving like_ships...");
 	
+	if (![self reifyShipClasses:result])  return;
+	OOLog(@"shipData.load.done", @"Finished building ship class models...");
+	
 	// Clean up subentity declarations and tag subentities so they won't be pruned.
 	if (![self canonicalizeAndTagSubentities:result])  return;
 	OOLog(@"shipData.load.done", @"Finished cleaning up subentities...");
@@ -300,9 +303,6 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	// Add shipyard entries into shipdata entries.
 	if (![self loadAndMergeShipyard:result])  return;
 	OOLog(@"shipData.load.done", @"Finished adding shipyard entries...");
-	
-	if (![self reifyShipClasses:result])  return;
-	OOLog(@"shipData.load.done", @"Finished building ship class models...");
 	
 #if PRELOAD
 	// Preload and cache meshes.
@@ -349,7 +349,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 													  cache:NO];
 	demoShips = [NSMutableArray arrayWithArray:initialDemoShips];
 	
-	// Note: iterate over initialDemoShips to avoid mutating the collection being enu,erated.
+	// Note: iterate over initialDemoShips to avoid mutating the collection being enumerated.
 	for (enumerator = [initialDemoShips objectEnumerator]; (key = [enumerator nextObject]); )
 	{
 		if (![key isKindOfClass:[NSString class]] || [self shipInfoForKey:key] == nil)

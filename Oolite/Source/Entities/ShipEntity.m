@@ -193,7 +193,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 {
 	OOJS_PROFILE_ENTER
 	
-	NSParameterAssert(dict != nil);
+	NSParameterAssert(key != nil);
 	
 	self = [super init];
 	if (self == nil)  return nil;
@@ -225,6 +225,12 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	return self;
 	
 	OOJS_PROFILE_EXIT
+}
+
+
+- (id)initWithKey:(NSString *)key
+{
+	return [self initWithKey:key definition:nil];
 }
 
 

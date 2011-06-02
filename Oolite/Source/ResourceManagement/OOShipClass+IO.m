@@ -233,7 +233,7 @@ MA 02110-1301, USA.
 #define kDefault_equipment					[NSArray array]
 
 
-@implementation OOShipClass (IO)
+@implementation OOShipClass (Writing)
 
 
 
@@ -637,13 +637,66 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 #define kKey_width							@"width"
 #define kKey_height							@"height"
 
-@implementation OOShipExhaustDefinition (IO)
+@implementation OOShipExhaustDefinition (Writing)
 
 - (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
 {
 	return $dict(kKey_position, OOPropertyListFromVector([self position]),
 				 kKey_width, $float([self width]),
 				 kKey_height, $float([self height]));
+}
+
+@end
+
+
+#define kKey_name							@"name"
+#define kKey_orientation					@"orientation"
+#define kKey_weaponFacing					@"weaponFacing"
+
+// NOTE: not table-based since this is only a subset of OOViewID.
+#define kFacingForward						@"FORWARD"
+#define kFacingAft							@"AFT"
+#define kFacingPort							@"PORT"
+#define kFacingStarboard					@"STARBOARD"
+
+@implementation OOShipViewDescription (Writing)
+
+- (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
+{
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:4];
+	[result setObject:[self name] forKey:kKey_name];
+	if (!vector_equal(kZeroVector, [self position]))
+	{
+		[result setObject:OOPropertyListFromVector([self position]) forKey:kKey_position];
+	}
+	if (!quaternion_equal(kIdentityQuaternion, [self orientation]))
+	{
+		[result setObject:OOPropertyListFromQuaternion([self orientation]) forKey:kKey_orientation];
+	}
+	
+	NSString *facing = nil;
+	switch ([self weaponFacing])
+	{
+		case VIEW_AFT:
+			facing = kFacingAft;
+			break;
+			
+		case VIEW_PORT:
+			facing = kFacingPort;
+			break;
+			
+		case VIEW_STARBOARD:
+			facing = kFacingStarboard;
+			break;
+			
+	//	case VIEW_FORWARD:
+		default:
+			facing = kFacingForward;
+	}
+	
+	[result setObject:facing forKey:kKey_weaponFacing];
+	
+	return result;
 }
 
 @end

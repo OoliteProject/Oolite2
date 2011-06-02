@@ -1321,3 +1321,80 @@ NSString *OOStringFromSubEntityType(OOSubEntityType type)
 			return @"flasher";
 	}
 }
+
+
+@implementation OOShipViewDescription
+
+- (id) initWithName:(NSString *)name
+		   position:(Vector)position
+		orientation:(Quaternion)orientation
+	   weaponFacing:(OOViewID)weaponFacing
+{
+	NSParameterAssert(name != nil);
+	
+	if ((self = [super init]))
+	{
+		if (!quaternion_equal(orientation, kZeroQuaternion))
+		{
+			quaternion_normalize(&orientation);
+		}
+		else
+		{
+			orientation = kIdentityQuaternion;
+		}
+		
+		_name = [name copy];
+		_position = position;
+		_orientation = orientation;
+		_weaponFacing = weaponFacing;
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_name autorelease];
+	_name = nil;
+	
+	[super dealloc];
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return [self retain];
+}
+
+
+- (NSString *) descriptionComponents
+{
+	return [self name];
+}
+
+
+- (NSString *) name
+{
+	return _name;
+}
+
+
+- (Vector) position
+{
+	return _position;
+}
+
+
+- (Quaternion) orientation
+{
+	return _orientation;
+}
+
+
+- (OOViewID) weaponFacing
+{
+	return _weaponFacing;
+}
+
+@end

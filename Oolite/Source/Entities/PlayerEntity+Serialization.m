@@ -33,6 +33,7 @@ MA 02110-1301, USA.
 #import "StationEntity.h"
 #import "MyOpenGLView.h"
 #import "OOShipRegistry.h"
+#import "OOShipClass.h"
 #import "OOEquipmentType.h"
 
 
@@ -884,9 +885,10 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	}
 	
 	// custom view no.
-	if (_customViews != nil)
-		_customViewIndex = [dict oo_unsignedIntForKey:@"custom_view_index"] % [_customViews count];
-
+	NSUInteger viewIndex = [dict oo_unsignedIntForKey:@"custom_view_index"];
+	NSUInteger viewCount = [[[self shipClass] customViews] count];
+	_customViewIndex = MIN(viewIndex, viewCount - 1);
+	
 	// trumble information
 	[self setUpTrumbles];
 	[self setTrumbleValueFrom:[dict objectForKey:@"trumbles"]];	// if it doesn't exist we'll check user-defaults

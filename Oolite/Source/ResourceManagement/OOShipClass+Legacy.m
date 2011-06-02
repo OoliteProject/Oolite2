@@ -25,6 +25,9 @@
 - (NSArray *) priv_parseLegacyExhaustDefinitions:(NSArray *)definitions
 								 problemReporter:(id <OOProblemReporting>)issues;
 
+- (NSArray *) priv_parseLegacyCustomViewDefinitions:(NSArray *)definitions
+									problemReporter:(id <OOProblemReporting>)issues;
+
 
 - (NSArray *) priv_parseLegacySubEntityDefinitions:(NSArray *)definitions
 										  shipData:(NSDictionary *)shipData
@@ -616,7 +619,9 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	READ_VECTOR	(aftViewPosition);
 	READ_VECTOR	(portViewPosition);
 	READ_VECTOR	(starboardViewPosition);
-	READ_ARRAY	(customViews);
+	
+	NSArray *customViews = [self priv_parseLegacyCustomViewDefinitions:[shipdata oo_arrayForKey:kKey_customViews] problemReporter:issues];
+	_customViews = [customViews retain];
 	
 	READ_UINT	(cargoSpaceCapacity);
 	READ_UINT	(cargoSpaceUsedMax);
@@ -935,6 +940,8 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	
 	foreach (legacyDef, definitions)
 	{
+		if (![legacyDef isKindOfClass:[NSString class]])  continue;
+		
 		NSArray *components = ScanTokensFromString(legacyDef);
 		if ([components count] != 6)
 		{
@@ -951,6 +958,48 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 																					 height:height];
 		[result addObject:newDef];
 		[newDef release];
+	}
+	
+	return [NSArray arrayWithArray:result];
+}
+
+
+- (NSArray *) priv_parseLegacyCustomViewDefinitions:(NSArray *)definitions
+									problemReporter:(id <OOProblemReporting>)issues
+{
+	NSMutableArray	*result = [NSMutableArray arrayWithCapacity:[definitions count]];
+	NSDictionary	*legacyDef = nil;
+	
+	foreach (legacyDef, definitions)
+	{
+		if (![legacyDef isKindOfClass:[NSDictionary class]])  continue;
+		
+		NSString *name = [legacyDef oo_stringForKey:@"view_description" defaultValue:@""];
+		Vector position = [legacyDef oo_vectorForKey:@"view_position"];
+		Quaternion orientation = [legacyDef oo_quaternionForKey:@"view_orientation"];
+		quaternion_normalize(&orientation);
+		
+		OOViewID weaponFacing = VIEW_FORWARD;
+		NSString *facing = [[legacyDef oo_stringForKey:@"weapon_facing"] lowercaseString];
+		if ([facing isEqual:@"aft"])
+		{
+			weaponFacing = VIEW_AFT;
+		}
+		else if ([facing isEqual:@"port"])
+		{
+			weaponFacing = VIEW_PORT;
+		}
+		else if ([facing isEqual:@"starboard"])
+		{
+			weaponFacing = VIEW_STARBOARD;
+		}
+		
+		OOShipViewDescription *view = [[OOShipViewDescription alloc] initWithName:name
+																		 position:position
+																	  orientation:orientation
+																	 weaponFacing:weaponFacing];
+		[result addObject:view];
+		[view release];
 	}
 	
 	return [NSArray arrayWithArray:result];

@@ -36,6 +36,7 @@ MA 02110-1301, USA.
 #import "ProxyPlayerEntity.h"
 #import "OOQuiriumCascadeEntity.h"
 #import "OOMesh.h"
+#import "OOShipClass.h"
 
 #import "GameController.h"
 #import "ResourceManager.h"
@@ -128,6 +129,8 @@ static GLfloat		sBaseMass = 0.0;
 // Jump distance/cost calculations for selected target.
 - (double) hyperspaceJumpDistance;
 - (OOFuelQuantity) fuelRequiredForJump;
+
+- (void) setDefaultViewOffsets;
 
 @end
 
@@ -654,8 +657,7 @@ static GLfloat		sBaseMass = 0.0;
 	voice_no = [UNIVERSE setVoice:-1 withGenderM:voice_gender_m];
 #endif
 	
-	[_customViews release];
-	_customViews = nil;
+	DESTROY(_customView);
 	_customViewIndex = 0;
 	
 	mouse_control_on = NO;
@@ -737,7 +739,6 @@ static GLfloat		sBaseMass = 0.0;
 	aftViewOffset			= kZeroVector;
 	portViewOffset			= kZeroVector;
 	starboardViewOffset		= kZeroVector;
-	customViewOffset		= kZeroVector;
 	
 	currentWeaponFacing		= VIEW_FORWARD;
 	[self currentWeaponStats];
@@ -847,15 +848,8 @@ static GLfloat		sBaseMass = 0.0;
 	ScanVectorFromString([shipDict oo_stringForKey:@"view_position_port"], &portViewOffset);
 	ScanVectorFromString([shipDict oo_stringForKey:@"view_position_starboard"], &starboardViewOffset);
 	
-	[self setDefaultCustomViews];
-	
-	NSArray *customViews = [shipDict oo_arrayForKey:@"custom_views"];
-	if (customViews != nil)
-	{
-		[_customViews release];
-		_customViews = [customViews retain];
-		_customViewIndex = 0;
-	}
+	DESTROY(_customView);
+	_customViewIndex = 0;
 	
 	// Load js script
 	[script autorelease];
@@ -908,14 +902,14 @@ static GLfloat		sBaseMass = 0.0;
 	
 	DESTROY(save_path);
 	
-	DESTROY(_customViews);
-	
 	DESTROY(dockingReport);
 	
 	[self destroySound];
 	
 	DESTROY(scannedWormholes);
 	DESTROY(wormhole);
+	
+	DESTROY(_customView);
 	
 	[self clearTargetMemory];
 	
@@ -2144,7 +2138,7 @@ static bool minShieldLevelPercentageInitialised = false;
 {
 	if ([UNIVERSE breakPatternHide])
 		return kZeroVector;	// center view for break pattern
-
+	
 	switch ([UNIVERSE viewDirection])
 	{
 		case VIEW_FORWARD:
@@ -2157,13 +2151,13 @@ static bool minShieldLevelPercentageInitialised = false;
 			return starboardViewOffset;
 		/* GILES custom viewpoints */
 		case VIEW_CUSTOM:
-			return customViewOffset;
+			return [self customViewOffset];
 		/* -- */
 		
 		default:
 			break;
 	}
-
+	
 	return kZeroVector;
 }
 
@@ -6845,21 +6839,6 @@ static NSString *last_outfitting_key=nil;
 	aftViewOffset = make_vector(0.0f, 0.0f, boundingBox.min.z + halfLength);
 	portViewOffset = make_vector(boundingBox.min.x + halfWidth, 0.0f, 0.0f);
 	starboardViewOffset = make_vector(boundingBox.max.x - halfWidth, 0.0f, 0.0f);
-	customViewOffset = kZeroVector;
-}
-
-
-- (void) setDefaultCustomViews
-{
-	NSArray *customViews = [[[OOShipRegistry sharedRegistry] shipInfoForKey:@"cobra3-player"] oo_arrayForKey:@"custom_views"];
-	
-	[_customViews release];
-	_customViews = nil;
-	_customViewIndex = 0;
-	if (customViews != nil)
-	{
-		_customViews = [customViews retain];
-	}
 }
 
 
@@ -6876,7 +6855,7 @@ static NSString *last_outfitting_key=nil;
 		case VIEW_STARBOARD:
 			return starboardViewOffset;
 		case VIEW_CUSTOM:
-			return customViewOffset;
+			return [self customViewOffset];
 		
 		case VIEW_NONE:
 		case VIEW_GUI_DISPLAY:
@@ -7292,85 +7271,73 @@ static NSString *last_outfitting_key=nil;
 }
 
 
-- (Quaternion)customViewQuaternion
+- (OOShipViewDescription *) customView
 {
-	return customViewQuaternion;
+	return _customView;
 }
 
 
-- (OOMatrix)customViewMatrix
+- (void) setCustomView:(OOShipViewDescription *)view
 {
-	return customViewMatrix;
-}
-
-
-- (Vector)customViewOffset
-{
-	return customViewOffset;
-}
-
-
-- (Vector)customViewForwardVector
-{
-	return customViewForwardVector;
-}
-
-
-- (Vector)customViewUpVector
-{
-	return customViewUpVector;
-}
-
-
-- (Vector)customViewRightVector
-{
-	return customViewRightVector;
-}
-
-
-- (NSString*)customViewDescription
-{
-	return customViewDescription;
-}
-
-- (void)setCustomViewDataFromDictionary:(NSDictionary *)viewDict
-{
-	customViewMatrix = kIdentityMatrix;
-	customViewOffset = kZeroVector;
-	if (viewDict == nil)  return;
+	[_customView release];
+	_customView = [view retain];
+	_customViewMatrix = kIdentityMatrix;
 	
-	customViewQuaternion = [viewDict oo_quaternionForKey:@"view_orientation"];
+	if (view == nil)  return;
 	
-	customViewRightVector = vector_right_from_quaternion(customViewQuaternion);
-	customViewUpVector = vector_up_from_quaternion(customViewQuaternion);
-	customViewForwardVector = vector_forward_from_quaternion(customViewQuaternion);
+	Quaternion customViewQuaternion = [view orientation];
+	
+	_customViewRightVector = vector_right_from_quaternion(customViewQuaternion);
+	_customViewUpVector = vector_up_from_quaternion(customViewQuaternion);
+	_customViewForwardVector = vector_forward_from_quaternion(customViewQuaternion);
 	
 	Quaternion q1 = customViewQuaternion;
 	q1.w = -q1.w;
-	customViewMatrix = OOMatrixForQuaternionRotation(q1);
+	_customViewMatrix = OOMatrixForQuaternionRotation(q1);
 	
-	customViewOffset = [viewDict oo_vectorForKey:@"view_position"];
-	customViewDescription = [viewDict oo_stringForKey:@"view_description"];
-	
-	NSString *facing = [[viewDict oo_stringForKey:@"weapon_facing"] lowercaseString];
-	if ([facing isEqual:@"aft"])
-	{
-		currentWeaponFacing = VIEW_AFT;
-	}
-	else if ([facing isEqual:@"port"])
-	{
-		currentWeaponFacing = VIEW_PORT;
-	}
-	else if ([facing isEqual:@"starboard"])
-	{
-		currentWeaponFacing = VIEW_STARBOARD;
-	}
-	else if ([facing isEqual:@"forward"])
-	{
-		currentWeaponFacing = VIEW_FORWARD;
-	}
-	// if the weapon facing is unset / unknown, 
-	// don't change current weapon facing!
+	currentWeaponFacing = [view weaponFacing];
+}
+
+
+- (Quaternion) customViewQuaternion
+{
+	return _customView ? [_customView orientation] : kIdentityQuaternion;
+}
+
+
+- (OOMatrix) customViewMatrix
+{
+	return _customViewMatrix;
+}
+
+
+- (Vector) customViewOffset
+{
+	return _customView ? [_customView position] : kZeroVector;
+}
+
+
+- (Vector) customViewForwardVector
+{
+	return _customViewForwardVector;
+}
+
+
+- (Vector) customViewUpVector
+{
+	return _customViewUpVector;
+}
+
+
+- (Vector) customViewRightVector
+{
+	return _customViewRightVector;
+}
+
+
+- (NSString *) customViewDescription
+{
+	return [_customView name];
 }
 
 

@@ -29,11 +29,13 @@ MA 02110-1301, USA.
 
 #if !OOLITE_LEAN
 
-
-@interface OOShipClass (IO) <JAPropertyListRepresentation>
+@interface OOShipClass (Writing) <JAPropertyListRepresentation>
 @end
 
-@interface OOShipExhaustDefinition (IO) <JAPropertyListRepresentation>
+@interface OOShipExhaustDefinition (Writing) <JAPropertyListRepresentation>
+@end
+
+@interface OOShipViewDescription (Writing) <JAPropertyListRepresentation>
 @end
 
 #endif

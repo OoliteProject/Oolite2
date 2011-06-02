@@ -47,6 +47,7 @@ MA 02110-1301, USA.
 #import "OOMusicController.h"
 #import "OOLegacyTexture.h"
 #import "OODebugFlags.h"
+#import "OOShipClass.h"
 
 #import "OOJoystickManager.h"
 
@@ -2509,15 +2510,17 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 	
 	if ([gameView isDown:key_custom_view])
 	{
-		if (!customView_pressed && [_customViews count] != 0 && gui_screen != GUI_SCREEN_LONG_RANGE_CHART)
+		NSArray *customViews = [[self shipClass] customViews];
+		
+		if (!customView_pressed && [customViews count] != 0 && gui_screen != GUI_SCREEN_LONG_RANGE_CHART)
 		{
 			if ([UNIVERSE viewDirection] == VIEW_CUSTOM)	// already in custom view mode
 			{
 				// rotate the custom views
-				_customViewIndex = (_customViewIndex + 1) % [_customViews count];
+				_customViewIndex = (_customViewIndex + 1) % [customViews count];
 			}
 			
-			[self setCustomViewDataFromDictionary:[_customViews oo_dictionaryAtIndex:_customViewIndex]];
+			[self setCustomView:[customViews objectAtIndex:_customViewIndex]];
 			
 			[self switchToThisView:VIEW_CUSTOM andProcessWeaponFacing:NO]; // weapon facing must not change, we just want an external view
 		}

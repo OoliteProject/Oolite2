@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 
 @class GuiDisplayGen, OOTrumble, MyOpenGLView, HeadUpDisplay, ShipEntity;
 @class OOSound, OOSoundSource, OOSoundReferencePoint;
-@class OOJoystickManager, OOLegacyTexture, OOCamera;
+@class OOJoystickManager, OOLegacyTexture, OOCamera, OOShipViewDescription;
 
 
 #define GUI_ROW_INIT(GUI) /*int n_rows = [(GUI) rows]*/
@@ -446,12 +446,6 @@ typedef enum
 	int						_targetMemoryIndex;
 	OOWeakReference			*_targetMemory[PLAYER_TARGET_MEMORY_SIZE];
 	
-	// custom view points
-	Quaternion				customViewQuaternion;
-	OOMatrix				customViewMatrix;
-	Vector					customViewOffset, customViewForwardVector, customViewUpVector, customViewRightVector;
-	NSString				*customViewDescription;
-	
 	OOViewID				currentWeaponFacing;	// decoupled from view direction
 	
 	// docking reports
@@ -511,8 +505,12 @@ typedef enum
 	OOGalacticHyperspaceBehaviour galacticHyperspaceBehaviour;
 	NSPoint					galacticHyperspaceFixedCoords;
 	
-	NSArray					*_customViews;
+	// custom view points
 	OOUInteger				_customViewIndex;
+	
+	OOShipViewDescription	*_customView;
+	OOMatrix				_customViewMatrix;
+	Vector					_customViewForwardVector, _customViewUpVector, _customViewRightVector;
 	
 	OODockingClearanceStatus dockingClearanceStatus;
 	
@@ -722,8 +720,6 @@ typedef enum
 - (void) getFined;
 - (void) reduceTradeInFactorBy:(int)value;
 
-- (void) setDefaultViewOffsets;
-- (void) setDefaultCustomViews;
 - (Vector) weaponViewOffset;
 
 - (void) setUpTrumbles;
@@ -753,14 +749,16 @@ typedef enum
 /* GILES custom viewpoints */
 
 // custom view points
-- (Quaternion)customViewQuaternion;
-- (OOMatrix)customViewMatrix;
-- (Vector)customViewOffset;
-- (Vector)customViewForwardVector;
-- (Vector)customViewUpVector;
-- (Vector)customViewRightVector;
-- (NSString *)customViewDescription;
-- (void)setCustomViewDataFromDictionary:(NSDictionary*) viewDict;
+- (OOShipViewDescription *) customView;
+- (void) setCustomView:(OOShipViewDescription *)view;
+
+- (Quaternion) customViewQuaternion;
+- (OOMatrix) customViewMatrix;
+- (Vector) customViewOffset;
+- (Vector) customViewForwardVector;
+- (Vector) customViewUpVector;
+- (Vector) customViewRightVector;
+- (NSString *) customViewDescription;
 - (Vector) viewpointPosition;
 - (Vector) viewpointOffset;
 

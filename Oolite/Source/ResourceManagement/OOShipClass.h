@@ -392,6 +392,28 @@ NSString *OOStringFromSubEntityType(OOSubEntityType type);
 @end
 
 
+@interface OOShipViewDescription: NSObject <NSCopying>
+{
+@private
+	NSString				*_name;
+	Vector					_position;
+	Quaternion				_orientation;
+	OOViewID				_weaponFacing;
+}
+
+- (id) initWithName:(NSString *)name
+		   position:(Vector)position
+		orientation:(Quaternion)orientation
+	   weaponFacing:(OOViewID)weaponFacing;
+
+- (NSString *) name;
+- (Vector) position;
+- (Quaternion) orientation;
+- (OOViewID) weaponFacing;
+
+@end
+
+
 extern NSString * const kOODefaultHUDName;
 extern NSString * const kOODefaultEscapePodRole;
 extern NSString * const kOODefaultShipScriptName;

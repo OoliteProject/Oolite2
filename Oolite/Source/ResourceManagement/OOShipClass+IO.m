@@ -153,13 +153,13 @@ MA 02110-1301, USA.
 #define kDefault_modelName					nil
 #define kDefault_smooth						NO
 #define kDefault_materialDefinitions		nil
-#define kDefault_exhaustDefinitions			nil
+#define kDefault_exhaustDefinitions			[NSArray array]
 #define kDefault_scannerColors				nil
 #define kDefault_bounty						0
 #define kDefault_density					1
 #define kDefault_roles						nil
 
-#define kDefault_subEntityDefinitions		nil
+#define kDefault_subEntityDefinitions		[NSArray array]
 #define kDefault_isFrangible				YES
 #define kDefault_escortCount				0
 #define kDefault_escortRoles				@"escort"
@@ -167,7 +167,7 @@ MA 02110-1301, USA.
 #define kDefault_aftViewPosition			kZeroVector
 #define kDefault_portViewPosition			kZeroVector
 #define kDefault_starboardViewPosition		kZeroVector
-#define kDefault_customViews				nil
+#define kDefault_customViews				[NSArray array]
 #define kDefault_cargoSpaceCapacity			0
 #define kDefault_cargoSpaceUsedMin			0
 #define kDefault_cargoSpaceUsedMax			0
@@ -483,10 +483,7 @@ static void WriteEnumeration(NSMutableDictionary *result, NSString *key, OOShipC
 	
 	WRIT_ROLES	(roles);
 	
-	if ([_subEntityDefinitions count] > 0)
-	{
-		WRIT_ARRAY	(subEntityDefinitions);
-	}
+	WRIT_ARRAY	(subEntityDefinitions);
 	WRIT_BOOL	(isFrangible);
 	
 	WRIT_UINT	(escortCount);

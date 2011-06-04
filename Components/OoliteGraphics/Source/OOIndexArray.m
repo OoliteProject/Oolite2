@@ -79,7 +79,7 @@
 	if (EXPECT_NOT(array == nil))  return [[self alloc] init];
 	if ([array isKindOfClass:[OOIndexArray class]])  return [array copy];
 	
-	OOUInteger i, count = [array count], maximum = 0;
+	NSUInteger i, count = [array count], maximum = 0;
 	GLuint *values = malloc(count * sizeof (GLuint));
 	if (EXPECT_NOT(values == NULL))  return nil;
 	

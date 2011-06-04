@@ -88,7 +88,7 @@ static inline void OOSoundAtomicAdd(int32_t delta, int32_t *value)
 
 
 #ifndef NDEBUG
-void OOCASoundVerifyBuffers(AudioBufferList *buffers, OOUInteger numFrames, OOSound *sound);
+void OOCASoundVerifyBuffers(AudioBufferList *buffers, NSUInteger numFrames, OOSound *sound);
 #else
 #define OOCASoundVerifyBuffers(buffers, numFrames, sound)  do {} while (0)
 #endif

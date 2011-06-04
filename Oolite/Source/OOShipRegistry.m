@@ -896,7 +896,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	NSString				*modelName = nil;
 	OOMesh					*mesh = nil;
 	NSAutoreleasePool		*pool = nil;
-	OOUInteger				i = 0, count;
+	NSUInteger				i = 0, count;
 	
 	count = [ioData count];
 	
@@ -1339,7 +1339,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 }
 
 
-- (OOUInteger) retainCount
+- (NSUInteger) retainCount
 {
 	return UINT_MAX;
 }

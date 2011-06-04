@@ -64,22 +64,22 @@ enum
 */
 
 
-OOINLINE OOUInteger PQLeftChild(OOUInteger n) INLINE_CONST_FUNC;
-OOINLINE OOUInteger PQRightChild(OOUInteger n) INLINE_CONST_FUNC;
-OOINLINE OOUInteger PQParent(OOUInteger n) INLINE_CONST_FUNC;
+OOINLINE NSUInteger PQLeftChild(NSUInteger n) INLINE_CONST_FUNC;
+OOINLINE NSUInteger PQRightChild(NSUInteger n) INLINE_CONST_FUNC;
+OOINLINE NSUInteger PQParent(NSUInteger n) INLINE_CONST_FUNC;
 
-OOINLINE OOUInteger PQLeftChild(OOUInteger n)
+OOINLINE NSUInteger PQLeftChild(NSUInteger n)
 {
 	return (n << 1) + 1;
 }
 
-OOINLINE OOUInteger PQRightChild(OOUInteger n)
+OOINLINE NSUInteger PQRightChild(NSUInteger n)
 {
 	return (n << 1) + 2;
 }
 
 
-OOINLINE OOUInteger PQParent(OOUInteger n)
+OOINLINE NSUInteger PQParent(NSUInteger n)
 {
 	return ((n + 1) >> 1) - 1;
 }
@@ -105,16 +105,16 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void) makeObjectsPerformSelector:(SEL)selector;
 
-- (void) bubbleUpFrom:(OOUInteger)i;
-- (void) bubbleDownFrom:(OOUInteger)i;
+- (void) bubbleUpFrom:(NSUInteger)i;
+- (void) bubbleDownFrom:(NSUInteger)i;
 
 - (void) growBuffer;
 - (void) shrinkBuffer;
 
-- (void)removeObjectAtIndex:(OOUInteger)i;
+- (void)removeObjectAtIndex:(NSUInteger)i;
 
 #if OO_DEBUG
-- (void) appendDebugDataToString:(NSMutableString *)string index:(OOUInteger)i depth:(OOUInteger)depth;
+- (void) appendDebugDataToString:(NSMutableString *)string index:(NSUInteger)i depth:(NSUInteger)depth;
 #endif
 
 @end
@@ -203,7 +203,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (BOOL) isEqual:(id)object
 {
-	OOUInteger					i;
+	NSUInteger					i;
 	OOPriorityQueue				*selfCopy = nil, *otherCopy = nil;
 	BOOL						identical = YES;
 	
@@ -231,7 +231,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 }
 
 
-- (OOUInteger) hash
+- (NSUInteger) hash
 {
 	if (_count == 0)  return NSNotFound;
 	return _count ^ [_heap[0] hash];
@@ -268,7 +268,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void) addObject:(id)object
 {
-	OOUInteger			i;
+	NSUInteger			i;
 	
 	// Validate object
 	if (object == nil)
@@ -298,7 +298,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void) removeObject:(id)object
 {
-	OOUInteger				i;
+	NSUInteger				i;
 	
 	/*	Perform linear search for object (using comparator). A depth-first
 		search could skip leaves of lower priority, but I don't expect this to
@@ -319,7 +319,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void) removeExactObject:(id)object
 {
-	OOUInteger				i;
+	NSUInteger				i;
 	
 	if (object == nil)  return;
 	
@@ -333,7 +333,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 }
 
 
-- (OOUInteger) count
+- (NSUInteger) count
 {
 	return _count;
 }
@@ -390,7 +390,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void) makeObjectsPerformSelector:(SEL)selector
 {
-	OOUInteger				i;
+	NSUInteger				i;
 	
 	if (selector == NULL)  return;
 	
@@ -401,9 +401,9 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 }
 
 
-- (void) bubbleUpFrom:(OOUInteger)i
+- (void) bubbleUpFrom:(NSUInteger)i
 {
-	OOUInteger				pi;
+	NSUInteger				pi;
 	id						obj = nil, par = nil;
 	
 	while (0 < i)
@@ -423,10 +423,10 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 }
 
 
-- (void) bubbleDownFrom:(OOUInteger)i
+- (void) bubbleDownFrom:(NSUInteger)i
 {
-	OOUInteger				end = _count - 1;
-	OOUInteger				li, ri, next;
+	NSUInteger				end = _count - 1;
+	NSUInteger				li, ri, next;
 	id						obj = nil;
 	
 	obj = _heap[i];
@@ -460,7 +460,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 - (void) growBuffer
 {
 	id					*newBuffer = NULL;
-	OOUInteger			newCapacity;
+	NSUInteger			newCapacity;
 	
 	newCapacity = _capacity * 3 / 2;
 	if (newCapacity < kMinCapacity)  newCapacity = kMinCapacity;
@@ -490,9 +490,9 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 - (void)shrinkBuffer
 {
-	OOUInteger			amountToRemove;
+	NSUInteger			amountToRemove;
 	id					*newBuffer = NULL;
-	OOUInteger			newCapacity;
+	NSUInteger			newCapacity;
 	
 	if (kMinCapacity < _capacity)
 	{
@@ -512,7 +512,7 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 }
 
 
-- (void)removeObjectAtIndex:(OOUInteger)i
+- (void)removeObjectAtIndex:(NSUInteger)i
 {
 	id					object = nil;
 	
@@ -538,9 +538,9 @@ OOINLINE NSComparisonResult PQCompare(id a, id b, SEL comparator)
 
 
 #if OO_DEBUG
-- (void) appendDebugDataToString:(NSMutableString *)string index:(OOUInteger)i depth:(OOUInteger)depth
+- (void) appendDebugDataToString:(NSMutableString *)string index:(NSUInteger)i depth:(NSUInteger)depth
 {
-	OOUInteger				spaces;
+	NSUInteger				spaces;
 	
 	if (_count <= i)  return;
 	
@@ -649,7 +649,7 @@ static NSString *EscapedString(NSString *string)
 - (NSString *) generateGraphViz
 {
 	NSMutableString			*result = nil;
-	OOUInteger				i;
+	NSUInteger				i;
 	id						node = nil;
 	NSString				*desc = nil;
 	

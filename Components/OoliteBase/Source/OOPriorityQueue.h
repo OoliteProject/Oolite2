@@ -45,7 +45,7 @@ SOFTWARE.
 {
 	SEL						_comparator;
 	id						*_heap;
-	OOUInteger				_count,
+	NSUInteger				_count,
 							_capacity;
 }
 
@@ -57,7 +57,7 @@ SOFTWARE.
 - (void) removeObject:(id)object;		// Uses comparator (looking for NSOrderedEqual) to find object. Note: relatively expensive.
 - (void) removeExactObject:(id)object;	// Uses pointer comparison to find object. Note: still relatively expensive.
 
-- (OOUInteger) count;
+- (NSUInteger) count;
 
 - (id) nextObject;
 - (id) peekAtNextObject;				// Returns next object without removing it.

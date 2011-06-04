@@ -524,19 +524,19 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (void) setSubIdx:(OOUInteger)value
+- (void) setSubIdx:(NSUInteger)value
 {
 	_subIdx = value;
 }
 
 
-- (OOUInteger) subIdx
+- (NSUInteger) subIdx
 {
 	return _subIdx;
 }
 
 
-- (OOUInteger) maxShipSubEntities
+- (NSUInteger) maxShipSubEntities
 {
 	return _maxShipSubIdx;
 }
@@ -565,7 +565,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	NSMutableString		*result = [NSMutableString stringWithCapacity:4];
 	NSEnumerator		*subEnum = nil;
 	ShipEntity			*se = nil;
-	OOUInteger			diff,i = 0;
+	NSUInteger			diff,i = 0;
 	
 	for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
 	{
@@ -1141,7 +1141,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if (_beaconDrawable == nil)
 	{
 		NSString	*beaconCode = [self beaconCode];
-		OOUInteger	length = [beaconCode length];
+		NSUInteger	length = [beaconCode length];
 		
 		if (length > 1)
 		{
@@ -9794,7 +9794,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	NSArray		*tokens = ScanTokensFromString(roles_number);
 	NSString	*roleString = nil;
 	NSString	*numberString = nil;
-	OOUInteger	number;
+	NSUInteger	number;
 	
 	if ([tokens count] != 2)
 	{

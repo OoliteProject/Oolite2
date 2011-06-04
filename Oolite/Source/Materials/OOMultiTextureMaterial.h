@@ -43,12 +43,12 @@ SOFTWARE.
 	OOLegacyTexture			*_diffuseMap;
 	OOLegacyTexture			*_emissionMap;
 	
-	OOUInteger			_unitsUsed;
+	NSUInteger			_unitsUsed;
 }
 
 - (id)initWithName:(NSString *)name configuration:(NSDictionary *)configuration;
 
-- (OOUInteger) textureUnitCount;
+- (NSUInteger) textureUnitCount;
 
 @end
 

@@ -48,13 +48,13 @@ enum
 {
 @public
 	OOShipGroup				*_group;
-	OOUInteger				_index, _updateCount;
+	NSUInteger				_index, _updateCount;
 	BOOL					_considerCleanup, _cleanupNeeded;
 }
 
 - (id) initWithShipGroup:(OOShipGroup *)group;
 
-- (OOUInteger) index;
+- (NSUInteger) index;
 - (void) setPerformCleanup:(BOOL)flag;
 
 @end
@@ -62,10 +62,10 @@ enum
 
 @interface OOShipGroup (Private)
 
-- (BOOL) resizeTo:(OOUInteger)newCapacity;
+- (BOOL) resizeTo:(NSUInteger)newCapacity;
 - (void) cleanUp;
 
-- (OOUInteger) updateCount;
+- (NSUInteger) updateCount;
 
 @end
 
@@ -116,7 +116,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 
 - (void) dealloc
 {
-	OOUInteger i;
+	NSUInteger i;
 	
 	for (i = 0; i < _count; i++)
 	{
@@ -218,7 +218,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 - (NSArray *) memberArray
 {
 	id						*objects = NULL;
-	OOUInteger				count = 0;
+	NSUInteger				count = 0;
 	NSArray					*result = nil;
 	
 	if (_count == 0)  return [NSArray array];
@@ -239,7 +239,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 - (NSArray *) memberArrayExcludingLeader
 {
 	id						*objects = NULL;
-	OOUInteger				count = 0;
+	NSUInteger				count = 0;
 	NSArray					*result = nil;
 	ShipEntity				*leader = nil;
 	
@@ -286,7 +286,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 - (NSArray *) memberArrayExcludingLeader
 {
 	id						*objects = NULL;
-	OOUInteger				count = 0;
+	NSUInteger				count = 0;
 	NSArray					*result = nil;
 	NSEnumerator			*shipEnum = nil;
 	ShipEntity				*ship = nil;
@@ -364,7 +364,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 {
 	OOShipGroupEnumerator	*shipEnum = nil;
 	ShipEntity				*containedShip = nil;
-	OOUInteger				index;
+	NSUInteger				index;
 	
 	_updateCount++;
 	
@@ -387,10 +387,10 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (OOUInteger) count
+- (NSUInteger) count
 {
 	NSEnumerator		*memberEnum = nil;
-	OOUInteger			result = 0;
+	NSUInteger			result = 0;
 	
 	if (_count != 0)
 	{
@@ -412,7 +412,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (BOOL) resizeTo:(OOUInteger)newCapacity
+- (BOOL) resizeTo:(NSUInteger)newCapacity
 {
 	OOWeakReference			**temp = NULL;
 	
@@ -429,7 +429,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 
 - (void) cleanUp
 {
-	OOUInteger				newCapacity = _capacity;
+	NSUInteger				newCapacity = _capacity;
 	
 	if (_count >= kMaxFreeSpace)
 	{
@@ -451,7 +451,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (OOUInteger) updateCount
+- (NSUInteger) updateCount
 {
 	return _updateCount;
 }
@@ -499,9 +499,9 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator)
 
 
 #if OOLITE_FAST_ENUMERATION
-- (OOUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(OOUInteger)len
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
-	OOUInteger				srcIndex, dstIndex = 0;
+	NSUInteger				srcIndex, dstIndex = 0;
 	ShipEntity				*item = nil;
 	BOOL					cleanupNeeded = NO;
 	
@@ -568,7 +568,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator)
 }
 
 
-- (OOUInteger) index
+- (NSUInteger) index
 {
 	return _index;
 }

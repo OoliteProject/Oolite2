@@ -2437,8 +2437,8 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawSurround:(NSDictionary *)info color:(const GLfloat[4])color
 {
-	OOInteger		x;
-	OOInteger		y;
+	NSInteger		x;
+	NSInteger		y;
 	NSSize			siz;
 	GLfloat			alpha = overallAlpha;
 	
@@ -2908,7 +2908,7 @@ NSRect OORectFromString(NSString *text, double x, double y, NSSize siz)
 }
 
 
-OOCGFloat OOStringWidthInEm(NSString *text)
+CGFloat OOStringWidthInEm(NSString *text)
 {
 	return OORectFromString(text, 0, 0, NSMakeSize(1.0 / (GLYPH_SCALE_FACTOR * 8.0), 1.0)).size.width;
 }

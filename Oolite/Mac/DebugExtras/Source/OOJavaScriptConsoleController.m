@@ -106,7 +106,7 @@ enum
 	[splitView addSubview:consoleLogHolderView atPosition:0];
 	[[splitView subviewAtPosition:0] setMinDimension:100 andMaxDimension:0];
 	
-	OOCGFloat height = [consoleInputHolderView frame].size.height;
+	CGFloat height = [consoleInputHolderView frame].size.height;
 	[splitView addSubview:consoleInputHolderView atPosition:1];
 	inputSplitSubview = [splitView subviewAtPosition:1];
 	[inputSplitSubview setMinDimension:30 andMaxDimension:0];

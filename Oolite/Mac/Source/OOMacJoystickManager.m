@@ -84,7 +84,7 @@ static void HandleDeviceRemovalCallback(void * inContext, IOReturn inResult, voi
 }
 
 
-- (OOUInteger) joystickCount
+- (NSUInteger) joystickCount
 {
 	return CFArrayGetCount(devices);
 }

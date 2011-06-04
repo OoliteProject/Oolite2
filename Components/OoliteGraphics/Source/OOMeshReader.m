@@ -557,7 +557,7 @@ typedef enum
 
 - (OOFloatArray *) priv_readAttributeDataWithDictionary:(NSMutableDictionary *)dictionary
 {
-	OOUInteger size = [dictionary oo_unsignedIntegerForKey:kSizeKey];
+	NSUInteger size = [dictionary oo_unsignedIntegerForKey:kSizeKey];
 	if (size < 1 || 4 < size)
 	{
 		[self priv_reportStructuralError:@"attribute \"%@@\" does not specify a valid size (must be 1 to 4)", _currentElementName];
@@ -689,7 +689,7 @@ typedef enum
 
 - (OOIndexArray *) priv_readGroupDataWithDictionary:(NSMutableDictionary *)dictionary
 {
-	OOUInteger size = [dictionary oo_unsignedIntegerForKey:kFaceCountKey];
+	NSUInteger size = [dictionary oo_unsignedIntegerForKey:kFaceCountKey];
 	if (size < 1 || kMaximumFaceCount < size)
 	{
 		[self priv_reportStructuralError:@"group \"%@\" does not specify a valid size (must be 1 to %u)", _currentElementName, kMaximumFaceCount];

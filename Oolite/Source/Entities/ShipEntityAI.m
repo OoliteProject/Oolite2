@@ -1432,8 +1432,8 @@ OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 
 - (void) checkGroupOddsVersusTarget
 {
-	OOUInteger ownGroupCount = [[self group] count] + (ranrot_rand() & 3);			// add a random fudge factor
-	OOUInteger targetGroupCount = [[[self primaryTarget] group] count] + (ranrot_rand() & 3);	// add a random fudge factor
+	NSUInteger ownGroupCount = [[self group] count] + (ranrot_rand() & 3);			// add a random fudge factor
+	NSUInteger targetGroupCount = [[[self primaryTarget] group] count] + (ranrot_rand() & 3);	// add a random fudge factor
 	
 	if (ownGroupCount == targetGroupCount)
 	{
@@ -2189,7 +2189,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 	}
 	
 	// find the current beacon in the list..
-	OOUInteger i = [beacons indexOfObject:currentBeacon];
+	NSUInteger i = [beacons indexOfObject:currentBeacon];
 	
 	if (i == NSNotFound)
 	{

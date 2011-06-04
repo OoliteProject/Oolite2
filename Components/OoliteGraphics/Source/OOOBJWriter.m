@@ -163,7 +163,7 @@ NSData *OOOBJDataFromMesh(OOAbstractMesh *mesh, NSString *name, NSData **outMtlD
 	/*
 		Iterate over groups and faces and write, er, groups and faces.
 	*/
-	OOUInteger groupIdx = 0;
+	NSUInteger groupIdx = 0;
 	foreach (group, mesh)
 	{
 		groupIdx++;

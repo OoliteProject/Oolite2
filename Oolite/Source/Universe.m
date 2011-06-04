@@ -96,7 +96,7 @@ enum
 	NSSpeechWordBoundary,
 	NSSpeechSentenceBoundary
 };
-typedef OOUInteger NSSpeechBoundary;
+typedef NSUInteger NSSpeechBoundary;
 
 
 @interface NSSpeechSynthesizer (Leopard)
@@ -397,7 +397,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 }
 
 
-- (OOUInteger) sessionID
+- (NSUInteger) sessionID
 {
 	return _sessionID;
 }
@@ -2590,7 +2590,7 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 		reverse the probabilities for scarce goods.
 	*/
 	NSMutableArray  *accumulator = [NSMutableArray arrayWithCapacity:how_many];
-	OOUInteger		commodityCount = [commodityData count];
+	NSUInteger		commodityCount = [commodityData count];
 	OOCargoQuantity quantities[commodityCount];
 	OOCargoQuantity total_quantity = 0;
 	
@@ -2628,7 +2628,7 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 			co_type = 0;
 			while (qr > 0)
 			{
-				NSAssert((OOUInteger)co_type < commodityCount, @"Commodity type index out of range.");
+				NSAssert((NSUInteger)co_type < commodityCount, @"Commodity type index out of range.");
 				qr -= quantities[co_type++];
 			}
 			co_type--;
@@ -4851,7 +4851,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 			{
 				NSString *original_phrase = [thePair oo_stringAtIndex:0];
 				
-				OOUInteger replacementIndex;
+				NSUInteger replacementIndex;
 #if OOLITE_MAC_OS_X
 				replacementIndex = 1;
 #elif OOLITE_ESPEAK
@@ -6343,7 +6343,7 @@ static NSDictionary	*sCachedSystemData = nil;
 	if (!equal_seeds(gal_seed, galaxy_seed))
 		[self setGalaxySeed:gal_seed];
 	
-	OOUInteger	system = NSNotFound;
+	NSUInteger	system = NSNotFound;
 	unsigned	distance, dx, dy;
 	unsigned	i;
 	unsigned	min_dist = 10000;
@@ -7008,7 +7008,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 			// now we need a commodity that's both plentiful here and scarce there...
 			// build list of goods allocating 0..100 for each based on how
 			// much of each quantity there is. Use a ratio of n x 100/64
-			OOUInteger	marketCount = [localMarket count];
+			NSUInteger	marketCount = [localMarket count];
 			int			quantities[marketCount];
 			int			total_quantity = 0;
 			unsigned	i;
@@ -7040,7 +7040,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 			co_type = 0;
 			while (qr > 0)
 			{
-				NSAssert((OOUInteger)co_type < marketCount, @"Commodity type index out of range.");
+				NSAssert((NSUInteger)co_type < marketCount, @"Commodity type index out of range.");
 				qr -= quantities[co_type++];
 			}
 			if (--co_type < 0)  continue;
@@ -9229,9 +9229,9 @@ static void PreloadOneSound(NSString *soundName)
 
 - (int) scatterAsteroidsAt:(Vector)spawnPos withVelocity:(Vector)spawnVel includingRockHermit:(BOOL)spawnHermit asCinders:(BOOL)asCinders
 {
-	OOUInteger	rocks = 0;
+	NSUInteger	rocks = 0;
 //	Vector		launchPos;
-	OOUInteger	i, clusterSize = 1 + (Ranrot() % 6) + (Ranrot() % 6);
+	NSUInteger	i, clusterSize = 1 + (Ranrot() % 6) + (Ranrot() % 6);
 	
 	NSString	*role = asCinders ? @"cinder" : @"asteroid";
 	

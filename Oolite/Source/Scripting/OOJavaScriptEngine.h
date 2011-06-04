@@ -598,7 +598,7 @@ void OOJSResumeTimeLimiter(void);
 void OOJSDumpStack(JSContext *context);
 
 JSStackFrame *OOJSGetCurrentCallFrame(JSContext *context);
-void OOJSGetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, OOUInteger *line);
+void OOJSGetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, NSUInteger *line);
 NSString *OOJSDescribeLocation(JSContext *context, JSStackFrame *stackFrame);
 void OOJSMarkConsoleEvalLocation(JSContext *context, JSStackFrame *stackFrame);
 #else

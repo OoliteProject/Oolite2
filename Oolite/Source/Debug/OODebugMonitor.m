@@ -952,7 +952,7 @@ NOTE: assumes single-threaded access.
 }
 
 
-- (OOUInteger)retainCount
+- (NSUInteger)retainCount
 {
 	return UINT_MAX;
 }

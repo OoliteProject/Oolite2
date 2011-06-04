@@ -150,7 +150,7 @@ enum
 #endif
 
 
-typedef OOUInteger	OOTechLevelID;		// 0..14, 99 is special. NSNotFound is used, so OOUInteger required.
+typedef NSUInteger	OOTechLevelID;		// 0..14, 99 is special. NSNotFound is used, so NSUInteger required.
 typedef uint8_t		OOGovernmentID;		// 0..7
 typedef uint8_t		OOEconomyID;		// 0..7
 
@@ -170,7 +170,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	GLfloat					stars_ambient[4];
 	
 @private
-	OOUInteger				_sessionID;
+	NSUInteger				_sessionID;
 	
 	// colors
 	GLfloat					sun_diffuse[4];
@@ -308,7 +308,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (id)initWithGameView:(MyOpenGLView *)gameView;
 
 // SessionID: a value that's incremented when the game is reset.
-- (OOUInteger) sessionID;
+- (NSUInteger) sessionID;
 
 - (BOOL) doProcedurallyTexturedPlanets;
 - (void) setDoProcedurallyTexturedPlanets:(BOOL) value;

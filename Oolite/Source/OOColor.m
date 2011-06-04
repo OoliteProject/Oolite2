@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 @implementation OOColor
 
 // Set methods are internal, because OOColor is immutable (as seen from outside).
-- (void) setRGBA:(OOCGFloat)r:(OOCGFloat)g:(OOCGFloat)b:(OOCGFloat)a
+- (void) setRGBA:(CGFloat)r:(CGFloat)g:(CGFloat)b:(CGFloat)a
 {
 	rgba[0] = r;
 	rgba[1] = g;
@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 }
 
 
-- (void) setHSBA:(OOCGFloat)h:(OOCGFloat)s:(OOCGFloat)b:(OOCGFloat)a
+- (void) setHSBA:(CGFloat)h:(CGFloat)s:(CGFloat)b:(CGFloat)a
 {
 	rgba[3] = a;
 	if (s == 0.0f)
@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 		rgba[0] = rgba[1] = rgba[2] = b;
 		return;
 	}
-	OOCGFloat f, p, q, t;
+	CGFloat f, p, q, t;
 	int i;
 	h = fmodf(h, 360.0f);
 	if (h < 0.0) h += 360.0f;
@@ -191,7 +191,7 @@ MA 02110-1301, USA.
 	
 	if (factor != 1.0f && result != nil)
 	{
-		OOCGFloat h, s, b, a;
+		CGFloat h, s, b, a;
 		[result getHue:&h saturation:&s brightness:&b alpha:&a];
 		h *= 1.0 / 360.0f;	// See note in header.
 		s *= factor;
@@ -343,25 +343,25 @@ MA 02110-1301, USA.
 
 
 // Get the red, green, or blue components.
-- (OOCGFloat)redComponent
+- (CGFloat)redComponent
 {
 	return rgba[0];
 }
 
 
-- (OOCGFloat)greenComponent
+- (CGFloat)greenComponent
 {
 	return rgba[1];
 }
 
 
-- (OOCGFloat)blueComponent
+- (CGFloat)blueComponent
 {
 	return rgba[2];
 }
 
 
-- (void)getRed:(OOCGFloat *)red green:(OOCGFloat *)green blue:(OOCGFloat *)blue alpha:(OOCGFloat *)alpha
+- (void)getRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha
 {
 	NSParameterAssert(red != NULL && green != NULL && blue != NULL && alpha != NULL);
 	
@@ -403,14 +403,14 @@ MA 02110-1301, USA.
 
 
 // Get the components as hue, saturation, or brightness.
-- (OOCGFloat)hueComponent
+- (CGFloat)hueComponent
 {
-	OOCGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
-	OOCGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
+	CGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
+	CGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
 	if (maxrgb == minrgb)
 		return 0.0;
-	OOCGFloat delta = maxrgb - minrgb;
-	OOCGFloat hue = 0.0;
+	CGFloat delta = maxrgb - minrgb;
+	CGFloat hue = 0.0;
 	if (rgba[0] == maxrgb)
 		hue = (rgba[1] - rgba[2]) / delta;
 	else if (rgba[1] == maxrgb)
@@ -422,25 +422,25 @@ MA 02110-1301, USA.
 	return hue;
 }
 
-- (OOCGFloat)saturationComponent
+- (CGFloat)saturationComponent
 {
-	OOCGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
-	OOCGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
-	OOCGFloat brightness = 0.5 * (maxrgb + minrgb);
+	CGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
+	CGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
+	CGFloat brightness = 0.5 * (maxrgb + minrgb);
 	if (maxrgb == minrgb)
 		return 0.0;
-	OOCGFloat delta = maxrgb - minrgb;
+	CGFloat delta = maxrgb - minrgb;
 	return (brightness <= 0.5)? (delta / (maxrgb + minrgb)) : (delta / (2.0 - (maxrgb + minrgb)));
 }
 
-- (OOCGFloat)brightnessComponent
+- (CGFloat)brightnessComponent
 {
-	OOCGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
-	OOCGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
+	CGFloat maxrgb = (rgba[0] > rgba[1])? ((rgba[0] > rgba[2])? rgba[0]:rgba[2]):((rgba[1] > rgba[2])? rgba[1]:rgba[2]);
+	CGFloat minrgb = (rgba[0] < rgba[1])? ((rgba[0] < rgba[2])? rgba[0]:rgba[2]):((rgba[1] < rgba[2])? rgba[1]:rgba[2]);
 	return 0.5 * (maxrgb + minrgb);
 }
 
-- (void)getHue:(OOCGFloat *)hue saturation:(OOCGFloat *)saturation brightness:(OOCGFloat *)brightness alpha:(OOCGFloat *)alpha
+- (void)getHue:(CGFloat *)hue saturation:(CGFloat *)saturation brightness:(CGFloat *)brightness alpha:(CGFloat *)alpha
 {
 	NSParameterAssert(hue != NULL && saturation != NULL && brightness != NULL && alpha != NULL);
 	
@@ -455,7 +455,7 @@ MA 02110-1301, USA.
 		*hue = 0.0;
 		return;
 	}
-	OOCGFloat delta = rgba[maxrgb] - rgba[minrgb];
+	CGFloat delta = rgba[maxrgb] - rgba[minrgb];
 	*saturation = (*brightness <= 0.5)? (delta / (rgba[maxrgb] + rgba[minrgb])) : (delta / (2.0 - (rgba[maxrgb] + rgba[minrgb])));
 
 	if (maxrgb==0)
@@ -481,7 +481,7 @@ MA 02110-1301, USA.
 
 
 // Get the alpha component.
-- (OOCGFloat)alphaComponent
+- (CGFloat)alphaComponent
 {
 	return rgba[3];
 }
@@ -508,7 +508,7 @@ MA 02110-1301, USA.
 
 - (NSArray *)normalizedArray
 {
-	OOCGFloat r, g, b, a;
+	CGFloat r, g, b, a;
 	[self getRed:&r green:&g blue:&b alpha:&a];
 	return $array($float(r), $float(g), $float(b), $float(a));
 }
@@ -528,7 +528,7 @@ MA 02110-1301, USA.
 
 - (id) ja_propertyListRepresentationWithContext:(NSDictionary *)context
 {
-	OOCGFloat r, g, b, a;
+	CGFloat r, g, b, a;
 	[self getRed:&r green:&g blue:&b alpha:&a];
 	if (a == 1)  return $array($float(r), $float(g), $float(b));
 	else  return $array($float(r), $float(g), $float(b), $float(a));

@@ -541,7 +541,7 @@ static void SetDisplayLogMessagesInClassThroughJS(NSString *msgClass, BOOL displ
 }
 
 
-- (OOUInteger)retainCount
+- (NSUInteger)retainCount
 {
 	return UINT_MAX;
 }

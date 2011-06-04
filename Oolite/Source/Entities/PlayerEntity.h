@@ -436,7 +436,7 @@ typedef enum
 	Vector					_sysInfoLight;
 	
 	// trumbles
-	OOUInteger				trumbleCount;
+	NSUInteger				trumbleCount;
 	OOTrumble				*trumble[PLAYER_MAX_TRUMBLES];
 	
 	// smart zoom
@@ -506,7 +506,7 @@ typedef enum
 	NSPoint					galacticHyperspaceFixedCoords;
 	
 	// custom view points
-	OOUInteger				_customViewIndex;
+	NSUInteger				_customViewIndex;
 	
 	OOShipViewDescription	*_customView;
 	OOMatrix				_customViewMatrix;
@@ -726,7 +726,7 @@ typedef enum
 - (void) addTrumble:(OOTrumble*) papaTrumble;
 - (void) removeTrumble:(OOTrumble*) deadTrumble;
 - (OOTrumble**)trumbleArray;
-- (OOUInteger) trumbleCount;
+- (NSUInteger) trumbleCount;
 // loading and saving trumbleCount
 - (id)trumbleValue;
 - (void) setTrumbleValueFrom:(NSObject*) trumbleValue;

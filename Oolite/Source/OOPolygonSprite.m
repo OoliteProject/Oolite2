@@ -287,7 +287,7 @@ static void APIENTRY ErrorCallback(GLenum error, void *polygonData);
 	gluTessBeginPolygon(tesselator, &polygonData);
 	SVGDumpBeginGroup(&polygonData, @"Fill");
 	
-	OOUInteger contourCount = [dataArray count], contourIndex;
+	NSUInteger contourCount = [dataArray count], contourIndex;
 	for (contourIndex = 0; contourIndex < contourCount && polygonData.OK; contourIndex++)
 	{
 		NSArray *contour = [dataArray oo_arrayAtIndex:contourIndex];
@@ -412,7 +412,7 @@ END:
 
 static void SubmitVertices(GLUtesselator *tesselator, TessPolygonData *polygonData, NSArray *contour)
 {
-	OOUInteger vertexCount = [contour count], vertexIndex;
+	NSUInteger vertexCount = [contour count], vertexIndex;
 	if (vertexCount > 2)
 	{
 		gluTessBeginContour(tesselator);
@@ -446,23 +446,23 @@ static NSArray *DataArrayToPoints(TessPolygonData *data, NSArray *dataArray)
 	
 	SVGDumpBeginGroup(data, @"Base contours");
 	
-	OOUInteger polyIter, polyCount = [dataArray count];
+	NSUInteger polyIter, polyCount = [dataArray count];
 	NSArray *subArrays[polyCount];
 	
 	for (polyIter = 0; polyIter < polyCount; polyIter++)
 	{
 		NSArray *polyDef = [dataArray objectAtIndex:polyIter];
-		OOUInteger vertIter, vertCount = [polyDef count] / 2;
+		NSUInteger vertIter, vertCount = [polyDef count] / 2;
 		NSMutableArray *newPolyDef = [NSMutableArray arrayWithCapacity:vertCount];
-		OOCGFloat area = 0;
+		CGFloat area = 0;
 		
-		OOCGFloat oldX = [polyDef oo_doubleAtIndex:(vertCount -1) * 2];
-		OOCGFloat oldY = [polyDef oo_doubleAtIndex:(vertCount -1) * 2 + 1];
+		CGFloat oldX = [polyDef oo_doubleAtIndex:(vertCount -1) * 2];
+		CGFloat oldY = [polyDef oo_doubleAtIndex:(vertCount -1) * 2 + 1];
 		
 		for (vertIter = 0; vertIter < vertCount; vertIter++)
 		{
-			OOCGFloat x = [polyDef oo_doubleAtIndex:vertIter * 2];
-			OOCGFloat y = [polyDef oo_doubleAtIndex:vertIter * 2 + 1];
+			CGFloat x = [polyDef oo_doubleAtIndex:vertIter * 2];
+			CGFloat y = [polyDef oo_doubleAtIndex:vertIter * 2 + 1];
 			
 			// Skip bad or duplicate vertices.
 			if (x == oldX && y == oldY)  continue;
@@ -502,7 +502,7 @@ static NSArray *DataArrayToPoints(TessPolygonData *data, NSArray *dataArray)
 
 static NSArray *BuildOutlineContour(NSArray *dataArray, GLfloat width, BOOL inner)
 {
-	OOUInteger i, count = [dataArray count];
+	NSUInteger i, count = [dataArray count];
 	if (count < 2)  return dataArray;
 	
 	/*
@@ -560,7 +560,7 @@ static NSArray *BuildOutlineContour(NSArray *dataArray, GLfloat width, BOOL inne
 		NSPoint a = PtFastNormal(PtSub(current, prev));
 		NSPoint b = PtFastNormal(PtSub(next, current));
 		
-		OOCGFloat dot = PtDot(a, b);
+		CGFloat dot = PtDot(a, b);
 		BOOL clockwise = PtCross(a, b) < 0.0f;
 		
 		if (-dot < kCosMitreLimit || !clockwise)
@@ -833,7 +833,7 @@ static void SVGDumpAppendBaseContour(TessPolygonData *data, NSArray *points)
 	NSString *groupName = [NSString stringWithFormat:@"contour %u", data->svgID++];
 	[data->debugSVG appendFormat:@"\t\t<g id=\"%@\" stroke=\"#BBB\" fill=\"none\">\n\t\t<path stroke-width=\"0.05\" d=\"", groupName];
 	
-	OOUInteger i, count = [points count];
+	NSUInteger i, count = [points count];
 	for (i = 0; i < count; i++)
 	{
 		NSPoint p = [[points objectAtIndex:i] pointValue];

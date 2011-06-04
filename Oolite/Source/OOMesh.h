@@ -126,7 +126,7 @@ typedef struct
 	id						_shaderBindingTarget;
 	
 #if OO_MULTITEXTURE
-	OOUInteger				_textureUnitCount;
+	NSUInteger				_textureUnitCount;
 #endif
 	
 #if OOMESH_PROFILE

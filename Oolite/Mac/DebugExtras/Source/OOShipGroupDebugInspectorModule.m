@@ -58,20 +58,20 @@
 
 - (IBAction) inspectMember:(id)sender
 {
-	OOInteger clickedRow = [sender clickedRow];
+	NSInteger clickedRow = [sender clickedRow];
 	if (clickedRow < 0)  return;
 	
 	[[_members objectAtIndex:clickedRow] inspect];
 }
 
 
-- (OOInteger)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [_members count];
 }
 
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(OOInteger)row
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
 	return [[_members objectAtIndex:row] inspDescription];
 }

@@ -50,13 +50,13 @@ SOFTWARE.
 }
 
 
-- (void) soundDebugMonitorNoteChannelMaxCount:(OOUInteger)maxChannels
+- (void) soundDebugMonitorNoteChannelMaxCount:(NSUInteger)maxChannels
 {
 	
 }
 
 
-- (void) soundDebugMonitorNoteActiveChannelCount:(OOUInteger)usedChannels
+- (void) soundDebugMonitorNoteActiveChannelCount:(NSUInteger)usedChannels
 {
 	[_currentField setIntValue:usedChannels];
 	if (usedChannels > _channelCountHighWaterMark)
@@ -67,7 +67,7 @@ SOFTWARE.
 }
 
 
-- (void) soundDebugMonitorNoteState:(OOCASoundDebugMonitorChannelState)state ofChannel:(OOUInteger)channel
+- (void) soundDebugMonitorNoteState:(OOCASoundDebugMonitorChannelState)state ofChannel:(NSUInteger)channel
 {
 	[[_checkBoxes cellWithTag:channel] setIntValue:state];
 }

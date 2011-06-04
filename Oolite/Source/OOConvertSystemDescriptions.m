@@ -36,11 +36,11 @@ SOFTWARE.
 #import "ResourceManager.h"
 
 static NSMutableDictionary *InitKeyToIndexDict(NSDictionary *dict, NSMutableSet **outUsedIndices);
-static NSString *IndexToKey(OOUInteger index, NSDictionary *indicesToKeys, BOOL useFallback);
+static NSString *IndexToKey(NSUInteger index, NSDictionary *indicesToKeys, BOOL useFallback);
 static NSArray *ConvertIndicesToKeys(NSArray *entry, NSDictionary *indicesToKeys);
-static NSNumber *KeyToIndex(NSString *key, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, OOUInteger *ioSlotCache);
-static NSArray *ConvertKeysToIndices(NSArray *entry, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, OOUInteger *ioSlotCache);
-static OOUInteger HighestIndex(NSMutableDictionary *sparseArray);	// Actually returns highest index + 1, which is fine.
+static NSNumber *KeyToIndex(NSString *key, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, NSUInteger *ioSlotCache);
+static NSArray *ConvertKeysToIndices(NSArray *entry, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, NSUInteger *ioSlotCache);
+static NSUInteger HighestIndex(NSMutableDictionary *sparseArray);	// Actually returns highest index + 1, which is fine.
 
 
 void CompileSystemDescriptions(BOOL asXML)
@@ -161,9 +161,9 @@ NSArray *OOConvertSystemDescriptionsToArrayFormat(NSDictionary *descriptionsInDi
 	NSEnumerator			*keyEnum = nil;
 	NSMutableDictionary		*keysToIndices = nil;
 	NSMutableSet			*usedIndices = nil;
-	OOUInteger				slotCache = 0;
+	NSUInteger				slotCache = 0;
 	NSNumber				*index = nil;
-	OOUInteger				i, count;
+	NSUInteger				i, count;
 	NSMutableArray			*realResult = nil;
 	
 	pool = [[NSAutoreleasePool alloc] init];
@@ -203,7 +203,7 @@ NSDictionary *OOConvertSystemDescriptionsToDictionaryFormat(NSArray *description
 	NSArray					*entry = nil;
 	NSEnumerator			*entryEnum = nil;
 	NSString				*key = nil;
-	OOUInteger				i = 0;
+	NSUInteger				i = 0;
 	
 	result = [NSMutableDictionary dictionaryWithCapacity:[descriptionsInArrayFormat count]];
 	pool = [[NSAutoreleasePool alloc] init];
@@ -224,7 +224,7 @@ NSDictionary *OOConvertSystemDescriptionsToDictionaryFormat(NSArray *description
 
 NSString *OOStringifySystemDescriptionLine(NSString *line, NSDictionary *indicesToKeys, BOOL useFallback)
 {
-	OOUInteger				p1, p2;
+	NSUInteger				p1, p2;
 	NSRange					searchRange;
 	NSString				*before = nil, *after = nil, *middle = nil;
 	NSString				*key = nil;
@@ -284,7 +284,7 @@ static NSMutableDictionary *InitKeyToIndexDict(NSDictionary *dict, NSMutableSet 
 }
 
 
-static NSString *IndexToKey(OOUInteger index, NSDictionary *indicesToKeys, BOOL useFallback)
+static NSString *IndexToKey(NSUInteger index, NSDictionary *indicesToKeys, BOOL useFallback)
 {
 	NSString *result = [indicesToKeys objectForKey:[NSString stringWithFormat:@"%u", index]];
 	if (result == nil && useFallback)  result = [NSString stringWithFormat:@"block_%u", index];
@@ -310,7 +310,7 @@ static NSArray *ConvertIndicesToKeys(NSArray *entry, NSDictionary *indicesToKeys
 }
 
 
-static NSNumber *KeyToIndex(NSString *key, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, OOUInteger *ioSlotCache)
+static NSNumber *KeyToIndex(NSString *key, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, NSUInteger *ioSlotCache)
 {
 	NSNumber				*result = nil;
 	
@@ -335,11 +335,11 @@ static NSNumber *KeyToIndex(NSString *key, NSMutableDictionary *ioKeysToIndices,
 }
 
 
-static NSArray *ConvertKeysToIndices(NSArray *entry, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, OOUInteger *ioSlotCache)
+static NSArray *ConvertKeysToIndices(NSArray *entry, NSMutableDictionary *ioKeysToIndices, NSMutableSet *ioUsedIndicies, NSUInteger *ioSlotCache)
 {
 	NSEnumerator			*lineEnum = nil;
 	NSString				*line = nil;
-	OOUInteger				p1, p2;
+	NSUInteger				p1, p2;
 	NSRange					searchRange;
 	NSMutableArray			*result = nil;
 	NSString				*before = nil, *after = nil, *middle = nil;
@@ -377,11 +377,11 @@ static NSArray *ConvertKeysToIndices(NSArray *entry, NSMutableDictionary *ioKeys
 }
 
 
-static OOUInteger HighestIndex(NSMutableDictionary *sparseArray)
+static NSUInteger HighestIndex(NSMutableDictionary *sparseArray)
 {
 	NSEnumerator			*keyEnum = nil;
 	NSNumber				*key = nil;
-	OOUInteger				curr, highest = 0;
+	NSUInteger				curr, highest = 0;
 	
 	for (keyEnum = [sparseArray keyEnumerator]; (key = [keyEnum nextObject]); )
 	{

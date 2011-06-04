@@ -2168,7 +2168,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 		([gameView isDown:gvArrowKeyRight] || [gameView isDown:gvArrowKeyLeft]))
 	{
 		int			direction = ([gameView isDown:gvArrowKeyRight]) ? 1 : -1;
-		OOInteger	displayModeIndex = [controller indexOfCurrentDisplayMode];
+		NSInteger	displayModeIndex = [controller indexOfCurrentDisplayMode];
 		if (displayModeIndex == NSNotFound)
 		{
 			OOLogWARN(@"graphics.mode.notFound", @"couldn't find current fullscreen setting, switching to default.");

@@ -192,9 +192,9 @@ DEFINE_JS_OBJECT_GETTER(JSSystemInfoGetSystemInfo, &sSystemInfoClass, sSystemInf
 }
 
 
-- (OOUInteger) hash
+- (NSUInteger) hash
 {
-	OOUInteger hash = _galaxy;
+	NSUInteger hash = _galaxy;
 	hash <<= 16;
 	hash |= (uint16_t)_system;
 	return hash;

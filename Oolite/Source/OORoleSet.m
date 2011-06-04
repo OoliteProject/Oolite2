@@ -90,7 +90,7 @@ SOFTWARE.
 }
 
 
-- (OOUInteger)hash
+- (NSUInteger)hash
 {
 	return [_rolesAndProbabilities hash];
 }

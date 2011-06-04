@@ -59,10 +59,10 @@ MA 02110-1301, USA.
 - (id) initWithName:(NSString *)name
 			  scope:(JSObject *)scope
 			   code:(NSString *)code
-	  argumentCount:(OOUInteger)argCount
+	  argumentCount:(NSUInteger)argCount
 	  argumentNames:(const char **)argNames
 		   fileName:(NSString *)fileName
-		 lineNumber:(OOUInteger)lineNumber
+		 lineNumber:(NSUInteger)lineNumber
 			context:(JSContext *)context
 {
 	BOOL						OK = YES;
@@ -195,7 +195,7 @@ MA 02110-1301, USA.
 				   arguments:(NSArray *)arguments
 					  result:(jsval *)result
 {
-	OOUInteger i, argc = [arguments count];
+	NSUInteger i, argc = [arguments count];
 	jsval argv[argc];
 	
 	for (i = 0; i < argc; i++)

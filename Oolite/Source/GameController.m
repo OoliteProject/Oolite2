@@ -158,7 +158,7 @@ static GameController *sSharedController = nil;
 }
 
 
-- (OOUInteger) indexOfCurrentDisplayMode
+- (NSUInteger) indexOfCurrentDisplayMode
 {
 	NSDictionary	*mode;
 	

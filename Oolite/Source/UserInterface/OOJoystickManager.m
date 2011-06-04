@@ -130,7 +130,7 @@ static id sSharedStickHandler = nil;
 
 - (NSArray *)listSticks
 {
-	OOUInteger i, stickCount = [self joystickCount];
+	NSUInteger i, stickCount = [self joystickCount];
 	
 	NSMutableArray *stickList = [NSMutableArray array];
 	for (i = 0; i < stickCount; i++)
@@ -515,7 +515,7 @@ static id sSharedStickHandler = nil;
 }
 
 
-- (OOUInteger) joystickCount
+- (NSUInteger) joystickCount
 {
 	return 0;
 }

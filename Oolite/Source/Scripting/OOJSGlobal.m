@@ -252,7 +252,7 @@ static JSBool GlobalLog(JSContext *context, uintN argc, jsval *vp)
 	{
 		JSStackFrame	*frame = OOJSGetCurrentCallFrame(context);
 		const char		*fileName = NULL;
-		OOUInteger		line = 0;
+		NSUInteger		line = 0;
 		jsval			callee;
 		NSString		*functionName = @"<anonymous function>";
 		

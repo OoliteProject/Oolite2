@@ -331,7 +331,7 @@ static NSArray *ArrayOfExtensions(NSString *extensionString)
 }
 
 
-- (OOUInteger)textureImageUnitCount
+- (NSUInteger)textureImageUnitCount
 {
 #if OO_SHADERS
 	return textureImageUnitCount;
@@ -371,7 +371,7 @@ static NSArray *ArrayOfExtensions(NSString *extensionString)
 }
 
 
-- (OOUInteger)textureUnitCount
+- (NSUInteger)textureUnitCount
 {
 #if OO_MULTITEXTURE
 	return textureUnitCount;
@@ -381,19 +381,19 @@ static NSArray *ArrayOfExtensions(NSString *extensionString)
 }
 
 
-- (OOUInteger)majorVersionNumber
+- (NSUInteger)majorVersionNumber
 {
 	return major;
 }
 
 
-- (OOUInteger)minorVersionNumber
+- (NSUInteger)minorVersionNumber
 {
 	return minor;
 }
 
 
-- (OOUInteger)releaseVersionNumber
+- (NSUInteger)releaseVersionNumber
 {
 	return release;
 }
@@ -712,7 +712,7 @@ NSComparisonResult CompareGPUSettingsByPriority(id a, id b, void *context)
 }
 
 
-- (OOUInteger)retainCount
+- (NSUInteger)retainCount
 {
 	return UINT_MAX;
 }

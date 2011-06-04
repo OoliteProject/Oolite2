@@ -921,7 +921,7 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
-- (OOUInteger) sessionID
+- (NSUInteger) sessionID
 {
 	// The player ship always belongs to the current session.
 	return [UNIVERSE sessionID];
@@ -5006,7 +5006,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	MyOpenGLView	*gameView = [UNIVERSE gameView];
 #endif
 	GameController	*controller = [UNIVERSE gameController];
-	OOUInteger		displayModeIndex = [controller indexOfCurrentDisplayMode];
+	NSUInteger		displayModeIndex = [controller indexOfCurrentDisplayMode];
 	NSArray			*modeList = [controller displayModes];
 	NSDictionary	*mode = nil;
 	
@@ -6282,7 +6282,7 @@ static NSString *last_outfitting_key=nil;
 		Optimised this method, to compensate for increased usage - Kaks 20091002
 	*/
 	NSArray				*manifest = [NSArray arrayWithArray:[self shipCommodityData]];
-	OOInteger			i, count = [manifest count];
+	NSInteger			i, count = [manifest count];
 	OOCargoQuantity		cargoQtyOnBoard = 0;
 	
 	for (i = count - 1; i >= 0 ; i--)
@@ -6915,8 +6915,8 @@ static NSString *last_outfitting_key=nil;
 	{
 		return;
 	}
-	OOUInteger	trumble_index = NSNotFound;
-	OOUInteger	i;
+	NSUInteger	trumble_index = NSNotFound;
+	NSUInteger	i;
 	
 	for (i = 0; (trumble_index == NSNotFound)&&(i < trumbleCount); i++)
 	{
@@ -6940,7 +6940,7 @@ static NSString *last_outfitting_key=nil;
 }
 
 
-- (OOUInteger) trumbleCount
+- (NSUInteger) trumbleCount
 {
 	return trumbleCount;
 }

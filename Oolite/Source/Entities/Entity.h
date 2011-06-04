@@ -82,7 +82,7 @@ enum OOScanClass
 	// lose the overheads of Obj-C accessor methods...
 	//
 @public
-	OOUInteger				_sessionID;
+	NSUInteger				_sessionID;
 	
 	OOUniversalID			universalID;			// used to reference the entity
 	
@@ -149,7 +149,7 @@ enum OOScanClass
 }
 
 // The session in which the entity was created.
-- (OOUInteger) sessionID;
+- (NSUInteger) sessionID;
 
 - (BOOL) isShip;
 - (BOOL) isStation;

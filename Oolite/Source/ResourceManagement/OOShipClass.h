@@ -68,7 +68,7 @@ MA 02110-1301, USA.
 	OORoleSet			*_roles;
 	NSArray				*_subEntityDefinitions;
 	
-	OOUInteger			_escortCount;
+	NSUInteger			_escortCount;
 	OORoleSet			*_escortRoles;
 	
 	Vector				_forwardViewPosition;
@@ -208,7 +208,7 @@ MA 02110-1301, USA.
 - (NSArray *) subEntityDefinitions;
 - (BOOL) isFrangible;			// FIXME: make subentity isBreakable attribute instead.
 
-- (OOUInteger) escortCount;
+- (NSUInteger) escortCount;
 - (OORoleSet *) escortRoles;
 - (NSString *) selectEscortShip;
 

@@ -311,10 +311,10 @@ static struct
 
 
 #ifndef NDEBUG
-static BOOL VerifyOneBuffer(AudioBuffer *buffer, OOUInteger numFrames, float *badVal);
+static BOOL VerifyOneBuffer(AudioBuffer *buffer, NSUInteger numFrames, float *badVal);
 
 
-void OOCASoundVerifyBuffers(AudioBufferList *buffers, OOUInteger numFrames, OOSound *sound)
+void OOCASoundVerifyBuffers(AudioBufferList *buffers, NSUInteger numFrames, OOSound *sound)
 {
 	BOOL allOK = YES;
 	UInt32 i;
@@ -337,7 +337,7 @@ void OOCASoundVerifyBuffers(AudioBufferList *buffers, OOUInteger numFrames, OOSo
 }
 
 
-static BOOL VerifyOneBuffer(AudioBuffer *buffer, OOUInteger numFrames, float *badVal)
+static BOOL VerifyOneBuffer(AudioBuffer *buffer, NSUInteger numFrames, float *badVal)
 {
 	if (buffer == NULL || buffer->mData == NULL || badVal == NULL)  return NO;
 	
@@ -351,7 +351,7 @@ static BOOL VerifyOneBuffer(AudioBuffer *buffer, OOUInteger numFrames, float *ba
 	
 	// Assume data is float.
 	float *floatBuffer = (float *)buffer->mData;
-	OOUInteger i;
+	NSUInteger i;
 	BOOL OK = YES;
 	BOOL worstAbnormal = NO;
 	for (i = 0; i < numFrames; i++)

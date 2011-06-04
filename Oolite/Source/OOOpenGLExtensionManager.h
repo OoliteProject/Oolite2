@@ -100,16 +100,16 @@ SOFTWARE.
 - (BOOL)shadersSupported;
 - (OOShaderSetting)defaultShaderSetting;
 - (OOShaderSetting)maximumShaderSetting;
-- (OOUInteger)textureImageUnitCount;	// Fragment shader sampler count limit. Does not apply to fixed function multitexturing. (GL_MAX_TEXTURE_IMAGE_UNITS_ARB)
+- (NSUInteger)textureImageUnitCount;	// Fragment shader sampler count limit. Does not apply to fixed function multitexturing. (GL_MAX_TEXTURE_IMAGE_UNITS_ARB)
 
 - (BOOL)vboSupported;					// Vertex buffer objects
 - (BOOL)fboSupported;					// Frame buffer objects
 - (BOOL)textureCombinersSupported;
-- (OOUInteger)textureUnitCount;			// Fixed function multitexture limit, does not apply to shaders. (GL_MAX_TEXTURE_UNITS_ARB)
+- (NSUInteger)textureUnitCount;			// Fixed function multitexture limit, does not apply to shaders. (GL_MAX_TEXTURE_UNITS_ARB)
 
-- (OOUInteger)majorVersionNumber;
-- (OOUInteger)minorVersionNumber;
-- (OOUInteger)releaseVersionNumber;
+- (NSUInteger)majorVersionNumber;
+- (NSUInteger)minorVersionNumber;
+- (NSUInteger)releaseVersionNumber;
 - (void)getVersionMajor:(unsigned *)outMajor minor:(unsigned *)outMinor release:(unsigned *)outRelease;
 - (BOOL) versionIsAtLeastMajor:(unsigned)maj minor:(unsigned)min;
 

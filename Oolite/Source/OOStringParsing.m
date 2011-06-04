@@ -328,11 +328,11 @@ NSString *ExpandDescriptionsWithOptions(NSString *text, Random_Seed seed, NSDict
 	NSDictionary		*descriptions = nil;
 	id					value = nil;
 	NSString			*part = nil, *before = nil, *after = nil, *middle = nil;
-	OOUInteger			sub, rnd, opt;
-	OOUInteger			p1, p2;
+	NSUInteger			sub, rnd, opt;
+	NSUInteger			p1, p2;
 	NSArray				*sysDesc = nil;
 	NSArray				*sysDescItem = nil;
-	OOUInteger			sysDescCount = 0, descItemCount;
+	NSUInteger			sysDescCount = 0, descItemCount;
 	
 	for (;;)
 	{
@@ -827,7 +827,7 @@ NSString *GraphVizTokenString(NSString *string, NSMutableSet *uniqueSet)
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	BOOL lastWasUnderscore = NO;
-	OOUInteger i, length = [string length], ri = 0;
+	NSUInteger i, length = [string length], ri = 0;
 	unichar result[length];
 	NSString *token = nil;
 	

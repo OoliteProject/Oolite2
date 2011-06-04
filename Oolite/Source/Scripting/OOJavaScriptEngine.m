@@ -806,10 +806,10 @@ void OOJSDumpStack(JSContext *context)
 
 
 static const char *sConsoleScriptName;	// Lifetime is lifetime of script object, which is forever.
-static OOUInteger sConsoleEvalLineNo;
+static NSUInteger sConsoleEvalLineNo;
 
 
-void OOJSGetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, OOUInteger *line)
+void OOJSGetLocationNameAndLine(JSContext *context, JSStackFrame *stackFrame, const char **name, NSUInteger *line)
 {
 	NSCParameterAssert(context != NULL && name != NULL && line != NULL);
 	
@@ -848,7 +848,7 @@ NSString *OOJSDescribeLocation(JSContext *context, JSStackFrame *stackFrame)
 	NSCParameterAssert(context != NULL && stackFrame != NULL);
 	
 	const char	*fileName;
-	OOUInteger	lineNo;
+	NSUInteger	lineNo;
 	OOJSGetLocationNameAndLine(context, stackFrame, &fileName, &lineNo);
 	if (fileName == NULL)  return NO;
 	

@@ -149,7 +149,7 @@ MA 02110-1301, USA.
 - (BOOL) setDisplayWidth:(unsigned int) d_width Height:(unsigned int)d_height Refresh:(unsigned int) d_refresh;
 - (NSDictionary *) findDisplayModeForWidth:(unsigned int)d_width Height:(unsigned int) d_height Refresh:(unsigned int) d_refresh;
 - (NSArray *) displayModes;
-- (OOUInteger) indexOfCurrentDisplayMode;
+- (NSUInteger) indexOfCurrentDisplayMode;
 
 - (NSString *) playerFileToLoad;
 - (void) setPlayerFileToLoad:(NSString *)filename;

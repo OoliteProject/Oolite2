@@ -291,42 +291,11 @@ enum {
 #endif
 
 
-
-/*	OOInteger and OOUInteger: int (32-bit) on 32-bit platforms, long (64-bit)
-	on 64-bit platforms. This is equivalent to NSInteger/NSUInteger in OS X
-	10.5 and GNUstep 1.16.
-	
-	Why not long in 32-bit? Because we want to avoid "multiple methods"
-	warnings when using SDKs using int.
-	
-	Similarly, CGFloat is 64-bit in 64-bit and 32-bit in 32-bit under OS X.
-	There is no need to make this distinction in GNUStep.
-*/
-
 #if OOLITE_MAC_OS_X
-	typedef NSInteger			OOInteger;
-	typedef NSUInteger			OOUInteger;
-	typedef CGFloat				OOCGFloat;
 	#if __LP64__
 		#define OOLITE_64_BIT	1
 	#endif
 #elif OOLITE_GNUSTEP
-	/* MKW 20090414 - GNUStep 1.19 still has the NSInteger bug, so let's revert
-	 * to the older definitions for OOInteger */
-	#if GNUSTEP_BASE_MAJOR_VERSION > 1 || GNUSTEP_BASE_MINOR_VERSION >= 20
-		typedef NSInteger		OOInteger;
-		typedef NSUInteger		OOUInteger;
-	#else
-		// Older versions of GNUstep used int on all systems.
-		typedef int				OOInteger;
-		typedef unsigned int	OOUInteger;
-	#endif
-	#if CGFLOAT_DEFINED
-		typedef CGFloat			OOCGFloat;
-	#else
-		typedef float			OOCGFloat;
-	#endif
-	
 	/*	As of GNUstep-base 1.20.1, NSIntegerMin, NSIntegerMax and NSUIntegerMax
 		aren’t defined.
 	*/
@@ -363,7 +332,7 @@ enum {
 	GNUstep.
 */
 #if OOLITE_MAC_OS_X
-	typedef OOInteger OOComparisonResult;
+	typedef NSInteger OOComparisonResult;
 #else
 	typedef NSComparisonResult OOComparisonResult;
 #endif

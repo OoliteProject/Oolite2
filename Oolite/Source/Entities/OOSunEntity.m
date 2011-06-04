@@ -68,7 +68,7 @@ MA 02110-1301, USA.
 	
 	OO_ENTER_OPENGL();
 	
-	OOCGFloat	hue, sat, bri, alf;
+	CGFloat	hue, sat, bri, alf;
 	OOColor		*color;
 	
 	[sun_color getHue:&hue saturation:&sat brightness:&bri alpha:&alf];

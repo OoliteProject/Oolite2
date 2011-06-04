@@ -103,7 +103,7 @@ enum
 
 
 // Choose a class for arrays that aren't NoCopy.
-static inline Class ClassForNormalArrayOfSize(OOUInteger size)
+static inline Class ClassForNormalArrayOfSize(NSUInteger size)
 {
 	return (size <= kMaxInlineCount) ? [OOInlineFloatArray class] : [OOExternFloatArray class];
 }

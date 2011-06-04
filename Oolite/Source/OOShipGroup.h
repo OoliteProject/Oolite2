@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #endif
 {
 @private
-	OOUInteger				_count, _capacity;
+	NSUInteger				_count, _capacity;
 	unsigned long			_updateCount;
 	OOWeakReference			**_members;
 	OOWeakReference			*_leader;
@@ -67,7 +67,7 @@ MA 02110-1301, USA.
 - (void) addShip:(ShipEntity *)ship;
 - (void) removeShip:(ShipEntity *)ship;
 
-- (OOUInteger) count;		// NOTE: this is O(n).
+- (NSUInteger) count;		// NOTE: this is O(n).
 - (BOOL) isEmpty;
 
 @end

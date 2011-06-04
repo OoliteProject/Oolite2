@@ -31,19 +31,19 @@ MA 02110-1301, USA.
 
 typedef struct
 {
-	OOCGFloat		r, g, b, a;
+	CGFloat		r, g, b, a;
 } OORGBAComponents;
 
 
 typedef struct
 {
-	OOCGFloat		h, s, b, a;
+	CGFloat		h, s, b, a;
 } OOHSBAComponents;
 
 
 @interface OOColor : NSObject <NSCopying, JAPropertyListRepresentation>
 {
-	OOCGFloat	rgba[4];
+	CGFloat	rgba[4];
 }
 
 + (OOColor *)colorWithCalibratedHue:(float)hue saturation:(float)saturation brightness:(float)brightness alpha:(float)alpha;	// Note: hue in 0..1
@@ -88,10 +88,10 @@ typedef struct
 
 /* Get the red, green, or blue components of NSCalibratedRGB or NSDeviceRGB colors.
 */
-- (OOCGFloat)redComponent;
-- (OOCGFloat)greenComponent;
-- (OOCGFloat)blueComponent;
-- (void)getRed:(OOCGFloat *)red green:(OOCGFloat *)green blue:(OOCGFloat *)blue alpha:(OOCGFloat *)alpha;
+- (CGFloat)redComponent;
+- (CGFloat)greenComponent;
+- (CGFloat)blueComponent;
+- (void)getRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha;
 - (void)getGLRed:(GLfloat *)red green:(GLfloat *)green blue:(GLfloat *)blue alpha:(GLfloat *)alpha;
 
 - (OORGBAComponents)rgbaComponents;
@@ -105,16 +105,16 @@ typedef struct
 	in the range [0, 360], but +colorWithCalibratedHue:... expects values in
 	the range [0, 1].
 */
-- (OOCGFloat)hueComponent;
-- (OOCGFloat)saturationComponent;
-- (OOCGFloat)brightnessComponent;
-- (void)getHue:(OOCGFloat *)hue saturation:(OOCGFloat *)saturation brightness:(OOCGFloat *)brightness alpha:(OOCGFloat *)alpha;
+- (CGFloat)hueComponent;
+- (CGFloat)saturationComponent;
+- (CGFloat)brightnessComponent;
+- (void)getHue:(CGFloat *)hue saturation:(CGFloat *)saturation brightness:(CGFloat *)brightness alpha:(CGFloat *)alpha;
 
 - (OOHSBAComponents)hsbaComponents;
 
 
 // Get the alpha component.
-- (OOCGFloat)alphaComponent;
+- (CGFloat)alphaComponent;
 
 // Returns the colour, premultiplied by its alpha channel, and with an alpha of 1.0. If the reciever's alpha is 1.0, it will return itself.
 - (OOColor *)premultipliedColor;

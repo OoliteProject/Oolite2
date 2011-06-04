@@ -43,9 +43,9 @@ MA 02110-1301, USA.
 
 @implementation OOBreakPatternEntity
 
-- (id) initWithPolygonSides:(OOUInteger)sides startAngle:(float)startAngleDegrees aspectRatio:(float)aspectRatio
+- (id) initWithPolygonSides:(NSUInteger)sides startAngle:(float)startAngleDegrees aspectRatio:(float)aspectRatio
 {
-	sides = MIN(MAX((OOUInteger)3, sides), (OOUInteger)kOOBreakPatternMaxSides);
+	sides = MIN(MAX((NSUInteger)3, sides), (NSUInteger)kOOBreakPatternMaxSides);
 	
 	if ((self = [super init]))
 	{
@@ -55,8 +55,8 @@ MA 02110-1301, USA.
 		float xAspect = fminf(1.0, aspectRatio);
 		float yAspect = fminf(1.0, 1.0 / aspectRatio);
 		
-		OOUInteger vi = 0;
-		for (OOUInteger i = 0; i < sides; i++)
+		NSUInteger vi = 0;
+		for (NSUInteger i = 0; i < sides; i++)
 		{
 			float s = sinf(angle) * xAspect;
 			float c = cosf(angle) * yAspect;
@@ -90,7 +90,7 @@ MA 02110-1301, USA.
 }
 
 
-+ (id) breakPatternWithPolygonSides:(OOUInteger)sides startAngle:(float)startAngleDegrees aspectRatio:(float)aspectRatio
++ (id) breakPatternWithPolygonSides:(NSUInteger)sides startAngle:(float)startAngleDegrees aspectRatio:(float)aspectRatio
 {
 	return [[[self alloc] initWithPolygonSides:sides startAngle:startAngleDegrees aspectRatio:aspectRatio] autorelease];
 }
@@ -109,7 +109,7 @@ MA 02110-1301, USA.
 {
 	GLfloat *colors[2] = { color1, color2 };
 	
-	for (OOUInteger i = 0; i < _vertexCount; i++)
+	for (NSUInteger i = 0; i < _vertexCount; i++)
 	{
 		GLfloat *color = colors[i & 1];
 		memcpy(&_vertexColor[i], color, sizeof (GLfloat) * 4);

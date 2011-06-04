@@ -441,6 +441,7 @@
 		1A5BFE0C133E6B0E0093BDC2 /* OOXMLExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5BFE0B133E6B0E0093BDC2 /* OOXMLExtensions.m */; };
 		1A64A1681323CA5700C2FDDB /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F24821317C5B700D06C6C /* OoliteBase.framework */; };
 		1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C20551334C5EB00821B1D /* OOVersion.m */; };
+		1A71665413995004005B6FC0 /* OOShipDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71665313995004005B6FC0 /* OOShipDescription.m */; };
 		1A9C62E51305FD6500B30EFD /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62E31305FD6500B30EFD /* MainMenu.nib */; };
 		1A9C62F01305FE2100B30EFD /* oolite-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62ED1305FE2100B30EFD /* oolite-document.icns */; };
 		1A9C62F11305FE2100B30EFD /* oolite-expansion-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */; };
@@ -1531,6 +1532,8 @@
 		1A64A0CE1323C54000C2FDDB /* oolite-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "oolite-version.inc"; sourceTree = "<group>"; };
 		1A6C20541334C5EB00821B1D /* OOVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVersion.h; sourceTree = "<group>"; };
 		1A6C20551334C5EB00821B1D /* OOVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOVersion.m; sourceTree = "<group>"; };
+		1A71665213995004005B6FC0 /* OOShipDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShipDescription.h; sourceTree = "<group>"; };
+		1A71665313995004005B6FC0 /* OOShipDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipDescription.m; sourceTree = "<group>"; };
 		1A9C62E41305FD6500B30EFD /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Oolite-Info.plist"; sourceTree = "<group>"; };
 		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-document.icns"; sourceTree = "<group>"; };
@@ -2437,6 +2440,8 @@
 		1A9C640C1306055700B30EFD /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				1A71665213995004005B6FC0 /* OOShipDescription.h */,
+				1A71665313995004005B6FC0 /* OOShipDescription.m */,
 				1A1F2A8A13182DB500D06C6C /* dummy.cpp */,
 				1A9C643A130607F400B30EFD /* OOTypes.h */,
 				1A1F27BC1317CCCC00D06C6C /* GameController.h */,
@@ -2960,6 +2965,7 @@
 				1AD6A7571336BA1C00E0B0B2 /* OOShipClass+IO.m in Sources */,
 				1A5BFE0C133E6B0E0093BDC2 /* OOXMLExtensions.m in Sources */,
 				1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */,
+				1A71665413995004005B6FC0 /* OOShipDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

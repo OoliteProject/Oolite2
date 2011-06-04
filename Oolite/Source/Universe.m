@@ -69,6 +69,7 @@ MA 02110-1301, USA.
 #import "OORingEffectEntity.h"
 #import "OOLightParticleEntity.h"
 #import "OOFlashEffectEntity.h"
+#import "OOShipDescription.h"
 
 #import "OOMusicController.h"
 #import "OOAsyncWorkManager.h"
@@ -7236,14 +7237,17 @@ static double estimatedTimeForJourney(double distance, int hops)
 		ship_base_dict = [[OOShipRegistry sharedRegistry] shipInfoForKey:ship_key];
 		
 		if ((days_until_sale > 0.0) && (days_until_sale < 30.0) && (ship_techlevel <= techlevel) && (randf() < chance) && (ship_base_dict != nil))
-		{			
-			NSMutableDictionary* ship_dict = [NSMutableDictionary dictionaryWithDictionary:ship_base_dict];
-			NSMutableString* description = [NSMutableString stringWithCapacity:256];
-			NSMutableString* short_description = [NSMutableString stringWithCapacity:256];
-			NSString *shipName = [ship_dict oo_stringForKey:@"display_name" defaultValue:[ship_dict oo_stringForKey:KEY_NAME]];
+		{
+			OOShipClass			*shipClass = [registry shipClassForKey:ship_key];
+			NSMutableDictionary	*ship_dict = [NSMutableDictionary dictionaryWithDictionary:ship_base_dict];
+			OOShipDescription	*shipDesc = [[[OOShipDescription alloc] initWithClass:shipClass] autorelease];
+			
+			NSMutableString *description = [NSMutableString stringWithCapacity:256];
+			NSMutableString *short_description = [NSMutableString stringWithCapacity:256];
+			
 			OOCreditsQuantity price = [ship_info oo_unsignedIntForKey:KEY_PRICE];
 			OOCreditsQuantity base_price = price;
-			NSMutableArray* extras = [NSMutableArray arrayWithArray:[[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_arrayForKey:KEY_EQUIPMENT_EXTRAS]];
+			NSMutableArray *extras = [NSMutableArray arrayWithArray:[[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_arrayForKey:KEY_EQUIPMENT_EXTRAS]];
 			NSString* fwd_weapon_string = [[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_stringForKey:KEY_EQUIPMENT_FORWARD_WEAPON];
 			NSString* aft_weapon_string = [[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_stringForKey:KEY_EQUIPMENT_AFT_WEAPON];
 			
@@ -7254,6 +7258,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 			//NSString* brochure_desc = [self brochureDescriptionWithDictionary: ship_dict standardEquipment: extras optionalEquipment: options];
 			//NSLog(@"%@ Brochure description : \"%@\"", [ship_dict objectForKey:KEY_NAME], brochure_desc);
 			
+			NSString *shipName = [shipClass displayName];
 			[description appendFormat:@"%@:", shipName];
 			[short_description appendFormat:@"%@:", shipName];
 			
@@ -7460,6 +7465,12 @@ static double estimatedTimeForJourney(double distance, int hops)
 				extras,							KEY_EQUIPMENT_EXTRAS,
 				[NSNumber numberWithUnsignedShort:personality], SHIPYARD_KEY_PERSONALITY,								  
 				NULL];
+			
+			[shipDesc setPersonality:personality];
+			[shipDesc setValue:description forKey:SHIPYARD_KEY_DESCRIPTION];
+			[shipDesc setValue:short_description forKey:KEY_SHORT_DESCRIPTION];
+			[shipDesc setValue:[NSNumber numberWithInt:price] forKey:SHIPYARD_KEY_PRICE];
+			[shipDesc setValue:extras forKey:KEY_EQUIPMENT_EXTRAS];
 			
 			[resultDictionary setObject:ship_info_dictionary forKey:ship_id];	// should order them fairly randomly
 		}

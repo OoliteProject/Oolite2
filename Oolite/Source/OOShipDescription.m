@@ -68,7 +68,7 @@ MA 02110-1301, USA.
 - (void)dealloc
 {
 	DESTROY(_shipClass);
-	DESTROY(_extras);
+	DESTROY(_attributes);
 	DESTROY(_missiles);
 	DESTROY(_equipment);
 	DESTROY(_escorts);
@@ -215,28 +215,28 @@ MUTABLE_ARRAY_ACCESSORS(NSString, escorts, Escorts)
 }
 
 
-- (id) valueForKey:(NSString *)key
+- (id) attributeValueForKey:(NSString *)key
 {
-	return [_extras objectForKey:key];
+	return [_attributes objectForKey:key];
 }
 
 
-- (void) setValue:(id)value forKey:(NSString *)key
+- (void) setAttributeValue:(id)value forKey:(NSString *)key
 {
 	NSParameterAssert(key != nil);
 	
-	if (_extras == nil && value != nil)
+	if (_attributes == nil && value != nil)
 	{
-		_extras = [[NSMutableDictionary alloc] init];
+		_attributes = [[NSMutableDictionary alloc] init];
 	}
 	
 	if (value != nil)
 	{
-		[_extras setObject:value forKey:key];
+		[_attributes setObject:value forKey:key];
 	}
 	else
 	{
-		[_extras removeObjectForKey:key];
+		[_attributes removeObjectForKey:key];
 	}
 }
 

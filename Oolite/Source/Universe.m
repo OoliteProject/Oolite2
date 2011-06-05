@@ -7241,18 +7241,23 @@ static double estimatedTimeForJourney(double distance, int hops)
 			OOShipClass			*shipClass = [registry shipClassForKey:ship_key];
 			NSMutableDictionary	*ship_dict = [NSMutableDictionary dictionaryWithDictionary:ship_base_dict];
 			OOShipDescription	*shipDesc = [[[OOShipDescription alloc] initWithClass:shipClass] autorelease];
+			OOCreditsQuantity	price = [ship_info oo_unsignedIntForKey:KEY_PRICE];
+			OOCreditsQuantity	base_price = price;
 			
-			NSMutableString *description = [NSMutableString stringWithCapacity:256];
-			NSMutableString *short_description = [NSMutableString stringWithCapacity:256];
+			NSMutableString *description = [NSMutableString string];
+			NSMutableString *short_description = [NSMutableString string];
 			
-			OOCreditsQuantity price = [ship_info oo_unsignedIntForKey:KEY_PRICE];
-			OOCreditsQuantity base_price = price;
-			NSMutableArray *extras = [NSMutableArray arrayWithArray:[[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_arrayForKey:KEY_EQUIPMENT_EXTRAS]];
-			NSString* fwd_weapon_string = [[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_stringForKey:KEY_EQUIPMENT_FORWARD_WEAPON];
-			NSString* aft_weapon_string = [[ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT] oo_stringForKey:KEY_EQUIPMENT_AFT_WEAPON];
+			[shipDesc setAttributeValue:[NSNumber numberWithUnsignedInteger:price] forKey:SHIPYARD_KEY_PRICE];
+			[shipDesc setCargoSpaceUsed:0];
 			
-			NSMutableArray* options = [NSMutableArray arrayWithArray:[ship_info oo_arrayForKey:KEY_OPTIONAL_EQUIPMENT]];
-			OOCargoQuantity max_cargo = [ship_dict oo_unsignedIntForKey:@"max_cargo"];
+			NSDictionary *standardEq = [ship_info oo_dictionaryForKey:KEY_STANDARD_EQUIPMENT];
+			NSString *fwd_weapon_string = [standardEq oo_stringForKey:KEY_EQUIPMENT_FORWARD_WEAPON];
+			NSString *aft_weapon_string = [standardEq oo_stringForKey:KEY_EQUIPMENT_AFT_WEAPON];
+			
+			NSMutableArray *extras = [NSMutableArray arrayWithArray:[standardEq oo_arrayForKey:KEY_EQUIPMENT_EXTRAS]];
+			NSMutableArray *options = [NSMutableArray arrayWithArray:[ship_info oo_arrayForKey:KEY_OPTIONAL_EQUIPMENT]];
+			
+			OOCargoQuantity max_cargo = [shipClass cargoSpaceCapacity];
 			
 			// more info for potential purchasers - how to reveal this I'm not yet sure...
 			//NSString* brochure_desc = [self brochureDescriptionWithDictionary: ship_dict standardEquipment: extras optionalEquipment: options];
@@ -7280,7 +7285,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 			NSString* passengerBerthLongDesc = nil;
 			
 			// customise the ship (if chance = 1, then ship will get all possible add ons)
-			while ((randf() < chance) && ([options count]))
+			while (randf() < chance && [options count])
 			{
 				chance *= chance;	//decrease the chance of a further customisation (unless it is 1, which might be a bug)
 				int				option_index = Ranrot() % [options count];
@@ -7324,8 +7329,14 @@ static double estimatedTimeForJourney(double distance, int hops)
 						}
 					}
 					
-					// Special case, NEU has to be compatible with EEU inside equipment.plist
-					// but we can only have either one or the other on board.
+					/*	Special case, NEU has to be compatible with EEU inside
+						equipment.plist, but we can only have either one or
+						the other on board. See:
+						http://developer.berlios.de/bugs/?func=detailbug&bug_id=13507&group_id=3577
+						TODO: allow general replacing one item with another
+						incompatible one, either generally or as an equipment
+						option.
+					*/
 					if ([equipmentKey isEqualTo:@"EQ_NAVAL_ENERGY_UNIT"])
 					{
 							if ([extras containsObject:@"EQ_ENERGY_UNIT"])
@@ -7467,10 +7478,9 @@ static double estimatedTimeForJourney(double distance, int hops)
 				NULL];
 			
 			[shipDesc setPersonality:personality];
-			[shipDesc setValue:description forKey:SHIPYARD_KEY_DESCRIPTION];
-			[shipDesc setValue:short_description forKey:KEY_SHORT_DESCRIPTION];
-			[shipDesc setValue:[NSNumber numberWithInt:price] forKey:SHIPYARD_KEY_PRICE];
-			[shipDesc setValue:extras forKey:KEY_EQUIPMENT_EXTRAS];
+			[shipDesc setAttributeValue:description forKey:SHIPYARD_KEY_DESCRIPTION];
+			[shipDesc setAttributeValue:short_description forKey:KEY_SHORT_DESCRIPTION];
+			[shipDesc setAttributeValue:extras forKey:KEY_EQUIPMENT_EXTRAS];
 			
 			[resultDictionary setObject:ship_info_dictionary forKey:ship_id];	// should order them fairly randomly
 		}

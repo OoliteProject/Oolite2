@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 {
 @private
 	OOShipClass				*_shipClass;
-	NSMutableDictionary		*_extras;
+	NSMutableDictionary		*_attributes;
 	NSMutableArray			*_missiles;
 	NSMutableArray			*_equipment;
 	NSMutableArray			*_escorts;
@@ -109,7 +109,7 @@ MA 02110-1301, USA.
 - (void) setHasPatrolShips:(BOOL)value;
 
 // Arbitrary associated data. Use nil value to remove objects.
-- (id) valueForKey:(NSString *)key;
-- (void) setValue:(id)value forKey:(NSString *)key;
+- (id) attributeValueForKey:(NSString *)key;
+- (void) setAttributeValue:(id)value forKey:(NSString *)key;
 
 @end

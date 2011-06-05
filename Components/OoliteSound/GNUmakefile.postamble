@@ -1,0 +1,1 @@
+include $(OOLITE_ROOT)/Config/oolite-copy-headers.make

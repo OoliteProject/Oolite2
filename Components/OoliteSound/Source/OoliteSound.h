@@ -1,11 +1,6 @@
 /*
 
-OOSound.h
-
-Dispatch header to select the appropriate implementation of OOSound.
-
-Add new OS imports here. The -DOS_NAME flag in the GNUmakefile
-will select which one gets compiled.
+OoliteSound/OoliteSound.h
 
 
 == Overview of Oolite sound architecture ==
@@ -41,17 +36,28 @@ MA 02110-1301, USA.
 
 */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #import <OoliteBase/OoliteBase.h>
 
 
 #if OOLITE_SDL
-	#import "OOSDLSound.h"
-	#import "SDLMusic.h"
-	#import "OOBasicSoundReferencePoint.h"
+#import "OOSDLSound.h"
+#import "SDLMusic.h"
+#import "OOBasicSoundReferencePoint.h"
 #else
-	#import "OOCASound.h"
-	#import "OOCAMusic.h"
-	#import "OOCASoundReferencePoint.h"
+#import "OOCASound.h"
+#import "OOCAMusic.h"
+#import "OOCASoundReferencePoint.h"
 #endif
-
+	
 #import "OOSoundSource.h"
+
+
+#ifdef __cplusplus
+}
+#endif

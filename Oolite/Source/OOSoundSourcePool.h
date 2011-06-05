@@ -34,7 +34,6 @@ SOFTWARE.
 */
 
 #import <Foundation/Foundation.h>
-#import "OOTypes.h"
 
 
 @interface OOSoundSourcePool: NSObject
@@ -42,17 +41,17 @@ SOFTWARE.
 	struct OOSoundSourcePoolElement	*_sources;
 	uint8_t							_count;
 	uint8_t							_latest;
-	OOTimeDelta						_minRepeat;
-	OOTimeAbsolute					_nextRepeat;
+	double							_minRepeat;
+	double							_nextRepeat;
 	NSString						*_lastKey;
 }
 
-+ (id) poolWithCount:(uint8_t)count minRepeatTime:(OOTimeDelta)minRepeat;
-- (id) initWithCount:(uint8_t)count minRepeatTime:(OOTimeDelta)minRepeat;
++ (id) poolWithCount:(uint8_t)count minRepeatTime:(double)minRepeat;
+- (id) initWithCount:(uint8_t)count minRepeatTime:(double)minRepeat;
 
 - (void) playSoundWithKey:(NSString *)key
 				 priority:(float)priority
-			   expiryTime:(OOTimeDelta)expiryTime;
+			   expiryTime:(double)expiryTime;
 
 - (void) playSoundWithKey:(NSString *)key
 				 priority:(float)priority;	// expiryTime:0.1 +/- 0.5

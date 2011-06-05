@@ -38,7 +38,6 @@ MA 02110-1301, USA.
 #import "GameController.h"
 #import "AI.h"
 #import "MyOpenGLView.h"
-#import "OOSound.h"
 #import "OOStringParsing.h"
 #import "ResourceManager.h"
 #import "HeadUpDisplay.h"

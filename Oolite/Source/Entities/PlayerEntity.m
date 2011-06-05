@@ -46,7 +46,6 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OOTrumble.h"
 #import "PlayerEntityLoadSave.h"
-#import "OOSound.h"
 #import "OOColor.h"
 #import "Octree.h"
 #import "OOCacheManager.h"

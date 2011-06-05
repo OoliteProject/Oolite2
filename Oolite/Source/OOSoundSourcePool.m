@@ -26,7 +26,6 @@ SOFTWARE.
 */
 
 #import "OOSoundSourcePool.h"
-#import "OOSound.h"
 #import "Universe.h"
 
 
@@ -39,7 +38,7 @@ enum
 typedef struct OOSoundSourcePoolElement
 {
 	OOSoundSource			*source;
-	OOTimeAbsolute			expiryTime;
+	double					expiryTime;
 	float					priority;
 } PoolElement;
 
@@ -53,13 +52,13 @@ typedef struct OOSoundSourcePoolElement
 
 @implementation OOSoundSourcePool
 
-+ (id) poolWithCount:(uint8_t)count minRepeatTime:(OOTimeDelta)minRepeat
++ (id) poolWithCount:(uint8_t)count minRepeatTime:(double)minRepeat
 {
 	return [[[self alloc] initWithCount:count minRepeatTime:minRepeat] autorelease];
 }
 
 
-- (id) initWithCount:(uint8_t)count minRepeatTime:(OOTimeDelta)minRepeat
+- (id) initWithCount:(uint8_t)count minRepeatTime:(double)minRepeat
 {
 	if ((self = [super init]))
 	{
@@ -100,10 +99,10 @@ typedef struct OOSoundSourcePoolElement
 
 - (void) playSoundWithKey:(NSString *)key
 				 priority:(float)priority
-			   expiryTime:(OOTimeDelta)expiryTime
+			   expiryTime:(double)expiryTime
 {
 	uint8_t					slot;
-	OOTimeAbsolute			now, absExpiryTime;
+	double					now, absExpiryTime;
 	PoolElement				*element = NULL;
 	OOSound					*sound = NULL;
 	
@@ -169,7 +168,7 @@ typedef struct OOSoundSourcePoolElement
 {
 	uint8_t					curr, count, expiredLower = kNoSlot, unexpiredLower = kNoSlot, expiredEqual = kNoSlot;
 	PoolElement				*element = NULL;
-	OOTimeAbsolute			now = [UNIVERSE gameTime];
+	double					now = [UNIVERSE gameTime];
 	
 #define NEXT(x) (((x) + 1) % _count)
 	

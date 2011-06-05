@@ -31,7 +31,6 @@ MA 02110-1301, USA.
 #import "AI.h"
 #import "GuiDisplayGen.h"
 #import "HeadUpDisplay.h"
-#import "OOSound.h"
 #import "OOColor.h"
 #import "OOCacheManager.h"
 #import "OOStringParsing.h"

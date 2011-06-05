@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A79E4F1139B99BC00AA6575 /* OoliteSound.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E4F0139B99BC00AA6575 /* OoliteSound.framework */; };
 		1A8FA0FD1347537E00068766 /* debugLogMessageClassesMenu.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A8FA0E91347537E00068766 /* debugLogMessageClassesMenu.plist */; };
 		1A8FA0FE1347537E00068766 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A8FA0EA1347537E00068766 /* Localizable.strings */; };
 		1A8FA0FF1347537E00068766 /* OOAIDebugInspectorModule.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A8FA0EC1347537E00068766 /* OOAIDebugInspectorModule.xib */; };
@@ -39,6 +40,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A79E4EB139B99AC00AA6575 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A79E4E6139B99AC00AA6575 /* OoliteSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AEA251111A73A9200B361DC;
+			remoteInfo = OoliteSound;
+		};
+		1A79E4EE139B99B700AA6575 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A79E4E6139B99AC00AA6575 /* OoliteSound.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AEA251011A73A9200B361DC;
+			remoteInfo = OoliteSound;
+		};
 		1A8FA18F1347549800068766 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1A8FA18B1347549800068766 /* OoliteBase.xcodeproj */;
@@ -73,6 +88,8 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1A79E4E6139B99AC00AA6575 /* OoliteSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteSound.xcodeproj; path = ../../../Components/OoliteSound/Mac/OoliteSound.xcodeproj; sourceTree = "<group>"; };
+		1A79E4F0139B99BC00AA6575 /* OoliteSound.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OoliteSound.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A8FA0B51347520300068766 /* oolite-copy-headers.make */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "oolite-copy-headers.make"; sourceTree = "<group>"; };
 		1A8FA0B61347520300068766 /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A8FA0B71347520300068766 /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A79E4F1139B99BC00AA6575 /* OoliteSound.framework in Frameworks */,
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
 				1A8FA193134754A300068766 /* OoliteBase.framework in Frameworks */,
 			);
@@ -147,10 +165,12 @@
 		089C166AFE841209C02AAC07 /* DebugExtras */ = {
 			isa = PBXGroup;
 			children = (
+				1A79E4F0139B99BC00AA6575 /* OoliteSound.framework */,
 				1A8FA0B41347520300068766 /* Config */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				1A79E4E6139B99AC00AA6575 /* OoliteSound.xcodeproj */,
 				1A8FA206134756C400068766 /* Oolite.xcodeproj */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
@@ -248,6 +268,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A79E4E7139B99AC00AA6575 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A79E4EC139B99AC00AA6575 /* OoliteSound.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1A8FA0B41347520300068766 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +334,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A79E4EF139B99B700AA6575 /* PBXTargetDependency */,
 				1A8FA1921347549E00068766 /* PBXTargetDependency */,
 				1A8FA211134756D500068766 /* PBXTargetDependency */,
 			);
@@ -345,6 +374,10 @@
 					ProductGroup = 1A8FA18C1347549800068766 /* Products */;
 					ProjectRef = 1A8FA18B1347549800068766 /* OoliteBase.xcodeproj */;
 				},
+				{
+					ProductGroup = 1A79E4E7139B99AC00AA6575 /* Products */;
+					ProjectRef = 1A79E4E6139B99AC00AA6575 /* OoliteSound.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -354,6 +387,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1A79E4EC139B99AC00AA6575 /* OoliteSound.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OoliteSound.framework;
+			remoteRef = 1A79E4EB139B99AC00AA6575 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1A8FA1901347549800068766 /* OoliteBase.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -418,6 +458,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1A79E4EF139B99B700AA6575 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OoliteSound;
+			targetProxy = 1A79E4EE139B99B700AA6575 /* PBXContainerItemProxy */;
+		};
 		1A8FA1921347549E00068766 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OoliteBase;

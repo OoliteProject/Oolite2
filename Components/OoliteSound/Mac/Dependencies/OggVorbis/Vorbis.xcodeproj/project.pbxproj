@@ -172,7 +172,7 @@
 				1A64A0D91323C5FD00C2FDDB /* oolite-version.inc */,
 			);
 			name = Config;
-			path = ../../../../Config;
+			path = ../../../../../Config;
 			sourceTree = SOURCE_ROOT;
 		};
 		1AE3451E12CB72E100FD8C62 /* Products */ = {
@@ -464,7 +464,7 @@
 					__MACOSX__,
 					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
 				);
-				OOLITE_ROOT = ../../../../;
+				OOLITE_ROOT = ../../../../../;
 			};
 			name = Debug;
 		};
@@ -490,7 +490,7 @@
 					__MACOSX__,
 					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
 				);
-				OOLITE_ROOT = ../../../../;
+				OOLITE_ROOT = ../../../../../;
 			};
 			name = Developer;
 		};
@@ -516,7 +516,7 @@
 					__MACOSX__,
 					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
 				);
-				OOLITE_ROOT = ../../../../;
+				OOLITE_ROOT = ../../../../../;
 			};
 			name = EndUser;
 		};

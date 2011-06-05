@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOMusicController.h"
-#import "OOSound.h"
+#import <OoliteSound/OoliteSound.h>
 #import "ResourceManager.h"
 
 

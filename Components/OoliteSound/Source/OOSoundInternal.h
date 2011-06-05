@@ -1,4 +1,4 @@
-#import "OOSound.h"
+#import "OoliteSound.h"
 
 #if OOLITE_SDL
 

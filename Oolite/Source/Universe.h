@@ -25,9 +25,9 @@ MA 02110-1301, USA.
 */
 
 #import <OoliteBase/OoliteBase.h>
+#import <OoliteSound/OoliteSound.h>
 #import "OOLegacyOpenGL.h"
 #import "OOTypes.h"
-#import "OOSound.h"
 #import "OOJSPropID.h"
 
 

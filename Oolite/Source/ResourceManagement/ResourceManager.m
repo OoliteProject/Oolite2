@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "ResourceManager.h"
-#import "OOSound.h"
 #import "OOCacheManager.h"
 #import "Universe.h"
 #import "OOStringParsing.h"

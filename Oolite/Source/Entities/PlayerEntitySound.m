@@ -23,7 +23,6 @@ MA 02110-1301, USA.
 */
 
 #import "PlayerEntitySound.h"
-#import "OOSound.h"
 #import "ResourceManager.h"
 #import "Universe.h"
 #import "OOSoundSourcePool.h"

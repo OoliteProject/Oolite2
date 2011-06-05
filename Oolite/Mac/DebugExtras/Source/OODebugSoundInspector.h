@@ -26,7 +26,7 @@ SOFTWARE.
 
 */
 
-#import "OOCASoundDebugMonitor.h"
+#import <OoliteSound/OOCASoundDebugMonitor.h>
 
 
 @interface OODebugSoundInspector: NSObject <OOCASoundDebugMonitor>

@@ -27,7 +27,6 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 #import "OOTextureSprite.h"
 #import "ResourceManager.h"
-#import "OOSound.h"
 #import "OOStringParsing.h"
 #import "HeadUpDisplay.h"
 #import "OOLegacyTexture.h"

@@ -31,7 +31,7 @@ SOFTWARE.
 */
 
 #import <Cocoa/Cocoa.h>
-#import "OOSound.h"
+#import "OOCASound.h"
 
 @class OOCASoundDecoder;
 @class VirtualRingBuffer;

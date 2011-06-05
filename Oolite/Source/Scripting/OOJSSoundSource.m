@@ -25,6 +25,7 @@ MA 02110-1301, USA.
 #import "OOJSSound.h"
 #import "OOJavaScriptEngine.h"
 #import "ResourceManager.h"
+#import <OoliteSound/OoliteSound.h>
 
 
 static JSObject *sSoundSourcePrototype;

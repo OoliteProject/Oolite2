@@ -28,6 +28,7 @@ MA 02110-1301, USA.
 #import "OOLegacyTexture.h"
 #import "ResourceManager.h"
 #import "OOStringParsing.h"
+#import "OOSound+OOCustomSounds.h"
 
 
 static void InitTrumbleSounds(void);

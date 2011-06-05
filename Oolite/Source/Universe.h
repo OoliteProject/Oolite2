@@ -25,7 +25,6 @@ MA 02110-1301, USA.
 */
 
 #import <OoliteBase/OoliteBase.h>
-#import <OoliteSound/OoliteSound.h>
 #import "OOLegacyOpenGL.h"
 #import "OOTypes.h"
 #import "OOJSPropID.h"
@@ -709,24 +708,6 @@ NSString *DESC_(NSString *key);
 NSString *DESC_PLURAL_(NSString *key, int count);
 #define DESC(key)	(DESC_(key ""))
 #define DESC_PLURAL(key,count)	(DESC_PLURAL_(key, count))
-
-
-@interface OOSound (OOCustomSounds)
-
-+ (id) soundWithCustomSoundKey:(NSString *)key;
-- (id) initWithCustomSoundKey:(NSString *)key;
-
-@end
-
-
-@interface OOSoundSource (OOCustomSounds)
-
-+ (id) sourceWithCustomSoundKey:(NSString *)key;
-- (id) initWithCustomSoundKey:(NSString *)key;
-
-- (void) playCustomSoundWithKey:(NSString *)key;
-
-@end
 
 
 NSString *OODisplayStringFromGovernmentID(OOGovernmentID government);

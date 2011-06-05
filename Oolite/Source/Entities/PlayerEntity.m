@@ -69,6 +69,7 @@ MA 02110-1301, USA.
 
 #import "OOJoystickManager.h"
 #import "PlayerEntityStickMapper.h"
+#import <OoliteSound/OoliteSound.h>
 
 #if OOLITE_MAC_OS_X
 #import "Groolite.h"

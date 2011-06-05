@@ -426,6 +426,7 @@
 		1A71665413995004005B6FC0 /* OOShipDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71665313995004005B6FC0 /* OOShipDescription.m */; };
 		1A79E3C0139B842200AA6575 /* OoliteSound.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E3BF139B842200AA6575 /* OoliteSound.framework */; };
 		1A79E3FB139B91C800AA6575 /* OOSoundSourcePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */; };
+		1A79E4F6139B9B4A00AA6575 /* OOSound+OOCustomSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E4F5139B9B4A00AA6575 /* OOSound+OOCustomSounds.m */; };
 		1A9C62E51305FD6500B30EFD /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62E31305FD6500B30EFD /* MainMenu.nib */; };
 		1A9C62F01305FE2100B30EFD /* oolite-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62ED1305FE2100B30EFD /* oolite-document.icns */; };
 		1A9C62F11305FE2100B30EFD /* oolite-expansion-document.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62EE1305FE2100B30EFD /* oolite-expansion-document.icns */; };
@@ -1480,6 +1481,8 @@
 		1A79E3BF139B842200AA6575 /* OoliteSound.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OoliteSound.framework; sourceTree = SOURCE_ROOT; };
 		1A79E3F9139B91C800AA6575 /* OOSoundSourcePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundSourcePool.h; sourceTree = "<group>"; };
 		1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundSourcePool.m; sourceTree = "<group>"; };
+		1A79E4F4139B9B4A00AA6575 /* OOSound+OOCustomSounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOSound+OOCustomSounds.h"; sourceTree = "<group>"; };
+		1A79E4F5139B9B4A00AA6575 /* OOSound+OOCustomSounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOSound+OOCustomSounds.m"; sourceTree = "<group>"; };
 		1A9C62E41305FD6500B30EFD /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = en.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		1A9C62E61305FD7500B30EFD /* Oolite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Oolite-Info.plist"; sourceTree = "<group>"; };
 		1A9C62ED1305FE2100B30EFD /* oolite-document.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "oolite-document.icns"; sourceTree = "<group>"; };
@@ -2269,6 +2272,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A79E4F3139B9AE500AA6575 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				1A79E4F4139B9B4A00AA6575 /* OOSound+OOCustomSounds.h */,
+				1A79E4F5139B9B4A00AA6575 /* OOSound+OOCustomSounds.m */,
+				1A1F2EF8131854F700D06C6C /* OOMusicController.h */,
+				1A1F2EF9131854F700D06C6C /* OOMusicController.m */,
+				1A79E3F9139B91C800AA6575 /* OOSoundSourcePool.h */,
+				1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
 		1A9C639B130600A000B30EFD /* Game Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -2311,6 +2327,7 @@
 				1A1F2D2413183E6F00D06C6C /* Debug */,
 				1AF2EB4A1306143D008ECA54 /* Resource Management */,
 				1A1B983A1308841D0078322D /* AI */,
+				1A79E4F3139B9AE500AA6575 /* Audio */,
 				1A1B971113087FBE0078322D /* Entities */,
 				1A1F2C1C13183B4500D06C6C /* Graphics */,
 				1A1B98401308842D0078322D /* User Interface */,
@@ -2357,13 +2374,9 @@
 				1A1F2D551318415F00D06C6C /* OoliteLogOutputHandler.m */,
 				1A1F2E7C13184EC200D06C6C /* OOLogHeader.h */,
 				1A1F2E7D13184EC200D06C6C /* OOLogHeader.m */,
-				1A1F2EF8131854F700D06C6C /* OOMusicController.h */,
-				1A1F2EF9131854F700D06C6C /* OOMusicController.m */,
 				1A6C20541334C5EB00821B1D /* OOVersion.h */,
 				1A6C20551334C5EB00821B1D /* OOVersion.m */,
 				1A71665B139A676D005B6FC0 /* OOPointMaths.h */,
-				1A79E3F9139B91C800AA6575 /* OOSoundSourcePool.h */,
-				1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */,
 			);
 			name = Misc;
 			sourceTree = "<group>";
@@ -2833,6 +2846,7 @@
 				1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */,
 				1A71665413995004005B6FC0 /* OOShipDescription.m in Sources */,
 				1A79E3FB139B91C800AA6575 /* OOSoundSourcePool.m in Sources */,
+				1A79E4F6139B9B4A00AA6575 /* OOSound+OOCustomSounds.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

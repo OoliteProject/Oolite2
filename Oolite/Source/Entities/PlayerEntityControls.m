@@ -49,6 +49,7 @@ MA 02110-1301, USA.
 #import "OOShipClass.h"
 
 #import "OOJoystickManager.h"
+#import <OoliteSound/OoliteSound.h>
 
 #import "OOJSScript.h"
 #import "OOEquipmentType.h"

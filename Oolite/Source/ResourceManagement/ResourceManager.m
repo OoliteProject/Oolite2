@@ -29,6 +29,7 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OoliteLogOutputHandler.h"
 #import "OOVersion.h"
+#import <OoliteSound/OoliteSound.h>
 
 #import "OOJSScript.h"
 

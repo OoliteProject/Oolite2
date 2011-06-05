@@ -33,6 +33,7 @@ MA 02110-1301, USA.
 #import "OOOpenGLExtensionManager.h"
 #import "NSFileManagerOOExtensions.h"
 #import "OoliteLogOutputHandler.h"
+#import <OoliteSound/OoliteSound.h>
 
 #define kOOLogUnconvertedNSLog @"unclassified.GameController"
 

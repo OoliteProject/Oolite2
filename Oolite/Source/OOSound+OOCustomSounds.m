@@ -36,39 +36,10 @@ MA 02110-1301, USA.
 	return [ResourceManager ooSoundNamed:fileName inFolder:@"Sounds"];
 }
 
-
-- (id) initWithCustomSoundKey:(NSString *)key
-{
-	[self release];
-	return [[OOSound soundWithCustomSoundKey:key] retain];
-}
-
 @end
 
 
 @implementation OOSoundSource (OOCustomSounds)
-
-+ (id) sourceWithCustomSoundKey:(NSString *)key
-{
-	return [[[self alloc] initWithCustomSoundKey:key] autorelease];
-}
-
-
-- (id) initWithCustomSoundKey:(NSString *)key
-{
-	OOSound *theSound = [OOSound soundWithCustomSoundKey:key];
-	if (theSound != nil)
-	{
-		self = [self initWithSound:theSound];
-	}
-	else
-	{
-		[self release];
-		self = nil;
-	}
-	return self;
-}
-
 
 - (void) playCustomSoundWithKey:(NSString *)key
 {

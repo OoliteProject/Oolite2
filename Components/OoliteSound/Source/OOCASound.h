@@ -2,7 +2,8 @@
 
 OOCASound.h
 
-Abstract base class for sounds, and primary sound loading interface.
+Shared functionality for CA implementations of OOSound. OOCASound itself is
+abstract.
 
 
 OOCASound - Core Audio sound implementation for Oolite.
@@ -28,22 +29,43 @@ SOFTWARE.
 
 */
 
-#import <Cocoa/Cocoa.h>
+#import "OOSound.h"
+#import <AudioUnit/AudioUnit.h>
+
+@class OOCASoundContext;
+typedef uintptr_t OOCASoundRenderContext;
 
 
-@interface OOSound: NSObject
+@interface OOCASound: OOSound
 {
+@private
+	OOCASoundContext	*_context;
 	uint32_t			_playingCount;
 }
 
-+ (void) setUp;
-+ (void) update;
+- (id) initWithContext:(OOCASoundContext *)context;
 
-+ (void) setMasterVolume:(float) fraction;
-+ (float) masterVolume;
+/*
+	Core render method.
+	
+	This method will be IMP cached, and will be called on the realtime rendering
+	thread, so it musn’t make any ObjC method calls.
+*/
+- (OSStatus) renderWithFlags:(AudioUnitRenderActionFlags *)ioFlags
+					  frames:(UInt32)inNumFrames
+					 context:(OOCASoundRenderContext *)ioContext
+						data:(AudioBufferList *)ioData;
 
-- (id) initWithContentsOfFile:(NSString *)path;
+// Called by -play and -stop only if in appropriate state
+- (BOOL) prepareToPlayWithContext:(OOCASoundRenderContext *)outContext
+						   looped:(BOOL)inLoop;
+- (void) finishStoppingWithContext:(OOCASoundRenderContext)inContext;
 
-- (NSString *)name;
+- (BOOL) getAudioStreamBasicDescription:(AudioStreamBasicDescription *)outFormat;
+
+- (void) incrementPlayingCount;
+- (void) decrementPlayingCount;
+
+- (BOOL) isPlaying;
 
 @end

@@ -25,6 +25,7 @@ MA 02110-1301, USA.
 #import "ResourceManager.h"
 #import "OOCacheManager.h"
 #import "Universe.h"
+#import "GameController.h"
 #import "OOStringParsing.h"
 #import "MyOpenGLView.h"
 #import "OoliteLogOutputHandler.h"
@@ -791,23 +792,38 @@ static NSMutableDictionary *sStringCache;
 
 + (OOMusic *) ooMusicNamed:(NSString *)fileName inFolder:(NSString *)folderName
 {
+#if 0
 	return [self retrieveFileNamed:fileName
 						  inFolder:folderName
 							 cache:NULL	// Don't cache music objects; minimizing latency isn't really important.
 							   key:[NSString stringWithFormat:@"OOMusic:%@:%@", folderName, fileName]
 							 class:[OOMusic class]
 					  usePathCache:YES];
+#else
+	// FIXME: music
+	return nil;
+#endif
 }
 
 
 + (OOSound *) ooSoundNamed:(NSString *)fileName inFolder:(NSString *)folderName
 {
-	return [self retrieveFileNamed:fileName
-						  inFolder:folderName
-							 cache:&sSoundCache
-							   key:[NSString stringWithFormat:@"OOSound:%@:%@", folderName, fileName]
-							 class:[OOSound class]
-					  usePathCache:YES];
+	OOSound *result = [sSoundCache objectForKey:fileName];
+	if (result == nil)
+	{
+		NSString *path = [self pathForFileNamed:fileName inFolder:folderName cache:YES];
+		if (path != nil)
+		{
+			result = [[[GameController sharedController] soundContext] soundWithContentsOfFile:path];
+			if (result != nil)
+			{
+				if (sSoundCache == nil)  sSoundCache = [[NSMutableDictionary alloc] init];
+				[sSoundCache setObject:result forKey:fileName];
+			}
+		}
+	}
+	
+	return result;
 }
 
 

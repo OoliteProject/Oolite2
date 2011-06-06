@@ -27,6 +27,9 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 
+@class OOSoundContext;
+
+
 #define MODE_WINDOWED			100
 #define MODE_FULL_SCREEN		200
 
@@ -67,8 +70,9 @@ MA 02110-1301, USA.
 #endif
 
 
-@interface GameController : NSObject
+@interface GameController: NSObject
 {
+@private
 #if OOLITE_HAVE_APPKIT
 	IBOutlet NSTextField	*splashProgressTextField;
 	IBOutlet NSView			*splashView;
@@ -119,6 +123,8 @@ MA 02110-1301, USA.
 	NSObject				*pauseTarget;
 
 	BOOL					gameIsPaused;
+	
+	OOSoundContext			*_soundContext;
 }
 
 + (id)sharedController;
@@ -181,6 +187,8 @@ MA 02110-1301, USA.
 - (void)setUpBasicOpenGLStateWithSize:(NSSize)viewSize;
 
 - (NSURL *) snapshotsURLCreatingIfNeeded:(BOOL)create;
+
+- (OOSoundContext *) soundContext;
 
 @end
 

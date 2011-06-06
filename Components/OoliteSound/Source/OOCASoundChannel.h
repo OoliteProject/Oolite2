@@ -31,67 +31,52 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import "OOSoundChannel.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "OOCASoundDebugMonitor.h"
-
-@class OOSound;
-
-
-typedef uintptr_t OOCASoundRenderContext;
-typedef  OSStatus (*OOSoundChannel_RenderIMP)(id inSelf, SEL inSelector, AudioUnitRenderActionFlags *ioFlags, UInt32 inNumFrames, OOCASoundRenderContext *ioContext, AudioBufferList *ioData);
+#import "OOCASound.h"
 
 
-@interface OOSoundChannel: NSObject
+typedef  OSStatus (*OOCASoundChannel_RenderIMP)(id inSelf, SEL inSelector, AudioUnitRenderActionFlags *ioFlags, UInt32 inNumFrames, OOCASoundRenderContext *ioContext, AudioBufferList *ioData);
+
+
+@interface OOCASoundChannel: OOSoundChannel
 {
-	OOSoundChannel				*_next;
-	id							_delegate;
+@public
+	// Exposed for internal use on RT thread, not really public.
+	OOCASoundChannel			*_next;
+	
+@private
 	AUNode						_subGraphNode;
 	AUGraph						_subGraph;
 	AUNode						_node;
 	AudioUnit					_au;
-	OOSound						*_sound;
-	OOCASoundRenderContext		_context;
-	OOSoundChannel_RenderIMP	Render;
+	OOCASound					*_sound;
+	OOCASoundRenderContext		_renderContext;
+	OOCASoundChannel_RenderIMP	Render;
 	uint8_t						_state,
 								_id,
 								_stopReq;
 	OSStatus					_error;
 }
 
-+ (BOOL)setUp;
-+ (void)tearDown;
+- (id) initWithContext:(OOCASoundContext *)context
+					ID:(uint8_t)inID
+			   auGraph:(AUGraph)inGraph;
 
-- (id)initWithID:(uint32_t)inID auGraph:(AUGraph)inGraph;
-
-- (void)setDelegate:(id)inDelegate;
-
-- (uint32_t)ID;
-
-- (AUNode)auSubGraphNode;
+- (AUNode) auSubGraphNode;
 
 // Unretained pointer used to maintain simple stack
-- (OOSoundChannel *)next;
-- (void)setNext:(OOSoundChannel *)inNext;
+- (OOCASoundChannel *) next;
+- (void) setNext:(OOCASoundChannel *)inNext;
 
-- (BOOL)playSound:(OOSound *)inSound looped:(BOOL)inLoop;
-- (void)stop;
+- (OOSound *) sound;
 
-- (OOSound *)sound;
-
-- (BOOL)isOK;
+- (BOOL) isOK;
 
 
 #ifndef NDEBUG
 - (OOCASoundDebugMonitorChannelState) soundInspectorState;
 #endif
-
-@end
-
-
-@interface NSObject(OOSoundChannelDelegate)
-
-// Note: this will be called in a separate thread.
-- (void)channel:(OOSoundChannel *)inChannel didFinishPlayingSound:(OOSound *)inSound;
 
 @end

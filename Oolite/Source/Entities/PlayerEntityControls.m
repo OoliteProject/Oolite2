@@ -2321,30 +2321,36 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 	}
 
 	if ((guiSelectedRow == GUI_ROW(GAME,VOLUME))
-		&&(([gameView isDown:gvArrowKeyRight])||([gameView isDown:gvArrowKeyLeft]))
-		&&[OOSound respondsToSelector:@selector(masterVolume)])
+		&&(([gameView isDown:gvArrowKeyRight])||([gameView isDown:gvArrowKeyLeft])))
 	{
-		if ((!volumeControlPressed)||(time > timeLastKeyPress + KEY_REPEAT_INTERVAL))
+		if (!volumeControlPressed || time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
 		{
+			OOSoundContext *sound = [[GameController sharedController] soundContext];
+			int volume = 100 * [sound masterVolume];
+			
 			BOOL rightKeyDown = [gameView isDown:gvArrowKeyRight];
 			BOOL leftKeyDown = [gameView isDown:gvArrowKeyLeft];
-			int volume = 100 * [OOSound masterVolume];
+			
 			volume += (((rightKeyDown && (volume < 100)) ? 5 : 0) - ((leftKeyDown && (volume > 0)) ? 5 : 0));
 			if (volume > 100) volume = 100;
 			if (volume < 0) volume = 0;
-			[OOSound setMasterVolume: 0.01 * volume];
+			
+			[sound setMasterVolume: 0.01 * volume];
 			[self playChangedOption];
+			
 			if (volume > 0)
 			{
-				NSString* soundVolumeWordDesc = DESC(@"gameoptions-sound-volume");
-				NSString* v1_string = @"|||||||||||||||||||||||||";
-				NSString* v0_string = @".........................";
+				NSString *soundVolumeWordDesc = DESC(@"gameoptions-sound-volume");
+				NSString *v1_string = @"|||||||||||||||||||||||||";
+				NSString *v0_string = @".........................";
 				v1_string = [v1_string substringToIndex:volume / 5];
 				v0_string = [v0_string substringToIndex:20 - volume / 5];
 				[gui setText:[NSString stringWithFormat:@"%@%@%@ ", soundVolumeWordDesc, v1_string, v0_string]	forRow:GUI_ROW(GAME,VOLUME)  align:GUI_ALIGN_CENTER];
 			}
 			else
+			{
 				[gui setText:DESC(@"gameoptions-sound-volume-mute")	forRow:GUI_ROW(GAME,VOLUME)  align:GUI_ALIGN_CENTER];
+			}
 			timeLastKeyPress = time;
 		}
 		volumeControlPressed = YES;

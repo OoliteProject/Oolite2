@@ -13,8 +13,7 @@
 		1A79E3DB139B855100AA6575 /* OOCABufferedSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C1139B855100AA6575 /* OOCABufferedSound.h */; };
 		1A79E3DC139B855100AA6575 /* OOCABufferedSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C2139B855100AA6575 /* OOCABufferedSound.m */; };
 		1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C3139B855100AA6575 /* OOCAMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A79E3DE139B855100AA6575 /* OOCAMusic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C4139B855100AA6575 /* OOCAMusic.m */; };
-		1A79E3DF139B855100AA6575 /* OOCASound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C5139B855100AA6575 /* OOCASound.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A79E3DF139B855100AA6575 /* OOCASound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C5139B855100AA6575 /* OOCASound.h */; settings = {ATTRIBUTES = (); }; };
 		1A79E3E0139B855100AA6575 /* OOCASound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C6139B855100AA6575 /* OOCASound.m */; };
 		1A79E3E1139B855100AA6575 /* OOCASoundChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C7139B855100AA6575 /* OOCASoundChannel.h */; };
 		1A79E3E2139B855100AA6575 /* OOCASoundChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C8139B855100AA6575 /* OOCASoundChannel.m */; };
@@ -28,7 +27,6 @@
 		1A79E3EA139B855100AA6575 /* OOCASoundReferencePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3D0139B855100AA6575 /* OOCASoundReferencePoint.m */; };
 		1A79E3EB139B855100AA6575 /* OOCAStreamingSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3D1139B855100AA6575 /* OOCAStreamingSound.h */; };
 		1A79E3EC139B855100AA6575 /* OOCAStreamingSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3D2139B855100AA6575 /* OOCAStreamingSound.m */; };
-		1A79E3ED139B855100AA6575 /* OOSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3D3139B855100AA6575 /* OOSound.h */; };
 		1A79E3EE139B855100AA6575 /* OOSoundInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3D4139B855100AA6575 /* OOSoundInternal.h */; };
 		1A79E3EF139B855100AA6575 /* OOSoundSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3D5139B855100AA6575 /* OOSoundSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A79E3F0139B855100AA6575 /* OOSoundSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3D6139B855100AA6575 /* OOSoundSource.m */; };
@@ -42,7 +40,22 @@
 		1A79E403139B92E200AA6575 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E402139B92E200AA6575 /* CoreServices.framework */; };
 		1A79E419139B937C00AA6575 /* libogg_for_oolite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E417139B937C00AA6575 /* libogg_for_oolite.a */; };
 		1A79E41A139B937C00AA6575 /* libvorbis_for_oolite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E418139B937C00AA6575 /* libvorbis_for_oolite.a */; };
+		1AA5085C139BB0F20003B901 /* OOSoundContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA5085A139BB0F20003B901 /* OOSoundContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AA5085D139BB0F20003B901 /* OOSoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5085B139BB0F20003B901 /* OOSoundContext.m */; };
+		1AA50861139BB28A0003B901 /* OOCASoundContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA5085F139BB28A0003B901 /* OOCASoundContext.h */; };
+		1AA50862139BB28A0003B901 /* OOCASoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA50860139BB28A0003B901 /* OOCASoundContext.m */; };
+		1AA50866139BF7680003B901 /* OOSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA50864139BF7670003B901 /* OOSound.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AA50867139BF7680003B901 /* OOSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA50865139BF7680003B901 /* OOSound.m */; };
+		1AA50922139D111C0003B901 /* OOSoundChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA50920139D11190003B901 /* OOSoundChannel.h */; };
+		1AA50923139D111C0003B901 /* OOSoundChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA50921139D111A0003B901 /* OOSoundChannel.m */; };
+		1AA50928139D1A080003B901 /* OOMixerSoundSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA50926139D1A080003B901 /* OOMixerSoundSource.h */; };
+		1AA50929139D1A080003B901 /* OOMixerSoundSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA50927139D1A080003B901 /* OOMixerSoundSource.m */; };
+		1AA5092C139D1B2E0003B901 /* OOMixerSoundContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA5092A139D1B2D0003B901 /* OOMixerSoundContext.h */; };
+		1AA5092D139D1B2E0003B901 /* OOMixerSoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5092B139D1B2E0003B901 /* OOMixerSoundContext.m */; };
+		1AA50930139D25090003B901 /* OOSoundMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA5092E139D25050003B901 /* OOSoundMixer.h */; };
+		1AA50931139D25090003B901 /* OOSoundMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5092F139D25060003B901 /* OOSoundMixer.m */; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		1AFE9F4E139D89EC00DCC1AF /* OOCASoundInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE9F4D139D89EC00DCC1AF /* OOCASoundInternal.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,7 +136,6 @@
 		1A79E3D0139B855100AA6575 /* OOCASoundReferencePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCASoundReferencePoint.m; sourceTree = "<group>"; };
 		1A79E3D1139B855100AA6575 /* OOCAStreamingSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCAStreamingSound.h; sourceTree = "<group>"; };
 		1A79E3D2139B855100AA6575 /* OOCAStreamingSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCAStreamingSound.m; sourceTree = "<group>"; };
-		1A79E3D3139B855100AA6575 /* OOSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSound.h; sourceTree = "<group>"; };
 		1A79E3D4139B855100AA6575 /* OOSoundInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundInternal.h; sourceTree = "<group>"; };
 		1A79E3D5139B855100AA6575 /* OOSoundSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundSource.h; sourceTree = "<group>"; };
 		1A79E3D6139B855100AA6575 /* OOSoundSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundSource.m; sourceTree = "<group>"; };
@@ -139,7 +151,22 @@
 		1A79E407139B935D00AA6575 /* Vorbis.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Vorbis.xcodeproj; path = Dependencies/OggVorbis/Vorbis.xcodeproj; sourceTree = "<group>"; };
 		1A79E417139B937C00AA6575 /* libogg_for_oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libogg_for_oolite.a; sourceTree = SOURCE_ROOT; };
 		1A79E418139B937C00AA6575 /* libvorbis_for_oolite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libvorbis_for_oolite.a; sourceTree = SOURCE_ROOT; };
+		1AA5085A139BB0F20003B901 /* OOSoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundContext.h; sourceTree = "<group>"; };
+		1AA5085B139BB0F20003B901 /* OOSoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundContext.m; sourceTree = "<group>"; };
+		1AA5085F139BB28A0003B901 /* OOCASoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCASoundContext.h; sourceTree = "<group>"; };
+		1AA50860139BB28A0003B901 /* OOCASoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOCASoundContext.m; sourceTree = "<group>"; };
+		1AA50864139BF7670003B901 /* OOSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSound.h; sourceTree = "<group>"; };
+		1AA50865139BF7680003B901 /* OOSound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSound.m; sourceTree = "<group>"; };
+		1AA50920139D11190003B901 /* OOSoundChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundChannel.h; sourceTree = "<group>"; };
+		1AA50921139D111A0003B901 /* OOSoundChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundChannel.m; sourceTree = "<group>"; };
+		1AA50926139D1A080003B901 /* OOMixerSoundSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMixerSoundSource.h; sourceTree = "<group>"; };
+		1AA50927139D1A080003B901 /* OOMixerSoundSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMixerSoundSource.m; sourceTree = "<group>"; };
+		1AA5092A139D1B2D0003B901 /* OOMixerSoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = OOMixerSoundContext.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
+		1AA5092B139D1B2E0003B901 /* OOMixerSoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = OOMixerSoundContext.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 1; wrapsLines = 1; };
+		1AA5092E139D25050003B901 /* OOSoundMixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundMixer.h; sourceTree = "<group>"; };
+		1AA5092F139D25060003B901 /* OOSoundMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundMixer.m; sourceTree = "<group>"; };
 		1AEA251111A73A9200B361DC /* OoliteSound.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OoliteSound.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AFE9F4D139D89EC00DCC1AF /* OOCASoundInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOCASoundInternal.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,32 +231,14 @@
 		08FB77AEFE84172EC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1A79E3C1139B855100AA6575 /* OOCABufferedSound.h */,
-				1A79E3C2139B855100AA6575 /* OOCABufferedSound.m */,
-				1A79E3C3139B855100AA6575 /* OOCAMusic.h */,
-				1A79E3C4139B855100AA6575 /* OOCAMusic.m */,
-				1A79E3C5139B855100AA6575 /* OOCASound.h */,
-				1A79E3C6139B855100AA6575 /* OOCASound.m */,
-				1A79E3C7139B855100AA6575 /* OOCASoundChannel.h */,
-				1A79E3C8139B855100AA6575 /* OOCASoundChannel.m */,
-				1A79E3C9139B855100AA6575 /* OOCASoundDebugMonitor.h */,
-				1A79E3CA139B855100AA6575 /* OOCASoundDecoder.h */,
-				1A79E3CB139B855100AA6575 /* OOCASoundDecoder.m */,
-				1A79E3CC139B855100AA6575 /* OOCASoundInternal.h */,
-				1A79E3CD139B855100AA6575 /* OOCASoundMixer.h */,
-				1A79E3CE139B855100AA6575 /* OOCASoundMixer.m */,
-				1A79E3CF139B855100AA6575 /* OOCASoundReferencePoint.h */,
-				1A79E3D0139B855100AA6575 /* OOCASoundReferencePoint.m */,
-				1A79E3D1139B855100AA6575 /* OOCAStreamingSound.h */,
-				1A79E3D2139B855100AA6575 /* OOCAStreamingSound.m */,
-				1A79E3D3139B855100AA6575 /* OOSound.h */,
-				1A79E3D4139B855100AA6575 /* OOSoundInternal.h */,
+				1AA5085A139BB0F20003B901 /* OOSoundContext.h */,
+				1AA5085B139BB0F20003B901 /* OOSoundContext.m */,
+				1AA50864139BF7670003B901 /* OOSound.h */,
+				1AA50865139BF7680003B901 /* OOSound.m */,
 				1A79E3D5139B855100AA6575 /* OOSoundSource.h */,
 				1A79E3D6139B855100AA6575 /* OOSoundSource.m */,
-				1A79E3D9139B855100AA6575 /* VirtualRingBuffer.h */,
-				1A79E3DA139B855100AA6575 /* VirtualRingBuffer.m */,
-				1A79E3F5139B85C300AA6575 /* OOMacErrorDescription.h */,
-				1A79E3F6139B85C300AA6575 /* OOMacErrorDescription.m */,
+				1AA50925139D19CF0003B901 /* Internal-shared */,
+				1AA50863139BF6510003B901 /* CA Sound */,
 			);
 			name = Source;
 			path = ../Source;
@@ -276,6 +285,54 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1AA50863139BF6510003B901 /* CA Sound */ = {
+			isa = PBXGroup;
+			children = (
+				1AFE9F4D139D89EC00DCC1AF /* OOCASoundInternal.h */,
+				1AA5085F139BB28A0003B901 /* OOCASoundContext.h */,
+				1AA50860139BB28A0003B901 /* OOCASoundContext.m */,
+				1A79E3C5139B855100AA6575 /* OOCASound.h */,
+				1A79E3C6139B855100AA6575 /* OOCASound.m */,
+				1A79E3C1139B855100AA6575 /* OOCABufferedSound.h */,
+				1A79E3C2139B855100AA6575 /* OOCABufferedSound.m */,
+				1A79E3D1139B855100AA6575 /* OOCAStreamingSound.h */,
+				1A79E3D2139B855100AA6575 /* OOCAStreamingSound.m */,
+				1A79E3C3139B855100AA6575 /* OOCAMusic.h */,
+				1A79E3C4139B855100AA6575 /* OOCAMusic.m */,
+				1A79E3C7139B855100AA6575 /* OOCASoundChannel.h */,
+				1A79E3C8139B855100AA6575 /* OOCASoundChannel.m */,
+				1A79E3C9139B855100AA6575 /* OOCASoundDebugMonitor.h */,
+				1A79E3CA139B855100AA6575 /* OOCASoundDecoder.h */,
+				1A79E3CB139B855100AA6575 /* OOCASoundDecoder.m */,
+				1A79E3CC139B855100AA6575 /* OOCASoundInternal.h */,
+				1A79E3CD139B855100AA6575 /* OOCASoundMixer.h */,
+				1A79E3CE139B855100AA6575 /* OOCASoundMixer.m */,
+				1A79E3CF139B855100AA6575 /* OOCASoundReferencePoint.h */,
+				1A79E3D0139B855100AA6575 /* OOCASoundReferencePoint.m */,
+				1A79E3D9139B855100AA6575 /* VirtualRingBuffer.h */,
+				1A79E3DA139B855100AA6575 /* VirtualRingBuffer.m */,
+				1A79E3F5139B85C300AA6575 /* OOMacErrorDescription.h */,
+				1A79E3F6139B85C300AA6575 /* OOMacErrorDescription.m */,
+			);
+			name = "CA Sound";
+			sourceTree = "<group>";
+		};
+		1AA50925139D19CF0003B901 /* Internal-shared */ = {
+			isa = PBXGroup;
+			children = (
+				1A79E3D4139B855100AA6575 /* OOSoundInternal.h */,
+				1AA5092A139D1B2D0003B901 /* OOMixerSoundContext.h */,
+				1AA5092B139D1B2E0003B901 /* OOMixerSoundContext.m */,
+				1AA5092E139D25050003B901 /* OOSoundMixer.h */,
+				1AA5092F139D25060003B901 /* OOSoundMixer.m */,
+				1AA50920139D11190003B901 /* OOSoundChannel.h */,
+				1AA50921139D111A0003B901 /* OOSoundChannel.m */,
+				1AA50926139D1A080003B901 /* OOMixerSoundSource.h */,
+				1AA50927139D1A080003B901 /* OOMixerSoundSource.m */,
+			);
+			name = "Internal-shared";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -284,10 +341,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A79E3B0139B82F600AA6575 /* OoliteSound.h in Headers */,
-				1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */,
-				1A79E3DF139B855100AA6575 /* OOCASound.h in Headers */,
-				1A79E3E9139B855100AA6575 /* OOCASoundReferencePoint.h in Headers */,
+				1AA5085C139BB0F20003B901 /* OOSoundContext.h in Headers */,
+				1AA50866139BF7680003B901 /* OOSound.h in Headers */,
 				1A79E3EF139B855100AA6575 /* OOSoundSource.h in Headers */,
+				1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */,
+				1A79E3E9139B855100AA6575 /* OOCASoundReferencePoint.h in Headers */,
 				1A79E3E3139B855100AA6575 /* OOCASoundDebugMonitor.h in Headers */,
 				1A79E3DB139B855100AA6575 /* OOCABufferedSound.h in Headers */,
 				1A79E3E1139B855100AA6575 /* OOCASoundChannel.h in Headers */,
@@ -295,10 +353,16 @@
 				1A79E3E6139B855100AA6575 /* OOCASoundInternal.h in Headers */,
 				1A79E3E7139B855100AA6575 /* OOCASoundMixer.h in Headers */,
 				1A79E3EB139B855100AA6575 /* OOCAStreamingSound.h in Headers */,
-				1A79E3ED139B855100AA6575 /* OOSound.h in Headers */,
 				1A79E3EE139B855100AA6575 /* OOSoundInternal.h in Headers */,
 				1A79E3F3139B855100AA6575 /* VirtualRingBuffer.h in Headers */,
 				1A79E3F7139B85C300AA6575 /* OOMacErrorDescription.h in Headers */,
+				1AA50861139BB28A0003B901 /* OOCASoundContext.h in Headers */,
+				1A79E3DF139B855100AA6575 /* OOCASound.h in Headers */,
+				1AA50922139D111C0003B901 /* OOSoundChannel.h in Headers */,
+				1AA50928139D1A080003B901 /* OOMixerSoundSource.h in Headers */,
+				1AA5092C139D1B2E0003B901 /* OOMixerSoundContext.h in Headers */,
+				1AA50930139D25090003B901 /* OOSoundMixer.h in Headers */,
+				1AFE9F4E139D89EC00DCC1AF /* OOCASoundInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,7 +491,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A79E3DC139B855100AA6575 /* OOCABufferedSound.m in Sources */,
-				1A79E3DE139B855100AA6575 /* OOCAMusic.m in Sources */,
 				1A79E3E0139B855100AA6575 /* OOCASound.m in Sources */,
 				1A79E3E2139B855100AA6575 /* OOCASoundChannel.m in Sources */,
 				1A79E3E5139B855100AA6575 /* OOCASoundDecoder.m in Sources */,
@@ -437,6 +500,13 @@
 				1A79E3F0139B855100AA6575 /* OOSoundSource.m in Sources */,
 				1A79E3F4139B855100AA6575 /* VirtualRingBuffer.m in Sources */,
 				1A79E3F8139B85C300AA6575 /* OOMacErrorDescription.m in Sources */,
+				1AA5085D139BB0F20003B901 /* OOSoundContext.m in Sources */,
+				1AA50862139BB28A0003B901 /* OOCASoundContext.m in Sources */,
+				1AA50867139BF7680003B901 /* OOSound.m in Sources */,
+				1AA50923139D111C0003B901 /* OOSoundChannel.m in Sources */,
+				1AA50929139D1A080003B901 /* OOMixerSoundSource.m in Sources */,
+				1AA5092D139D1B2E0003B901 /* OOMixerSoundContext.m in Sources */,
+				1AA50931139D25090003B901 /* OOSoundMixer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

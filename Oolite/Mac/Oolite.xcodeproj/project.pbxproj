@@ -255,7 +255,7 @@
 		1A1F2EB213184FA600D06C6C /* OOGraphicsResetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2EB113184FA600D06C6C /* OOGraphicsResetManager.m */; };
 		1A1F2EFA131854F700D06C6C /* OOMusicController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2EF9131854F700D06C6C /* OOMusicController.m */; };
 		1A1F2F32131858B700D06C6C /* OORegExpMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2F31131858B700D06C6C /* OORegExpMatcher.m */; };
-		1A1F30C413185D1800D06C6C /* afterburner1.ogg in Copy Sounds */ = {isa = PBXBuildFile; fileRef = 1A1F301F13185CA600D06C6C /* afterburner1.ogg */; };
+		1A1F30C413185D1800D06C6C /* oolite-afterburner.ogg in Copy Sounds */ = {isa = PBXBuildFile; fileRef = 1A1F301F13185CA600D06C6C /* oolite-afterburner.ogg */; };
 		1A1F30C513185D1800D06C6C /* beep.ogg in Copy Sounds */ = {isa = PBXBuildFile; fileRef = 1A1F302013185CA600D06C6C /* beep.ogg */; };
 		1A1F30C613185D1800D06C6C /* bigbang.ogg in Copy Sounds */ = {isa = PBXBuildFile; fileRef = 1A1F302113185CA600D06C6C /* bigbang.ogg */; };
 		1A1F30C713185D1800D06C6C /* boop.ogg in Copy Sounds */ = {isa = PBXBuildFile; fileRef = 1A1F302213185CA600D06C6C /* boop.ogg */; };
@@ -796,7 +796,7 @@
 			dstPath = Sounds;
 			dstSubfolderSpec = 7;
 			files = (
-				1A1F30C413185D1800D06C6C /* afterburner1.ogg in Copy Sounds */,
+				1A1F30C413185D1800D06C6C /* oolite-afterburner.ogg in Copy Sounds */,
 				1A1F30C513185D1800D06C6C /* beep.ogg in Copy Sounds */,
 				1A1F30C613185D1800D06C6C /* bigbang.ogg in Copy Sounds */,
 				1A1F30C713185D1800D06C6C /* boop.ogg in Copy Sounds */,
@@ -1298,7 +1298,7 @@
 		1A1F2EF9131854F700D06C6C /* OOMusicController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOMusicController.m; sourceTree = "<group>"; };
 		1A1F2F30131858B700D06C6C /* OORegExpMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OORegExpMatcher.h; sourceTree = "<group>"; };
 		1A1F2F31131858B700D06C6C /* OORegExpMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OORegExpMatcher.m; sourceTree = "<group>"; };
-		1A1F301F13185CA600D06C6C /* afterburner1.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = afterburner1.ogg; sourceTree = "<group>"; };
+		1A1F301F13185CA600D06C6C /* oolite-afterburner.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "oolite-afterburner.ogg"; sourceTree = "<group>"; };
 		1A1F302013185CA600D06C6C /* beep.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = beep.ogg; sourceTree = "<group>"; };
 		1A1F302113185CA600D06C6C /* bigbang.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bigbang.ogg; sourceTree = "<group>"; };
 		1A1F302213185CA600D06C6C /* boop.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = boop.ogg; sourceTree = "<group>"; };
@@ -2022,7 +2022,7 @@
 		1A1F301E13185CA600D06C6C /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				1A1F301F13185CA600D06C6C /* afterburner1.ogg */,
+				1A1F301F13185CA600D06C6C /* oolite-afterburner.ogg */,
 				1A1F302013185CA600D06C6C /* beep.ogg */,
 				1A1F302113185CA600D06C6C /* bigbang.ogg */,
 				1A1F302213185CA600D06C6C /* boop.ogg */,

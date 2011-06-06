@@ -53,27 +53,21 @@ SOFTWARE.
 }
 
 
-- (NSString *)description
+- (NSString *) descriptionComponents
 {
-	return [NSString stringWithFormat:@"<%@ %p>{\"%@\", %s, %g Hz, %u bytes}", [self className], self, [self name], _stereo ? "stereo" : "mono", _sampleRate, _size * sizeof (float) * (_stereo ? 2 : 1)];
+	return $sprintf(@"\"%@\", %s, %g Hz, %u bytes", [self name], _stereo ? "stereo" : "mono", _sampleRate, _size * sizeof (float) * (_stereo ? 2 : 1));
 }
 
 
 #pragma mark OOSound
 
-- (NSString *)name
+- (NSString *) name
 {
 	return _name;
 }
 
 
-- (void)play
-{
-	[[OOSoundMixer sharedMixer] playSound:self];
-}
-
-
-- (BOOL)getAudioStreamBasicDescription:(AudioStreamBasicDescription *)outFormat
+- (BOOL) getAudioStreamBasicDescription:(AudioStreamBasicDescription *)outFormat
 {
 	assert(NULL != outFormat);
 	
@@ -92,14 +86,18 @@ SOFTWARE.
 
 
 // Context is (offset << 1) | loop. Offset is initially 0.
-- (BOOL)prepareToPlayWithContext:(OOCASoundRenderContext *)outContext looped:(BOOL)inLoop
+- (BOOL) prepareToPlayWithContext:(OOCASoundRenderContext *)outContext
+						   looped:(BOOL)inLoop
 {
 	*outContext = inLoop ? 1 : 0;
 	return YES;
 }
 
 
-- (OSStatus)renderWithFlags:(AudioUnitRenderActionFlags *)ioFlags frames:(UInt32)inNumFrames context:(OOCASoundRenderContext *)ioContext data:(AudioBufferList *)ioData
+- (OSStatus) renderWithFlags:(AudioUnitRenderActionFlags *)ioFlags
+					  frames:(UInt32)inNumFrames
+					 context:(OOCASoundRenderContext *)ioContext
+						data:(AudioBufferList *)ioData
 {
 	size_t					toCopy, remaining, underflow, offset;
 	BOOL					loop, done = NO;
@@ -154,39 +152,37 @@ SOFTWARE.
 		bzero(ioData->mBuffers[1].mData + toCopy, underflow * sizeof (float));
 	}
 	
-	OOCASoundVerifyBuffers(ioData, inNumFrames, self);
-	
 	return done ? endOfDataReached : noErr;
 }
 
 
 #pragma mark OOCABufferedSound
 
-- (id)initWithDecoder:(OOCASoundDecoder *)inDecoder
+- (id) initWithContext:(OOCASoundContext *)context
+			   decoder:(OOCASoundDecoder *)decoder
 {
 	BOOL					OK = YES;
 	
-	assert(gOOSoundSetUp);
-	if (gOOSoundBroken || nil == inDecoder) OK = NO;
+	if (decoder == nil)  return NO;
 	
 	if (OK)
 	{
-		self = [super init];
+		self = [super initWithContext:context];
 		if (nil == self) OK = NO;
 	}
 	
 	if (OK)
 	{
-		_name = [[inDecoder name] copy];
-		_sampleRate = [inDecoder sampleRate];
-		if ([inDecoder isStereo])
+		_name = [[decoder name] copy];
+		_sampleRate = [decoder sampleRate];
+		if ([decoder isStereo])
 		{
-			OK = [inDecoder readStereoCreatingLeftBuffer:&_bufferL rightBuffer:&_bufferR withFrameCount:&_size];
+			OK = [decoder readStereoCreatingLeftBuffer:&_bufferL rightBuffer:&_bufferR withFrameCount:&_size];
 			_stereo = YES;
 		}
 		else
 		{
-			OK = [inDecoder readMonoCreatingBuffer:&_bufferL withFrameCount:&_size];
+			OK = [decoder readMonoCreatingBuffer:&_bufferL withFrameCount:&_size];
 			_bufferR = _bufferL;
 		}
 	}

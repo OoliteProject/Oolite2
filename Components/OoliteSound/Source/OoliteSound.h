@@ -44,18 +44,16 @@ extern "C" {
 
 #import <OoliteBase/OoliteBase.h>
 
+#import "OOSoundContext.h"
+#import "OOSound.h"
+#import "OOSoundSource.h"
+
 
 #if OOLITE_SDL
-#import "OOSDLSound.h"
-#import "SDLMusic.h"
 #import "OOBasicSoundReferencePoint.h"
 #else
-#import "OOCASound.h"
-#import "OOCAMusic.h"
 #import "OOCASoundReferencePoint.h"
 #endif
-	
-#import "OOSoundSource.h"
 
 
 #ifdef __cplusplus

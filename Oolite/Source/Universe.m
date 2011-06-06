@@ -8166,7 +8166,8 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 
 - (void) startSpeakingString:(NSString *) text
 {
-	[speechSynthesizer startSpeakingString:[NSString stringWithFormat:@"[[volm %.3f]]%@", 0.3333333f * [OOSound masterVolume], text]];
+	OOSoundContext *soundContext = [[self gameController] soundContext];
+	[speechSynthesizer startSpeakingString:[NSString stringWithFormat:@"[[volm %.3f]]%@", [soundContext masterVolume] / 3.0f, text]];
 }
 
 

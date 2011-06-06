@@ -31,6 +31,7 @@ SOFTWARE.
 #import "OOCASoundInternal.h"
 #import "OOCASoundDecoder.h"
 #import "VirtualRingBuffer.h"
+#import </usr/include/libkern/OSAtomic.h>
 
 
 static NSString * const kOOLogSoundStreamingRefill		= @"sound.streaming.refill";
@@ -94,12 +95,10 @@ enum
 
 @implementation OOCAStreamingSound
 
-- (id)initWithDecoder:(OOCASoundDecoder *)inDecoder
+- (id) initWithContext:(OOCASoundContext *)context
+			   decoder:(OOCASoundDecoder *)decoder
 {
 	BOOL					OK = YES;
-	
-	assert(gOOSoundSetUp);
-	if (gOOSoundBroken || nil == inDecoder) OK = NO;
 	
 	if (OK && VRB_lengthAvailableToReadReturningPointer == NULL)
 	{
@@ -111,13 +110,18 @@ enum
 	
 	if (OK)
 	{
-		self = [super init];
+		self = [super initWithContext:context];
 		if (nil == self) OK = NO;
 	}
 	
 	if (OK)
 	{
-		_decoder = [inDecoder retain];
+		_mixer = (OOCASoundMixer *)[[context mixer] retain];
+	}
+	
+	if (OK)
+	{
+		_decoder = [decoder retain];
 	}
 	
 	if (!OK)
@@ -133,14 +137,9 @@ enum
 {
 	assert(![self isPlaying]);
 	[_decoder release];
+	[_mixer release];
 	
 	[super dealloc];
-}
-
-
-- (void)play
-{
-	[[OOSoundMixer sharedMixer] playSound:self];
 }
 
 
@@ -199,7 +198,7 @@ enum
 	
 	context = (OOCAStreamingSoundRenderContext) inContext;
 	
-	[gOOCASoundSyncLock lock];
+	[_mixer lock];
 	context->stopped = YES;
 	if (0 == context->pendingCount)
 	{
@@ -210,7 +209,7 @@ enum
 	{
 		OOLog(@"sound.streaming.releaseContext.deferring", @"Streaming sound %@ stopped with %i pendingCount, deferring release.", self, context->pendingCount);
 	}
-	[gOOCASoundSyncLock unlock];
+	[_mixer unlock];
 }
 
 
@@ -252,7 +251,7 @@ enum
 	void					*ptrL, *ptrR;
 	size_t					frames;
 	
-	[gOOCASoundSyncLock lock];
+	[_mixer lock];
 	spaceL = [inContext->bufferL lengthAvailableToWriteReturningPointer:&ptrL];
 	spaceR = [inContext->bufferR lengthAvailableToWriteReturningPointer:&ptrR];
 	
@@ -291,14 +290,14 @@ enum
 		}
 	}
 	
-	OOSoundAtomicAdd(-1, &inContext->pendingCount);
+	OSAtomicAdd32(-1, &inContext->pendingCount);
 	if (inContext->pendingCount == 0 && inContext->stopped)
 	{
 		OOLog(@"sound.streaming.releaseContext.deferred", @"Stopped streaming sound %@ reached 0 pendingCount, releasing context.", self);
 		[self releaseContext:inContext];
 	}
 	
-	[gOOCASoundSyncLock unlock];
+	[_mixer unlock];
 }
 
 
@@ -366,12 +365,10 @@ enum
 		bzero(ioData->mBuffers[1].mData + available, underflow);
 	}
 	
-	OOCASoundVerifyBuffers(ioData, inNumFrames, self);
-	
 	remaining -= available;
 	if (!context->atEnd && remaining < kStreamBufferRefillThreshold * sizeof (float) && sFeederQueue != kInvalidID)
 	{
-		OOSoundAtomicAdd(1, &context->pendingCount);
+		OSAtomicAdd32(1, &context->pendingCount);
 		MPNotifyQueue(sFeederQueue, (void *)kMsgFillBuffers, self, context);
 	}
 	

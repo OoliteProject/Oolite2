@@ -1,9 +1,10 @@
 /*
 
-OOSound.h
+OOSoundChannel.h
 
-An OOSound is a playable audio entity. It is loaded through an OOSoundContext
-and played through an OOSoundSource.
+Abstract sound channel class for audio engines that use a mixer and channels model.
+(The Core Audio and SDL engines do; the OpenAL engine won’t.) Abstract but not
+public.
 
 
 Copyright © 2005–2011 Jens Ayton
@@ -30,13 +31,33 @@ SOFTWARE.
 
 #import <OoliteBase/OoliteBase.h>
 
-@class OOSoundContext;
+@class OOSound, OOSoundContext;
 
 
-@interface OOSound: NSObject
+@interface OOSoundChannel: NSObject
+{
+@private
+	id							_delegate;
+	OOWeakReference				*_context;
+}
 
-- (NSString *) name;
+- (id) initWithContext:(OOSoundContext *)context;
 
 - (OOSoundContext *) context;
+- (NSUInteger) ID;
+
+- (id) delegate;
+- (void) setDelegate:(id)inDelegate;
+
+- (BOOL) playSound:(OOSound *)inSound looped:(BOOL)inLoop;
+- (void) stop;
+
+@end
+
+
+@interface NSObject(OOSoundChannelDelegate)
+
+// Note: this will be called in a separate thread in the CA implementation.
+- (void) channel:(OOSoundChannel *)inChannel didFinishPlayingSound:(OOSound *)inSound;
 
 @end

@@ -30,11 +30,11 @@ SOFTWARE.
 
 */
 
-#import <Foundation/Foundation.h>
+#import "OOSoundMixer.h"
 #import <mach/port.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-@class OOMusic, OOSoundChannel, OOSoundSource;
+@class OOMusic, OOCASoundChannel, OOSoundSource, OOCASoundContext;
 
 
 enum
@@ -43,11 +43,13 @@ enum
 };
 
 
-@interface OOSoundMixer: NSObject
+@interface OOCASoundMixer: OOSoundMixer
 {
-	OOSoundChannel				*_channels[kMixerGeneralChannels];
-	OOSoundChannel				*_freeList;
+@private
+	OOCASoundChannel			*_channels[kMixerGeneralChannels];
+	OOCASoundChannel			*_freeList;
 	NSLock						*_listLock;
+	NSRecursiveLock				*_mixerLock;
 	
 	AUGraph						_graph;
 	AUNode						_mixerNode;
@@ -60,14 +62,10 @@ enum
 #endif
 }
 
-// Singleton accessor
-+ (id) sharedMixer;
+- (id) initWithContext:(OOCASoundContext *)context;
 
 - (void) update;
 
 - (void) setMasterVolume:(float)inVolume;
-
-- (OOSoundChannel *) popChannel;
-- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED inChannel;
 
 @end

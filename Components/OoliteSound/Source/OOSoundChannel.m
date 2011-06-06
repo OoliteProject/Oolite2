@@ -1,9 +1,6 @@
 /*
 
-OOSound.h
-
-An OOSound is a playable audio entity. It is loaded through an OOSoundContext
-and played through an OOSoundSource.
+OOSoundChannel.m
 
 
 Copyright © 2005–2011 Jens Ayton
@@ -28,15 +25,66 @@ SOFTWARE.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
-
-@class OOSoundContext;
+#import "OOSoundChannel.h"
 
 
-@interface OOSound: NSObject
+@implementation OOSoundChannel
 
-- (NSString *) name;
+- (id) initWithContext:(OOSoundContext *)context
+{
+	NSParameterAssert(context != nil);
+	
+	if ((self = [super init]))
+	{
+		_context = [context weakRetain];
+	}
+	
+	return self;
+}
 
-- (OOSoundContext *) context;
+
+- (void) dealloc
+{
+	[_context release];
+	
+	[super dealloc];
+}
+
+
+- (OOSoundContext *) context
+{
+	return [_context weakRefUnderlyingObject];
+}
+
+
+- (NSUInteger) ID
+{
+	return 0;
+}
+
+
+- (id) delegate
+{
+	return _delegate;
+}
+
+
+- (void) setDelegate:(id)inDelegate
+{
+	_delegate = inDelegate;
+}
+
+
+- (BOOL) playSound:(OOSound *)inSound looped:(BOOL)inLoop
+{
+	OOLogGenericSubclassResponsibility();
+	return NO;
+}
+
+
+- (void) stop
+{
+	OOLogGenericSubclassResponsibility();
+}
 
 @end

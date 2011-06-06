@@ -27,6 +27,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "OOSound+OOCustomSounds.h"
 #import "OOSoundSourcePool.h"
+#import "GameController.h"
 
 
 // Sizes of sound source pools
@@ -58,10 +59,12 @@ static OOSoundSource		*sAfterburnerSources[2];
 {
 	[self destroySound];
 	
-	sInterfaceBeepSource = [[OOSoundSource alloc] init];
-	sBreakPatternSource = [[OOSoundSource alloc] init];
-	sEcmSource = [[OOSoundSource alloc] init];
-	sHyperspaceSoundSource = [[OOSoundSource alloc] init];
+	OOSoundContext *soundContext = [[GameController sharedController] soundContext];
+	
+	sInterfaceBeepSource = [[soundContext soundSource] retain];
+	sBreakPatternSource = [[soundContext soundSource] retain];
+	sEcmSource = [[soundContext soundSource] retain];
+	sHyperspaceSoundSource = [[soundContext soundSource] retain];
 	
 	sBuySellSourcePool = [[OOSoundSourcePool alloc] initWithCount:kBuySellSourcePoolSize minRepeatTime:0.0];
 	sWarningSoundPool = [[OOSoundSourcePool alloc] initWithCount:kWarningPoolSize minRepeatTime:0.0];
@@ -70,9 +73,11 @@ static OOSoundSource		*sAfterburnerSources[2];
 	sMiscSoundPool = [[OOSoundSourcePool alloc] initWithCount:kMiscPoolSize minRepeatTime:0.0];
 	
 	// Two sources with the same sound are used to simulate looping.
-	OOSound *afterburnerSound = [ResourceManager ooSoundNamed:@"afterburner1.ogg" inFolder:@"Sounds"];
-	sAfterburnerSources[0] = [[OOSoundSource alloc] initWithSound:afterburnerSound];
-	sAfterburnerSources[1] = [[OOSoundSource alloc] initWithSound:afterburnerSound];
+	OOSound *afterburnerSound = [ResourceManager ooSoundNamed:@"oolite-afterburner.ogg" inFolder:@"Sounds"];
+	sAfterburnerSources[0] = [[soundContext soundSource] retain];
+	sAfterburnerSources[1] = [[soundContext soundSource] retain];
+	[sAfterburnerSources[0] setSound:afterburnerSound];
+	[sAfterburnerSources[1] setSound:afterburnerSound];
 }
 
 

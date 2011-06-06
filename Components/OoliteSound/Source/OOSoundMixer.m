@@ -1,9 +1,7 @@
 /*
 
-OOCASoundInternal.h
-
-Declarations used within OOCASound. This file should not be used by client
-code.
+OOSoundMixer.m
+ 
 
 
 OOCASound - Core Audio sound implementation for Oolite.
@@ -29,43 +27,50 @@ SOFTWARE.
 
 */
 
-#import "OOSoundInternal.h"
-#import "OOCASoundContext.h"
-#import "OOCASound.h"
-#import "OOCASoundChannel.h"
-#import "OOCABufferedSound.h"
-#import "OOCAStreamingSound.h"
-#import <CoreAudio/CoreAudio.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import "OOMacErrorDescription.h"
+#import "OOSoundMixer.h"
 
 
-@interface OOCASoundMixer (Internal)
+@implementation OOSoundMixer
 
-- (BOOL)connectChannel:(OOCASoundChannel *)inChannel;
-- (OSStatus)disconnectChannel:(OOCASoundChannel *)inChannel;
+- (id) initWithContext:(OOMixerSoundContext *)context
+{
+	if ((self = [super init]))
+	{
+		_context = [context weakRetain];
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_context release];
+	
+	[super dealloc];
+}
+
+
+- (OOMixerSoundContext *) context
+{
+	return [_context weakRefUnderlyingObject];
+}
+
+
+- (void) lock {}
+- (void) unlock {}
+
+
+- (OOSoundChannel *) popChannel
+{
+	// FIXME: what to do when being used as dummy engine?
+	return nil;
+}
+
+
+- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED inChannel
+{
+	
+}
 
 @end
-
-
-@interface OOCASoundChannel (Internal)
-
-- (void) reap;
-- (void) cleanUp;
-
-#ifndef NDEBUG
-- (BOOL) readyToReap;
-#endif
-
-@end
-
-
-#define kOOLogSoundInitErrorGlavin @"sound.initialization.error"
-
-
-
-/*	The Vorbis floating-point decoder gives us out-of-range values for certain
-	built-in sounds. To compensate, we reduce overall volume slightly to avoid
-	clipping. (The worst observed value is -1.341681f in bigbang.ogg.)
-*/
-#define kOOAudioSlop 1.341682f

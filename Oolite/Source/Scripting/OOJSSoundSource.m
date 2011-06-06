@@ -26,6 +26,7 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "ResourceManager.h"
 #import <OoliteSound/OoliteSound.h>
+#import "GameController.h"
 
 
 static JSObject *sSoundSourcePrototype;
@@ -113,7 +114,7 @@ static JSBool SoundSourceConstruct(JSContext *context, uintN argc, jsval *vp)
 		return NO;
 	}
 	
-	OOJS_RETURN_OBJECT([[[OOSoundSource alloc] init] autorelease]);
+	OOJS_RETURN_OBJECT([[[GameController sharedController] soundContext] soundSource]);
 	
 	OOJS_NATIVE_EXIT
 }

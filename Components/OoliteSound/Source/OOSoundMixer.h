@@ -1,9 +1,15 @@
 /*
 
-OOCASoundInternal.h
+OOSoundMixer.h
 
-Declarations used within OOCASound. This file should not be used by client
-code.
+Abstract mixer for sound engines that use the mixer-and-channel model.
+
+In this model, each sound source is played through a channel, and channels are
+mixed together by the mixer. The number of channels is fixed, but high enough
+that the limit doesn’t practically matter.
+
+The Core Audio and SDL engines use this approach.
+ 
 
 
 OOCASound - Core Audio sound implementation for Oolite.
@@ -29,43 +35,31 @@ SOFTWARE.
 
 */
 
-#import "OOSoundInternal.h"
-#import "OOCASoundContext.h"
-#import "OOCASound.h"
-#import "OOCASoundChannel.h"
-#import "OOCABufferedSound.h"
-#import "OOCAStreamingSound.h"
-#import <CoreAudio/CoreAudio.h>
-#import <AudioToolbox/AudioToolbox.h>
-#import "OOMacErrorDescription.h"
+#import <OoliteBase/OoliteBase.h>
+
+@class OOMixerSoundContext, OOSoundChannel;
 
 
-@interface OOCASoundMixer (Internal)
+@interface OOSoundMixer: NSObject
+{
+@private
+	OOWeakReference			*_context;
+}
 
-- (BOOL)connectChannel:(OOCASoundChannel *)inChannel;
-- (OSStatus)disconnectChannel:(OOCASoundChannel *)inChannel;
+- (id) initWithContext:(OOMixerSoundContext *)context;
 
-@end
+- (OOMixerSoundContext *) context;
 
-
-@interface OOCASoundChannel (Internal)
-
-- (void) reap;
-- (void) cleanUp;
-
-#ifndef NDEBUG
-- (BOOL) readyToReap;
-#endif
-
-@end
-
-
-#define kOOLogSoundInitErrorGlavin @"sound.initialization.error"
-
-
-
-/*	The Vorbis floating-point decoder gives us out-of-range values for certain
-	built-in sounds. To compensate, we reduce overall volume slightly to avoid
-	clipping. (The worst observed value is -1.341681f in bigbang.ogg.)
+/*
+	A mutex, if necessary. The default implementations do nothing.
+	(The Core Audio implementation provides a mutex because its channels may
+	need to stop themselves on the reaper thread. Possibly.
+	FIXME: check this. -- Ahruman 2011-06-06)
 */
-#define kOOAudioSlop 1.341682f
+- (void) lock;
+- (void) unlock;
+
+- (OOSoundChannel *) popChannel;
+- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED inChannel;
+
+@end

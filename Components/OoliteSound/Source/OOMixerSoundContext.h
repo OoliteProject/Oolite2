@@ -1,14 +1,11 @@
 /*
 
-OOCABufferedSound.h
+OOMixerSoundContext.h
 
-Subclass of OOSound playing from an in-memory buffer.
+Abstract interface for sound contexts that use the mixer-and-channels model.
 
-This class is an implementation detail. Do not use it directly; use OOSound.
-
-
-OOCASound - Core Audio sound implementation for Oolite.
-Copyright (C) 2005-2011 Jens Ayton
+ 
+Copyright (C) 2006–2011 Jens Ayton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,22 +27,13 @@ SOFTWARE.
 
 */
 
-#import "OOCASound.h"
+#import "OOSoundContext.h"
 
-@class OOCASoundDecoder;
+@class OOSoundMixer;
 
 
-@interface OOCABufferedSound: OOCASound
-{
-	float				*_bufferL,
-						*_bufferR;
-	size_t				_size;
-	Float64				_sampleRate;
-	NSString			*_name;
-	BOOL				_stereo;
-}
+@interface OOMixerSoundContext: OOSoundContext
 
-- (id) initWithContext:(OOCASoundContext *)context
-			   decoder:(OOCASoundDecoder *)decoder;
+- (OOSoundMixer *) mixer;
 
 @end

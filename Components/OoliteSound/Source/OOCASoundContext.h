@@ -1,9 +1,8 @@
 /*
 
-OOSound.h
+OOCASoundContext.h
 
-An OOSound is a playable audio entity. It is loaded through an OOSoundContext
-and played through an OOSoundSource.
+Core Audio implementation of OOSoundContext.
 
 
 Copyright © 2005–2011 Jens Ayton
@@ -28,15 +27,35 @@ SOFTWARE.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
+#import "OOMixerSoundContext.h"
+#include <mach/mach.h>
+#include <pthread.h>
 
-@class OOSoundContext;
+@class OOCASoundMixer, OOCASoundChannel;
 
 
-@interface OOSound: NSObject
-
-- (NSString *) name;
-
-- (OOSoundContext *) context;
+@interface OOCASoundContext: OOMixerSoundContext
+{
+@private
+	OOCASoundMixer			*_mixer;
+	
+	size_t					_maxBufferedSoundSize;
+	
+	mach_port_t				_reaperPort;
+	mach_port_t				_statusPort;
+	pthread_mutex_t			_reapQueueMutex;
+	OOCASoundChannel		*_deadList;
+	OOCASoundChannel		*_reapQueue;
+	
+	BOOL					_reaperRunning;
+}
 
 @end
+
+
+/*
+	OOCASoundContextReapChannel()
+	Called by a channel to return itself to the available list after it has
+	finished playing. May only be called on the CA render thread.
+*/
+void OOCASoundContextReapChannel(OOCASoundContext *context, OOCASoundChannel *channel);

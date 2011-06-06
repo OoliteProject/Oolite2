@@ -26,8 +26,9 @@ SOFTWARE.
 */
 
 #import "OOSoundSourcePool.h"
-#import "Universe.h"
 #import "OOSound+OOCustomSounds.h"
+#import "Universe.h"
+#import "GameController.h"
 
 
 enum
@@ -127,7 +128,7 @@ typedef struct OOSoundSourcePoolElement
 	if (element->source != nil)  [element->source stop];
 	else
 	{
-		element->source = [[OOSoundSource alloc] init];
+		element->source = [[[[GameController sharedController] soundContext] soundSource] retain];
 		if (element->source == nil)  return;
 	}
 	

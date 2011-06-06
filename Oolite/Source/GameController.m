@@ -319,7 +319,7 @@ static BOOL _switchRez = NO, _switchRezDeferred = NO;
 		}
 		
 		[UNIVERSE update:delta_t];
-		[OOSound update];
+		[[self soundContext] update];
 	
 		OOJSFrameCallbacksInvoke(delta_t);
 		
@@ -1404,6 +1404,13 @@ static NSMutableArray *sMessageStack;
 		OOGL(glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR));
 	}
 #endif
+}
+
+
+- (OOSoundContext *) soundContext
+{
+	if (_soundContext == nil)  _soundContext = [[OOSoundContext alloc] init];
+	return _soundContext;
 }
 
 @end

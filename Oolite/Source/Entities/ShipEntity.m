@@ -1908,7 +1908,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				[self noteLostTarget];
 			}
 		}
-
+		
 		switch (behaviour)
 		{
 			case BEHAVIOUR_TUMBLE :
@@ -3447,7 +3447,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	int missile_chance = 0;
 	int rhs = 3.2 / delta_t;
 	if (rhs)	missile_chance = 1 + (ranrot_rand() % rhs);
-
+	
 	double hurt_factor = 16 * pow(energy/maxEnergy, 4.0);
 	if (missiles > missile_chance * hurt_factor)
 	{

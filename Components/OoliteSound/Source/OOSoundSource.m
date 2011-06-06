@@ -30,42 +30,12 @@ SOFTWARE.
 
 @implementation OOSoundSource
 
-+ (id) sourceWithSound:(OOSound *)inSound
-{
-	return [[[self alloc] initWithSound:inSound] autorelease];
-}
-
-
-- (id) initWithSound:(OOSound *)inSound
-{
-	self = [self init];
-	if (!self) return nil;
-	
-	[self setSound:inSound];
-	
-	return self;
-}
-
-
 - (void) dealloc
 {
 	[self stop];
 	[_sound autorelease];
 	
 	[super dealloc];
-}
-
-
-- (NSString *) descriptionComponents
-{
-	if ([self isPlaying])
-	{
-		return [NSString stringWithFormat:@"sound=%@, loop=%s, repeatCount=%u, playing on channel %@", _sound, [self loop] ? "YES" : "NO", [self repeatCount], _channel];
-	}
-	else
-	{
-		return [NSString stringWithFormat:@"sound=%@, loop=%s, repeatCount=%u, not playing", _sound, [self loop] ? "YES" : "NO", [self repeatCount]];
-	}
 }
 
 
@@ -112,28 +82,14 @@ SOFTWARE.
 
 - (BOOL) isPlaying
 {
-	return _channel != nil;
+	OOLogGenericSubclassResponsibility();
+	return NO;
 }
 
 
-- (void)play
+- (void) play
 {
-	if ([self sound] == nil) return;
-	
-	OOSoundAcquireLock();
-	
-	if (_channel)  [self stop];
-	
-	_channel = [[OOSoundMixer sharedMixer] popChannel];
-	if (nil != _channel)
-	{
-		_remainingCount = [self repeatCount];
-		[_channel setDelegate:self];
-		[_channel playSound:[self sound] looped:[self loop]];
-		[self retain];
-	}
-	
-	OOSoundReleaseLock();
+	OOLogGenericSubclassResponsibility();
 }
 
 
@@ -144,19 +100,9 @@ SOFTWARE.
 }
 
 
-- (void)stop
+- (void) stop
 {
-	OOSoundAcquireLock();
-	
-	if (nil != _channel)
-	{
-		[_channel setDelegate:[self class]];
-		[_channel stop];
-		_channel = nil;
-		[self release];
-	}
-	
-	OOSoundReleaseLock();
+	OOLogGenericSubclassResponsibility();
 }
 
 
@@ -177,7 +123,7 @@ SOFTWARE.
 
 - (void) playOrRepeatSound:(OOSound *)sound
 {
-	if (_sound != sound) [self playSound:sound];
+	if (_sound != sound)  [self playSound:sound];
 	else [self playOrRepeat];
 }
 
@@ -221,35 +167,6 @@ SOFTWARE.
 - (void) positionRelativeTo:(OOSoundReferencePoint *)inPoint
 {
 	
-}
-
-
-// OOSoundChannelDelegate
-- (void)channel:(OOSoundChannel *)channel didFinishPlayingSound:(OOSound *)sound
-{
-	assert(_channel == channel);
-	
-	OOSoundAcquireLock();
-	
-	if (--_remainingCount)
-	{
-		[_channel playSound:[self sound] looped:NO];
-	}
-	else
-	{
-		[_channel setDelegate:nil];
-		[[OOSoundMixer sharedMixer] pushChannel:_channel];
-		_channel = nil;
-		[self release];
-	}
-	OOSoundReleaseLock();
-}
-
-
-+ (void)channel:(OOSoundChannel *)inChannel didFinishPlayingSound:(OOSound *)inSound
-{
-	// This delegate is used for a stopped source
-	[[OOSoundMixer sharedMixer] pushChannel:inChannel];
 }
 
 @end

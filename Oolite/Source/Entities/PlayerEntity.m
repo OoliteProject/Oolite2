@@ -5048,25 +5048,22 @@ static bool minShieldLevelPercentageInitialised = false;
 		[gui setKey:GUI_KEY_OK forRow:GUI_ROW(GAME,AUTOSAVE)];
 	
 		// volume control
-		if ([OOSound respondsToSelector:@selector(masterVolume)])
+		OOSoundContext *sound = [[GameController sharedController] soundContext];
+		int volume = 20 * [sound masterVolume];
+		NSString* soundVolumeWordDesc = DESC(@"gameoptions-sound-volume");
+		NSString* v1_string = @"|||||||||||||||||||||||||";
+		NSString* v0_string = @".........................";
+		v1_string = [v1_string substringToIndex:volume];
+		v0_string = [v0_string substringToIndex:20 - volume];
+		if (volume > 0)
 		{
-			int volume = 20 * [OOSound masterVolume];
-			NSString* soundVolumeWordDesc = DESC(@"gameoptions-sound-volume");
-			NSString* v1_string = @"|||||||||||||||||||||||||";
-			NSString* v0_string = @".........................";
-			v1_string = [v1_string substringToIndex:volume];
-			v0_string = [v0_string substringToIndex:20 - volume];
-			if (volume > 0)
-				[gui setText:[NSString stringWithFormat:@"%@%@%@ ", soundVolumeWordDesc, v1_string, v0_string] forRow:GUI_ROW(GAME,VOLUME) align:GUI_ALIGN_CENTER];
-			else
-				[gui setText:DESC(@"gameoptions-sound-volume-mute") forRow:GUI_ROW(GAME,VOLUME) align:GUI_ALIGN_CENTER];
-			[gui setKey:GUI_KEY_OK forRow:GUI_ROW(GAME,VOLUME)];
+			[gui setText:[NSString stringWithFormat:@"%@%@%@ ", soundVolumeWordDesc, v1_string, v0_string] forRow:GUI_ROW(GAME,VOLUME) align:GUI_ALIGN_CENTER];
 		}
 		else
 		{
-			[gui setText:DESC(@"gameoptions-volume-external-only") forRow:GUI_ROW(GAME,VOLUME) align:GUI_ALIGN_CENTER];
-			[gui setColor:[OOColor grayColor] forRow:GUI_ROW(GAME,VOLUME)];
+			[gui setText:DESC(@"gameoptions-sound-volume-mute") forRow:GUI_ROW(GAME,VOLUME) align:GUI_ALIGN_CENTER];
 		}
+		[gui setKey:GUI_KEY_OK forRow:GUI_ROW(GAME,VOLUME)];
 		
 #if OOLITE_MAC_OS_X
 		// Growl priority control

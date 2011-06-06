@@ -27,6 +27,7 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 #import "OOLegacyTexture.h"
 #import "ResourceManager.h"
+#import "GameController.h"
 #import "OOStringParsing.h"
 #import "OOSound+OOCustomSounds.h"
 
@@ -974,9 +975,9 @@ static void InitTrumbleSounds(void)
 {
 	if (sTrumbleSoundSource == nil)
 	{
-		sTrumbleSoundSource = [[OOSoundSource alloc] init];
-		sTrumbleIdleSound = [[OOSound alloc] initWithCustomSoundKey:@"[trumble-idle]"];
-		sTrumbleSqealSound = [[OOSound alloc] initWithCustomSoundKey:@"[trumble-squeal]"];
+		sTrumbleSoundSource = [[[[GameController sharedController] soundContext] soundSource] retain];
+		sTrumbleIdleSound = [[OOSound soundWithCustomSoundKey:@"[trumble-idle]"] retain];
+		sTrumbleSqealSound = [[OOSound soundWithCustomSoundKey:@"[trumble-squeal]"] retain];
 	}
 }
 

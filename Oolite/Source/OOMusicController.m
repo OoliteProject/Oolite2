@@ -95,6 +95,7 @@ enum
 
 - (void) playMusicNamed:(NSString *)name loop:(BOOL)loop
 {
+#if 0
 	if ([self isPlaying] && [name isEqual:[self playingMusic]])  return;
 	
 	if (_mode == kOOMusicOn)
@@ -110,6 +111,9 @@ enum
 			_current = [music retain];
 		}
 	}
+#else
+	// FIXME: music
+#endif
 }
 
 
@@ -169,7 +173,11 @@ enum
 
 - (void) stop
 {
+#if 0
 	[_current stop];
+#else
+	// FIXME: music
+#endif
 	[_current release];
 	_current = nil;
 	_special = kSpecialNone;

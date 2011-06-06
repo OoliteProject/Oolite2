@@ -30,18 +30,19 @@ SOFTWARE.
 
 */
 
-#import <Cocoa/Cocoa.h>
 #import "OOCASound.h"
 
 @class OOCASoundDecoder;
 @class VirtualRingBuffer;
 
 
-@interface OOCAStreamingSound: OOSound
+@interface OOCAStreamingSound: OOCASound
 {
 	OOCASoundDecoder		*_decoder;
+	OOCASoundMixer			*_mixer;
 }
 
-- (id) initWithDecoder:(OOCASoundDecoder *)inDecoder;
+- (id) initWithContext:(OOCASoundContext *)context
+			   decoder:(OOCASoundDecoder *)decoder;
 
 @end

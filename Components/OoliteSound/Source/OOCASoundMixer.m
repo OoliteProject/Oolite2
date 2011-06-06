@@ -37,15 +37,12 @@ static NSString * const kOOLogSoundMixerReplacingBrokenChannel	= @"sound.mixer.r
 static NSString * const kOOLogSoundMixerFailedToConnectChannel	= @"sound.mixer.failedToConnectChannel";
 
 
-@interface OOSoundMixer (Private)
+@interface OOCASoundMixer (Private)
 
-- (void)pushChannel:(OOSoundChannel *)inChannel;
-- (OOSoundChannel *)popChannel;
+- (void)pushChannel:(OOCASoundChannel *)inChannel;
+- (OOCASoundChannel *)popChannel;
 
 @end
-
-
-static OOSoundMixer *sSingleton = nil;
 
 
 #ifndef NDEBUG
@@ -62,34 +59,24 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 #endif
 
 
-@implementation OOSoundMixer
+@implementation OOCASoundMixer
 
-+ (id) sharedMixer
-{
-	if (nil == sSingleton)
-	{
-		sSingleton = [[self alloc] init];
-	}
-	return sSingleton;
-}
-
-
-- (id)init
+- (id) initWithContext:(OOCASoundContext *)context
 {
 	OSStatus					err = noErr;
 	BOOL						OK;
 	uint32_t					idx = 0, count = kMixerGeneralChannels;
-	OOSoundChannel				*temp;
+	OOCASoundChannel			*temp;
 	AudioComponentDescription	desc;
 	
-	if (!gOOSoundSetUp)  [OOSound setUp];
-	
-	self = [super init];
-	if (nil != self)
+	if ((self = [super initWithContext:context]))
 	{
 		_listLock = [[NSLock alloc] init];
 		[_listLock ooSetName:@"OOSoundMixer list lock"];
-		OK = nil != _listLock;
+		_mixerLock = [[NSRecursiveLock alloc] init];
+		[_mixerLock ooSetName:@"OOCASoundMixer synchronization lock"];
+		
+		OK = nil != _listLock && nil != _mixerLock;
 		
 		if (OK)
 		{
@@ -129,7 +116,9 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 			// Allocate channels
 			do
 			{
-				temp = [[OOSoundChannel alloc] initWithID:count auGraph:_graph];
+				temp = [[OOCASoundChannel alloc] initWithContext:context
+															  ID:count
+														 auGraph:_graph];
 				if (nil != temp)
 				{
 					_channels[idx++] = temp;
@@ -160,33 +149,33 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 			self = nil;
 		}
 	}
-	sSingleton = self;
 	
-	return sSingleton;
+	return self;
 }
 
 
-- (void)dealloc
+- (void) dealloc
 {
-	uint32_t					idx;
-	
-	if (NULL != _graph)
+	if (_graph != NULL)
 	{
 		AUGraphStop(_graph);
 		AUGraphUninitialize(_graph);
 		AUGraphClose(_graph);
 		DisposeAUGraph(_graph);
 	}
-	for (idx = 0; idx != kMixerGeneralChannels; ++idx)
+	for (uint32_t idx = 0; idx != kMixerGeneralChannels; ++idx)
 	{
 		[_channels[idx] release];
 	}
+	
+	[_listLock release];
+	[_mixerLock release];
 	
 	[super dealloc];
 }
 
 
-- (void)channel:(OOSoundChannel *)inChannel didFinishPlayingSound:(OOSound *)inSound
+- (void) channel:(OOCASoundChannel *)inChannel didFinishPlayingSound:(OOCASound *)inSound
 {
 	uint32_t				ID;
 		
@@ -197,7 +186,9 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 		OOLog(kOOLogSoundMixerReplacingBrokenChannel, @"Sound mixer: replacing broken channel %@.", inChannel);
 		ID = [inChannel ID];
 		[inChannel release];
-		inChannel = [[OOSoundChannel alloc] initWithID:ID auGraph:_graph];
+		inChannel = [[OOCASoundChannel alloc] initWithContext:(OOCASoundContext *)[self context]
+														   ID:ID
+													  auGraph:_graph];
 	}
 	
 	[self pushChannel:inChannel];
@@ -211,7 +202,7 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 #endif
 
 
-- (void)update
+- (void) update
 {
 #ifndef NDEBUG
 	if (gOOCASoundDebugMonitor != nil)
@@ -240,15 +231,15 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 }
 
 
-- (void)setMasterVolume:(float)inVolume
+- (void) setMasterVolume:(float)inVolume
 {
 	AudioUnitSetParameter(_mixerUnit, kStereoMixerParam_Volume, kAudioUnitScope_Output, 0, inVolume / kOOAudioSlop, 0);
 }
 
 
-- (OOSoundChannel *)popChannel
+- (OOCASoundChannel *) popChannel
 {
-	OOSoundChannel				*result;
+	OOCASoundChannel				*result;
 	
 	[_listLock lock];
 	result = _freeList;
@@ -271,7 +262,7 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 }
 
 
-- (void)pushChannel:(OOSoundChannel *) OO_NS_CONSUMED inChannel
+- (void) pushChannel:(OOCASoundChannel *) OO_NS_CONSUMED inChannel
 {
 	assert(nil != inChannel);
 	
@@ -292,7 +283,7 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 }
 
 
-- (BOOL)connectChannel:(OOSoundChannel *)inChannel
+- (BOOL) connectChannel:(OOCASoundChannel *)inChannel
 {
 	AUNode						node;
 	OSStatus					err;
@@ -309,7 +300,7 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 }
 
 
-- (OSStatus)disconnectChannel:(OOSoundChannel *)inChannel
+- (OSStatus) disconnectChannel:(OOCASoundChannel *)inChannel
 {
 	OSStatus					err;
 	
@@ -321,54 +312,16 @@ void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor)
 	return err;
 }
 
-@end
 
-
-@implementation OOSoundMixer (Singleton)
-
-/*	Canonical singleton boilerplate.
-	See Cocoa Fundamentals Guide: Creating a Singleton Instance.
-	See also +sharedMixer above.
-	
-	NOTE: assumes single-threaded access.
-*/
-
-+ (id)allocWithZone:(NSZone *)inZone
+- (void) lock
 {
-	if (sSingleton == nil)
-	{
-		sSingleton = [super allocWithZone:inZone];
-		return sSingleton;
-	}
-	return nil;
+	[_mixerLock lock];
 }
 
 
-- (id)copyWithZone:(NSZone *)inZone
+- (void) unlock
 {
-	return self;
-}
-
-
-- (id)retain
-{
-	return self;
-}
-
-
-- (NSUInteger)retainCount
-{
-	return UINT_MAX;
-}
-
-
-- (void)release
-{}
-
-
-- (id)autorelease
-{
-	return self;
+	[_mixerLock unlock];
 }
 
 @end

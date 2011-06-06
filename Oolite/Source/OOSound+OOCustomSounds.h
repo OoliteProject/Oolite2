@@ -31,15 +31,11 @@ MA 02110-1301, USA.
 @interface OOSound (OOCustomSounds)
 
 + (id) soundWithCustomSoundKey:(NSString *)key;
-- (id) initWithCustomSoundKey:(NSString *)key;
 
 @end
 
 
 @interface OOSoundSource (OOCustomSounds)
-
-+ (id) sourceWithCustomSoundKey:(NSString *)key;
-- (id) initWithCustomSoundKey:(NSString *)key;
 
 - (void) playCustomSoundWithKey:(NSString *)key;
 

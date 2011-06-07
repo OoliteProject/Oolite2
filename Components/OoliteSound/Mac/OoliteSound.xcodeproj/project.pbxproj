@@ -12,7 +12,7 @@
 		1A79E3B2139B838800AA6575 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E3B1139B838800AA6575 /* OpenAL.framework */; };
 		1A79E3DB139B855100AA6575 /* OOCABufferedSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C1139B855100AA6575 /* OOCABufferedSound.h */; };
 		1A79E3DC139B855100AA6575 /* OOCABufferedSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C2139B855100AA6575 /* OOCABufferedSound.m */; };
-		1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C3139B855100AA6575 /* OOCAMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C3139B855100AA6575 /* OOCAMusic.h */; settings = {ATTRIBUTES = (); }; };
 		1A79E3DF139B855100AA6575 /* OOCASound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C5139B855100AA6575 /* OOCASound.h */; settings = {ATTRIBUTES = (); }; };
 		1A79E3E0139B855100AA6575 /* OOCASound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3C6139B855100AA6575 /* OOCASound.m */; };
 		1A79E3E1139B855100AA6575 /* OOCASoundChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C7139B855100AA6575 /* OOCASoundChannel.h */; };
@@ -344,9 +344,8 @@
 				1AA5085C139BB0F20003B901 /* OOSoundContext.h in Headers */,
 				1AA50866139BF7680003B901 /* OOSound.h in Headers */,
 				1A79E3EF139B855100AA6575 /* OOSoundSource.h in Headers */,
-				1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */,
-				1A79E3E9139B855100AA6575 /* OOCASoundReferencePoint.h in Headers */,
 				1A79E3E3139B855100AA6575 /* OOCASoundDebugMonitor.h in Headers */,
+				1A79E3E9139B855100AA6575 /* OOCASoundReferencePoint.h in Headers */,
 				1A79E3DB139B855100AA6575 /* OOCABufferedSound.h in Headers */,
 				1A79E3E1139B855100AA6575 /* OOCASoundChannel.h in Headers */,
 				1A79E3E4139B855100AA6575 /* OOCASoundDecoder.h in Headers */,
@@ -354,6 +353,7 @@
 				1A79E3E7139B855100AA6575 /* OOCASoundMixer.h in Headers */,
 				1A79E3EB139B855100AA6575 /* OOCAStreamingSound.h in Headers */,
 				1A79E3EE139B855100AA6575 /* OOSoundInternal.h in Headers */,
+				1A79E3DD139B855100AA6575 /* OOCAMusic.h in Headers */,
 				1A79E3F3139B855100AA6575 /* VirtualRingBuffer.h in Headers */,
 				1A79E3F7139B85C300AA6575 /* OOMacErrorDescription.h in Headers */,
 				1AA50861139BB28A0003B901 /* OOCASoundContext.h in Headers */,

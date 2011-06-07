@@ -1006,9 +1006,6 @@ static GLfloat		sBaseMass = 0.0;
 	UPDATE_STAGE(@"manageCollisions");
 	[self manageCollisions];
 	
-	UPDATE_STAGE(@"pollControls:");
-	[self pollControls:delta_t];
-	
 	UPDATE_STAGE(@"updateTrumbles:");
 	[self updateTrumbles:delta_t];
 	

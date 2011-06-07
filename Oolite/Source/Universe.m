@@ -55,6 +55,7 @@ MA 02110-1301, USA.
 
 #import "PlayerEntity.h"
 #import "PlayerEntityContracts.h"
+#import "PlayerEntityControls.h"
 #import "PlayerEntityScriptMethods.h"
 #import "StationEntity.h"
 #import "SkyEntity.h"
@@ -4949,7 +4950,9 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 	volatile OOTimeDelta delta_t = inDeltaT * [self timeAccelerationFactor];
 	NSUInteger sessionID = _sessionID;
 	
-	if (!no_update)
+	[PLAYER pollControls:delta_t];
+	
+	if (!no_update && delta_t != 0.0)
 	{
 		unsigned	i, ent_count = n_entities;
 		Entity		*my_entities[ent_count];

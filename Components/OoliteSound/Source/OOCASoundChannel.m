@@ -160,7 +160,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 		
 		if (err)
 		{
-			OOLog(kOOLogSoundInitErrorGlavin, @"AudioUnit setup error %@ preparing channel ID %u.", AudioErrorNSString(err), inID);
+			OOLog(kOOLogSoundInitError, @"AudioUnit setup error %@ preparing channel ID %u.", AudioErrorNSString(err), inID);
 			
 			[self release];
 			self = nil;

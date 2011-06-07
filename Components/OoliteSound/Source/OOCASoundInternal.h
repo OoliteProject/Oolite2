@@ -60,7 +60,7 @@ SOFTWARE.
 @end
 
 
-#define kOOLogSoundInitErrorGlavin @"sound.initialization.error"
+#define kOOLogSoundInitError @"sound.initialization.error"
 
 
 

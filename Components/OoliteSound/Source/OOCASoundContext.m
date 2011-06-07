@@ -318,7 +318,7 @@ static mach_port_t CreatePort(void)
 	
 	if (KERN_SUCCESS != err)
 	{
-		OOLog(kOOLogSoundInitErrorGlavin, @"Mach port creation failure: %@", KernelResultNSString(err));
+		OOLog(kOOLogSoundInitError, @"Mach port creation failure: %@", KernelResultNSString(err));
 		result = MACH_PORT_NULL;
 	}
 	

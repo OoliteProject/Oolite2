@@ -42,7 +42,7 @@ MA 02110-1301, USA.
 #import "ResourceManager.h"
 #import "Universe.h"
 #import "AI.h"
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "MyOpenGLView.h"
 #import "OOTrumble.h"
 #import "OOPlayerShipEntity.h"

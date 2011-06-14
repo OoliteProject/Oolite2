@@ -1,6 +1,6 @@
 /*
 
-ShipEntityAI.h
+OOShipEntity+AI.h
 
 Additional methods relating to behaviour/artificial intelligence.
 

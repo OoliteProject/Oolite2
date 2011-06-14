@@ -64,7 +64,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "WormholeEntity.h"
 #import "OOBreakPatternEntity.h"
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "OOProxyPlayerShipEntity.h"
 #import "OORingEffectEntity.h"
 #import "OOLightParticleEntity.h"

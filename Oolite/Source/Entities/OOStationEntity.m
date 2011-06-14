@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOStationEntity.h"
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "OOStringParsing.h"
 
 #import "Universe.h"

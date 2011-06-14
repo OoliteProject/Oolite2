@@ -1,6 +1,6 @@
 /*
 
-ShipEntityLoadRestore.h
+OOShipEntity+LoadRestore.h
 
 Support for saving and restoring individual non-player ships.
 

@@ -1,6 +1,6 @@
 /*
 
-ShipEntityLoadRestore.m
+OOShipEntity+LoadRestore.m
 
 
 Oolite
@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntityLoadRestore.h"
+#import "OOShipEntity+LoadRestore.h"
 #import "Universe.h"
 
 #import "OOShipRegistry.h"

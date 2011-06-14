@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOPlayerShipEntity.h"
-#import "ShipEntityLoadRestore.h"
+#import "OOShipEntity+LoadRestore.h"
 
 #import "Universe.h"
 #import "AI.h"

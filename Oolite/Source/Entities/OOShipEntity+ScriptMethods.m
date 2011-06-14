@@ -1,6 +1,6 @@
 /*
 
-ShipEntityScriptMethods.m
+OOShipEntity+ScriptMethods.m
 
 
 Oolite
@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntityScriptMethods.h"
+#import "OOShipEntity+ScriptMethods.h"
 #import "Universe.h"
 
 

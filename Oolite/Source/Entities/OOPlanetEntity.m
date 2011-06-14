@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #import "AI.h"
 #import "Universe.h"
 #import "OOShipEntity.h"
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "OOCharacter.h"
 
 #import "ResourceManager.h"

@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 #import "OOLegacyTexture.h"
 #import "OOPixMapTextureLoader.h"
 #import "MyOpenGLView.h"
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "OOColor.h"
 #import "OOCharacter.h"
 #import "OOStringParsing.h"

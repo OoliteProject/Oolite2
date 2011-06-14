@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+LoadSave.h"
 #import "OOPlayerShipEntity+StickMapper.h"
 
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "OOStationEntity.h"
 #import "Universe.h"
 #import "OOSunEntity.h"

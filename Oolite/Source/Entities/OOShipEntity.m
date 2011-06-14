@@ -25,8 +25,8 @@ MA 02110-1301, USA.
 
 
 #import "OOShipEntity.h"
-#import "ShipEntityAI.h"
-#import "ShipEntityScriptMethods.h"
+#import "OOShipEntity+AI.h"
+#import "OOShipEntity+ScriptMethods.h"
 #import "OOShipRegistry.h"
 #import "OOShipClass.h"
 
@@ -9040,7 +9040,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 		[UNIVERSE witchspaceShipWithPrimaryRole:[self primaryRole]];
 	}
 
-	// MKW 2011.02.27 - Moved here from ShipEntityAI so escorts reliably follow
+	// MKW 2011.02.27 - Moved here from OOShipEntity+AI so escorts reliably follow
 	//                  mother in all wormhole cases, not just when the ship
 	//                  creates the wormhole.
 	[self addTarget:wormhole];

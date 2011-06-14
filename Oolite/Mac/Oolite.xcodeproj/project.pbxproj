@@ -54,9 +54,9 @@
 		1A1B977513087FBE0078322D /* OOPlayerShipEntity+StickMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974913087FBE0078322D /* OOPlayerShipEntity+StickMapper.m */; };
 		1A1B977613087FBE0078322D /* OOProxyPlayerShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */; };
 		1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974D13087FBE0078322D /* OOShipEntity.m */; };
-		1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974F13087FBE0078322D /* ShipEntityAI.m */; };
-		1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */; };
-		1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */; };
+		1A1B977813087FBE0078322D /* OOShipEntity+AI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974F13087FBE0078322D /* OOShipEntity+AI.m */; };
+		1A1B977913087FBE0078322D /* OOShipEntity+LoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */; };
+		1A1B977A13087FBE0078322D /* OOShipEntity+ScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */; };
 		1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975513087FBE0078322D /* SkyEntity.m */; };
 		1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975713087FBE0078322D /* OOStationEntity.m */; };
 		1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975913087FBE0078322D /* WormholeEntity.m */; };
@@ -982,12 +982,12 @@
 		1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProxyPlayerShipEntity.m; sourceTree = "<group>"; };
 		1A1B974C13087FBE0078322D /* OOShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOShipEntity.h; sourceTree = "<group>"; };
 		1A1B974D13087FBE0078322D /* OOShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipEntity.m; sourceTree = "<group>"; };
-		1A1B974E13087FBE0078322D /* ShipEntityAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityAI.h; sourceTree = "<group>"; };
-		1A1B974F13087FBE0078322D /* ShipEntityAI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntityAI.m; sourceTree = "<group>"; };
-		1A1B975013087FBE0078322D /* ShipEntityLoadRestore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityLoadRestore.h; sourceTree = "<group>"; };
-		1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntityLoadRestore.m; sourceTree = "<group>"; };
-		1A1B975213087FBE0078322D /* ShipEntityScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityScriptMethods.h; sourceTree = "<group>"; };
-		1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntityScriptMethods.m; sourceTree = "<group>"; };
+		1A1B974E13087FBE0078322D /* OOShipEntity+AI.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+AI.h"; sourceTree = "<group>"; };
+		1A1B974F13087FBE0078322D /* OOShipEntity+AI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+AI.m"; sourceTree = "<group>"; };
+		1A1B975013087FBE0078322D /* OOShipEntity+LoadRestore.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+LoadRestore.h"; sourceTree = "<group>"; };
+		1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+LoadRestore.m"; sourceTree = "<group>"; };
+		1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
+		1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+ScriptMethods.m"; sourceTree = "<group>"; };
 		1A1B975413087FBE0078322D /* SkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkyEntity.h; sourceTree = "<group>"; };
 		1A1B975513087FBE0078322D /* SkyEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkyEntity.m; sourceTree = "<group>"; };
 		1A1B975613087FBE0078322D /* OOStationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOStationEntity.h; sourceTree = "<group>"; };
@@ -1642,12 +1642,12 @@
 				1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */,
 				1A1B974C13087FBE0078322D /* OOShipEntity.h */,
 				1A1B974D13087FBE0078322D /* OOShipEntity.m */,
-				1A1B974E13087FBE0078322D /* ShipEntityAI.h */,
-				1A1B974F13087FBE0078322D /* ShipEntityAI.m */,
-				1A1B975013087FBE0078322D /* ShipEntityLoadRestore.h */,
-				1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */,
-				1A1B975213087FBE0078322D /* ShipEntityScriptMethods.h */,
-				1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */,
+				1A1B974E13087FBE0078322D /* OOShipEntity+AI.h */,
+				1A1B974F13087FBE0078322D /* OOShipEntity+AI.m */,
+				1A1B975013087FBE0078322D /* OOShipEntity+LoadRestore.h */,
+				1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */,
+				1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */,
+				1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */,
 				1A1B975413087FBE0078322D /* SkyEntity.h */,
 				1A1B975513087FBE0078322D /* SkyEntity.m */,
 				1A1B975613087FBE0078322D /* OOStationEntity.h */,
@@ -2727,9 +2727,9 @@
 				1A1B977513087FBE0078322D /* OOPlayerShipEntity+StickMapper.m in Sources */,
 				1A1B977613087FBE0078322D /* OOProxyPlayerShipEntity.m in Sources */,
 				1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */,
-				1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */,
-				1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */,
-				1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */,
+				1A1B977813087FBE0078322D /* OOShipEntity+AI.m in Sources */,
+				1A1B977913087FBE0078322D /* OOShipEntity+LoadRestore.m in Sources */,
+				1A1B977A13087FBE0078322D /* OOShipEntity+ScriptMethods.m in Sources */,
 				1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */,
 				1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */,
 				1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */,

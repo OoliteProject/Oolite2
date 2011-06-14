@@ -1,6 +1,6 @@
 /*
 
-ShipEntityScriptMethods.h
+OOShipEntity+ScriptMethods.h
 
 Methods for use by scripting mechanisms.
 

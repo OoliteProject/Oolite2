@@ -1,6 +1,6 @@
 /*
 
-ShipEntityAI.m
+OOShipEntity+AI.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntityAI.h"
+#import "OOShipEntity+AI.h"
 #import "Universe.h"
 #import "AI.h"
 
@@ -38,8 +38,6 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOEntityFilterPredicate.h"
 #import "OOConstToString.h"
-
-#define kOOLogUnconvertedNSLog @"unclassified.ShipEntityAI"
 
 
 @interface OOShipEntity (OOAIPrivate)

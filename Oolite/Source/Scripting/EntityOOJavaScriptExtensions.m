@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "OOPlanetEntity.h"
 
 
-@implementation Entity (OOJavaScriptExtensions)
+@implementation OOEntity (OOJavaScriptExtensions)
 
 - (BOOL) isVisibleToScripts
 {

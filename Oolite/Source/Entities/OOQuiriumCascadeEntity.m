@@ -103,8 +103,8 @@ MA 02110-1301, USA.
 	}
 	
 	// manage collisions
-	Entity *owner = [self owner];
-	Entity *e = nil;
+	OOEntity *owner = [self owner];
+	OOEntity *e = nil;
 	foreach (e, collidingEntities)
 	{
 		[e takeEnergyDamage:energy from:self becauseOf:owner];
@@ -160,7 +160,7 @@ MA 02110-1301, USA.
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	return YES;
 }
@@ -168,7 +168,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation Entity (OOQuiriumCascadeExtensions)
+@implementation OOEntity (OOQuiriumCascadeExtensions)
 
 - (BOOL) isCascadeWeapon
 {

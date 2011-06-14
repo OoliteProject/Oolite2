@@ -482,7 +482,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	return ![other isEffect];
 }

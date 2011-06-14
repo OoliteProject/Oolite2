@@ -35,11 +35,11 @@ MA 02110-1301, USA.
 #endif
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
-		Entity, ShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
+		OOEntity, ShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
 		PlayerEntity, OORoleSet, OOColor, OOShipClass;
 
 
-typedef BOOL (*EntityFilterPredicate)(Entity *entity, void *parameter);
+typedef BOOL (*EntityFilterPredicate)(OOEntity *entity, void *parameter);
 
 #ifndef OO_SCANCLASS_TYPE
 #define OO_SCANCLASS_TYPE
@@ -158,13 +158,13 @@ typedef uint8_t		OOEconomyID;		// 0..7
 {
 @public
 	// use a sorted list for drawing and other activities
-	Entity					*sortedEntities[UNIVERSE_MAX_ENTITIES];
+	OOEntity					*sortedEntities[UNIVERSE_MAX_ENTITIES];
 	unsigned				n_entities;
 	
 	int						cursor_row;
 	
 	// collision optimisation sorted lists
-	Entity					*x_list_start, *y_list_start, *z_list_start;
+	OOEntity					*x_list_start, *y_list_start, *z_list_start;
 	
 	GLfloat					stars_ambient[4];
 	
@@ -184,7 +184,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	MyOpenGLView			*gameView;
 	
 	int						next_universal_id;
-	Entity					*entity_for_uid[MAX_ENTITY_UID];
+	OOEntity					*entity_for_uid[MAX_ENTITY_UID];
 
 	NSMutableArray			*entities;
 	
@@ -346,7 +346,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (BOOL) addShips:(int)howMany withRole:(NSString *)desc intoBoundingBox:(OOBoundingBox)bbox;
 - (BOOL) spawnShip:(NSString *) shipdesc;
 - (void) witchspaceShipWithPrimaryRole:(NSString *)role;
-- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(Entity *) entity;
+- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity;
 
 - (ShipEntity *) addShipAt:(Vector)pos withRole:(NSString *)role withinRadius:(GLfloat)radius;
 - (NSArray *) addShipsAt:(Vector)pos withRole:(NSString *)role quantity:(unsigned)count withinRadius:(GLfloat)radius asGroup:(BOOL)isGroup;
@@ -428,27 +428,27 @@ typedef uint8_t		OOEconomyID;		// 0..7
 
 - (id) entityForUniversalID:(OOUniversalID)u_id DEPRECATED_FUNC;
 
-- (BOOL) addEntity:(Entity *) entity;
-- (BOOL) removeEntity:(Entity *) entity;
-- (void) ensureEntityReallyRemoved:(Entity *)entity;
+- (BOOL) addEntity:(OOEntity *) entity;
+- (BOOL) removeEntity:(OOEntity *) entity;
+- (void) ensureEntityReallyRemoved:(OOEntity *)entity;
 - (void) removeAllEntitiesExceptPlayer;
 - (void) removeDemoShips;
 
 - (ShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning;
 
-- (BOOL) isVectorClearFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
-- (Entity*) hazardOnRouteFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
-- (Vector) getSafeVectorFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
+- (BOOL) isVectorClearFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
+- (OOEntity*) hazardOnRouteFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
+- (Vector) getSafeVectorFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
 
 - (ShipEntity *) getFirstShipHitByLaserFromShip:(ShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr;
-- (Entity *) getFirstEntityTargetedByPlayer;
+- (OOEntity *) getFirstEntityTargetedByPlayer;
 
-- (NSArray *) getEntitiesWithinRange:(double)range ofEntity:(Entity *)entity;
-- (unsigned) countShipsWithRole:(NSString *)role inRange:(double)range ofEntity:(Entity *)entity;
+- (NSArray *) getEntitiesWithinRange:(double)range ofEntity:(OOEntity *)entity;
+- (unsigned) countShipsWithRole:(NSString *)role inRange:(double)range ofEntity:(OOEntity *)entity;
 - (unsigned) countShipsWithRole:(NSString *)role;
-- (unsigned) countShipsWithPrimaryRole:(NSString *)role inRange:(double)range ofEntity:(Entity *)entity;
+- (unsigned) countShipsWithPrimaryRole:(NSString *)role inRange:(double)range ofEntity:(OOEntity *)entity;
 - (unsigned) countShipsWithPrimaryRole:(NSString *)role;
-- (unsigned) countShipsWithScanClass:(OOScanClass)scanClass inRange:(double)range ofEntity:(Entity *)entity;
+- (unsigned) countShipsWithScanClass:(OOScanClass)scanClass inRange:(double)range ofEntity:(OOEntity *)entity;
 - (void) sendShipsWithPrimaryRole:(NSString *)role messageToAI:(NSString *)message;
 
 
@@ -456,27 +456,27 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (unsigned) countEntitiesMatchingPredicate:(EntityFilterPredicate)predicate
 								  parameter:(void *)parameter
 									inRange:(double)range
-								   ofEntity:(Entity *)entity;
+								   ofEntity:(OOEntity *)entity;
 - (unsigned) countShipsMatchingPredicate:(EntityFilterPredicate)predicate
 							   parameter:(void *)parameter
 								 inRange:(double)range
-								ofEntity:(Entity *)entity;
+								ofEntity:(OOEntity *)entity;
 - (NSMutableArray *) findEntitiesMatchingPredicate:(EntityFilterPredicate)predicate
 										 parameter:(void *)parameter
 										   inRange:(double)range
-										  ofEntity:(Entity *)entity;
+										  ofEntity:(OOEntity *)entity;
 - (id) findOneEntityMatchingPredicate:(EntityFilterPredicate)predicate
 							parameter:(void *)parameter;
 - (NSMutableArray *) findShipsMatchingPredicate:(EntityFilterPredicate)predicate
 									  parameter:(void *)parameter
 										inRange:(double)range
-									   ofEntity:(Entity *)entity;
+									   ofEntity:(OOEntity *)entity;
 - (id) nearestEntityMatchingPredicate:(EntityFilterPredicate)predicate
 							parameter:(void *)parameter
-					 relativeToEntity:(Entity *)entity;
+					 relativeToEntity:(OOEntity *)entity;
 - (id) nearestShipMatchingPredicate:(EntityFilterPredicate)predicate
 						  parameter:(void *)parameter
-				   relativeToEntity:(Entity *)entity;
+				   relativeToEntity:(OOEntity *)entity;
 
 
 - (OOTimeAbsolute) gameTime;	// "Game real time" clock.

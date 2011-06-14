@@ -2,7 +2,7 @@
 
 OOPlanetEntity.h
 
-Entity subclass representing a planet.
+OOEntity subclass representing a planet.
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -29,12 +29,12 @@ MA 02110-1301, USA.
 #import "PlanetEntity.h"
 #else
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OOPlanetDrawable, ShipEntity, OOMaterial;
 
 
-@interface OOPlanetEntity: Entity <OOStellarBody>
+@interface OOPlanetEntity: OOEntity <OOStellarBody>
 {
 @private
 	OOPlanetDrawable		*_planetDrawable;

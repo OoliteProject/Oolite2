@@ -45,7 +45,7 @@ SOFTWARE.
 #import "ResourceManager.h"
 
 
-@interface Entity (OODebugInspector)
+@interface OOEntity (OODebugInspector)
 
 // Method added by inspector in Debug OXP under OS X only.
 - (void) inspect;
@@ -723,7 +723,7 @@ static JSBool ConsoleInspectEntity(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	Entity				*entity = nil;
+	OOEntity				*entity = nil;
 	
 	if (JSValueToEntity(context, OOJS_ARGV[0], &entity))
 	{

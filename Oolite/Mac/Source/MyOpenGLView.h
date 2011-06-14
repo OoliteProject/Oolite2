@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #define NUM_KEYS			320
 #define MOUSE_DOUBLE_CLICK_INTERVAL	0.40
 
-@class Entity, GameController;
+@class OOEntity, GameController;
 
 enum GameViewKeys
 {

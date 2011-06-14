@@ -1595,28 +1595,10 @@ OOINLINE NSString *CurrentScriptDesc(void)
 }
 
 
-#if OBSOLETE
-- (void) targetNearestHostile
-{
-	[self scanForHostiles];
-	if (found_target != NO_TARGET)
-	{
-		Entity *ent = [UNIVERSE entityForUniversalID:found_target];
-		if (ent != 0x00)
-		{
-			ident_engaged = YES;
-			missile_status = MISSILE_STATUS_TARGET_LOCKED;
-			[self addTarget:ent];
-		}
-	}
-}
-#endif
-
-
 - (void) targetNearestIncomingMissile
 {
 	[self scanForNearestIncomingMissile];
-	Entity *foundTarget = [self foundTarget];
+	OOEntity *foundTarget = [self foundTarget];
 	if (foundTarget != nil)
 	{
 		ident_engaged = YES;

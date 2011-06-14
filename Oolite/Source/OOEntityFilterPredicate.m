@@ -26,31 +26,31 @@ MA 02110-1301, USA.
 */
 
 #import "OOEntityFilterPredicate.h"
-#import "Entity.h"
+#import "OOEntity.h"
 #import "ShipEntity.h"
 #import "OOPlanetEntity.h"
 #import "OORoleSet.h"
 
 
-BOOL YESPredicate(Entity *entity, void *parameter)
+BOOL YESPredicate(OOEntity *entity, void *parameter)
 {
 	return YES;
 }
 
 
-BOOL NOPredicate(Entity *entity, void *parameter)
+BOOL NOPredicate(OOEntity *entity, void *parameter)
 {
 	return NO;
 }
 
 
-BOOL HasScanClassPredicate(Entity *entity, void *parameter)
+BOOL HasScanClassPredicate(OOEntity *entity, void *parameter)
 {
 	return [(id)parameter intValue] == [entity scanClass];
 }
 
 
-BOOL IsPlanetPredicate(Entity *entity, void *parameter)
+BOOL IsPlanetPredicate(OOEntity *entity, void *parameter)
 {
 	if (![entity isPlanet])  return NO;
 	OOStellarBodyType type = [(OOPlanetEntity *)entity planetType];
@@ -58,7 +58,7 @@ BOOL IsPlanetPredicate(Entity *entity, void *parameter)
 }
 
 
-BOOL IsHostileAgainstTargetPredicate(Entity *ship, void *parameter)
+BOOL IsHostileAgainstTargetPredicate(OOEntity *ship, void *parameter)
 {
 	ShipEntity *self = (ShipEntity *)ship, *target = parameter;
 	

@@ -329,7 +329,7 @@ BOOL JSObjectGetVector(JSContext *context, JSObject *vectorObj, Vector *outVecto
 	if (OOJSIsMemberOfSubclass(context, vectorObj, JSEntityClass()))
 	{
 		COUNT(entityCount);
-		Entity *entity = JS_GetPrivate(context, vectorObj);
+		OOEntity *entity = JS_GetPrivate(context, vectorObj);
 		*outVector = [entity position];
 		return YES;
 	}

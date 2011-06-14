@@ -24,12 +24,12 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OODrawable;
 
 
-@interface OOEntityWithDrawable: Entity
+@interface OOEntityWithDrawable: OOEntity
 {
 	OODrawable				*drawable;
 }

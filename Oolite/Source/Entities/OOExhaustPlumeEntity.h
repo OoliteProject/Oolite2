@@ -43,7 +43,7 @@ enum
 };
 
 
-@interface OOExhaustPlumeEntity: Entity <OOSubEntity>
+@interface OOExhaustPlumeEntity: OOEntity <OOSubEntity>
 {
 @private
 	GLfloat			_width, _height;
@@ -62,7 +62,7 @@ enum
 @end
 
 
-@interface Entity (OOExhaustPlume)
+@interface OOEntity (OOExhaustPlume)
 
 - (BOOL)isExhaust;
 

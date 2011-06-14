@@ -125,7 +125,7 @@ void InitOOJSEntity(JSContext *context, JSObject *global)
 }
 
 
-BOOL JSValueToEntity(JSContext *context, jsval value, Entity **outEntity)
+BOOL JSValueToEntity(JSContext *context, jsval value, OOEntity **outEntity)
 {
 	if (JSVAL_IS_OBJECT(value))
 	{
@@ -136,7 +136,7 @@ BOOL JSValueToEntity(JSContext *context, jsval value, Entity **outEntity)
 }
 
 
-BOOL EntityFromArgumentList(JSContext *context, NSString *scriptClass, NSString *function, uintN argc, jsval *argv, Entity **outEntity, uintN *outConsumed)
+BOOL EntityFromArgumentList(JSContext *context, NSString *scriptClass, NSString *function, uintN argc, jsval *argv, OOEntity **outEntity, uintN *outConsumed)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -173,7 +173,7 @@ static JSBool EntityGetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	Entity						*entity = nil;
+	OOEntity						*entity = nil;
 	id							result = nil;
 	
 	if (EXPECT_NOT(!OOJSEntityGetEntity(context, this, &entity))) return NO;
@@ -271,7 +271,7 @@ static JSBool EntitySetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	Entity				*entity = nil;
+	OOEntity				*entity = nil;
 	double				fValue;
 	Vector				vValue;
 	Quaternion			qValue;
@@ -293,6 +293,7 @@ static JSBool EntitySetProperty(JSContext *context, JSObject *this, jsid propID,
 		case kEntity_orientation:
 			if (JSValueToQuaternion(context, *value, &qValue))
 			{
+				quaternion_normalize(&qValue);
 				[entity setNormalOrientation:qValue];
 				return YES;
 			}

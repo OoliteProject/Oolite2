@@ -6,7 +6,7 @@
 //  Copyright 2008 Jens Ayton. All rights reserved.
 //
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 
 @interface NSObject (OOInspectorExtensions)
@@ -25,7 +25,7 @@
 @end
 
 
-@interface Entity (OOEntityInspectorExtensions)
+@interface OOEntity (OOEntityInspectorExtensions)
 
 - (NSString *) inspScanClassLine;
 - (NSString *) inspStatusLine;

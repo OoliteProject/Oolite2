@@ -194,7 +194,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation Entity (ProxyPlayer)
+@implementation OOEntity (ProxyPlayer)
 
 - (BOOL) isPlayerLikeShip
 {

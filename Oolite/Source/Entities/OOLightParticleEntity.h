@@ -25,12 +25,12 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OOLegacyTexture, OOColor;
 
 
-@interface OOLightParticleEntity: Entity
+@interface OOLightParticleEntity: OOEntity
 {
 @protected
 	GLfloat					_colorComponents[4];

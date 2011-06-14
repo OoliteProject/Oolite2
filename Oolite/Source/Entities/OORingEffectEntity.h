@@ -2,7 +2,7 @@
 
 OORingEffectEntity.h
 
-Entity subclass for expanding-ring effect, used for hyperspace entry and for
+OOEntity subclass for expanding-ring effect, used for hyperspace entry and for
 some large explosions.
 
 
@@ -26,10 +26,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 
-@interface OORingEffectEntity: Entity
+@interface OORingEffectEntity: OOEntity
 {
 @private
 	GLfloat				_timePassed;
@@ -39,7 +39,7 @@ MA 02110-1301, USA.
 						_outerGrowthRate;
 }
 
-+ (id) ringFromEntity:(Entity *)sourceEntity;
-+ (id) shrinkingRingFromEntity:(Entity *)sourceEntity;
++ (id) ringFromEntity:(OOEntity *)sourceEntity;
++ (id) shrinkingRingFromEntity:(OOEntity *)sourceEntity;
 
 @end

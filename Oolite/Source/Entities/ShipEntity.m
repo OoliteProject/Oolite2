@@ -139,15 +139,15 @@ static GLfloat calcFuelChargeRate (GLfloat myMass)
 - (BOOL) setUpOneFlasher:(NSDictionary *) subentDict;
 - (BOOL) setUpOneStandardSubentity:(NSDictionary *) subentDict asTurret:(BOOL)asTurret;
 
-- (Entity<OOStellarBody> *) lastAegisLock;
-- (void) setLastAegisLock:(Entity<OOStellarBody> *)lastAegisLock;
+- (OOEntity<OOStellarBody> *) lastAegisLock;
+- (void) setLastAegisLock:(OOEntity<OOStellarBody> *)lastAegisLock;
 
-- (void) addSubEntity:(Entity<OOSubEntity> *) subent;
+- (void) addSubEntity:(OOEntity<OOSubEntity> *) subent;
 
 - (void) refreshEscortPositions;
 - (Vector) coordinatesForEscortPosition:(unsigned)idx;
 
-- (void) addSubentityToCollisionRadius:(Entity<OOSubEntity> *) subent;
+- (void) addSubentityToCollisionRadius:(OOEntity<OOSubEntity> *) subent;
 - (ShipEntity *) launchPodWithCrew:(NSArray *)podCrew;
 
 - (BOOL) firePlasmaShotAtOffset:(double)offset speed:(double)speed color:(OOColor *)color direction:(OOViewID)direction;
@@ -160,7 +160,7 @@ static GLfloat calcFuelChargeRate (GLfloat myMass)
 - (float) density;
 - (void) calculateMass;
 
-- (void) setLastEscortTarget:(Entity *)target;
+- (void) setLastEscortTarget:(OOEntity *)target;
 
 - (void) setProximateShip:(ShipEntity*) other;
 
@@ -845,7 +845,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	if (octree != nil)
 	{
 		mass = [self density] * [octree volume];
-		Entity *subEnt = nil;
+		OOEntity *subEnt = nil;
 		foreach (subEnt, subEntities)
 		{
 			mass = [subEnt mass];
@@ -896,7 +896,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (BOOL) hasSubEntity:(Entity<OOSubEntity> *)sub
+- (BOOL) hasSubEntity:(OOEntity<OOSubEntity> *)sub
 {
 	return [subEntities containsObject:sub];
 }
@@ -1442,7 +1442,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		int n_subs = [prime_subs count];
 		for (i = 0; i < n_subs; i++)
 		{
-			Entity* se = [prime_subs objectAtIndex:i];
+			OOEntity* se = [prime_subs objectAtIndex:i];
 			if ([se isShip] && [se canCollide] && doOctreesCollide((ShipEntity*)se, other))
 				return other;
 		}
@@ -1456,7 +1456,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		int n_subs = [other_subs count];
 		for (i = 0; i < n_subs; i++)
 		{
-			Entity* se = [other_subs objectAtIndex:i];
+			OOEntity* se = [other_subs objectAtIndex:i];
 			if ([se isShip] && [se canCollide] && doOctreesCollide(prime, (ShipEntity*)se))
 				return (ShipEntity*)se;
 		}
@@ -1469,14 +1469,14 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		int n_osubs = [other_subs count];
 		for (i = 0; i < n_osubs; i++)
 		{
-			Entity* oe = [other_subs objectAtIndex:i];
+			OOEntity* oe = [other_subs objectAtIndex:i];
 			if ([oe isShip] && [oe canCollide])
 			{
 				int j;
 				int n_psubs = [prime_subs count];
 				for (j = 0; j <  n_psubs; j++)
 				{
-					Entity* pe = [prime_subs objectAtIndex:j];
+					OOEntity* pe = [prime_subs objectAtIndex:j];
 					if ([pe isShip] && [pe canCollide] && doOctreesCollide((ShipEntity*)pe, (ShipEntity*)oe))
 						return (ShipEntity*)oe;
 				}
@@ -1489,7 +1489,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	if (other == nil)  return NO;
 	if ([collidingEntities containsObject:other])  return NO;	// we know about this already!
@@ -1548,8 +1548,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (Triangle) absoluteIJKForSubentity
 {
 	Triangle	result = {{ kBasisXVector, kBasisYVector, kBasisZVector, kZeroVector }};
-	Entity		*last = nil;
-	Entity		*father = self;
+	OOEntity		*last = nil;
+	OOEntity		*father = self;
 	OOMatrix	r_mat;
 	
 	while ((father)&&(father != last) && (father != NO_TARGET))
@@ -1567,7 +1567,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (void) addSubentityToCollisionRadius:(Entity<OOSubEntity> *)subent
+- (void) addSubentityToCollisionRadius:(OOEntity<OOSubEntity> *)subent
 {
 	if (!subent)  return;
 	
@@ -2066,9 +2066,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (void)respondToAttackFrom:(Entity *)from becauseOf:(Entity *)other
+- (void)respondToAttackFrom:(OOEntity *)from becauseOf:(OOEntity *)other
 {
-	Entity				*source = nil;
+	OOEntity				*source = nil;
 	
 	if ([other isKindOfClass:[ShipEntity class]])
 	{
@@ -3048,7 +3048,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 
 - (void) behaviour_track_target:(double) delta_t
 {
-	Entity *primaryTarget = [self primaryTarget];
+	OOEntity *primaryTarget = [self primaryTarget];
 	
 	if (primaryTarget == nil)
 	{
@@ -3985,7 +3985,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		OODebugDrawPoint(destination, [OOColor blueColor]);
 		OODebugDrawColoredLine([self position], destination, [OOColor colorWithCalibratedWhite:0.15 alpha:1.0]);
 		
-		Entity *pTarget = [self primaryTarget];
+		OOEntity *pTarget = [self primaryTarget];
 		if (pTarget != nil)
 		{
 			OODebugDrawPoint([pTarget position], [OOColor redColor]);
@@ -3998,7 +3998,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			OODebugDrawPoint([sTarget position], [OOColor cyanColor]);
 		}
 		
-		Entity *fTarget = [self foundTarget];
+		OOEntity *fTarget = [self foundTarget];
 		if (fTarget != nil && fTarget != pTarget && fTarget != sTarget)
 		{
 			OODebugDrawPoint([fTarget position], [OOColor magentaColor]);
@@ -4010,7 +4010,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 
 - (void) drawSubEntity:(BOOL) immediate :(BOOL) translucent
 {
-	Entity* my_owner = [self owner];
+	OOEntity* my_owner = [self owner];
 	if (my_owner)
 	{
 		// this test provides an opportunity to do simple LoD culling
@@ -4024,8 +4024,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if ([self status] == STATUS_ACTIVE)
 	{
 		Vector abspos = position;  // STATUS_ACTIVE means it is in control of it's own orientation
-		Entity		*last = nil;
-		Entity		*father = my_owner;
+		OOEntity		*last = nil;
+		OOEntity		*father = my_owner;
 		OOMatrix	r_mat;
 		
 		while ((father)&&(father != last)  &&father != NO_TARGET)
@@ -4195,7 +4195,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 }
 
 
-- (void) addSubEntity:(Entity<OOSubEntity> *)sub
+- (void) addSubEntity:(OOEntity<OOSubEntity> *)sub
 {
 	if (sub == nil)  return;
 	
@@ -4209,7 +4209,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 }
 
 
-- (void) setOwner:(Entity *)who_owns_entity
+- (void) setOwner:(OOEntity *)who_owns_entity
 {
 	[super setOwner:who_owns_entity];
 	
@@ -4759,7 +4759,7 @@ static BOOL IsBehaviourHostile(OOBehaviour behaviour)
 	return IsBehaviourHostile(behaviour);
 }
 
-- (BOOL) isHostileTo:(Entity *)entity
+- (BOOL) isHostileTo:(OOEntity *)entity
 {
 	return ([self hasHostileTarget] && [self primaryTarget] == entity);
 }
@@ -4878,7 +4878,7 @@ static BOOL IsBehaviourHostile(OOBehaviour behaviour)
 {
 	if (!suppressAegisMessages && aegis_status != AEGIS_NONE)
 	{
-		Entity<OOStellarBody> *lastAegisLock = [self lastAegisLock];
+		OOEntity<OOStellarBody> *lastAegisLock = [self lastAegisLock];
 		if (lastAegisLock != nil)
 		{
 			[self doScriptEvent:OOJSID("shipExitedPlanetaryVicinity") withArgument:lastAegisLock];
@@ -4903,7 +4903,7 @@ static BOOL IsBehaviourHostile(OOBehaviour behaviour)
 }
 
 
-static float SurfaceDistanceSqaredV(Vector reference, Entity<OOStellarBody> *stellar)
+static float SurfaceDistanceSqaredV(Vector reference, OOEntity<OOStellarBody> *stellar)
 {
 	float centerDistance = magnitude2(vector_subtract([stellar position], reference));
 	float r = [(OOPlanetEntity *)stellar radius];
@@ -4915,7 +4915,7 @@ static float SurfaceDistanceSqaredV(Vector reference, Entity<OOStellarBody> *ste
 }
 
 
-static float SurfaceDistanceSqared(Entity *reference, Entity<OOStellarBody> *stellar)
+static float SurfaceDistanceSqared(OOEntity *reference, OOEntity<OOStellarBody> *stellar)
 {
 	return SurfaceDistanceSqaredV([reference position], stellar);
 }
@@ -4978,9 +4978,9 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (Entity<OOStellarBody> *) findNearestStellarBody
+- (OOEntity<OOStellarBody> *) findNearestStellarBody
 {
-	Entity<OOStellarBody> *match = [self findNearestPlanet];
+	OOEntity<OOStellarBody> *match = [self findNearestPlanet];
 	OOSunEntity *sun = [UNIVERSE sun];
 	
 	if (sun != nil)
@@ -5025,7 +5025,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 
 - (OOAegisStatus) checkForAegis
 {
-	Entity<OOStellarBody>	*nearest = [self findNearestStellarBody];
+	OOEntity<OOStellarBody>	*nearest = [self findNearestStellarBody];
 	BOOL					sunGoneNova = [[UNIVERSE sun] goneNova];
 	
 	if (nearest == nil)
@@ -5177,9 +5177,9 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (Entity<OOStellarBody> *) lastAegisLock
+- (OOEntity<OOStellarBody> *) lastAegisLock
 {
-	Entity<OOStellarBody> *stellar = [_lastAegisLock weakRefUnderlyingObject];
+	OOEntity<OOStellarBody> *stellar = [_lastAegisLock weakRefUnderlyingObject];
 	if (stellar == nil)
 	{
 		[_lastAegisLock release];
@@ -5190,7 +5190,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) setLastAegisLock:(Entity<OOStellarBody> *)lastAegisLock
+- (void) setLastAegisLock:(OOEntity<OOStellarBody> *)lastAegisLock
 {
 	[_lastAegisLock release];
 	_lastAegisLock = [lastAegisLock weakRetain];
@@ -5686,7 +5686,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 		unsigned i;
 		for (i = 0; i < [targets count]; i++)
 		{
-			Entity *e2 = [targets objectAtIndex:i];
+			OOEntity *e2 = [targets objectAtIndex:i];
 			Vector p2 = vector_subtract([e2 position], position);
 			double ecr = [e2 collisionRadius];
 			double d2 = magnitude2(p2) - ecr * ecr;
@@ -5739,7 +5739,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) noteTakingDamage:(double)amount from:(Entity *)entity type:(OOShipDamageType)type
+- (void) noteTakingDamage:(double)amount from:(OOEntity *)entity type:(OOShipDamageType)type
 {
 	if (amount < 0 || (amount == 0 && [UNIVERSE isGamePaused]))  return;
 	
@@ -5756,7 +5756,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) noteKilledBy:(Entity *)whom damageType:(OOShipDamageType)type
+- (void) noteKilledBy:(OOEntity *)whom damageType:(OOShipDamageType)type
 {
 	JSContext *context = OOJSAcquireContext();
 	
@@ -5777,7 +5777,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) getDestroyedBy:(Entity *)whom damageType:(OOShipDamageType)type
+- (void) getDestroyedBy:(OOEntity *)whom damageType:(OOShipDamageType)type
 {
 	[self noteKilledBy:whom damageType:type];
 	[self becomeExplosion];
@@ -5790,7 +5790,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	[self setMesh:[[self mesh] meshRescaledBy:factor]];
 	
 	// rescale subentities
-	Entity<OOSubEntity>	*se = nil;
+	OOEntity<OOSubEntity>	*se = nil;
 	foreach (se, [self subEntities])
 	{
 		[se setPosition:vector_multiply_scalar([se position], factor)];
@@ -6454,7 +6454,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) checkScanner
 {
-	Entity* scan;
+	OOEntity* scan;
 	n_scanned_ships = 0;
 	//
 	scan = z_previous;	while ((scan)&&(scan->isShip == NO))	scan = scan->z_previous;	// skip non-ships
@@ -6498,15 +6498,15 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (Entity *) foundTarget
+- (OOEntity *) foundTarget
 {
-	Entity *result = [_foundTarget weakRefUnderlyingObject];
+	OOEntity *result = [_foundTarget weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_foundTarget);
 	return result;
 }
 
 
-- (void) setFoundTarget:(Entity *)targetEntity
+- (void) setFoundTarget:(OOEntity *)targetEntity
 {
 	[_foundTarget release];
 	_foundTarget = [targetEntity weakRetain];
@@ -6520,7 +6520,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity
+- (void) setAndAnnounceFoundTarget:(OOEntity *)targetEntity
 {
 	[self setFoundTarget:targetEntity];
 	[self announceFoundTarget];
@@ -6529,13 +6529,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (id) primaryAggressor
 {
-	Entity *result = [_primaryAggressor weakRefUnderlyingObject];
+	OOEntity *result = [_primaryAggressor weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_primaryAggressor);
 	return result;
 }
 
 
-- (void) setPrimaryAggressor:(Entity *)targetEntity
+- (void) setPrimaryAggressor:(OOEntity *)targetEntity
 {
 	if (targetEntity != nil)
 	{
@@ -6553,7 +6553,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setTargetStation:(Entity *) target
+- (void) setTargetStation:(OOEntity *) target
 {
 	[_targetStation release];
 	_targetStation = [target weakRetain];
@@ -6582,7 +6582,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) addTarget:(Entity *) targetEntity
+- (void) addTarget:(OOEntity *) targetEntity
 {
 	if (targetEntity == self)  return;
 	if (targetEntity != nil)
@@ -6596,7 +6596,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) removeTarget:(Entity *) targetEntity
+- (void) removeTarget:(OOEntity *) targetEntity
 {
 	if(targetEntity != nil) [self noteLostTarget];
 	else  DESTROY(_primaryTarget); 
@@ -6755,10 +6755,10 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Vector		my_ref = reference;
 	double		aim_cos;
 	
-	Entity		*target = [self primaryTarget];
+	OOEntity		*target = [self primaryTarget];
 	
-	Entity		*last = nil;
-	Entity		*father = [self parentEntity];
+	OOEntity		*last = nil;
+	OOEntity		*father = [self parentEntity];
 	OOMatrix	r_mat;
 	BOOL		doTrack;
 	
@@ -6810,7 +6810,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Vector vector_to_target;
 	Quaternion q_minarc;
 	//
-	Entity* target = [self primaryTarget];
+	OOEntity* target = [self primaryTarget];
 	//
 	if (!target)
 		return;
@@ -6848,10 +6848,10 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	Vector		my_aim = vector_forward_from_quaternion(orientation);
 	Vector		my_ref = reference;
 	double		aim_cos, ref_cos;
-	Entity		*target = [self primaryTarget];
+	OOEntity		*target = [self primaryTarget];
 	Vector		leading = [target velocity];
-	Entity		*last = nil;
-	Entity		*father = [self parentEntity];
+	OOEntity		*last = nil;
+	OOEntity		*father = [self parentEntity];
 	OOMatrix	r_mat;
 	
 	while ((father)&&(father != last) && (father != NO_TARGET))
@@ -6903,7 +6903,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (double) trackPrimaryTarget:(double) delta_t :(BOOL) retreat
 {
-	Entity*	target = [self primaryTarget];
+	OOEntity*	target = [self primaryTarget];
 
 	if (!target)   // leave now!
 	{
@@ -7093,7 +7093,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	Vector  relPos;
 	GLfloat  d_forward, d_up, d_right;
-	Entity  *target = [self primaryTarget];
+	OOEntity  *target = [self primaryTarget];
 
 	if (!target)   // leave now!
 		return 0.0;
@@ -7388,7 +7388,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	double dist;
 	Vector delta;
-	Entity  *target = [self primaryTarget];
+	OOEntity  *target = [self primaryTarget];
 	if (target == nil)   // leave now!
 		return 0.0;
 	delta = vector_subtract(target->position, position);
@@ -7409,7 +7409,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		return (randf() < 0.05);	// one in twenty shots on target
 	}
 	
-	Entity  *target = [self primaryTarget];
+	OOEntity  *target = [self primaryTarget];
 	if (target == nil)  return NO;
 	if ([target status] == STATUS_DEAD)  return NO;
 	
@@ -7531,8 +7531,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		return NO;
 	
 	Vector		origin = position;
-	Entity		*last = nil;
-	Entity		*father = [self parentEntity];
+	OOEntity		*last = nil;
+	OOEntity		*father = [self parentEntity];
 	OOMatrix	r_mat;
 	Vector		vel;
 	
@@ -7636,7 +7636,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (BOOL) fireDirectLaserShot
 {
-	Entity			*my_target = [self primaryTarget];
+	OOEntity			*my_target = [self primaryTarget];
 	if (my_target == nil)  return NO;
 	
 	GLfloat			hit_at_range;
@@ -7889,7 +7889,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(Entity *) target
+- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target
 {
 	// both players and NPCs!
 	//
@@ -8283,7 +8283,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	// deal with collisions
 	//
-	Entity*		ent;
+	OOEntity*		ent;
 	ShipEntity* other_ship;
 	
 	while ([collidingEntities count] > 0)
@@ -8692,7 +8692,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) cascadeIfAppropriateWithDamageAmount:(double)amount cascadeOwner:(Entity *)owner
+- (void) cascadeIfAppropriateWithDamageAmount:(double)amount cascadeOwner:(OOEntity *)owner
 {
 	switch ([self scanClass])
 	{
@@ -8729,7 +8729,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) takeEnergyDamage:(double)amount from:(Entity *)ent becauseOf:(Entity *)other
+- (void) takeEnergyDamage:(double)amount from:(OOEntity *)ent becauseOf:(OOEntity *)other
 {
 	if ([self status] == STATUS_DEAD)  return;
 	if (amount <= 0.0)  return;
@@ -8938,7 +8938,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) takeScrapeDamage:(double) amount from:(Entity *)ent
+- (void) takeScrapeDamage:(double) amount from:(OOEntity *)ent
 {
 	if ([self status] == STATUS_DEAD)  return;
 
@@ -9321,7 +9321,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (Entity *) lastEscortTarget
+- (OOEntity *) lastEscortTarget
 {
 	id result = [_lastEscortTarget weakRefUnderlyingObject];
 	if (result == nil && _lastEscortTarget != nil)  DESTROY(_lastEscortTarget);
@@ -9329,7 +9329,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setLastEscortTarget:(Entity *)target
+- (void) setLastEscortTarget:(OOEntity *)target
 {
 	DESTROY(_lastEscortTarget);
 	_lastEscortTarget = [target weakRetain];
@@ -9344,7 +9344,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	ShipEntity		*target = nil;
 	NSMutableSet	*idleEscorts = nil;
 	unsigned		deployCount;
-	Entity			*primaryTarget = [self primaryTarget];
+	OOEntity			*primaryTarget = [self primaryTarget];
 	
 	if (primaryTarget == nil || _escortGroup == nil)  return;
 	
@@ -9427,7 +9427,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) setTargetToNearestStationIncludingHostiles:(BOOL) includeHostiles
 {
 	// check if the groupID (parent ship) points to a station...
-	Entity		*mother = [[self group] leader];
+	OOEntity		*mother = [[self group] leader];
 	if ([mother isStation])
 	{
 		[self setTargetStationAndTarget:(StationEntity *)mother];
@@ -9436,8 +9436,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	/*- selects the nearest station it can find -*/
 	int			ent_count = UNIVERSE->n_entities;
-	Entity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity		*my_entities[ent_count];
+	OOEntity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity		*my_entities[ent_count];
 	int i;
 	int station_count = 0;
 	for (i = 0; i < ent_count; i++)
@@ -9540,7 +9540,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-static BOOL AuthorityPredicate(Entity *entity, void *parameter)
+static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 {
 	ShipEntity			*victim = parameter;
 	
@@ -9747,9 +9747,9 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 		// if I'm under attack send a thank-you message to the rescuer
 		NSArray *tokens = ScanTokensFromString(ms);
 		OOUniversalID switcherID = [tokens oo_intAtIndex:1];	// Attacker that switched targets.
-		Entity *switcher = [UNIVERSE entityForUniversalID:switcherID];
+		OOEntity *switcher = [UNIVERSE entityForUniversalID:switcherID];
 		OOUniversalID rescuerID = [tokens oo_intAtIndex:2];	// New primary target of attacker. 
-		Entity *rescuer = [UNIVERSE entityForUniversalID:rescuerID];
+		OOEntity *rescuer = [UNIVERSE entityForUniversalID:rescuerID];
 		
 		if (switcher == [self primaryAggressor] &&
 			switcher == [self primaryTarget] && 
@@ -9781,7 +9781,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 }
 
 
-- (OOBoundingBox) findBoundingBoxRelativeTo:(Entity *)other InVectors:(Vector) _i :(Vector) _j :(Vector) _k
+- (OOBoundingBox) findBoundingBoxRelativeTo:(OOEntity *)other InVectors:(Vector) _i :(Vector) _j :(Vector) _k
 {
 	Vector  opv = other ? other->position : position;
 	return [self findBoundingBoxRelativeToPosition:opv InVectors:_i :_j :_k];
@@ -9826,7 +9826,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 	const GLfloat k = 0.1;
 	
 	unsigned	entityCount = UNIVERSE->n_entities, shipCount = 0;
-	Entity		**sortedEntities = UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity		**sortedEntities = UNIVERSE->sortedEntities;	// grab the public sorted list
 	ShipEntity	*ships[entityCount];
 	ShipEntity	*blocker = nil;
 	
@@ -9913,7 +9913,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 
 - (void) sendCoordinatesToPilot
 {
-	Entity		*scan;
+	OOEntity	*scan;
 	ShipEntity	*scanShip, *pilot;
 	
 	n_scanned_ships = 0;
@@ -10064,7 +10064,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 }
 
 
-- (Entity *)entityForShaderProperties
+- (OOEntity *)entityForShaderProperties
 {
 	return [self rootShipEntity];
 }
@@ -10205,9 +10205,9 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 @end
 
 
-@implementation Entity (SubEntityRelationship)
+@implementation OOEntity (SubEntityRelationship)
 
-- (BOOL) isShipWithSubEntityShip:(Entity *)other
+- (BOOL) isShipWithSubEntityShip:(OOEntity *)other
 {
 	return NO;
 }
@@ -10217,7 +10217,7 @@ static BOOL AuthorityPredicate(Entity *entity, void *parameter)
 
 @implementation ShipEntity (SubEntityRelationship)
 
-- (BOOL) isShipWithSubEntityShip:(Entity *)other
+- (BOOL) isShipWithSubEntityShip:(OOEntity *)other
 {
 	assert ([self isShip]);
 	
@@ -10268,7 +10268,7 @@ BOOL OOUniformBindingPermitted(NSString *propertyName, id bindingTarget)
 		playerShipWhitelist = [[NSSet alloc] initWithArray:[wlDict oo_arrayForKey:@"shader_player_ship_binding_methods"]];
 	}
 	
-	if ([bindingTarget isKindOfClass:[Entity class]])
+	if ([bindingTarget isKindOfClass:[OOEntity class]])
 	{
 		if ([entityWhitelist containsObject:propertyName])  return YES;
 		if ([bindingTarget isShip])

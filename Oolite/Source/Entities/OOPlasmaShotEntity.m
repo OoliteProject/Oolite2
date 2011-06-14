@@ -72,7 +72,7 @@ MA 02110-1301, USA.
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	return ([other rootShipEntity] != [self owner]) && ![other isEffect];
 }
@@ -93,7 +93,7 @@ MA 02110-1301, USA.
 	NSUInteger i, count = [collidingEntities count];
 	for (i = 0; i < count; i++)
 	{
-		Entity *e = (Entity *)[collidingEntities objectAtIndex:i];
+		OOEntity *e = (OOEntity *)[collidingEntities objectAtIndex:i];
 		if ([e rootShipEntity] != [self owner])
 		{
 			[e takeEnergyDamage:[self energy] * attenuation

@@ -422,7 +422,7 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 @end
 
 
-@implementation Entity (OOExhaustPlume)
+@implementation OOEntity (OOExhaustPlume)
 
 - (BOOL)isExhaust
 {

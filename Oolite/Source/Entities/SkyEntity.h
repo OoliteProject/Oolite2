@@ -2,7 +2,7 @@
 
 SkyEntity.h
 
-Entity subclass implementing the game backdrop of stars and nebulae.
+OOEntity subclass implementing the game backdrop of stars and nebulae.
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors

@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 #define WORMHOLE_EXPIRES_TIMEINTERVAL	900.0
 #define WORMHOLE_SHRINK_RATE			4000.0
@@ -43,7 +43,7 @@ typedef enum
 	WH_SCANINFO_SHIP,
 } WORMHOLE_SCANINFO;
 
-@interface WormholeEntity: Entity
+@interface WormholeEntity: OOEntity
 {
 	double			expiry_time;	// Time when wormhole entrance closes
 	double			travel_time;	// Time taken for a ship to traverse the wormhole

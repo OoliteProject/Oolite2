@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 #import "OOTypes.h"
 
-@class Entity;
+@class OOEntity;
 
 
 NSMutableArray *ScanTokensFromString(NSString *values) DEPRECATED_FUNC;	 // Use OOScanTokensFromString() instead.
@@ -55,7 +55,7 @@ NSString *DescriptionForSystem(Random_Seed seed,NSString *name);
 NSString *DescriptionForCurrentSystem(void);
 
 // target and localVariables are optional; target will default to the player.
-NSString *ReplaceVariables(NSString *string, Entity *target, NSDictionary *localVariables);
+NSString *ReplaceVariables(NSString *string, OOEntity *target, NSDictionary *localVariables);
 
 NSString *RandomDigrams(void);
 

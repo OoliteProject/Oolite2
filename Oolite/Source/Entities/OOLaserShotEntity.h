@@ -25,13 +25,13 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 #import "OOTypes.h"
 
 @class ShipEntity, OOColor;
 
 
-@interface OOLaserShotEntity: Entity
+@interface OOLaserShotEntity: OOEntity
 {
 @private
 	GLfloat					_color[4];

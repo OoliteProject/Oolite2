@@ -9,7 +9,7 @@
 #import "OOEntityDebugInspectorModule.h"
 #import "OODebugInspector.h"
 #import "OOEntityInspectorExtensions.h"
-#import "Entity.h"
+#import "OOEntity.h"
 
 
 @implementation OOEntityDebugInspectorModule
@@ -39,7 +39,7 @@
 @end
 
 
-@implementation Entity (OOEntityDebugInspectorModule)
+@implementation OOEntity (OOEntityDebugInspectorModule)
 
 - (NSArray *) debugInspectorModules
 {

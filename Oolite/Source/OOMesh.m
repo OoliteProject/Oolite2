@@ -39,7 +39,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "Geometry.h"
 #import "ResourceManager.h"
-#import "Entity.h"		// for NO_DRAW_DISTANCE_FACTOR.
+#import "OOEntity.h"		// for NO_DRAW_DISTANCE_FACTOR.
 #import "Octree.h"
 #import "OOMaterialConvenienceCreators.h"
 #import "OOBasicMaterial.h"

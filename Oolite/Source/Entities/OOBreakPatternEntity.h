@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OOColor;
 
@@ -37,7 +37,7 @@ enum
 };
 
 
-@interface OOBreakPatternEntity: Entity
+@interface OOBreakPatternEntity: OOEntity
 {
 @private
 	Vector					_vertexPosition[kOOBreakPatternMaxVertices];
@@ -56,7 +56,7 @@ enum
 @end
 
 
-@interface Entity (OOBreakPatternEntity)
+@interface OOEntity (OOBreakPatternEntity)
 
 - (BOOL) isBreakPattern;
 

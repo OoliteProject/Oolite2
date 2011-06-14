@@ -2,7 +2,7 @@
 
 PlanetEntity.h
 
-Entity subclass representing a planet or an atmosphere.
+OOEntity subclass representing a planet or an atmosphere.
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 
 #if !NEW_PLANETS
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OOLegacyTexture, OOColor;
 
@@ -50,7 +50,7 @@ typedef struct
 #define PlanetEntity OOPlanetEntity
 
 
-@interface PlanetEntity: Entity <OOStellarBody>
+@interface PlanetEntity: OOEntity <OOStellarBody>
 {
 @private
 	OOStellarBodyType		planet_type;

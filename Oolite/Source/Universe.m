@@ -183,7 +183,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 @interface Universe (OOPrivate)
 
-- (BOOL) doRemoveEntity:(Entity *)entity;
+- (BOOL) doRemoveEntity:(OOEntity *)entity;
 - (void) preloadSounds;
 - (void) setUpSettings;
 - (void) setUpInitialUniverse;
@@ -518,7 +518,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 			int index = 0;
 			while ([entities count] > 2)
 			{
-				Entity *ent = [entities objectAtIndex:index];
+				OOEntity *ent = [entities objectAtIndex:index];
 				if ((ent != player)&&(ent != dockedStation))
 				{
 					if (ent->isStation)  // clear out queues
@@ -647,7 +647,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 {
 	// new system is hyper-centric : witchspace exit point is origin
 	
-	Entity				*thing;
+	OOEntity				*thing;
 	PlayerEntity*		player = PLAYER;
 	Quaternion			randomQ;
 	
@@ -752,7 +752,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 		[allPlanets removeObject:a_planet];
 		cachedPlanet=a_planet;
 		[allPlanets replaceObjectAtIndex:0 withObject:a_planet];
-		[self removeEntity:(Entity *)tmp];
+		[self removeEntity:(OOEntity *)tmp];
 	}
 	else
 	{
@@ -764,7 +764,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 - (void) setUpSpace
 {
-	Entity				*thing;
+	OOEntity				*thing;
 	ShipEntity			*nav_buoy;
 	StationEntity		*a_station;
 	OOSunEntity			*a_sun;
@@ -1240,7 +1240,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 {
 	// adds a ship within scanner range of a point on route 1
 	
-	Entity* the_station = [self station];
+	OOEntity* the_station = [self station];
 	if (!the_station)
 		return;
 	Vector  h1_pos = [self getWitchspaceExitPosition];
@@ -1804,7 +1804,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 
 
 // adds a ship within the collision radius of the other entity
-- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(Entity *) entity
+- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity
 {
 	if (entity == nil)  return nil;
 	
@@ -1964,7 +1964,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 {
 	NSMutableArray			*ships = [NSMutableArray arrayWithCapacity:count];
 	ShipEntity				*ship = nil;
-	Entity<OOStellarBody>	*entity = nil;
+	OOEntity<OOStellarBody>	*entity = nil;
 	Vector					pos = kZeroVector, direction = kZeroVector, point0 = kZeroVector, point1 = kZeroVector;
 	double					radius = 0;
 	
@@ -2205,13 +2205,13 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 }
 
 
-static BOOL IsCandidateMainStationPredicate(Entity *entity, void *parameter)
+static BOOL IsCandidateMainStationPredicate(OOEntity *entity, void *parameter)
 {
 	return [entity isStation] && !entity->isExplicitlyNotMainStation;
 }
 
 
-static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
+static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 {
 	return [entity isStation] && ![(ShipEntity *)entity isHostileTo:parameter];
 }
@@ -2357,7 +2357,7 @@ static BOOL IsFriendlyStationPredicate(Entity *entity, void *parameter)
 
 - (BOOL) breakPatternHide
 {
-	Entity* player = PLAYER;
+	OOEntity* player = PLAYER;
 	return ((breakPatternCounter > 5)||(!player)||([player status] == STATUS_DOCKING));
 }
 
@@ -3081,10 +3081,10 @@ static const OOMatrix	starboard_matrix =
 			Vector			position, view_dir, view_up;
 			OOMatrix		view_matrix;
 			int				ent_count =	n_entities;
-			Entity			*my_entities[ent_count];
+			OOEntity			*my_entities[ent_count];
 			int				draw_count = 0;
 			PlayerEntity	*player = PLAYER;
-			Entity			*drawthing = nil;
+			OOEntity			*drawthing = nil;
 			BOOL			demoShipMode = [player showDemoShips];
 			
 			if (!displayGUI && wasDisplayGUI)
@@ -3098,7 +3098,7 @@ static const OOMatrix	starboard_matrix =
 			// use a non-mutable copy so this can't be changed under us.
 			for (i = 0; i < ent_count; i++)
 			{
-				Entity *e = sortedEntities[i]; // ordered NEAREST -> FURTHEST AWAY
+				OOEntity *e = sortedEntities[i]; // ordered NEAREST -> FURTHEST AWAY
 				if ([e isVisible])
 				{
 					my_entities[draw_count++] = [[e retain] autorelease];
@@ -3433,7 +3433,7 @@ static const OOMatrix	starboard_matrix =
 	if ((u_id == NO_TARGET)||(!entity_for_uid[u_id]))
 		return nil;
 	
-	Entity *ent = entity_for_uid[u_id];
+	OOEntity *ent = entity_for_uid[u_id];
 	if ([ent isEffect])	// effects SHOULD NOT HAVE U_IDs!
 	{
 		return nil;
@@ -3457,7 +3457,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	if (uni->n_entities > 0)
 	{
 		int n;
-		Entity	*checkEnt, *last;
+		OOEntity	*checkEnt, *last;
 		
 		last = nil;
 		
@@ -3573,7 +3573,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 		int i;
 		for (i = 0; i < n_ents; i++)
 		{
-			Entity* ent = (Entity*)[allEntities objectAtIndex:i];
+			OOEntity* ent = (OOEntity*)[allEntities objectAtIndex:i];
 			ent->x_next = nil;
 			ent->x_previous = nil;
 			ent->y_next = nil;
@@ -3588,7 +3588,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (BOOL) addEntity:(Entity *) entity
+- (BOOL) addEntity:(OOEntity *) entity
 {
 	if (entity)
 	{
@@ -3726,7 +3726,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (BOOL) removeEntity:(Entity *) entity
+- (BOOL) removeEntity:(OOEntity *) entity
 {
 	if (entity != nil && ![entity isPlayer])
 	{
@@ -3742,7 +3742,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (void) ensureEntityReallyRemoved:(Entity *)entity
+- (void) ensureEntityReallyRemoved:(OOEntity *)entity
 {
 	if ([entity universalID] != NO_TARGET)
 	{
@@ -3758,7 +3758,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	no_update = YES;			// no drawing while we do this!
 	
 #ifndef NDEBUG
-	Entity* p0 = [entities objectAtIndex:0];
+	OOEntity* p0 = [entities objectAtIndex:0];
 	if (!(p0->isPlayer))
 	{
 		OOLog(kOOLogInconsistentState, @"***** First entity is not the player in Universe.removeAllEntitiesExceptPlayer - exiting.");
@@ -3771,7 +3771,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	while ([entities count] > 1)
 	{
-		Entity* ent = [entities objectAtIndex:1];
+		OOEntity* ent = [entities objectAtIndex:1];
 		if (ent->isStation)  // clear out queues
 			[(StationEntity *)ent clear];
 		[self removeEntity:ent];
@@ -3798,7 +3798,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	int ent_count = n_entities;
 	if (ent_count > 0)
 	{
-		Entity* ent;
+		OOEntity* ent;
 		for (i = 0; i < ent_count; i++)
 		{
 			ent = sortedEntities[i];
@@ -3845,7 +3845,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (BOOL) isVectorClearFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
+- (BOOL) isVectorClearFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
 {
 	if (!e1)
 		return NO;
@@ -3862,7 +3862,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	int i;
 	int ent_count = n_entities;
-	Entity* my_entities[ent_count];
+	OOEntity* my_entities[ent_count];
 	for (i = 0; i < ent_count; i++)
 		my_entities[i] = [sortedEntities[i] retain]; //	retained
 	
@@ -3873,7 +3873,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; i < ent_count ; i++)
 	{
-		Entity *e2 = my_entities[i];
+		OOEntity *e2 = my_entities[i];
 		if ((e2 != e1)&&([e2 canCollide]))
 		{
 			Vector epos = e2->position;
@@ -3906,7 +3906,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (Entity*) hazardOnRouteFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
+- (OOEntity*) hazardOnRouteFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
 {
 	if (!e1)
 		return nil;
@@ -3921,10 +3921,10 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	if (nearest < 0.0)
 		return nil;			// within range already!
 	
-	Entity* result = nil;
+	OOEntity* result = nil;
 	int i;
 	int ent_count = n_entities;
-	Entity* my_entities[ent_count];
+	OOEntity* my_entities[ent_count];
 	for (i = 0; i < ent_count; i++)
 		my_entities[i] = [sortedEntities[i] retain]; //	retained
 	
@@ -3935,7 +3935,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; (i < ent_count) && (!result) ; i++)
 	{
-		Entity *e2 = my_entities[i];
+		OOEntity *e2 = my_entities[i];
 		if ((e2 != e1)&&([e2 canCollide]))
 		{
 			Vector epos = e2->position;
@@ -3964,7 +3964,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (Vector) getSafeVectorFromEntity:(Entity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
+- (Vector) getSafeVectorFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2
 {
 	// heuristic three
 	
@@ -3978,7 +3978,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	Vector  result = p2;
 	int i;
 	int ent_count = n_entities;
-	Entity* my_entities[ent_count];
+	OOEntity* my_entities[ent_count];
 	for (i = 0; i < ent_count; i++)
 		my_entities[i] = [sortedEntities[i] retain];	// retained
 	Vector p1 = e1->position;
@@ -3994,7 +3994,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; i < ent_count; i++)
 	{
-		Entity *e2 = my_entities[i];
+		OOEntity *e2 = my_entities[i];
 		if ((e2 != e1)&&([e2 canCollide]))
 		{
 			Vector epos = e2->position;
@@ -4101,7 +4101,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; i < ent_count; i++)
 	{
-		Entity* ent = sortedEntities[i];
+		OOEntity* ent = sortedEntities[i];
 		if (ent != srcEntity && ent != parent && [ent isShip] && [ent canCollide])
 		{
 			my_entities[ship_count++] = [ent retain];
@@ -4196,15 +4196,15 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (Entity *)getFirstEntityTargetedByPlayer
+- (OOEntity *)getFirstEntityTargetedByPlayer
 {
 	PlayerEntity	*player = PLAYER;
-	Entity			*hit_entity = nil;
+	OOEntity			*hit_entity = nil;
 	double			nearest = SCANNER_MAX_RANGE - 100;	// 100m shorter than range at which target is lost
 	int				i;
 	int				ent_count = n_entities;
 	int				ship_count = 0;
-	Entity			*my_entities[ent_count];
+	OOEntity			*my_entities[ent_count];
 	
 	for (i = 0; i < ent_count; i++)
 	{
@@ -4242,7 +4242,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	r1 = vector_right_from_quaternion(q1);
 	for (i = 0; i < ship_count; i++)
 	{
-		Entity *e2 = my_entities[i];
+		OOEntity *e2 = my_entities[i];
 		if ([e2 canCollide]&&([e2 scanClass] != CLASS_NO_DRAW))
 		{
 			Vector rp = [e2 position];
@@ -4273,7 +4273,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (NSArray *) getEntitiesWithinRange:(double)range ofEntity:(Entity *)entity
+- (NSArray *) getEntitiesWithinRange:(double)range ofEntity:(OOEntity *)entity
 {
 	if (entity == nil)  return nil;
 	
@@ -4284,7 +4284,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (unsigned) countShipsWithRole:(NSString *)role inRange:(double)range ofEntity:(Entity *)entity
+- (unsigned) countShipsWithRole:(NSString *)role inRange:(double)range ofEntity:(OOEntity *)entity
 {
 	return [self countShipsMatchingPredicate:HasRolePredicate
 							   parameter:role
@@ -4299,7 +4299,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (unsigned) countShipsWithPrimaryRole:(NSString *)role inRange:(double)range ofEntity:(Entity *)entity
+- (unsigned) countShipsWithPrimaryRole:(NSString *)role inRange:(double)range ofEntity:(OOEntity *)entity
 {
 	return [self countShipsMatchingPredicate:HasPrimaryRolePredicate
 							   parameter:role
@@ -4308,7 +4308,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (unsigned) countShipsWithScanClass:(OOScanClass)scanClass inRange:(double)range ofEntity:(Entity *)entity
+- (unsigned) countShipsWithScanClass:(OOScanClass)scanClass inRange:(double)range ofEntity:(OOEntity *)entity
 {
 	return [self countShipsMatchingPredicate:HasScanClassPredicate
 							   parameter:[NSNumber numberWithInt:scanClass]
@@ -4339,7 +4339,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 - (unsigned) countEntitiesMatchingPredicate:(EntityFilterPredicate)predicate
 								  parameter:(void *)parameter
 									inRange:(double)range
-								   ofEntity:(Entity *)e1
+								   ofEntity:(OOEntity *)e1
 {
 	unsigned		i, found = 0;
 	Vector			p1, p2;
@@ -4352,7 +4352,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; i < n_entities; i++)
 	{
-		Entity *e2 = sortedEntities[i];
+		OOEntity *e2 = sortedEntities[i];
 		if (e2 != e1 && predicate(e2, parameter))
 		{
 			if (range < 0)  distance = -1;	// Negative range means infinity
@@ -4376,7 +4376,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 - (unsigned) countShipsMatchingPredicate:(EntityFilterPredicate)predicate
 							   parameter:(void *)parameter
 								 inRange:(double)range
-								ofEntity:(Entity *)entity
+								ofEntity:(OOEntity *)entity
 {
 	if (predicate != NULL)
 	{
@@ -4401,7 +4401,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
+OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 {
 	if (range < 0)  return YES;
 	Vector p2 = vector_subtract(e2->position, p1);
@@ -4415,7 +4415,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 - (NSMutableArray *) findEntitiesMatchingPredicate:(EntityFilterPredicate)predicate
 								  parameter:(void *)parameter
 									inRange:(double)range
-								   ofEntity:(Entity *)e1
+								   ofEntity:(OOEntity *)e1
 {
 	OOJS_PROFILE_ENTER
 	
@@ -4434,7 +4434,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 	
 	for (i = 0; i < n_entities; i++)
 	{
-		Entity *e2 = sortedEntities[i];
+		OOEntity *e2 = sortedEntities[i];
 		
 		if (e1 != e2 &&
 			EntityInRange(p1, e2, range) &&
@@ -4456,7 +4456,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 							parameter:(void *)parameter
 {
 	unsigned		i;
-	Entity			*candidate = nil;
+	OOEntity			*candidate = nil;
 	
 	OOJSPauseTimeLimiter();
 	
@@ -4477,7 +4477,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 - (NSMutableArray *) findShipsMatchingPredicate:(EntityFilterPredicate)predicate
 									  parameter:(void *)parameter
 										inRange:(double)range
-									   ofEntity:(Entity *)entity
+									   ofEntity:(OOEntity *)entity
 {
 	if (predicate != NULL)
 	{
@@ -4504,7 +4504,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 
 - (id) nearestEntityMatchingPredicate:(EntityFilterPredicate)predicate
 							parameter:(void *)parameter
-					 relativeToEntity:(Entity *)entity
+					 relativeToEntity:(OOEntity *)entity
 {
 	unsigned		i;
 	Vector			p1;
@@ -4518,7 +4518,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 	
 	for (i = 0; i < n_entities; i++)
 	{
-		Entity *e2 = sortedEntities[i];
+		OOEntity *e2 = sortedEntities[i];
 		float distanceToReferenceEntitySquared = (float)distance2(p1, [e2 position]);
 		
 		if (entity != e2 &&
@@ -4536,7 +4536,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 
 - (id) nearestShipMatchingPredicate:(EntityFilterPredicate)predicate
 						  parameter:(void *)parameter
-				   relativeToEntity:(Entity *)entity
+				   relativeToEntity:(OOEntity *)entity
 {
 	if (predicate != NULL)
 	{
@@ -4955,7 +4955,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 	if (!no_update && delta_t != 0.0)
 	{
 		unsigned	i, ent_count = n_entities;
-		Entity		*my_entities[ent_count];
+		OOEntity		*my_entities[ent_count];
 		
 		[self verifyEntitySessionIDs];
 		
@@ -5058,7 +5058,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 			
 			for (i = 0; i < ent_count; i++)
 			{
-				Entity *thing = my_entities[i];
+				OOEntity *thing = my_entities[i];
 #ifndef NDEBUG
 				update_stage_param = thing;
 				update_stage = @"update:entity [%@]";
@@ -5121,7 +5121,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 			{
 				update_stage = @"shootin' zombies";
 				NSEnumerator *zombieEnum = nil;
-				Entity *zombie = nil;
+				OOEntity *zombie = nil;
 				for (zombieEnum = [zombies objectEnumerator]; (zombie = [zombieEnum nextObject]); )
 				{
 					OOLogERR(@"universe.zombie", @"Found dead entity %@ in active entity list, removing. This is an internal error, please report it.", zombie);
@@ -5222,7 +5222,7 @@ OOINLINE BOOL EntityInRange(Vector p1, Entity *e2, float range)
 		change might still give some trouble I missed.
 		-- Eric, 17-10-2010
 	*/
-	Entity	*e0, *next;
+	OOEntity	*e0, *next;
 	GLfloat start, finish, next_start, next_finish;
 	
 	// using the z_list - set or clear collisionTestFilter and clear collision_chain
@@ -8309,7 +8309,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 }
 
 
-Entity *gOOJSPlayerIfStale = nil;
+OOEntity *gOOJSPlayerIfStale = nil;
 
 - (BOOL) blockJSPlayerShipProps
 {
@@ -8423,7 +8423,7 @@ Entity *gOOJSPlayerIfStale = nil;
 {
 #ifndef NDEBUG
 	NSMutableArray *badEntities = nil;
-	Entity *entity = nil;
+	OOEntity *entity = nil;
 	
 	unsigned i;
 	for (i = 0; i < n_entities; i++)
@@ -8628,7 +8628,7 @@ Entity *gOOJSPlayerIfStale = nil;
 }
 
 
-- (BOOL)doRemoveEntity:(Entity *)entity
+- (BOOL)doRemoveEntity:(OOEntity *)entity
 {
 	// remove reference to entity in linked lists
 	if ([entity canCollide])	// filter only collidables disappearing

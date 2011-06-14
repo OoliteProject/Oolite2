@@ -2,7 +2,7 @@
 
 PlayerEntity.h
 
-Entity subclass nominally representing the player's ship, but also
+OOEntity subclass nominally representing the player's ship, but also
 implementing much of the interaction, menu system etc. Breaking it up into
 ten or so different classes is a perennial to-do item.
 
@@ -353,7 +353,7 @@ typedef enum
 	unsigned				ship_kills;
 	
 	OOCompassMode			compassMode;
-	Entity 					*compassTarget;
+	OOEntity 					*compassTarget;
 	
 	GLfloat					fuel_leak_rate;
 	
@@ -624,8 +624,8 @@ typedef enum
 
 - (NSMutableArray *) commLog;
 
-- (Entity *) compassTarget;
-- (void) setCompassTarget:(Entity *)value;
+- (OOEntity *) compassTarget;
+- (void) setCompassTarget:(OOEntity *)value;
 
 - (OOCompassMode) compassMode;
 - (void) setCompassMode:(OOCompassMode)value;

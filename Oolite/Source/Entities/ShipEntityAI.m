@@ -296,7 +296,7 @@ OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPre
 }
 
 
-OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
+OOINLINE BOOL IsIncomingMissilePredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
 	ShipEntity *ship = (ShipEntity *)entity, *self = (ShipEntity *)parameter;
@@ -429,10 +429,10 @@ OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
 
 - (void) setTargetToPrimaryAggressor
 {
-	Entity *aggressor = [self primaryAggressor];
+	OOEntity *aggressor = [self primaryAggressor];
 	if (aggressor == nil)  return;
 	
-	Entity *primaryTarget = [self primaryTarget];
+	OOEntity *primaryTarget = [self primaryTarget];
 	if (primaryTarget == aggressor)  return;
 		
 	// A more considered approach here:
@@ -479,7 +479,7 @@ OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
 	[self checkScanner];
 	
 	found_d2 = scannerRange * scannerRange;
-	Entity *target = NO_TARGET;
+	OOEntity *target = NO_TARGET;
 	
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
@@ -504,7 +504,7 @@ OOINLINE BOOL IsIncomingMissilePredicate(Entity *entity, void *parameter)
 }
 
 
-static BOOL IsPirateVictimPredicate(Entity *entity, void *predicate)
+static BOOL IsPirateVictimPredicate(OOEntity *entity, void *predicate)
 {
 	NSCParameterAssert([entity isShip]);
 	
@@ -555,7 +555,7 @@ static BOOL IsPirateVictimPredicate(Entity *entity, void *predicate)
 	[self checkScanner];
 	
 	GLfloat		found_d2 = scannerRange * scannerRange;
-	Entity		*target = nil;
+	OOEntity		*target = nil;
 	unsigned	i;
 	
 	for (i = 0; i < n_scanned_ships; i++)
@@ -579,7 +579,7 @@ static BOOL IsPirateVictimPredicate(Entity *entity, void *predicate)
 }
 
 
-static BOOL IsLootPredicate(Entity *entity, void *predicate)
+static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 {
 	NSCParameterAssert([entity isShip]);
 	ShipEntity *ship = (ShipEntity *)entity;
@@ -596,7 +596,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 
 - (void) setTargetToFoundTarget
 {
-	Entity *target = [self foundTarget];
+	OOEntity *target = [self foundTarget];
 	if (target != nil)	[self addTarget:target];
 	else  [shipAI message:@"TARGET_LOST"];	// to prevent the ship going for a wrong, previous target. Should not be a reactToMessage.
 }
@@ -893,7 +893,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 
 - (void) setDestinationToTarget
 {
-	Entity *the_target = [self primaryTarget];
+	OOEntity *the_target = [self primaryTarget];
 	if (the_target)
 		destination = the_target->position;
 }
@@ -901,7 +901,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 
 - (void) setDestinationWithinTarget
 {
-	Entity *the_target = [self primaryTarget];
+	OOEntity *the_target = [self primaryTarget];
 	if (the_target)
 	{
 		Vector pos = the_target->position;
@@ -915,7 +915,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 
 - (void) checkCourseToDestination
 {
-	Entity *hazard = [UNIVERSE hazardOnRouteFromEntity: self toDistance: desired_range fromPoint: destination];
+	OOEntity *hazard = [UNIVERSE hazardOnRouteFromEntity: self toDistance: desired_range fromPoint: destination];
 	
 	if (hazard == nil || ([hazard isShip] && distance(position, [hazard position]) > scannerRange) || ([hazard isPlanet] && aegis_status == AEGIS_NONE)) 
 		[shipAI message:@"COURSE_OK"]; // Avoid going into a waypoint.plist for far away objects, it cripples the main AI a bit in its funtionality.
@@ -942,7 +942,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 			break;
 		case AEGIS_CLOSE_TO_ANY_PLANET:
 			{
-				Entity<OOStellarBody> *nearest = [self findNearestStellarBody];
+				OOEntity<OOStellarBody> *nearest = [self findNearestStellarBody];
 				
 				if([nearest isSun])
 				{
@@ -1002,7 +1002,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 	
 	if ([UNIVERSE sun] == nil)  gov_factor = 1.0;
 	
-	Entity				*target = nil;
+	OOEntity				*target = nil;
 	 
 	// Find the worst offender on the scanner.
 	[self checkScanner];
@@ -1242,7 +1242,7 @@ static BOOL IsLootPredicate(Entity *entity, void *predicate)
 }
 
 
-OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
+OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip]);
 	ShipEntity *ship = (ShipEntity *)entity;
@@ -1285,7 +1285,7 @@ OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 - (void) becomeUncontrolledThargon
 {
 	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
 	int i;
 	for (i = 0; i < ent_count; i++) if (uni_entities[i]->isShip)
 	{
@@ -1314,11 +1314,11 @@ OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 
 - (void) fightOrFleeHostiles
 {
-	Entity *foundTarget = [self foundTarget];
+	OOEntity *foundTarget = [self foundTarget];
 	
 	if ([self hasEscorts])
 	{
-		Entity *lastEscortTarget = [self lastEscortTarget];
+		OOEntity *lastEscortTarget = [self lastEscortTarget];
 		
 		if (foundTarget == lastEscortTarget)
 		{
@@ -1485,7 +1485,7 @@ OOINLINE BOOL IsNonThargoidPredicate(Entity *entity, void *parameter)
 }
 
 
-OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *parameter)
+OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
 	ShipEntity *ship = (ShipEntity *)entity, *self = parameter;
@@ -1533,7 +1533,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 	// check we've arrived near the last given coordinates
 	if (distance2(position, coordinates) < 1000000 || patrol_counter == 0)
 	{
-		Entity *sun = [UNIVERSE sun];
+		OOEntity *sun = [UNIVERSE sun];
 		StationEntity *station = (StationEntity *)[[self group] leader];
 		if(!station || ![station isStation]) station = [UNIVERSE station];
 		
@@ -1635,7 +1635,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 
 - (void) setSunSkimExitCoordinates
 {
-	Entity *the_sun = [UNIVERSE sun];
+	OOEntity *the_sun = [UNIVERSE sun];
 	if (the_sun == nil)  return;
 	Vector v1 = [UNIVERSE getSunSkimEndPositionForShip:self];
 	Vector vs = the_sun->position;
@@ -1742,7 +1742,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 
 - (void) setDestinationToDockingAbort
 {
-	Entity *the_target = [self primaryTarget];
+	OOEntity *the_target = [self primaryTarget];
 	double bo_distance = 8000; //	8km back off
 	Vector v0 = position;
 	Vector d0 = (the_target) ? the_target->position : kZeroVector;
@@ -1768,7 +1768,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 		return;
 	}
 	
-	Entity *target = NO_TARGET;
+	OOEntity *target = NO_TARGET;
 	[self checkScanner];
 	unsigned i;
 	GLfloat found_d2 = scannerRange * scannerRange;
@@ -2110,7 +2110,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(Entity *entity, void *paramete
 	{
 		// locate nearest wormhole
 		int				ent_count =		UNIVERSE->n_entities;
-		Entity**		uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+		OOEntity**		uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
 		WormholeEntity*	wormholes[ent_count];
 		int i;
 		int wh_count = 0;
@@ -2407,7 +2407,7 @@ OOINLINE void ScanForNearestShip(ShipEntity *self, EntityFilterPredicate predica
 }
 
 
-OOINLINE BOOL NonDerelictAndPredicate(Entity *entity, void *parameter)
+OOINLINE BOOL NonDerelictAndPredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && parameter != NULL);
 	ChainedEntityPredicateParameter *param = parameter;

@@ -46,9 +46,9 @@ static JSObject *sSystemPrototype;
 
 
 // Support functions for entity search methods.
-static BOOL GetRelativeToAndRange(JSContext *context, NSString *methodName, uintN *ioArgc, jsval **ioArgv, Entity **outRelativeTo, double *outRange);
-static NSArray *FindJSVisibleEntities(EntityFilterPredicate predicate, void *parameter, Entity *relativeTo, double range);
-static NSArray *FindShips(EntityFilterPredicate predicate, void *parameter, Entity *relativeTo, double range);
+static BOOL GetRelativeToAndRange(JSContext *context, NSString *methodName, uintN *ioArgc, jsval **ioArgv, OOEntity **outRelativeTo, double *outRange);
+static NSArray *FindJSVisibleEntities(EntityFilterPredicate predicate, void *parameter, OOEntity *relativeTo, double range);
+static NSArray *FindShips(EntityFilterPredicate predicate, void *parameter, OOEntity *relativeTo, double range);
 static NSComparisonResult CompareEntitiesByDistance(id a, id b, void *relativeTo);
 
 static JSBool SystemAddShipsOrGroup(JSContext *context, uintN argc, jsval *vp, BOOL isGroup);
@@ -527,8 +527,8 @@ static JSBool SystemSendAllShipsAway(JSContext *context, uintN argc, jsval *vp)
 	OOJS_NATIVE_ENTER(context)
 	
 	unsigned	i, ent_count =	UNIVERSE->n_entities;
-	Entity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity		*my_entities[ent_count];
+	OOEntity		**uni_entities = UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity		*my_entities[ent_count];
 	
 	for (i = 0; i < ent_count; i++)
 	{
@@ -537,7 +537,7 @@ static JSBool SystemSendAllShipsAway(JSContext *context, uintN argc, jsval *vp)
 
 	for (i = 0; i < ent_count; i++)
 	{
-		Entity* e1 = my_entities[i];
+		OOEntity* e1 = my_entities[i];
 		if ([e1 isShip] && ![e1 isPlayer])
 		{
 			ShipEntity* se1 = (ShipEntity*)e1;
@@ -573,7 +573,7 @@ static JSBool SystemCountShipsWithPrimaryRole(JSContext *context, uintN argc, js
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString			*role = nil;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	unsigned			result;
 	
@@ -605,7 +605,7 @@ static JSBool SystemCountShipsWithRole(JSContext *context, uintN argc, jsval *vp
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString			*role = nil;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	unsigned			result;
 	
@@ -637,7 +637,7 @@ static JSBool SystemShipsWithPrimaryRole(JSContext *context, uintN argc, jsval *
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString			*role = nil;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	NSArray				*result = nil;
 	
@@ -670,7 +670,7 @@ static JSBool SystemShipsWithRole(JSContext *context, uintN argc, jsval *vp)
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString			*role = nil;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	NSArray				*result = nil;
 	
@@ -703,7 +703,7 @@ static JSBool SystemCountEntitiesWithScanClass(JSContext *context, uintN argc, j
 	OOJS_NATIVE_ENTER(context)
 	
 	OOScanClass			scanClass = CLASS_NOT_SET;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	unsigned			result;
 	
@@ -735,7 +735,7 @@ static JSBool SystemEntitiesWithScanClass(JSContext *context, uintN argc, jsval 
 	OOJS_NATIVE_ENTER(context)
 	
 	OOScanClass			scanClass = CLASS_NOT_SET;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	NSArray				*result = nil;
 	
@@ -769,7 +769,7 @@ static JSBool SystemFilteredEntities(JSContext *context, uintN argc, jsval *vp)
 	
 	JSObject			*jsThis = NULL;
 	jsval				predicate;
-	Entity				*relativeTo = nil;
+	OOEntity				*relativeTo = nil;
 	double				range = -1;
 	NSArray				*result = nil;
 	
@@ -1233,7 +1233,7 @@ static JSBool SystemAddShipsOrGroupToRoute(JSContext *context, uintN argc, jsval
 }
 
 
-static BOOL GetRelativeToAndRange(JSContext *context, NSString *methodName, uintN *ioArgc, jsval **ioArgv, Entity **outRelativeTo, double *outRange)
+static BOOL GetRelativeToAndRange(JSContext *context, NSString *methodName, uintN *ioArgc, jsval **ioArgv, OOEntity **outRelativeTo, double *outRange)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -1268,7 +1268,7 @@ static BOOL GetRelativeToAndRange(JSContext *context, NSString *methodName, uint
 }
 
 
-static NSArray *FindJSVisibleEntities(EntityFilterPredicate predicate, void *parameter, Entity *relativeTo, double range)
+static NSArray *FindJSVisibleEntities(EntityFilterPredicate predicate, void *parameter, OOEntity *relativeTo, double range)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -1295,7 +1295,7 @@ static NSArray *FindJSVisibleEntities(EntityFilterPredicate predicate, void *par
 }
 
 
-static NSArray *FindShips(EntityFilterPredicate predicate, void *parameter, Entity *relativeTo, double range)
+static NSArray *FindShips(EntityFilterPredicate predicate, void *parameter, OOEntity *relativeTo, double range)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -1314,9 +1314,9 @@ static NSComparisonResult CompareEntitiesByDistance(id a, id b, void *relativeTo
 {
 	OOJS_PROFILE_ENTER
 	
-	Entity				*ea = a,
-	*eb = b,
-	*r = (id)relativeTo;
+	OOEntity			*ea = a,
+						*eb = b,
+						*r = (id)relativeTo;
 	float				d1, d2;
 	
 	d1 = distance2(ea->position, r->position);

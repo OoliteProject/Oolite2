@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 
 #import <Foundation/Foundation.h>
 
-@class Entity;
+@class OOEntity;
 
 
 @interface OOScript: NSObject
@@ -59,6 +59,6 @@ MA 02110-1301, USA.
 - (NSString *)version;
 - (NSString *)displayName;	// "name version" if version is defined, otherwise just "name".
 
-- (void)runWithTarget:(Entity *)target;
+- (void)runWithTarget:(OOEntity *)target;
 
 @end

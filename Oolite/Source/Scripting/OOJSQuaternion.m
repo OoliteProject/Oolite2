@@ -310,7 +310,7 @@ BOOL JSObjectGetQuaternion(JSContext *context, JSObject *quaternionObj, Quaterni
 	if (OOJSIsMemberOfSubclass(context, quaternionObj, JSEntityClass()))
 	{
 		COUNT(entityCount);
-		Entity *entity = JS_GetPrivate(context, quaternionObj);
+		OOEntity *entity = JS_GetPrivate(context, quaternionObj);
 		*outQuaternion = [entity orientation];
 		return YES;
 	}

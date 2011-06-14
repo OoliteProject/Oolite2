@@ -25,12 +25,12 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class ShipEntity;
 
 
-@interface OOECMBlastEntity: Entity
+@interface OOECMBlastEntity: OOEntity
 {
 @private
 	OOTimeDelta			_nextBlast;
@@ -43,7 +43,7 @@ MA 02110-1301, USA.
 @end
 
 
-@interface Entity (OOECMBlastEntity)
+@interface OOEntity (OOECMBlastEntity)
 
 - (BOOL) isECMBlast;
 

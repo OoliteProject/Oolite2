@@ -76,7 +76,7 @@ static OOLegacyTexture *sFlashTexture = nil;
 }
 
 
-+ (id) explosionFlashFromEntity:(Entity *)entity
++ (id) explosionFlashFromEntity:(OOEntity *)entity
 {
 	return [[[self alloc] initExplosionFlashWithPosition:[entity position] velocity:[entity velocity] size:[entity collisionRadius]] autorelease];
 }

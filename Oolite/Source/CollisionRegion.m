@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "CollisionRegion.h"
 #import "Universe.h"
-#import "Entity.h"
+#import "OOEntity.h"
 #import "ShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
@@ -57,7 +57,7 @@ static int crid_counter = 1;
 	
 	max_entities = COLLISION_MAX_ENTITIES;
 	n_entities = 0;
-	entity_array = (Entity**) malloc( max_entities * sizeof(Entity*));
+	entity_array = (OOEntity**) malloc( max_entities * sizeof(OOEntity*));
 	
 	subregions = [[NSMutableArray alloc] initWithCapacity: 32];	// retained
 	
@@ -80,7 +80,7 @@ static int crid_counter = 1;
 	
 	max_entities = COLLISION_MAX_ENTITIES;
 	n_entities = 0;
-	entity_array = (Entity**) malloc( max_entities * sizeof(Entity*));
+	entity_array = (OOEntity**) malloc( max_entities * sizeof(OOEntity*));
 	
 	subregions = [[NSMutableArray alloc] initWithCapacity: 32];	// retained
 	
@@ -246,14 +246,14 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 	isPlayerInRegion = NO;
 }
 
-- (void) addEntity:(Entity*) ent
+- (void) addEntity:(OOEntity*) ent
 {
 	// expand if necessary
 	//	
 	if (n_entities == max_entities)
 	{
 		max_entities = 1 + max_entities * 2;
-		Entity** new_store = (Entity**) malloc( max_entities * sizeof(Entity*));
+		OOEntity** new_store = (OOEntity**) malloc( max_entities * sizeof(OOEntity*));
 		int i;
 		for (i = 0; i < n_entities; i++)
 			new_store[i] = entity_array[i];
@@ -265,7 +265,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 	entity_array[n_entities++] = ent;
 }
 
-- (BOOL) checkEntity:(Entity*) ent
+- (BOOL) checkEntity:(OOEntity*) ent
 {
 	Vector position = ent->position;
 	
@@ -296,11 +296,11 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 	//
 	// According to Shark, when this was in Universe this was where Oolite spent most time!
 	//
-	Entity *e1,*e2;
+	OOEntity *e1,*e2;
 	Vector p1, p2;
 	double dist2, r1, r2, r0, min_dist2;
 	int i;
-	Entity*	entities_to_test[n_entities];
+	OOEntity*	entities_to_test[n_entities];
 	//
 	
 	// reject trivial cases
@@ -437,7 +437,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 	}
 }
 
-static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_sun)
+static BOOL testEntityOccludedByEntity(OOEntity* e1, OOEntity* e2, OOSunEntity* the_sun)
 {
 	// simple tests
 	if (e1 == e2)
@@ -511,7 +511,7 @@ static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_
 	//
 	// Copy/pasting the collision code to detect occlusion!
 	//
-	Entity* e1;
+	OOEntity* e1;
 	int i,j;
 	
 	if ([UNIVERSE reducedDetail])  return;	// don't do this in reduced detail mode
@@ -524,8 +524,8 @@ static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_
 	//
 	// get a list of planet entities because they can shade across regions
 	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity*		planets[ent_count];
+	OOEntity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity*		planets[ent_count];
 	int n_planets = 0;
 	for (i = 0; i < ent_count; i++)
 	{
@@ -559,7 +559,7 @@ static BOOL testEntityOccludedByEntity(Entity* e1, Entity* e2, OOSunEntity* the_
 		}
 		if (e1->isSunlit == NO)
 		{
-			Entity* occluder = [e1->_shadingEntity weakRefUnderlyingObject];
+			OOEntity* occluder = [e1->_shadingEntity weakRefUnderlyingObject];
 			if (occluder)
 			{
 				occluder_moved = occluder->hasMoved;

@@ -63,7 +63,7 @@
 @end
 
 
-@implementation Entity (OOEntityInspectorExtensions)
+@implementation OOEntity (OOEntityInspectorExtensions)
 
 - (NSString *) inspDescription
 {

@@ -567,14 +567,14 @@ NSString *DescriptionForCurrentSystem(void)
 }
 
 
-NSString *ReplaceVariables(NSString *string, Entity *target, NSDictionary *localVariables)
+NSString *ReplaceVariables(NSString *string, OOEntity *target, NSDictionary *localVariables)
 {
 	NSMutableString			*resultString = nil;
 	NSMutableArray			*tokens = nil;
 	NSEnumerator			*tokenEnum = nil;
 	NSString				*token = nil;
 	NSString				*replacement = nil;
-	Entity					*effeciveTarget = nil;
+	OOEntity					*effeciveTarget = nil;
 	PlayerEntity			*player = nil;
 	
 	tokens = ScanTokensFromString(string);

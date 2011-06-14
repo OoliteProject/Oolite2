@@ -7,7 +7,7 @@
 //
 
 #import "OODebugInspectorModule.h"
-#import "Entity.h"
+#import "OOEntity.h"
 
 
 @interface OOEntityDebugInspectorModule : OODebugInspectorModule

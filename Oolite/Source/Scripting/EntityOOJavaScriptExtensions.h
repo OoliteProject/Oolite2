@@ -25,11 +25,11 @@ MA 02110-1301, USA.
 */
 
 
-#import "Entity.h"
+#import "OOEntity.h"
 #import "OOJavaScriptEngine.h"
 
 
-@interface Entity (OOJavaScriptExtensions)
+@interface OOEntity (OOJavaScriptExtensions)
 
 - (BOOL) isVisibleToScripts;
 

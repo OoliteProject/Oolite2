@@ -102,7 +102,7 @@ MA 02110-1301, USA.
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	if (other == [self owner])  return NO;
 	return ![other isEffect];
@@ -282,7 +282,7 @@ do { \
 }
 
 
-+ (id) fragmentBurstFromEntity:(Entity *)entity
++ (id) fragmentBurstFromEntity:(OOEntity *)entity
 {
 	return [[[self alloc] initFragmentBurstFrom:[entity position] velocity:[entity velocity] size:[entity collisionRadius]] autorelease];
 }
@@ -337,7 +337,7 @@ do { \
 }
 
 
-+ (id) fragmentBurstFromEntity:(Entity *)entity
++ (id) fragmentBurstFromEntity:(OOEntity *)entity
 {
 	return [[[self alloc] initFragmentBurstFrom:[entity position] velocity:vector_multiply_scalar([entity velocity], 0.85) size:[entity collisionRadius]] autorelease];
 }

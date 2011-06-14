@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 
 
-@implementation Entity (ShaderBindings)
+@implementation OOEntity (ShaderBindings)
 
 // Clock time.
 - (GLfloat) clock

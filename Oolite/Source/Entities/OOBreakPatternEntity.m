@@ -210,7 +210,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation Entity (OOBreakPatternEntity)
+@implementation OOEntity (OOBreakPatternEntity)
 
 - (BOOL) isBreakPattern
 {

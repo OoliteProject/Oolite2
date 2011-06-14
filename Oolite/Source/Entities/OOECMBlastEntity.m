@@ -120,7 +120,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation Entity (OOECMBlastEntity)
+@implementation OOEntity (OOECMBlastEntity)
 
 - (BOOL) isECMBlast
 {

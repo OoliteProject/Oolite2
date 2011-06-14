@@ -1104,7 +1104,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 				{
 					if (!docking_clearance_request_key_pressed)
 					{
-						Entity *primeTarget = [self primaryTarget];
+						OOEntity *primeTarget = [self primaryTarget];
 						if (primeTarget != nil && [primeTarget isStation] && [primeTarget isKindOfClass:[StationEntity class]])
 						{
 							NSString *stationDockingClearanceStatus = [(StationEntity*)primeTarget acceptDockingClearanceRequestFrom:self];
@@ -3268,7 +3268,7 @@ static BOOL toggling_music;
 - (void) handleAutopilotOn:(BOOL)fastDocking
 {
 	BOOL		isOkayToUseAutopilot	= NO;
-	Entity		*target					= nil;
+	OOEntity		*target					= nil;
 	NSString	*message				= nil;
 
 	// Check alert condition - on red alert, abort
@@ -3287,7 +3287,7 @@ static BOOL toggling_music;
 	if( !isOkayToUseAutopilot )
 	{
 		Universe  *uni        = UNIVERSE;
-		Entity    **entities  = uni->sortedEntities;	// grab the public sorted list
+		OOEntity    **entities  = uni->sortedEntities;	// grab the public sorted list
 		int       nStations   = 0;
 		unsigned  i;
 		

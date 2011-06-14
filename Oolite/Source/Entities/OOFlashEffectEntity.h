@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 	float				_growthRate;
 }
 
-+ (id) explosionFlashFromEntity:(Entity *)entity;
++ (id) explosionFlashFromEntity:(OOEntity *)entity;
 + (id) laserFlashWithPosition:(Vector)position velocity:(Vector)vel color:(OOColor *)color;
 
 + (void) setUpTexture;

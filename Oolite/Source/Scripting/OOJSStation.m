@@ -133,7 +133,7 @@ static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, 
 	OOJS_PROFILE_ENTER
 	
 	BOOL						result;
-	Entity						*entity = nil;
+	OOEntity					*entity = nil;
 	
 	if (outEntity == NULL)  return NO;
 	*outEntity = nil;

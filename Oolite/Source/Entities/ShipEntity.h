@@ -2,8 +2,8 @@
 
 ShipEntity.h
 
-Entity subclass representing a ship, or various other flying things like cargo
-pods and stations (a subclass).
+OOEntity subclass representing a ship, or various other flying things like
+cargo pods and stations (a subclass).
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -443,7 +443,7 @@ typedef enum
 
 - (NSArray *)subEntities;
 - (unsigned) subEntityCount;
-- (BOOL) hasSubEntity:(Entity<OOSubEntity> *)sub;
+- (BOOL) hasSubEntity:(OOEntity<OOSubEntity> *)sub;
 
 - (NSEnumerator *)subEntityEnumerator;
 - (NSEnumerator *)shipSubEntityEnumerator;
@@ -501,7 +501,7 @@ typedef enum
 - (BOOL) isFrangible;
 - (BOOL) suppressFlightNotifications;
 
-- (void) respondToAttackFrom:(Entity *)from becauseOf:(Entity *)other;
+- (void) respondToAttackFrom:(OOEntity *)from becauseOf:(OOEntity *)other;
 
 // Equipment
 - (BOOL) hasEquipmentItem:(id)equipmentKeys includeWeapons:(BOOL)includeWeapons;	// This can take a string or an set or array of strings. If a collection, returns YES if ship has _any_ of the specified equipment. If includeWeapons is NO, missiles and primary weapons are not checked.
@@ -652,7 +652,7 @@ typedef enum
 - (BOOL)isUnpiloted;	// Has unpiloted = yes in its shipdata.plist entry
 
 - (BOOL) hasHostileTarget;
-- (BOOL) isHostileTo:(Entity *)entity;
+- (BOOL) isHostileTo:(OOEntity *)entity;
 
 - (GLfloat) weaponRange;
 - (void) setWeaponRange:(GLfloat) value;
@@ -672,7 +672,7 @@ typedef enum
 
 - (void) transitionToAegisNone;
 - (OOPlanetEntity *) findNearestPlanet;
-- (Entity<OOStellarBody> *) findNearestStellarBody;		// NOTE: includes sun.
+- (OOEntity<OOStellarBody> *) findNearestStellarBody;		// NOTE: includes sun.
 - (OOPlanetEntity *) findNearestPlanetExcludingMoons;
 - (OOAegisStatus) checkForAegis;
 - (BOOL) isWithinStationAegis;
@@ -767,11 +767,11 @@ typedef enum
 - (void) dealMomentumWithinDesiredRange:(double)amount;
 
 // Dispatch shipTakingDamage() event.
-- (void) noteTakingDamage:(double)amount from:(Entity *)entity type:(OOShipDamageType)type;
+- (void) noteTakingDamage:(double)amount from:(OOEntity *)entity type:(OOShipDamageType)type;
 // Dispatch shipDied() and possibly shipKilledOther() events. This is only for use by getDestroyedBy:damageType:, but needs to be visible to PlayerEntity's version.
-- (void) noteKilledBy:(Entity *)whom damageType:(OOShipDamageType)type;
+- (void) noteKilledBy:(OOEntity *)whom damageType:(OOShipDamageType)type;
 
-- (void) getDestroyedBy:(Entity *)whom damageType:(OOShipDamageType)type;
+- (void) getDestroyedBy:(OOEntity *)whom damageType:(OOShipDamageType)type;
 - (void) becomeExplosion;
 - (void) becomeLargeExplosion:(double) factor;
 - (void) becomeEnergyBlast;
@@ -808,18 +808,18 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (int) numberOfScannedShips;
 
 - (id) primaryAggressor;
-- (void) setPrimaryAggressor:(Entity *)targetEntity;
-- (void) addTarget:(Entity *)targetEntity;
-- (void) removeTarget:(Entity *)targetEntity;
+- (void) setPrimaryAggressor:(OOEntity *)targetEntity;
+- (void) addTarget:(OOEntity *)targetEntity;
+- (void) removeTarget:(OOEntity *)targetEntity;
 - (id) primaryTarget;
 - (OOUniversalID) primaryTargetID DEPRECATED_FUNC;
 
-- (Entity *) lastEscortTarget;
+- (OOEntity *) lastEscortTarget;
 
-- (Entity *) foundTarget;
-- (void) setFoundTarget:(Entity *)targetEntity;
+- (OOEntity *) foundTarget;
+- (void) setFoundTarget:(OOEntity *)targetEntity;
 - (void) announceFoundTarget;	// Sends TARGET_FOUND or NOTHING_FOUND to AI as appropriate.
-- (void) setAndAnnounceFoundTarget:(Entity *)targetEntity;
+- (void) setAndAnnounceFoundTarget:(OOEntity *)targetEntity;
 
 - (StationEntity *) targetStation;
 - (void) setTargetStation:(StationEntity *)target;
@@ -876,13 +876,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (BOOL) fireLaserShotInDirection:(OOViewID)direction;
 - (BOOL) firePlasmaShotAtOffset:(double)offset speed:(double)speed color:(OOColor *)color;
 - (ShipEntity *) fireMissile;
-- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(Entity *) target;
+- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target;
 - (BOOL) isMissileFlagSet;
 - (void) setIsMissileFlag:(BOOL)newValue;
 - (OOTimeDelta) missileLoadTime;
 - (void) setMissileLoadTime:(OOTimeDelta)newMissileLoadTime;
 - (BOOL) fireECM;
-- (void) cascadeIfAppropriateWithDamageAmount:(double)amount cascadeOwner:(Entity *)owner;
+- (void) cascadeIfAppropriateWithDamageAmount:(double)amount cascadeOwner:(OOEntity *)owner;
 - (BOOL) activateCloakingDevice;
 - (void) deactivateCloakingDevice;
 - (BOOL) launchCascadeMine;
@@ -902,7 +902,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (BOOL) abandonShip;
 
-- (void) takeScrapeDamage:(double) amount from:(Entity *) ent;
+- (void) takeScrapeDamage:(double) amount from:(OOEntity *) ent;
 - (void) takeHeatDamage:(double) amount;
 
 - (void) enterDock:(StationEntity *)station;
@@ -981,7 +981,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (BOOL) scriptedMisjump;
 - (void) setScriptedMisjump:(BOOL)newValue;
 
-- (Entity *)entityForShaderProperties;
+- (OOEntity *)entityForShaderProperties;
 
 /*	*** Script events.
 	For NPC ships, these call doEvent: on the ship script.
@@ -1048,9 +1048,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 
 // For the common case of testing whether foo is a ship, bar is a ship, bar is a subentity of foo and this relationship is represented sanely.
-@interface Entity (SubEntityRelationship)
+@interface OOEntity (SubEntityRelationship)
 
-- (BOOL) isShipWithSubEntityShip:(Entity *)other;
+- (BOOL) isShipWithSubEntityShip:(OOEntity *)other;
 
 @end
 

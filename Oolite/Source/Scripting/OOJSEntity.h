@@ -28,16 +28,16 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "Universe.h"
 
-@class Entity;
+@class OOEntity;
 
 
 void InitOOJSEntity(JSContext *context, JSObject *global);
 
-BOOL JSValueToEntity(JSContext *context, jsval value, Entity **outEntity);
+BOOL JSValueToEntity(JSContext *context, jsval value, OOEntity **outEntity);
 
 JSClass gOOEntityJSClass;
 JSObject *gOOEntityJSPrototype;
-DEFINE_JS_OBJECT_GETTER(OOJSEntityGetEntity, &gOOEntityJSClass, gOOEntityJSPrototype, Entity)
+DEFINE_JS_OBJECT_GETTER(OOJSEntityGetEntity, &gOOEntityJSClass, gOOEntityJSPrototype, OOEntity)
 
 OOINLINE JSClass *JSEntityClass(void)  { return &gOOEntityJSClass; }
 OOINLINE JSObject *JSEntityPrototype(void)  { return gOOEntityJSPrototype; }
@@ -53,7 +53,7 @@ OOINLINE JSObject *JSEntityPrototype(void)  { return gOOEntityJSPrototype; }
 	scriptClass and function are non-nil, a warning will be reported to the
 	log.
 */
-BOOL EntityFromArgumentList(JSContext *context, NSString *scriptClass, NSString *function, uintN argc, jsval *argv, Entity **outEntity, uintN *outConsumed);
+BOOL EntityFromArgumentList(JSContext *context, NSString *scriptClass, NSString *function, uintN argc, jsval *argv, OOEntity **outEntity, uintN *outConsumed);
 
 
 /*
@@ -64,12 +64,12 @@ BOOL EntityFromArgumentList(JSContext *context, NSString *scriptClass, NSString 
 */
 OOINLINE BOOL OOIsPlayerStale(void)
 {
-	extern Entity *gOOJSPlayerIfStale;
+	extern OOEntity *gOOJSPlayerIfStale;
 	return gOOJSPlayerIfStale != nil;
 }
 
-OOINLINE BOOL OOIsStaleEntity(Entity *entity)
+OOINLINE BOOL OOIsStaleEntity(OOEntity *entity)
 {
-	extern Entity *gOOJSPlayerIfStale;
+	extern OOEntity *gOOJSPlayerIfStale;
 	return entity == nil || (entity == gOOJSPlayerIfStale);
 }

@@ -217,7 +217,7 @@ static void hudDrawMarkerAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz, double 
 static void hudDrawBarAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz, double amount);
 static void hudDrawSurroundAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz);
 static void hudDrawStatusIconAt(int x, int y, int z, NSSize siz);
-static void hudDrawReticleOnTarget(Entity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive);
+static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive);
 static void drawScannerGrid(double x, double y, double z, NSSize siz, int v_dir, GLfloat thickness, double zoom);
 
 
@@ -816,15 +816,15 @@ static BOOL hostiles;
 	
 	// use a non-mutable copy so this can't be changed under us.
 	int				ent_count		= uni->n_entities;
-	Entity			**uni_entities	= uni->sortedEntities;	// grab the public sorted list
-	Entity			*my_entities[ent_count];
+	OOEntity			**uni_entities	= uni->sortedEntities;	// grab the public sorted list
+	OOEntity			*my_entities[ent_count];
 	
 	for (i = 0; i < ent_count; i++)
 	{
 		my_entities[i] = [uni_entities[i] retain];	// retained
 	}
 	
-	Entity	*drawthing = nil;
+	OOEntity	*drawthing = nil;
 	
 	GLfloat col[4] =	{ 1.0, 1.0, 1.0, alpha };	// can be manipulated
 	
@@ -855,7 +855,7 @@ static BOOL hostiles;
 			// consider large bodies for mass_lock
 			if ([drawthing isStellarObject])
 			{
-				Entity<OOStellarBody> *stellar = (Entity<OOStellarBody> *)drawthing;
+				OOEntity<OOStellarBody> *stellar = (OOEntity<OOStellarBody> *)drawthing;
 				if ([stellar planetType] != STELLAR_TYPE_MINIATURE)
 				{
 					double dist =   stellar->zero_distance;
@@ -1165,7 +1165,7 @@ static BOOL hostiles;
 	OOSunEntity		*the_sun = [UNIVERSE sun];
 	OOPlanetEntity	*the_planet = [UNIVERSE planet];
 	StationEntity	*the_station = [UNIVERSE station];
-	Entity			*the_target = [player primaryTarget];
+	OOEntity			*the_target = [player primaryTarget];
 	ShipEntity		*beacon = [player nextBeacon];
 	OOEntityStatus	p_status = [player status];
 	if	(((p_status == STATUS_IN_FLIGHT)
@@ -1176,7 +1176,7 @@ static BOOL hostiles;
 		&&(the_planet)					// and be in a system
 		&& ![the_sun goneNova])				// and the system has not been novabombed
 	{
-		Entity *reference = nil;
+		OOEntity *reference = nil;
 		OOAegisStatus	aegis = AEGIS_NONE;
 		
 		switch ([player compassMode])
@@ -2134,7 +2134,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 	if ([UNIVERSE displayGUI])  return;
 	
 	GLfloat		clear_color[4] = {0.0f, 1.0f, 0.0f, 0.0f};
-	Entity		*target = [player primaryTarget];
+	OOEntity		*target = [player primaryTarget];
 	if (target == nil)  return;
 	
 	// draw the direction cue
@@ -2613,7 +2613,7 @@ static void hudDrawStatusIconAt(int x, int y, int z, NSSize siz)
 }
 
 
-static void hudDrawReticleOnTarget(Entity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive)
+static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive)
 {
 	ShipEntity		*target_ship = nil;
 	NSString		*legal_desc = nil;

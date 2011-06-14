@@ -1970,7 +1970,7 @@ JSBool OOJSObjectWrapperToString(JSContext *context, uintN argc, jsval *vp)
 }
 
 
-BOOL JSFunctionPredicate(Entity *entity, void *parameter)
+BOOL JSFunctionPredicate(OOEntity *entity, void *parameter)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -2013,7 +2013,7 @@ BOOL JSFunctionPredicate(Entity *entity, void *parameter)
 }
 
 
-BOOL JSEntityIsJavaScriptVisiblePredicate(Entity *entity, void *parameter)
+BOOL JSEntityIsJavaScriptVisiblePredicate(OOEntity *entity, void *parameter)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -2023,7 +2023,7 @@ BOOL JSEntityIsJavaScriptVisiblePredicate(Entity *entity, void *parameter)
 }
 
 
-BOOL JSEntityIsJavaScriptSearchablePredicate(Entity *entity, void *parameter)
+BOOL JSEntityIsJavaScriptSearchablePredicate(OOEntity *entity, void *parameter)
 {
 	OOJS_PROFILE_ENTER
 	

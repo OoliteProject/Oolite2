@@ -1012,8 +1012,8 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	// check against all ships
 	BOOL		isEmpty = YES;
 	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity*		my_entities[ent_count];
+	OOEntity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity*		my_entities[ent_count];
 	int i;
 	int ship_count = 0;
 	for (i = 0; i < ent_count; i++)
@@ -1067,8 +1067,8 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	// check against all ships
 	BOOL		isClear = YES;
 	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity*		my_entities[ent_count];
+	OOEntity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity*		my_entities[ent_count];
 	int i;
 	int ship_count = 0;
 	for (i = 0; i < ent_count; i++)
@@ -1414,7 +1414,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	return [super hasHostileTarget] || (alertLevel == STATION_ALERT_LEVEL_YELLOW) || (alertLevel == STATION_ALERT_LEVEL_RED);
 }
 
-- (void) takeEnergyDamage:(double)amount from:(Entity *)ent becauseOf:(Entity *)other
+- (void) takeEnergyDamage:(double)amount from:(OOEntity *)ent becauseOf:(OOEntity *)other
 {
 	//stations must ignore friendly fire, otherwise the defenders' AI gets stuck.
 	BOOL			isFriend = NO;
@@ -1463,7 +1463,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	if (self != [UNIVERSE station])  [super adjustVelocity:xVel]; //dont get moved
 }
 
-- (void)takeScrapeDamage:(double)amount from:(Entity *)ent
+- (void)takeScrapeDamage:(double)amount from:(OOEntity *)ent
 {
 	// Stop damage if main station
 	if (self != [UNIVERSE station])  [super takeScrapeDamage:amount from:ent];
@@ -1664,7 +1664,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (NSArray *) launchPolice
 {
-	Entity			*target = [self primaryTarget];
+	OOEntity			*target = [self primaryTarget];
 	if (target == nil)
 	{
 		[self noteLostTarget];
@@ -1720,7 +1720,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (ShipEntity *) launchDefenseShip
 {
-	Entity			*target = [self primaryTarget];
+	OOEntity			*target = [self primaryTarget];
 	if (target == nil)
 	{
 		[self noteLostTarget];
@@ -1861,7 +1861,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (ShipEntity *) launchPirateShip
 {
-	Entity			*target = [self primaryTarget];
+	OOEntity			*target = [self primaryTarget];
 	if (target == nil)
 	{
 		[self noteLostTarget];

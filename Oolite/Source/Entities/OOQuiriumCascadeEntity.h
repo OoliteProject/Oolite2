@@ -25,10 +25,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 
 
-@interface OOQuiriumCascadeEntity: Entity
+@interface OOQuiriumCascadeEntity: OOEntity
 {
 @private
 	OOTimeDelta			_timePassed;
@@ -40,7 +40,7 @@ MA 02110-1301, USA.
 @end
 
 
-@interface Entity (OOQuiriumCascadeExtensions)
+@interface OOEntity (OOQuiriumCascadeExtensions)
 
 - (BOOL) isCascadeWeapon;
 

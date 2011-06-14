@@ -108,8 +108,8 @@ static OOLegacyTexture *sBlobTexture = nil;
 	
 	OO_ENTER_OPENGL();
 	
-	Entity *father = [self owner];
-	Entity *last = nil;
+	OOEntity *father = [self owner];
+	OOEntity *last = nil;
 	Vector abspos = position;
 	
 	while (father != nil && father != last && father != NO_TARGET)

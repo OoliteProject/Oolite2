@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 #import "OOOpenGLExtensionManager.h"
 
 #define DUST_SCALE			2000
@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 @class OOColor, OOLegacyShaderProgram, OOLegacyShaderUniform;
 
 
-@interface DustEntity: Entity
+@interface DustEntity: OOEntity
 {
 	OOColor				*dust_color;
 	Vector				vertices[DUST_N_PARTICLES * 2];

@@ -205,7 +205,7 @@ MA 02110-1301, USA.
 
 
 #ifndef NDEBUG
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	if (gDebugFlags & DEBUG_COLLISIONS)
 	{

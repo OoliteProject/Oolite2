@@ -217,7 +217,7 @@ static NSString * const kOOLogLoadScriptNone				= @"script.load.none";
 }
 
 
-- (void)runWithTarget:(Entity *)target
+- (void)runWithTarget:(OOEntity *)target
 {
 	OOLog(kOOLogScriptSubclassResponsibility, @"OOScript should not be used directly!");
 }

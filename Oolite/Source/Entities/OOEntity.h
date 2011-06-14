@@ -1,6 +1,6 @@
 /*
 
-Entity.h
+OOEntity.h
 
 Base class for entities, i.e. drawable world objects.
 
@@ -71,7 +71,7 @@ enum OOScanClass
 #undef ENTRY
 
 
-@interface Entity: OOWeakRefObject
+@interface OOEntity: OOWeakRefObject
 {
 	// the base object for ships/stations/anything actually
 	//////////////////////////////////////////////////////
@@ -111,12 +111,12 @@ enum OOScanClass
 	int						zero_index;
 	
 	// Linked lists of entites, sorted by position on each (world) axis
-	Entity					*x_previous, *x_next;
-	Entity					*y_previous, *y_next;
-	Entity					*z_previous, *z_next;
+	OOEntity					*x_previous, *x_next;
+	OOEntity					*y_previous, *y_next;
+	OOEntity					*z_previous, *z_next;
 	
-	Entity					*collision_chain;
-	Entity					*collider;
+	OOEntity					*collision_chain;
+	OOEntity					*collider;
 	CollisionRegion			*collisionRegion;		// initially nil - then maintained
 	
 	OOWeakReference			*_shadingEntity;
@@ -183,7 +183,7 @@ enum OOScanClass
 - (void) setThrowSparks:(BOOL)value;
 - (void) throwSparks;
 
-- (void) setOwner:(Entity *)ent;
+- (void) setOwner:(OOEntity *)ent;
 - (id)owner;
 - (ShipEntity *)parentEntity;	// owner if self is subentity of owner, otherwise nil.
 - (ShipEntity *)rootShipEntity;	// like parentEntity, but recursive.
@@ -196,7 +196,7 @@ enum OOScanClass
 - (Vector) absolutePositionForSubentityOffset:(Vector) offset;
 
 - (double) zeroDistance;
-- (NSComparisonResult) compareZeroDistance:(Entity *)otherEntity;
+- (NSComparisonResult) compareZeroDistance:(OOEntity *)otherEntity;
 
 - (OOBoundingBox) boundingBox;
 
@@ -246,9 +246,9 @@ enum OOScanClass
 - (void) update:(OOTimeDelta)delta_t;
 - (void) applyVelocityWithTimeDelta:(OOTimeDelta)delta_t;	// Newtonion mechanics is opt-in. (FIXME: is there actually anything with a non-zero velocity that doesn't want this? -- Ahruman 2011-01-31)
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other;
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other;
 
-- (void) takeEnergyDamage:(double)amount from:(Entity *)ent becauseOf:(Entity *)other;
+- (void) takeEnergyDamage:(double)amount from:(OOEntity *)ent becauseOf:(OOEntity *)other;
 
 - (void) dumpState;		// General "describe situtation verbosely in log" command.
 - (void) dumpSelfState;	// Subclasses should override this, not -dumpState, and call throught to super first.

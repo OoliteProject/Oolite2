@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #define	COLLISION_REGION_BORDER_RADIUS	32000.0f
 #define	COLLISION_MAX_ENTITIES			128
 
-@class	Entity;
+@class	OOEntity;
 
 @interface CollisionRegion : NSObject
 {
@@ -52,7 +52,7 @@ MA 02110-1301, USA.
 	
 	BOOL				isPlayerInRegion;
 	
-	Entity				**entity_array;	// entities within the region
+	OOEntity				**entity_array;	// entities within the region
 	int					n_entities;		// number of entities
 	int					max_entities;	// so storage can be expanded
 	
@@ -78,9 +78,9 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 // collision checking
 //
 - (void) clearEntityList;
-- (void) addEntity:(Entity*) ent;
+- (void) addEntity:(OOEntity*) ent;
 //
-- (BOOL) checkEntity:(Entity*) ent;
+- (BOOL) checkEntity:(OOEntity*) ent;
 //
 - (void) findCollisions;
 - (void) findShadowedEntities;

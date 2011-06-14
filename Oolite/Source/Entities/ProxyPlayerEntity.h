@@ -95,7 +95,7 @@ MA 02110-1301, USA.
 @end
 
 
-@interface Entity (ProxyPlayer)
+@interface OOEntity (ProxyPlayer)
 
 // True for PlayerEntity or ProxyPlayerEntity.
 - (BOOL) isPlayerLikeShip;

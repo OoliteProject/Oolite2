@@ -111,7 +111,7 @@ static GLfloat		sBaseMass = 0.0;
 - (void) performDockingUpdates:(OOTimeDelta)delta_t;
 - (void) performDeadUpdates:(OOTimeDelta)delta_t;
 - (void) updateTargeting;
-- (BOOL) isValidTarget:(Entity*)target;
+- (BOOL) isValidTarget:(OOEntity*)target;
 - (void) showGameOver;
 - (void) addScannedWormhole:(WormholeEntity*)wormhole;
 - (void) updateWormholes;
@@ -951,7 +951,7 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
-- (NSComparisonResult) compareZeroDistance:(Entity *)otherEntity
+- (NSComparisonResult) compareZeroDistance:(OOEntity *)otherEntity
 {
 	return NSOrderedDescending;  // always the most near
 }
@@ -1873,7 +1873,7 @@ static bool minShieldLevelPercentageInitialised = false;
 // Target is valid if it's within Scanner range, AND
 // Target is a ship AND is not cloaked or jamming, OR
 // Target is a wormhole AND player has the Wormhole Scanner
-- (BOOL)isValidTarget:(Entity*)target
+- (BOOL)isValidTarget:(OOEntity*)target
 {
 	// Just in case we got called with a bad target.
 	if (!target)
@@ -1980,7 +1980,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			(ident_engaged || missile_status != MISSILE_STATUS_SAFE) &&
 			([self status] == STATUS_IN_FLIGHT || [self status] == STATUS_WITCHSPACE_COUNTDOWN))
 	{
-		Entity *target = [UNIVERSE getFirstEntityTargetedByPlayer];
+		OOEntity *target = [UNIVERSE getFirstEntityTargetedByPlayer];
 		if ([self isValidTarget:target])
 		{
 			[self addTarget:target];
@@ -2479,7 +2479,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// find nearest planet type entity...
 	assert(UNIVERSE != nil);
 	
-	Entity	*nearestPlanet = [self findNearestStellarBody];
+	OOEntity	*nearestPlanet = [self findNearestStellarBody];
 	if (nearestPlanet == nil)  return 1.0f;
 	
 	GLfloat	zd = nearestPlanet->zero_distance;
@@ -2618,13 +2618,13 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (Entity *) compassTarget
+- (OOEntity *) compassTarget
 {
 	return compassTarget;
 }
 
 
-- (void) setCompassTarget:(Entity *)value
+- (void) setCompassTarget:(OOEntity *)value
 {
 	compassTarget = value;
 }
@@ -2733,7 +2733,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 - (NSString *) dialTargetName
 {
-	Entity		*target_entity = [self primaryTarget];
+	OOEntity		*target_entity = [self primaryTarget];
 	NSString	*result = nil;
 	
 	if (target_entity == nil)
@@ -3303,7 +3303,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) takeEnergyDamage:(double)amount from:(Entity *)ent becauseOf:(Entity *)other
+- (void) takeEnergyDamage:(double)amount from:(OOEntity *)ent becauseOf:(OOEntity *)other
 {
 	Vector		rel_pos;
 	double		d_forward;
@@ -3397,7 +3397,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) takeScrapeDamage:(double) amount from:(Entity *) ent
+- (void) takeScrapeDamage:(double) amount from:(OOEntity *) ent
 {
 	Vector  rel_pos;
 	double  d_forward;
@@ -3810,7 +3810,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) getDestroyedBy:(Entity *)whom damageType:(OOShipDamageType)type
+- (void) getDestroyedBy:(OOEntity *)whom damageType:(OOShipDamageType)type
 {
 	if ([self isDocked])  return;	// Can't die while docked. (Doing so would cause breakage elsewhere.)
 	
@@ -3851,14 +3851,14 @@ static bool minShieldLevelPercentageInitialised = false;
 	if (!UNIVERSE)
 		return;
 	int			ent_count =		UNIVERSE->n_entities;
-	Entity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-	Entity*		my_entities[ent_count];
+	OOEntity**	uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
+	OOEntity*		my_entities[ent_count];
 	int i;
 	for (i = 0; i < ent_count; i++)
 		my_entities[i] = [uni_entities[i] retain];		//	retained
 	for (i = 0; i < ent_count ; i++)
 	{
-		Entity* thing = my_entities[i];
+		OOEntity* thing = my_entities[i];
 		if (thing->isShip)
 		{
 			ShipEntity* ship = (ShipEntity *)thing;
@@ -7102,7 +7102,7 @@ static NSString *last_outfitting_key=nil;
 
 
 // Override addTarget: to implement target memory.
-- (void) addTarget:(Entity *)targetEntity
+- (void) addTarget:(OOEntity *)targetEntity
 {
 	if ([self status] != STATUS_IN_FLIGHT && [self status] != STATUS_WITCHSPACE_COUNTDOWN)  return;
 	if (targetEntity == self)  return;
@@ -7117,14 +7117,14 @@ static NSString *last_outfitting_key=nil;
 	
 	if ([self hasEquipmentItem:@"EQ_TARGET_MEMORY"])
 	{
-		Entity *primaryTarget = [self primaryTarget];
+		OOEntity *primaryTarget = [self primaryTarget];
 		
 		int i = 0;
 		BOOL foundSlot = NO;
 		// if targeted previously use that memory space
 		for (i = 0; i < PLAYER_TARGET_MEMORY_SIZE; i++)
 		{
-			Entity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
+			OOEntity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
 			if (memSlot == nil)  DESTROY(_targetMemory[i]);	// Clean up invalid weakrefs.
 			
 			if (memSlot == primaryTarget)
@@ -7140,7 +7140,7 @@ static NSString *last_outfitting_key=nil;
 			// find and use a blank space in memory
 			for (i = 0; i < PLAYER_TARGET_MEMORY_SIZE; i++)
 			{
-				Entity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
+				OOEntity *memSlot = [_targetMemory[i] weakRefUnderlyingObject];
 				if (memSlot == nil)
 				{
 					// No point cleaning up here, because we'll already have visited all slots in the first loop.

@@ -47,7 +47,7 @@ To avoid pulling in unnecessary headers, some functions defined in
 OOConstToString.m are declared in the header with the appropriate type
 declaration, in particular:
 
-	Entity.h:
+	OOEntity.h:
 	OOStringFromEntityStatus()
 	OOEntityStatusFromString()
 	OOStringFromScanClass()

@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 #import "OOTypes.h"
 
 @class OOLegacyTexture, OOColor;
@@ -36,7 +36,7 @@ enum
 };
 
 
-@interface OOParticleSystem: Entity
+@interface OOParticleSystem: OOEntity
 {
 @protected
 	Vector			_particlePosition[kFragmentBurstMaxParticles];
@@ -67,7 +67,7 @@ enum
 
 @interface OOSmallFragmentBurstEntity: OOParticleSystem
 
-+ (id) fragmentBurstFromEntity:(Entity *)entity;
++ (id) fragmentBurstFromEntity:(OOEntity *)entity;
 
 @end
 
@@ -78,6 +78,6 @@ enum
 	GLfloat			_baseSize;
 }
 
-+ (id) fragmentBurstFromEntity:(Entity *)entity;
++ (id) fragmentBurstFromEntity:(OOEntity *)entity;
 
 @end

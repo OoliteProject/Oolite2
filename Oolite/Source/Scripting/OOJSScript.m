@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 #import "OOJSEngineTimeManagement.h"
 
 #import "OOConstToString.h"
-#import "Entity.h"
+#import "OOEntity.h"
 #import "EntityOOJavaScriptExtensions.h"
 #import "OOConstToJSString.h"
 
@@ -347,7 +347,7 @@ static JSFunctionSpec sScriptMethods[] =
 }
 
 
-- (void)runWithTarget:(Entity *)target
+- (void)runWithTarget:(OOEntity *)target
 {
 	JSContext *context = OOJSAcquireContext();
 	jsval arg = OOJSValueFromEntityStatus(context, [PLAYER status]);

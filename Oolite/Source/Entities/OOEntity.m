@@ -1,6 +1,6 @@
 /*
 
-Entity.m
+OOEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "Entity.h"
+#import "OOEntity.h"
 #import "EntityOOJavaScriptExtensions.h"
 #import "PlayerEntity.h"
 #import "OOPlanetEntity.h"
@@ -36,8 +36,6 @@ MA 02110-1301, USA.
 #import "CollisionRegion.h"
 
 #import "OODebugFlags.h"
-
-#define kOOLogUnconvertedNSLog @"unclassified.Entity"
 
 #ifndef NDEBUG
 uint32_t gLiveEntityCount = 0;
@@ -53,14 +51,14 @@ static NSString * const kOOLogEntityRemoveFromListError		= @"entity.linkedList.r
 static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.error";
 
 
-@interface Entity (OOPrivate)
+@interface OOEntity (OOPrivate)
 
 - (BOOL) checkLinkedLists;
 
 @end
 
 
-@implementation Entity
+@implementation OOEntity
 
 - (id) init
 {
@@ -312,7 +310,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 	if (UNIVERSE->n_entities > 0)
 	{
 		int n;
-		Entity	*check, *last;
+		OOEntity	*check, *last;
 		//
 		last = nil;
 		//
@@ -506,7 +504,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 - (void) warnAboutHostiles
 {
 	// do nothing for now, this can be expanded in sub classes
-	OOLog(@"general.error.subclassResponsibility.Entity-warnAboutHostiles", @"***** Entity does nothing in warnAboutHostiles");
+	OOLogGenericSubclassResponsibility();
 }
 
 
@@ -553,7 +551,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (void) setOwner:(Entity *)ent
+- (void) setOwner:(OOEntity *)ent
 {
 	[_owner release];
 	_owner = [ent weakRetain];
@@ -612,8 +610,8 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 - (Vector) absolutePositionForSubentityOffset:(Vector) offset
 {
 	Vector		abspos = vector_add(position, OOVectorMultiplyMatrix(offset, rotMatrix));
-	Entity		*last = nil;
-	Entity		*father = [self parentEntity];
+	OOEntity		*last = nil;
+	OOEntity		*father = [self parentEntity];
 	OOMatrix	r_mat;
 	
 	while ((father)&&(father != last)  && (father != NO_TARGET))
@@ -634,7 +632,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (NSComparisonResult) compareZeroDistance:(Entity *)otherEntity
+- (NSComparisonResult) compareZeroDistance:(OOEntity *)otherEntity
 {
 	if ((otherEntity)&&(zero_distance > otherEntity->zero_distance))
 		return NSOrderedAscending;
@@ -917,7 +915,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 	return other != nil;
 }
@@ -943,7 +941,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (void) takeEnergyDamage:(double) amount from:(Entity *) ent becauseOf:(Entity *) other
+- (void) takeEnergyDamage:(double) amount from:(OOEntity *) ent becauseOf:(OOEntity *) other
 {
 	
 }

@@ -2,7 +2,7 @@
 
 OOSunEntity.h
 
-Entity subclass representing a sun.
+OOEntity subclass representing a sun.
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOPlanetEntity.h"
-#import "Entity.h"
+#import "OOEntity.h"
 
 @class OOColor;
 
@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 @class ShipEntity;
 
 
-@interface OOSunEntity: Entity <OOStellarBody>
+@interface OOSunEntity: OOEntity <OOStellarBody>
 {
 @private
 	GLfloat					sun_diffuse[4];

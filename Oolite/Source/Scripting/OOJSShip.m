@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOJSEquipmentInfo.h"
 #import "OOJavaScriptEngine.h"
 #import "ShipEntity.h"
-#import "Entity.h"
+#import "OOEntity.h"
 #import "ShipEntityAI.h"
 #import "ShipEntityScriptMethods.h"
 #import "AI.h"

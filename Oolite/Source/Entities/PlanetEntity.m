@@ -627,7 +627,7 @@ static const BaseFace kTexturedFaces[][3] =
 }
 
 
-- (BOOL) checkCloseCollisionWith:(Entity *)other
+- (BOOL) checkCloseCollisionWith:(OOEntity *)other
 {
 #ifndef NDEBUG
 	if (gDebugFlags & DEBUG_COLLISIONS)
@@ -726,7 +726,7 @@ static const BaseFace kTexturedFaces[][3] =
 {
 	rotationAxis = vector_up_from_quaternion(inOrientation);
 	[super setOrientation:inOrientation];
-	if (atmosphere) [atmosphere setOrientation:inOrientation];
+	if (atmosphere)  [atmosphere setOrientation:inOrientation];
 }
 
 

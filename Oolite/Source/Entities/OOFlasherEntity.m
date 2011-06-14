@@ -165,7 +165,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation Entity (OOFlasherEntityExtensions)
+@implementation OOEntity (OOFlasherEntityExtensions)
 
 - (BOOL) isFlasher
 {

@@ -25,7 +25,7 @@
 		1A15816E133F8C180075FC2A /* PlayerEntity+Serialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A15816D133F8C180075FC2A /* PlayerEntity+Serialization.m */; };
 		1A18D69913191A920096D960 /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18D69813191A920096D960 /* SUUpdater.m */; };
 		1A1B975A13087FBE0078322D /* DustEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971313087FBE0078322D /* DustEntity.m */; };
-		1A1B975B13087FBE0078322D /* Entity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971513087FBE0078322D /* Entity.m */; };
+		1A1B975B13087FBE0078322D /* OOEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971513087FBE0078322D /* OOEntity.m */; };
 		1A1B975C13087FBE0078322D /* EntityShaderBindings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971613087FBE0078322D /* EntityShaderBindings.m */; };
 		1A1B975D13087FBE0078322D /* OOBreakPatternEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */; };
 		1A1B975E13087FBE0078322D /* OOECMBlastEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971A13087FBE0078322D /* OOECMBlastEntity.m */; };
@@ -924,8 +924,8 @@
 		1A18D69813191A920096D960 /* SUUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUpdater.m; sourceTree = "<group>"; };
 		1A1B971213087FBE0078322D /* DustEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DustEntity.h; sourceTree = "<group>"; };
 		1A1B971313087FBE0078322D /* DustEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DustEntity.m; sourceTree = "<group>"; };
-		1A1B971413087FBE0078322D /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
-		1A1B971513087FBE0078322D /* Entity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entity.m; sourceTree = "<group>"; };
+		1A1B971413087FBE0078322D /* OOEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOEntity.h; sourceTree = "<group>"; };
+		1A1B971513087FBE0078322D /* OOEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOEntity.m; sourceTree = "<group>"; };
 		1A1B971613087FBE0078322D /* EntityShaderBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityShaderBindings.m; sourceTree = "<group>"; };
 		1A1B971713087FBE0078322D /* OOBreakPatternEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBreakPatternEntity.h; sourceTree = "<group>"; };
 		1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBreakPatternEntity.m; sourceTree = "<group>"; };
@@ -1582,8 +1582,8 @@
 			children = (
 				1A1B971213087FBE0078322D /* DustEntity.h */,
 				1A1B971313087FBE0078322D /* DustEntity.m */,
-				1A1B971413087FBE0078322D /* Entity.h */,
-				1A1B971513087FBE0078322D /* Entity.m */,
+				1A1B971413087FBE0078322D /* OOEntity.h */,
+				1A1B971513087FBE0078322D /* OOEntity.m */,
 				1A1B971613087FBE0078322D /* EntityShaderBindings.m */,
 				1A1B971713087FBE0078322D /* OOBreakPatternEntity.h */,
 				1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */,
@@ -2698,7 +2698,7 @@
 				1AF2EBB21306163F008ECA54 /* OOScript.m in Sources */,
 				1AF2EBB31306163F008ECA54 /* OOScriptTimer.m in Sources */,
 				1A1B975A13087FBE0078322D /* DustEntity.m in Sources */,
-				1A1B975B13087FBE0078322D /* Entity.m in Sources */,
+				1A1B975B13087FBE0078322D /* OOEntity.m in Sources */,
 				1A1B975C13087FBE0078322D /* EntityShaderBindings.m in Sources */,
 				1A1B975D13087FBE0078322D /* OOBreakPatternEntity.m in Sources */,
 				1A1B975E13087FBE0078322D /* OOECMBlastEntity.m in Sources */,

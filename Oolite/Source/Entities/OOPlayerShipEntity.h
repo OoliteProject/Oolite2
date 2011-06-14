@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 */
 
 #import <Foundation/Foundation.h>
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 #import "OOShipEntity.h"
 #import "OOTypes.h"
 #import "OOJSPropID.h"
@@ -515,7 +515,7 @@ typedef enum
 	OODockingClearanceStatus dockingClearanceStatus;
 	
 	NSMutableArray			*scannedWormholes;
-	WormholeEntity			*wormhole;
+	OOWormholeEntity			*wormhole;
 
 	OOShipEntity				*demoShip; // Used while docked to maintain demo ship rotation.
 }
@@ -809,7 +809,7 @@ typedef enum
 
 - (NSArray *) scannedWormholes;
 
-- (WormholeEntity *) wormhole;
+- (OOWormholeEntity *) wormhole;
 
 @end
 

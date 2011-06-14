@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 #import "OOPlayerShipEntity.h"
 #import "OOJavaScriptEngine.h"
 #import "OOJSFunction.h"
@@ -1078,7 +1078,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	NSEnumerator		*shipEnum = nil;
 	OOShipEntity			*ship = nil;
 	NSString			*context = nil;
-	WormholeEntity		*whole = nil;
+	OOWormholeEntity		*whole = nil;
 	
 	whole = [self primaryTarget];
 	if (![whole isWormhole])  return;
@@ -1104,7 +1104,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 {
 	NSEnumerator		*shipEnum = nil;
 	OOShipEntity			*ship = nil;
-	WormholeEntity		*whole = nil;
+	OOWormholeEntity		*whole = nil;
 	
 	whole = [self primaryTarget];
 	if (![whole isWormhole])  return;
@@ -2092,14 +2092,14 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 
 - (void) enterTargetWormhole
 {
-	WormholeEntity *whole = nil;
+	OOWormholeEntity *whole = nil;
 	OOShipEntity		*targEnt = [self primaryTarget];
 	double found_d2 = scannerRange * scannerRange;
 
 	if (targEnt && (distance2(position, [targEnt position]) < found_d2))
 	{
 		if ([targEnt isWormhole])
-			whole = (WormholeEntity *)targEnt;
+			whole = (OOWormholeEntity *)targEnt;
 		else if ([targEnt isPlayer])
 			whole = [PLAYER wormhole];
 	}
@@ -2109,7 +2109,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 		// locate nearest wormhole
 		int				ent_count =		UNIVERSE->n_entities;
 		OOEntity**		uni_entities =	UNIVERSE->sortedEntities;	// grab the public sorted list
-		WormholeEntity*	wormholes[ent_count];
+		OOWormholeEntity*	wormholes[ent_count];
 		int i;
 		int wh_count = 0;
 		for (i = 0; i < ent_count; i++)
@@ -2119,7 +2119,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 		//double found_d2 = scannerRange * scannerRange;
 		for (i = 0; i < wh_count ; i++)
 		{
-			WormholeEntity *wh = wormholes[i];
+			OOWormholeEntity *wh = wormholes[i];
 			double d2 = distance2(position, wh->position);
 			if (d2 < found_d2)
 			{
@@ -2315,7 +2315,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	fuel -= 10 * dist;
 	
 	// create wormhole
-	WormholeEntity  *whole = [[[WormholeEntity alloc] initWormholeTo: targetSystem fromShip: self] autorelease];
+	OOWormholeEntity  *whole = [[[OOWormholeEntity alloc] initWormholeTo: targetSystem fromShip: self] autorelease];
 	[UNIVERSE addEntity: whole];
 	
 	[self enterWormhole:whole replacing:replace];

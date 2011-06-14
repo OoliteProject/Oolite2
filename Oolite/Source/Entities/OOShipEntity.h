@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOJSPropID.h"
 #import "OOTriangle.h"
 
-@class	OOShipClass, OOColor, OOStationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript, OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
+@class	OOShipClass, OOColor, OOStationEntity, OOWormholeEntity, AI, Octree, OOMesh, OOScript, OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
 
 #ifdef OO_BRAIN_AI
 @class OOBrain;
@@ -908,7 +908,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 - (void) enterDock:(OOStationEntity *)station;
 - (void) leaveDock:(OOStationEntity *)station;
 
-- (void) enterWormhole:(WormholeEntity *) wormhole replacing:(BOOL)replacing;
+- (void) enterWormhole:(OOWormholeEntity *) wormhole replacing:(BOOL)replacing;
 - (void) enterWitchspace;
 - (void) leaveWitchspace;
 - (void) witchspaceLeavingEffects;

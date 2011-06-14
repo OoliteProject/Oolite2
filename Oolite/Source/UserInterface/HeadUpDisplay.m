@@ -2807,7 +2807,7 @@ static void hudDrawReticleOnTarget(OOEntity* target, OOPlayerShipEntity* player1
 	{
 		// Note: No break statements in the following switch() since every case
 		//       falls through to the next.  Cases arranged in reverse order.
-		switch([(WormholeEntity *)target scanInfo])
+		switch([(OOWormholeEntity *)target scanInfo])
 		{
 			case WH_SCANINFO_SHIP:
 				// TOOD: Render anything on the HUD for this?
@@ -2816,12 +2816,12 @@ static void hudDrawReticleOnTarget(OOEntity* target, OOPlayerShipEntity* player1
 				// unless we want a separate line Destination: XXX ?
 			case WH_SCANINFO_ARRIVAL_TIME:
 			{
-				NSString *wormholeETA = [NSString stringWithFormat:DESC(@"wormhole-ETA-@"), ClockToString([(WormholeEntity *)target estimatedArrivalTime], NO)];
+				NSString *wormholeETA = [NSString stringWithFormat:DESC(@"wormhole-ETA-@"), ClockToString([(OOWormholeEntity *)target estimatedArrivalTime], NO)];
 				OODrawString(wormholeETA, rs0, 0.5 * rs2 - 3 * line_height, 0, textsize);
 			}
 			case WH_SCANINFO_COLLAPSE_TIME:
 			{
-				double timeForCollapsing = [(WormholeEntity *)target expiryTime] - [player1 clockTimeAdjusted];
+				double timeForCollapsing = [(OOWormholeEntity *)target expiryTime] - [player1 clockTimeAdjusted];
 				int minutesToCollapse = floor (timeForCollapsing / 60.0);
 				int secondsToCollapse = (int)timeForCollapsing % 60;
 				

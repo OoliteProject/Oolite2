@@ -1,6 +1,6 @@
 /*
 
-WormholeEntity.m
+OOWormholeEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 
 #import "OOShipEntity.h"
 #import "OOSunEntity.h"
@@ -38,7 +38,7 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 
 // Hidden interface
-@interface WormholeEntity (Private)
+@interface OOWormholeEntity (Private)
 
 -(id) init;
 
@@ -48,7 +48,7 @@ MA 02110-1301, USA.
 static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int step, GLfloat z_distance, GLfloat *col4v1);
 
 
-@implementation WormholeEntity (Private)
+@implementation OOWormholeEntity (Private)
 
 -(id) init
 {
@@ -74,9 +74,9 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 // Public Wormhole Implementation
 //
 
-@implementation WormholeEntity
+@implementation OOWormholeEntity
 
-- (WormholeEntity*)initWithDict:(NSDictionary*)dict
+- (OOWormholeEntity*)initWithDict:(NSDictionary*)dict
 {
 	assert(dict != nil);
 
@@ -137,7 +137,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	return self;
 }
 
-- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship
+- (OOWormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship
 {
 	assert(ship != nil);
 
@@ -553,7 +553,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 					
 		OOGL(glEnable(GL_CULL_FACE));			// face culling
 	}
-	CheckOpenGLErrors(@"WormholeEntity after drawing %@", self);
+	CheckOpenGLErrors(@"OOWormholeEntity after drawing %@", self);
 }
 
 

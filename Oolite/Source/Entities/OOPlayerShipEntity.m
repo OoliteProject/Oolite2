@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 #import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 #import "OOProxyPlayerShipEntity.h"
 #import "OOQuiriumCascadeEntity.h"
 #import "OOMesh.h"
@@ -113,7 +113,7 @@ static GLfloat		sBaseMass = 0.0;
 - (void) updateTargeting;
 - (BOOL) isValidTarget:(OOEntity*)target;
 - (void) showGameOver;
-- (void) addScannedWormhole:(WormholeEntity*)wormhole;
+- (void) addScannedWormhole:(OOWormholeEntity*)wormhole;
 - (void) updateWormholes;
 
 // Shopping
@@ -496,7 +496,7 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
-- (WormholeEntity *) wormhole
+- (OOWormholeEntity *) wormhole
 {
     return wormhole;
 }
@@ -1992,7 +1992,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	UPDATE_STAGE(@"checking for additional wormhole information");
 	if ([[self primaryTarget] isWormhole])
 	{
-		WormholeEntity *wh = [self primaryTarget];
+		OOWormholeEntity *wh = [self primaryTarget];
 		switch ([wh scanInfo])
 		{
 			case WH_SCANINFO_NONE:
@@ -4295,7 +4295,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 // now with added misjump goodness!
 // If the wormhole generator misjumped, the player's ship misjumps too. Kaks 20110211
-- (void) enterWormhole:(WormholeEntity *) w_hole replacing:(BOOL)replacing
+- (void) enterWormhole:(OOWormholeEntity *) w_hole replacing:(BOOL)replacing
 {
 	wormhole = [w_hole retain];
 	[self addScannedWormhole:wormhole];
@@ -4351,7 +4351,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	fuel -= [self fuelRequiredForJump];
 	
 	// NEW: Create the players' wormhole
-	wormhole = [[WormholeEntity alloc] initWormholeTo:target_system_seed fromShip:self];
+	wormhole = [[OOWormholeEntity alloc] initWormholeTo:target_system_seed fromShip:self];
 	[UNIVERSE addEntity:wormhole]; // New new: Add new wormhole to Universe to let other ships target it. Required for ships following the player.
 	[self addScannedWormhole:wormhole];
 	
@@ -7112,7 +7112,7 @@ static NSString *last_outfitting_key=nil;
 	if ([targetEntity isWormhole])
 	{
 		assert ([self hasEquipmentItem:@"EQ_WORMHOLE_SCANNER"]);
-		[self addScannedWormhole:(WormholeEntity*)targetEntity];
+		[self addScannedWormhole:(OOWormholeEntity*)targetEntity];
 	}
 	
 	if ([self hasEquipmentItem:@"EQ_TARGET_MEMORY"])
@@ -7681,14 +7681,14 @@ static NSString *last_outfitting_key=nil;
 //
 // Wormhole Scanner support functions
 //
-- (void)addScannedWormhole:(WormholeEntity*)whole
+- (void)addScannedWormhole:(OOWormholeEntity*)whole
 {
 	assert(scannedWormholes != nil);
 	assert(whole != nil);
 	
 	// Only add if we don't have it already!
 	NSEnumerator *wormholes = [scannedWormholes objectEnumerator];
-	WormholeEntity *wh = nil;
+	OOWormholeEntity *wh = nil;
 	while ((wh = [wormholes nextObject]))
 	{
 		if (wh == whole)  return;
@@ -7711,9 +7711,9 @@ static NSString *last_outfitting_key=nil;
 
 	NSMutableArray * savedWormholes = [[NSMutableArray alloc] initWithCapacity:[scannedWormholes count]];
 	NSEnumerator * wormholes = [scannedWormholes objectEnumerator];
-	WormholeEntity *wh;
+	OOWormholeEntity *wh;
 
-	while ((wh = (WormholeEntity*)[wormholes nextObject]))
+	while ((wh = (OOWormholeEntity*)[wormholes nextObject]))
 	{
 		// TODO: Start drawing wormhole exit a few seconds before the first
 		//       ship is disgorged.

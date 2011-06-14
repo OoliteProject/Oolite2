@@ -1,6 +1,6 @@
 /*
 
-WormholeEntity.h
+OOWormholeEntity.h
 
 Entity subclass representing a wormhole between systems. (This is -- to use
 technical terminology -- the blue blobby thing you see hanging in space. The
@@ -43,7 +43,7 @@ typedef enum
 	WH_SCANINFO_SHIP,
 } WORMHOLE_SCANINFO;
 
-@interface WormholeEntity: OOEntity
+@interface OOWormholeEntity: OOEntity
 {
 	double			expiry_time;	// Time when wormhole entrance closes
 	double			travel_time;	// Time taken for a ship to traverse the wormhole
@@ -67,8 +67,8 @@ typedef enum
 	BOOL			_misjump;
 }
 
-- (WormholeEntity*) initWithDict:(NSDictionary*)dict;
-- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship;
+- (OOWormholeEntity*) initWithDict:(NSDictionary*)dict;
+- (OOWormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship;
 
 - (BOOL) suckInShip:(OOShipEntity *) ship;
 - (void) disgorgeShips;

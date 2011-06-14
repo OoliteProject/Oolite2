@@ -62,7 +62,7 @@ MA 02110-1301, USA.
 #import "DustEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOSunEntity.h"
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 #import "OOBreakPatternEntity.h"
 #import "OOShipEntity+AI.h"
 #import "OOProxyPlayerShipEntity.h"
@@ -8788,7 +8788,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		NS_DURING
-			WormholeEntity* whole = [activeWormholes objectAtIndex:0];		
+			OOWormholeEntity* whole = [activeWormholes objectAtIndex:0];		
 			// If the wormhole has been scanned by the player then the
 			// OOPlayerShipEntity will take care of it
 			if (![whole isScanned] &&

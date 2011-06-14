@@ -362,7 +362,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	if ([scannedWormholes count] > 0)
 	{
 		NSMutableArray * wormholes = [NSMutableArray arrayWithCapacity:[scannedWormholes count]];
-		WormholeEntity * wh = nil;
+		OOWormholeEntity * wh = nil;
 		foreach (wh, scannedWormholes)
 		{
 			[wormholes addObject:[wh getDict]];
@@ -579,8 +579,8 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	// wormhole information
 	NSMutableArray * wormholeDicts = [NSMutableArray arrayWithCapacity:[scannedWormholes count]];
 	NSEnumerator * wormholes = [scannedWormholes objectEnumerator];
-	WormholeEntity * wh;
-	while ((wh = (WormholeEntity*)[wormholes nextObject]))
+	OOWormholeEntity * wh;
+	while ((wh = (OOWormholeEntity*)[wormholes nextObject]))
 	{
 		[wormholeDicts addObject:[wh getDict]];
 	}
@@ -872,7 +872,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	scannedWormholes = [[NSMutableArray alloc] initWithCapacity:[whArray count]];
 	while ((whCurrDict = [whDicts nextObject]) != nil)
 	{
-		WormholeEntity * wh = [[WormholeEntity alloc] initWithDict:whCurrDict];
+		OOWormholeEntity * wh = [[OOWormholeEntity alloc] initWithDict:whCurrDict];
 		[scannedWormholes addObject:wh];
 		/* TODO - add to Universe if the wormhole hasn't expired yet; but in this case
 		 * we need to save/load position and mass as well, which we currently 

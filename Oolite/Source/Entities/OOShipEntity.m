@@ -61,7 +61,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOPlayerShipEntity.h"
-#import "WormholeEntity.h"
+#import "OOWormholeEntity.h"
 #import "OOFlasherEntity.h"
 #import "OOExhaustPlumeEntity.h"
 #import "OOSparkEntity.h"
@@ -8302,7 +8302,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 			}
 			else if ([ent isWormhole])
 			{
-				[self enterWormhole:(WormholeEntity*)ent replacing:NO];
+				[self enterWormhole:(OOWormholeEntity*)ent replacing:NO];
 			}
 		}
 	}
@@ -9021,13 +9021,13 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 }
 
 
-- (void) enterWormhole:(WormholeEntity *)wormhole
+- (void) enterWormhole:(OOWormholeEntity *)wormhole
 {
 	[self enterWormhole:wormhole replacing:YES];
 }
 
 
-- (void) enterWormhole:(WormholeEntity *)wormhole replacing:(BOOL)replacing
+- (void) enterWormhole:(OOWormholeEntity *)wormhole replacing:(BOOL)replacing
 {
 	if (wormhole == nil)  return;
 

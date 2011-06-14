@@ -40,7 +40,7 @@ MA 02110-1301, USA.
 
 #import "GameController.h"
 #import "ResourceManager.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "AI.h"
 #import "OOShipEntity+AI.h"
 #import "MyOpenGLView.h"
@@ -4352,7 +4352,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	// NEW: Create the players' wormhole
 	wormhole = [[OOWormholeEntity alloc] initWormholeTo:target_system_seed fromShip:self];
-	[UNIVERSE addEntity:wormhole]; // New new: Add new wormhole to Universe to let other ships target it. Required for ships following the player.
+	[UNIVERSE addEntity:wormhole]; // New new: Add new wormhole to OOUniverse to let other ships target it. Required for ships following the player.
 	[self addScannedWormhole:wormhole];
 	
 	[self setStatus:STATUS_ENTERING_WITCHSPACE];

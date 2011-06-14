@@ -27,7 +27,7 @@ SOFTWARE.
 
 #import "OOLegacyPNGTextureLoader.h"
 #import "OOLegacyTextureLoader.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOTextureScaling.h"
 #import "OOPixMapChannelOperations.h"
 #import "ResourceManager.h"
@@ -61,7 +61,7 @@ static BOOL					sHaveSetUp = NO;
 	if (EXPECT_NOT(inPath == nil)) return nil;
 	if (EXPECT_NOT(!sHaveSetUp))  [self setUp];
 	
-	// Get reduced detail setting (every time, in case it changes; we don't want to call through to Universe on the loading thread in case the implementation becomes non-trivial).
+	// Get reduced detail setting (every time, in case it changes; we don't want to call through to OOUniverse on the loading thread in case the implementation becomes non-trivial).
 	sReducedDetail = [UNIVERSE reducedDetail];
 	
 	// Get a suitable loader. FIXME -- this should sniff the data instead of relying on extensions.

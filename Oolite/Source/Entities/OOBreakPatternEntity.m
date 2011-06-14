@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import "OOBreakPatternEntity.h"
 #import "OOColor.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOMacroOpenGL.h"
 
 

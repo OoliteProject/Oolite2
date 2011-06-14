@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOScript.h"
 #import "OOJSScript.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOJavaScriptEngine.h"
 #import "ResourceManager.h"
 

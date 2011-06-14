@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import "OOShipEntity.h"
 
-@class AI, Universe, OOPlanetEntity;
+@class AI, OOUniverse, OOPlanetEntity;
 
 @interface OOShipEntity (AI)
 

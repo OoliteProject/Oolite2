@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOJSEngineTimeManagement.h"
 #import "OOJSScript.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlanetEntity.h"
 #import "EntityOOJavaScriptExtensions.h"
 #import "ResourceManager.h"

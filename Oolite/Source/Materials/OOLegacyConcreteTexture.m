@@ -29,7 +29,7 @@
 
 #import "OOLegacyTextureLoader.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "ResourceManager.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"

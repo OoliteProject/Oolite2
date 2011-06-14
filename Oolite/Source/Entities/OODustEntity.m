@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OODustEntity.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 #import "OOGraphicsResetManager.h"
 #import "OODebugFlags.h"

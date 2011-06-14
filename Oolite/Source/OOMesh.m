@@ -36,7 +36,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOMesh.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "Geometry.h"
 #import "ResourceManager.h"
 #import "OOEntity.h"		// for NO_DRAW_DISTANCE_FACTOR.

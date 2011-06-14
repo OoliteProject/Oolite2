@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOParticleSystem.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOLegacyTexture.h"
 #import "OOPlayerShipEntity.h"
 #import "OOLightParticleEntity.h"

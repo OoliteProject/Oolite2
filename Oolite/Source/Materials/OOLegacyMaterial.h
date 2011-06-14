@@ -40,7 +40,7 @@ SOFTWARE.
 
 @interface OOLegacyMaterial: NSObject
 
-// Called once at startup (by -[Universe init]).
+// Called once at startup (by -[OOUniverse init]).
 + (void) setUp;
 
 

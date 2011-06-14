@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity.h"
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 #define MAX_ROWS_FUNCTIONS		12
 

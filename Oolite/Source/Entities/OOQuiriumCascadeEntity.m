@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOQuiriumCascadeEntity.h"
 #import "OOPlayerShipEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOMacroOpenGL.h"
 
 

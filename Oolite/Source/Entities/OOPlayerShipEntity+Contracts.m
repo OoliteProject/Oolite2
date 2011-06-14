@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+Serialization.h"
 #import "OOProxyPlayerShipEntity.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "AI.h"
 #import "OOColor.h"
 #import "OOCharacter.h"

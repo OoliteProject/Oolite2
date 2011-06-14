@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipEntity+ScriptMethods.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 extern NSString * const kOOLogNoteAddShips;

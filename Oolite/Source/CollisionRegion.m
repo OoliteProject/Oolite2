@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "CollisionRegion.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOEntity.h"
 #import "OOShipEntity.h"
 #import "OOSunEntity.h"
@@ -294,7 +294,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 - (void) findCollisions
 {
 	//
-	// According to Shark, when this was in Universe this was where Oolite spent most time!
+	// According to Shark, when this was in OOUniverse this was where Oolite spent most time!
 	//
 	OOEntity *e1,*e2;
 	Vector p1, p2;

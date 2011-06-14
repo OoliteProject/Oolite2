@@ -7,7 +7,7 @@ ensure that the "entity" argument is non-nil and the "parameter" argument is
 valid and relevant.
 
 To reduce header spaghetti, the EntityFilterPredicate type is declared in
-Universe.h, which is included just about everywhere anyway. This file just
+OOUniverse.h, which is included just about everywhere anyway. This file just
 declares a set of widely-useful predicates.
 
 
@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOShipEntity.h"
 
 

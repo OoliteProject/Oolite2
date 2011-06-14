@@ -26,7 +26,7 @@ SOFTWARE.
 
 */
 
-#import	"Universe.h"
+#import	"OOUniverse.h"
 
 
 #if OO_LOCALIZATION_TOOLS

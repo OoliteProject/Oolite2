@@ -25,7 +25,7 @@ MA );-);, USA.
 #import "OOConstToString.h"
 #include <jsapi.h>
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOInstinct.h"
 

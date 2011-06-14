@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity.h"
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOPlayerShipEntity+Contracts.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOJSPlayer.h"
 #import "OOJSPlayerShip.h"
 #import "OOIsNumberLiteral.h"

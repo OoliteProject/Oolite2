@@ -28,7 +28,7 @@ SOFTWARE.
 
 #import "OOCrosshairs.h"
 #import "OOColor.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 #import "OOMacroOpenGL.h"
 

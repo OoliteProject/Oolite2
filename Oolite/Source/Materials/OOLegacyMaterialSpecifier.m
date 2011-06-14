@@ -28,7 +28,7 @@ SOFTWARE.
 #import "OOLegacyMaterialSpecifier.h"
 #import "OOColor.h"
 #import "OOLegacyTexture.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 NSString * const kOOMaterialDiffuseColorName				= @"diffuse_color";

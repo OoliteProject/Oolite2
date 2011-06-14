@@ -41,7 +41,7 @@
 #ifndef TEXGEN_TEST_RIG
 #import "OOColor.h"
 #import "OOTexture.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #endif
 
 #if DEBUG_DUMP

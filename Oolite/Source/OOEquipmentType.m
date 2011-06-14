@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOEquipmentType.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOPlayerShipEntity+LegacyScriptEngine.h"
 

@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "ResourceManager.h"
 #import "OOCacheManager.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "GameController.h"
 #import "OOStringParsing.h"
 #import "MyOpenGLView.h"

@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity.h"
 #import "OOShipEntity+LoadRestore.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "AI.h"
 #import "OORoleSet.h"
 #import "OOShipRegistry.h"

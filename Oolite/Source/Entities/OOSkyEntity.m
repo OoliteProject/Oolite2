@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOSkyDrawable.h"
 #import "OOPlayerShipEntity.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"

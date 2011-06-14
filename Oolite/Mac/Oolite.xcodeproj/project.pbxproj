@@ -168,7 +168,7 @@
 		1A1F27B81317CBC500D06C6C /* ResourceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27B71317CBC500D06C6C /* ResourceManager.m */; };
 		1A1F27BB1317CCAE00D06C6C /* MyOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27BA1317CCAE00D06C6C /* MyOpenGLView.m */; };
 		1A1F27BE1317CCCC00D06C6C /* GameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27BD1317CCCC00D06C6C /* GameController.m */; };
-		1A1F27C11317CCD600D06C6C /* Universe.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27C01317CCD600D06C6C /* Universe.m */; };
+		1A1F27C11317CCD600D06C6C /* OOUniverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27C01317CCD600D06C6C /* OOUniverse.m */; };
 		1A1F2972131823BC00D06C6C /* Geometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2971131823BC00D06C6C /* Geometry.m */; };
 		1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2A1213182C4E00D06C6C /* NSFileManagerOOExtensions.m */; };
 		1A1F2A2113182CB000D06C6C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F2A2013182CB000D06C6C /* OpenGL.framework */; };
@@ -918,13 +918,13 @@
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
-		1A15816C133F8C180075FC2A /* OOPlayerShipEntity+Serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+Serialization.h"; sourceTree = "<group>"; };
+		1A15816C133F8C180075FC2A /* OOPlayerShipEntity+Serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+Serialization.h"; sourceTree = "<group>"; };
 		1A15816D133F8C180075FC2A /* OOPlayerShipEntity+Serialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+Serialization.m"; sourceTree = "<group>"; };
 		1A18D69713191A920096D960 /* SUUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUpdater.h; sourceTree = "<group>"; };
 		1A18D69813191A920096D960 /* SUUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUpdater.m; sourceTree = "<group>"; };
-		1A1B971213087FBE0078322D /* OODustEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OODustEntity.h; sourceTree = "<group>"; };
+		1A1B971213087FBE0078322D /* OODustEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OODustEntity.h; sourceTree = "<group>"; };
 		1A1B971313087FBE0078322D /* OODustEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODustEntity.m; sourceTree = "<group>"; };
-		1A1B971413087FBE0078322D /* OOEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOEntity.h; sourceTree = "<group>"; };
+		1A1B971413087FBE0078322D /* OOEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOEntity.h; sourceTree = "<group>"; };
 		1A1B971513087FBE0078322D /* OOEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOEntity.m; sourceTree = "<group>"; };
 		1A1B971613087FBE0078322D /* OOEntity+ShaderBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOEntity+ShaderBindings.m"; sourceTree = "<group>"; };
 		1A1B971713087FBE0078322D /* OOBreakPatternEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBreakPatternEntity.h; sourceTree = "<group>"; };
@@ -962,37 +962,37 @@
 		1A1B973713087FBE0078322D /* OOSunEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OOSunEntity.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1A1B973813087FBE0078322D /* PlanetEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetEntity.h; sourceTree = "<group>"; };
 		1A1B973913087FBE0078322D /* PlanetEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanetEntity.m; sourceTree = "<group>"; };
-		1A1B973A13087FBE0078322D /* OOPlayerShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOPlayerShipEntity.h; sourceTree = "<group>"; };
+		1A1B973A13087FBE0078322D /* OOPlayerShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOPlayerShipEntity.h; sourceTree = "<group>"; };
 		1A1B973B13087FBE0078322D /* OOPlayerShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOPlayerShipEntity.m; sourceTree = "<group>"; };
-		1A1B973C13087FBE0078322D /* OOPlayerShipEntity+Contracts.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+Contracts.h"; sourceTree = "<group>"; };
+		1A1B973C13087FBE0078322D /* OOPlayerShipEntity+Contracts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+Contracts.h"; sourceTree = "<group>"; };
 		1A1B973D13087FBE0078322D /* OOPlayerShipEntity+Contracts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+Contracts.m"; sourceTree = "<group>"; };
-		1A1B973E13087FBE0078322D /* OOPlayerShipEntity+Controls.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+Controls.h"; sourceTree = "<group>"; };
+		1A1B973E13087FBE0078322D /* OOPlayerShipEntity+Controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+Controls.h"; sourceTree = "<group>"; };
 		1A1B973F13087FBE0078322D /* OOPlayerShipEntity+Controls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+Controls.m"; sourceTree = "<group>"; };
-		1A1B974013087FBE0078322D /* OOPlayerShipEntity+LegacyScriptEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+LegacyScriptEngine.h"; sourceTree = "<group>"; };
+		1A1B974013087FBE0078322D /* OOPlayerShipEntity+LegacyScriptEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+LegacyScriptEngine.h"; sourceTree = "<group>"; };
 		1A1B974113087FBE0078322D /* OOPlayerShipEntity+LegacyScriptEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+LegacyScriptEngine.m"; sourceTree = "<group>"; };
-		1A1B974213087FBE0078322D /* OOPlayerShipEntity+LoadSave.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+LoadSave.h"; sourceTree = "<group>"; };
+		1A1B974213087FBE0078322D /* OOPlayerShipEntity+LoadSave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+LoadSave.h"; sourceTree = "<group>"; };
 		1A1B974313087FBE0078322D /* OOPlayerShipEntity+LoadSave.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+LoadSave.m"; sourceTree = "<group>"; };
-		1A1B974413087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
+		1A1B974413087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
 		1A1B974513087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+ScriptMethods.m"; sourceTree = "<group>"; };
-		1A1B974613087FBE0078322D /* OOPlayerShipEntity+Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+Sound.h"; sourceTree = "<group>"; };
+		1A1B974613087FBE0078322D /* OOPlayerShipEntity+Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+Sound.h"; sourceTree = "<group>"; };
 		1A1B974713087FBE0078322D /* OOPlayerShipEntity+Sound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+Sound.m"; sourceTree = "<group>"; };
-		1A1B974813087FBE0078322D /* OOPlayerShipEntity+StickMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+StickMapper.h"; sourceTree = "<group>"; };
+		1A1B974813087FBE0078322D /* OOPlayerShipEntity+StickMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOPlayerShipEntity+StickMapper.h"; sourceTree = "<group>"; };
 		1A1B974913087FBE0078322D /* OOPlayerShipEntity+StickMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+StickMapper.m"; sourceTree = "<group>"; };
-		1A1B974A13087FBE0078322D /* OOProxyPlayerShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOProxyPlayerShipEntity.h; sourceTree = "<group>"; };
+		1A1B974A13087FBE0078322D /* OOProxyPlayerShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOProxyPlayerShipEntity.h; sourceTree = "<group>"; };
 		1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProxyPlayerShipEntity.m; sourceTree = "<group>"; };
-		1A1B974C13087FBE0078322D /* OOShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOShipEntity.h; sourceTree = "<group>"; };
+		1A1B974C13087FBE0078322D /* OOShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOShipEntity.h; sourceTree = "<group>"; };
 		1A1B974D13087FBE0078322D /* OOShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipEntity.m; sourceTree = "<group>"; };
-		1A1B974E13087FBE0078322D /* OOShipEntity+AI.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+AI.h"; sourceTree = "<group>"; };
+		1A1B974E13087FBE0078322D /* OOShipEntity+AI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOShipEntity+AI.h"; sourceTree = "<group>"; };
 		1A1B974F13087FBE0078322D /* OOShipEntity+AI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+AI.m"; sourceTree = "<group>"; };
-		1A1B975013087FBE0078322D /* OOShipEntity+LoadRestore.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+LoadRestore.h"; sourceTree = "<group>"; };
+		1A1B975013087FBE0078322D /* OOShipEntity+LoadRestore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOShipEntity+LoadRestore.h"; sourceTree = "<group>"; };
 		1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+LoadRestore.m"; sourceTree = "<group>"; };
-		1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
+		1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
 		1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+ScriptMethods.m"; sourceTree = "<group>"; };
-		1A1B975413087FBE0078322D /* OOSkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOSkyEntity.h; sourceTree = "<group>"; };
+		1A1B975413087FBE0078322D /* OOSkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSkyEntity.h; sourceTree = "<group>"; };
 		1A1B975513087FBE0078322D /* OOSkyEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSkyEntity.m; sourceTree = "<group>"; };
-		1A1B975613087FBE0078322D /* OOStationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOStationEntity.h; sourceTree = "<group>"; };
+		1A1B975613087FBE0078322D /* OOStationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOStationEntity.h; sourceTree = "<group>"; };
 		1A1B975713087FBE0078322D /* OOStationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOStationEntity.m; sourceTree = "<group>"; };
-		1A1B975813087FBE0078322D /* OOWormholeEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOWormholeEntity.h; sourceTree = "<group>"; };
+		1A1B975813087FBE0078322D /* OOWormholeEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOWormholeEntity.h; sourceTree = "<group>"; };
 		1A1B975913087FBE0078322D /* OOWormholeEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOWormholeEntity.m; sourceTree = "<group>"; };
 		1A1B97CC130881D70078322D /* OOAsyncWorkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAsyncWorkManager.h; sourceTree = "<group>"; };
 		1A1B97CD130881D70078322D /* OOAsyncWorkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOAsyncWorkManager.m; sourceTree = "<group>"; };
@@ -1119,8 +1119,8 @@
 		1A1F27BA1317CCAE00D06C6C /* MyOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOpenGLView.m; sourceTree = "<group>"; };
 		1A1F27BC1317CCCC00D06C6C /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
 		1A1F27BD1317CCCC00D06C6C /* GameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameController.m; sourceTree = "<group>"; };
-		1A1F27BF1317CCD600D06C6C /* Universe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Universe.h; sourceTree = "<group>"; };
-		1A1F27C01317CCD600D06C6C /* Universe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Universe.m; sourceTree = "<group>"; };
+		1A1F27BF1317CCD600D06C6C /* OOUniverse.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOUniverse.h; sourceTree = "<group>"; };
+		1A1F27C01317CCD600D06C6C /* OOUniverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOUniverse.m; sourceTree = "<group>"; };
 		1A1F296A1318239100D06C6C /* OOTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTriangle.h; sourceTree = "<group>"; };
 		1A1F2970131823BC00D06C6C /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		1A1F2971131823BC00D06C6C /* Geometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Geometry.m; sourceTree = "<group>"; };
@@ -2350,8 +2350,8 @@
 				1A9C643A130607F400B30EFD /* OOTypes.h */,
 				1A1F27BC1317CCCC00D06C6C /* GameController.h */,
 				1A1F27BD1317CCCC00D06C6C /* GameController.m */,
-				1A1F27BF1317CCD600D06C6C /* Universe.h */,
-				1A1F27C01317CCD600D06C6C /* Universe.m */,
+				1A1F27BF1317CCD600D06C6C /* OOUniverse.h */,
+				1A1F27C01317CCD600D06C6C /* OOUniverse.m */,
 				1A1B98B1130886080078322D /* JAPersistentFileReference.h */,
 				1A1B98B2130886080078322D /* JAPersistentFileReference.m */,
 				1A1B9B231308A3A80078322D /* OOTrumble.h */,
@@ -2753,7 +2753,7 @@
 				1A1F27B81317CBC500D06C6C /* ResourceManager.m in Sources */,
 				1A1F27BB1317CCAE00D06C6C /* MyOpenGLView.m in Sources */,
 				1A1F27BE1317CCCC00D06C6C /* GameController.m in Sources */,
-				1A1F27C11317CCD600D06C6C /* Universe.m in Sources */,
+				1A1F27C11317CCD600D06C6C /* OOUniverse.m in Sources */,
 				1A1F2972131823BC00D06C6C /* Geometry.m in Sources */,
 				1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */,
 				1A1F2A8B13182DB500D06C6C /* dummy.cpp in Sources */,

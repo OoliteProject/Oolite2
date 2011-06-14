@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 #import "OOExhaustPlumeEntity.h"
 #import "OOShipEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOMacroOpenGL.h"
 #import "OOShipClass.h"
 

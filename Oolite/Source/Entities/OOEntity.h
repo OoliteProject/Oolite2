@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOCacheManager.h"
 #import "OOTypes.h"
 
-@class Universe, Geometry, CollisionRegion, OOShipEntity;
+@class OOUniverse, Geometry, CollisionRegion, OOShipEntity;
 
 
 #ifndef NDEBUG

@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOStringParsing.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOPlayerShipEntity+LegacyScriptEngine.h"
 #import "ResourceManager.h"

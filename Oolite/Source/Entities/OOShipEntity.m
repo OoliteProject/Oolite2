@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOShipRegistry.h"
 #import "OOShipClass.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOShaderMaterial.h"
 #import "OOOpenGLExtensionManager.h"
 
@@ -8625,8 +8625,8 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 	/*	Bug: docking failed due to NSRangeException while looking for element
 		NSNotFound of cargo mainfest in -[OOPlayerShipEntity unloadCargoPods].
 		Analysis: bad cargo pods being generated due to
-		-[Universe commodityForName:] looking in wrong place for names.
-		Fix 1: fix -[Universe commodityForName:].
+		-[OOUniverse commodityForName:] looking in wrong place for names.
+		Fix 1: fix -[OOUniverse commodityForName:].
 		Fix 2: catch NSNotFound here and substitute random cargo type.
 		-- Ahruman 20070714
 	*/

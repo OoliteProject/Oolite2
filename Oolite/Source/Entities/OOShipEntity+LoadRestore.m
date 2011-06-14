@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipEntity+LoadRestore.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 #import "OOShipRegistry.h"
 #import "OORoleSet.h"

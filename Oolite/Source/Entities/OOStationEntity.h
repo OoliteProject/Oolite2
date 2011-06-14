@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 typedef enum

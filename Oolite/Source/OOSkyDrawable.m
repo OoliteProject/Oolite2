@@ -32,7 +32,7 @@ SOFTWARE.
 #import "OOColor.h"
 #import "OOProbabilisticTextureManager.h"
 #import "OOGraphicsResetManager.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOMacroOpenGL.h"
 
 

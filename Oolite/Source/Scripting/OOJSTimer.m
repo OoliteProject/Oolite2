@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOJSTimer.h"
 #import "OOJavaScriptEngine.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 // Minimum allowable interval for repeating timers.

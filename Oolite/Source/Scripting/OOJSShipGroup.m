@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOShipGroup.h"
 #import "OOJavaScriptEngine.h"
 #import "OOShipGroup.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 static JSObject *sShipGroupPrototype;

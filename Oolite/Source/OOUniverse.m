@@ -1,6 +1,6 @@
 /*
 
-Universe.m
+OOUniverse.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 
 #import "OOLegacyOpenGL.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 #import "GameController.h"
 #import "ResourceManager.h"
@@ -117,7 +117,7 @@ enum
 };
 
 
-#define kOOLogUnconvertedNSLog @"unclassified.Universe"
+#define kOOLogUnconvertedNSLog @"unclassified.OOUniverse"
 
 #define MAX_NUMBER_OF_ENTITIES				200
 #define MAX_NUMBER_OF_SOLAR_SYSTEM_ENTITIES 20
@@ -131,10 +131,10 @@ static NSString * const kOOLogEntityVerificationRebuild		= @"entity.linkedList.v
 static NSString * const kOOLogFoundBeacon					= @"beacon.list";
 
 
-Universe *gSharedUniverse = nil;
+OOUniverse *gSharedUniverse = nil;
 
 
-static BOOL MaintainLinkedLists(Universe* uni);
+static BOOL MaintainLinkedLists(OOUniverse* uni);
 
 
 static OOComparisonResult compareName(id dict1, id dict2, void * context);
@@ -181,7 +181,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 @end
 
 
-@interface Universe (OOPrivate)
+@interface OOUniverse (OOPrivate)
 
 - (BOOL) doRemoveEntity:(OOEntity *)entity;
 - (void) preloadSounds;
@@ -225,7 +225,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 @end
 
 
-@implementation Universe
+@implementation OOUniverse
 
 - (id) initWithGameView:(MyOpenGLView *)inGameView
 {	
@@ -234,10 +234,10 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	if (gSharedUniverse != nil)
 	{
 		[self release];
-		[NSException raise:NSInternalInconsistencyException format:@"%s: expected only one Universe to exist at a time.", __PRETTY_FUNCTION__];
+		[NSException raise:NSInternalInconsistencyException format:@"%s: expected only one OOUniverse to exist at a time.", __PRETTY_FUNCTION__];
 	}
 	
-	OO_DEBUG_PROGRESS(@"Universe initWithGameView:");
+	OO_DEBUG_PROGRESS(@"OOUniverse initWithGameView:");
 	
 	self = [super init];
 	if (self == nil)  return nil;
@@ -2328,7 +2328,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	}
 	else
 	{
-		OOLog(@"universe.beacon.error", @"***** ERROR: Universe setNextBeacon '%@'. The ship has no beacon code set.", beaconShip);
+		OOLog(@"universe.beacon.error", @"***** ERROR: OOUniverse setNextBeacon '%@'. The ship has no beacon code set.", beaconShip);
 	}
 }
 
@@ -2483,7 +2483,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 		
 		if ([[localException name] isEqual:OOLITE_EXCEPTION_DATA_NOT_FOUND])
 		{
-			OOLog(kOOLogException, @"***** Oolite Exception : '%@' in [Universe newShipWithName: %@ ] *****", [localException reason], shipKey);
+			OOLog(kOOLogException, @"***** Oolite Exception : '%@' in [OOUniverse newShipWithName: %@ ] *****", [localException reason], shipKey);
 		}
 		else  [localException raise];
 	}
@@ -3110,7 +3110,7 @@ static const OOMatrix	starboard_matrix =
 			
 			[self getActiveViewMatrix:&view_matrix forwardVector:&view_dir upVector:&view_up];
 			
-			CheckOpenGLErrors(@"Universe before doing anything");
+			CheckOpenGLErrors(@"OOUniverse before doing anything");
 			
 			OOGL(glEnable(GL_DEPTH_TEST));
 			OOGL(glEnable(GL_CULL_FACE));			// face culling
@@ -3188,7 +3188,7 @@ static const OOMatrix	starboard_matrix =
 				
 				OOGL(glHint(GL_FOG_HINT, [self reducedDetail] ? GL_FASTEST : GL_NICEST));
 				
-				CheckOpenGLErrors(@"Universe after setting up for opaque pass");
+				CheckOpenGLErrors(@"OOUniverse after setting up for opaque pass");
 				//		DRAW ALL THE OPAQUE ENTITIES
 				for (i = furthest; i >= nearest; i--)
 				{
@@ -3253,7 +3253,7 @@ static const OOMatrix	starboard_matrix =
 				OOGL(glDepthMask(GL_FALSE));			// don't write to depth buffer
 				OOGL(glDisable(GL_LIGHTING));
 				
-				CheckOpenGLErrors(@"Universe after setting up for translucent pass");
+				CheckOpenGLErrors(@"OOUniverse after setting up for translucent pass");
 				for (i = furthest; i >= nearest; i--)
 				{
 					drawthing = my_entities[i];
@@ -3317,7 +3317,7 @@ static const OOMatrix	starboard_matrix =
 			OOGL(glDisable(GL_CULL_FACE));			// face culling
 			OOGL(glDepthMask(GL_FALSE));			// don't write to depth buffer
 			
-			CheckOpenGLErrors(@"Universe after drawing entities");
+			CheckOpenGLErrors(@"OOUniverse after drawing entities");
 
 			GLfloat	line_width = [gameView viewSize].width / 1024.0; // restore line size
 			if (line_width < 1.0)  line_width = 1.0;
@@ -3353,7 +3353,7 @@ static const OOMatrix	starboard_matrix =
 			[theHUD drawWatermarkString:@"Development version " @OOLITE_SNAPSHOT_VERSION];
 #endif
 			
-			CheckOpenGLErrors(@"Universe after drawing HUD");
+			CheckOpenGLErrors(@"OOUniverse after drawing HUD");
 			
 			OOGL(glFlush());	// don't wait around for drawing to complete
 			
@@ -3448,7 +3448,7 @@ static const OOMatrix	starboard_matrix =
 }
 
 
-static BOOL MaintainLinkedLists(Universe *uni)
+static BOOL MaintainLinkedLists(OOUniverse *uni)
 {
 	NSCParameterAssert(uni != NULL);
 	BOOL result = YES;
@@ -3603,7 +3603,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 		if (n_entities >= UNIVERSE_MAX_ENTITIES - 1)
 		{
 			// throw an exception here...
-			OOLog(@"universe.addEntity.failed", @"***** Universe cannot addEntity:%@ -- Universe is full (%d entities out of %d)", entity, n_entities, UNIVERSE_MAX_ENTITIES);
+			OOLog(@"universe.addEntity.failed", @"***** OOUniverse cannot addEntity:%@ -- OOUniverse is full (%d entities out of %d)", entity, n_entities, UNIVERSE_MAX_ENTITIES);
 #ifndef NDEBUG
 			[self debugDumpEntities];
 #endif
@@ -3623,7 +3623,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 				if (limiter-- == 0)
 				{
 					// Every slot has been tried! This should not happen due to previous test, but there was a problem here in 1.70.
-					OOLog(@"universe.addEntity.failed", @"***** Universe cannot addEntity:%@ -- Could not find free slot for entity.", entity);
+					OOLog(@"universe.addEntity.failed", @"***** OOUniverse cannot addEntity:%@ -- Could not find free slot for entity.", entity);
 					return NO;
 				}
 			}
@@ -3761,7 +3761,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	OOEntity* p0 = [entities objectAtIndex:0];
 	if (!(p0->isPlayer))
 	{
-		OOLog(kOOLogInconsistentState, @"***** First entity is not the player in Universe.removeAllEntitiesExceptPlayer - exiting.");
+		OOLog(kOOLogInconsistentState, @"***** First entity is not the player in OOUniverse.removeAllEntitiesExceptPlayer - exiting.");
 		exit(1);
 	}
 #endif
@@ -3970,7 +3970,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	if (!e1)
 	{
-		OOLog(kOOLogParameterError, @"***** No entity set in Universe getSafeVectorFromEntity:toDistance:fromPoint:");
+		OOLog(kOOLogParameterError, @"***** No entity set in OOUniverse getSafeVectorFromEntity:toDistance:fromPoint:");
 		return kZeroVector;
 	}
 	
@@ -5158,7 +5158,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 #ifndef NDEBUG
 				if (update_stage_param != nil)  update_stage = [NSString stringWithFormat:update_stage, update_stage_param];
 #endif
-				OOLog(kOOLogException, @"***** Exception during [%@] in [Universe update:] : %@ : %@ *****", update_stage, [localException name], [localException reason]);
+				OOLog(kOOLogException, @"***** Exception during [%@] in [OOUniverse update:] : %@ : %@ *****", update_stage, [localException name], [localException reason]);
 				[localException raise];
 			}
 		NS_ENDHANDLER
@@ -6534,7 +6534,7 @@ static NSDictionary	*sCachedSystemData = nil;
 		{		
 			if (distance < 0)
 			{
-				OOLogWARN(@"universe.findsystems", @"DEBUG: Universe neighboursToRandomSeed: found a system (%d) a negative distance (%d) away from %d", distance, seed, systems[i]);
+				OOLogWARN(@"universe.findsystems", @"DEBUG: OOUniverse neighboursToRandomSeed: found a system (%d) a negative distance (%d) away from %d", distance, seed, systems[i]);
 				//i guess its still in range, but skip as it makes no sense
 				continue;
 			}
@@ -7850,14 +7850,14 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 {
 	if (!ship)
 	{
-		OOLog(kOOLogParameterError, @"***** No ship set in Universe getSunSkimStartPositionForShip:");
+		OOLog(kOOLogParameterError, @"***** No ship set in OOUniverse getSunSkimStartPositionForShip:");
 		return kZeroVector;
 	}
 	OOSunEntity* the_sun = [self sun];
 	// get vector from sun position to ship
 	if (!the_sun)
 	{
-		OOLog(kOOLogInconsistentState, @"***** No sun set in Universe getSunSkimStartPositionForShip:");
+		OOLog(kOOLogInconsistentState, @"***** No sun set in OOUniverse getSunSkimStartPositionForShip:");
 		return kZeroVector;
 	}
 	Vector v0 = the_sun->position;
@@ -7880,13 +7880,13 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 	OOSunEntity* the_sun = [self sun];
 	if (!ship)
 	{
-		OOLog(kOOLogParameterError, @"***** No ship set in Universe getSunSkimEndPositionForShip:");
+		OOLog(kOOLogParameterError, @"***** No ship set in OOUniverse getSunSkimEndPositionForShip:");
 		return kZeroVector;
 	}
 	// get vector from sun position to ship
 	if (!the_sun)
 	{
-		OOLog(kOOLogInconsistentState, @"***** No sun set in Universe getSunSkimEndPositionForShip:");
+		OOLog(kOOLogInconsistentState, @"***** No sun set in OOUniverse getSunSkimEndPositionForShip:");
 		return kZeroVector;
 	}
 	Vector v0 = the_sun->position;
@@ -8653,14 +8653,14 @@ OOEntity *gOOJSPlayerIfStale = nil;
 	{
 		if (sortedEntities[index] != entity)
 		{
-			OOLog(kOOLogInconsistentState, @"DEBUG: Universe removeEntity:%@ ENTITY IS NOT IN THE RIGHT PLACE IN THE ZERO_DISTANCE SORTED LIST -- FIXING...", entity);
+			OOLog(kOOLogInconsistentState, @"DEBUG: OOUniverse removeEntity:%@ ENTITY IS NOT IN THE RIGHT PLACE IN THE ZERO_DISTANCE SORTED LIST -- FIXING...", entity);
 			unsigned i;
 			index = -1;
 			for (i = 0; (i < n_entities)&&(index == -1); i++)
 				if (sortedEntities[i] == entity)
 					index = i;
 			if (index == -1)
-				 OOLog(kOOLogInconsistentState, @"DEBUG: Universe removeEntity:%@ ENTITY IS NOT IN THE ZERO_DISTANCE SORTED LIST -- CONTINUING...", entity);
+				 OOLog(kOOLogInconsistentState, @"DEBUG: OOUniverse removeEntity:%@ ENTITY IS NOT IN THE ZERO_DISTANCE SORTED LIST -- CONTINUING...", entity);
 		}
 		if (index != -1)
 		{
@@ -8674,7 +8674,7 @@ OOEntity *gOOJSPlayerIfStale = nil;
 				index++;
 			}
 			if (n > 1)
-				 OOLog(kOOLogInconsistentState, @"DEBUG: Universe removeEntity: REMOVED %d EXTRA COPIES OF %@ FROM THE ZERO_DISTANCE SORTED LIST", n - 1, entity);
+				 OOLog(kOOLogInconsistentState, @"DEBUG: OOUniverse removeEntity: REMOVED %d EXTRA COPIES OF %@ FROM THE ZERO_DISTANCE SORTED LIST", n - 1, entity);
 			while (n--)
 			{
 				n_entities--;

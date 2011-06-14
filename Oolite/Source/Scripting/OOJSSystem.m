@@ -29,7 +29,7 @@
 #import "OOJSVector.h"
 #import "OOJSEntity.h"
 #import "OOJSPlayer.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlanetEntity.h"
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOPlayerShipEntity+LegacyScriptEngine.h"

@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "GuiDisplayGen.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOTextureSprite.h"
 #import "ResourceManager.h"

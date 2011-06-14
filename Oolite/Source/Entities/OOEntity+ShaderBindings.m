@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOPlayerShipEntity+ScriptMethods.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 @implementation OOEntity (ShaderBindings)

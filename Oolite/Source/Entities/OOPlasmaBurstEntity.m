@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOPlasmaBurstEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOColor.h"
 
 

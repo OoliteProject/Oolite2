@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "OOPlanetDrawable.h"
 
 #import "AI.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOShipEntity.h"
 #import "OOShipEntity+AI.h"
 #import "OOCharacter.h"

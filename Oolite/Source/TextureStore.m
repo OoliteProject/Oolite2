@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #if !NEW_PLANETS
 
 #ifndef NDEBUG
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 #endif
 

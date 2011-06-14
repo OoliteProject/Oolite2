@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #define WORMHOLE_EXPIRES_TIMEINTERVAL	900.0
 #define WORMHOLE_SHRINK_RATE			4000.0
 
-@class OOShipEntity, Universe;
+@class OOShipEntity, OOUniverse;
 
 typedef enum
 {

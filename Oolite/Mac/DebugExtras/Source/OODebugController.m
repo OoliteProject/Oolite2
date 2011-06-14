@@ -35,7 +35,7 @@ SOFTWARE.
 
 #import "OOGraphicsResetManager.h"
 #import "OOLegacyTexture.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOLegacyOpenGL.h"
 #import "OOCacheManager.h"
 #import "OOPlayerShipEntity.h"

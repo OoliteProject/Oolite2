@@ -1,6 +1,6 @@
 /*
 
-Universe.h
+OOUniverse.h
 
 Manages a lot of stuff that isn't managed somewhere else.
 
@@ -154,17 +154,17 @@ typedef uint8_t		OOGovernmentID;		// 0..7
 typedef uint8_t		OOEconomyID;		// 0..7
 
 
-@interface Universe: OOWeakRefObject
+@interface OOUniverse: OOWeakRefObject
 {
 @public
 	// use a sorted list for drawing and other activities
-	OOEntity					*sortedEntities[UNIVERSE_MAX_ENTITIES];
+	OOEntity				*sortedEntities[UNIVERSE_MAX_ENTITIES];
 	unsigned				n_entities;
 	
 	int						cursor_row;
 	
 	// collision optimisation sorted lists
-	OOEntity					*x_list_start, *y_list_start, *z_list_start;
+	OOEntity				*x_list_start, *y_list_start, *z_list_start;
 	
 	GLfloat					stars_ambient[4];
 	
@@ -184,7 +184,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	MyOpenGLView			*gameView;
 	
 	int						next_universal_id;
-	OOEntity					*entity_for_uid[MAX_ENTITY_UID];
+	OOEntity				*entity_for_uid[MAX_ENTITY_UID];
 
 	NSMutableArray			*entities;
 	
@@ -251,7 +251,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	
 	int						breakPatternCounter;
 	
-	OOShipEntity				*demo_ship;
+	OOShipEntity			*demo_ship;
 	
 	OOStationEntity			*cachedStation;
 	OOPlanetEntity			*cachedPlanet;
@@ -694,10 +694,10 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	The purpose of this is that it makes UNIVERSE essentially a read-only
 	global with zero overhead.
 */
-OOINLINE Universe *GetUniverse(void) INLINE_CONST_FUNC;
-OOINLINE Universe *GetUniverse(void)
+OOINLINE OOUniverse *GetUniverse(void) INLINE_CONST_FUNC;
+OOINLINE OOUniverse *GetUniverse(void)
 {
-	extern Universe *gSharedUniverse;
+	extern OOUniverse *gSharedUniverse;
 	return gSharedUniverse;
 }
 #define UNIVERSE GetUniverse()

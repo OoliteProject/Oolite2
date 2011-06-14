@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 
 #import "OOShipEntity+AI.h"
 #import "OOStationEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "GameController.h"
@@ -3286,7 +3286,7 @@ static BOOL toggling_music;
 	// Otherwise check for nearby dockables
 	if( !isOkayToUseAutopilot )
 	{
-		Universe  *uni        = UNIVERSE;
+		OOUniverse  *uni        = UNIVERSE;
 		OOEntity    **entities  = uni->sortedEntities;	// grab the public sorted list
 		int       nStations   = 0;
 		unsigned  i;

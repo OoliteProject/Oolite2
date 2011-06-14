@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 #import "Groolite.h"
 #import "GameController.h"
 #import "GuiDisplayGen.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOPlayerShipEntity+LegacyScriptEngine.h"
 

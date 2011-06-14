@@ -27,7 +27,7 @@ SOFTWARE.
 
 #import "OOSoundSourcePool.h"
 #import "OOSound+OOCustomSounds.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "GameController.h"
 
 

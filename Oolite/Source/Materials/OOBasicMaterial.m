@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOBasicMaterial.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOLegacyMaterialSpecifier.h"
 #import "OOLegacyTexture.h"
 

@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOPlayerShipEntity+LoadSave.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOConstToString.h"
 
 #ifndef NDEBUG
@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 #endif
 
 
-@interface Universe (Peek)
+@interface OOUniverse (Peek)
 
 - (NSDictionary *) generateSystemDataForGalaxy:(OOGalaxyID)gnum planet:(OOSystemID)pnum;
 

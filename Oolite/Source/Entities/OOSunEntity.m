@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "AI.h"
 #import "MyOpenGLView.h"
 #import "OOShipEntity+AI.h"

@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOTrumble.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"
 #import "OOLegacyTexture.h"
 #import "ResourceManager.h"

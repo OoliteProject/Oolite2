@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "GameController.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "ResourceManager.h"
 #import "MyOpenGLView.h"
 #import "OOLegacyOpenGL.h"
@@ -210,7 +210,7 @@ static GameController *sSharedController = nil;
 		
 		[self getDisplayModes];
 		
-		// moved to before the Universe is created
+		// moved to before the OOUniverse is created
 		if (expansionPathsToInclude)
 		{
 			for (i = 0; i < [expansionPathsToInclude count]; i++)
@@ -220,8 +220,8 @@ static GameController *sSharedController = nil;
 		}
 		
 		// moved here to try to avoid initialising this before having an Open GL context
-		//[self logProgress:DESC(@"Initialising universe")]; // DESC expansions only possible after Universe init
-		[[Universe alloc] initWithGameView:gameView];
+		//[self logProgress:DESC(@"Initialising universe")]; // DESC expansions only possible after OOUniverse init
+		[[OOUniverse alloc] initWithGameView:gameView];
 		
 		[self loadPlayerIfRequired];
 		

@@ -26,7 +26,7 @@ SOFTWARE.
 */
 
 #import "OOLogHeader.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOStellarBody.h"
 #import "OOJavaScriptEngine.h"
 #import "OOVersion.h"

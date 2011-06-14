@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity.h"
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 #define LABELROW 1
 #define BACKROW 2 

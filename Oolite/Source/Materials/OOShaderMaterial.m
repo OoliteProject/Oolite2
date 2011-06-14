@@ -36,7 +36,7 @@ SOFTWARE.
 #import "OOLegacyTexture.h"
 #import "OOOpenGLExtensionManager.h"
 #import "OOMacroOpenGL.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OODebugFlags.h"
 
 

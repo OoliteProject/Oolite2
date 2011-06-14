@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOPlayerShipEntity+Sound.h"
 #import "GuiDisplayGen.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "ResourceManager.h"
 #import "AI.h"
 #import "OOShipEntity+AI.h"

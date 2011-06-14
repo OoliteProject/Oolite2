@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "OOVersion.h"
 #import "OOStringParsing.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOStationEntity.h"
 #import "MyOpenGLView.h"
 #import "OOShipRegistry.h"
@@ -874,7 +874,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 	{
 		OOWormholeEntity * wh = [[OOWormholeEntity alloc] initWithDict:whCurrDict];
 		[scannedWormholes addObject:wh];
-		/* TODO - add to Universe if the wormhole hasn't expired yet; but in this case
+		/* TODO - add to OOUniverse if the wormhole hasn't expired yet; but in this case
 		 * we need to save/load position and mass as well, which we currently 
 		 * don't
 		if (equal_seeds([wh origin], system_seed))

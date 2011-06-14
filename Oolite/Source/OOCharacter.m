@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOCharacter.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOStringParsing.h"
 #import "OOJSScript.h"
 

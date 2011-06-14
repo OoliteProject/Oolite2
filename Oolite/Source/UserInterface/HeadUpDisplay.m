@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "OOPlanetEntity.h"
 #import "OOStationEntity.h"
 #import "OOQuiriumCascadeEntity.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOTrumble.h"
 #import "OOColor.h"
 #import "GuiDisplayGen.h"
@@ -810,7 +810,7 @@ static BOOL hostiles;
 	OOMatrix		rotMatrix;
 	int				flash = ((int)([UNIVERSE gameTime] * 4))&1;
 	
-	Universe		*uni			= UNIVERSE;
+	OOUniverse		*uni			= UNIVERSE;
 	OOPlayerShipEntity	*player = PLAYER;
 	if (player == nil)  return;
 	

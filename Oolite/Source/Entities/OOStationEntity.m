@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOShipEntity+AI.h"
 #import "OOStringParsing.h"
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "HeadUpDisplay.h"
 
 #import "OOPlanetEntity.h"
@@ -2222,7 +2222,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 - (NSString *) marketOverrideName
 {
 	// 2010.06.14 - Micha - we can't default to the primary role as otherwise the logic
-	//				generating the market in [Universe commodityDataForEconomy:] doesn't
+	//				generating the market in [OOUniverse commodityDataForEconomy:] doesn't
 	//				work properly with the various overrides.  The primary role will get
 	//				used if either there is no market override, or the market wasn't
 	//				defined.

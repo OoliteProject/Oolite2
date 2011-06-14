@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOJSClock.h"
 #import "OOJavaScriptEngine.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "OOJSPlayer.h"
 #import "OOPlayerShipEntity.h"
 #import "OOPlayerShipEntity+ScriptMethods.h"

@@ -138,7 +138,7 @@ BOOL OOExpandPixMap(OOPixMap *ioPixMap, size_t desiredSize)
 
 #ifndef NDEBUG
 
-#import "Universe.h"
+#import "OOUniverse.h"
 #import "MyOpenGLView.h"
 
 

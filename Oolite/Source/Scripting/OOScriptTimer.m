@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOScriptTimer.h"
-#import "Universe.h"
+#import "OOUniverse.h"
 
 
 static OOPriorityQueue	*sTimers;

@@ -71,7 +71,7 @@ declaration, in particular:
 	OOGalacticHyperspaceBehaviourFromString()
 	OOStringFromGalacticHyperspaceBehaviour()
 	
-	Universe.h:
+	OOUniverse.h:
 	OODisplayStringFromGovernmentID()
 	OODisplayStringFromEconomyID()
 	

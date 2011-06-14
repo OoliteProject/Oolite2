@@ -26,7 +26,7 @@
 		1A18D69913191A920096D960 /* SUUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A18D69813191A920096D960 /* SUUpdater.m */; };
 		1A1B975A13087FBE0078322D /* OODustEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971313087FBE0078322D /* OODustEntity.m */; };
 		1A1B975B13087FBE0078322D /* OOEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971513087FBE0078322D /* OOEntity.m */; };
-		1A1B975C13087FBE0078322D /* EntityShaderBindings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971613087FBE0078322D /* EntityShaderBindings.m */; };
+		1A1B975C13087FBE0078322D /* OOEntity+ShaderBindings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971613087FBE0078322D /* OOEntity+ShaderBindings.m */; };
 		1A1B975D13087FBE0078322D /* OOBreakPatternEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */; };
 		1A1B975E13087FBE0078322D /* OOECMBlastEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971A13087FBE0078322D /* OOECMBlastEntity.m */; };
 		1A1B975F13087FBE0078322D /* OOEntityWithDrawable.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B971C13087FBE0078322D /* OOEntityWithDrawable.m */; };
@@ -926,7 +926,7 @@
 		1A1B971313087FBE0078322D /* OODustEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OODustEntity.m; sourceTree = "<group>"; };
 		1A1B971413087FBE0078322D /* OOEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOEntity.h; sourceTree = "<group>"; };
 		1A1B971513087FBE0078322D /* OOEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOEntity.m; sourceTree = "<group>"; };
-		1A1B971613087FBE0078322D /* EntityShaderBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityShaderBindings.m; sourceTree = "<group>"; };
+		1A1B971613087FBE0078322D /* OOEntity+ShaderBindings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOEntity+ShaderBindings.m"; sourceTree = "<group>"; };
 		1A1B971713087FBE0078322D /* OOBreakPatternEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOBreakPatternEntity.h; sourceTree = "<group>"; };
 		1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOBreakPatternEntity.m; sourceTree = "<group>"; };
 		1A1B971913087FBE0078322D /* OOECMBlastEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOECMBlastEntity.h; sourceTree = "<group>"; };
@@ -1584,7 +1584,7 @@
 				1A1B971313087FBE0078322D /* OODustEntity.m */,
 				1A1B971413087FBE0078322D /* OOEntity.h */,
 				1A1B971513087FBE0078322D /* OOEntity.m */,
-				1A1B971613087FBE0078322D /* EntityShaderBindings.m */,
+				1A1B971613087FBE0078322D /* OOEntity+ShaderBindings.m */,
 				1A1B971713087FBE0078322D /* OOBreakPatternEntity.h */,
 				1A1B971813087FBE0078322D /* OOBreakPatternEntity.m */,
 				1A1B971913087FBE0078322D /* OOECMBlastEntity.h */,
@@ -2699,7 +2699,7 @@
 				1AF2EBB31306163F008ECA54 /* OOScriptTimer.m in Sources */,
 				1A1B975A13087FBE0078322D /* OODustEntity.m in Sources */,
 				1A1B975B13087FBE0078322D /* OOEntity.m in Sources */,
-				1A1B975C13087FBE0078322D /* EntityShaderBindings.m in Sources */,
+				1A1B975C13087FBE0078322D /* OOEntity+ShaderBindings.m in Sources */,
 				1A1B975D13087FBE0078322D /* OOBreakPatternEntity.m in Sources */,
 				1A1B975E13087FBE0078322D /* OOECMBlastEntity.m in Sources */,
 				1A1B975F13087FBE0078322D /* OOEntityWithDrawable.m in Sources */,

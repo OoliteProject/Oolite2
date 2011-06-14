@@ -1,6 +1,6 @@
 /*
 
-EntityShaderBindings.m
+OOEntity+ShaderBindings.m
 
 Extra methods exposed for shader bindings.
 

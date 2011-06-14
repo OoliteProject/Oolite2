@@ -388,7 +388,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (NSString *) randomShipKeyForRoleRespectingConditions:(NSString *)role;
 - (OOShipEntity *) newShipWithRole:(NSString *)role;		// Selects ship using role weights, applies auto_ai, respects conditions
 - (OOShipEntity *) newShipWithName:(NSString *)shipKey;	// Does not apply auto_ai or respect conditions
-- (OOShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy;	// If usePlayerProxy, non-carriers are instantiated as ProxyPlayerEntity.
+- (OOShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy;	// If usePlayerProxy, non-carriers are instantiated as OOProxyPlayerShipEntity.
 
 - (Class) classForShipClass:(OOShipClass *)shipClass usePlayerProxy:(BOOL)usePlayerProxy;
 

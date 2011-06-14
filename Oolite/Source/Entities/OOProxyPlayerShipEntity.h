@@ -1,9 +1,10 @@
 /*
 
-ProxyPlayerEntity.h
+OOProxyPlayerShipEntity.h
 
-Ship entity which, in some respects, emulates a PlayerShip. In particular, at
-this time it implements the extra shader bindable methods of PlayerShip.
+Ship entity which, in some respects, emulates an OOPlayerShipEntity. In
+particular, at this time it implements the extra shader bindable methods of
+OOPlayerShipEntity.
 
 
 Oolite
@@ -29,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity.h"
 
 
-@interface ProxyPlayerEntity: OOShipEntity
+@interface OOProxyPlayerShipEntity: OOShipEntity
 {
 @private
 	float					_fuelLeakRate;
@@ -97,7 +98,7 @@ MA 02110-1301, USA.
 
 @interface OOEntity (ProxyPlayer)
 
-// True for OOPlayerShipEntity or ProxyPlayerEntity.
+// True for OOPlayerShipEntity or OOProxyPlayerShipEntity.
 - (BOOL) isPlayerLikeShip;
 
 @end

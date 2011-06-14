@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "WormholeEntity.h"
-#import "ProxyPlayerEntity.h"
+#import "OOProxyPlayerShipEntity.h"
 #import "OOQuiriumCascadeEntity.h"
 #import "OOMesh.h"
 #import "OOShipClass.h"
@@ -3495,9 +3495,9 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (ProxyPlayerEntity *) createDoppelganger
+- (OOProxyPlayerShipEntity *) createDoppelganger
 {
-	ProxyPlayerEntity *result = [[UNIVERSE newShipWithName:[self shipDataKey] usePlayerProxy:YES] autorelease];
+	OOProxyPlayerShipEntity *result = [[UNIVERSE newShipWithName:[self shipDataKey] usePlayerProxy:YES] autorelease];
 	
 	if (result != nil)
 	{

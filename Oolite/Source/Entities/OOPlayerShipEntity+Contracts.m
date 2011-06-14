@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+Contracts.h"
 #import "OOPlayerShipEntity+Controls.h"
 #import "OOPlayerShipEntity+Serialization.h"
-#import "ProxyPlayerEntity.h"
+#import "OOProxyPlayerShipEntity.h"
 
 #import "Universe.h"
 #import "AI.h"
@@ -1518,7 +1518,7 @@ static NSMutableDictionary* currentShipyard = nil;
 		[demoShip release];
 	}
 	
-	ship = [[ProxyPlayerEntity alloc] initWithKey:shipKey definition:shipData];
+	ship = [[OOProxyPlayerShipEntity alloc] initWithKey:shipKey definition:shipData];
 	if (personality != ENTITY_PERSONALITY_INVALID)  [ship setEntityPersonalityInt:personality];
 	[ship wasAddedToUniverse];
 	

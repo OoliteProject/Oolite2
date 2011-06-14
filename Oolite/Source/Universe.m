@@ -65,7 +65,7 @@ MA 02110-1301, USA.
 #import "WormholeEntity.h"
 #import "OOBreakPatternEntity.h"
 #import "ShipEntityAI.h"
-#import "ProxyPlayerEntity.h"
+#import "OOProxyPlayerShipEntity.h"
 #import "OORingEffectEntity.h"
 #import "OOLightParticleEntity.h"
 #import "OOFlashEffectEntity.h"
@@ -2515,7 +2515,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	}
 	else if (usePlayerProxy)
 	{
-		return [ProxyPlayerEntity class];
+		return [OOProxyPlayerShipEntity class];
 	}
 	else
 	{

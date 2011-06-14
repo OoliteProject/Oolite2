@@ -1,6 +1,6 @@
 /*
 
-ProxyPlayerEntity.m
+OOProxyPlayerShipEntity.m
 
 
 Oolite
@@ -23,10 +23,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "ProxyPlayerEntity.h"
+#import "OOProxyPlayerShipEntity.h"
 
 
-@implementation ProxyPlayerEntity
+@implementation OOProxyPlayerShipEntity
 
 - (id)initWithKey:(NSString *)key definition:(NSDictionary *)dict
 {

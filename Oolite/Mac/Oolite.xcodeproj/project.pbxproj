@@ -52,7 +52,7 @@
 		1A1B977313087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974513087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.m */; };
 		1A1B977413087FBE0078322D /* OOPlayerShipEntity+Sound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974713087FBE0078322D /* OOPlayerShipEntity+Sound.m */; };
 		1A1B977513087FBE0078322D /* OOPlayerShipEntity+StickMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974913087FBE0078322D /* OOPlayerShipEntity+StickMapper.m */; };
-		1A1B977613087FBE0078322D /* ProxyPlayerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */; };
+		1A1B977613087FBE0078322D /* OOProxyPlayerShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */; };
 		1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974D13087FBE0078322D /* OOShipEntity.m */; };
 		1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974F13087FBE0078322D /* ShipEntityAI.m */; };
 		1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */; };
@@ -978,8 +978,8 @@
 		1A1B974713087FBE0078322D /* OOPlayerShipEntity+Sound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+Sound.m"; sourceTree = "<group>"; };
 		1A1B974813087FBE0078322D /* OOPlayerShipEntity+StickMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOPlayerShipEntity+StickMapper.h"; sourceTree = "<group>"; };
 		1A1B974913087FBE0078322D /* OOPlayerShipEntity+StickMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOPlayerShipEntity+StickMapper.m"; sourceTree = "<group>"; };
-		1A1B974A13087FBE0078322D /* ProxyPlayerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyPlayerEntity.h; sourceTree = "<group>"; };
-		1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyPlayerEntity.m; sourceTree = "<group>"; };
+		1A1B974A13087FBE0078322D /* OOProxyPlayerShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOProxyPlayerShipEntity.h; sourceTree = "<group>"; };
+		1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOProxyPlayerShipEntity.m; sourceTree = "<group>"; };
 		1A1B974C13087FBE0078322D /* OOShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOShipEntity.h; sourceTree = "<group>"; };
 		1A1B974D13087FBE0078322D /* OOShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipEntity.m; sourceTree = "<group>"; };
 		1A1B974E13087FBE0078322D /* ShipEntityAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityAI.h; sourceTree = "<group>"; };
@@ -1638,8 +1638,8 @@
 				1A1B974713087FBE0078322D /* OOPlayerShipEntity+Sound.m */,
 				1A1B974813087FBE0078322D /* OOPlayerShipEntity+StickMapper.h */,
 				1A1B974913087FBE0078322D /* OOPlayerShipEntity+StickMapper.m */,
-				1A1B974A13087FBE0078322D /* ProxyPlayerEntity.h */,
-				1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */,
+				1A1B974A13087FBE0078322D /* OOProxyPlayerShipEntity.h */,
+				1A1B974B13087FBE0078322D /* OOProxyPlayerShipEntity.m */,
 				1A1B974C13087FBE0078322D /* OOShipEntity.h */,
 				1A1B974D13087FBE0078322D /* OOShipEntity.m */,
 				1A1B974E13087FBE0078322D /* ShipEntityAI.h */,
@@ -2725,7 +2725,7 @@
 				1A1B977313087FBE0078322D /* OOPlayerShipEntity+ScriptMethods.m in Sources */,
 				1A1B977413087FBE0078322D /* OOPlayerShipEntity+Sound.m in Sources */,
 				1A1B977513087FBE0078322D /* OOPlayerShipEntity+StickMapper.m in Sources */,
-				1A1B977613087FBE0078322D /* ProxyPlayerEntity.m in Sources */,
+				1A1B977613087FBE0078322D /* OOProxyPlayerShipEntity.m in Sources */,
 				1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */,
 				1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */,
 				1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */,

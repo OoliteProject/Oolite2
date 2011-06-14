@@ -33,7 +33,7 @@
 #import "OOXMLExtensions.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "OOConstToString.h"
 #import "OOShipRegistry.h"
 #import "OOLegacyTexture.h"

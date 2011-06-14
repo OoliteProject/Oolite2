@@ -58,7 +58,7 @@
 		1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */; };
 		1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */; };
 		1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975513087FBE0078322D /* SkyEntity.m */; };
-		1A1B977C13087FBE0078322D /* StationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975713087FBE0078322D /* StationEntity.m */; };
+		1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975713087FBE0078322D /* OOStationEntity.m */; };
 		1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975913087FBE0078322D /* WormholeEntity.m */; };
 		1A1B97CE130881D70078322D /* OOAsyncWorkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B97CD130881D70078322D /* OOAsyncWorkManager.m */; };
 		1A1B9836130883E60078322D /* EntityOOJavaScriptExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B9835130883E60078322D /* EntityOOJavaScriptExtensions.m */; };
@@ -990,8 +990,8 @@
 		1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntityScriptMethods.m; sourceTree = "<group>"; };
 		1A1B975413087FBE0078322D /* SkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkyEntity.h; sourceTree = "<group>"; };
 		1A1B975513087FBE0078322D /* SkyEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkyEntity.m; sourceTree = "<group>"; };
-		1A1B975613087FBE0078322D /* StationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StationEntity.h; sourceTree = "<group>"; };
-		1A1B975713087FBE0078322D /* StationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StationEntity.m; sourceTree = "<group>"; };
+		1A1B975613087FBE0078322D /* OOStationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOStationEntity.h; sourceTree = "<group>"; };
+		1A1B975713087FBE0078322D /* OOStationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOStationEntity.m; sourceTree = "<group>"; };
 		1A1B975813087FBE0078322D /* WormholeEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WormholeEntity.h; sourceTree = "<group>"; };
 		1A1B975913087FBE0078322D /* WormholeEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WormholeEntity.m; sourceTree = "<group>"; };
 		1A1B97CC130881D70078322D /* OOAsyncWorkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOAsyncWorkManager.h; sourceTree = "<group>"; };
@@ -1650,8 +1650,8 @@
 				1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */,
 				1A1B975413087FBE0078322D /* SkyEntity.h */,
 				1A1B975513087FBE0078322D /* SkyEntity.m */,
-				1A1B975613087FBE0078322D /* StationEntity.h */,
-				1A1B975713087FBE0078322D /* StationEntity.m */,
+				1A1B975613087FBE0078322D /* OOStationEntity.h */,
+				1A1B975713087FBE0078322D /* OOStationEntity.m */,
 				1A1B975813087FBE0078322D /* WormholeEntity.h */,
 				1A1B975913087FBE0078322D /* WormholeEntity.m */,
 			);
@@ -2731,7 +2731,7 @@
 				1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */,
 				1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */,
 				1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */,
-				1A1B977C13087FBE0078322D /* StationEntity.m in Sources */,
+				1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */,
 				1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */,
 				1A1B97CE130881D70078322D /* OOAsyncWorkManager.m in Sources */,
 				1A1B9836130883E60078322D /* EntityOOJavaScriptExtensions.m in Sources */,

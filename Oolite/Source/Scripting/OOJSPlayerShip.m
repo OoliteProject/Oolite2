@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #import "PlayerEntityScriptMethods.h"
 #import "PlayerEntityLegacyScriptEngine.h"
 #import "HeadUpDisplay.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 
 #import "OOConstToJSString.h"
 #import "OOConstToString.h"
@@ -536,9 +536,9 @@ static JSBool PlayerShipEngageAutopilotToStation(JSContext *context, uintN argc,
 	
 	if (EXPECT_NOT(OOIsPlayerStale()))  OOJS_RETURN_VOID;
 	
-	StationEntity			*stationForDocking = nil;
+	OOStationEntity			*stationForDocking = nil;
 	
-	if (argc > 0)  stationForDocking = OOJSNativeObjectOfClassFromJSValue(context, OOJS_ARGV[0], [StationEntity class]);
+	if (argc > 0)  stationForDocking = OOJSNativeObjectOfClassFromJSValue(context, OOJS_ARGV[0], [OOStationEntity class]);
 	if (stationForDocking == nil)
 	{
 		OOJSReportBadArguments(context, @"PlayerShip", @"engageAutopilot", MIN(argc, 1U), OOJS_ARGV, nil, @"station");

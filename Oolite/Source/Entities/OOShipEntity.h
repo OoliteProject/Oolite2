@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOJSPropID.h"
 #import "OOTriangle.h"
 
-@class	OOShipClass, OOColor, StationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript, OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
+@class	OOShipClass, OOColor, OOStationEntity, WormholeEntity, AI, Octree, OOMesh, OOScript, OOJSScript, OORoleSet, OOShipGroup, OOEquipmentType;
 
 #ifdef OO_BRAIN_AI
 @class OOBrain;
@@ -821,9 +821,9 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 - (void) announceFoundTarget;	// Sends TARGET_FOUND or NOTHING_FOUND to AI as appropriate.
 - (void) setAndAnnounceFoundTarget:(OOEntity *)targetEntity;
 
-- (StationEntity *) targetStation;
-- (void) setTargetStation:(StationEntity *)target;
-- (void) setTargetStationAndTarget:(StationEntity *)target;
+- (OOStationEntity *) targetStation;
+- (void) setTargetStation:(OOStationEntity *)target;
+- (void) setTargetStationAndTarget:(OOStationEntity *)target;
 
 - (OOShipEntity *) thankedShip;
 - (void) setThankedShip:(OOShipEntity *)thankedShip;
@@ -905,8 +905,8 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 - (void) takeScrapeDamage:(double) amount from:(OOEntity *) ent;
 - (void) takeHeatDamage:(double) amount;
 
-- (void) enterDock:(StationEntity *)station;
-- (void) leaveDock:(StationEntity *)station;
+- (void) enterDock:(OOStationEntity *)station;
+- (void) leaveDock:(OOStationEntity *)station;
 
 - (void) enterWormhole:(WormholeEntity *) wormhole replacing:(BOOL)replacing;
 - (void) enterWitchspace;

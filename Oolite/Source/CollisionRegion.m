@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "PlayerEntity.h"
 #import "OODebugFlags.h"
 
@@ -397,7 +397,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 					
 					if (e1->isStation)
 					{
-						StationEntity* se1 = (StationEntity*) e1;
+						OOStationEntity* se1 = (OOStationEntity*) e1;
 						if ([se1 shipIsInDockingCorridor: (OOShipEntity*)e2])
 							collision = NO;
 						else
@@ -405,7 +405,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 					}
 					else if (e2->isStation)
 					{
-						StationEntity* se2 = (StationEntity*) e2;
+						OOStationEntity* se2 = (OOStationEntity*) e2;
 						if ([se2 shipIsInDockingCorridor: (OOShipEntity*)e1])
 							collision = NO;
 						else

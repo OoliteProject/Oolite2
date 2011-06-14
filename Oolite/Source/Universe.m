@@ -57,7 +57,7 @@ MA 02110-1301, USA.
 #import "PlayerEntityContracts.h"
 #import "PlayerEntityControls.h"
 #import "PlayerEntityScriptMethods.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "SkyEntity.h"
 #import "DustEntity.h"
 #import "OOPlanetEntity.h"
@@ -503,7 +503,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 		// we're in witchspace...		
 		
 		PlayerEntity	*player = PLAYER;
-		StationEntity	*dockedStation = [player dockedStation];
+		OOStationEntity	*dockedStation = [player dockedStation];
 		NSPoint			coords = [player galaxy_coordinates];
 		// check the nearest system
 		Random_Seed s_seed = [self findSystemAtCoords:coords withGalaxySeed:[player galaxy_seed]];
@@ -522,7 +522,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 				if ((ent != player)&&(ent != dockedStation))
 				{
 					if (ent->isStation)  // clear out queues
-						[(StationEntity *)ent clear];
+						[(OOStationEntity *)ent clear];
 					[self removeEntity:ent];
 				}
 				else
@@ -766,7 +766,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 {
 	OOEntity				*thing;
 	OOShipEntity			*nav_buoy;
-	StationEntity		*a_station;
+	OOStationEntity		*a_station;
 	OOSunEntity			*a_sun;
 	OOPlanetEntity		*a_planet;
 	
@@ -945,7 +945,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	//// possibly systeminfo has an override for the station
 	stationDesc = [systeminfo oo_stringForKey:@"station" defaultValue:defaultStationDesc];
 	
-	a_station = (StationEntity *)[self newShipWithRole:stationDesc];			// retain count = 1
+	a_station = (OOStationEntity *)[self newShipWithRole:stationDesc];			// retain count = 1
 	
 	/*	Sanity check: ensure that only stations are generated here. This is an
 		attempt to fix exceptions of the form:
@@ -970,7 +970,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 		}
 		[a_station release];
 		stationDesc = defaultStationDesc;
-		a_station = (StationEntity *)[self newShipWithRole:stationDesc];		 // retain count = 1
+		a_station = (OOStationEntity *)[self newShipWithRole:stationDesc];		 // retain count = 1
 		
 		if (![a_station isStation] || ![a_station validForAddToUniverse])
 		{
@@ -984,7 +984,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 			}
 			[a_station release];
 			
-			a_station = (StationEntity *)[self newShipWithName:@"coriolis-station"];
+			a_station = (OOStationEntity *)[self newShipWithName:@"coriolis-station"];
 			if (![a_station isStation] || ![a_station validForAddToUniverse])
 			{
 				OOLog(@"universe.setup.badStation", @"Could not create built-in Coriolis station! Generating a stationless system.");
@@ -2217,7 +2217,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (StationEntity *) station
+- (OOStationEntity *) station
 {
 	if (cachedSun != nil && cachedStation == nil)
 	{
@@ -2228,7 +2228,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (StationEntity *) stationFriendlyTo:(OOShipEntity *) ship
+- (OOStationEntity *) stationFriendlyTo:(OOShipEntity *) ship
 {
 	// In interstellar space we select a random friendly carrier as mainStation.
 	// No caching: friendly status can change!
@@ -2264,7 +2264,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 
 - (void) unMagicMainStation
 {
-	StationEntity *theStation = [self station];
+	OOStationEntity *theStation = [self station];
 	if (theStation != nil)  theStation->isExplicitlyNotMainStation = YES;
 	cachedStation = nil;
 }
@@ -2511,7 +2511,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	
 	if ([shipClass isCarrier])
 	{
-		return [StationEntity class];
+		return [OOStationEntity class];
 	}
 	else if (usePlayerProxy)
 	{
@@ -3639,7 +3639,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 				if ([se isStation])
 				{
 					// check if it is a proper rotating station (ie. roles contains the word "station")
-					if ([(StationEntity*)se isRotatingStation])
+					if ([(OOStationEntity*)se isRotatingStation])
 					{
 						double stationRoll = 0.0;
 						// check for station_roll override
@@ -3660,7 +3660,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 					{
 						[se setRoll: 0.0];
 					}
-					[(StationEntity *)se setPlanet:[self planet]];
+					[(OOStationEntity *)se setPlanet:[self planet]];
 				}
 				// stations used to have STATUS_ACTIVE, they're all STATUS_IN_FLIGHT now.
 				[se setStatus:STATUS_IN_FLIGHT];
@@ -3773,7 +3773,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	{
 		OOEntity* ent = [entities objectAtIndex:1];
 		if (ent->isStation)  // clear out queues
-			[(StationEntity *)ent clear];
+			[(OOStationEntity *)ent clear];
 		[self removeEntity:ent];
 	}
 	
@@ -6669,7 +6669,7 @@ static NSDictionary	*sCachedSystemData = nil;
 }
 
 
-- (NSArray *) commodityDataForEconomy:(OOEconomyID) economy andStation:(StationEntity *)some_station andRandomFactor:(int) random_factor
+- (NSArray *) commodityDataForEconomy:(OOEconomyID) economy andStation:(OOStationEntity *)some_station andRandomFactor:(int) random_factor
 {
 	NSString		*marketName = nil;
 	NSArray			*market = nil;
@@ -9277,7 +9277,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		Vector launchPos = vector_add(spawnPos, OOVectorRandomRadial(SCANNER_MAX_RANGE));
 		
-		OOShipEntity *hermit = (StationEntity *)[self newShipWithRole:@"rockhermit"];   // retain count = 1
+		OOShipEntity *hermit = (OOStationEntity *)[self newShipWithRole:@"rockhermit"];   // retain count = 1
 		if (hermit != nil)
 		{
 			[hermit setPosition:launchPos];

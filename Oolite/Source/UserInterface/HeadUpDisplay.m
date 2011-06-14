@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "OOQuiriumCascadeEntity.h"
 #import "Universe.h"
 #import "OOTrumble.h"
@@ -1164,7 +1164,7 @@ static BOOL hostiles;
 	
 	OOSunEntity		*the_sun = [UNIVERSE sun];
 	OOPlanetEntity	*the_planet = [UNIVERSE planet];
-	StationEntity	*the_station = [UNIVERSE station];
+	OOStationEntity	*the_station = [UNIVERSE station];
 	OOEntity			*the_target = [player primaryTarget];
 	OOShipEntity		*beacon = [player nextBeacon];
 	OOEntityStatus	p_status = [player status];

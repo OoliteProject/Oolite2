@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 
 #import "Universe.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "MyOpenGLView.h"
 #import "OOShipRegistry.h"
 #import "OOShipClass.h"

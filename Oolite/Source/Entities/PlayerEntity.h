@@ -293,12 +293,12 @@ typedef enum
 	BOOL					pollControls;
 // ...end save screen   
 
-	StationEntity			*dockedStation;
+	OOStationEntity			*dockedStation;
 	
 /* Used by the DOCKING_CLEARANCE code to implement docking at non-main
  * stations. Could possibly overload use of 'dockedStation' instead
  * but that needs futher investigation to ensure it doesn't break anything. */
-	StationEntity			*targetDockStation; 
+	OOStationEntity			*targetDockStation; 
 	
 	HeadUpDisplay			*hud;
 	
@@ -559,15 +559,15 @@ typedef enum
 - (BOOL) atHyperspeed;
 
 - (void) setDockedAtMainStation;
-- (StationEntity *) dockedStation;
+- (OOStationEntity *) dockedStation;
 
-- (BOOL) engageAutopilotToStation:(StationEntity *)stationForDocking;
+- (BOOL) engageAutopilotToStation:(OOStationEntity *)stationForDocking;
 - (void) disengageAutopilot;
 
 - (void) resetAutopilotAI;
 
-- (void) setTargetDockStationTo:(StationEntity *) value;
-- (StationEntity *) getTargetDockStation;
+- (void) setTargetDockStationTo:(OOStationEntity *) value;
+- (OOStationEntity *) getTargetDockStation;
 
 - (HeadUpDisplay *) hud;
 - (BOOL) switchHudTo:(NSString *)hudFileName;

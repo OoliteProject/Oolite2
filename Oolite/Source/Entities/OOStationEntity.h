@@ -1,6 +1,6 @@
 /*
 
-StationEntity.h
+OOStationEntity.h
 
 ShipEntity subclass representing a space station or dockable ship.
 
@@ -44,7 +44,7 @@ typedef enum
 
 #define DOCKING_CLEARANCE_WINDOW		126.0
 
-@interface StationEntity: OOShipEntity
+@interface OOStationEntity: OOShipEntity
 {
 @private
 	NSMutableDictionary		*shipsOnApproach;

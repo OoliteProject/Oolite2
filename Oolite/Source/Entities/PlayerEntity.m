@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "PlayerEntitySound.h"
 #import "PlayerEntity+Serialization.h"
 
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "WormholeEntity.h"
@@ -1408,7 +1408,7 @@ static bool minShieldLevelPercentageInitialised = false;
 			}
 			[UNIVERSE setViewDirection:VIEW_FORWARD];
 			
-			[self enterDock:(StationEntity *)[self primaryTarget]];
+			[self enterDock:(OOStationEntity *)[self primaryTarget]];
 		}
 		else	// no target? target is not a station? game over!
 		{
@@ -1637,7 +1637,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (BOOL) engageAutopilotToStation:(StationEntity *)stationForDocking
+- (BOOL) engageAutopilotToStation:(OOStationEntity *)stationForDocking
 {
 	if (stationForDocking == nil)   return NO;
 	if ([self isDocked])  return NO;
@@ -1844,7 +1844,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[self setStatus:STATUS_IN_FLIGHT];
 
 		[self setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_NONE];
-		StationEntity *stationLaunchedFrom = [UNIVERSE nearestEntityMatchingPredicate:IsStationPredicate parameter:NULL relativeToEntity:self];
+		OOStationEntity *stationLaunchedFrom = [UNIVERSE nearestEntityMatchingPredicate:IsStationPredicate parameter:NULL relativeToEntity:self];
 		[self doScriptEvent:OOJSID("shipLaunchedFromStation") withArgument:stationLaunchedFrom];
 	}
 }
@@ -2255,19 +2255,19 @@ static bool minShieldLevelPercentageInitialised = false;
 	[self setStatus:STATUS_DOCKED];
 }
 
-- (StationEntity *) dockedStation
+- (OOStationEntity *) dockedStation
 {
 	return dockedStation;
 }
 
 
-- (void) setTargetDockStationTo:(StationEntity *) value
+- (void) setTargetDockStationTo:(OOStationEntity *) value
 {
 	targetDockStation = value;
 }
 
 
-- (StationEntity *) getTargetDockStation
+- (OOStationEntity *) getTargetDockStation
 {
 	return targetDockStation;
 }
@@ -3875,7 +3875,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) enterDock:(StationEntity *)station
+- (void) enterDock:(OOStationEntity *)station
 {
 	if ([self status] == STATUS_DEAD)  return;
 	
@@ -3988,7 +3988,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) leaveDock:(StationEntity *)station
+- (void) leaveDock:(OOStationEntity *)station
 {
 	if (station == nil)  return;
 	
@@ -6303,7 +6303,7 @@ static NSString *last_outfitting_key=nil;
 
 - (NSMutableArray *) localMarket
 {
-	StationEntity			*station = nil;
+	OOStationEntity			*station = nil;
 	NSMutableArray 			*localMarket = nil;
 	
 	if ([self isDocked])  station = dockedStation;
@@ -6328,7 +6328,7 @@ static NSString *last_outfitting_key=nil;
 	if ([UNIVERSE station] == nil)
 	{
 		unsigned i;
-		NSMutableArray *ourEconomy = [NSMutableArray arrayWithArray:[UNIVERSE commodityDataForEconomy:0 andStation:(StationEntity*)nil andRandomFactor:0]];
+		NSMutableArray *ourEconomy = [NSMutableArray arrayWithArray:[UNIVERSE commodityDataForEconomy:0 andStation:(OOStationEntity*)nil andRandomFactor:0]];
 		for (i = 0; i < [ourEconomy count]; i++)
 		{
 			NSMutableArray *commodityInfo = [NSMutableArray arrayWithArray:[ourEconomy objectAtIndex:i]];

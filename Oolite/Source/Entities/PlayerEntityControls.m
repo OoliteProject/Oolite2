@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "PlayerEntityStickMapper.h"
 
 #import "ShipEntityAI.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "Universe.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
@@ -1105,9 +1105,9 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 					if (!docking_clearance_request_key_pressed)
 					{
 						OOEntity *primeTarget = [self primaryTarget];
-						if (primeTarget != nil && [primeTarget isStation] && [primeTarget isKindOfClass:[StationEntity class]])
+						if (primeTarget != nil && [primeTarget isStation] && [primeTarget isKindOfClass:[OOStationEntity class]])
 						{
-							NSString *stationDockingClearanceStatus = [(StationEntity*)primeTarget acceptDockingClearanceRequestFrom:self];
+							NSString *stationDockingClearanceStatus = [(OOStationEntity*)primeTarget acceptDockingClearanceRequestFrom:self];
 							if (stationDockingClearanceStatus != nil)
 							{
 								[self doScriptEvent:OOJSID("playerRequestedDockingClearance") withArgument:stationDockingClearanceStatus];
@@ -3087,7 +3087,7 @@ static BOOL toggling_music;
 
 - (void) handleUndockControl
 {
-	// FIXME: should this not be in leaveDock:? (Note: leaveDock: is also called from script method launchFromStation and -[StationEntity becomeExplosion]) -- Ahruman 20080308
+	// FIXME: should this not be in leaveDock:? (Note: leaveDock: is also called from script method launchFromStation and -[OOStationEntity becomeExplosion]) -- Ahruman 20080308
 	[UNIVERSE setUpUniverseFromStation]; // player pre-launch
 	if (!dockedStation)  dockedStation = [UNIVERSE station];
 	
@@ -3282,7 +3282,7 @@ static BOOL toggling_music;
 
 	// Check if current target is dockable
 	target = [self primaryTarget];
-	isOkayToUseAutopilot = target && [target isStation] && [target isKindOfClass:[StationEntity class]];
+	isOkayToUseAutopilot = target && [target isStation] && [target isKindOfClass:[OOStationEntity class]];
 	// Otherwise check for nearby dockables
 	if( !isOkayToUseAutopilot )
 	{
@@ -3293,7 +3293,7 @@ static BOOL toggling_music;
 		
 		for( i = 0; i < uni->n_entities && nStations < 2; i++ )
 		{
-			if( entities[i]->isStation && [entities[i] isKindOfClass:[StationEntity class]] &&
+			if( entities[i]->isStation && [entities[i] isKindOfClass:[OOStationEntity class]] &&
 					entities[i]->zero_distance <= SCANNER_MAX_RANGE2 )
 			{
 				nStations++;
@@ -3345,7 +3345,7 @@ static BOOL toggling_music;
 	}
 
 	// We found a dockable, check whether we can dock with it
-	StationEntity *ts = (StationEntity *)target;
+	OOStationEntity *ts = (OOStationEntity *)target;
 
 	// If station is not transmitting docking instructions, we cannot use autopilot.
 	if (![ts allowsAutoDocking])

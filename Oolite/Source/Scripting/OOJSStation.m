@@ -27,13 +27,13 @@ MA 02110-1301, USA.
 #import "OOJSPlayer.h"
 #import "OOJavaScriptEngine.h"
 
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "GameController.h"
 
 
 static JSObject		*sStationPrototype;
 
-static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, StationEntity **outEntity);
+static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, OOStationEntity **outEntity);
 
 
 static JSBool StationGetProperty(JSContext *context, JSObject *this, jsid propID, jsval *value);
@@ -128,7 +128,7 @@ void InitOOJSStation(JSContext *context, JSObject *global)
 }
 
 
-static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, StationEntity **outEntity)
+static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, OOStationEntity **outEntity)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -141,16 +141,16 @@ static BOOL JSStationGetStationEntity(JSContext *context, JSObject *stationObj, 
 	result = OOJSEntityGetEntity(context, stationObj, &entity);
 	if (!result)  return NO;
 	
-	if (![entity isKindOfClass:[StationEntity class]])  return NO;
+	if (![entity isKindOfClass:[OOStationEntity class]])  return NO;
 	
-	*outEntity = (StationEntity *)entity;
+	*outEntity = (OOStationEntity *)entity;
 	return YES;
 	
 	OOJS_PROFILE_EXIT
 }
 
 
-@implementation StationEntity (OOJavaScriptExtensions)
+@implementation OOStationEntity (OOJavaScriptExtensions)
 
 - (void)getJSClass:(JSClass **)outClass andPrototype:(JSObject **)outPrototype
 {
@@ -173,7 +173,7 @@ static JSBool StationGetProperty(JSContext *context, JSObject *this, jsid propID
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity				*entity = nil;
+	OOStationEntity				*entity = nil;
 	
 	if (!JSStationGetStationEntity(context, this, &entity))  return NO;
 	if (entity == nil)  { *value = JSVAL_VOID; return YES; }
@@ -242,7 +242,7 @@ static JSBool StationSetProperty(JSContext *context, JSObject *this, jsid propID
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity				*entity = nil;
+	OOStationEntity				*entity = nil;
 	JSBool						bValue;
 	int32						iValue;
 	
@@ -330,7 +330,7 @@ static JSBool StationDockPlayer(JSContext *context, uintN argc, jsval *vp)
 	
 	if (EXPECT(![PLAYER isDocked]))
 	{
-		StationEntity *stationForDockingPlayer = nil;
+		OOStationEntity *stationForDockingPlayer = nil;
 		JSStationGetStationEntity(context, OOJS_THIS, &stationForDockingPlayer); 
 		[PLAYER setDockingClearanceStatus:DOCKING_CLEARANCE_STATUS_GRANTED];
 		[PLAYER safeAllMissiles];
@@ -349,7 +349,7 @@ static JSBool StationLaunchShipWithRole(JSContext *context, uintN argc, jsval *v
 	OOJS_NATIVE_ENTER(context)
 	
 	NSString		*shipRole = nil;
-	StationEntity	*station = nil;
+	OOStationEntity	*station = nil;
 	OOShipEntity		*result = nil;
 	JSBool			abortAllDockings = NO;
 	
@@ -376,7 +376,7 @@ static JSBool StationLaunchDefenseShip(JSContext *context, uintN argc, jsval *vp
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchDefenseShip]);
@@ -388,7 +388,7 @@ static JSBool StationLaunchScavenger(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchScavenger]);
@@ -400,7 +400,7 @@ static JSBool StationLaunchMiner(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchMiner]);
@@ -412,7 +412,7 @@ static JSBool StationLaunchPirateShip(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchPirateShip]);
@@ -424,7 +424,7 @@ static JSBool StationLaunchShuttle(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchShuttle]);
@@ -436,7 +436,7 @@ static JSBool StationLaunchPatrol(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchPatrol]);
@@ -448,7 +448,7 @@ static JSBool StationLaunchPolice(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	StationEntity *station = nil;
+	OOStationEntity *station = nil;
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op
 	
 	OOJS_RETURN_OBJECT([station launchPolice]);

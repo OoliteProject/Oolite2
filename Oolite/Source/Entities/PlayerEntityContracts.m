@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #import "AI.h"
 #import "OOColor.h"
 #import "OOCharacter.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "GuiDisplayGen.h"
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
@@ -574,7 +574,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	double			clockTime = [self clockTime];
 	
 	// set up initial markets if there are none
-	StationEntity* the_station = [UNIVERSE station];
+	OOStationEntity* the_station = [UNIVERSE station];
 	if (![the_station localPassengers])
 		[the_station setLocalPassengers:[NSMutableArray arrayWithArray:[UNIVERSE passengersForLocalSystemAtTime:clockTime]]];
 	if (![the_station localContracts])
@@ -1279,7 +1279,7 @@ static NSMutableDictionary* currentShipyard = nil;
 	unsigned		i;
 	
 	// set up initial market if there is none
-	StationEntity	*the_station;
+	OOStationEntity	*the_station;
 	OOTechLevelID	station_tl;
 	
 	if (dockedStation)

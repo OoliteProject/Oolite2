@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "Universe.h"
 #import "AI.h"
 
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "WormholeEntity.h"
@@ -662,7 +662,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	//
 	// we don't use "checkScanner" because we must rely on finding a present station.
 	//
-	StationEntity	*station =  nil;
+	OOStationEntity	*station =  nil;
 	station = [UNIVERSE nearestShipMatchingPredicate:IsStationPredicate
 											   parameter:nil
 										relativeToEntity:self];
@@ -1534,7 +1534,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	if (distance2(position, coordinates) < 1000000 || patrol_counter == 0)
 	{
 		OOEntity *sun = [UNIVERSE sun];
-		StationEntity *station = (StationEntity *)[[self group] leader];
+		OOStationEntity *station = (OOStationEntity *)[[self group] leader];
 		if(!station || ![station isStation]) station = [UNIVERSE station];
 		
 		if (sun == nil || station == nil)  return;
@@ -1655,7 +1655,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	// Set a report time in the patrolled station to delay a new launch.
 	OOShipEntity *the_station = [[self group] leader];
 	if(!the_station || ![the_station isStation]) the_station = [UNIVERSE station];
-	[(StationEntity*)the_station acceptPatrolReportFrom:self];
+	[(OOStationEntity*)the_station acceptPatrolReportFrom:self];
 }
 
 
@@ -2018,7 +2018,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 		then use the nearest it can find (which may be a rock hermit).
 	*/
 	
-	StationEntity *station = [self targetStation];
+	OOStationEntity *station = [self targetStation];
 	if (station == nil)
 	{
 		station = [UNIVERSE nearestShipMatchingPredicate:IsStationPredicate
@@ -2072,7 +2072,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 		destination = [dockingInstructions oo_vectorForKey:@"destination"];
 		desired_speed = fminf([dockingInstructions oo_floatForKey:@"speed"], maxFlightSpeed);
 		desired_range = [dockingInstructions oo_floatForKey:@"range"];
-		StationEntity *targetStation = [[dockingInstructions objectForKey:@"station"] weakRefUnderlyingObject];
+		OOStationEntity *targetStation = [[dockingInstructions objectForKey:@"station"] weakRefUnderlyingObject];
 		if (targetStation != nil)  [self setTargetStationAndTarget:targetStation];
 		else  [self removeTarget:[self primaryTarget]];
 		docking_match_rotation = [dockingInstructions oo_boolForKey:@"match_rotation"];
@@ -2450,7 +2450,7 @@ OOINLINE void ScanForNearestNonDerelictNegated(OOShipEntity *self, EntityFilterP
 @end
 
 
-@implementation StationEntity (OOAIPrivate)
+@implementation OOStationEntity (OOAIPrivate)
 
 - (void) acceptDistressMessageFrom:(OOShipEntity *)other
 {

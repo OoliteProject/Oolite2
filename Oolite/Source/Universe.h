@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #endif
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
-		OOEntity, OOShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
+		OOEntity, OOShipEntity, OOStationEntity, OOPlanetEntity, OOSunEntity,
 		PlayerEntity, OORoleSet, OOColor, OOShipClass;
 
 
@@ -253,7 +253,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	
 	OOShipEntity				*demo_ship;
 	
-	StationEntity			*cachedStation;
+	OOStationEntity			*cachedStation;
 	OOPlanetEntity			*cachedPlanet;
 	OOSunEntity				*cachedSun;
 	NSMutableArray			*allPlanets;
@@ -363,7 +363,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (void) selectIntro2Previous;
 - (void) selectIntro2Next;
 
-- (StationEntity *) station;
+- (OOStationEntity *) station;
 - (OOPlanetEntity *) planet;
 - (OOSunEntity *) sun;
 - (NSArray *) planets;	// Note: does not include sun.
@@ -371,7 +371,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 // Turn main station into just another station, for blowUpStation.
 - (void) unMagicMainStation;
 // find a valid station in interstellar space
-- (StationEntity *) stationFriendlyTo:(OOShipEntity *) ship;
+- (OOStationEntity *) stationFriendlyTo:(OOShipEntity *) ship;
 
 - (void) resetBeacons;
 - (OOShipEntity *) firstBeacon;
@@ -586,7 +586,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (NSArray *) commodityData;
 
 - (BOOL) generateEconomicDataWithEconomy:(OOEconomyID) economy andRandomFactor:(int) random_factor;
-- (NSArray *) commodityDataForEconomy:(OOEconomyID) economy andStation:(StationEntity *)some_station andRandomFactor:(int) random_factor;
+- (NSArray *) commodityDataForEconomy:(OOEconomyID) economy andStation:(OOStationEntity *)some_station andRandomFactor:(int) random_factor;
 
 - (NSString *) timeDescription:(OOTimeDelta) interval;
 - (NSString *) shortTimeDescription:(OOTimeDelta) interval;

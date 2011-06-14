@@ -57,7 +57,7 @@ MA 02110-1301, USA.
 #import "OOGeometryGLHelpers.h"
 
 #import "OOParticleSystem.h"
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "PlayerEntity.h"
@@ -680,7 +680,7 @@ static OOShipEntity *doOctreesCollide(OOShipEntity *prime, OOShipEntity *other);
 	
 	if (!asTurret && [self isStation] && [subentDict oo_boolForKey:@"is_dock"])
 	{
-		[(StationEntity *)self setDockingPortModel:subentity :subPosition :subOrientation];
+		[(OOStationEntity *)self setDockingPortModel:subentity :subPosition :subOrientation];
 	}
 	
 	[subentity setPosition:subPosition];
@@ -1835,7 +1835,7 @@ OOShipEntity* doOctreesCollide(OOShipEntity* prime, OOShipEntity* other)
 	{
 		if ([UNIVERSE gameTime] > launch_time + launch_delay)		// move for while before thinking
 		{
-			StationEntity *stationLaunchedFrom = [UNIVERSE nearestEntityMatchingPredicate:IsStationPredicate parameter:NULL relativeToEntity:self];
+			OOStationEntity *stationLaunchedFrom = [UNIVERSE nearestEntityMatchingPredicate:IsStationPredicate parameter:NULL relativeToEntity:self];
 			[self setStatus:STATUS_IN_FLIGHT];
 			[self doScriptEvent:OOJSID("shipLaunchedFromStation") withArgument:stationLaunchedFrom];
 			[shipAI reactToMessage:@"LAUNCHED OKAY" context:@"launched"];
@@ -5077,7 +5077,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	}
 	
 	// check station
-	StationEntity	*the_station = [UNIVERSE station];
+	OOStationEntity	*the_station = [UNIVERSE station];
 	if (the_station)
 	{
 		d2 = magnitude2(vector_subtract([the_station position], [self position]));
@@ -6542,9 +6542,9 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 }
 
 
-- (StationEntity *) targetStation
+- (OOStationEntity *) targetStation
 {
-	StationEntity *result = [_targetStation weakRefUnderlyingObject];
+	OOStationEntity *result = [_targetStation weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_targetStation);
 	return result;
 }
@@ -6557,7 +6557,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 }
 
 
-- (void) setTargetStationAndTarget:(StationEntity *)target
+- (void) setTargetStationAndTarget:(OOStationEntity *)target
 {
 	[self addTarget:target];
 	[self setTargetStation:target];
@@ -6566,7 +6566,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 
 - (OOShipEntity *) thankedShip
 {
-	StationEntity *result = [_thankedShip weakRefUnderlyingObject];
+	OOStationEntity *result = [_thankedShip weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_thankedShip);
 	return result;
 }
@@ -7302,7 +7302,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 	if (we_are_docking && docking_match_rotation && (d_forward > max_cos))
 	{
 		/* we are docking and need to consider the rotation/orientation of the docking port */
-		StationEntity *stationForDocking = [self targetStation];
+		OOStationEntity *stationForDocking = [self targetStation];
 		
 		if (stationForDocking != nil)
 		{
@@ -8994,7 +8994,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 }
 
 
-- (void) enterDock:(StationEntity *)station
+- (void) enterDock:(OOStationEntity *)station
 {
 	// throw these away now we're docked...
 	if (dockingInstructions != nil)
@@ -9011,7 +9011,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 }
 
 
-- (void) leaveDock:(StationEntity *)station
+- (void) leaveDock:(OOStationEntity *)station
 {
 	// This code is never used. Currently npc ships are only launched from the stations launch queue.
 	if (station == nil)  return;
@@ -9408,7 +9408,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 		// act individually now!
 		if ([escort group] == escortGroup)  [escort setGroup:nil];
 		if ([escort owner] == self)  [escort setOwner:nil];
-		if ([target isStation]) [escort setTargetStation:(StationEntity *)target];
+		if ([target isStation]) [escort setTargetStation:(OOStationEntity *)target];
 		
 		[ai setStateMachine:@"dockingAI.plist" afterDelay:delay];
 		[ai setState:@"ABORT" afterDelay:delay + 0.25];
@@ -9427,7 +9427,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 	OOEntity		*mother = [[self group] leader];
 	if ([mother isStation])
 	{
-		[self setTargetStationAndTarget:(StationEntity *)mother];
+		[self setTargetStationAndTarget:(OOStationEntity *)mother];
 		return;	// head for mother!
 	}
 	
@@ -9441,11 +9441,11 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 		if (uni_entities[i]->isStation)
 			my_entities[station_count++] = [uni_entities[i] retain];		//	retained
 	//
-	StationEntity *thing = nil, *station = nil;
+	OOStationEntity *thing = nil, *station = nil;
 	double range2, nearest2 = SCANNER_MAX_RANGE2 * 1000000.0; // 1000x scanner range (25600 km), squared.
 	for (i = 0; i < station_count; i++)
 	{
-		thing = (StationEntity *)my_entities[i];
+		thing = (OOStationEntity *)my_entities[i];
 		range2 = distance2(position, thing->position);
 		if (range2 < nearest2 && (includeHostiles || ![thing isHostileTo:self]))
 		{
@@ -9486,7 +9486,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 // Exposed to AI
 - (void) setTargetToSystemStation
 {
-	StationEntity *systemStation = [UNIVERSE station];
+	OOStationEntity *systemStation = [UNIVERSE station];
 	
 	if (![systemStation isStation])
 	{
@@ -9899,7 +9899,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	}
 
 	// Get the station to launch a pilot boat to bring a pilot out to the hulk (use a viper for now)
-	StationEntity *station = (StationEntity *)[self primaryTarget];
+	OOStationEntity *station = (OOStationEntity *)[self primaryTarget];
 	OOLog(@"claimAsSalvage.requestingPilot", @"claimAsSalvage asking station to launch a pilot boat");
 	[station launchShipWithRole:@"pilot"];
 	[self setReportAIMessages:YES];

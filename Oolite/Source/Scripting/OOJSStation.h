@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import <Foundation/Foundation.h>
 #include <jsapi.h>
 
-@class StationEntity;
+@class OOStationEntity;
 
 
 void InitOOJSStation(JSContext *context, JSObject *global);

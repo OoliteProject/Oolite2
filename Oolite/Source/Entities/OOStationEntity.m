@@ -1,6 +1,6 @@
 /*
 
-StationEntity.m
+OOStationEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "StationEntity.h"
+#import "OOStationEntity.h"
 #import "ShipEntityAI.h"
 #import "OOStringParsing.h"
 
@@ -41,12 +41,10 @@ MA 02110-1301, USA.
 #import "OODebugFlags.h"
 #import "OOGeometryGLHelpers.h"
 
-#define kOOLogUnconvertedNSLog @"unclassified.StationEntity"
 
+static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation);
 
-static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation);
-
-@interface StationEntity (private)
+@interface OOStationEntity (private)
 
 - (void)clearIdLocks:(OOShipEntity*)ship;
 - (void) pullInShipIfPermitted:(OOShipEntity *)ship;
@@ -54,14 +52,14 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 @end
 
 #ifndef NDEBUG
-@interface StationEntity (mwDebug)
+@interface OOStationEntity (mwDebug)
 - (NSArray *) dbgGetShipsOnApproach;
 - (NSArray *) dbgGetIdLocks;
 - (NSString *) dbgDumpIdLocks;
 @end
 #endif
 
-@implementation StationEntity
+@implementation OOStationEntity
 
 - (OOTechLevelID) equivalentTechLevel
 {
@@ -318,7 +316,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	[shipAI message:@"DOCKING_COMPLETE"];
 }
 
-static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation)
+static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords, float speed, float range, NSString* ai_message, NSString* comms_message, BOOL match_rotation)
 {
 	NSMutableDictionary *acc = [NSMutableDictionary dictionaryWithCapacity:8];
 	[acc setObject:[NSString stringWithFormat:@"%.2f %.2f %.2f", coords.x, coords.y, coords.z] forKey:@"destination"];
@@ -2346,7 +2344,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 #ifndef NDEBUG
 
-@implementation StationEntity (OOWireframeDockingBox)
+@implementation OOStationEntity (OOWireframeDockingBox)
 
 - (void)drawEntity:(BOOL)immediate :(BOOL)translucent
 {

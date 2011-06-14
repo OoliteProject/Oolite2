@@ -1,6 +1,6 @@
 /*
 
-ShipEntity.m
+OOShipEntity.m
 
 
 Oolite
@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "ShipEntityAI.h"
 #import "ShipEntityScriptMethods.h"
 #import "OOShipRegistry.h"
@@ -88,9 +88,6 @@ MA 02110-1301, USA.
 #import "OOJSEngineTimeManagement.h"
 
 
-#define kOOLogUnconvertedNSLog @"unclassified.ShipEntity"
-
-
 extern NSString * const kOOLogSyntaxAddShips;
 static NSString * const kOOLogEntityBehaviourChanged	= @"entity.behaviour.changed";
 
@@ -122,12 +119,12 @@ static GLfloat calcFuelChargeRate (GLfloat myMass)
 #endif
 
 
-@interface ShipEntity (Private)
+@interface OOShipEntity (Private)
 
 - (void) drawSubEntity:(BOOL) immediate :(BOOL) translucent;
 
-- (void)subEntityDied:(ShipEntity *)sub;
-- (void)subEntityReallyDied:(ShipEntity *)sub;
+- (void)subEntityDied:(OOShipEntity *)sub;
+- (void)subEntityReallyDied:(OOShipEntity *)sub;
 
 #ifndef NDEBUG
 - (void) drawDebugStuff;
@@ -148,21 +145,21 @@ static GLfloat calcFuelChargeRate (GLfloat myMass)
 - (Vector) coordinatesForEscortPosition:(unsigned)idx;
 
 - (void) addSubentityToCollisionRadius:(OOEntity<OOSubEntity> *) subent;
-- (ShipEntity *) launchPodWithCrew:(NSArray *)podCrew;
+- (OOShipEntity *) launchPodWithCrew:(NSArray *)podCrew;
 
 - (BOOL) firePlasmaShotAtOffset:(double)offset speed:(double)speed color:(OOColor *)color direction:(OOViewID)direction;
 
 // equipment
 - (OOEquipmentType *) generateMissileEquipmentTypeFrom:(NSString *)role;
 
-- (void) setShipHitByLaser:(ShipEntity *)ship;
+- (void) setShipHitByLaser:(OOShipEntity *)ship;
 
 - (float) density;
 - (void) calculateMass;
 
 - (void) setLastEscortTarget:(OOEntity *)target;
 
-- (void) setProximateShip:(ShipEntity*) other;
+- (void) setProximateShip:(OOShipEntity*) other;
 
 - (void) avoidCollision;
 - (void) resumePostProximityAlert;
@@ -170,10 +167,10 @@ static GLfloat calcFuelChargeRate (GLfloat myMass)
 @end
 
 
-static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
+static OOShipEntity *doOctreesCollide(OOShipEntity *prime, OOShipEntity *other);
 
 
-@implementation ShipEntity
+@implementation OOShipEntity
 
 - (id) init
 {
@@ -564,7 +561,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 {	
 	NSMutableString		*result = [NSMutableString stringWithCapacity:4];
 	NSEnumerator		*subEnum = nil;
-	ShipEntity			*se = nil;
+	OOShipEntity			*se = nil;
 	NSUInteger			diff,i = 0;
 	
 	for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
@@ -586,11 +583,11 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	int					i,idx, start = [subEnts count] - 1;
 	int					strMaxIdx = [string length] - 1;
 		
-	ShipEntity			*se = nil;
+	OOShipEntity			*se = nil;
 	
 	for (i = start; i >= 0; i--)
 	{
-		se = (ShipEntity *)[subEnts objectAtIndex:i];
+		se = (OOShipEntity *)[subEnts objectAtIndex:i];
 		idx = [se subIdx]; // should be identical to i, but better safe than sorry...
 		if (idx <= strMaxIdx && [[string substringWithRange:NSMakeRange(idx, 1)] isEqualToString:@"0"])
 		{
@@ -667,7 +664,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 
 - (BOOL) setUpOneStandardSubentity:(NSDictionary *) subentDict asTurret:(BOOL)asTurret
 {
-	ShipEntity			*subentity = nil;
+	OOShipEntity			*subentity = nil;
 	NSString			*subentKey = nil;
 	Vector				subPosition;
 	Quaternion			subOrientation;
@@ -926,9 +923,9 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (ShipEntity *) subEntityTakingDamage
+- (OOShipEntity *) subEntityTakingDamage
 {
-	ShipEntity *result = [_subEntityTakingDamage weakRefUnderlyingObject];
+	OOShipEntity *result = [_subEntityTakingDamage weakRefUnderlyingObject];
 	
 #ifndef NDEBUG
 	// Sanity check - there have been problems here, see fireLaserShotInDirection:
@@ -943,7 +940,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (void) setSubEntityTakingDamage:(ShipEntity *)sub
+- (void) setSubEntityTakingDamage:(OOShipEntity *)sub
 {
 #ifndef NDEBUG
 	// Sanity checks: sub must be a ship subentity of self, or nil.
@@ -1019,10 +1016,10 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (GLfloat) doesHitLine:(Vector)v0: (Vector)v1 :(ShipEntity **)hitEntity
+- (GLfloat) doesHitLine:(Vector)v0: (Vector)v1 :(OOShipEntity **)hitEntity
 {
 	if (hitEntity)
-		hitEntity[0] = (ShipEntity*)nil;
+		hitEntity[0] = (OOShipEntity*)nil;
 	Vector u0 = vector_between(position, v0);	// relative to origin of model / octree
 	Vector u1 = vector_between(position, v1);
 	Vector w0 = make_vector(dot_product(u0, v_right), dot_product(u0, v_up), dot_product(u0, v_forward));	// in ijk vectors
@@ -1035,7 +1032,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	}
 	
 	NSEnumerator	*subEnum = nil;
-	ShipEntity		*se = nil;
+	OOShipEntity		*se = nil;
 	for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
 	{
 		Vector p0 = [se absolutePositionForSubentity];
@@ -1160,13 +1157,13 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 }
 
 
-- (ShipEntity *) nextBeacon
+- (OOShipEntity *) nextBeacon
 {
 	return [_nextBeacon weakRefUnderlyingObject];
 }
 
 
-- (void) setNextBeacon:(ShipEntity *)beaconShip
+- (void) setNextBeacon:(OOShipEntity *)beaconShip
 {
 	if (beaconShip != [self nextBeacon])
 	{
@@ -1270,7 +1267,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	{
 		Vector ex_pos = [self coordinatesForEscortPosition:[escortGroup count] - 1]; // this adds ship 1 on position 1 etc. 
 		
-		ShipEntity *escorter = nil;
+		OOShipEntity *escorter = nil;
 		
 		if (escortShipKey)
 		{
@@ -1409,7 +1406,7 @@ static ShipEntity *doOctreesCollide(ShipEntity *prime, ShipEntity *other);
 	return YES;
 }
 
-ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
+OOShipEntity* doOctreesCollide(OOShipEntity* prime, OOShipEntity* other)
 {
 	// octree check
 	Octree		*prime_octree = prime->octree;
@@ -1443,7 +1440,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		for (i = 0; i < n_subs; i++)
 		{
 			OOEntity* se = [prime_subs objectAtIndex:i];
-			if ([se isShip] && [se canCollide] && doOctreesCollide((ShipEntity*)se, other))
+			if ([se isShip] && [se canCollide] && doOctreesCollide((OOShipEntity*)se, other))
 				return other;
 		}
 	}
@@ -1457,8 +1454,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		for (i = 0; i < n_subs; i++)
 		{
 			OOEntity* se = [other_subs objectAtIndex:i];
-			if ([se isShip] && [se canCollide] && doOctreesCollide(prime, (ShipEntity*)se))
-				return (ShipEntity*)se;
+			if ([se isShip] && [se canCollide] && doOctreesCollide(prime, (OOShipEntity*)se))
+				return (OOShipEntity*)se;
 		}
 	}
 	
@@ -1477,8 +1474,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				for (j = 0; j <  n_psubs; j++)
 				{
 					OOEntity* pe = [prime_subs objectAtIndex:j];
-					if ([pe isShip] && [pe canCollide] && doOctreesCollide((ShipEntity*)pe, (ShipEntity*)oe))
-						return (ShipEntity*)oe;
+					if ([pe isShip] && [pe canCollide] && doOctreesCollide((OOShipEntity*)pe, (OOShipEntity*)oe))
+						return (OOShipEntity*)oe;
 				}
 			}
 		}
@@ -1494,8 +1491,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (other == nil)  return NO;
 	if ([collidingEntities containsObject:other])  return NO;	// we know about this already!
 	
-	ShipEntity *otherShip = nil;
-	if ([other isShip])  otherShip = (ShipEntity *)other;
+	OOShipEntity *otherShip = nil;
+	if ([other isShip])  otherShip = (OOShipEntity *)other;
 	
 	if ([self canScoop:otherShip])  return YES;	// quick test - could this improve scooping for small ships? I think so!
 	
@@ -1572,7 +1569,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (!subent)  return;
 	
 	double distance = magnitude([subent position]) + [subent findCollisionRadius];
-	if ([subent isKindOfClass:[ShipEntity class]])	// Solid subentity
+	if ([subent isKindOfClass:[OOShipEntity class]])	// Solid subentity
 	{
 		if (distance > collision_radius)
 		{
@@ -1588,9 +1585,9 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (ShipEntity *) launchPodWithCrew:(NSArray *)podCrew
+- (OOShipEntity *) launchPodWithCrew:(NSArray *)podCrew
 {
-	ShipEntity *pod = nil;
+	OOShipEntity *pod = nil;
 	
 	pod = [UNIVERSE newShipWithRole:[[self shipInfoDictionary] oo_stringForKey:@"escape_pod_model" defaultValue:kOODefaultEscapePodRole]];
 	if (!pod)
@@ -1651,7 +1648,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (scanClass == CLASS_POLICE)
 	{
 		bounty = 0;
-		ShipEntity *target = [self primaryTarget];
+		OOShipEntity *target = [self primaryTarget];
 		if (target != nil && [target scanClass] == CLASS_POLICE)
 		{
 			[self noteLostTarget];
@@ -1665,7 +1662,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		NSString *other_key = nil;
 		foreachkey (other_key, closeContactsInfo)
 		{
-			ShipEntity* other = [UNIVERSE entityForUniversalID:[other_key intValue]];
+			OOShipEntity* other = [UNIVERSE entityForUniversalID:[other_key intValue]];
 			if ([other isShip])
 			{
 				if (distance2(position, other->position) > collision_radius * collision_radius)	// moved beyond our sphere!
@@ -1859,7 +1856,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				}
 			}
 			
-			ShipEntity *se = nil;
+			OOShipEntity *se = nil;
 			foreach (se, [self subEntities])
 			{
 				[se update:delta_t];
@@ -1893,7 +1890,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		ShipEntity *target = [self primaryTarget];
+		OOShipEntity *target = [self primaryTarget];
 		
 		if (target == nil || [target scanClass] == CLASS_NO_DRAW || ![target isShip] || [target isCloaked])
 		{
@@ -2019,7 +2016,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		[self refreshEscortPositions];
 		if ([self hasEscorts])
 		{
-			ShipEntity	*escort = nil;
+			OOShipEntity	*escort = nil;
 			unsigned	i = 0;
 			// Note: works on escortArray rather than escortEnumerator because escorts may be mutated.
 			foreach(escort, [self escortArray])
@@ -2027,7 +2024,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				[escort setEscortDestination:[self coordinatesForEscortPosition:i++]];
 			}
 
-			ShipEntity *leader = [[self escortGroup] leader];
+			OOShipEntity *leader = [[self escortGroup] leader];
 			if (leader != nil && ([leader scanClass] != [self scanClass])) {
 				OOLog(@"ship.sanityCheck.failed", @"Ship %@ escorting %@ with wrong scanclass!", self, leader);
 				[[self escortGroup] removeShip:self];
@@ -2052,7 +2049,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	totalBoundingBox = boundingBox;
 	
 	// update subentities
-	ShipEntity *se = nil;
+	OOShipEntity *se = nil;
 	foreach (se, [self subEntities])
 	{
 		[se update:delta_t];
@@ -2070,11 +2067,11 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 {
 	OOEntity				*source = nil;
 	
-	if ([other isKindOfClass:[ShipEntity class]])
+	if ([other isKindOfClass:[OOShipEntity class]])
 	{
 		source = other;
 		
-		ShipEntity *hunter = (ShipEntity *)other;
+		OOShipEntity *hunter = (OOShipEntity *)other;
 		//if we are in the same group, then we have to be careful about how we handle things
 		if ([self isPolice] && [hunter isPolice]) 
 		{
@@ -2094,7 +2091,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				return;
 			}
 			
-			ShipEntity *groupLeader = [group leader];
+			OOShipEntity *groupLeader = [group leader];
 			if (hunter == groupLeader)
 			{
 				//oops we were attacked by our leader, desert him
@@ -2116,7 +2113,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 		source = from;
 	}	
 	[self doScriptEvent:OOJSID("shipBeingAttacked") withArgument:source andReactToAIMessage:@"ATTACKED"];
-	if ([source isShip]) [(ShipEntity *)source doScriptEvent:OOJSID("shipAttackedOther") withArgument:self];
+	if ([source isShip]) [(OOShipEntity *)source doScriptEvent:OOJSID("shipAttackedOther") withArgument:self];
 }
 
 
@@ -2160,7 +2157,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (BOOL) hasPrimaryWeapon:(OOWeaponType)weaponType
 {
 	NSEnumerator				*subEntEnum = nil;
-	ShipEntity					*subEntity = nil;
+	OOShipEntity					*subEntity = nil;
 	
 	if (forward_weapon_type == weaponType || aft_weapon_type == weaponType)  return YES;
 	
@@ -2273,7 +2270,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			if (weapon_type == WEAPON_NONE)
 			{
 				NSEnumerator	*subEntEnum = [self shipSubEntityEnumerator];
-				ShipEntity		*subEntity = nil;
+				OOShipEntity		*subEntity = nil;
 				while (weapon_type == WEAPON_NONE && (subEntity = [subEntEnum nextObject]))
 				{
 					weapon_type = subEntity->forward_weapon_type;
@@ -2576,7 +2573,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 {
 	NSString			*eqRole = nil;
 	NSString			*shipKey = nil;
-	ShipEntity			*missile = nil;
+	OOShipEntity			*missile = nil;
 	OOEquipmentType		*missileType = nil;
 	BOOL				isRandomMissile = [role isEqualToString:@"missile"];
 	
@@ -2942,7 +2939,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (void) behaviour_tractored:(double) delta_t
 {
 	desired_range = collision_radius * 2.0;
-	ShipEntity* hauler = (ShipEntity*)[self owner];
+	OOShipEntity* hauler = (OOShipEntity*)[self owner];
 	if ((hauler)&&([hauler isShip]))
 	{
 		destination = [hauler absoluteTractorPosition];
@@ -3021,7 +3018,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (ShipEntity *) proximateShip
+- (OOShipEntity *) proximateShip
 {
 	id result = [_proximateShip weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_proximateShip);
@@ -3029,7 +3026,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 }
 
 
-- (void) setProximateShip:(ShipEntity *)other
+- (void) setProximateShip:(OOShipEntity *)other
 {
 	DESTROY(_proximateShip);
 	_proximateShip = [other weakRetain];
@@ -3038,7 +3035,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 
 - (void) avoidCollisionIfNecessary
 {
-	ShipEntity *proximateShip = [self proximateShip];
+	OOShipEntity *proximateShip = [self proximateShip];
 	if (proximateShip != nil && proximateShip != [self primaryTarget])
 	{
 		[self avoidCollision];
@@ -3079,7 +3076,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	else
 	{
 		// = BEHAVIOUR_COLLECT_TARGET
-		ShipEntity*	target = [self primaryTarget];
+		OOShipEntity*	target = [self primaryTarget];
 		if (!target)
 		{
 			[self noteLostTargetAndGoIdle];
@@ -3161,7 +3158,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 				The COMBAT_JINK_OFFSET intentionally over-compensates the range for collision radii to send ships towards
 				the target at low speeds.
 				*/
-				ShipEntity*	target = [self primaryTarget];
+				OOShipEntity*	target = [self primaryTarget];
 				float relativeSpeed = magnitude(vector_subtract([self velocity], [target velocity]));
 				jink.x = (ranrot_rand() % 256) - 128.0;
 				jink.y = (ranrot_rand() % 256) - 128.0;
@@ -3209,7 +3206,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	if (canBurn) max_available_speed *= [self afterburnerFactor];
 	
 	// deal with collisions and lost targets
-	ShipEntity *proximateShip = [self proximateShip];
+	OOShipEntity *proximateShip = [self proximateShip];
 	if (proximateShip != nil)
 	{
 		if (proximateShip == [self primaryTarget])
@@ -3232,7 +3229,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	// control speed
 	BOOL isUsingAfterburner = canBurn && (flightSpeed > maxFlightSpeed);
 	double	slow_down_range = weaponRange * COMBAT_WEAPON_RANGE_FACTOR * ((isUsingAfterburner)? 3.0 * [self afterburnerFactor] : 1.0);
-	ShipEntity*	target = [self primaryTarget];
+	OOShipEntity*	target = [self primaryTarget];
 	double target_speed = [target speed];
 		double last_success_factor = success_factor;
 	double distance = [self rangeToDestination];
@@ -3326,7 +3323,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		ShipEntity *proximateShip = [self proximateShip];
+		OOShipEntity *proximateShip = [self proximateShip];
 		if ((range < 650) || proximateShip != nil)
 		{
 			if (proximateShip == nil)
@@ -3358,14 +3355,14 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	float		max_available_speed = maxFlightSpeed;
 	if (canBurn)  max_available_speed *= [self afterburnerFactor];
 	double		range = [self rangeToPrimaryTarget];
-	ShipEntity	*target = [self primaryTarget];
+	OOShipEntity	*target = [self primaryTarget];
 	
 	if (target == nil)
 	{
 		[self noteLostTargetAndGoIdle];
 		return;
 	}
-	ShipEntity *proximateShip = [self proximateShip];
+	OOShipEntity *proximateShip = [self proximateShip];
 	if (range < COMBAT_IN_RANGE_FACTOR * weaponRange || proximateShip != nil)
 	{
 		if (proximateShip == NO_TARGET || proximateShip == target)
@@ -3580,7 +3577,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 
 	double hurt_factor = 16 * pow(energy/maxEnergy, 4.0);
-	if (([(ShipEntity *)[self primaryTarget] primaryTarget] == self)&&(missiles > missile_chance * hurt_factor))
+	if (([(OOShipEntity *)[self primaryTarget] primaryTarget] == self)&&(missiles > missile_chance * hurt_factor))
 		[self fireMissile];
 	if (cloakAutomatic) [self activateCloakingDevice];
 	[self applyRoll:delta_t * flightRoll andClimb:delta_t * flightPitch];
@@ -3661,7 +3658,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (void) behaviour_formation_form_up:(double) delta_t
 {
 	// destination for each escort is set in update() from owner.
-	ShipEntity	*leadShip = [self owner];
+	OOShipEntity	*leadShip = [self owner];
 	GLfloat		distance = [self rangeToDestination];
 	GLfloat		eta;
 	
@@ -3820,7 +3817,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	}
 	else
 	{
-		ShipEntity *proximateShip = [self proximateShip];
+		OOShipEntity *proximateShip = [self proximateShip];
 		if (proximateShip != nil)
 		{
 			desired_range = [proximateShip collisionRadius] * PROXIMITY_AVOID_DISTANCE_FACTOR;
@@ -3839,8 +3836,8 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 - (void) behaviour_track_as_turret:(double) delta_t
 {
 	double aim = [self ballTrackLeadingTarget:delta_t];
-	ShipEntity *turret_owner = (ShipEntity *)[self owner];
-	ShipEntity *turret_target = (ShipEntity *)[turret_owner primaryTarget];
+	OOShipEntity *turret_owner = (OOShipEntity *)[self owner];
+	OOShipEntity *turret_target = (OOShipEntity *)[turret_owner primaryTarget];
 	
 	if (turret_owner && turret_target && [turret_owner hasHostileTarget])
 	{
@@ -3966,7 +3963,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 	// Draw subentities.
 	if (!immediate)	// TODO: is this relevant any longer?
 	{
-		ShipEntity *subEntity = nil;
+		OOShipEntity *subEntity = nil;
 		foreach (subEntity, [self subEntities])
 		{
 			[subEntity setOwner:self]; // refresh ownership
@@ -3992,7 +3989,7 @@ ShipEntity* doOctreesCollide(ShipEntity* prime, ShipEntity* other)
 			OODebugDrawColoredLine([self position], [pTarget position], [OOColor colorWithCalibratedRed:0.2 green:0.0 blue:0.0 alpha:1.0]);
 		}
 		
-		ShipEntity *sTarget = [self targetStation];
+		OOShipEntity *sTarget = [self targetStation];
 		if (sTarget != pTarget)
 		{
 			OODebugDrawPoint([sTarget position], [OOColor cyanColor]);
@@ -4076,7 +4073,7 @@ static GLfloat police_color1[4] =	{ 0.5, 0.0, 1.0, 1.0};	// purpley-blue
 static GLfloat police_color2[4] =	{ 1.0, 0.0, 0.5, 1.0};	// purpley-red
 static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by script
 
-- (GLfloat *) scannerDisplayColorForShip:(ShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2
+- (GLfloat *) scannerDisplayColorForShip:(OOShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2
 {
 	// if there are any scripted scanner display colors for the ship, use them
 	if (scannerDisplayColor1 || scannerDisplayColor2)
@@ -4308,7 +4305,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		return;
 	}
 	
-	ShipEntity *proximateShip = [self proximateShip];
+	OOShipEntity *proximateShip = [self proximateShip];
 	
 	if (proximateShip != nil)
 	{
@@ -4319,7 +4316,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 		}
 
 		previousCondition = [[NSMutableDictionary dictionaryWithCapacity:5] retain];
-		ShipEntity *primaryTarget = [self primaryTarget];
+		OOShipEntity *primaryTarget = [self primaryTarget];
 		
 		[previousCondition oo_setInteger:behaviour forKey:@"behaviour"];
 		if (primaryTarget != nil)  [previousCondition setObject:[primaryTarget weakRetain] forKey:@"primaryTarget"];
@@ -4476,7 +4473,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 }
 
 
-- (void) notePotentialCollsion:(ShipEntity*) other
+- (void) notePotentialCollsion:(OOShipEntity*) other
 {
 	if (other == nil)
 	{
@@ -4531,7 +4528,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 
 	if (behaviour == BEHAVIOUR_AVOID_COLLISION)	//	already avoiding something
 	{
-		ShipEntity *proximateShip = [self proximateShip];
+		OOShipEntity *proximateShip = [self proximateShip];
 		if (proximateShip != nil && proximateShip != other)
 		{
 			// check which subtends the greatest angle
@@ -4570,7 +4567,7 @@ static GLfloat scripted_color[4] = 	{ 0.0, 0.0, 0.0, 0.0};	// to be defined by s
 }
 
 
-- (NSString *) identFromShip:(ShipEntity *)otherShip
+- (NSString *) identFromShip:(OOShipEntity *)otherShip
 {
 	return _displayName;
 }
@@ -4923,7 +4920,7 @@ static float SurfaceDistanceSqared(OOEntity *reference, OOEntity<OOStellarBody> 
 
 NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 {
-	Vector p = [(ShipEntity*) context position];
+	Vector p = [(OOShipEntity*) context position];
 	OOPlanetEntity* e1 = i1;
 	OOPlanetEntity* e2 = i2;
 	
@@ -5705,7 +5702,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 		unsigned i;
 		for (i = 0; i < [targets count]; i++)
 		{
-			ShipEntity *e2 = (ShipEntity*)[targets objectAtIndex:i];
+			OOShipEntity *e2 = (OOShipEntity*)[targets objectAtIndex:i];
 			if ([e2 isShip])
 			{
 				Vector p2 = vector_subtract([e2 position], position);
@@ -5769,7 +5766,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	if ([whom isShip])
 	{
 		jsval selfVal = OOJSValueFromNativeObject(context, self);
-		ShipScriptEvent(context, (ShipEntity *)whom, "shipKilledOther", selfVal, typeVal);
+		ShipScriptEvent(context, (OOShipEntity *)whom, "shipKilledOther", selfVal, typeVal);
 	}
 	
 	[self setStatus:originalStatus];
@@ -5807,10 +5804,10 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	OOCargoQuantity cargo_to_go;
 	
 	// check if we're destroying a subentity
-	ShipEntity *parent = [self parentEntity];
+	OOShipEntity *parent = [self parentEntity];
 	if (parent != nil)
 	{
-		ShipEntity* this_ship = [self retain];
+		OOShipEntity* this_ship = [self retain];
 		Vector this_pos = [self absolutePositionForSubentity];
 		
 		// remove this ship from its parent's subentity list
@@ -5933,7 +5930,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 					{
 						if (Ranrot() % 100 < cargo_chance)  //  chance of any given piece of cargo surviving decompression
 						{
-							ShipEntity* container = [jetsam objectAtIndex:i];
+							OOShipEntity* container = [jetsam objectAtIndex:i];
 							Vector  rpos = xposition;
 							Vector	rrand = OORandomPositionInBoundingBox(boundingBox);
 							rpos.x += rrand.x;	rpos.y += rrand.y;	rpos.z += rrand.z;
@@ -5972,7 +5969,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 						NSString *debrisRole = [[self shipInfoDictionary] oo_stringForKey:@"debris_role" defaultValue:kOODefaultDebrisRole];
 						for (i = 0; i < n_rocks; i++)
 						{
-							ShipEntity* rock = [UNIVERSE newShipWithRole:debrisRole];   // retain count = 1
+							OOShipEntity* rock = [UNIVERSE newShipWithRole:debrisRole];   // retain count = 1
 							if (rock)
 							{
 								Vector  rpos = xposition;
@@ -6009,7 +6006,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 						NSString *debrisRole = [[self shipInfoDictionary] oo_stringForKey:@"debris_role" defaultValue:@"splinter"];
 						for (i = 0; i < n_rocks; i++)
 						{
-							ShipEntity* rock = [UNIVERSE newShipWithRole:debrisRole];   // retain count = 1
+							OOShipEntity* rock = [UNIVERSE newShipWithRole:debrisRole];   // retain count = 1
 							if (rock)
 							{
 								Vector  rpos = xposition;
@@ -6055,7 +6052,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 					
 					for (i = 0; i < n_wreckage; i++)
 					{
-						ShipEntity* wreck = [UNIVERSE newShipWithRole:@"wreckage"];   // retain count = 1
+						OOShipEntity* wreck = [UNIVERSE newShipWithRole:@"wreckage"];   // retain count = 1
 						if (wreck)
 						{
 							GLfloat expected_mass = 0.1f * mass * (0.75 + 0.5 * randf());
@@ -6089,7 +6086,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 				//
 				for (i = 0; i < n_alloys; i++)
 				{
-					ShipEntity* plate = [UNIVERSE newShipWithRole:@"alloy"];   // retain count = 1
+					OOShipEntity* plate = [UNIVERSE newShipWithRole:@"alloy"];   // retain count = 1
 					if (plate)
 					{
 						Vector  rpos = xposition;
@@ -6118,7 +6115,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 		
 		// Explode subentities.
 		NSEnumerator	*subEnum = nil;
-		ShipEntity		*se = nil;
+		OOShipEntity		*se = nil;
 		for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
 		{
 			[se setSuppressExplosion:suppressExplosion];
@@ -6158,7 +6155,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void)subEntityDied:(ShipEntity *)sub
+- (void)subEntityDied:(OOShipEntity *)sub
 {
 	if ([self subEntityTakingDamage] == sub)  [self setSubEntityTakingDamage:nil];
 	
@@ -6172,7 +6169,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void)subEntityReallyDied:(ShipEntity *)sub
+- (void)subEntityReallyDied:(OOShipEntity *)sub
 {
 	if ([self subEntityTakingDamage] == sub)  [self setSubEntityTakingDamage:nil];
 	
@@ -6233,7 +6230,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q, NSString* align)
+Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion q, NSString* align)
 {
 	NSString* padAlign = [NSString stringWithFormat:@"%@---", align];
 	Vector i = vector_right_from_quaternion(q);
@@ -6338,7 +6335,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			if (Ranrot() % 100 < cargo_chance)  //  10% chance of any given piece of cargo surviving decompression
 			{
-				ShipEntity *container = [[cargo objectAtIndex:0] retain];
+				OOShipEntity *container = [[cargo objectAtIndex:0] retain];
 				Vector  rpos = xposition;
 				Vector	rrand = OORandomPositionInBoundingBox(boundingBox);
 				rpos.x += rrand.x;	rpos.y += rrand.y;	rpos.z += rrand.z;
@@ -6357,7 +6354,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		}
 		
 		NSEnumerator	*subEnum = nil;
-		ShipEntity		*se = nil;
+		OOShipEntity		*se = nil;
 		for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
 		{
 			[se setSuppressExplosion:suppressExplosion];
@@ -6374,13 +6371,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) collectBountyFor:(ShipEntity *)other
+- (void) collectBountyFor:(OOShipEntity *)other
 {
 	if ([self isPirate])  bounty += [other bounty];
 }
 
 
-- (NSComparisonResult) compareBeaconCodeWith:(ShipEntity*) other
+- (NSComparisonResult) compareBeaconCodeWith:(OOShipEntity*) other
 {
 	return [[self beaconCode] compare:[other beaconCode] options: NSCaseInsensitiveSearch];
 }
@@ -6464,7 +6461,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			distance2_scanned_ships[n_scanned_ships] = distance2(position, scan->position);
 			if (distance2_scanned_ships[n_scanned_ships] < SCANNER_MAX_RANGE2)
-				scanned_ships[n_scanned_ships++] = (ShipEntity*)scan;
+				scanned_ships[n_scanned_ships++] = (OOShipEntity*)scan;
 		}
 		scan = scan->z_previous;	while ((scan)&&(scan->isShip == NO))	scan = scan->z_previous;
 	}
@@ -6476,7 +6473,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			distance2_scanned_ships[n_scanned_ships] = distance2(position, scan->position);
 			if (distance2_scanned_ships[n_scanned_ships] < SCANNER_MAX_RANGE2)
-				scanned_ships[n_scanned_ships++] = (ShipEntity*)scan;
+				scanned_ships[n_scanned_ships++] = (OOShipEntity*)scan;
 		}
 		scan = scan->z_next;	while ((scan)&&(scan->isShip == NO))	scan = scan->z_next;	// skip non-ships
 	}
@@ -6485,7 +6482,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity**) scannedShips
+- (OOShipEntity**) scannedShips
 {
 	scanned_ships[n_scanned_ships] = nil;	// terminate array
 	return scanned_ships;
@@ -6567,7 +6564,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity *) thankedShip
+- (OOShipEntity *) thankedShip
 {
 	StationEntity *result = [_thankedShip weakRefUnderlyingObject];
 	if (result == nil)  DESTROY(_thankedShip);
@@ -6575,7 +6572,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) setThankedShip:(ShipEntity *)thankedShip
+- (void) setThankedShip:(OOShipEntity *)thankedShip
 {
 	[_thankedShip release];
 	_thankedShip = [thankedShip weakRetain];
@@ -6632,7 +6629,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) isFriendlyTo:(ShipEntity *)otherShip
+- (BOOL) isFriendlyTo:(OOShipEntity *)otherShip
 {
 	BOOL isFriendly = NO;
 	OOShipGroup	*myGroup = [self group];
@@ -6651,13 +6648,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity *) shipHitByLaser
+- (OOShipEntity *) shipHitByLaser
 {
 	return [_shipHitByLaser weakRefUnderlyingObject];
 }
 
 
-- (void) setShipHitByLaser:(ShipEntity *)ship
+- (void) setShipHitByLaser:(OOShipEntity *)ship
 {
 	if (ship != [self shipHitByLaser])
 	{
@@ -6687,9 +6684,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) noteTargetDestroyed:(ShipEntity *)target
+- (void) noteTargetDestroyed:(OOShipEntity *)target
 {
-	[self collectBountyFor:(ShipEntity *)target];
+	[self collectBountyFor:(OOShipEntity *)target];
 	if ([self primaryTarget] == target)
 	{
 		[self removeTarget:target];
@@ -6931,7 +6928,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		Vector vx, vy, vz;
 		if (target->isShip)
 		{
-			ShipEntity* targetShip = (ShipEntity*)target;
+			OOShipEntity* targetShip = (OOShipEntity*)target;
 			vx = targetShip->v_right;
 			vy = targetShip->v_up;
 			vz = targetShip->v_forward;
@@ -7472,7 +7469,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	//can we fire lasers from our subentities?
 	NSEnumerator	*subEnum = nil;
-	ShipEntity		*se = nil;
+	OOShipEntity		*se = nil;
 	for (subEnum = [self shipSubEntityEnumerator]; (se = [subEnum nextObject]); )
 	{
 		if ([se fireSubentityLaserShot:range])  fired = YES;
@@ -7590,7 +7587,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (forward_weapon_type == WEAPON_NONE)  return NO;
 	[self setWeaponDataFromType:forward_weapon_type];
 
-	ShipEntity* parent = (ShipEntity*)[self owner];
+	OOShipEntity* parent = (OOShipEntity*)[self owner];
 
 	if ([self shotTime] < weapon_recharge_rate)
 		return NO;
@@ -7598,7 +7595,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (range > weaponRange)  return NO;
 	
 	hit_at_range = weaponRange;
-	ShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:direction offset: make_vector(0,0,0) rangeFound: &hit_at_range];
+	OOShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:direction offset: make_vector(0,0,0) rangeFound: &hit_at_range];
 	[self setShipHitByLaser:victim];
 	
 	OOLaserShotEntity *shot = [OOLaserShotEntity laserFromShip:self view:direction offset:kZeroVector];
@@ -7607,7 +7604,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if (victim != nil)
 	{
-		ShipEntity *subent = [victim subEntityTakingDamage];
+		OOShipEntity *subent = [victim subEntityTakingDamage];
 		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
@@ -7653,7 +7650,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 	Quaternion q_save = orientation;	// save rotation
 	orientation = q_laser;			// face in direction of laser
-	ShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:VIEW_FORWARD offset: make_vector(0,0,0) rangeFound: &hit_at_range];
+	OOShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:VIEW_FORWARD offset: make_vector(0,0,0) rangeFound: &hit_at_range];
 	[self setShipHitByLaser:victim];
 	orientation = q_save;			// restore rotation
 
@@ -7669,7 +7666,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if (victim != nil)
 	{
-		ShipEntity *subent = [victim subEntityTakingDamage];
+		OOShipEntity *subent = [victim subEntityTakingDamage];
 		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
@@ -7727,7 +7724,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			laserPortOffset = forwardWeaponOffset;
 	}
 	
-	ShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:direction offset:laserPortOffset rangeFound: &hit_at_range];
+	OOShipEntity *victim = [UNIVERSE getFirstShipHitByLaserFromShip:self inView:direction offset:laserPortOffset rangeFound: &hit_at_range];
 	[self setShipHitByLaser:victim];
 	
 	OOLaserShotEntity *shot = [OOLaserShotEntity laserFromShip:self view:direction offset:laserPortOffset];
@@ -7746,7 +7743,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			Fix: made subentity_taking_damage a weak reference accessed via a method.
 			-- Ahruman 20070706, 20080304
 		*/
-		ShipEntity *subent = [victim subEntityTakingDamage];
+		OOShipEntity *subent = [victim subEntityTakingDamage];
 		if (subent != nil && [victim isFrangible])
 		{
 			// do 1% bleed-through damage...
@@ -7883,18 +7880,18 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity *) fireMissile
+- (OOShipEntity *) fireMissile
 {
 	return [self fireMissileWithIdentifier:nil andTarget:[self primaryTarget]];
 }
 
 
-- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target
+- (OOShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target
 {
 	// both players and NPCs!
 	//
-	ShipEntity		*missile = nil;
-	ShipEntity		*target_ship = nil;
+	OOShipEntity		*missile = nil;
+	OOShipEntity		*target_ship = nil;
 	
 	Vector			vel;
 	Vector			start, v_eject;
@@ -7923,7 +7920,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	if ([target isShip])
 	{
-		target_ship = (ShipEntity*)target;
+		target_ship = (OOShipEntity*)target;
 		if ([target_ship isCloaked])  return nil;
 	}
 	
@@ -8080,7 +8077,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	if (![self hasCascadeMine])  return NO;
 	[self setSpeed: maxFlightSpeed + 300];
-	ShipEntity*	bomb = [UNIVERSE newShipWithRole:@"energy-bomb"];
+	OOShipEntity*	bomb = [UNIVERSE newShipWithRole:@"energy-bomb"];
 	if (bomb == nil)  return NO;
 	
 	[self removeEquipmentItem:@"EQ_QC_MINE"];
@@ -8124,9 +8121,9 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (ShipEntity *) launchEscapeCapsule
+- (OOShipEntity *) launchEscapeCapsule
 {
-	ShipEntity			*mainPod = nil;
+	OOShipEntity			*mainPod = nil;
 	unsigned			n_pods, i;
 	
 	/*
@@ -8170,15 +8167,15 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 // This is a documented AI method; do not change semantics. (Note: AIs don't have access to the return value.)
 - (OOCargoType) dumpCargo
 {
-	ShipEntity *jetto = [self dumpCargoItem];
+	OOShipEntity *jetto = [self dumpCargoItem];
 	if (jetto != nil)  return [jetto commodityType];
 	else  return CARGO_NOT_CARGO;
 }
 
 
-- (ShipEntity *) dumpCargoItem
+- (OOShipEntity *) dumpCargoItem
 {
-	ShipEntity				*jetto = nil;
+	OOShipEntity				*jetto = nil;
 	
 	if (([cargo count] > 0)&&([UNIVERSE gameTime] - cargo_dump_time > 0.5))  // space them 0.5s or 10m apart
 	{
@@ -8195,7 +8192,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (OOCargoType) dumpItem: (ShipEntity*) jetto
+- (OOCargoType) dumpItem: (OOShipEntity*) jetto
 {
 	if (!jetto)
 		return 0;
@@ -8284,7 +8281,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	// deal with collisions
 	//
 	OOEntity*		ent;
-	ShipEntity* other_ship;
+	OOShipEntity* other_ship;
 	
 	while ([collidingEntities count] > 0)
 	{
@@ -8295,7 +8292,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			if ([ent isShip])
 			{
-				other_ship = (ShipEntity *)ent;
+				other_ship = (OOShipEntity *)ent;
 				[self collideWithShip:other_ship];
 			}
 			else if ([ent isStellarObject])
@@ -8312,7 +8309,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) collideWithShip:(ShipEntity *)other
+- (BOOL) collideWithShip:(OOShipEntity *)other
 {
 	Vector  loc;
 	double  dam1, dam2;
@@ -8320,7 +8317,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	if (!other)
 		return NO;
 	
-	ShipEntity *otherParent = [other parentEntity];
+	OOShipEntity *otherParent = [other parentEntity];
 	BOOL otherIsStation = (other == [UNIVERSE station]);
 	// calculate line of centers using centres
 	loc = vector_normal_or_zbasis(vector_subtract([other absolutePositionForSubentity], position));
@@ -8495,7 +8492,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) canScoop:(ShipEntity*)other
+- (BOOL) canScoop:(OOShipEntity*)other
 {
 	if (other == nil)							return NO;
 	if (![self hasScoop])						return NO;
@@ -8515,7 +8512,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) getTractoredBy:(ShipEntity *)other
+- (void) getTractoredBy:(OOShipEntity *)other
 {
 	if([self status] == STATUS_BEING_SCOOPED) return; // both cargo and ship call this. Act only once.
 	desired_speed = 0.0;
@@ -8528,7 +8525,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	unsigned i;
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		ShipEntity *scooper = (ShipEntity *)scanned_ships[i];
+		OOShipEntity *scooper = (OOShipEntity *)scanned_ships[i];
 		// very specific. might break if the AI convention changes.
 		// if (other != scoopers && (id) self == [scoopers primaryTarget] && [[[scoopers getAI] state] isEqualToString: @"COLLECT_STUFF"])
 		// more generic, if other ships are trying to shoot the scooped item, they'll lose it too.
@@ -8540,7 +8537,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) scoopIn:(ShipEntity *)other
+- (void) scoopIn:(OOShipEntity *)other
 {
 	[other getTractoredBy:self];
 }
@@ -8552,7 +8549,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (void) scoopUp:(ShipEntity *)other
+- (void) scoopUp:(OOShipEntity *)other
 {
 	if (other == nil)  return;
 	
@@ -8742,10 +8739,10 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	energy -= amount;
 	being_mined = NO;
-	ShipEntity *hunter = nil;
+	OOShipEntity *hunter = nil;
 	
 	hunter = [other rootShipEntity];
-	if (hunter == nil && [other isShip]) hunter = (ShipEntity *)other;
+	if (hunter == nil && [other isShip]) hunter = (OOShipEntity *)other;
 	
 	if (hunter !=nil && [self owner] != hunter) // our owner could be the same entity as the one responsible for our taking damage in the case of submunitions
 	{
@@ -8789,7 +8786,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		{
 			if ([self isTrader] || [self isEscort])
 			{
-				ShipEntity *groupLeader = [group leader];
+				OOShipEntity *groupLeader = [group leader];
 				if (groupLeader != self)
 				{
 					[groupLeader setFoundTarget:hunter];
@@ -8801,7 +8798,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			if ([self isPirate])
 			{
 				NSEnumerator		*groupEnum = nil;
-				ShipEntity			*otherPirate = nil;
+				OOShipEntity			*otherPirate = nil;
 				
 				for (groupEnum = [group mutationSafeEnumerator]; (otherPirate = [groupEnum nextObject]); )
 				{
@@ -8816,7 +8813,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			else if (iAmTheLaw)
 			{
 				NSEnumerator		*groupEnum = nil;
-				ShipEntity			*otherPolice = nil;
+				OOShipEntity			*otherPolice = nil;
 				
 				for (groupEnum = [group mutationSafeEnumerator]; (otherPolice = [groupEnum nextObject]); )
 				{
@@ -8847,7 +8844,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		}
 
 		if ((other)&&([other isShip]))
-			being_mined = [(ShipEntity *)other isMining];
+			being_mined = [(OOShipEntity *)other isMining];
 	}
 	
 	OOShipDamageType damageType = kOODamageTypeEnergy;
@@ -8885,13 +8882,13 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	BOOL OK = NO;
 	if ([self isPlayer] && [(PlayerEntity *)self isDocked])
 	{
-		OOLog(@"ShipEntity.abandonShip.failed", @"Player cannot abandon ship while docked.");
+		OOLog(@"abandonShip.failed", @"Player cannot abandon ship while docked.");
 		return OK;
 	}
 	
 	if (![self hasEscapePod])
 	{
-		OOLog(@"ShipEntity.abandonShip.failed", @"Ship abandonment was requested for %@, but this ship does not carry escape pod(s).", self);
+		OOLog(@"abandonShip.failed", @"Ship abandonment was requested for %@, but this ship does not carry escape pod(s).", self);
 		return OK;
 	}
 		
@@ -8914,7 +8911,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 			{
 				OOShipGroup			*escortGroup = [self escortGroup];
 				NSEnumerator		*escortEnum = nil;
-				ShipEntity			*escort = nil;
+				OOShipEntity			*escort = nil;
 				// Note: works on escortArray rather than escortEnumerator because escorts may be mutated.
 				for (escortEnum = [[self escortArray] objectEnumerator]; (escort = [escortEnum nextObject]); )
 				{
@@ -8932,7 +8929,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	else
 	{
 		// this shouldn't happen any more!
-		OOLog(@"ShipEntity.abandonShip.notPossible", @"Ship %@ cannot be abandoned at this time.", self);
+		OOLog(@"abandonShip.notPossible", @"Ship %@ cannot be abandoned at this time.", self);
 	}
 	return OK;
 }
@@ -8957,7 +8954,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 		being_mined = YES;  // same as using a mining laser
 		if ([ent isShip])
 		{
-			[(ShipEntity *)ent noteTargetDestroyed:self];
+			[(OOShipEntity *)ent noteTargetDestroyed:self];
 		}
 		[self getDestroyedBy:ent damageType:kOODamageTypeScrape];
 	}
@@ -9126,7 +9123,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	NSEnumerator	*subEnum = nil;
 	OOFlasherEntity	*se = nil;
-	ShipEntity		*sub = nil;
+	OOShipEntity		*sub = nil;
 	
 	_lightsActive = YES;
 	
@@ -9145,7 +9142,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 {
 	NSEnumerator	*subEnum = nil;
 	OOFlasherEntity	*se = nil;
-	ShipEntity		*sub = nil;
+	OOShipEntity		*sub = nil;
 	
 	_lightsActive = NO;
 	
@@ -9179,7 +9176,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 
 
-- (BOOL) canAcceptEscort:(ShipEntity *)potentialEscort
+- (BOOL) canAcceptEscort:(OOShipEntity *)potentialEscort
 {
 	if (dockingInstructions) // we are busy with docking.
 	{
@@ -9201,7 +9198,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 }
 	
 
-- (BOOL) acceptAsEscort:(ShipEntity *) other_ship
+- (BOOL) acceptAsEscort:(OOShipEntity *) other_ship
 {
 	// can't pair with self
 	if (self == other_ship)  return NO;
@@ -9340,8 +9337,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) deployEscorts
 {
 	NSEnumerator	*escortEnum = nil;
-	ShipEntity		*escort = nil;
-	ShipEntity		*target = nil;
+	OOShipEntity		*escort = nil;
+	OOShipEntity		*target = nil;
 	NSMutableSet	*idleEscorts = nil;
 	unsigned		deployCount;
 	OOEntity			*primaryTarget = [self primaryTarget];
@@ -9399,8 +9396,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	
 	OOShipGroup			*escortGroup = [self escortGroup];
 	NSEnumerator		*escortEnum = nil;
-	ShipEntity			*escort = nil;
-	ShipEntity			*target = [self primaryTarget];
+	OOShipEntity			*escort = nil;
+	OOShipEntity			*target = [self primaryTarget];
 	unsigned			i = 0;
 	// Note: works on escortArray rather than escortEnumerator because escorts may be mutated.
 	for (escortEnum = [[self escortArray] objectEnumerator]; (escort = [escortEnum nextObject]); )
@@ -9542,7 +9539,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 {
-	ShipEntity			*victim = parameter;
+	OOShipEntity			*victim = parameter;
 	
 	// Select main station, if victim is in aegis
 	if (entity == [UNIVERSE station] && [victim isWithinStationAegis])
@@ -9562,7 +9559,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) broadcastHitByLaserFrom:(ShipEntity *) aggressor_ship
+- (void) broadcastHitByLaserFrom:(OOShipEntity *) aggressor_ship
 {
 	/*-- If you're clean, locates all police and stations in range and tells them OFFENCE_COMMITTED --*/
 	if (!UNIVERSE)  return;
@@ -9578,7 +9575,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	{
 		NSArray			*authorities = nil;
 		NSEnumerator	*authEnum = nil;
-		ShipEntity		*auth = nil;
+		OOShipEntity		*auth = nil;
 		
 		authorities = [UNIVERSE findShipsMatchingPredicate:AuthorityPredicate
 												 parameter:self
@@ -9595,7 +9592,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) sendMessage:(NSString *) message_text toShip:(ShipEntity*) other_ship withUnpilotedOverride:(BOOL)unpilotedOverride
+- (void) sendMessage:(NSString *) message_text toShip:(OOShipEntity*) other_ship withUnpilotedOverride:(BOOL)unpilotedOverride
 {
 	if (!other_ship || !message_text) return;
 	if (!crew && !unpilotedOverride) return;
@@ -9618,7 +9615,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) sendExpandedMessage:(NSString *) message_text toShip:(ShipEntity*) other_ship
+- (void) sendExpandedMessage:(NSString *) message_text toShip:(OOShipEntity*) other_ship
 {
 	if (!other_ship || !crew)
 		return;	// nobody to receive or send the signal
@@ -9659,7 +9656,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	unsigned i;
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		ShipEntity* ship = scanned_ships[i];
+		OOShipEntity* ship = scanned_ships[i];
 		[[ship getAI] message: expandedMessage];
 	}
 }
@@ -9677,7 +9674,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	unsigned i;
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		ShipEntity* ship = scanned_ships[i];
+		OOShipEntity* ship = scanned_ships[i];
 		if (![ship isPlayer]) [ship receiveCommsMessage:expandedMessage from:self];
 	}
 	
@@ -9703,7 +9700,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) receiveCommsMessage:(NSString *) message_text from:(ShipEntity *) other
+- (void) receiveCommsMessage:(NSString *) message_text from:(OOShipEntity *) other
 {
 	// Too complex for AI scripts to handle, JS event only.
 	[self doScriptEvent:OOJSID("commsMessageReceived") withArgument:message_text andArgument:other];
@@ -9758,8 +9755,8 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 			[self thankedShip] != rescuer &&
 			scanClass != CLASS_THARGOID)
 		{
-			ShipEntity *rescueShip = (ShipEntity *)rescuer;
-			ShipEntity *switchingShip = (ShipEntity *)switcher;
+			OOShipEntity *rescueShip = (OOShipEntity *)rescuer;
+			OOShipEntity *switchingShip = (OOShipEntity *)switcher;
 			if (scanClass == CLASS_POLICE)
 			{
 				[self sendExpandedMessage:@"[police-thanks-for-assist]" toShip:rescueShip];
@@ -9811,7 +9808,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) shipBlockingHyperspaceJump
+- (OOShipEntity *) shipBlockingHyperspaceJump
 {
 	/*
 		Checks if there are any large masses close by.
@@ -9827,20 +9824,20 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	
 	unsigned	entityCount = UNIVERSE->n_entities, shipCount = 0;
 	OOEntity		**sortedEntities = UNIVERSE->sortedEntities;	// grab the public sorted list
-	ShipEntity	*ships[entityCount];
-	ShipEntity	*blocker = nil;
+	OOShipEntity	*ships[entityCount];
+	OOShipEntity	*blocker = nil;
 	
 	for (unsigned i = 0; i < entityCount; i++)
 	{
 		if ([sortedEntities[i] isShip] && sortedEntities[i] != self)
 		{
-			ships[shipCount++] = (ShipEntity *)sortedEntities[i];
+			ships[shipCount++] = (OOShipEntity *)sortedEntities[i];
 		}
 	}
 	
 	for (unsigned i = 0; i < shipCount && blocker == nil; i++)
 	{
-		ShipEntity *ship = ships[i];
+		OOShipEntity *ship = ships[i];
 		GLfloat d2 = distance2(position, [ship position]);
 		
 		// if you go off scanner from a blocker - it ceases to block
@@ -9913,23 +9910,20 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 
 - (void) sendCoordinatesToPilot
 {
-	OOEntity	*scan;
-	ShipEntity	*scanShip, *pilot;
-	
 	n_scanned_ships = 0;
-	scan = z_previous;
+	OOEntity *scan = z_previous;
 	OOLog(@"ship.pilotage", @"searching for pilot boat");
 	while (scan &&(scan->isShip == NO))
 	{
 		scan = scan->z_previous;	// skip non-ships
 	}
 
-	pilot = nil;
+	OOShipEntity *pilot = nil;
 	while (scan)
 	{
 		if (scan->isShip)
 		{
-			scanShip = (ShipEntity *)scan;
+			OOShipEntity *scanShip = (OOShipEntity *)scan;
 			
 			if ([self hasRole:@"pilot"] == YES)
 			{
@@ -10215,7 +10209,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 @end
 
 
-@implementation ShipEntity (SubEntityRelationship)
+@implementation OOShipEntity (SubEntityRelationship)
 
 - (BOOL) isShipWithSubEntityShip:(OOEntity *)other
 {
@@ -10227,7 +10221,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	
 #ifndef NDEBUG
 	// Sanity check; this should always be true.
-	if (![self hasSubEntity:(ShipEntity *)other])
+	if (![self hasSubEntity:(OOShipEntity *)other])
 	{
 		OOLogERR(@"ship.subentity.sanityCheck.failed", @"%@ thinks it's a subentity of %@, but the supposed parent does not agree. %@", [other shortDescription], [self shortDescription], @"This is an internal error, please report it.");
 		[other setOwner:nil];

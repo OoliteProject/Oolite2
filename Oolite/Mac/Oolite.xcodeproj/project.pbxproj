@@ -53,7 +53,7 @@
 		1A1B977413087FBE0078322D /* PlayerEntitySound.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974713087FBE0078322D /* PlayerEntitySound.m */; };
 		1A1B977513087FBE0078322D /* PlayerEntityStickMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974913087FBE0078322D /* PlayerEntityStickMapper.m */; };
 		1A1B977613087FBE0078322D /* ProxyPlayerEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */; };
-		1A1B977713087FBE0078322D /* ShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974D13087FBE0078322D /* ShipEntity.m */; };
+		1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974D13087FBE0078322D /* OOShipEntity.m */; };
 		1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974F13087FBE0078322D /* ShipEntityAI.m */; };
 		1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* ShipEntityLoadRestore.m */; };
 		1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975313087FBE0078322D /* ShipEntityScriptMethods.m */; };
@@ -980,8 +980,8 @@
 		1A1B974913087FBE0078322D /* PlayerEntityStickMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerEntityStickMapper.m; sourceTree = "<group>"; };
 		1A1B974A13087FBE0078322D /* ProxyPlayerEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProxyPlayerEntity.h; sourceTree = "<group>"; };
 		1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProxyPlayerEntity.m; sourceTree = "<group>"; };
-		1A1B974C13087FBE0078322D /* ShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntity.h; sourceTree = "<group>"; };
-		1A1B974D13087FBE0078322D /* ShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntity.m; sourceTree = "<group>"; };
+		1A1B974C13087FBE0078322D /* OOShipEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOShipEntity.h; sourceTree = "<group>"; };
+		1A1B974D13087FBE0078322D /* OOShipEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipEntity.m; sourceTree = "<group>"; };
 		1A1B974E13087FBE0078322D /* ShipEntityAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityAI.h; sourceTree = "<group>"; };
 		1A1B974F13087FBE0078322D /* ShipEntityAI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShipEntityAI.m; sourceTree = "<group>"; };
 		1A1B975013087FBE0078322D /* ShipEntityLoadRestore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShipEntityLoadRestore.h; sourceTree = "<group>"; };
@@ -1640,8 +1640,8 @@
 				1A1B974913087FBE0078322D /* PlayerEntityStickMapper.m */,
 				1A1B974A13087FBE0078322D /* ProxyPlayerEntity.h */,
 				1A1B974B13087FBE0078322D /* ProxyPlayerEntity.m */,
-				1A1B974C13087FBE0078322D /* ShipEntity.h */,
-				1A1B974D13087FBE0078322D /* ShipEntity.m */,
+				1A1B974C13087FBE0078322D /* OOShipEntity.h */,
+				1A1B974D13087FBE0078322D /* OOShipEntity.m */,
 				1A1B974E13087FBE0078322D /* ShipEntityAI.h */,
 				1A1B974F13087FBE0078322D /* ShipEntityAI.m */,
 				1A1B975013087FBE0078322D /* ShipEntityLoadRestore.h */,
@@ -2726,7 +2726,7 @@
 				1A1B977413087FBE0078322D /* PlayerEntitySound.m in Sources */,
 				1A1B977513087FBE0078322D /* PlayerEntityStickMapper.m in Sources */,
 				1A1B977613087FBE0078322D /* ProxyPlayerEntity.m in Sources */,
-				1A1B977713087FBE0078322D /* ShipEntity.m in Sources */,
+				1A1B977713087FBE0078322D /* OOShipEntity.m in Sources */,
 				1A1B977813087FBE0078322D /* ShipEntityAI.m in Sources */,
 				1A1B977913087FBE0078322D /* ShipEntityLoadRestore.m in Sources */,
 				1A1B977A13087FBE0078322D /* ShipEntityScriptMethods.m in Sources */,

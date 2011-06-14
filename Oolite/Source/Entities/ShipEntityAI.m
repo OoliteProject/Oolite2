@@ -42,17 +42,17 @@ MA 02110-1301, USA.
 #define kOOLogUnconvertedNSLog @"unclassified.ShipEntityAI"
 
 
-@interface ShipEntity (OOAIPrivate)
+@interface OOShipEntity (OOAIPrivate)
 
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace;
 - (BOOL)performHyperSpaceExitReplace:(BOOL)replace toSystem:(OOSystemID)systemID;
 
-- (void) acceptDistressMessageFrom:(ShipEntity *)other;
+- (void) acceptDistressMessageFrom:(OOShipEntity *)other;
 
 @end
 
 
-@interface ShipEntity (PureAI)
+@interface OOShipEntity (PureAI)
 
 // Methods used only by AI.
 
@@ -243,14 +243,14 @@ MA 02110-1301, USA.
 @end
 
 
-OOINLINE void ScanForNearestShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
-OOINLINE void ScanForRandomShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
-OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
-OOINLINE void ScanForNearestNonDerelict(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
-OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestShip(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForRandomShip(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestShipNoAnnounce(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestNonDerelict(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
+OOINLINE void ScanForNearestNonDerelictNegated(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter) ALWAYS_INLINE_FUNC;
 
 
-@implementation ShipEntity (AI)
+@implementation OOShipEntity (AI)
 
 
 - (void) setAITo:(NSString *)aiString
@@ -299,7 +299,7 @@ OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPre
 OOINLINE BOOL IsIncomingMissilePredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
-	ShipEntity *ship = (ShipEntity *)entity, *self = (ShipEntity *)parameter;
+	OOShipEntity *ship = (OOShipEntity *)entity, *self = (OOShipEntity *)parameter;
 	
 	return ship->scanClass == CLASS_MISSILE && [ship primaryTarget] == self;
 }
@@ -313,7 +313,7 @@ OOINLINE BOOL IsIncomingMissilePredicate(OOEntity *entity, void *parameter)
 @end
 
 
-@implementation ShipEntity (PureAI)
+@implementation OOShipEntity (PureAI)
 
 - (void) setStateTo:(NSString *)state
 {
@@ -450,10 +450,10 @@ OOINLINE BOOL IsIncomingMissilePredicate(OOEntity *entity, void *parameter)
 	}
 	
 	// React only if the primary aggressor is not a friendly ship, else ignore it.
-	if ([aggressor isShip] && [primaryTarget isShip] && ![(ShipEntity *)aggressor isFriendlyTo:self])
+	if ([aggressor isShip] && [primaryTarget isShip] && ![(OOShipEntity *)aggressor isFriendlyTo:self])
 	{
 		// Inform our old target of our new target.
-		[[(ShipEntity *)primaryTarget getAI] message:$sprintf(@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, [self universalID], [aggressor universalID])];
+		[[(OOShipEntity *)primaryTarget getAI] message:$sprintf(@"%@ %d %d", AIMS_AGGRESSOR_SWITCHED_TARGET, [self universalID], [aggressor universalID])];
 		
 		// Okay, so let's now target the aggressor.
 		[self addTarget:aggressor];
@@ -473,7 +473,7 @@ OOINLINE BOOL IsIncomingMissilePredicate(OOEntity *entity, void *parameter)
 {
 	float				d2, found_d2;
 	unsigned			i;
-	ShipEntity			*ship = nil;
+	OOShipEntity			*ship = nil;
 	
 	//-- Locates the nearest merchantman in range.
 	[self checkScanner];
@@ -508,7 +508,7 @@ static BOOL IsPirateVictimPredicate(OOEntity *entity, void *predicate)
 {
 	NSCParameterAssert([entity isShip]);
 	
-	return [(ShipEntity *)entity isPirateVictim];
+	return [(OOShipEntity *)entity isPirateVictim];
 }
 
 
@@ -560,7 +560,7 @@ static BOOL IsPirateVictimPredicate(OOEntity *entity, void *predicate)
 	
 	for (i = 0; i < n_scanned_ships; i++)
 	{
-		ShipEntity *other = (ShipEntity *)scanned_ships[i];
+		OOShipEntity *other = (OOShipEntity *)scanned_ships[i];
 		if ([other scanClass] == CLASS_CARGO && [other cargoType] != CARGO_NOT_CARGO && [other status] != STATUS_BEING_SCOOPED)
 		{
 			if (![self isPolice] || [other commodityType] == CARGO_SLAVES) // police only rescue lifepods and slaves
@@ -582,7 +582,7 @@ static BOOL IsPirateVictimPredicate(OOEntity *entity, void *predicate)
 static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 {
 	NSCParameterAssert([entity isShip]);
-	ShipEntity *ship = (ShipEntity *)entity;
+	OOShipEntity *ship = (OOShipEntity *)entity;
 	
 	return ship->scanClass == CLASS_CARGO && [ship cargoType] != CARGO_NOT_CARGO && [ship status] != STATUS_BEING_SCOOPED;
 }
@@ -703,16 +703,16 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 {
 	// find an incoming missile...
 	//
-	ShipEntity			*missile =  nil;
+	OOShipEntity			*missile =  nil;
 	unsigned			i;
 	NSEnumerator		*escortEnum = nil;
-	ShipEntity			*escort = nil;
-	ShipEntity			*target = nil;
+	OOShipEntity			*escort = nil;
+	OOShipEntity			*target = nil;
 	
 	[self checkScanner];
 	for (i = 0; (i < n_scanned_ships)&&(missile == nil); i++)
 	{
-		ShipEntity *thing = scanned_ships[i];
+		OOShipEntity *thing = scanned_ships[i];
 		if (thing->scanClass == CLASS_MISSILE)
 		{
 			target = [thing primaryTarget];
@@ -739,7 +739,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	[self addTarget:missile];
 
 	// Notify own ship script that we are being attacked.	
-	ShipEntity *hunter = [missile owner];
+	OOShipEntity *hunter = [missile owner];
 	[self doScriptEvent:OOJSID("shipBeingAttacked") withArgument:hunter];
 	[hunter doScriptEvent:OOJSID("shipAttackedOther") withArgument:self];
 	
@@ -748,7 +748,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 		// Notify other police in group of attacker.
 		// Note: prior to 1.73 this was done only if we had ECM.
 		NSEnumerator	*policeEnum = nil;
-		ShipEntity		*police = nil;
+		OOShipEntity		*police = nil;
 		
 		for (policeEnum = [[self group] mutationSafeEnumerator]; (police = [policeEnum nextObject]); )
 		{
@@ -828,7 +828,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 
 - (void) checkTargetLegalStatus
 {
-	ShipEntity  *other_ship = [self primaryTarget];
+	OOShipEntity  *other_ship = [self primaryTarget];
 	if (!other_ship)
 	{
 		[shipAI message:@"NO_TARGET"];
@@ -1012,7 +1012,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	OOShipGroup *group = [self group];
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		ShipEntity *ship = scanned_ships[i];
+		OOShipEntity *ship = scanned_ships[i];
 		if ((ship->scanClass != CLASS_CARGO)&&([ship status] != STATUS_DEAD)&&([ship status] != STATUS_DOCKED))
 		{
 			GLfloat	d2 = distance2_scanned_ships[i];
@@ -1078,7 +1078,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 - (void) wormholeEscorts
 {
 	NSEnumerator		*shipEnum = nil;
-	ShipEntity			*ship = nil;
+	OOShipEntity			*ship = nil;
 	NSString			*context = nil;
 	WormholeEntity		*whole = nil;
 	
@@ -1105,7 +1105,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 - (void) wormholeGroup
 {
 	NSEnumerator		*shipEnum = nil;
-	ShipEntity			*ship = nil;
+	OOShipEntity			*ship = nil;
 	WormholeEntity		*whole = nil;
 	
 	whole = [self primaryTarget];
@@ -1147,7 +1147,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	GLfloat			d2;
 	NSString		*distress_message;
 	BOOL			isBuoy = (scanClass == CLASS_BUOY);
-	ShipEntity		*aggressorShip = [self primaryAggressor];
+	OOShipEntity		*aggressorShip = [self primaryAggressor];
 	
 	[self setFoundTarget:nil];
 	if (aggressorShip == nil)  return;
@@ -1169,7 +1169,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 	
 	for (unsigned i = 0; i < n_scanned_ships; i++)
 	{
-		ShipEntity	*ship = scanned_ships[i];
+		OOShipEntity	*ship = scanned_ships[i];
 		d2 = distance2_scanned_ships[i];
 	
 		// Tell it!
@@ -1245,7 +1245,7 @@ static BOOL IsLootPredicate(OOEntity *entity, void *predicate)
 OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip]);
-	ShipEntity *ship = (ShipEntity *)entity;
+	OOShipEntity *ship = (OOShipEntity *)entity;
 	
 	return ship->scanClass != CLASS_CARGO && [ship status] != STATUS_DOCKED && ![ship isThargoid] && ![ship isCloaked];
 }
@@ -1259,7 +1259,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 
 - (void) thargonCheckMother
 {
-	ShipEntity   *mother = [self owner];
+	OOShipEntity   *mother = [self owner];
 	if (mother == nil && [self group] != nil)  mother = [[self group] leader];
 	
 	const double maxRange2 = scannerRange * scannerRange;
@@ -1272,7 +1272,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 	{
 		// we lost the old mother, search for a new one
 		[self scanForNearestShipHavingRole:@"thargoid-mothership"]; // the scan will send further AI messages.
-		mother = (ShipEntity *)[self foundTarget];
+		mother = (OOShipEntity *)[self foundTarget];
 		if (mother != nil)
 		{
 			[self setOwner:mother];
@@ -1289,7 +1289,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 	int i;
 	for (i = 0; i < ent_count; i++) if (uni_entities[i]->isShip)
 	{
-		ShipEntity *other = (ShipEntity*)uni_entities[i];
+		OOShipEntity *other = (OOShipEntity*)uni_entities[i];
 		if ([other primaryTarget] == self)
 		{
 			[other removeTarget:self];
@@ -1362,7 +1362,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 
 - (void) suggestEscort
 {
-	ShipEntity   *mother = [self primaryTarget];
+	OOShipEntity   *mother = [self primaryTarget];
 	if (mother)
 	{
 #ifndef NDEBUG
@@ -1403,7 +1403,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 
 - (void) escortCheckMother
 {
-	ShipEntity   *mother = [self owner];
+	OOShipEntity   *mother = [self owner];
 	
 	if ([mother acceptAsEscort:self])
 	{
@@ -1453,7 +1453,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 - (void) groupAttackTarget
 {
 	NSEnumerator		*shipEnum = nil;
-	ShipEntity			*target = [self primaryTarget], *ship = nil;
+	OOShipEntity			*target = [self primaryTarget], *ship = nil;
 	
 	if (target == nil) return;
 	
@@ -1472,7 +1472,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 		[ship reactToAIMessage:@"GROUP_ATTACK_TARGET" context:@"groupAttackTarget"];
 		if ([ship escortGroup] != [ship group] && [[ship escortGroup] count] > 1) // Ship has a seperate escort group.
 		{
-			ShipEntity		*escort = nil;
+			OOShipEntity		*escort = nil;
 			NSEnumerator	*shipEnum = nil;
 			NSArray			*escortMembers = [[ship escortGroup] memberArrayExcludingLeader];
 			for (shipEnum = [escortMembers objectEnumerator]; (escort = [shipEnum nextObject]); )
@@ -1488,7 +1488,7 @@ OOINLINE BOOL IsNonThargoidPredicate(OOEntity *entity, void *parameter)
 OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parameter)
 {
 	NSCParameterAssert([entity isShip] && [(id)parameter isShip]);
-	ShipEntity *ship = (ShipEntity *)entity, *self = parameter;
+	OOShipEntity *ship = (OOShipEntity *)entity, *self = parameter;
 	
 	return ship != self && ship->scanClass == self->scanClass && ![ship isPlayer] && [ship primaryTarget] != self;
 }
@@ -1510,7 +1510,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 
 - (void) messageMother:(NSString *)msgString
 {
-	ShipEntity *mother = [self owner];
+	OOShipEntity *mother = [self owner];
 	if (mother != nil && mother != self)
 	{
 		NSString *context = nil;
@@ -1653,7 +1653,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 - (void) patrolReportIn
 {
 	// Set a report time in the patrolled station to delay a new launch.
-	ShipEntity *the_station = [[self group] leader];
+	OOShipEntity *the_station = [[self group] leader];
 	if(!the_station || ![the_station isStation]) the_station = [UNIVERSE station];
 	[(StationEntity*)the_station acceptPatrolReportFrom:self];
 }
@@ -1661,7 +1661,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 
 - (void) checkForMotherStation
 {
-	ShipEntity *motherStation = [[self group] leader];
+	OOShipEntity *motherStation = [[self group] leader];
 	if ((!motherStation) || (!(motherStation->isStation)))
 	{
 		[shipAI message:@"NOTHING_FOUND"];
@@ -1681,7 +1681,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 
 - (void) sendTargetCommsMessage:(NSString*) message
 {
-	ShipEntity *ship = [self primaryTarget];
+	OOShipEntity *ship = [self primaryTarget];
 	if ((ship == nil) || ([ship status] == STATUS_DEAD) || ([ship status] == STATUS_DOCKED))
 	{
 		[self noteLostTarget];
@@ -1693,7 +1693,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 
 - (void) markTargetForFines
 {
-	ShipEntity *ship = [self primaryTarget];
+	OOShipEntity *ship = [self primaryTarget];
 	if ((ship == nil) || ([ship status] == STATUS_DEAD) || ([ship status] == STATUS_DOCKED))
 	{
 		[self noteLostTarget];
@@ -1707,7 +1707,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 {
 	if ((isStation)||(scanClass == CLASS_POLICE))
 	{
-		ShipEntity *ship = [self primaryTarget];
+		OOShipEntity *ship = [self primaryTarget];
 		if ((ship == nil) || ([ship status] == STATUS_DEAD) || ([ship status] == STATUS_DOCKED))
 		{
 			[self noteLostTarget];
@@ -1761,7 +1761,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 {
 	// Locates all the ships in range targeting the mother ship and chooses the nearest/biggest.
 	
-	ShipEntity *mother = [[self group] leader];
+	OOShipEntity *mother = [[self group] leader];
 	if (mother == nil)
 	{
 		[shipAI message:@"MOTHER_LOST"];
@@ -1775,7 +1775,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	GLfloat max_e = 0;
 	for (i = 0; i < n_scanned_ships ; i++)
 	{
-		ShipEntity *thing = scanned_ships[i];
+		OOShipEntity *thing = scanned_ships[i];
 		GLfloat d2 = distance2_scanned_ships[i];
 		GLfloat e1 = [thing energy];
 		if (d2 < found_d2 && e1 > max_e &&
@@ -2095,7 +2095,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 - (void) enterTargetWormhole
 {
 	WormholeEntity *whole = nil;
-	ShipEntity		*targEnt = [self primaryTarget];
+	OOShipEntity		*targEnt = [self primaryTarget];
 	double found_d2 = scannerRange * scannerRange;
 
 	if (targEnt && (distance2(position, [targEnt position]) < found_d2))
@@ -2179,7 +2179,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 - (void) targetNextBeaconWithCode:(NSString*) code
 {
 	NSArray			*beacons = [UNIVERSE listBeaconsWithCode: code];
-	ShipEntity		*currentBeacon = [self primaryTarget];
+	OOShipEntity		*currentBeacon = [self primaryTarget];
 	
 	if (![currentBeacon isBeacon])
 	{
@@ -2216,7 +2216,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 - (void) setRacepointsFromTarget
 {
 	// two point - one at z - cr one at z + cr
-	ShipEntity *ship = [self primaryTarget];
+	OOShipEntity *ship = [self primaryTarget];
 	if (ship == nil)
 	{
 		[shipAI message:@"NOTHING_FOUND"];
@@ -2245,7 +2245,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 @end
 
 
-@implementation ShipEntity (OOAIPrivate)
+@implementation OOShipEntity (OOAIPrivate)
 
 - (BOOL) performHyperSpaceExitReplace:(BOOL)replace
 {
@@ -2280,7 +2280,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	}
 	
 	// check if we're clear of nearby masses
-	ShipEntity *blocker = [self shipBlockingHyperspaceJump];
+	OOShipEntity *blocker = [self shipBlockingHyperspaceJump];
 	if (blocker != nil)
 	{
 		[self setFoundTarget:blocker];
@@ -2327,7 +2327,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 }
 
 
-OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+OOINLINE void ScanForNearestShipNoAnnounce(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	// Locates all the ships in range for which predicate returns YES, and chooses the nearest.
 	NSCParameterAssert(self != nil && predicate != NULL);
@@ -2335,15 +2335,15 @@ OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredica
 	[self checkScanner];
 	
 	unsigned	i, scannedCount = self->n_scanned_ships;
-	ShipEntity	*target = nil;
-	ShipEntity	**scannedShips = self->scanned_ships;
+	OOShipEntity	*target = nil;
+	OOShipEntity	**scannedShips = self->scanned_ships;
 	OOScalar	*distances = self->distance2_scanned_ships;
 	OOScalar	found_d2 = self->scannerRange;
 	found_d2 *= found_d2;
 	
 	for (i = 0; i < scannedCount; i++)
 	{
-		ShipEntity *ship = scannedShips[i];
+		OOShipEntity *ship = scannedShips[i];
 		OOScalar d2 = distances[i];
 		
 		if (d2 < found_d2 && ship->scanClass != CLASS_CARGO)
@@ -2362,20 +2362,20 @@ OOINLINE void ScanForNearestShipNoAnnounce(ShipEntity *self, EntityFilterPredica
 }
 
 
-OOINLINE void ScanForRandomShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+OOINLINE void ScanForRandomShip(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	[self checkScanner];
 	
 	unsigned	i, count = 0, scannedCount = self->n_scanned_ships;
-	ShipEntity	*shipsFound[scannedCount];
-	ShipEntity	**scannedShips = self->scanned_ships;
+	OOShipEntity	*shipsFound[scannedCount];
+	OOShipEntity	**scannedShips = self->scanned_ships;
 	OOScalar	*distances = self->distance2_scanned_ships;
 	OOScalar	found_d2 = self->scannerRange;
 	found_d2 *= found_d2;
 	
 	for (i = 0; i < scannedCount; i++)
 	{
-		ShipEntity *ship = scannedShips[i];
+		OOShipEntity *ship = scannedShips[i];
 		float d2 = distances[i];
 		if (d2 < found_d2)
 		{
@@ -2400,7 +2400,7 @@ OOINLINE void ScanForRandomShip(ShipEntity *self, EntityFilterPredicate predicat
 }
 
 
-OOINLINE void ScanForNearestShip(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+OOINLINE void ScanForNearestShip(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	ScanForNearestShipNoAnnounce(self, predicate, parameter);
 	[self announceFoundTarget];
@@ -2412,27 +2412,27 @@ OOINLINE BOOL NonDerelictAndPredicate(OOEntity *entity, void *parameter)
 	NSCParameterAssert([entity isShip] && parameter != NULL);
 	ChainedEntityPredicateParameter *param = parameter;
 	
-	return ![(ShipEntity *)entity isHulk] && param->predicate(entity, param->parameter);
+	return ![(OOShipEntity *)entity isHulk] && param->predicate(entity, param->parameter);
 }
 
 
-OOINLINE void ScanForNearestNonDerelict(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+OOINLINE void ScanForNearestNonDerelict(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	ChainedEntityPredicateParameter param = { predicate, parameter, };
 	ScanForNearestShip(self, NonDerelictAndPredicate, &param);
 }
 
 
-OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPredicate predicate, void *parameter)
+OOINLINE void ScanForNearestNonDerelictNegated(OOShipEntity *self, EntityFilterPredicate predicate, void *parameter)
 {
 	ChainedEntityPredicateParameter param = { predicate, parameter };
 	ScanForNearestNonDerelict(self, NOTPredicate, &param);
 }
 
 
-- (void) acceptDistressMessageFrom:(ShipEntity *)other
+- (void) acceptDistressMessageFrom:(OOShipEntity *)other
 {
-	ShipEntity *perp = [other primaryTarget];
+	OOShipEntity *perp = [other primaryTarget];
 	[self setFoundTarget:perp];
 	
 	if ([self isPolice])
@@ -2452,13 +2452,13 @@ OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPre
 
 @implementation StationEntity (OOAIPrivate)
 
-- (void) acceptDistressMessageFrom:(ShipEntity *)other
+- (void) acceptDistressMessageFrom:(OOShipEntity *)other
 {
 	if (self != [UNIVERSE station])  return;
 	
 	OOWeakReference *temp = _primaryTarget;
 	_primaryTarget = [[[other primaryTarget] weakRetain] autorelease];
-	[(ShipEntity *)[other primaryTarget] markAsOffender:8];	// mark their card
+	[(OOShipEntity *)[other primaryTarget] markAsOffender:8];	// mark their card
 	[self launchDefenseShip];
 	_primaryTarget = temp;
 	
@@ -2467,7 +2467,7 @@ OOINLINE void ScanForNearestNonDerelictNegated(ShipEntity *self, EntityFilterPre
 @end
 
 
-@implementation ShipEntity (OOAIStationStubs)
+@implementation OOShipEntity (OOAIStationStubs)
 
 // AI methods for stations, have no effect on normal ships.
 

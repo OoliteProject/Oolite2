@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "WormholeEntity.h"
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "PlayerEntity.h"
@@ -116,7 +116,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 			NSDictionary *shipInfo = [currShipDict oo_dictionaryForKey:@"ship_info"];
 			if (shipInfo != nil)
 			{
-				ShipEntity *ship = [ShipEntity shipRestoredFromDictionary:shipInfo
+				OOShipEntity *ship = [OOShipEntity shipRestoredFromDictionary:shipInfo
 															  useFallback:YES
 																  context:restoreContext];
 				if (ship != nil)
@@ -137,7 +137,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	return self;
 }
 
-- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(ShipEntity *) ship
+- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship
 {
 	assert(ship != nil);
 
@@ -203,7 +203,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 }
 
 
-- (BOOL) suckInShip:(ShipEntity *) ship
+- (BOOL) suckInShip:(OOShipEntity *) ship
 {
 	if (!ship)
 		return NO;
@@ -224,7 +224,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 		float shipSpeed = [ship maxFlightSpeed] * afterburnerFactor;
 		// MKW 2011.02.27 - calculate speed based on group leader, if any, to
 		// try and prevent escorts from entering the wormhole before their mother.
-		ShipEntity *leader = [[ship group] leader];
+		OOShipEntity *leader = [[ship group] leader];
 		if (leader && (leader != ship))
 		{
 			afterburnerFactor = [leader hasFuelInjection] && [leader fuel] > MIN_FUEL ? [leader afterburnerFactor] : 1.0;
@@ -269,7 +269,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	{
 		NSDictionary *shipDesc = [shipsInTransit oo_dictionaryAtIndex:i];
 		
-		ShipEntity *ship = [shipDesc objectForKey:@"ship"];
+		OOShipEntity *ship = [shipDesc objectForKey:@"ship"];
 		NSString *shipBeacon = [shipDesc oo_stringForKey:@"shipBeacon"];
 		double	ship_arrival_time = arrival_time + [shipDesc oo_doubleForKey:@"time"];
 		double	time_passed = now - ship_arrival_time;
@@ -445,7 +445,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 }
 
 
-- (NSString *) identFromShip:(ShipEntity*)ship
+- (NSString *) identFromShip:(OOShipEntity*)ship
 {
 	if ([ship hasEquipmentItem:@"EQ_WORMHOLE_SCANNER"])
 	{
@@ -682,7 +682,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	for (i = 0; i < [shipsInTransit count]; ++i)
 	{
 		NSDictionary *shipDict = [shipsInTransit oo_dictionaryAtIndex:i];
-		ShipEntity* ship = (ShipEntity*)[shipDict objectForKey:@"ship"];
+		OOShipEntity* ship = (OOShipEntity*)[shipDict objectForKey:@"ship"];
 		double	ship_arrival_time = arrival_time + [shipDict oo_doubleForKey:@"time"];
 		OOLog(@"dumpState.wormholeEntity.ships", @"Ship %d: %@  mass %.2f  arrival time %@", i+1, ship, [ship mass], ClockToString(ship_arrival_time, false));
 	}

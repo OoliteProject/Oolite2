@@ -25,13 +25,13 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
-@interface ShipEntity (ScriptMethods)
+@interface OOShipEntity (ScriptMethods)
 
-- (ShipEntity *) ejectShipOfType:(NSString *)shipKey;	// Note: ship type, not role.
-- (ShipEntity *) ejectShipOfRole:(NSString *)role;
+- (OOShipEntity *) ejectShipOfType:(NSString *)shipKey;	// Note: ship type, not role.
+- (OOShipEntity *) ejectShipOfRole:(NSString *)role;
 
 - (NSArray *) spawnShipsWithRole:(NSString *)role count:(NSUInteger)count;
 

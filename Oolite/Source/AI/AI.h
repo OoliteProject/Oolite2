@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #define AI_THINK_INTERVAL					0.125
 
 
-@class ShipEntity;
+@class OOShipEntity;
 #ifdef OO_BRAIN_AI
 @class OOInstinct;
 #endif
@@ -37,7 +37,7 @@ MA 02110-1301, USA.
 
 @interface AI : OOWeakRefObject
 {
-	id					_owner;						// OOWeakReference to the ShipEntity this is the AI for
+	id					_owner;						// OOWeakReference to the OOShipEntity this is the AI for
 	NSString			*ownerDesc;					// describes the object this is the AI for
 	
 	NSDictionary		*stateMachine;
@@ -75,8 +75,8 @@ MA 02110-1301, USA.
 - (void) setRulingInstinct:(OOInstinct*) instinct;
 #endif
 
-- (ShipEntity *)owner;
-- (void) setOwner:(ShipEntity *)ship;
+- (OOShipEntity *)owner;
+- (void) setOwner:(OOShipEntity *)ship;
 
 - (void) preserveCurrentStateMachine;
 

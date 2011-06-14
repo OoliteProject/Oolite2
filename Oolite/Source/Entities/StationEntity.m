@@ -48,8 +48,8 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 @interface StationEntity (private)
 
-- (void)clearIdLocks:(ShipEntity*)ship;
-- (void) pullInShipIfPermitted:(ShipEntity *)ship;
+- (void)clearIdLocks:(OOShipEntity*)ship;
+- (void) pullInShipIfPermitted:(OOShipEntity *)ship;
 
 @end
 
@@ -299,7 +299,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	for (i = 0; i < count; i++)
 	{
-		ShipEntity *ship = [UNIVERSE entityForUniversalID:[ships oo_unsignedIntAtIndex:i]];
+		OOShipEntity *ship = [UNIVERSE entityForUniversalID:[ships oo_unsignedIntAtIndex:i]];
 		if ([ship isShip])
 		{
 			[self pullInShipIfPermitted:ship];
@@ -336,7 +336,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 // this routine does more than set coordinates - it provides a whole set of docking instructions and messages at each stage..
 //
-- (NSDictionary *) dockingInstructionsForShip:(ShipEntity *) ship
+- (NSDictionary *) dockingInstructionsForShip:(OOShipEntity *) ship
 {	
 	Vector		coords;
 	
@@ -567,7 +567,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) addShipToShipsOnApproach:(ShipEntity *) ship
+- (void) addShipToShipsOnApproach:(OOShipEntity *) ship
 {		
 	int			corridor_distance[] =	{	-1,	1,	3,	5,	7,	9,	11,	12,	12};
 	int			corridor_offset[] =		{	0,	0,	0,	0,	0,	0,	1,	3,	12};
@@ -663,7 +663,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) abortDockingForShip:(ShipEntity *) ship
+- (void) abortDockingForShip:(OOShipEntity *) ship
 {
 	int			ship_id = [ship universalID];
 	NSNumber	*shipID = [NSNumber numberWithUnsignedShort:ship_id];
@@ -750,7 +750,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	[super dealloc];
 }
 
-- (void) clearIdLocks:(ShipEntity *)ship
+- (void) clearIdLocks:(OOShipEntity *)ship
 {
 	int i;
 	for (i = 1; i < MAX_DOCKING_STAGES; i++)
@@ -833,7 +833,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) setDockingPortModel:(ShipEntity*) dock_model :(Vector) dock_pos :(Quaternion) dock_q
+- (void) setDockingPortModel:(OOShipEntity*) dock_model :(Vector) dock_pos :(Quaternion) dock_q
 {
 	port_model = dock_model;
 	
@@ -864,7 +864,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (BOOL) shipIsInDockingCorridor:(ShipEntity *)ship
+- (BOOL) shipIsInDockingCorridor:(OOShipEntity *)ship
 {
 	if (![ship isShip])  return NO;
 	if ([ship isPlayer] && [ship status] == STATUS_DEAD)  return NO;
@@ -973,7 +973,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) pullInShipIfPermitted:(ShipEntity *)ship
+- (void) pullInShipIfPermitted:(OOShipEntity *)ship
 {
 #if 0
 	/*
@@ -1023,7 +1023,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 	for (i = 0; (i < ship_count)&&(isEmpty); i++)
 	{
-		ShipEntity*	ship = (ShipEntity*)my_entities[i];
+		OOShipEntity*	ship = (OOShipEntity*)my_entities[i];
 		double		d2 = distance2(position, ship->position);
 		if ((ship != self)&&(d2 < 25000000)&&([ship status] != STATUS_DOCKED))	// within 5km
 		{
@@ -1077,7 +1077,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 	for (i = 0; i < ship_count; i++)
 	{
-		ShipEntity*	ship = (ShipEntity*)my_entities[i];
+		OOShipEntity*	ship = (OOShipEntity*)my_entities[i];
 		double		d2 = distance2(position, ship->position);
 		if ((ship != self)&&(d2 < 25000000)&&([ship status] != STATUS_DOCKED))	// within 5km
 		{
@@ -1179,7 +1179,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	if (([launchQueue count] > 0)&&([shipsOnApproach count] == 0)&&[self dockingCorridorIsEmpty])
 	{
-		ShipEntity *se=(ShipEntity *)[launchQueue objectAtIndex:0];
+		OOShipEntity *se=(OOShipEntity *)[launchQueue objectAtIndex:0];
 		[self launchShip:se];
 		[launchQueue removeObjectAtIndex:0];
 	}
@@ -1236,7 +1236,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) addShipToLaunchQueue:(ShipEntity *) ship :(BOOL) priority
+- (void) addShipToLaunchQueue:(OOShipEntity *) ship :(BOOL) priority
 {
 	[self sanityCheckShipsOnApproach];
 	if (!launchQueue)
@@ -1265,7 +1265,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) launchShip:(ShipEntity *) ship
+- (void) launchShip:(OOShipEntity *) ship
 {
 	if (![ship isShip])  return;
 	
@@ -1327,7 +1327,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) noteDockedShip:(ShipEntity *) ship
+- (void) noteDockedShip:(OOShipEntity *) ship
 {
 	if (ship == nil)  return;	
 	
@@ -1367,7 +1367,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	}
 }
 
-- (void) addShipToStationCount:(ShipEntity *) ship
+- (void) addShipToStationCount:(OOShipEntity *) ship
 {
  	if ([ship isShuttle])  docked_shuttles++;
 	else if ([ship isTrader] && ![ship isPlayer])  docked_traders++;
@@ -1400,7 +1400,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (BOOL) collideWithShip:(ShipEntity *)other
+- (BOOL) collideWithShip:(OOShipEntity *)other
 {
 	// 2010.06.10 - Micha. Commented out as there doesn't appear to be a good
 	//				reason for it and it interferes with docking clearance.
@@ -1422,7 +1422,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	if ([other isShip] && group != nil)
 	{
-		OOShipGroup *otherGroup = [(ShipEntity *)other group];
+		OOShipGroup *otherGroup = [(OOShipEntity *)other group];
 		isFriend = otherGroup == group || [otherGroup leader] == self;
 	}
 	
@@ -1433,11 +1433,11 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 		BOOL isEnergyMine = [ent isCascadeWeapon];
 		unsigned b=isEnergyMine ? 96 : 64;
-		if ([(ShipEntity*)other bounty] >= b)	//already a hardened criminal?
+		if ([(OOShipEntity*)other bounty] >= b)	//already a hardened criminal?
 		{
 			b *= 1.5; //bigger bounty!
 		}
-		[(ShipEntity*)other markAsOffender:b];
+		[(OOShipEntity*)other markAsOffender:b];
 		
 		[self setPrimaryAggressor:other];
 		[self setFoundTarget:other];
@@ -1515,11 +1515,11 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchIndependentShip:(NSString*) role
+- (OOShipEntity *) launchIndependentShip:(NSString*) role
 {
 	BOOL			trader = [role isEqualToString:@"trader"];
 	BOOL			sunskimmer = ([role isEqualToString:@"sunskim-trader"]);
-	ShipEntity		*ship = nil;
+	OOShipEntity		*ship = nil;
 	NSString		*defaultRole = @"escort";
 	NSString		*escortRole = nil;
 	NSString		*escortShipKey = nil;
@@ -1600,7 +1600,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 				
 			while (escorts--)
 			{
-				ShipEntity  *escort_ship;
+				OOShipEntity  *escort_ship;
 
 				if (escortShipKey)
 				{
@@ -1680,7 +1680,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	for (i = 0; (i < 4)&&(defenders_launched < max_police) ; i++)
 	{
-		ShipEntity  *police_ship = nil;
+		OOShipEntity  *police_ship = nil;
 		
 		if ((Ranrot() & 7) + 6 <= techlevel)
 		{
@@ -1718,7 +1718,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchDefenseShip
+- (OOShipEntity *) launchDefenseShip
 {
 	OOEntity			*target = [self primaryTarget];
 	if (target == nil)
@@ -1727,7 +1727,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 		return [NSArray array];
 	}
 	
-	ShipEntity		*defense_ship = nil;
+	OOShipEntity		*defense_ship = nil;
 	NSString		*defense_ship_key = nil,
 					*defense_ship_role = nil,
 					*default_defense_ship_role = nil;
@@ -1798,7 +1798,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchScavenger
+- (OOShipEntity *) launchScavenger
 {
 	unsigned scavs = [UNIVERSE countShipsWithPrimaryRole:@"scavenger" inRange:SCANNER_MAX_RANGE ofEntity:self] + [self countShipsInLaunchQueueWithPrimaryRole:@"scavenger"];
 	
@@ -1807,7 +1807,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	scavengers_launched++;
 		
-	ShipEntity *scavenger_ship = [UNIVERSE newShipWithRole:@"scavenger"];   // retain count = 1
+	OOShipEntity *scavenger_ship = [UNIVERSE newShipWithRole:@"scavenger"];   // retain count = 1
 	if (scavenger_ship != nil)
 	{
 		if (![scavenger_ship crew])
@@ -1826,9 +1826,9 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchMiner
+- (OOShipEntity *) launchMiner
 {
-	ShipEntity  *miner_ship;
+	OOShipEntity  *miner_ship;
 	
 	int		n_miners = [UNIVERSE countShipsWithPrimaryRole:@"miner" inRange:SCANNER_MAX_RANGE ofEntity:self] + [self countShipsInLaunchQueueWithPrimaryRole:@"miner"];
 	
@@ -1859,7 +1859,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 /**Lazygun** added the following method. A complete rip-off of launchDefenseShip. 
  */
 // Exposed to AI
-- (ShipEntity *) launchPirateShip
+- (OOShipEntity *) launchPirateShip
 {
 	OOEntity			*target = [self primaryTarget];
 	if (target == nil)
@@ -1873,7 +1873,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	defenders_launched++;
 	
 	// Yep! The standard hermit defence ships, even if they're the aggressor.
-	ShipEntity *pirateShip = [UNIVERSE newShipWithRole:@"pirate"];   // retain count = 1
+	OOShipEntity *pirateShip = [UNIVERSE newShipWithRole:@"pirate"];   // retain count = 1
 	// Nope, use standard pirates in a generic method.
 	
 	if (pirateShip)
@@ -1903,9 +1903,9 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchShuttle
+- (OOShipEntity *) launchShuttle
 {
-	ShipEntity  *shuttle_ship;
+	OOShipEntity  *shuttle_ship;
 		
 	shuttle_ship = [UNIVERSE newShipWithRole:@"shuttle"];   // retain count = 1
 	
@@ -1930,7 +1930,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (void) launchEscort
 {
-	ShipEntity  *escort_ship;
+	OOShipEntity  *escort_ship;
 		
 	escort_ship = [UNIVERSE newShipWithRole:@"escort"];   // retain count = 1
 	
@@ -1952,11 +1952,11 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 
 
 // Exposed to AI
-- (ShipEntity *) launchPatrol
+- (OOShipEntity *) launchPatrol
 {
 	if (defenders_launched < max_police)
 	{
-		ShipEntity		*patrol_ship = nil;
+		OOShipEntity		*patrol_ship = nil;
 		OOTechLevelID	techlevel;
 		
 		techlevel = [self equivalentTechLevel];
@@ -1995,7 +1995,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 // Exposed to AI
 - (void) launchShipWithRole:(NSString*) role
 {
-	ShipEntity  *ship = [UNIVERSE newShipWithRole: role];   // retain count = 1
+	OOShipEntity  *ship = [UNIVERSE newShipWithRole: role];   // retain count = 1
 	if (ship)
 	{
 		if (![ship crew])
@@ -2054,13 +2054,13 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 }
 
 
-- (void) acceptPatrolReportFrom:(ShipEntity*) patrol_ship
+- (void) acceptPatrolReportFrom:(OOShipEntity*) patrol_ship
 {
 	last_patrol_report_time = [UNIVERSE gameTime];
 }
 
 
-- (NSString *) acceptDockingClearanceRequestFrom:(ShipEntity *)other
+- (NSString *) acceptDockingClearanceRequestFrom:(OOShipEntity *)other
 {
 	NSString	*result = nil;
 	double		timeNow = [UNIVERSE gameTime];
@@ -2311,7 +2311,7 @@ static NSDictionary* DockingInstructions(StationEntity *station, Vector coords, 
 	
 	// approach and hold lists.
 	unsigned i;
-	ShipEntity		*ship = nil;
+	OOShipEntity		*ship = nil;
 	NSArray*	ships = [shipsOnApproach allKeys];
 	if([ships count] > 0 ) OOLog(@"dumpState.stationEntity", @"%i Ships on approach (unsorted):", [ships count]);
 	for (i = 0; i < [ships count]; i++)

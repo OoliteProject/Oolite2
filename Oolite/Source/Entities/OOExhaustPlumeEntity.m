@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 
 #import "OOExhaustPlumeEntity.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "Universe.h"
 #import "OOMacroOpenGL.h"
 #import "OOShipClass.h"
@@ -45,13 +45,13 @@ MA 02110-1301, USA.
 
 @implementation OOExhaustPlumeEntity
 
-+ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
++ (id) exhaustForShip:(OOShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
 {
 	return [[[self alloc] initForShip:ship withDefinition:definition] autorelease];
 }
 
 
-- (id) initForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
+- (id) initForShip:(OOShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition
 {
 	if ((self = [super init]))
 	{
@@ -80,7 +80,7 @@ MA 02110-1301, USA.
 - (void) update:(OOTimeDelta) delta_t
 {
 	// don't draw if there's no ship, or if we're just jumping out of whitchspace/docked at a station!
-	ShipEntity  *ship = [self owner];
+	OOShipEntity  *ship = [self owner];
 	if (EXPECT_NOT(ship == nil || ([ship isPlayer] && [ship suppressFlightNotifications]))) return;
 
 	OOTimeAbsolute now = [UNIVERSE gameTime];
@@ -280,7 +280,7 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 {
 	if (!translucent)  return;
 	
-	ShipEntity *ship = [self owner];
+	OOShipEntity *ship = [self owner];
 	if ([ship speedFactor] <= 0.0)  return;	// don't draw if there's no fire!
 	
 	OO_ENTER_OPENGL();
@@ -323,7 +323,7 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 
 - (void) saveToLastFrame
 {
-	ShipEntity *ship = [self owner];
+	OOShipEntity *ship = [self owner];
 	
 	// Absolute position of self
 	Vector framePos = OOVectorMultiplyMatrix([self position], [ship drawTransformationMatrix]);
@@ -392,7 +392,7 @@ GLuint tfan2[10] =    {	33,	25,	26,	27,	28,	29,	30,	31,	32,	25 };	// final fan 6
 
 - (void) resetPlume
 {
-	/*ShipEntity *ship = [self owner];
+	/*OOShipEntity *ship = [self owner];
 	
 	// Absolute position of self
 	Vector framePos = OOVectorMultiplyMatrix([self position], [ship drawTransformationMatrix]);

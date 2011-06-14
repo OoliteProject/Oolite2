@@ -1,6 +1,6 @@
 /*
 
-ShipEntity.h
+OOShipEntity.h
 
 OOEntity subclass representing a ship, or various other flying things like
 cargo pods and stations (a subclass).
@@ -164,7 +164,7 @@ typedef enum
 
 
 
-@interface ShipEntity: OOEntityWithDrawable <OOSubEntity>
+@interface OOShipEntity: OOEntityWithDrawable <OOSubEntity>
 {
 @public
 	// derived variables
@@ -348,7 +348,7 @@ typedef enum
 	float					ship_temperature;
 	
 	// for advanced scanning etc.
-	ShipEntity*				scanned_ships[MAX_SCAN_NUMBER + 1];
+	OOShipEntity*				scanned_ships[MAX_SCAN_NUMBER + 1];
 	OOScalar				distance2_scanned_ships[MAX_SCAN_NUMBER + 1];
 	unsigned				n_scanned_ships;
 	
@@ -450,8 +450,8 @@ typedef enum
 - (NSEnumerator *)flasherEnumerator;
 - (NSEnumerator *)exhaustEnumerator;
 
-- (ShipEntity *) subEntityTakingDamage;
-- (void) setSubEntityTakingDamage:(ShipEntity *)sub;
+- (OOShipEntity *) subEntityTakingDamage;
+- (void) setSubEntityTakingDamage:(OOShipEntity *)sub;
 
 - (void) clearSubEntities;	// Releases and clears subentity array, after making sure subentities don't think ship is owner.
 
@@ -467,7 +467,7 @@ typedef enum
 
 // octree collision hunting
 - (GLfloat)doesHitLine:(Vector) v0: (Vector) v1;
-- (GLfloat)doesHitLine:(Vector) v0: (Vector) v1 :(ShipEntity**) hitEntity;
+- (GLfloat)doesHitLine:(Vector) v0: (Vector) v1 :(OOShipEntity**) hitEntity;
 - (GLfloat)doesHitLine:(Vector) v0: (Vector) v1 withPosition:(Vector) o andIJK:(Vector) i :(Vector) j :(Vector) k;	// for subentities
 
 - (OOBoundingBox) findBoundingBoxRelativeToPosition:(Vector)opv InVectors:(Vector) _i :(Vector) _j :(Vector) _k;
@@ -479,8 +479,8 @@ typedef enum
 - (void) setBeaconCode:(NSString *)bcode;
 - (BOOL) isBeacon;
 - (id <OOHUDBeaconIcon>) beaconDrawable;
-- (ShipEntity *) nextBeacon;
-- (void) setNextBeacon:(ShipEntity*) beaconShip;
+- (OOShipEntity *) nextBeacon;
+- (void) setNextBeacon:(OOShipEntity*) beaconShip;
 
 - (void) setIsBoulder:(BOOL)flag;
 - (BOOL) isBoulder;
@@ -589,7 +589,7 @@ typedef enum
 - (void) behaviour_track_as_turret:(double) delta_t;
 - (void) behaviour_fly_thru_navpoints:(double) delta_t;
 
-- (GLfloat *) scannerDisplayColorForShip:(ShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2;
+- (GLfloat *) scannerDisplayColorForShip:(OOShipEntity*)otherShip :(BOOL)isHostile :(BOOL)flash :(OOColor *)scannerDisplayColor1 :(OOColor *)scannerDisplayColor2;
 - (void)setScannerDisplayColor1:(OOColor *)color1;
 - (void)setScannerDisplayColor2:(OOColor *)color2;
 - (OOColor *)scannerDisplayColor1;
@@ -623,10 +623,10 @@ typedef enum
 - (uint8_t) pendingEscortCount;
 - (void) setPendingEscortCount:(uint8_t)count;
 
-- (ShipEntity *) proximateShip;
-- (void) notePotentialCollsion:(ShipEntity*) other;
+- (OOShipEntity *) proximateShip;
+- (void) notePotentialCollsion:(OOShipEntity*) other;
 
-- (NSString *) identFromShip:(ShipEntity*) otherShip; // name displayed to other ships
+- (NSString *) identFromShip:(OOShipEntity*) otherShip; // name displayed to other ships
 
 - (BOOL) hasRole:(NSString *)role;
 - (OORoleSet *)roleSet;
@@ -777,15 +777,15 @@ typedef enum
 - (void) becomeEnergyBlast;
 
 - (Vector) positionOffsetForAlignment:(NSString*) align;
-Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q, NSString* align);
+Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion q, NSString* align);
 
-- (void) collectBountyFor:(ShipEntity *)other;
+- (void) collectBountyFor:(OOShipEntity *)other;
 
 - (OOBoundingBox) findSubentityBoundingBox;
 
 - (Triangle) absoluteIJKForSubentity;
 
-- (NSComparisonResult) compareBeaconCodeWith:(ShipEntity *)other;
+- (NSComparisonResult) compareBeaconCodeWith:(OOShipEntity *)other;
 
 - (GLfloat)laserHeatLevel;
 - (GLfloat)hullHeatLevel;
@@ -804,7 +804,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 -----------------------------------------*/
 
 - (void) checkScanner;
-- (ShipEntity**) scannedShips;
+- (OOShipEntity**) scannedShips;
 - (int) numberOfScannedShips;
 
 - (id) primaryAggressor;
@@ -825,16 +825,16 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) setTargetStation:(StationEntity *)target;
 - (void) setTargetStationAndTarget:(StationEntity *)target;
 
-- (ShipEntity *) thankedShip;
-- (void) setThankedShip:(ShipEntity *)thankedShip;
+- (OOShipEntity *) thankedShip;
+- (void) setThankedShip:(OOShipEntity *)thankedShip;
 
-- (BOOL) isFriendlyTo:(ShipEntity *)otherShip;
+- (BOOL) isFriendlyTo:(OOShipEntity *)otherShip;
 
-- (ShipEntity *) shipHitByLaser;
+- (OOShipEntity *) shipHitByLaser;
 
 - (void) noteLostTarget;
 - (void) noteLostTargetAndGoIdle;
-- (void) noteTargetDestroyed:(ShipEntity *)target;
+- (void) noteTargetDestroyed:(OOShipEntity *)target;
 
 - (OOBehaviour) behaviour;
 - (void) setBehaviour:(OOBehaviour) cond;
@@ -875,8 +875,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (BOOL) fireDirectLaserShot;
 - (BOOL) fireLaserShotInDirection:(OOViewID)direction;
 - (BOOL) firePlasmaShotAtOffset:(double)offset speed:(double)speed color:(OOColor *)color;
-- (ShipEntity *) fireMissile;
-- (ShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target;
+- (OOShipEntity *) fireMissile;
+- (OOShipEntity *) fireMissileWithIdentifier:(NSString *) identifier andTarget:(OOEntity *) target;
 - (BOOL) isMissileFlagSet;
 - (void) setIsMissileFlag:(BOOL)newValue;
 - (OOTimeDelta) missileLoadTime;
@@ -886,19 +886,19 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (BOOL) activateCloakingDevice;
 - (void) deactivateCloakingDevice;
 - (BOOL) launchCascadeMine;
-- (ShipEntity *) launchEscapeCapsule;
+- (OOShipEntity *) launchEscapeCapsule;
 - (OOCargoType) dumpCargo;
-- (ShipEntity *) dumpCargoItem;
-- (OOCargoType) dumpItem: (ShipEntity*) jetto;
+- (OOShipEntity *) dumpCargoItem;
+- (OOCargoType) dumpItem: (OOShipEntity*) jetto;
 
 - (void) manageCollisions;
-- (BOOL) collideWithShip:(ShipEntity *)other;
+- (BOOL) collideWithShip:(OOShipEntity *)other;
 - (void) adjustVelocity:(Vector) xVel;
 - (void) addImpactMoment:(Vector) moment fraction:(GLfloat) howmuch;
-- (BOOL) canScoop:(ShipEntity *)other;
-- (void) getTractoredBy:(ShipEntity *)other;
-- (void) scoopIn:(ShipEntity *)other;
-- (void) scoopUp:(ShipEntity *)other;
+- (BOOL) canScoop:(OOShipEntity *)other;
+- (void) getTractoredBy:(OOShipEntity *)other;
+- (void) scoopIn:(OOShipEntity *)other;
+- (void) scoopUp:(OOShipEntity *)other;
 
 - (BOOL) abandonShip;
 
@@ -926,8 +926,8 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 - (void) setDestination:(Vector) dest;
 - (void) setEscortDestination:(Vector) dest;
 
-- (BOOL) canAcceptEscort:(ShipEntity *)potentialEscort;
-- (BOOL) acceptAsEscort:(ShipEntity *) other_ship;
+- (BOOL) canAcceptEscort:(OOShipEntity *)potentialEscort;
+- (BOOL) acceptAsEscort:(OOShipEntity *) other_ship;
 - (void) deployEscorts;
 - (void) dockEscorts;
 
@@ -941,15 +941,15 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) broadcastThargoidDestroyed;
 
-- (void) broadcastHitByLaserFrom:(ShipEntity*) aggressor_ship;
+- (void) broadcastHitByLaserFrom:(OOShipEntity*) aggressor_ship;
 
 // Unpiloted ships cannot broadcast messages, unless the unpilotedOverride is set to YES.
-- (void) sendExpandedMessage:(NSString *) message_text toShip:(ShipEntity*) other_ship;
-- (void) sendMessage:(NSString *) message_text toShip:(ShipEntity*) other_ship withUnpilotedOverride:(BOOL)unpilotedOverride;
+- (void) sendExpandedMessage:(NSString *) message_text toShip:(OOShipEntity*) other_ship;
+- (void) sendMessage:(NSString *) message_text toShip:(OOShipEntity*) other_ship withUnpilotedOverride:(BOOL)unpilotedOverride;
 - (void) broadcastAIMessage:(NSString *) ai_message;
 - (void) broadcastMessage:(NSString *) message_text withUnpilotedOverride:(BOOL) unpilotedOverride;
 - (void) setCommsMessageColor;
-- (void) receiveCommsMessage:(NSString *) message_text from:(ShipEntity *) other;
+- (void) receiveCommsMessage:(NSString *) message_text from:(OOShipEntity *) other;
 - (void) commsMessage:(NSString *)valueString withUnpilotedOverride:(BOOL)unpilotedOverride;
 
 - (BOOL) markForFines;
@@ -958,7 +958,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 - (void) spawn:(NSString *)roles_number;
 
-- (ShipEntity *) shipBlockingHyperspaceJump;
+- (OOShipEntity *) shipBlockingHyperspaceJump;
 
 - (BOOL) trackCloseContacts;
 - (void) setTrackCloseContacts:(BOOL) value;
@@ -1028,7 +1028,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 	it as necessary. It’s called by -initWithKey:definition:.
 	
 	-setUpShipBaseWithShipClass:andDictionary:
-	This performs the core ShipEntity setup that’s shared between players and
+	This performs the core OOShipEntity setup that’s shared between players and
 	NPCs. PlayerEntity calls this instead of super setUpShip….
 */
 
@@ -1039,7 +1039,7 @@ Vector positionOffsetForShipInRotationToAlignment(ShipEntity* ship, Quaternion q
 
 
 #ifndef NDEBUG
-@interface ShipEntity (Debug)
+@interface OOShipEntity (Debug)
 
 - (OOShipGroup *) rawEscortGroup;
 

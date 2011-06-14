@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import "OOEntityFilterPredicate.h"
 #import "OOEntity.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOPlanetEntity.h"
 #import "OORoleSet.h"
 
@@ -60,7 +60,7 @@ BOOL IsPlanetPredicate(OOEntity *entity, void *parameter)
 
 BOOL IsHostileAgainstTargetPredicate(OOEntity *ship, void *parameter)
 {
-	ShipEntity *self = (ShipEntity *)ship, *target = parameter;
+	OOShipEntity *self = (OOShipEntity *)ship, *target = parameter;
 	
 	return ((target == [self primaryTarget] && [self hasHostileTarget]) ||
 			([self isThargoid] && ![target isThargoid]));

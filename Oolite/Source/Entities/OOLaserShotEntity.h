@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOEntity.h"
 #import "OOTypes.h"
 
-@class ShipEntity, OOColor;
+@class OOShipEntity, OOColor;
 
 
 @interface OOLaserShotEntity: OOEntity
@@ -39,7 +39,7 @@ MA 02110-1301, USA.
 	GLfloat					_range;
 }
 
-+ (id) laserFromShip:(ShipEntity *)ship view:(OOViewID)view offset:(Vector)offset;
++ (id) laserFromShip:(OOShipEntity *)ship view:(OOViewID)view offset:(Vector)offset;
 
 - (void) setColor:(OOColor *)color;
 

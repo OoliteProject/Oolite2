@@ -435,7 +435,7 @@ static JSBool PlayerSetEscapePodDestination(JSContext *context, uintN argc, jsva
 			[PLAYER setEscapePodDestination:NULL];
 			OK = YES;
 		}
-		else if ([destValue isKindOfClass:[ShipEntity class]] && [destValue isStation])
+		else if ([destValue isKindOfClass:[OOShipEntity class]] && [destValue isStation])
 		{
 			[PLAYER setEscapePodDestination:destValue];
 			OK = YES;

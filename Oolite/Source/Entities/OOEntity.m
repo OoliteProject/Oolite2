@@ -564,7 +564,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (ShipEntity *)parentEntity
+- (OOShipEntity *)parentEntity
 {
 	id owner = [self owner];
 	if ([owner isShipWithSubEntityShip:self])  return owner;
@@ -578,11 +578,11 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (ShipEntity *) rootShipEntity
+- (OOShipEntity *) rootShipEntity
 {
-	ShipEntity *parent = [self parentEntity];
+	OOShipEntity *parent = [self parentEntity];
 	if (parent != nil)  return [parent rootShipEntity];
-	if ([self isShip])  return (ShipEntity *)self;
+	if ([self isShip])  return (OOShipEntity *)self;
 	return nil;
 }
 
@@ -998,7 +998,7 @@ static NSString * const kOOLogEntityUpdateError				= @"entity.linkedList.update.
 }
 
 
-- (void)subEntityReallyDied:(ShipEntity *)sub
+- (void)subEntityReallyDied:(OOShipEntity *)sub
 {
 	OOLog(@"entity.bug", @"%s called for non-ship entity %p by %p", __PRETTY_FUNCTION__, self, sub);
 }

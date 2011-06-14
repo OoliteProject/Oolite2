@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOShipDescription.h"
 #import "OOShipClass.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
 @implementation OOShipDescription

@@ -299,7 +299,7 @@ OOINLINE BOOL ValidBindingType(OOShaderUniformType type)
 	
 	/*	Examples:
 			<OOShaderUniform 0xf00>{1: int tex1 = 1;}
-			<OOShaderUniform 0xf00>{3: float laser_heat_level = [<ShipEntity 0xba8> laserHeatLevel];}
+			<OOShaderUniform 0xf00>{3: float laser_heat_level = [<OOShipEntity 0xba8> laserHeatLevel];}
 	*/
 	return [NSString stringWithFormat:@"<%@ %p>{%i: %@ %@ = %@;}", [self class], self, location, valueType, name, valueDesc];
 }

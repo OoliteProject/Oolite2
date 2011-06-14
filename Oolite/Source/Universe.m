@@ -187,7 +187,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 - (void) preloadSounds;
 - (void) setUpSettings;
 - (void) setUpInitialUniverse;
-- (ShipEntity *) spawnPatrolShipAt:(Vector)launchPos alongRoute:(Vector)v_route withOffset:(double)ship_location;
+- (OOShipEntity *) spawnPatrolShipAt:(Vector)launchPos alongRoute:(Vector)v_route withOffset:(double)ship_location;
 - (Vector) fractionalPositionFrom:(Vector)point0 to:(Vector)point1 withFraction:(double)routeFraction;
 
 - (void) resetSystemDataCache;
@@ -214,8 +214,8 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 // Set shader effects level without logging or triggering a reset -- should only be used directly during startup.
 - (void) setShaderEffectsLevelDirectly:(OOShaderSetting)value;
 
-- (void) setFirstBeacon:(ShipEntity *)beacon;
-- (void) setLastBeacon:(ShipEntity *)beacon;
+- (void) setFirstBeacon:(OOShipEntity *)beacon;
+- (void) setLastBeacon:(OOShipEntity *)beacon;
 
 - (void) verifyDescriptions;
 - (void) loadDescriptions;
@@ -705,7 +705,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	for (i = 0; i < n_thargs; i++)
 	{
 		Quaternion  tharg_quaternion;
-		ShipEntity  *thargoid = [self newShipWithRole:@"thargoid"]; // is retained
+		OOShipEntity  *thargoid = [self newShipWithRole:@"thargoid"]; // is retained
 		if (thargoid)
 		{
 			Vector		tharg_pos = tharg_start_pos;
@@ -765,7 +765,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 - (void) setUpSpace
 {
 	OOEntity				*thing;
-	ShipEntity			*nav_buoy;
+	OOShipEntity			*nav_buoy;
 	StationEntity		*a_station;
 	OOSunEntity			*a_sun;
 	OOPlanetEntity		*a_planet;
@@ -949,7 +949,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	
 	/*	Sanity check: ensure that only stations are generated here. This is an
 		attempt to fix exceptions of the form:
-			NSInvalidArgumentException : *** -[ShipEntity setPlanet:]: selector
+			NSInvalidArgumentException : *** -[OOShipEntity setPlanet:]: selector
 			not recognized [self = 0x19b7e000] *****
 		which I presume to be originating here since all other uses of
 		setPlanet: are guarded by isStation checks. This error could happen if
@@ -1201,7 +1201,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 }
 
 
-- (ShipEntity *) addShipWithRole:(NSString *)desc launchPos:(Vector)launchPos rfactor:(GLfloat)rfactor
+- (OOShipEntity *) addShipWithRole:(NSString *)desc launchPos:(Vector)launchPos rfactor:(GLfloat)rfactor
 {
 	if (rfactor != 0.0)
 	{
@@ -1211,7 +1211,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 		launchPos.z += rfactor*(randf() - randf());
 	}
 	
-	ShipEntity  *ship = [self newShipWithRole:desc];   // retain count = 1
+	OOShipEntity  *ship = [self newShipWithRole:desc];   // retain count = 1
 	
 	if (ship)
 	{
@@ -1540,7 +1540,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	GLfloat	walk_factor = 2.0;
 	while (i < howMany)
 	{
-	 	ShipEntity  *ship = [self addShipWithRole:desc launchPos:launchPos rfactor:0.0];
+	 	OOShipEntity  *ship = [self addShipWithRole:desc launchPos:launchPos rfactor:0.0];
 		if (ship == nil) return NO;
 		OOScanClass scanClass = [ship scanClass];
 		[ship setScanClass:CLASS_NO_DRAW];	// avoid lollipop flash
@@ -1689,7 +1689,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 
 - (BOOL) spawnShip:(NSString *) shipdesc
 {
-	ShipEntity		*ship;
+	OOShipEntity		*ship;
 	NSDictionary	*shipdict = nil;
 	
 	shipdict = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipdesc];
@@ -1750,7 +1750,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 - (void) witchspaceShipWithPrimaryRole:(NSString *)role
 {
 	// adds a ship exiting witchspace (corollary of when ships leave the system)
-	ShipEntity			*ship = nil;
+	OOShipEntity			*ship = nil;
 	NSDictionary		*systeminfo = nil;
 	OOGovernmentID		government;
 	
@@ -1804,11 +1804,11 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 
 
 // adds a ship within the collision radius of the other entity
-- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity
+- (OOShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity
 {
 	if (entity == nil)  return nil;
 	
-	ShipEntity  *ship = nil;
+	OOShipEntity  *ship = nil;
 	Vector		spawn_pos;
 	Quaternion	spawn_q;
 	GLfloat		offset = (randf() + randf()) * entity->collision_radius;
@@ -1823,7 +1823,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 }
 
 
-- (ShipEntity *) addShipAt:(Vector)pos withRole:(NSString *)role withinRadius:(GLfloat)radius
+- (OOShipEntity *) addShipAt:(Vector)pos withRole:(NSString *)role withinRadius:(GLfloat)radius
 {
 	OOJS_PROFILE_ENTER
 	
@@ -1847,7 +1847,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 		pos = vector_add(pos, OOVectorRandomSpatial(radius));
 	}
 	
-	ShipEntity  		*ship = [self newShipWithRole:role]; // is retained
+	OOShipEntity  		*ship = [self newShipWithRole:role]; // is retained
 	
 	if (ship != nil)
 	{
@@ -1933,7 +1933,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	OOJS_PROFILE_ENTER
 	
 	NSMutableArray		*ships = [NSMutableArray arrayWithCapacity:count];
-	ShipEntity			*ship = nil;
+	OOShipEntity			*ship = nil;
 	OOShipGroup			*group = nil;
 	
 	if (isGroup)
@@ -1963,7 +1963,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 - (NSArray *) addShipsToRoute:(NSString *)route withRole:(NSString *)role quantity:(unsigned)count routeFraction:(double)routeFraction asGroup:(BOOL)isGroup
 {
 	NSMutableArray			*ships = [NSMutableArray arrayWithCapacity:count];
-	ShipEntity				*ship = nil;
+	OOShipEntity				*ship = nil;
 	OOEntity<OOStellarBody>	*entity = nil;
 	Vector					pos = kZeroVector, direction = kZeroVector, point0 = kZeroVector, point1 = kZeroVector;
 	double					radius = 0;
@@ -2046,7 +2046,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 }
 
 
-- (void) addWitchspaceJumpEffectForShip:(ShipEntity *)ship
+- (void) addWitchspaceJumpEffectForShip:(OOShipEntity *)ship
 {
 	[self addEntity:[OORingEffectEntity ringFromEntity:ship]];
 	[self addEntity:[OORingEffectEntity shrinkingRingFromEntity:ship]];
@@ -2130,7 +2130,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 - (void) setupIntroFirstGo: (BOOL) justCobra
 {
 	PlayerEntity* player = PLAYER;
-	ShipEntity		*ship;
+	OOShipEntity		*ship;
 	Quaternion		q2;
 	q2.x = 0.0;   q2.y = 0.0;   q2.z = 0.0; q2.w = 1.0;
 	quaternion_rotate_about_y(&q2,M_PI);
@@ -2213,7 +2213,7 @@ static BOOL IsCandidateMainStationPredicate(OOEntity *entity, void *parameter)
 
 static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 {
-	return [entity isStation] && ![(ShipEntity *)entity isHostileTo:parameter];
+	return [entity isStation] && ![(OOShipEntity *)entity isHostileTo:parameter];
 }
 
 
@@ -2228,7 +2228,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (StationEntity *) stationFriendlyTo:(ShipEntity *) ship
+- (StationEntity *) stationFriendlyTo:(OOShipEntity *) ship
 {
 	// In interstellar space we select a random friendly carrier as mainStation.
 	// No caching: friendly status can change!
@@ -2272,7 +2272,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 
 - (void) resetBeacons
 {
-	ShipEntity *beaconShip = [self firstBeacon], *next = nil;
+	OOShipEntity *beaconShip = [self firstBeacon], *next = nil;
 	while (beaconShip)
 	{
 		next = [beaconShip nextBeacon];
@@ -2285,13 +2285,13 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) firstBeacon
+- (OOShipEntity *) firstBeacon
 {
 	return [_firstBeacon weakRefUnderlyingObject];
 }
 
 
-- (void) setFirstBeacon:(ShipEntity *)beacon
+- (void) setFirstBeacon:(OOShipEntity *)beacon
 {
 	if (beacon != [self firstBeacon])
 	{
@@ -2301,13 +2301,13 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) lastBeacon
+- (OOShipEntity *) lastBeacon
 {
 	return [_lastBeacon weakRefUnderlyingObject];
 }
 
 
-- (void) setLastBeacon:(ShipEntity *)beacon
+- (void) setLastBeacon:(OOShipEntity *)beacon
 {
 	if (beacon != [self lastBeacon])
 	{
@@ -2317,7 +2317,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) setNextBeacon:(ShipEntity *) beaconShip
+- (void) setNextBeacon:(OOShipEntity *) beaconShip
 {
 	if ([beaconShip isBeacon])
 	{
@@ -2423,11 +2423,11 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) newShipWithRole:(NSString *)role
+- (OOShipEntity *) newShipWithRole:(NSString *)role
 {
 	OOJS_PROFILE_ENTER
 	
-	ShipEntity				*ship = nil;
+	OOShipEntity				*ship = nil;
 	NSString				*shipKey = nil;
 	NSDictionary			*shipInfo = nil;
 	NSString				*autoAI = nil;
@@ -2463,11 +2463,11 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy
+- (OOShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy
 {
 	OOJS_PROFILE_ENTER
 	
-	ShipEntity  *ship = nil;
+	OOShipEntity  *ship = nil;
 	OOShipClass *shipClass = [[OOShipRegistry sharedRegistry] shipClassForKey:shipKey];
 	if (shipClass == nil)  return nil;
 	
@@ -2499,7 +2499,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (ShipEntity *) newShipWithName:(NSString *)shipKey
+- (OOShipEntity *) newShipWithName:(NSString *)shipKey
 {
 	return [self newShipWithName:shipKey usePlayerProxy:NO];
 }
@@ -2519,7 +2519,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	}
 	else
 	{
-		return [ShipEntity class];
+		return [OOShipEntity class];
 	}
 	
 	OOJS_PROFILE_EXIT
@@ -2612,7 +2612,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	// quantities is now used to determine which good get into the containers
 	for (i = 0; i < how_many; i++)
 	{
-		ShipEntity* container = [self newShipWithRole:@"cargopod"];	// retained
+		OOShipEntity* container = [self newShipWithRole:@"cargopod"];	// retained
 		
 		// look for a pre-set filling
 		OOCargoType co_type = [container commodityType];
@@ -2638,7 +2638,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 			
 			if (randf() < 0.5) // only half of the time to prevent an oxp from monopolising a pod for a commodity.
 			{
-				ShipEntity* special_container = [self newShipWithRole: [self symbolicNameForCommodity:co_type]];
+				OOShipEntity* special_container = [self newShipWithRole: [self symbolicNameForCommodity:co_type]];
 				if (special_container)
 				{
 					[container release];
@@ -2676,7 +2676,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 	
 	while (how_much > 0)
 	{
-		ShipEntity		*container = [self newShipWithRole: commodity_name];	// try the commodity name first
+		OOShipEntity		*container = [self newShipWithRole: commodity_name];	// try the commodity name first
 		if (!container)  container = [self newShipWithRole:@"cargopod"];
 		OOCargoQuantity	amount = 1;
 		if (commodity_units != 0)
@@ -2701,7 +2701,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (void) fillCargopodWithRandomCargo:(ShipEntity *)cargopod
+- (void) fillCargopodWithRandomCargo:(OOShipEntity *)cargopod
 {
 	if (cargopod == nil || ![cargopod hasRole:@"cargopod"] || [cargopod cargoType] == CARGO_SCRIPTED_ITEM)  return;
 	
@@ -3592,7 +3592,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 {
 	if (entity)
 	{
-		ShipEntity* se = nil;
+		OOShipEntity* se = nil;
 		
 		if (![entity validForAddToUniverse])  return NO;
 		
@@ -3631,7 +3631,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 			entity_for_uid[next_universal_id] = entity;
 			if ([entity isShip])
 			{
-				se = (ShipEntity *)entity;
+				se = (OOShipEntity *)entity;
 				if ([se isBeacon])
 				{
 					[self setNextBeacon:se];
@@ -3812,7 +3812,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (ShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning
+- (OOShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning
 {
 	if ([PLAYER dockedStation] == nil)  return nil;
 	
@@ -3821,7 +3821,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	[PLAYER setShowDemoShips: YES];
 	Quaternion q2 = { (GLfloat)M_SQRT1_2, (GLfloat)M_SQRT1_2, (GLfloat)0.0, (GLfloat)0.0 };
 	
-	ShipEntity *ship = [self newShipWithRole:role];   // retain count = 1
+	OOShipEntity *ship = [self newShipWithRole:role];   // retain count = 1
 	if (ship)
 	{
 		double cr = [ship collisionRadius];
@@ -4074,15 +4074,15 @@ static BOOL MaintainLinkedLists(Universe *uni)
 }
 
 
-- (ShipEntity *) getFirstShipHitByLaserFromShip:(ShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr
+- (OOShipEntity *) getFirstShipHitByLaserFromShip:(OOShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr
 {
 	if (srcEntity == nil) return nil;
 	
-	ShipEntity		*hit_entity = nil;
-	ShipEntity		*hit_subentity = nil;
+	OOShipEntity		*hit_entity = nil;
+	OOShipEntity		*hit_subentity = nil;
 	Vector			p0 = [srcEntity position];
 	Quaternion		q1 = [srcEntity normalOrientation];
-	ShipEntity		*parent = [srcEntity parentEntity];
+	OOShipEntity		*parent = [srcEntity parentEntity];
 	
 	if (parent)
 	{
@@ -4097,7 +4097,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	int				i;
 	int				ent_count = n_entities;
 	int				ship_count = 0;
-	ShipEntity		*my_entities[ent_count];
+	OOShipEntity		*my_entities[ent_count];
 	
 	for (i = 0; i < ent_count; i++)
 	{
@@ -4138,7 +4138,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 	
 	for (i = 0; i < ship_count; i++)
 	{
-		ShipEntity *e2 = my_entities[i];
+		OOShipEntity *e2 = my_entities[i];
 		
 		// check outermost bounding sphere
 		GLfloat cr = e2->collision_radius;
@@ -4161,8 +4161,8 @@ static BOOL MaintainLinkedLists(Universe *uni)
 				&&(v_off.x*v_off.x + v_off.y*v_off.y < ar*ar))							// AND not off to both sides
 			*/
 			{
-				ShipEntity* entHit = (ShipEntity*)nil;
-				GLfloat hit = [(ShipEntity*)e2 doesHitLine:p0:p1:&entHit];	// octree detection
+				OOShipEntity* entHit = (OOShipEntity*)nil;
+				GLfloat hit = [(OOShipEntity*)e2 doesHitLine:p0:p1:&entHit];	// octree detection
 				
 				if ((hit > 0.0)&&(hit < nearest))
 				{
@@ -5019,7 +5019,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 								
 								demo_ship_index = (demo_ship_index + 1) % [demo_ships count];
 								shipDesc = [demo_ships oo_stringAtIndex:demo_ship_index];
-								demo_ship = [[ShipEntity alloc] initWithKey:shipDesc];
+								demo_ship = [[OOShipEntity alloc] initWithKey:shipDesc];
 								
 								if (demo_ship != nil)
 								{
@@ -5101,7 +5101,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 #ifndef NDEBUG
 					update_stage = @"update:think [%@]";
 #endif
-					AI* theShipsAI = [(ShipEntity *)thing getAI];
+					AI* theShipsAI = [(OOShipEntity *)thing getAI];
 					if (theShipsAI)
 					{
 						double thinkTime = [theShipsAI nextThinkTime];
@@ -7154,7 +7154,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 }
 
 
-- (void) makeSunSkimmer:(ShipEntity *) ship andSetAI:(BOOL)setAI
+- (void) makeSunSkimmer:(OOShipEntity *) ship andSetAI:(BOOL)setAI
 {
 	if (setAI) [ship switchAITo:@"route2sunskimAI.plist"];	// perfectly acceptable for both route 2 & 3
 	// slow ships need extra insulation or they will burn up when sunskimming. (Tested at biggest sun in G3: Aenqute)
@@ -7846,7 +7846,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 }
 
 
-- (Vector) getSunSkimStartPositionForShip:(ShipEntity*) ship
+- (Vector) getSunSkimStartPositionForShip:(OOShipEntity*) ship
 {
 	if (!ship)
 	{
@@ -7875,7 +7875,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 }
 
 
-- (Vector) getSunSkimEndPositionForShip:(ShipEntity*) ship
+- (Vector) getSunSkimEndPositionForShip:(OOShipEntity*) ship
 {
 	OOSunEntity* the_sun = [self sun];
 	if (!ship)
@@ -7925,7 +7925,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 - (NSArray *) listBeaconsWithCode:(NSString *)code
 {
 	NSMutableArray	*result = [NSMutableArray array];
-	ShipEntity		*beacon = [self firstBeacon];
+	OOShipEntity		*beacon = [self firstBeacon];
 	
 	while (beacon != nil)
 	{
@@ -7946,7 +7946,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 	int i;
 	int ent_count = n_entities;
 	int ship_count = 0;
-	ShipEntity* my_ships[ent_count];
+	OOShipEntity* my_ships[ent_count];
 	for (i = 0; i < ent_count; i++)
 	{
 		if (sortedEntities[i]->isShip)
@@ -7957,7 +7957,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 	
 	for (i = 0; i < ship_count; i++)
 	{
-		ShipEntity* se = my_ships[i];
+		OOShipEntity* se = my_ships[i];
 		[se doScriptEvent:event];
 		if (message != nil)  [[se getAI] reactToMessage:message context:@"global message"];
 		[se release]; //	released
@@ -8553,9 +8553,9 @@ OOEntity *gOOJSPlayerIfStale = nil;
 }
 
 
-- (ShipEntity *) spawnPatrolShipAt:(Vector)launchPos alongRoute:(Vector)v_route withOffset:(double)ship_location
+- (OOShipEntity *) spawnPatrolShipAt:(Vector)launchPos alongRoute:(Vector)v_route withOffset:(double)ship_location
 {
-		ShipEntity			*hunter_ship = nil;
+		OOShipEntity			*hunter_ship = nil;
 		NSDictionary		*systeminfo = [self generateSystemData:system_seed];
 		OOTechLevelID		techlevel = [systeminfo  oo_unsignedCharForKey:KEY_TECHLEVEL];		// 0 .. 13
 		OOGovernmentID		government = [systeminfo  oo_unsignedCharForKey:KEY_GOVERNMENT];	// 0 .. 7 (0 anarchic .. 7 most stable)
@@ -8691,10 +8691,10 @@ OOEntity *gOOJSPlayerIfStale = nil;
 		
 		if ([entity isShip])
 		{
-			ShipEntity *se = (ShipEntity*)entity;
+			OOShipEntity *se = (OOShipEntity*)entity;
 			if ([se isBeacon])
 			{
-				ShipEntity	*beacon = [self firstBeacon];
+				OOShipEntity	*beacon = [self firstBeacon];
 				if (beacon == se)
 				{
 					[self setFirstBeacon:[se nextBeacon]];
@@ -8912,7 +8912,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		
-		ShipEntity  *trader_ship;
+		OOShipEntity  *trader_ship;
 		launchPos = h1_pos;
 		r = 2 + (Ranrot() % (total_clicks - 2));  // find an empty slot
 		double ship_location = d_route1 * r / total_clicks;
@@ -8967,7 +8967,7 @@ static void PreloadOneSound(NSString *soundName)
 		{
 			pool = [[NSAutoreleasePool alloc] init];
 			
-			ShipEntity  *pirate_ship;
+			OOShipEntity  *pirate_ship;
 			// use last group position
 			launchPos = lastPiratePosition;
 			launchPos.x += SCANNER_MAX_RANGE*((Ranrot() & 255)/256.0 - 0.5)*0.1; // pack them closer together
@@ -9008,7 +9008,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 
-		ShipEntity  *hunter_ship;
+		OOShipEntity  *hunter_ship;
 		// random position along route1
 		r = 2 + (Ranrot() % (total_clicks - 2));  // find an empty slot
 		
@@ -9034,7 +9034,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		
-		ShipEntity  *thargoid_ship;
+		OOShipEntity  *thargoid_ship;
 		launchPos.x = h1_pos.x + thargoid_location * v_route1.x + SCANNER_MAX_RANGE*((Ranrot() & 255)/256.0 - 0.5);
 		launchPos.y = h1_pos.y + thargoid_location * v_route1.y + SCANNER_MAX_RANGE*((Ranrot() & 255)/256.0 - 0.5);
 		launchPos.z = h1_pos.z + thargoid_location * v_route1.z + SCANNER_MAX_RANGE*((Ranrot() & 255)/256.0 - 0.5);
@@ -9086,7 +9086,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		
-		ShipEntity*	trader_ship;
+		OOShipEntity*	trader_ship;
 		Vector		launchPos = p1_pos;
 		double		start = 4.0 * [[self planet] radius];
 		double		end = 3.0 * [[self sun] radius];
@@ -9151,7 +9151,7 @@ static void PreloadOneSound(NSString *soundName)
 		{
 			pool = [[NSAutoreleasePool alloc] init];
 			
-			ShipEntity*	pirate_ship;
+			OOShipEntity*	pirate_ship;
 			// use last position
 			launchPos = lastPiratePosition;
 			launchPos.x += SCANNER_MAX_RANGE*((Ranrot() & 255)/256.0 - 0.5)*0.1; // pack them closer together
@@ -9187,7 +9187,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		
-		ShipEntity  *hunter_ship;
+		OOShipEntity  *hunter_ship;
 		// random position along route2
 		start = 4.0 * [[self planet] radius];
 		end = 3.0 * [[self sun] radius];
@@ -9253,7 +9253,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		Vector launchPos = vector_add(spawnPos, OOVectorRandomRadial(SCANNER_MAX_RANGE));
 		
-		ShipEntity *asteroid = [self newShipWithRole:role];   // retain count = 1
+		OOShipEntity *asteroid = [self newShipWithRole:role];   // retain count = 1
 		if (asteroid != nil)
 		{
 			[asteroid setPosition:launchPos];
@@ -9277,7 +9277,7 @@ static void PreloadOneSound(NSString *soundName)
 	{
 		Vector launchPos = vector_add(spawnPos, OOVectorRandomRadial(SCANNER_MAX_RANGE));
 		
-		ShipEntity *hermit = (StationEntity *)[self newShipWithRole:@"rockhermit"];   // retain count = 1
+		OOShipEntity *hermit = (StationEntity *)[self newShipWithRole:@"rockhermit"];   // retain count = 1
 		if (hermit != nil)
 		{
 			[hermit setPosition:launchPos];

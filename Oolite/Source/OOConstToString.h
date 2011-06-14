@@ -53,7 +53,7 @@ declaration, in particular:
 	OOStringFromScanClass()
 	OOScanClassFromString()
 
-	ShipEntity.h:
+	OOShipEntity.h:
 	OOStringFromBehaviour()
 	OOEquipmentIdentifierFromWeaponType()
 	OOWeaponTypeFromEquipmentIdentifierSloppy()

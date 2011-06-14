@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 #import "Universe.h"
-#import "ShipEntity.h"	// For OOWeaponType
+#import "OOShipEntity.h"	// For OOWeaponType
 
 @class OORoleSet;
 

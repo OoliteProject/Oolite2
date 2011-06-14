@@ -638,7 +638,7 @@ static const BaseFace kTexturedFaces[][3] =
 		return NO;
 	if (other->isShip)
 	{
-		ShipEntity *ship = (ShipEntity *)other;
+		OOShipEntity *ship = (OOShipEntity *)other;
 		if ([ship isShuttle])
 		{
 			[ship landOnPlanet:self];
@@ -1114,7 +1114,7 @@ static const BaseFace kTexturedFaces[][3] =
 
 - (void) launchShuttle
 {
-	ShipEntity  *shuttle_ship;
+	OOShipEntity  *shuttle_ship;
 	Quaternion  q1;
 	Vector		launch_pos = position;
 	double		start_distance = collision_radius + 125.0;
@@ -1148,7 +1148,7 @@ static const BaseFace kTexturedFaces[][3] =
 }
 
 
-- (void) welcomeShuttle:(ShipEntity *) shuttle
+- (void) welcomeShuttle:(OOShipEntity *) shuttle
 {
 	shuttles_on_ground++;
 }

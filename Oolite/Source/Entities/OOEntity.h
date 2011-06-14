@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOCacheManager.h"
 #import "OOTypes.h"
 
-@class Universe, Geometry, CollisionRegion, ShipEntity;
+@class Universe, Geometry, CollisionRegion, OOShipEntity;
 
 
 #ifndef NDEBUG
@@ -185,8 +185,8 @@ enum OOScanClass
 
 - (void) setOwner:(OOEntity *)ent;
 - (id)owner;
-- (ShipEntity *)parentEntity;	// owner if self is subentity of owner, otherwise nil.
-- (ShipEntity *)rootShipEntity;	// like parentEntity, but recursive.
+- (OOShipEntity *)parentEntity;	// owner if self is subentity of owner, otherwise nil.
+- (OOShipEntity *)rootShipEntity;	// like parentEntity, but recursive.
 
 - (void) setPosition:(Vector)posn;
 - (void) setPositionX:(GLfloat)x y:(GLfloat)y z:(GLfloat)z;

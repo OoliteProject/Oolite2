@@ -104,7 +104,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation ShipEntity (OOJavaScriptExtensions)
+@implementation OOShipEntity (OOJavaScriptExtensions)
 
 - (BOOL) isVisibleToScripts
 {
@@ -131,22 +131,22 @@ MA 02110-1301, USA.
 }
 
 
-- (void) setTargetForScript:(ShipEntity *)target
+- (void) setTargetForScript:(OOShipEntity *)target
 {
-	ShipEntity *me = self;
+	OOShipEntity *me = self;
 	
 	// Ensure coherence by not fiddling with subentities.
 	while ([me isSubEntity])
 	{
 		if (me == [me owner] || [me owner] == nil)  break;
-		me = (ShipEntity *)[me owner];
+		me = (OOShipEntity *)[me owner];
 	}
 	while ([target isSubEntity])
 	{
 		if (target == [target owner] || [target owner] == nil)  break;
-		target = (ShipEntity *)[target owner];
+		target = (OOShipEntity *)[target owner];
 	}
-	if (![me isKindOfClass:[ShipEntity class]])  return;
+	if (![me isKindOfClass:[OOShipEntity class]])  return;
 	if (target != nil)
 	{
 		[me addTarget:target];

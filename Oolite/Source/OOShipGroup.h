@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 
-@class ShipEntity;
+@class OOShipEntity;
 
 
 @interface OOShipGroup: OOWeakRefObject
@@ -47,13 +47,13 @@ MA 02110-1301, USA.
 - (id) init;
 - (id) initWithName:(NSString *)name;
 + (id) groupWithName:(NSString *)name;
-+ (id) groupWithName:(NSString *)name leader:(ShipEntity *)leader;
++ (id) groupWithName:(NSString *)name leader:(OOShipEntity *)leader;
 
 - (NSString *) name;
 - (void) setName:(NSString *)name;
 
-- (ShipEntity *) leader;
-- (void) setLeader:(ShipEntity *)leader;
+- (OOShipEntity *) leader;
+- (void) setLeader:(OOShipEntity *)leader;
 
 - (NSEnumerator *) objectEnumerator;
 - (NSEnumerator *) mutationSafeEnumerator;	// Enumerate over contents at time this is called, even if actual group is mutated.
@@ -63,9 +63,9 @@ MA 02110-1301, USA.
 - (NSSet *) membersExcludingLeader;
 - (NSArray *) memberArrayExcludingLeader;	// arbitrary order
 
-- (BOOL) containsShip:(ShipEntity *)ship;
-- (void) addShip:(ShipEntity *)ship;
-- (void) removeShip:(ShipEntity *)ship;
+- (BOOL) containsShip:(OOShipEntity *)ship;
+- (void) addShip:(OOShipEntity *)ship;
+- (void) removeShip:(OOShipEntity *)ship;
 
 - (NSUInteger) count;		// NOTE: this is O(n).
 - (BOOL) isEmpty;

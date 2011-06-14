@@ -42,12 +42,12 @@ MA 02110-1301, USA.
 @end
 
 
-@interface ShipEntity (OOJavaScriptExtensions)
+@interface OOShipEntity (OOJavaScriptExtensions)
 
 // "Normal" subentities, excluding flashers and exhaust plumes.
 - (NSArray *) subEntitiesForScript;
 
-- (void) setTargetForScript:(ShipEntity *)target;
+- (void) setTargetForScript:(OOShipEntity *)target;
 
 @end
 

@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOStringParsing.h"
 #import "OOCacheManager.h"
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 #ifdef OO_BRAIN_AI
 #import "OOInstinct.h"
@@ -165,9 +165,9 @@ extern void GenerateGraphVizForAIStateMachine(NSDictionary *stateMachine, NSStri
 #endif
 
 
-- (ShipEntity *)owner
+- (OOShipEntity *)owner
 {
-	ShipEntity		*owner = [_owner weakRefUnderlyingObject];
+	OOShipEntity		*owner = [_owner weakRefUnderlyingObject];
 	if (owner == nil)
 	{
 		[_owner release];
@@ -178,7 +178,7 @@ extern void GenerateGraphVizForAIStateMachine(NSDictionary *stateMachine, NSStri
 }
 
 
-- (void) setOwner:(ShipEntity *)ship
+- (void) setOwner:(OOShipEntity *)ship
 {
 	[_owner release];
 	_owner = [ship weakRetain];
@@ -375,7 +375,7 @@ typedef struct AIStackElement AIStackElement;
 struct AIStackElement
 {
 	AIStackElement			*back;
-	ShipEntity				*owner;
+	OOShipEntity				*owner;
 	NSString				*aiName;
 	NSString				*state;
 	NSString				*message;
@@ -391,7 +391,7 @@ static AIStackElement *sStack;
 	unsigned		i;
 	NSArray			*actions = nil;
 	NSDictionary	*messagesForState = nil;
-	ShipEntity		*owner = [self owner];
+	OOShipEntity		*owner = [self owner];
 	static unsigned	recursionLimiter = 0;
 	AI				*previousRunning = sCurrentlyRunningAI;
 	
@@ -502,7 +502,7 @@ static AIStackElement *sStack;
 	NSString		*dataString = nil;
 	NSString		*selectorStr;
 	SEL				selector;
-	ShipEntity		*owner = [self owner];
+	OOShipEntity		*owner = [self owner];
 	
 #ifndef NDEBUG
 	BOOL report = [owner reportAIMessages];
@@ -741,7 +741,7 @@ static AIStackElement *sStack;
 
 - (void)refreshOwnerDesc
 {
-	ShipEntity *owner = [self owner];
+	OOShipEntity *owner = [self owner];
 	[ownerDesc release];
 	if ([owner isPlayer])
 	{

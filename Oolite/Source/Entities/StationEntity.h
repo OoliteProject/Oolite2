@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "Universe.h"
 
 
@@ -44,7 +44,7 @@ typedef enum
 
 #define DOCKING_CLEARANCE_WINDOW		126.0
 
-@interface StationEntity: ShipEntity
+@interface StationEntity: OOShipEntity
 {
 @private
 	NSMutableDictionary		*shipsOnApproach;
@@ -54,7 +54,7 @@ typedef enum
 	double					approach_spacing;
 	OOStationAlertLevel		alertLevel;
 	
-	ShipEntity				*id_lock[MAX_DOCKING_STAGES];	// OOWeakReferences to a ShipEntity
+	OOShipEntity				*id_lock[MAX_DOCKING_STAGES];	// OOWeakReferences to a OOShipEntity
 	
 	unsigned				max_police;					// max no. of police ships allowed
 	unsigned				max_defense_ships;			// max no. of defense ships allowed
@@ -69,7 +69,7 @@ typedef enum
 	Vector					port_position;
 	Quaternion				port_orientation;
 	Vector  				port_dimensions;
-	ShipEntity				*port_model;
+	OOShipEntity				*port_model;
 	double					port_corridor;				// corridor length inside station.
 	
 	unsigned				no_docking_while_launching: 1,
@@ -101,7 +101,7 @@ typedef enum
 							allowsAutoDocking: 1;
 }
 
-- (void) setDockingPortModel:(ShipEntity*) dock_model :(Vector) dock_pos :(Quaternion) dock_q;
+- (void) setDockingPortModel:(OOShipEntity*) dock_model :(Vector) dock_pos :(Quaternion) dock_q;
 
 - (NSMutableArray *) localMarket;
 - (void) setLocalMarket:(NSArray *) some_market;
@@ -136,13 +136,13 @@ typedef enum
 
 - (void) autoDockShipsOnApproach;
 
-- (NSDictionary *) dockingInstructionsForShip:(ShipEntity *) ship;
-- (void) addShipToShipsOnApproach:(ShipEntity *) ship;
+- (NSDictionary *) dockingInstructionsForShip:(OOShipEntity *) ship;
+- (void) addShipToShipsOnApproach:(OOShipEntity *) ship;
 
 - (Vector) portUpVector;
 - (Vector) portUpVectorForShipsBoundingBox:(OOBoundingBox)bb;
 
-- (BOOL) shipIsInDockingCorridor:(ShipEntity*) ship;
+- (BOOL) shipIsInDockingCorridor:(OOShipEntity*) ship;
 
 - (BOOL) dockingCorridorIsEmpty;
 
@@ -153,18 +153,18 @@ typedef enum
 
 - (void) abortAllDockings;
 
-- (void) abortDockingForShip:(ShipEntity *) ship;
+- (void) abortDockingForShip:(OOShipEntity *) ship;
 
-- (void) addShipToLaunchQueue:(ShipEntity *) ship :(BOOL) priority;
+- (void) addShipToLaunchQueue:(OOShipEntity *) ship :(BOOL) priority;
 
 - (unsigned) countShipsInLaunchQueueWithPrimaryRole:(NSString *)role;
 
-- (void) launchShip:(ShipEntity *) ship;
+- (void) launchShip:(OOShipEntity *) ship;
 
-- (ShipEntity *) launchIndependentShip:(NSString*) role;
+- (OOShipEntity *) launchIndependentShip:(NSString*) role;
 
-- (void) noteDockedShip:(ShipEntity *) ship;
-- (void) addShipToStationCount:(ShipEntity *) ship;
+- (void) noteDockedShip:(OOShipEntity *) ship;
+- (void) addShipToStationCount:(OOShipEntity *) ship;
 - (BOOL) interstellarUndockingAllowed;
 - (BOOL) hasNPCTraffic;
 - (void) setHasNPCTraffic:(BOOL)flag;
@@ -178,20 +178,20 @@ typedef enum
 - (void) decreaseAlertLevel;
 
 - (NSArray *) launchPolice;
-- (ShipEntity *) launchDefenseShip;
-- (ShipEntity *) launchScavenger;
-- (ShipEntity *) launchMiner;
+- (OOShipEntity *) launchDefenseShip;
+- (OOShipEntity *) launchScavenger;
+- (OOShipEntity *) launchMiner;
 /**Lazygun** added the following line*/
-- (ShipEntity *) launchPirateShip;
-- (ShipEntity *) launchShuttle;
+- (OOShipEntity *) launchPirateShip;
+- (OOShipEntity *) launchShuttle;
 - (void) launchEscort;
-- (ShipEntity *) launchPatrol;
+- (OOShipEntity *) launchPatrol;
 
 - (void) launchShipWithRole:(NSString*) role;
 
-- (void) acceptPatrolReportFrom:(ShipEntity*) patrol_ship;
+- (void) acceptPatrolReportFrom:(OOShipEntity*) patrol_ship;
 
-- (NSString *) acceptDockingClearanceRequestFrom:(ShipEntity *)other;
+- (NSString *) acceptDockingClearanceRequestFrom:(OOShipEntity *)other;
 - (BOOL) requiresDockingClearance;
 - (void) setRequiresDockingClearance:(BOOL)newValue;
 

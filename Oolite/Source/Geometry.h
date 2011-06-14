@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import <OoliteBase/OoliteBase.h>
 #import "OOTriangle.h"
 
-@class ShipEntity, Octree;
+@class OOShipEntity, Octree;
 
 
 @interface Geometry: NSObject

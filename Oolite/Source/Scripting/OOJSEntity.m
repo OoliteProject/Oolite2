@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 
 #import "OOJSPlayer.h"
 #import "PlayerEntity.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
 JSObject		*gOOEntityJSPrototype;
@@ -285,7 +285,7 @@ static JSBool EntitySetProperty(JSContext *context, JSObject *this, jsid propID,
 			if (JSValueToVector(context, *value, &vValue))
 			{
 				[entity setPosition:vValue];
-				if ([entity isShip]) [(ShipEntity *)entity resetExhaustPlumes];
+				if ([entity isShip]) [(OOShipEntity *)entity resetExhaustPlumes];
 				return YES;
 			}
 			break;

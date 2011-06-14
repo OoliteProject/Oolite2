@@ -540,7 +540,7 @@ static JSBool SystemSendAllShipsAway(JSContext *context, uintN argc, jsval *vp)
 		OOEntity* e1 = my_entities[i];
 		if ([e1 isShip] && ![e1 isPlayer])
 		{
-			ShipEntity* se1 = (ShipEntity*)e1;
+			OOShipEntity* se1 = (OOShipEntity*)e1;
 			int e_class = [e1 scanClass];
 			if (((e_class == CLASS_NEUTRAL)||(e_class == CLASS_POLICE)||(e_class == CLASS_MILITARY)||(e_class == CLASS_THARGOID)) &&
 											! ([se1 isStation] && [se1 maxFlightSpeed] == 0)) // exclude only stations, not carriers.
@@ -1154,7 +1154,7 @@ static JSBool SystemAddShipsOrGroup(JSContext *context, uintN argc, jsval *vp, B
 	if (isGroup)
 	{
 		NSArray *array = result;
-		if ([array count] > 0)  result = [(ShipEntity *)[array objectAtIndex:0] group];
+		if ([array count] > 0)  result = [(OOShipEntity *)[array objectAtIndex:0] group];
 		else  result = nil;
 	}
 	OOJS_END_FULL_NATIVE
@@ -1222,7 +1222,7 @@ static JSBool SystemAddShipsOrGroupToRoute(JSContext *context, uintN argc, jsval
 	if (isGroup)
 	{
 		NSArray *array = result;
-		if ([array count] > 0)  result = [(ShipEntity *)[array objectAtIndex:0] group];
+		if ([array count] > 0)  result = [(OOShipEntity *)[array objectAtIndex:0] group];
 		else  result = nil;
 	}
 	OOJS_END_FULL_NATIVE

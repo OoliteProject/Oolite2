@@ -516,7 +516,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 		int i;
 		for (i = [cargo count]-1; i >=0; i--)
 		{
-			ShipEntity* canister = [cargo objectAtIndex:i];
+			OOShipEntity* canister = [cargo objectAtIndex:i];
 			if (!canister) break;
 			unit = [UNIVERSE unitsForCommodity:[canister commodityType]];
 			if (unit == UNITS_TONS)
@@ -1133,7 +1133,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 		return;
 	}
 	
-	ShipEntity *ship = [UNIVERSE makeDemoShipWithRole:role spinning:YES];
+	OOShipEntity *ship = [UNIVERSE makeDemoShipWithRole:role spinning:YES];
 	OOLog(kOOLogNoteShowShipModel, @"::::: showShipModel:'%@' (%@) (%@)", role, ship, [ship name]);
 }
 
@@ -1355,7 +1355,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 			return NO;				//		   0... 1... 2 3 4 5 6 7 8 9....
 		}
 		
-		ShipEntity* ship = nil;
+		OOShipEntity* ship = nil;
 		
 		if ([i_key isEqualToString:@"ship"]||[i_key isEqualToString:@"model"])
 		{
@@ -1397,7 +1397,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 		if ([i_info count] != 9)	// must be player_x_y_z_W_X_Y_Z_align
 			return NO;				//		   0..... 1 2 3 4 5 6 7 8....
 
-		ShipEntity* doppelganger = [UNIVERSE newShipWithName:[self shipDataKey]];   // retain count = 1
+		OOShipEntity* doppelganger = [UNIVERSE newShipWithName:[self shipDataKey]];   // retain count = 1
 		if (!doppelganger)
 			return NO;
 		

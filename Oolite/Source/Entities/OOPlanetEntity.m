@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 
 #import "AI.h"
 #import "Universe.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "ShipEntityAI.h"
 #import "OOCharacter.h"
 
@@ -412,7 +412,7 @@ static OOColor *ColorWithHSBColor(Vector c)
 	float start_distance = collision_radius + 125.0f;
 	Vector launch_pos = vector_add(position, vector_multiply_scalar(vector_forward_from_quaternion(q1), start_distance));
 	
-	ShipEntity *shuttle_ship = [UNIVERSE newShipWithRole:@"shuttle"];   // retain count = 1
+	OOShipEntity *shuttle_ship = [UNIVERSE newShipWithRole:@"shuttle"];   // retain count = 1
 	if (shuttle_ship)
 	{
 		if ([[shuttle_ship crew] count] == 0)
@@ -437,7 +437,7 @@ static OOColor *ColorWithHSBColor(Vector c)
 }
 
 
-- (void) welcomeShuttle:(ShipEntity *)shuttle
+- (void) welcomeShuttle:(OOShipEntity *)shuttle
 {
 	_shuttlesOnGround++;
 }

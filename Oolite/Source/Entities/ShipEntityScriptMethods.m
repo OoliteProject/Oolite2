@@ -30,11 +30,11 @@ MA 02110-1301, USA.
 extern NSString * const kOOLogNoteAddShips;
 
 
-@implementation ShipEntity (ScriptMethods)
+@implementation OOShipEntity (ScriptMethods)
 
-- (ShipEntity *) ejectShipOfType:(NSString *)shipKey
+- (OOShipEntity *) ejectShipOfType:(NSString *)shipKey
 {
-	ShipEntity		*item = nil;
+	OOShipEntity		*item = nil;
 	
 	if (shipKey != nil)
 	{
@@ -46,9 +46,9 @@ extern NSString * const kOOLogNoteAddShips;
 }
 
 
-- (ShipEntity *) ejectShipOfRole:(NSString *)role
+- (OOShipEntity *) ejectShipOfRole:(NSString *)role
 {
-	ShipEntity		*item = nil;
+	OOShipEntity		*item = nil;
 	
 	if (role != nil)
 	{
@@ -62,8 +62,8 @@ extern NSString * const kOOLogNoteAddShips;
 
 - (NSArray *) spawnShipsWithRole:(NSString *)role count:(NSUInteger)count
 {
-	ShipEntity				*ship = [self rootShipEntity];	// FIXME: (EMMSTRAN) implement an -absolutePosition method,use that in spawnShipWithRole:near:, and use self instead of root.
-	ShipEntity				*spawned = nil;
+	OOShipEntity				*ship = [self rootShipEntity];	// FIXME: (EMMSTRAN) implement an -absolutePosition method,use that in spawnShipWithRole:near:, and use self instead of root.
+	OOShipEntity				*spawned = nil;
 	NSMutableArray			*result = nil;
 	
 	if (count == 0)  return [NSArray array];

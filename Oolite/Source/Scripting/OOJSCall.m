@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOJSCall.h"
 #import "OOJavaScriptEngine.h"
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOJSVector.h"
 #import "OOJSQuaternion.h"
 

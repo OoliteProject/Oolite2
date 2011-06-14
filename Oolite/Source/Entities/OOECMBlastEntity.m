@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOECMBlastEntity.h"
 #import "Universe.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOEntityFilterPredicate.h"
 #import "OOJavaScriptEngine.h"
 
@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 
 @implementation OOECMBlastEntity
 
-- (id) initFromShip:(ShipEntity *)ship
+- (id) initFromShip:(OOShipEntity *)ship
 {
 	if (ship == nil)
 	{
@@ -89,7 +89,7 @@ MA 02110-1301, USA.
 			
 			for (i = 0; i < count; i++)
 			{
-				ShipEntity *target = [targets objectAtIndex:i];
+				OOShipEntity *target = [targets objectAtIndex:i];
 				ShipScriptEvent(context, target, "shipHitByECM", ecmPulsesRemaining);
 				[target reactToAIMessage:@"ECM" context:nil];
 			}

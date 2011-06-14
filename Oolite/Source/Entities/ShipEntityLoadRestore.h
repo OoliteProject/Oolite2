@@ -25,10 +25,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
-@interface ShipEntity (LoadRestore)
+@interface OOShipEntity (LoadRestore)
 
 /*	Produces a property list representation of a specific ship. Intended for
 	use with wormholes, but should probably generalize quite well.

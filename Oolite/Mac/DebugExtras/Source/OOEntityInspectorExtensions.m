@@ -137,7 +137,7 @@
 @end
 
 
-@implementation ShipEntity (OOEntityInspectorExtensions)
+@implementation OOShipEntity (OOEntityInspectorExtensions)
 
 - (BOOL) inspHasSecondaryIdentityLine
 {

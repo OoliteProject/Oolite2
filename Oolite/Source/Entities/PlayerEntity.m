@@ -135,7 +135,7 @@ static GLfloat		sBaseMass = 0.0;
 @end
 
 
-@interface ShipEntity (Hax)
+@interface OOShipEntity (Hax)
 
 - (id) initBypassForPlayer;
 
@@ -184,7 +184,7 @@ static GLfloat		sBaseMass = 0.0;
 	int 			n_cargo = [cargo count];
 	if (n_cargo == 0)  return;
 	
-	ShipEntity		*cargoItem = nil;
+	OOShipEntity		*cargoItem = nil;
 	int				co_type, amount, i;
 
 	// step through the cargo pods adding in the quantities	
@@ -217,7 +217,7 @@ static GLfloat		sBaseMass = 0.0;
 	int 			n_cargo = [cargo count];
 	if (n_cargo == 0)  return;
 	
-	ShipEntity		*cargoItem = nil;
+	OOShipEntity		*cargoItem = nil;
 	int				co_type, amount, i;
 	int				cargoToGo = quantity;
 
@@ -314,7 +314,7 @@ static GLfloat		sBaseMass = 0.0;
 		// put each ton in a separate container
 		for (j = 0; j < podsRequiredForQuantity; j++)
 		{
-			ShipEntity *container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
+			OOShipEntity *container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
 			if (container)
 			{
 				OOCargoQuantity amountToLoadInCargopod = (units == UNITS_TONS) ? 1 : (units == UNITS_KILOGRAMS) ? 1000 : 1000000;
@@ -355,7 +355,7 @@ static GLfloat		sBaseMass = 0.0;
 				int smaller_quantity = 1 + ((quantity - 1) % amount_per_container);
 				if ([cargo count] < max_cargo)
 				{
-					ShipEntity* container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
+					OOShipEntity* container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
 					if (container)
 					{
 						// the cargopod ship is just being set up. If ejected,  will call UNIVERSE addEntity
@@ -391,7 +391,7 @@ static GLfloat		sBaseMass = 0.0;
 			{
 				if ([cargo count] < max_cargo)
 				{
-					ShipEntity* container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
+					OOShipEntity* container = [UNIVERSE newShipWithRole:@"1t-cargopod"];
 					if (container)
 					{
 						// the cargopod ship is just being set up. If ejected, will call UNIVERSE addEntity
@@ -509,7 +509,7 @@ static GLfloat		sBaseMass = 0.0;
 	PlayerEntity is alloced and inited on demand by +sharedPlayer. This
 	initialization doesn't actually set anything up -- apart from the
 	assertion, it's like doing a bare alloc. -deferredInit does the work
-	that -init "should" be doing. It assumes that -[ShipEntity initWithKey:
+	that -init "should" be doing. It assumes that -[OOShipEntity initWithKey:
 	definition:] will not return an object other than self.
 	This is necessary because we need a pointer to the PlayerEntity early in
 	startup, when ship data hasn't been loaded yet. In particular, we need
@@ -528,7 +528,7 @@ static GLfloat		sBaseMass = 0.0;
 - (void) deferredInit
 {
 	NSAssert(gOOPlayer == self, @"Expected only one PlayerEntity to exist at a time.");
-	NSAssert([super initWithKey:PLAYER_SHIP_DESC definition:[NSDictionary dictionary]] == self, @"PlayerEntity requires -[ShipEntity initWithKey:definition:] to return unmodified self.");
+	NSAssert([super initWithKey:PLAYER_SHIP_DESC definition:[NSDictionary dictionary]] == self, @"PlayerEntity requires -[OOShipEntity initWithKey:definition:] to return unmodified self.");
 	
 	compassMode = COMPASS_MODE_BASIC;
 	
@@ -1367,7 +1367,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	if (status == STATUS_ESCAPE_SEQUENCE && shot_time > ESCAPE_SEQUENCE_TIME)
 	{
 		UPDATE_STAGE(@"resetting after escape");
-		ShipEntity	*doppelganger = (ShipEntity *)[self foundTarget];	// FIXME: using foundTarget for this is begging for trouble. -- Ahruman 2011-04-22
+		OOShipEntity	*doppelganger = (OOShipEntity *)[self foundTarget];	// FIXME: using foundTarget for this is begging for trouble. -- Ahruman 2011-04-22
 		// reset legal status again! Could have changed if a previously launched missile hit a clean NPC while in the escape pod.
 		legalStatus = 0;
 		bounty = 0;
@@ -1399,7 +1399,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		{
 			[doppelganger becomeExplosion];	// blow up the doppelganger
 			// restore player ship
-			ShipEntity *player_ship = [UNIVERSE newShipWithName:[self shipDataKey]];	// retained
+			OOShipEntity *player_ship = [UNIVERSE newShipWithName:[self shipDataKey]];	// retained
 			if (player_ship)
 			{
 				// FIXME: this should use OOShipType, which should exist. -- Ahruman
@@ -1524,7 +1524,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 	// update subentities
 	UPDATE_STAGE(@"updating subentities");
-	ShipEntity *se = nil;
+	OOShipEntity *se = nil;
 	foreach (se, [self subEntities])
 	{
 		[se update:delta_t];
@@ -1886,7 +1886,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// If target is a ship, check whether it's cloaked or is actively jamming our scanner
 	if ([target isShip])
 	{
-		if ([(ShipEntity *)target isCloaked])
+		if ([(OOShipEntity *)target isCloaked])
 		{
 			return NO;
 		}
@@ -2562,7 +2562,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	return missile_status;
 }
 
-- (BOOL) canScoop:(ShipEntity*)other
+- (BOOL) canScoop:(OOShipEntity*)other
 {
 	if (specialCargo)	return NO;
 	return [super canScoop:other];
@@ -2645,7 +2645,7 @@ static bool minShieldLevelPercentageInitialised = false;
 - (void) setNextCompassMode
 {
 	OOAegisStatus	aegis = AEGIS_NONE;
-	ShipEntity		*beacon = nil;
+	OOShipEntity		*beacon = nil;
 	
 	switch (compassMode)
 	{
@@ -2743,7 +2743,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	
 	if ([target_entity respondsToSelector:@selector(identFromShip:)])
 	{
-		result = [(ShipEntity*)target_entity identFromShip:self];
+		result = [(OOShipEntity*)target_entity identFromShip:self];
 	}
 	
 	if (result == nil)  result = DESC(@"unknown-target");
@@ -2752,7 +2752,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (ShipEntity *) missileForPylon: (unsigned) value
+- (OOShipEntity *) missileForPylon: (unsigned) value
 {
 	if (value < max_missiles)  return missile_entity[value];
 	return nil;
@@ -2958,7 +2958,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (BOOL) mountMissile:(ShipEntity *)missile
+- (BOOL) mountMissile:(OOShipEntity *)missile
 {
 	if (missile == nil)  return NO;
 	
@@ -2986,11 +2986,11 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (ShipEntity *) fireMissile
+- (OOShipEntity *) fireMissile
 {
-	ShipEntity	*missile = missile_entity[activeMissile];	// retain count is 1
+	OOShipEntity	*missile = missile_entity[activeMissile];	// retain count is 1
 	NSString	*identifier = [missile primaryRole];
-	ShipEntity	*firedMissile = nil;
+	OOShipEntity	*firedMissile = nil;
 
 	if (missile == nil) return nil;
 	
@@ -3029,7 +3029,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (ShipEntity *) launchMine:(ShipEntity*) mine
+- (OOShipEntity *) launchMine:(OOShipEntity*) mine
 {
 	if (!mine)
 		return nil;
@@ -3070,7 +3070,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		return NO;
 	}
 
-	ShipEntity *amiss = [UNIVERSE newShipWithRole:equipmentKey];
+	OOShipEntity *amiss = [UNIVERSE newShipWithRole:equipmentKey];
 	
 	if (!amiss) return NO;
 
@@ -3330,7 +3330,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	rel_pos = vector_subtract(rel_pos, position);
 	
 	[self doScriptEvent:OOJSID("shipBeingAttacked") withArgument:ent];
-	if ([ent isShip]) [(ShipEntity *)ent doScriptEvent:OOJSID("shipAttackedOther") withArgument:self];
+	if ([ent isShip]) [(OOShipEntity *)ent doScriptEvent:OOJSID("shipAttackedOther") withArgument:self];
 
 	d_forward = dot_product(rel_pos, v_forward);
 	
@@ -3339,7 +3339,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// firing on an innocent ship is an offence
 	if ([other isShip])
 	{
-		[self broadcastHitByLaserFrom:(ShipEntity*) other];
+		[self broadcastHitByLaserFrom:(OOShipEntity*) other];
 	}
 
 	if (d_forward >= 0)
@@ -3385,7 +3385,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	{
 		if ([other isShip])
 		{
-			[(ShipEntity *)other noteTargetDestroyed:self];
+			[(OOShipEntity *)other noteTargetDestroyed:self];
 		}
 		
 		[self getDestroyedBy:other damageType:damageType];
@@ -3518,10 +3518,10 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (ShipEntity *) launchEscapeCapsule
+- (OOShipEntity *) launchEscapeCapsule
 {
-	ShipEntity		*doppelganger = nil;
-	ShipEntity		*escapePod = nil;
+	OOShipEntity		*doppelganger = nil;
+	OOShipEntity		*escapePod = nil;
 	
 	if ([UNIVERSE displayGUI]) [self switchToMainView];	// Clear the F7 screen!
 	[UNIVERSE setViewDirection:VIEW_FORWARD];
@@ -3630,7 +3630,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	int n_cargo = [cargo count];
 	if (n_cargo == 0)  return;
 	
-	ShipEntity* pod = (ShipEntity*)[[cargo objectAtIndex:0] retain];
+	OOShipEntity* pod = (OOShipEntity*)[[cargo objectAtIndex:0] retain];
 	int current_contents = [pod commodityType];
 	int contents;
 	int rotates = 0;
@@ -3640,7 +3640,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[cargo removeObjectAtIndex:0];	// take it from the eject position
 		[cargo addObject:pod];	// move it to the last position
 		[pod release];
-		pod = (ShipEntity*)[[cargo objectAtIndex:0] retain];
+		pod = (OOShipEntity*)[[cargo objectAtIndex:0] retain];
 		contents = [pod commodityType];
 		rotates++;
 	} while ((contents == current_contents)&&(rotates < n_cargo));
@@ -3696,7 +3696,7 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (void) collectBountyFor:(ShipEntity *)other
+- (void) collectBountyFor:(OOShipEntity *)other
 {
 	if (other == nil || [other isSubEntity])  return;
 	
@@ -3751,7 +3751,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// cargo damage
 	if (damage_to < [cargo count])
 	{
-		ShipEntity* pod = (ShipEntity*)[cargo objectAtIndex:damage_to];
+		OOShipEntity* pod = (OOShipEntity*)[cargo objectAtIndex:damage_to];
 		NSString* cargo_desc = [UNIVERSE displayNameForCommodity:[pod commodityType]];
 		if (!cargo_desc)
 			return NO;
@@ -3861,7 +3861,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		OOEntity* thing = my_entities[i];
 		if (thing->isShip)
 		{
-			ShipEntity* ship = (ShipEntity *)thing;
+			OOShipEntity* ship = (OOShipEntity *)thing;
 			if (self == [ship primaryTarget])
 			{
 				[ship noteLostTarget];
@@ -4122,7 +4122,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	{
 		// check nearby masses
 		//UPDATE_STAGE(@"checking for mass blockage");
-		ShipEntity* blocker = [self shipBlockingHyperspaceJump];
+		OOShipEntity* blocker = [self shipBlockingHyperspaceJump];
 		if (blocker != nil)
 		{
 			[UNIVERSE clearPreviousMessage];
@@ -4675,7 +4675,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	}
 	for (i = 0; i < [cargo count]; i++)
 	{
-		ShipEntity *container = [cargo objectAtIndex:i];
+		OOShipEntity *container = [cargo objectAtIndex:i];
 		in_hold[[container commodityType]] += [container commodityAmount];
 	}
 	
@@ -6082,7 +6082,7 @@ static NSString *last_outfitting_key=nil;
 
 	if ([eqKey hasSuffix:@"MISSILE"] || [eqKey hasSuffix:@"MINE"])
 	{
-		ShipEntity* weapon = [[UNIVERSE newShipWithRole:eqKey] autorelease];
+		OOShipEntity* weapon = [[UNIVERSE newShipWithRole:eqKey] autorelease];
 		if (weapon)  OOLog(kOOLogBuyMountedOK, @"Got ship for mounted weapon role %@", eqKey);
 		else  OOLog(kOOLogBuyMountedFailed, @"Could not find ship for mounted weapon role %@", eqKey);
 
@@ -6185,7 +6185,7 @@ static NSString *last_outfitting_key=nil;
 	{
 		int 			i;
 		OOCommodityType co_type;
-		ShipEntity		*cargoItem = nil;
+		OOShipEntity		*cargoItem = nil;
 		
 		for (i = [cargo count] - 1; i >= 0 ; i--)
 		{
@@ -6354,7 +6354,7 @@ static NSString *last_outfitting_key=nil;
 			in_hold[i] = [(NSNumber *)[(NSArray *)[shipCommodityData objectAtIndex:i] objectAtIndex:MARKET_QUANTITY] intValue];
 		for (i = 0; i < [cargo count]; i++)
 		{
-			ShipEntity *container = (ShipEntity *)[cargo objectAtIndex:i];
+			OOShipEntity *container = (OOShipEntity *)[cargo objectAtIndex:i];
 			in_hold[[container commodityType]] += [container commodityAmount];
 		}
 
@@ -6779,12 +6779,12 @@ static NSString *last_outfitting_key=nil;
 
 - (BOOL) hasHostileTarget
 {
-	ShipEntity *playersTarget = [self primaryTarget];
+	OOShipEntity *playersTarget = [self primaryTarget];
 	return ([playersTarget isShip] && [playersTarget hasHostileTarget] && [playersTarget primaryTarget] == self);
 }
 
 
-- (void) receiveCommsMessage:(NSString *) message_text from:(ShipEntity *) other
+- (void) receiveCommsMessage:(NSString *) message_text from:(OOShipEntity *) other
 {
 	[UNIVERSE addCommsMessage:[NSString stringWithFormat:@"%@:\n %@", [other displayName], message_text] forCount:4.5];
 	[super receiveCommsMessage:message_text from:other];
@@ -7211,7 +7211,7 @@ static NSString *last_outfitting_key=nil;
 			_targetMemoryIndex -= PLAYER_TARGET_MEMORY_SIZE;
 		}
 		
-		ShipEntity *potentialTarget = [_targetMemory[_targetMemoryIndex] weakRefUnderlyingObject];
+		OOShipEntity *potentialTarget = [_targetMemory[_targetMemoryIndex] weakRefUnderlyingObject];
 		if (potentialTarget != nil)
 		{
 			if (potentialTarget->zero_distance < SCANNER_MAX_RANGE2)
@@ -7559,7 +7559,7 @@ static NSString *last_outfitting_key=nil;
 #endif
 
 
-- (void) setEscapePodDestination:(ShipEntity *)entity
+- (void) setEscapePodDestination:(OOShipEntity *)entity
 {
 	DESTROY(_escapePodDestination);
 	_escapePodDestination = [entity weakRetain];

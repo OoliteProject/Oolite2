@@ -367,7 +367,7 @@ static JSBool MissionRunScreen(JSContext *context, uintN argc, jsval *vp)
 	
 	[UNIVERSE removeDemoShips];	// remove any demoship or miniature planet that may be remaining from previous screens
 	
-	ShipEntity *demoShip = nil;
+	OOShipEntity *demoShip = nil;
 	if (JS_GetProperty(context, params, "model", &value) && !JSVAL_IS_VOID(value))
 	{
 		if ([PLAYER status] == STATUS_IN_FLIGHT && JSVAL_IS_STRING(value))

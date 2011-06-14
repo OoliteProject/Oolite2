@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 
 #import "OOEntity.h"
 
-@class ShipEntity;
+@class OOShipEntity;
 
 
 @interface OOECMBlastEntity: OOEntity
@@ -38,7 +38,7 @@ MA 02110-1301, USA.
 }
 
 
-- (id) initFromShip:(ShipEntity *)ship;
+- (id) initFromShip:(OOShipEntity *)ship;
 
 @end
 

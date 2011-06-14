@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 #define MAX_CORONAFLARE			600000.0	// nova flare
 
 
-@class ShipEntity;
+@class OOShipEntity;
 
 
 @interface OOSunEntity: OOEntity <OOStellarBody>

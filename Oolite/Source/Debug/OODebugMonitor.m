@@ -475,7 +475,7 @@ typedef struct
 		NSDictionary *shipInfo = nil;
 		for (shipEnum = [[entity shipsInTransit] objectEnumerator]; (shipInfo = [shipEnum nextObject]); )
 		{
-			ShipEntity *ship = [shipInfo objectForKey:@"ship"];
+			OOShipEntity *ship = [shipInfo objectForKey:@"ship"];
 			[self dumpEntity:ship withState:state parentVisible:NO];
 		}
 	}

@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #define WORMHOLE_EXPIRES_TIMEINTERVAL	900.0
 #define WORMHOLE_SHRINK_RATE			4000.0
 
-@class ShipEntity, Universe;
+@class OOShipEntity, Universe;
 
 typedef enum
 {
@@ -68,9 +68,9 @@ typedef enum
 }
 
 - (WormholeEntity*) initWithDict:(NSDictionary*)dict;
-- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(ShipEntity *) ship;
+- (WormholeEntity*) initWormholeTo:(Random_Seed) s_seed fromShip:(OOShipEntity *) ship;
 
-- (BOOL) suckInShip:(ShipEntity *) ship;
+- (BOOL) suckInShip:(OOShipEntity *) ship;
 - (void) disgorgeShips;
 - (void) setExitPosition:(Vector)pos;
 
@@ -95,7 +95,7 @@ typedef enum
 
 - (NSArray*) shipsInTransit;
 
-- (NSString *) identFromShip:(ShipEntity*) ship;
+- (NSString *) identFromShip:(OOShipEntity*) ship;
 
 - (NSDictionary *)getDict;
 

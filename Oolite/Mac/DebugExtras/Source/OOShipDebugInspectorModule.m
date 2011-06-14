@@ -10,7 +10,7 @@
 #import "OOEntityDebugInspectorModule.h"
 #import "OOShipGroupDebugInspectorModule.h"
 #import "OOEntityInspectorExtensions.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OODebugInspector.h"
 #import "AI.h"
 #import "OORoleSet.h"
@@ -18,7 +18,7 @@
 #import "OOConstToString.h"
 
 
-@interface ShipEntity (DebugRawAccess)
+@interface OOShipEntity (DebugRawAccess)
 
 - (OOShipGroup *) rawEscortGroup;
 
@@ -29,7 +29,7 @@
 
 - (void) update
 {
-	ShipEntity			*object = [self object];
+	OOShipEntity			*object = [self object];
 	NSString			*primaryRole = [object primaryRole];
 	NSMutableSet		*roles = nil;
 	NSString			*placeholder = InspectorUnknownValueString();
@@ -132,7 +132,7 @@
 @end
 
 
-@implementation ShipEntity (OOShipDebugInspectorModule)
+@implementation OOShipEntity (OOShipDebugInspectorModule)
 
 - (NSArray *) debugInspectorModules
 {

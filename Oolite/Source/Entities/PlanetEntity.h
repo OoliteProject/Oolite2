@@ -117,7 +117,7 @@ typedef struct
 
 - (void) launchShuttle;
 
-- (void) welcomeShuttle:(ShipEntity *) shuttle;
+- (void) welcomeShuttle:(OOShipEntity *) shuttle;
 
 - (void) drawUnconditionally;
 

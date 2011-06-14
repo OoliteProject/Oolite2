@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOLaserShotEntity.h"
 #import "Universe.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOMacroOpenGL.h"
 
 
@@ -44,9 +44,9 @@ MA 02110-1301, USA.
 
 @implementation OOLaserShotEntity
 
-- (id) initLaserFromShip:(ShipEntity *)srcEntity view:(OOViewID)view offset:(Vector)offset
+- (id) initLaserFromShip:(OOShipEntity *)srcEntity view:(OOViewID)view offset:(Vector)offset
 {
-	ShipEntity			*ship = [srcEntity rootShipEntity];
+	OOShipEntity			*ship = [srcEntity rootShipEntity];
 	OOBoundingBox 		bbox = [srcEntity boundingBox];
 	
 	if (!(self = [super init]))  return nil;
@@ -113,7 +113,7 @@ MA 02110-1301, USA.
 }
 
 
-+ (id) laserFromShip:(ShipEntity *)ship view:(OOViewID)view offset:(Vector)offset
++ (id) laserFromShip:(OOShipEntity *)ship view:(OOViewID)view offset:(Vector)offset
 {
 	return [[[self alloc] initLaserFromShip:ship view:view offset:offset] autorelease];
 }

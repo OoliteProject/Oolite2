@@ -237,7 +237,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 		NSMutableArray *missileList = [NSMutableArray arrayWithCapacity:count];
 		for (i = 0; i < count; i++)
 		{
-			ShipEntity *missile = missile_entity[i];
+			OOShipEntity *missile = missile_entity[i];
 			if (missile != nil)  [missileList addObject:[missile primaryRole]];
 			else  [missileList addObject:[NSNull null]];
 		}
@@ -805,7 +805,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 			NSString *missile_desc = [missileRoles oo_stringAtIndex:i];
 			if (missile_desc != nil && ![missile_desc isEqualToString:@"NONE"])
 			{
-				ShipEntity *amiss = [UNIVERSE newShipWithRole:missile_desc];
+				OOShipEntity *amiss = [UNIVERSE newShipWithRole:missile_desc];
 				if (amiss)
 				{
 					missile_list[missiles] = [OOEquipmentType equipmentTypeWithIdentifier:missile_desc];

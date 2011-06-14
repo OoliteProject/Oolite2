@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 */
 
 #import "OOShipGroup.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
 enum
@@ -106,7 +106,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-+ (id) groupWithName:(NSString *)name leader:(ShipEntity *)leader
++ (id) groupWithName:(NSString *)name leader:(OOShipEntity *)leader
 {
 	OOShipGroup *result = [self groupWithName:name];
 	[result setLeader:leader];
@@ -162,9 +162,9 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (ShipEntity *) leader
+- (OOShipEntity *) leader
 {
-	ShipEntity *result = [_leader weakRefUnderlyingObject];
+	OOShipEntity *result = [_leader weakRefUnderlyingObject];
 	
 	// If reference is stale, delete weakref object.
 	if (result == nil && _leader != nil)
@@ -177,7 +177,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (void) setLeader:(ShipEntity *)leader
+- (void) setLeader:(OOShipEntity *)leader
 {
 	_updateCount++;
 	
@@ -241,7 +241,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 	id						*objects = NULL;
 	NSUInteger				count = 0;
 	NSArray					*result = nil;
-	ShipEntity				*leader = nil;
+	OOShipEntity				*leader = nil;
 	
 	if (_count == 0)  return [NSArray array];
 	leader = self.leader;
@@ -262,9 +262,9 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (BOOL) containsShip:(ShipEntity *)ship
+- (BOOL) containsShip:(OOShipEntity *)ship
 {
-	ShipEntity				*containedShip = nil;
+	OOShipEntity				*containedShip = nil;
 	
 	for (containedShip in self)
 	{
@@ -289,8 +289,8 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 	NSUInteger				count = 0;
 	NSArray					*result = nil;
 	NSEnumerator			*shipEnum = nil;
-	ShipEntity				*ship = nil;
-	ShipEntity				*leader = nil;
+	OOShipEntity				*ship = nil;
+	OOShipEntity				*leader = nil;
 	
 	if (_count == 0)  return [NSArray array];
 	leader = [self leader];
@@ -312,10 +312,10 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (BOOL) containsShip:(ShipEntity *)ship
+- (BOOL) containsShip:(OOShipEntity *)ship
 {
 	OOShipGroupEnumerator	*shipEnum = nil;
-	ShipEntity				*containedShip = nil;
+	OOShipEntity				*containedShip = nil;
 	BOOL					result = NO;
 	
 	shipEnum = (OOShipGroupEnumerator *)[self objectEnumerator];
@@ -337,7 +337,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 #endif
 
 
-- (void) addShip:(ShipEntity *)ship
+- (void) addShip:(OOShipEntity *)ship
 {
 	_updateCount++;
 	
@@ -360,10 +360,10 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator);
 }
 
 
-- (void) removeShip:(ShipEntity *)ship
+- (void) removeShip:(OOShipEntity *)ship
 {
 	OOShipGroupEnumerator	*shipEnum = nil;
-	ShipEntity				*containedShip = nil;
+	OOShipEntity				*containedShip = nil;
 	NSUInteger				index;
 	
 	_updateCount++;
@@ -462,7 +462,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator)
 	// The work is done here so that we can have access to both OOShipGroup's and OOShipGroupEnumerator's ivars.
 	
 	OOShipGroup				*group = enumerator->_group;
-	ShipEntity				*result = nil;
+	OOShipEntity				*result = nil;
 	BOOL					cleanupNeeded = NO;
 	
 	if (enumerator->_updateCount != group->_updateCount)
@@ -502,7 +502,7 @@ static id ShipGroupIterate(OOShipGroupEnumerator *enumerator)
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id *)stackbuf count:(NSUInteger)len
 {
 	NSUInteger				srcIndex, dstIndex = 0;
-	ShipEntity				*item = nil;
+	OOShipEntity				*item = nil;
 	BOOL					cleanupNeeded = NO;
 	
 	srcIndex = state->state;

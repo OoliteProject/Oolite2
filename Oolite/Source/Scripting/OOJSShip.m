@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOJSVector.h"
 #import "OOJSEquipmentInfo.h"
 #import "OOJavaScriptEngine.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOEntity.h"
 #import "ShipEntityAI.h"
 #import "ShipEntityScriptMethods.h"
@@ -82,7 +82,7 @@ static JSBool ShipExitSystem(JSContext *context, uintN argc, jsval *vp);
 static JSBool ShipUpdateEscortFormation(JSContext *context, uintN argc, jsval *vp);
 
 static BOOL RemoveOrExplodeShip(JSContext *context, uintN argc, jsval *vp, BOOL explode);
-static JSBool ShipSetMaterialsInternal(JSContext *context, uintN argc, jsval *vp, ShipEntity *thisEnt, BOOL fromShaders);
+static JSBool ShipSetMaterialsInternal(JSContext *context, uintN argc, jsval *vp, OOShipEntity *thisEnt, BOOL fromShaders);
 
 
 static JSClass sShipClass =
@@ -315,7 +315,7 @@ static JSFunctionSpec sShipMethods[] =
 };
 
 
-DEFINE_JS_OBJECT_GETTER(JSShipGetShipEntity, &sShipClass, sShipPrototype, ShipEntity)
+DEFINE_JS_OBJECT_GETTER(JSShipGetShipEntity, &sShipClass, sShipPrototype, OOShipEntity)
 
 
 void InitOOJSShip(JSContext *context, JSObject *global)
@@ -344,7 +344,7 @@ static JSBool ShipGetProperty(JSContext *context, JSObject *this, jsid propID, j
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity					*entity = nil;
+	OOShipEntity					*entity = nil;
 	id							result = nil;
 	
 	if (EXPECT_NOT(!JSShipGetShipEntity(context, this, &entity)))  return NO;
@@ -672,8 +672,8 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 	
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity					*entity = nil;
-	ShipEntity					*target = nil;
+	OOShipEntity					*entity = nil;
+	OOShipEntity					*target = nil;
 	NSString					*sValue = nil;
 	jsdouble					fValue;
 	int32						iValue;
@@ -744,7 +744,7 @@ static JSBool ShipSetProperty(JSContext *context, JSObject *this, jsid propID, J
 				[entity setTargetForScript:nil];
 				return YES;
 			}
-			else if (JSValueToEntity(context, *value, &target) && [target isKindOfClass:[ShipEntity class]])
+			else if (JSValueToEntity(context, *value, &target) && [target isKindOfClass:[OOShipEntity class]])
 			{
 				[entity setTargetForScript:target];
 				return YES;
@@ -928,7 +928,7 @@ static JSBool ShipSetScript(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*name = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -956,7 +956,7 @@ static JSBool ShipSetAI(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*name = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -984,7 +984,7 @@ static JSBool ShipSwitchAI(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*name = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1012,7 +1012,7 @@ static JSBool ShipExitAI(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	AI						*thisAI = nil;
 	NSString				*message = nil;
 	
@@ -1049,7 +1049,7 @@ static JSBool ShipReactToAIMessage(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*message = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1077,7 +1077,7 @@ static JSBool ShipSendAIMessage(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*message = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1105,7 +1105,7 @@ static JSBool ShipDeployEscorts(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1121,7 +1121,7 @@ static JSBool ShipDockEscorts(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1137,7 +1137,7 @@ static JSBool ShipHasRole(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*role = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1160,7 +1160,7 @@ static JSBool ShipEjectItem(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*role = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1183,7 +1183,7 @@ static JSBool ShipEjectSpecificItem(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*itemKey = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1206,7 +1206,7 @@ static JSBool ShipDumpCargo(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1227,7 +1227,7 @@ static JSBool ShipSpawn(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*role = nil;
 	int32					count = 1;
 	BOOL					gotCount = YES;
@@ -1269,7 +1269,7 @@ static JSBool ShipRemove(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	JSBool					suppressDeathEvent = NO;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1303,9 +1303,9 @@ static JSBool ShipCommsMessage(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*message = nil;
-	ShipEntity				*target = nil;
+	OOShipEntity				*target = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1335,7 +1335,7 @@ static JSBool ShipFireECM(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	BOOL					OK;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1357,7 +1357,7 @@ static JSBool ShipAbandonShip(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	OOJS_RETURN_BOOL([thisEnt hasEscapePod] && [thisEnt abandonShip]);
@@ -1371,7 +1371,7 @@ static JSBool ShipCanAwardEquipment(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity					*thisEnt = nil;
+	OOShipEntity					*thisEnt = nil;
 	NSString					*key = nil;
 	OOEquipmentType				*eqType = nil;
 	BOOL						result;
@@ -1415,7 +1415,7 @@ static JSBool ShipAwardEquipment(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity					*thisEnt = nil;
+	OOShipEntity					*thisEnt = nil;
 	OOEquipmentType				*eqType = nil;
 	NSString					*identifier = nil;
 	BOOL						OK = YES;
@@ -1502,7 +1502,7 @@ static JSBool ShipRemoveEquipment(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity					*thisEnt = nil;
+	OOShipEntity					*thisEnt = nil;
 	NSString					*key = nil;
 	BOOL						OK = YES;
 	
@@ -1560,7 +1560,7 @@ static JSBool ShipRestoreSubEntities(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1583,7 +1583,7 @@ static JSBool ShipSetEquipmentStatus(JSContext *context, uintN argc, jsval *vp)
 	
 	// equipment status accepted: @"EQUIPMENT_OK", @"EQUIPMENT_DAMAGED"
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	OOEquipmentType			*eqType = nil;
 	NSString				*key = nil;
 	NSString				*damagedKey = nil;
@@ -1681,7 +1681,7 @@ static JSBool ShipEquipmentStatus(JSContext *context, uintN argc, jsval *vp)
 		strUnknown = STRING_TO_JSVAL(JS_InternString(context, "EQUIPMENT_UNKNOWN"));
 	}
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*key = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1712,7 +1712,7 @@ static JSBool ShipSelectNewMissile(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1731,7 +1731,7 @@ static JSBool ShipFireMissile(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity			*thisEnt = nil;
+	OOShipEntity			*thisEnt = nil;
 	id					result = nil;
 	
 	GET_THIS_SHIP(thisEnt);
@@ -1749,7 +1749,7 @@ static JSBool ShipSetCargo(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	NSString				*cargoType = nil;
 	OOCargoType				commodity = CARGO_UNDEFINED;
 	int32					count = 1;
@@ -1779,7 +1779,7 @@ static JSBool ShipSetMaterials(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	if (argc < 1)
 	{
@@ -1800,7 +1800,7 @@ static JSBool ShipSetShaders(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1824,7 +1824,7 @@ static JSBool ShipSetShaders(JSContext *context, uintN argc, jsval *vp)
 }
 
 
-static JSBool ShipSetMaterialsInternal(JSContext *context, uintN argc, jsval *vp, ShipEntity *thisEnt, BOOL fromShaders)
+static JSBool ShipSetMaterialsInternal(JSContext *context, uintN argc, jsval *vp, OOShipEntity *thisEnt, BOOL fromShaders)
 {
 	OOJS_PROFILE_ENTER
 	
@@ -1902,7 +1902,7 @@ static JSBool ShipExitSystem(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	ShipEntity			*thisEnt = nil;
+	OOShipEntity			*thisEnt = nil;
 	int32				systemID = -1;
 	BOOL				OK = NO;
 	
@@ -1934,7 +1934,7 @@ static JSBool ShipUpdateEscortFormation(JSContext *context, uintN argc, jsval *v
 {
 	OOJS_PROFILE_ENTER
 	
-	ShipEntity *thisEnt = nil;
+	OOShipEntity *thisEnt = nil;
 	GET_THIS_SHIP(thisEnt);
 	[thisEnt updateEscortFormation];
 	
@@ -1948,7 +1948,7 @@ static BOOL RemoveOrExplodeShip(JSContext *context, uintN argc, jsval *vp, BOOL 
 {
 	OOJS_PROFILE_ENTER
 	
-	ShipEntity				*thisEnt = nil;
+	OOShipEntity				*thisEnt = nil;
 	
 	GET_THIS_SHIP(thisEnt);
 	
@@ -1964,7 +1964,7 @@ static BOOL RemoveOrExplodeShip(JSContext *context, uintN argc, jsval *vp, BOOL 
 		}
 	}
 	
-	if (thisEnt == (ShipEntity *)[UNIVERSE station])
+	if (thisEnt == (OOShipEntity *)[UNIVERSE station])
 	{
 		// Allow exploding of main station (e.g. nova mission)
 		[UNIVERSE unMagicMainStation];

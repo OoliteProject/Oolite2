@@ -25,7 +25,7 @@
 	OOShipGroup			*object = [self object];
 	NSString			*placeholder = InspectorUnknownValueString();
 	NSEnumerator		*memberEnum = nil;
-	ShipEntity			*member = nil;
+	OOShipEntity			*member = nil;
 	NSMutableArray		*members = nil;
 	
 	[leaderField setStringValue:[[object leader] inspDescription] ?: placeholder];

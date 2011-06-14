@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 #import "CollisionRegion.h"
 #import "Universe.h"
 #import "OOEntity.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "StationEntity.h"
@@ -334,7 +334,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 			[[e1 collisionArray] removeAllObjects];
 		e1->hasCollided = NO;
 		if (e1->isShip)
-			[(ShipEntity*)e1 notePotentialCollsion:nil];
+			[(OOShipEntity*)e1 notePotentialCollsion:nil];
 		e1->collider = nil;
 	}
 	
@@ -387,8 +387,8 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 				{
 					if ((dist2 < PROXIMITY_WARN_DISTANCE2 * r2 * r2) || (dist2 < PROXIMITY_WARN_DISTANCE2 * r1 * r1))
 					{
-						[(ShipEntity*)e1 notePotentialCollsion:(ShipEntity*)e2];
-						[(ShipEntity*)e2 notePotentialCollsion:(ShipEntity*)e1];
+						[(OOShipEntity*)e1 notePotentialCollsion:(OOShipEntity*)e2];
+						[(OOShipEntity*)e2 notePotentialCollsion:(OOShipEntity*)e1];
 					}
 				}
 				if (dist2 < min_dist2)
@@ -398,7 +398,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 					if (e1->isStation)
 					{
 						StationEntity* se1 = (StationEntity*) e1;
-						if ([se1 shipIsInDockingCorridor: (ShipEntity*)e2])
+						if ([se1 shipIsInDockingCorridor: (OOShipEntity*)e2])
 							collision = NO;
 						else
 							collision = [e1 checkCloseCollisionWith: e2];
@@ -406,7 +406,7 @@ NSArray* subregionsContainingPosition( Vector position, CollisionRegion* region)
 					else if (e2->isStation)
 					{
 						StationEntity* se2 = (StationEntity*) e2;
-						if ([se2 shipIsInDockingCorridor: (ShipEntity*)e1])
+						if ([se2 shipIsInDockingCorridor: (OOShipEntity*)e1])
 							collision = NO;
 						else
 							collision = [e2 checkCloseCollisionWith: e1];

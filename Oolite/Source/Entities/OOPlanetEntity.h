@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 
 #import "OOEntity.h"
 
-@class OOPlanetDrawable, ShipEntity, OOMaterial;
+@class OOPlanetDrawable, OOShipEntity, OOMaterial;
 
 
 @interface OOPlanetEntity: OOEntity <OOStellarBody>
@@ -59,7 +59,7 @@ MA 02110-1301, USA.
 - (id) miniatureVersion;
 
 - (void) launchShuttle;
-- (void) welcomeShuttle:(ShipEntity *)shuttle;
+- (void) welcomeShuttle:(OOShipEntity *)shuttle;
 
 - (BOOL) hasAtmosphere;
 

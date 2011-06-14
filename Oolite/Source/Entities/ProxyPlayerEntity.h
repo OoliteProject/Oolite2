@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "PlayerEntity.h"
 
 
-@interface ProxyPlayerEntity: ShipEntity
+@interface ProxyPlayerEntity: OOShipEntity
 {
 @private
 	float					_fuelLeakRate;

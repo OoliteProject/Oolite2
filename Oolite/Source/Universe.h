@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #endif
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
-		OOEntity, ShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
+		OOEntity, OOShipEntity, StationEntity, OOPlanetEntity, OOSunEntity,
 		PlayerEntity, OORoleSet, OOColor, OOShipClass;
 
 
@@ -251,7 +251,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 	
 	int						breakPatternCounter;
 	
-	ShipEntity				*demo_ship;
+	OOShipEntity				*demo_ship;
 	
 	StationEntity			*cachedStation;
 	OOPlanetEntity			*cachedPlanet;
@@ -333,7 +333,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (void) setMainLightPosition: (Vector) sunPos;
 - (OOPlanetEntity *) setUpPlanet;
 
-- (void) makeSunSkimmer:(ShipEntity *) ship andSetAI:(BOOL)setAI;
+- (void) makeSunSkimmer:(OOShipEntity *) ship andSetAI:(BOOL)setAI;
 - (void) addShipWithRole:(NSString *) desc nearRouteOneAt:(double) route_fraction;
 - (Vector) coordinatesForPosition:(Vector) pos withCoordinateSystem:(NSString *) system returningScalar:(GLfloat*) my_scalar;
 - (NSString *) expressPosition:(Vector) pos inCoordinateSystem:(NSString *) system;
@@ -346,15 +346,15 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (BOOL) addShips:(int)howMany withRole:(NSString *)desc intoBoundingBox:(OOBoundingBox)bbox;
 - (BOOL) spawnShip:(NSString *) shipdesc;
 - (void) witchspaceShipWithPrimaryRole:(NSString *)role;
-- (ShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity;
+- (OOShipEntity *) spawnShipWithRole:(NSString *) desc near:(OOEntity *) entity;
 
-- (ShipEntity *) addShipAt:(Vector)pos withRole:(NSString *)role withinRadius:(GLfloat)radius;
+- (OOShipEntity *) addShipAt:(Vector)pos withRole:(NSString *)role withinRadius:(GLfloat)radius;
 - (NSArray *) addShipsAt:(Vector)pos withRole:(NSString *)role quantity:(unsigned)count withinRadius:(GLfloat)radius asGroup:(BOOL)isGroup;
 - (NSArray *) addShipsToRoute:(NSString *)route withRole:(NSString *)role quantity:(unsigned)count routeFraction:(double)routeFraction asGroup:(BOOL)isGroup;
 
 - (BOOL) roleIsPirateVictim:(NSString *)role;
 
-- (void) addWitchspaceJumpEffectForShip:(ShipEntity *)ship;
+- (void) addWitchspaceJumpEffectForShip:(OOShipEntity *)ship;
 
 - (void) setUpBreakPattern:(Vector)pos orientation:(Quaternion)q forDocking:(BOOL)forDocking;
 - (void) handleGameOver;
@@ -371,12 +371,12 @@ typedef uint8_t		OOEconomyID;		// 0..7
 // Turn main station into just another station, for blowUpStation.
 - (void) unMagicMainStation;
 // find a valid station in interstellar space
-- (StationEntity *) stationFriendlyTo:(ShipEntity *) ship;
+- (StationEntity *) stationFriendlyTo:(OOShipEntity *) ship;
 
 - (void) resetBeacons;
-- (ShipEntity *) firstBeacon;
-- (ShipEntity *) lastBeacon;
-- (void) setNextBeacon:(ShipEntity *) beaconShip;
+- (OOShipEntity *) firstBeacon;
+- (OOShipEntity *) lastBeacon;
+- (void) setNextBeacon:(OOShipEntity *) beaconShip;
 
 - (GLfloat *) skyClearColor;
 // Note: the alpha value is also air resistance!
@@ -386,9 +386,9 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (BOOL) breakPatternHide;
 
 - (NSString *) randomShipKeyForRoleRespectingConditions:(NSString *)role;
-- (ShipEntity *) newShipWithRole:(NSString *)role;		// Selects ship using role weights, applies auto_ai, respects conditions
-- (ShipEntity *) newShipWithName:(NSString *)shipKey;	// Does not apply auto_ai or respect conditions
-- (ShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy;	// If usePlayerProxy, non-carriers are instantiated as ProxyPlayerEntity.
+- (OOShipEntity *) newShipWithRole:(NSString *)role;		// Selects ship using role weights, applies auto_ai, respects conditions
+- (OOShipEntity *) newShipWithName:(NSString *)shipKey;	// Does not apply auto_ai or respect conditions
+- (OOShipEntity *) newShipWithName:(NSString *)shipKey usePlayerProxy:(BOOL)usePlayerProxy;	// If usePlayerProxy, non-carriers are instantiated as ProxyPlayerEntity.
 
 - (Class) classForShipClass:(OOShipClass *)shipClass usePlayerProxy:(BOOL)usePlayerProxy;
 
@@ -403,7 +403,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (NSArray *) getContainersOfGoods:(OOCargoQuantity)how_many scarce:(BOOL)scarce;
 - (NSArray *) getContainersOfDrugs:(OOCargoQuantity) how_many;
 - (NSArray *) getContainersOfCommodity:(NSString*) commodity_name :(OOCargoQuantity) how_many;
-- (void) fillCargopodWithRandomCargo:(ShipEntity *)cargopod;
+- (void) fillCargopodWithRandomCargo:(OOShipEntity *)cargopod;
 
 - (OOCargoType) getRandomCommodity;
 - (OOCargoQuantity) getRandomAmountOfCommodity:(OOCargoType) co_type;
@@ -434,13 +434,13 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (void) removeAllEntitiesExceptPlayer;
 - (void) removeDemoShips;
 
-- (ShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning;
+- (OOShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning;
 
 - (BOOL) isVectorClearFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
 - (OOEntity*) hazardOnRouteFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
 - (Vector) getSafeVectorFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
 
-- (ShipEntity *) getFirstShipHitByLaserFromShip:(ShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr;
+- (OOShipEntity *) getFirstShipHitByLaserFromShip:(OOShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr;
 - (OOEntity *) getFirstEntityTargetedByPlayer;
 
 - (NSArray *) getEntitiesWithinRange:(double)range ofEntity:(OOEntity *)entity;
@@ -606,8 +606,8 @@ typedef uint8_t		OOEconomyID;		// 0..7
 - (Vector) getWitchspaceExitPositionResettingRandomSeed:(BOOL)resetSeed;
 - (Quaternion) getWitchspaceExitRotation;
 
-- (Vector) getSunSkimStartPositionForShip:(ShipEntity*) ship;
-- (Vector) getSunSkimEndPositionForShip:(ShipEntity*) ship;
+- (Vector) getSunSkimStartPositionForShip:(OOShipEntity*) ship;
+- (Vector) getSunSkimEndPositionForShip:(OOShipEntity*) ship;
 
 - (NSArray*) listBeaconsWithCode:(NSString*) code;
 

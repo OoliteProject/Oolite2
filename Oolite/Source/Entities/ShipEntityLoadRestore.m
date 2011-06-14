@@ -65,14 +65,14 @@ static NSUInteger GroupIDForGroup(OOShipGroup *group, NSMutableDictionary *conte
 static OOShipGroup *GroupForGroupID(NSUInteger groupID, NSMutableDictionary *context);
 
 
-@interface ShipEntity (LoadRestoreInternal)
+@interface OOShipEntity (LoadRestoreInternal)
 
 - (void) simplifyShipdata:(NSMutableDictionary *)data andGetDeletes:(NSArray **)deletes;
 
 @end
 
 
-@implementation ShipEntity (LoadRestore)
+@implementation OOShipEntity (LoadRestore)
 
 - (NSDictionary *) savedShipDictionaryWithContext:(NSMutableDictionary *)context
 {
@@ -166,7 +166,7 @@ static OOShipGroup *GroupForGroupID(NSUInteger groupID, NSMutableDictionary *con
 	if (dict == nil)  return nil;
 	if (context == nil)  context = [NSMutableDictionary dictionary];
 	
-	ShipEntity *ship = nil;
+	OOShipEntity *ship = nil;
 	
 	NSString		*shipKey = [dict oo_stringForKey:KEY_SHIP_KEY];
 	NSDictionary	*shipData = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];

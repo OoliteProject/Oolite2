@@ -70,7 +70,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 	// No enumerator because we're mutating the array -- Ahruman
 	for (i = 0; i < [cargo count]; i++)
 	{
-		ShipEntity	*cargoItem = [cargo objectAtIndex:i];
+		OOShipEntity	*cargoItem = [cargo objectAtIndex:i];
 		NSArray		*podCrew = [cargoItem crew];
 		
 		if (podCrew != nil)
@@ -1504,7 +1504,7 @@ static NSMutableDictionary* currentShipyard = nil;
 
 - (void) showShipyardModel:(NSString *)shipKey shipData:(NSDictionary *)shipData personality:(uint16_t)personality
 {
-	ShipEntity		*ship;
+	OOShipEntity		*ship;
 		
 	if (shipKey == nil || dockedStation == nil)  return;
 	if (shipData == nil)  shipData = [[OOShipRegistry sharedRegistry] shipInfoForKey:shipKey];

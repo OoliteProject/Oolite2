@@ -8,7 +8,7 @@
 
 #import "OOAIDebugInspectorModule.h"
 #import "AI.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "Universe.h"
 #import "OOEntityInspectorExtensions.h"
 #import "OOConstToString.h"

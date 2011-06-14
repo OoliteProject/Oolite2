@@ -848,7 +848,7 @@ static BOOL hostiles;
 			if (drawClass == CLASS_PLAYER)	drawClass = CLASS_NO_DRAW;
 			if (drawthing->isShip)
 			{
-				ShipEntity* ship = (ShipEntity*)drawthing;
+				OOShipEntity* ship = (OOShipEntity*)drawthing;
 				if ([ship isCloaked])  drawClass = CLASS_NO_DRAW;
 			}
 			
@@ -910,7 +910,7 @@ static BOOL hostiles;
 				// Has it sent a recent message?
 				if ([drawthing isShip])
 				{
-					ms_blip = 2.0 * [(ShipEntity *)drawthing messageTime];
+					ms_blip = 2.0 * [(OOShipEntity *)drawthing messageTime];
 				}
 				if (ms_blip > max_blip)
 				{
@@ -938,7 +938,7 @@ static BOOL hostiles;
 				isHostile = NO;
 				if ([drawthing isShip])
 				{
-					ShipEntity* ship = (ShipEntity *)drawthing;
+					OOShipEntity* ship = (OOShipEntity *)drawthing;
 					double wr = [ship weaponRange];
 					isHostile = (([ship hasHostileTarget])&&([ship primaryTarget] == player)&&(drawthing->zero_distance < wr*wr));
 					GLfloat* base_col = [ship scannerDisplayColorForShip:player :isHostile :flash :[ship scannerDisplayColor1] :[ship scannerDisplayColor2]];
@@ -975,7 +975,7 @@ static BOOL hostiles;
 				
 				if ([drawthing isShip])
 				{
-					ShipEntity* ship = (ShipEntity*)drawthing;
+					OOShipEntity* ship = (OOShipEntity*)drawthing;
 					if (ship->collision_radius * upscale > 4.5)
 					{
 						Vector bounds[6];
@@ -1032,7 +1032,7 @@ static BOOL hostiles;
 					if ([drawthing isShip])
 					{
 						glColor4f(1.0, 1.0, 0.5, alpha);
-						OODrawString([(ShipEntity *)drawthing displayName], x1 + 2, y2 + 2, z1, NSMakeSize(8, 8));
+						OODrawString([(OOShipEntity *)drawthing displayName], x1 + 2, y2 + 2, z1, NSMakeSize(8, 8));
 					}
 #endif
 					OOGLBEGIN(GL_QUADS);
@@ -1065,7 +1065,7 @@ static BOOL hostiles;
 
 - (void) refreshLastTransmitter
 {
-	ShipEntity* lt = [_lastTransmitter weakRefUnderlyingObject];
+	OOShipEntity* lt = [_lastTransmitter weakRefUnderlyingObject];
 	if (![lt isShip])  return;
 	
 	if ([lt messageTime] <= 0.0)
@@ -1166,7 +1166,7 @@ static BOOL hostiles;
 	OOPlanetEntity	*the_planet = [UNIVERSE planet];
 	StationEntity	*the_station = [UNIVERSE station];
 	OOEntity			*the_target = [player primaryTarget];
-	ShipEntity		*beacon = [player nextBeacon];
+	OOShipEntity		*beacon = [player nextBeacon];
 	OOEntityStatus	p_status = [player status];
 	if	(((p_status == STATUS_IN_FLIGHT)
 		||(p_status == STATUS_AUTOPILOT_ENGAGED)
@@ -1909,7 +1909,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 }
 
 
-- (void) drawIconForMissile:(ShipEntity *)missile
+- (void) drawIconForMissile:(OOShipEntity *)missile
 				   selected:(BOOL)selected
 					 status:(OOMissileStatus)status
 						  x:(int)x y:(int)y
@@ -2004,7 +2004,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 		unsigned i;
 		for (i = 0; i < n_mis; i++)
 		{
-			ShipEntity *missile = [player missileForPylon:i];
+			OOShipEntity *missile = [player missileForPylon:i];
 			if (missile)
 			{
 				[self drawIconForMissile:missile
@@ -2615,13 +2615,13 @@ static void hudDrawStatusIconAt(int x, int y, int z, NSSize siz)
 
 static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive)
 {
-	ShipEntity		*target_ship = nil;
+	OOShipEntity		*target_ship = nil;
 	NSString		*legal_desc = nil;
 	if ((!target)||(!player1))
 		return;
 
 	if ([target isShip])
-		target_ship = (ShipEntity*)target;
+		target_ship = (OOShipEntity*)target;
 
 	if ([target_ship isCloaked])  return;
 	
@@ -2746,7 +2746,7 @@ static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfl
 				if ([propertiesReticleTargetSensitive oo_boolForKey:@"isAccurate"])
 				{
 					// high accuracy reticle
-					ShipEntity *hitShip = [UNIVERSE getFirstShipHitByLaserFromShip:player1 inView:[UNIVERSE viewDirection] offset:make_vector(0,0,0) rangeFound: &target_distance];
+					OOShipEntity *hitShip = [UNIVERSE getFirstShipHitByLaserFromShip:player1 inView:[UNIVERSE viewDirection] offset:make_vector(0,0,0) rangeFound: &target_distance];
 					isTargeted = (hitShip == target);
 				}
 				else
@@ -2758,7 +2758,7 @@ static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfl
 			else
 			{
 				// high accuracy reticle
-				ShipEntity *hitShip = [UNIVERSE getFirstShipHitByLaserFromShip:player1 inView:[UNIVERSE viewDirection] offset:make_vector(0,0,0) rangeFound: &target_distance];
+				OOShipEntity *hitShip = [UNIVERSE getFirstShipHitByLaserFromShip:player1 inView:[UNIVERSE viewDirection] offset:make_vector(0,0,0) rangeFound: &target_distance];
 				isTargeted = (hitShip == target);
 			}
 		}

@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 @class OOShipExhaustDefinition;
 
@@ -54,8 +54,8 @@ enum
 	uint8_t			_nextFrame;
 }
 
-+ (id) exhaustForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
-- (id) initForShip:(ShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
++ (id) exhaustForShip:(OOShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
+- (id) initForShip:(OOShipEntity *)ship withDefinition:(OOShipExhaustDefinition *)definition;
 
 - (void) resetPlume;
 

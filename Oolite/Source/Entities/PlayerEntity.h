@@ -28,11 +28,11 @@ MA 02110-1301, USA.
 
 #import <Foundation/Foundation.h>
 #import "WormholeEntity.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 #import "OOTypes.h"
 #import "OOJSPropID.h"
 
-@class GuiDisplayGen, OOTrumble, MyOpenGLView, HeadUpDisplay, ShipEntity;
+@class GuiDisplayGen, OOTrumble, MyOpenGLView, HeadUpDisplay, OOShipEntity;
 @class OOSound, OOSoundSource, OOSoundReferencePoint;
 @class OOJoystickManager, OOLegacyTexture, OOCamera, OOShipViewDescription;
 
@@ -231,7 +231,7 @@ typedef enum
 #define PLAYER_DOCKING_AI_NAME			@"oolite-player-AI.plist"
 
 
-@interface PlayerEntity: ShipEntity
+@interface PlayerEntity: OOShipEntity
 {
 @public
 	Random_Seed				system_seed;
@@ -345,7 +345,7 @@ typedef enum
 	
 	NSMutableArray			*shipCommodityData;
 	
-	ShipEntity				*missile_entity[PLAYER_MAX_MISSILES];	// holds the actual missile entities or equivalents
+	OOShipEntity				*missile_entity[PLAYER_MAX_MISSILES];	// holds the actual missile entities or equivalents
 	OOWeakReference			*_escapePodDestination;
 	
 	int						legalStatus;
@@ -517,7 +517,7 @@ typedef enum
 	NSMutableArray			*scannedWormholes;
 	WormholeEntity			*wormhole;
 
-	ShipEntity				*demoShip; // Used while docked to maintain demo ship rotation.
+	OOShipEntity				*demoShip; // Used while docked to maintain demo ship rotation.
 }
 
 + (PlayerEntity *)sharedPlayer;
@@ -638,7 +638,7 @@ typedef enum
 - (void) setIdentEngaged:(BOOL)newValue;
 - (NSString *) specialCargo;
 - (NSString *) dialTargetName;
-- (ShipEntity *) missileForPylon:(unsigned)value;
+- (OOShipEntity *) missileForPylon:(unsigned)value;
 - (void) safeAllMissiles;
 - (void) selectNextMissile;
 - (void) tidyMissilePylons;
@@ -650,13 +650,13 @@ typedef enum
 - (void) setAlertFlag:(int)flag to:(BOOL)value;
 - (OOAlertCondition) alertCondition;
 
-- (BOOL) mountMissile:(ShipEntity *)missile;
+- (BOOL) mountMissile:(OOShipEntity *)missile;
 - (BOOL) mountMissileWithRole:(NSString *)role;
 
 - (OOEnergyUnitType) installedEnergyUnitType;
 - (OOEnergyUnitType) energyUnitType;
 
-- (ShipEntity *) launchMine:(ShipEntity *)mine;
+- (OOShipEntity *) launchMine:(OOShipEntity *)mine;
 
 - (BOOL) weaponsOnline;
 - (void) setWeaponsOnline:(BOOL)newValue;
@@ -800,7 +800,7 @@ typedef enum
 
 - (BOOL) scoopOverride;
 - (void) setScoopOverride:(BOOL)newValue;
-- (void) setEscapePodDestination:(ShipEntity *)entity;
+- (void) setEscapePodDestination:(OOShipEntity *)entity;
 
 - (BOOL) clearedToDock;
 - (void) setDockingClearanceStatus:(OODockingClearanceStatus) newValue;

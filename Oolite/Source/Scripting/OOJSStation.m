@@ -350,7 +350,7 @@ static JSBool StationLaunchShipWithRole(JSContext *context, uintN argc, jsval *v
 	
 	NSString		*shipRole = nil;
 	StationEntity	*station = nil;
-	ShipEntity		*result = nil;
+	OOShipEntity		*result = nil;
 	JSBool			abortAllDockings = NO;
 	
 	if (!JSStationGetStationEntity(context, OOJS_THIS, &station))  OOJS_RETURN_VOID; // stale reference, no-op

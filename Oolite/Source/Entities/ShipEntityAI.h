@@ -25,11 +25,11 @@ MA 02110-1301, USA.
 
 */
 
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 @class AI, Universe, OOPlanetEntity;
 
-@interface ShipEntity (AI)
+@interface OOShipEntity (AI)
 
 //	AI methods also used in other code.
 

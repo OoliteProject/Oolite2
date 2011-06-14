@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 
 @implementation OOQuiriumCascadeEntity
 
-- (id) initQuiriumCascadeFromShip:(ShipEntity *)ship
+- (id) initQuiriumCascadeFromShip:(OOShipEntity *)ship
 {
 	if (ship == nil)
 	{
@@ -61,7 +61,7 @@ MA 02110-1301, USA.
 }
 
 
-+ (id) quiriumCascadeFromShip:(ShipEntity *)ship
++ (id) quiriumCascadeFromShip:(OOShipEntity *)ship
 {
 	return [[[self alloc] initQuiriumCascadeFromShip:ship] autorelease];
 }

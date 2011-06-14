@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 
 
 #import "Universe.h"
-#import "ShipEntity.h"
+#import "OOShipEntity.h"
 
 
 typedef struct
@@ -70,12 +70,12 @@ OOINLINE BOOL IsStationPredicate(OOEntity *entity, void *parameter);				// Param
          BOOL IsPlanetPredicate(OOEntity *entity, void *parameter);				// Parameter: ignored. Tests isPlanet and planetType == STELLAR_TYPE_NORMAL_PLANET.
 OOINLINE BOOL IsSunPredicate(OOEntity *entity, void *parameter);					// Parameter: ignored. Tests isSun.
 
-// These predicates assume their parameter is a ShipEntity.
+// These predicates assume their parameter is a OOShipEntity.
 OOINLINE BOOL HasRolePredicate(OOEntity *ship, void *parameter);					// Parameter: NSString
 OOINLINE BOOL HasPrimaryRolePredicate(OOEntity *ship, void *parameter);			// Parameter: NSString
 OOINLINE BOOL HasRoleInSetPredicate(OOEntity *ship, void *parameter);				// Parameter: NSSet
 OOINLINE BOOL HasPrimaryRoleInSetPredicate(OOEntity *ship, void *parameter);		// Parameter: NSSet
-         BOOL IsHostileAgainstTargetPredicate(OOEntity *ship, void *parameter);	// Parameter: ShipEntity
+         BOOL IsHostileAgainstTargetPredicate(OOEntity *ship, void *parameter);	// Parameter: OOShipEntity
 
 
 /*** Only inline definitions beyond this point ***/
@@ -165,22 +165,22 @@ OOINLINE BOOL IsSunPredicate(OOEntity *entity, void *parameter)
 OOINLINE BOOL HasRolePredicate(OOEntity *ship, void *parameter)
 {
 	NSCParameterAssert([ship isShip] && [(id)parameter isKindOfClass:[NSString class]]);
-	return [(ShipEntity *)ship hasRole:(NSString *)parameter];
+	return [(OOShipEntity *)ship hasRole:(NSString *)parameter];
 }
 
 OOINLINE BOOL HasPrimaryRolePredicate(OOEntity *ship, void *parameter)
 {
 	NSCParameterAssert([ship isShip] && [(id)parameter isKindOfClass:[NSString class]]);
-	return [(ShipEntity *)ship hasPrimaryRole:(NSString *)parameter];
+	return [(OOShipEntity *)ship hasPrimaryRole:(NSString *)parameter];
 }
 
 OOINLINE BOOL HasRoleInSetPredicate(OOEntity *ship, void *parameter)
 {
 	NSCParameterAssert([ship isShip] && [(id)parameter isKindOfClass:[NSSet class]]);
-	return [[(ShipEntity *)ship roleSet] intersectsSet:(NSSet *)parameter];
+	return [[(OOShipEntity *)ship roleSet] intersectsSet:(NSSet *)parameter];
 }
 OOINLINE BOOL HasPrimaryRoleInSetPredicate(OOEntity *ship, void *parameter)
 {
 	NSCParameterAssert([ship isShip] && [(id)parameter isKindOfClass:[NSSet class]]);
-	return [(NSSet *)parameter containsObject:[(ShipEntity *)ship primaryRole]];
+	return [(NSSet *)parameter containsObject:[(OOShipEntity *)ship primaryRole]];
 }

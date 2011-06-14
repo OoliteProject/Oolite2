@@ -395,7 +395,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 		
 		Actually, it'd be better to separate PlayerEntity into OOPlayer and
 		OOPlayerShipEntity. And then move most of OOPlayerShipEntity into
-		ShipEntity, and make NPC ships behave more like player ships.
+		OOShipEntity, and make NPC ships behave more like player ships.
 		-- Ahruman
 	*/
 	

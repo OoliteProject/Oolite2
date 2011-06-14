@@ -62,7 +62,6 @@ enum
 	kPlanet_hasAtmosphere,
 	kPlanet_radius,				// Radius of planet in metres, read-only
 	kPlanet_texture,			// Planet texture read / write
-	kPlanet_orientation,		// orientation, quaternion, read/write
 	kPlanet_rotationalVelocity,	// read/write
 };
 
@@ -75,7 +74,6 @@ static JSPropertySpec sPlanetProperties[] =
 	{ "radius",					kPlanet_radius,				OOJS_PROP_READONLY_CB },
 	{ "rotationalVelocity",		kPlanet_rotationalVelocity,	OOJS_PROP_READWRITE_CB },
 	{ "texture",				kPlanet_texture,			OOJS_PROP_READWRITE_CB },
-	{ "orientation",			kPlanet_orientation,		OOJS_PROP_READWRITE_CB },	// Not documented since it's inherited from Entity
 	{ 0 }
 };
 
@@ -148,9 +146,6 @@ static JSBool PlanetGetProperty(JSContext *context, JSObject *this, jsid propID,
 		case kPlanet_texture:
 			*value = OOJSValueFromNativeObject(context, [planet textureFileName]);
 			return YES;
-			
-		case kPlanet_orientation:
-			return QuaternionToJSValue(context, [planet normalOrientation], value);
 		
 		case kPlanet_rotationalVelocity:
 			return JS_NewNumberValue(context, [planet rotationalVelocity], value);
@@ -172,7 +167,6 @@ static JSBool PlanetSetProperty(JSContext *context, JSObject *this, jsid propID,
 	
 	OOPlanetEntity			*planet = nil;
 	NSString				*sValue = nil;
-	Quaternion				qValue;
 	jsdouble				dValue;
 	
 	if (!JSPlanetGetPlanetEntity(context, this, &planet))  return NO;
@@ -208,16 +202,7 @@ static JSBool PlanetSetProperty(JSContext *context, JSObject *this, jsid propID,
 
 			return YES;	// Even if !OK, no exception was raised.
 		}
-			
-		case kPlanet_orientation:
-			if (JSValueToQuaternion(context, *value, &qValue))
-			{
-				quaternion_normalize(&qValue);
-				[planet setOrientation:qValue];
-				return YES;
-			}
-			break;
-
+		
 		case kPlanet_rotationalVelocity:
 			if (JS_ValueToNumber(context, *value, &dValue))
 			{

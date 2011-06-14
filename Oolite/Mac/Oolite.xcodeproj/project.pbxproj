@@ -57,7 +57,7 @@
 		1A1B977813087FBE0078322D /* OOShipEntity+AI.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B974F13087FBE0078322D /* OOShipEntity+AI.m */; };
 		1A1B977913087FBE0078322D /* OOShipEntity+LoadRestore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */; };
 		1A1B977A13087FBE0078322D /* OOShipEntity+ScriptMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */; };
-		1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975513087FBE0078322D /* SkyEntity.m */; };
+		1A1B977B13087FBE0078322D /* OOSkyEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975513087FBE0078322D /* OOSkyEntity.m */; };
 		1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975713087FBE0078322D /* OOStationEntity.m */; };
 		1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B975913087FBE0078322D /* WormholeEntity.m */; };
 		1A1B97CE130881D70078322D /* OOAsyncWorkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1B97CD130881D70078322D /* OOAsyncWorkManager.m */; };
@@ -988,8 +988,8 @@
 		1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+LoadRestore.m"; sourceTree = "<group>"; };
 		1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; path = "OOShipEntity+ScriptMethods.h"; sourceTree = "<group>"; };
 		1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OOShipEntity+ScriptMethods.m"; sourceTree = "<group>"; };
-		1A1B975413087FBE0078322D /* SkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkyEntity.h; sourceTree = "<group>"; };
-		1A1B975513087FBE0078322D /* SkyEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkyEntity.m; sourceTree = "<group>"; };
+		1A1B975413087FBE0078322D /* OOSkyEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOSkyEntity.h; sourceTree = "<group>"; };
+		1A1B975513087FBE0078322D /* OOSkyEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSkyEntity.m; sourceTree = "<group>"; };
 		1A1B975613087FBE0078322D /* OOStationEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOStationEntity.h; sourceTree = "<group>"; };
 		1A1B975713087FBE0078322D /* OOStationEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOStationEntity.m; sourceTree = "<group>"; };
 		1A1B975813087FBE0078322D /* WormholeEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WormholeEntity.h; sourceTree = "<group>"; };
@@ -1648,8 +1648,8 @@
 				1A1B975113087FBE0078322D /* OOShipEntity+LoadRestore.m */,
 				1A1B975213087FBE0078322D /* OOShipEntity+ScriptMethods.h */,
 				1A1B975313087FBE0078322D /* OOShipEntity+ScriptMethods.m */,
-				1A1B975413087FBE0078322D /* SkyEntity.h */,
-				1A1B975513087FBE0078322D /* SkyEntity.m */,
+				1A1B975413087FBE0078322D /* OOSkyEntity.h */,
+				1A1B975513087FBE0078322D /* OOSkyEntity.m */,
 				1A1B975613087FBE0078322D /* OOStationEntity.h */,
 				1A1B975713087FBE0078322D /* OOStationEntity.m */,
 				1A1B975813087FBE0078322D /* WormholeEntity.h */,
@@ -2730,7 +2730,7 @@
 				1A1B977813087FBE0078322D /* OOShipEntity+AI.m in Sources */,
 				1A1B977913087FBE0078322D /* OOShipEntity+LoadRestore.m in Sources */,
 				1A1B977A13087FBE0078322D /* OOShipEntity+ScriptMethods.m in Sources */,
-				1A1B977B13087FBE0078322D /* SkyEntity.m in Sources */,
+				1A1B977B13087FBE0078322D /* OOSkyEntity.m in Sources */,
 				1A1B977C13087FBE0078322D /* OOStationEntity.m in Sources */,
 				1A1B977D13087FBE0078322D /* WormholeEntity.m in Sources */,
 				1A1B97CE130881D70078322D /* OOAsyncWorkManager.m in Sources */,

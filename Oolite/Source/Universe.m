@@ -58,7 +58,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+Controls.h"
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOStationEntity.h"
-#import "SkyEntity.h"
+#import "OOSkyEntity.h"
 #import "DustEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOSunEntity.h"
@@ -671,7 +671,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	/*- the sky backdrop -*/
 	OOColor *col1 = [OOColor colorWithCalibratedRed:0.0 green:1.0 blue:0.5 alpha:1.0];
 	OOColor *col2 = [OOColor colorWithCalibratedRed:0.0 green:1.0 blue:0.0 alpha:1.0];
-	thing = [[SkyEntity alloc] initWithColors:col1:col2 andSystemInfo: systeminfo];	// alloc retains!
+	thing = [[OOSkyEntity alloc] initWithColors:col1:col2 andSystemInfo: systeminfo];	// alloc retains!
 	[thing setScanClass: CLASS_NO_DRAW];
 	quaternion_set_random(&randomQ);
 	[thing setOrientation:randomQ];
@@ -806,10 +806,10 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	OOColor *col1 = [OOColor colorWithCalibratedHue:h1 saturation:randf() brightness:0.5 + randf()/2.0 alpha:1.0];
 	OOColor *col2 = [OOColor colorWithCalibratedHue:h2 saturation:0.5 + randf()/2.0 brightness:0.5 + randf()/2.0 alpha:1.0];
 	
-	thing = [[SkyEntity alloc] initWithColors:col1:col2 andSystemInfo: systeminfo];	// alloc retains!
+	thing = [[OOSkyEntity alloc] initWithColors:col1:col2 andSystemInfo: systeminfo];	// alloc retains!
 	[thing setScanClass: CLASS_NO_DRAW];
 	[self addEntity:thing];
-	bgcolor = [(SkyEntity *)thing skyColor];
+	bgcolor = [(OOSkyEntity *)thing skyColor];
 	pale_bgcolor = [bgcolor blendedColorWithFraction:0.5 ofColor:[OOColor whiteColor]];
 	[thing release];
 	/*--*/
@@ -1128,14 +1128,14 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 	
 	NSDictionary	*systeminfo = [self generateSystemData:system_seed];
 	OOSunEntity		*the_sun = [self sun];
-	SkyEntity		*the_sky = nil;
+	OOSkyEntity		*the_sky = nil;
 	GLfloat			sun_pos[] = {0.0, 0.0, 0.0, 1.0};	// equivalent to kZeroVector - for interstellar space.
 	GLfloat			sun_ambient[] = {0.0, 0.0, 0.0, 1.0};	// overridden later in code
 	int i;
 	
 	for (i = n_entities - 1; i > 0; i--)
-		if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[SkyEntity class]]))
-			the_sky = (SkyEntity*)sortedEntities[i];
+		if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[OOSkyEntity class]]))
+			the_sky = (OOSkyEntity*)sortedEntities[i];
 	
 	if (the_sun)
 	{
@@ -5960,12 +5960,12 @@ static NSDictionary	*sCachedSystemData = nil;
 		else if ([key isEqualToString:@"sun_color"] || [key isEqualToString:@"star_count_multiplier"] ||
 				[key isEqualToString:@"nebula_count_multiplier"] || [key hasPrefix:@"sky_"])
 		{
-			SkyEntity	*the_sky = nil;
+			OOSkyEntity	*the_sky = nil;
 			int i;
 			
 			for (i = n_entities - 1; i > 0; i--)
-				if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[SkyEntity class]]))
-					the_sky = (SkyEntity*)sortedEntities[i];
+				if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[OOSkyEntity class]]))
+					the_sky = (OOSkyEntity*)sortedEntities[i];
 			
 			if (the_sky != nil)
 			{

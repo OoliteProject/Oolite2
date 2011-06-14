@@ -1,6 +1,6 @@
 /*
 
-SkyEntity.h
+OOSkyEntity.h
 
 OOEntity subclass implementing the game backdrop of stars and nebulae.
 
@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 @class OOColor;
 
 
-@interface SkyEntity: OOEntityWithDrawable
+@interface OOSkyEntity: OOEntityWithDrawable
 {
 	OOColor					*skyColor;
 }

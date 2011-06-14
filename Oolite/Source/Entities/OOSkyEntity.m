@@ -1,6 +1,6 @@
 /*
 
-SkyEntity.m
+OOSkyEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 
-#import "SkyEntity.h"
+#import "OOSkyEntity.h"
 #import "OOSkyDrawable.h"
 #import "OOPlayerShipEntity.h"
 
@@ -41,14 +41,14 @@ MA 02110-1301, USA.
 #define SKY_scale				10.0
 
 
-@interface SkyEntity (OOPrivate)
+@interface OOSkyEntity (OOPrivate)
 
 - (void)readColor1:(OOColor **)ioColor1 andColor2:(OOColor **)ioColor2 fromDictionary:(NSDictionary *)dictionary;
 
 @end
 
 
-@implementation SkyEntity
+@implementation OOSkyEntity
 
 - (id) initWithColors:(OOColor *) col1:(OOColor *) col2 andSystemInfo:(NSDictionary *) systemInfo
 {
@@ -190,7 +190,7 @@ MA 02110-1301, USA.
 	
 	[super drawEntity:immediate :translucent];
 	
-	CheckOpenGLErrors(@"SkyEntity after drawing %@", self);
+	CheckOpenGLErrors(@"OOSkyEntity after drawing %@", self);
 }
 
 

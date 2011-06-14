@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "OOJSCall.h"
 
 #import "OOJSPlayer.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOShipEntity.h"
 
 

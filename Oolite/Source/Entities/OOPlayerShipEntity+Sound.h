@@ -1,6 +1,6 @@
 /*
 
-PlayerEntitySound.h
+OOPlayerShipEntity+Sound.h
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,10 +22,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
-@interface PlayerEntity (Sound)
+@interface OOPlayerShipEntity (Sound)
 
 - (void) setUpSound;
 - (void) destroySound;

@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOStationEntity.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OODebugFlags.h"
 
 

@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityControls.m
+OOPlayerShipEntity+Controls.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,13 +22,13 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntityControls.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntityScriptMethods.h"
-#import "PlayerEntitySound.h"
-#import "PlayerEntityLoadSave.h"
-#import "PlayerEntityStickMapper.h"
+#import "OOPlayerShipEntity+Controls.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
+#import "OOPlayerShipEntity+Sound.h"
+#import "OOPlayerShipEntity+LoadSave.h"
+#import "OOPlayerShipEntity+StickMapper.h"
 
 #import "ShipEntityAI.h"
 #import "OOStationEntity.h"
@@ -117,7 +117,7 @@ static int 				pressedArrow = 0;
 static BOOL				mouse_x_axis_map_to_yaw = NO;
 
 
-@interface PlayerEntity (OOControlsPrivate)
+@interface OOPlayerShipEntity (OOControlsPrivate)
 
 - (void) pollFlightControls:(double) delta_t;
 - (void) pollFlightArrowKeyControls:(double) delta_t;
@@ -141,7 +141,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 @end
 
 
-@implementation PlayerEntity (Controls)
+@implementation OOPlayerShipEntity (Controls)
 
 - (void) initControls
 {
@@ -425,7 +425,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 @end
 
 
-@implementation PlayerEntity (OOControlsPrivate)
+@implementation OOPlayerShipEntity (OOControlsPrivate)
 
 - (void) pollApplicationControls
 {

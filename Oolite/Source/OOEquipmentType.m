@@ -27,8 +27,8 @@ SOFTWARE.
 
 #import "OOEquipmentType.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
 
 
 static NSArray			*sEquipmentTypes = nil;

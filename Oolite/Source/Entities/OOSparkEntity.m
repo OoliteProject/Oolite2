@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "OOSparkEntity.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOColor.h"
 
 

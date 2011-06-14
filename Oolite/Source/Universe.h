@@ -36,7 +36,7 @@ MA 02110-1301, USA.
 
 @class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
 		OOEntity, OOShipEntity, OOStationEntity, OOPlanetEntity, OOSunEntity,
-		PlayerEntity, OORoleSet, OOColor, OOShipClass;
+		OOPlayerShipEntity, OORoleSet, OOColor, OOShipClass;
 
 
 typedef BOOL (*EntityFilterPredicate)(OOEntity *entity, void *parameter);

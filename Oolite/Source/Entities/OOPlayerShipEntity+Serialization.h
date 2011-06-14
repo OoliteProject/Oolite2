@@ -1,8 +1,8 @@
 /*
 
-PlayerEntity+Serialization.h
+OOPlayerShipEntity+Serialization.h
 
-Methods for converting PlayerEntity to/from property list for saving.
+Methods for converting OOPlayerShipEntity to/from property list for saving.
 
 
 Oolite
@@ -25,10 +25,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
-@interface PlayerEntity (Serialization)
+@interface OOPlayerShipEntity (Serialization)
 
 + (NSString *) savedPathGameForName:(NSString *)name directoryPath:(NSString *)directoryPath;
 

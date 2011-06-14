@@ -26,8 +26,8 @@ MA 02110-1301, USA.
 #import "GameController.h"
 #import "GuiDisplayGen.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
 
 
 static NSString * const kOOLogGrooliteError	= @"growl.error";
@@ -76,7 +76,7 @@ static NSString * const kOOLogGrooliteDebug	= @"growl.debug";
 
 - (void)displayGrowlNotificationWithTitle:(NSString *)inTitle andMessage:(NSString *)inMessage fromApp:(NSString *) inAppname
 {
-	PlayerEntity			*player;
+	OOPlayerShipEntity			*player;
 	NSString				*notificationString;
 	NSString				*displayString;
 	

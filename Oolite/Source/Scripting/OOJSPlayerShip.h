@@ -8,7 +8,7 @@ separation makes more sense conceptually and design-wise, and we might want to
 make it that way in the future. The scripting interface anticipates this by
 using two separate objects for the player and player's ship.
 
-The -javaScriptValue of the PlayerEntity is the player's ship.
+The -javaScriptValue of the OOPlayerShipEntity is the player's ship.
 
 
 Oolite
@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 #import <Foundation/Foundation.h>
 #include <jsapi.h>
 
-@class PlayerEntity;
+@class OOPlayerShipEntity;
 
 
 void InitOOJSPlayerShip(JSContext *context, JSObject *global);

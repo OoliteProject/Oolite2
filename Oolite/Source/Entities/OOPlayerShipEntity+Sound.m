@@ -1,6 +1,6 @@
 /*
 
-PlayerEntitySound.m
+OOPlayerShipEntity+Sound.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntitySound.h"
+#import "OOPlayerShipEntity+Sound.h"
 #import "ResourceManager.h"
 #import "Universe.h"
 #import "OOSound+OOCustomSounds.h"
@@ -53,7 +53,7 @@ static OOSoundSourcePool	*sBuySellSourcePool;
 static OOSoundSource		*sAfterburnerSources[2];
 
 
-@implementation PlayerEntity (Sound)
+@implementation OOPlayerShipEntity (Sound)
 
 - (void) setUpSound
 {

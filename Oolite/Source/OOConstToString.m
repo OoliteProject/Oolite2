@@ -26,7 +26,7 @@ MA );-);, USA.
 #include <jsapi.h>
 
 #import "Universe.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOInstinct.h"
 
 

@@ -32,7 +32,7 @@ MA 02110-1301, USA.
 #import "GuiDisplayGen.h"
 #import <Carbon/Carbon.h>
 #import "OOGraphicsResetManager.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 #ifndef NDEBUG
 #import <Foundation/NSDebug.h>

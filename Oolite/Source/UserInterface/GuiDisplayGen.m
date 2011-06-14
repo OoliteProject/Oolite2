@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "GuiDisplayGen.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOTextureSprite.h"
 #import "ResourceManager.h"
 #import "OOStringParsing.h"
@@ -1068,7 +1068,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 	
 	if (alpha > 0.05f)
 	{
-		PlayerEntity* player = PLAYER;
+		OOPlayerShipEntity* player = PLAYER;
 		
 		[self drawGLDisplay:x - 0.5f * size_in_pixels.width :y - 0.5f * size_in_pixels.height :z :alpha];
 		
@@ -1322,7 +1322,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 
 - (void) drawStarChart:(GLfloat)x :(GLfloat)y :(GLfloat)z :(GLfloat) alpha
 {
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 
 	if (!player)
 		return;
@@ -1551,7 +1551,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 
 - (void) drawGalaxyChart:(GLfloat)x :(GLfloat)y :(GLfloat)z :(GLfloat) alpha
 {
-	PlayerEntity*	player = PLAYER;
+	OOPlayerShipEntity*	player = PLAYER;
 	NSPoint			galaxy_coordinates = [player galaxy_coordinates];
 	NSPoint			cursor_coordinates = [player cursor_coordinates];
 	Random_Seed		galaxy_seed = [player galaxy_seed];
@@ -1739,7 +1739,7 @@ static OOTextureSprite *NewTextureSpriteWithDescriptor(NSDictionary *descriptor)
 // Advanced Navigation Array -- galactic chart route mapping - contributed by Nikos Barkas (another_commander).
 - (void) drawAdvancedNavArrayAtX:(float)x y:(float)y z:(float)z alpha:(float)alpha usingRoute:(NSDictionary *) routeInfo optimizedBy:(OORouteType) optimizeBy
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	Random_Seed		g_seed, g_seed2;
 	int				i, j;
 	double			hscale = size_in_pixels.width / 256.0;

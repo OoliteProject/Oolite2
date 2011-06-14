@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityControls.h
+OOPlayerShipEntity+Controls.h
 
 Input management methods.
 
@@ -24,10 +24,10 @@ MA 02110-1301, USA.
 
 */
 
-#include "PlayerEntity.h"
+#include "OOPlayerShipEntity.h"
 
 
-@interface PlayerEntity (Controls)
+@interface OOPlayerShipEntity (Controls)
 
 - (void) initControls;
 

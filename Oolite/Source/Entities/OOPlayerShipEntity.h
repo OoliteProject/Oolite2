@@ -1,6 +1,6 @@
 /*
 
-PlayerEntity.h
+OOPlayerShipEntity.h
 
 OOEntity subclass nominally representing the player's ship, but also
 implementing much of the interaction, menu system etc. Breaking it up into
@@ -231,7 +231,7 @@ typedef enum
 #define PLAYER_DOCKING_AI_NAME			@"oolite-player-AI.plist"
 
 
-@interface PlayerEntity: OOShipEntity
+@interface OOPlayerShipEntity: OOShipEntity
 {
 @public
 	Random_Seed				system_seed;
@@ -498,7 +498,7 @@ typedef enum
 	BOOL					voice_gender_m;
 #endif
   
-	// For PlayerEntity (StickMapper)
+	// For OOPlayerShipEntity (StickMapper)
 	int						selFunctionIdx;
 	NSArray					*stickFunctions; 
 	
@@ -520,7 +520,7 @@ typedef enum
 	OOShipEntity				*demoShip; // Used while docked to maintain demo ship rotation.
 }
 
-+ (PlayerEntity *)sharedPlayer;
++ (OOPlayerShipEntity *)sharedPlayer;
 - (void) deferredInit;
 
 - (void) setUp;
@@ -817,12 +817,12 @@ typedef enum
 /*	Use PLAYER to refer to the shared player object in cases where it is
 	assumed to exist (i.e., except during early initialization).
 */
-OOINLINE PlayerEntity *OOGetPlayer(void) INLINE_CONST_FUNC;
-OOINLINE PlayerEntity *OOGetPlayer(void)
+OOINLINE OOPlayerShipEntity *OOGetPlayer(void) INLINE_CONST_FUNC;
+OOINLINE OOPlayerShipEntity *OOGetPlayer(void)
 {
-	extern PlayerEntity *gOOPlayer;
+	extern OOPlayerShipEntity *gOOPlayer;
 #if OO_DEBUG
-	NSCAssert(gOOPlayer != nil, @"PLAYER used when [PlayerEntity sharedPlayer] has not been called.");
+	NSCAssert(gOOPlayer != nil, @"PLAYER used when [OOPlayerShipEntity sharedPlayer] has not been called.");
 #endif
 	return gOOPlayer;
 }

@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 #import "Universe.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #include <jsapi.h>
 
 

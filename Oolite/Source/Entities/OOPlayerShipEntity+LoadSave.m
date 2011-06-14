@@ -1,6 +1,6 @@
 /*
  
- PlayerEntityLoadSave.m
+ OOPlayerShipEntity+LoadSave.m
  
  Oolite
  Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,14 +22,14 @@
  
  */
 
-#import "PlayerEntityLoadSave.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityControls.h"
-#import "PlayerEntitySound.h"
-#import "PlayerEntity+Serialization.h"
+#import "OOPlayerShipEntity+LoadSave.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+Controls.h"
+#import "OOPlayerShipEntity+Sound.h"
+#import "OOPlayerShipEntity+Serialization.h"
 
 #import "GameController.h"
-#import "PlayerEntityControls.h"
+#import "OOPlayerShipEntity+Controls.h"
 #import "OOXMLExtensions.h"
 #import "OOColor.h"
 #import "OOStringParsing.h"
@@ -63,7 +63,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 @end
 
 
-@interface PlayerEntity (OOLoadSavePrivate)
+@interface OOPlayerShipEntity (OOLoadSavePrivate)
 
 #if OOLITE_USE_APPKIT_LOAD_SAVE
 
@@ -85,7 +85,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 @end
 
 
-@implementation PlayerEntity (LoadSave)
+@implementation OOPlayerShipEntity (LoadSave)
 
 - (BOOL)loadPlayer
 {
@@ -391,9 +391,9 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 - (BOOL) loadPlayerFromFile:(NSString *)fileToOpen
 {
 	/*	TODO: it would probably be better to load by creating a new
-		PlayerEntity, verifying that's OK, then replacing the global player.
+		OOPlayerShipEntity, verifying that's OK, then replacing the global player.
 		
-		Actually, it'd be better to separate PlayerEntity into OOPlayer and
+		Actually, it'd be better to separate OOPlayerShipEntity into OOPlayer and
 		OOPlayerShipEntity. And then move most of OOPlayerShipEntity into
 		OOShipEntity, and make NPC ships behave more like player ships.
 		-- Ahruman
@@ -515,7 +515,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 @end
 
 
-@implementation PlayerEntity (OOLoadSavePrivate)
+@implementation OOPlayerShipEntity (OOLoadSavePrivate)
 
 #if OOLITE_USE_APPKIT_LOAD_SAVE
 
@@ -588,7 +588,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 	// TEMP: write a new-style save game alongside the old-style one.
 	NSString *name = [[path lastPathComponent] stringByDeletingPathExtension];
 	NSString *dirPath = [path stringByDeletingLastPathComponent];
-	[self writeSavedGameToPath:[PlayerEntity savedPathGameForName:name directoryPath:dirPath] error:NULL];
+	[self writeSavedGameToPath:[OOPlayerShipEntity savedPathGameForName:name directoryPath:dirPath] error:NULL];
 	
 	dict = [self legacyCommanderDataDictionary];
 	if (dict == nil)  errDesc = @"could not construct commander data dictionary.";
@@ -733,7 +733,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 	unsigned i;
 	int row=STARTROW;
 	
-	// cdrArray defined in PlayerEntity.h
+	// cdrArray defined in OOPlayerShipEntity.h
 	NSArray *cdrArray = [cdrFileManager commanderContentsOfPath:directory];
 	
 	// get commander details so a brief rundown of the commander's details may
@@ -972,7 +972,7 @@ static uint16_t PersonalityForCommanderDict(NSDictionary *dict);
 	//-------------------------------------------------------------------------------------------------------------------------
 	
 	// Store the current galaxy seed because findSystemNumberAtCoords may alter it in a while.
-	PlayerEntity		*player = PLAYER;
+	OOPlayerShipEntity		*player = PLAYER;
 	Random_Seed		player_galaxy_seed = [player galaxy_seed];	
 	
 	int			galNumber;

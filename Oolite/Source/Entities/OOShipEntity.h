@@ -768,7 +768,7 @@ typedef enum
 
 // Dispatch shipTakingDamage() event.
 - (void) noteTakingDamage:(double)amount from:(OOEntity *)entity type:(OOShipDamageType)type;
-// Dispatch shipDied() and possibly shipKilledOther() events. This is only for use by getDestroyedBy:damageType:, but needs to be visible to PlayerEntity's version.
+// Dispatch shipDied() and possibly shipKilledOther() events. This is only for use by getDestroyedBy:damageType:, but needs to be visible to OOPlayerShipEntity's version.
 - (void) noteKilledBy:(OOEntity *)whom damageType:(OOShipDamageType)type;
 
 - (void) getDestroyedBy:(OOEntity *)whom damageType:(OOShipDamageType)type;
@@ -1029,7 +1029,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 	
 	-setUpShipBaseWithShipClass:andDictionary:
 	This performs the core OOShipEntity setup that’s shared between players and
-	NPCs. PlayerEntity calls this instead of super setUpShip….
+	NPCs. OOPlayerShipEntity calls this instead of super setUpShip….
 */
 
 - (BOOL) setUpShipBaseWithShipClass:(OOShipClass *)shipClass andDictionary:(NSDictionary *)shipDict;

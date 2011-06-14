@@ -1210,7 +1210,7 @@ static JSBool ShipDumpCargo(JSContext *context, uintN argc, jsval *vp)
 	
 	GET_THIS_SHIP(thisEnt);
 	
-	if (EXPECT_NOT([thisEnt isPlayer] && [(PlayerEntity *)thisEnt isDocked]))
+	if (EXPECT_NOT([thisEnt isPlayer] && [(OOPlayerShipEntity *)thisEnt isDocked]))
 	{
 		OOJSReportWarningForCaller(context, @"PlayerShip", @"dumpCargo", @"Can't dump cargo while docked, ignoring.");
 		OOJS_RETURN_NULL;
@@ -1450,7 +1450,7 @@ static JSBool ShipAwardEquipment(JSContext *context, uintN argc, jsval *vp)
 	{
 		if ([thisEnt isPlayer])
 		{
-			PlayerEntity *player = (PlayerEntity *)thisEnt;
+			OOPlayerShipEntity *player = (OOPlayerShipEntity *)thisEnt;
 			
 			if ([identifier isEqualToString:@"EQ_MISSILE_REMOVAL"])
 			{
@@ -1532,7 +1532,7 @@ static JSBool ShipRemoveEquipment(JSContext *context, uintN argc, jsval *vp)
 				if ([thisEnt passengerCapacity] > [thisEnt passengerCount])
 				{
 					// must be the player's ship!
-					if ([thisEnt isPlayer]) [(PlayerEntity*)thisEnt changePassengerBerths:-1];
+					if ([thisEnt isPlayer]) [(OOPlayerShipEntity*)thisEnt changePassengerBerths:-1];
 				}
 				else OK = NO;
 			}
@@ -1633,10 +1633,10 @@ static JSBool ShipSetEquipmentStatus(JSContext *context, uintN argc, jsval *vp)
 			if ([thisEnt isPlayer])
 			{
 				// these player methods are different to the ship ones.
-				[(PlayerEntity*)thisEnt addEquipmentItem:(hasOK ? damagedKey : key)];
-				if (hasOK) [(PlayerEntity*)thisEnt doScriptEvent:OOJSID("equipmentDamaged") withArgument:key];
+				[(OOPlayerShipEntity*)thisEnt addEquipmentItem:(hasOK ? damagedKey : key)];
+				if (hasOK) [(OOPlayerShipEntity*)thisEnt doScriptEvent:OOJSID("equipmentDamaged") withArgument:key];
 				// if player's Docking Computers are set to EQUIPMENT_DAMAGED while on, stop them
-				if (hasOK && [key isEqualToString:@"EQ_DOCK_COMP"])  [(PlayerEntity*)thisEnt disengageAutopilot];
+				if (hasOK && [key isEqualToString:@"EQ_DOCK_COMP"])  [(OOPlayerShipEntity*)thisEnt disengageAutopilot];
 			}
 			else
 			{
@@ -1955,7 +1955,7 @@ static BOOL RemoveOrExplodeShip(JSContext *context, uintN argc, jsval *vp, BOOL 
 	if (EXPECT_NOT([thisEnt isPlayer]))
 	{
 		NSCAssert(explode, @"RemoveOrExplodeShip(): shouldn't be called for player with !explode.");	// player.ship.remove() is blocked by caller.
-		PlayerEntity *player = (PlayerEntity *)thisEnt;
+		OOPlayerShipEntity *player = (OOPlayerShipEntity *)thisEnt;
 		
 		if ([player isDocked])
 		{

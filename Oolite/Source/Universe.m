@@ -53,10 +53,10 @@ MA 02110-1301, USA.
 #import "OOEquipmentType.h"
 #import "OOGeometryGLHelpers.h"
 
-#import "PlayerEntity.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityControls.h"
-#import "PlayerEntityScriptMethods.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+Controls.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOStationEntity.h"
 #import "SkyEntity.h"
 #import "DustEntity.h"
@@ -229,7 +229,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 - (id) initWithGameView:(MyOpenGLView *)inGameView
 {	
-	PlayerEntity	*player = nil;
+	OOPlayerShipEntity	*player = nil;
 	
 	if (gSharedUniverse != nil)
 	{
@@ -295,7 +295,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	
 	entities = [[NSMutableArray arrayWithCapacity:MAX_NUMBER_OF_ENTITIES] retain];
 	
-	// this MUST have the default no. of rows else the GUI_ROW macros in PlayerEntity.h need modification
+	// this MUST have the default no. of rows else the GUI_ROW macros in OOPlayerShipEntity.h need modification
 	gui = [[GuiDisplayGen alloc] init]; // alloc retains
 	comm_log_gui = [[GuiDisplayGen alloc] init]; // alloc retains
 	
@@ -313,7 +313,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[OOLightParticleEntity setUpTexture];
 	[OOFlashEffectEntity setUpTexture];
 	
-	player = [PlayerEntity sharedPlayer];
+	player = [OOPlayerShipEntity sharedPlayer];
 	[player deferredInit];
 	[self addEntity:player];
 	
@@ -457,7 +457,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 - (void) pauseGame
 {
 	// deal with the machine going to sleep, or player pressing 'p'.
-	PlayerEntity 	*player = PLAYER;
+	OOPlayerShipEntity 	*player = PLAYER;
 	
 	[self setPauseMessageVisible:NO];
 	
@@ -502,7 +502,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	{
 		// we're in witchspace...		
 		
-		PlayerEntity	*player = PLAYER;
+		OOPlayerShipEntity	*player = PLAYER;
 		OOStationEntity	*dockedStation = [player dockedStation];
 		NSPoint			coords = [player galaxy_coordinates];
 		// check the nearest system
@@ -578,7 +578,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 - (void) setUpUniverseFromWitchspace
 {
-	PlayerEntity		*player;
+	OOPlayerShipEntity		*player;
 	
 	//
 	// check the player is still around!
@@ -586,7 +586,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	if ([entities count] == 0)
 	{
 		/*- the player ship -*/
-		player = [[PlayerEntity alloc] init];	// alloc retains!
+		player = [[OOPlayerShipEntity alloc] init];	// alloc retains!
 		
 		[self addEntity:player];
 		
@@ -613,7 +613,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 
 - (void) setUpUniverseFromMisjump
 {
-	PlayerEntity		*player;
+	OOPlayerShipEntity		*player;
 	
 	//
 	// check the player is still around!
@@ -621,7 +621,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	if ([entities count] == 0)
 	{
 		/*- the player ship -*/
-		player = [[PlayerEntity alloc] init];	// alloc retains!
+		player = [[OOPlayerShipEntity alloc] init];	// alloc retains!
 		
 		[self addEntity:player];
 		
@@ -648,7 +648,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	// new system is hyper-centric : witchspace exit point is origin
 	
 	OOEntity				*thing;
-	PlayerEntity*		player = PLAYER;
+	OOPlayerShipEntity*		player = PLAYER;
 	Quaternion			randomQ;
 	
 	NSMutableDictionary *systeminfo = [NSMutableDictionary dictionaryWithCapacity:4];
@@ -2129,7 +2129,7 @@ GLfloat docked_light_specular[4]	= { DOCKED_ILLUM_LEVEL, DOCKED_ILLUM_LEVEL, DOC
 
 - (void) setupIntroFirstGo: (BOOL) justCobra
 {
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	OOShipEntity		*ship;
 	Quaternion		q2;
 	q2.x = 0.0;   q2.y = 0.0;   q2.z = 0.0; q2.w = 1.0;
@@ -3017,7 +3017,7 @@ static const OOMatrix	starboard_matrix =
 {
 	assert(outMatrix != NULL && outForward != NULL && outUp != NULL);
 	
-	PlayerEntity			*player = nil;
+	OOPlayerShipEntity			*player = nil;
 	
 	switch (viewDirection)
 	{
@@ -3083,7 +3083,7 @@ static const OOMatrix	starboard_matrix =
 			int				ent_count =	n_entities;
 			OOEntity			*my_entities[ent_count];
 			int				draw_count = 0;
-			PlayerEntity	*player = PLAYER;
+			OOPlayerShipEntity	*player = PLAYER;
 			OOEntity			*drawthing = nil;
 			BOOL			demoShipMode = [player showDemoShips];
 			
@@ -3360,7 +3360,7 @@ static const OOMatrix	starboard_matrix =
 			no_update = NO;	// allow other attempts to draw
 			
 			// frame complete, when it is time to update the fps_counter, updateClocks:delta_t
-			// in PlayerEntity.m will take care of resetting the processed frames number to 0.
+			// in OOPlayerShipEntity.m will take care of resetting the processed frames number to 0.
 			if (![[self gameController] isGamePaused])
 			{
 				framesDoneThisUpdate++;
@@ -4198,7 +4198,7 @@ static BOOL MaintainLinkedLists(Universe *uni)
 
 - (OOEntity *)getFirstEntityTargetedByPlayer
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	OOEntity			*hit_entity = nil;
 	double			nearest = SCANNER_MAX_RANGE - 100;	// 100m shorter than range at which target is lost
 	int				i;
@@ -4825,7 +4825,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 #if OOLITE_SPEECH_SYNTH
 	//speech synthesis
 	
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	if ([player isSpeechOn])
 	{
 		BOOL		isStandard = NO;
@@ -4911,7 +4911,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 	
 	if (![currentMessage isEqualToString:text] || universal_time >= messageRepeatTime)
 	{
-		PlayerEntity* player = PLAYER;
+		OOPlayerShipEntity* player = PLAYER;
 		
 		if (!logOnly)
 		{
@@ -4971,7 +4971,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 #endif
 		
 		NS_DURING
-			PlayerEntity *player = PLAYER;
+			OOPlayerShipEntity *player = PLAYER;
 			
 			skyClearColor[0] = 0.0;
 			skyClearColor[1] = 0.0;
@@ -5508,7 +5508,7 @@ OOINLINE BOOL EntityInRange(Vector p1, OOEntity *e2, float range)
 - (void) setSystemTo:(Random_Seed) s_seed
 {
 	NSDictionary	*systemData;
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	OOEconomyID		economy;
 	
 	[self setGalaxySeed: [player galaxy_seed]];
@@ -6746,7 +6746,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 
 - (NSArray *) passengersForLocalSystemAtTime:(OOTimeAbsolute) current_time
 {
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	int player_repute = [player passengerReputation];
 	
 	int start = [self currentSystemID];
@@ -6962,7 +6962,7 @@ static double estimatedTimeForJourney(double distance, int hops)
 
 - (NSArray *) contractsForLocalSystemAtTime:(double) current_time
 {
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	
 	int player_repute = [player contractReputation];
 	
@@ -8142,7 +8142,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context)
 		{
 			exception = [ooliteException retain];
 			
-			PlayerEntity* player = PLAYER;
+			OOPlayerShipEntity* player = PLAYER;
 			[player setStatus:STATUS_HANDLING_ERROR];
 			
 			OOLog(kOOLogException, @"***** Handling Fatal : %@ : %@ *****",[exception name], [exception reason]);
@@ -8449,7 +8449,7 @@ OOEntity *gOOJSPlayerIfStale = nil;
 - (void) reinitAndShowDemo:(BOOL)showDemo
 {
 	no_update = YES;
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	assert(player != nil);
 	
 	[self removeAllEntitiesExceptPlayer];
@@ -8519,7 +8519,7 @@ OOEntity *gOOJSPlayerIfStale = nil;
 
 - (void) setUpInitialUniverse
 {
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	
 	OO_DEBUG_PUSH_PROGRESS(@"Wormhole and character reset");
 	if (activeWormholes) [activeWormholes autorelease];
@@ -8790,7 +8790,7 @@ static void PreloadOneSound(NSString *soundName)
 		NS_DURING
 			WormholeEntity* whole = [activeWormholes objectAtIndex:0];		
 			// If the wormhole has been scanned by the player then the
-			// PlayerEntity will take care of it
+			// OOPlayerShipEntity will take care of it
 			if (![whole isScanned] &&
 				NSEqualPoints([PLAYER galaxy_coordinates], [whole destinationCoordinates]))
 			{

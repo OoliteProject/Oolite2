@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityStickMapper.h
+OOPlayerShipEntity+StickMapper.h
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,14 +22,14 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntityStickMapper.h"
-#import "PlayerEntityControls.h"
+#import "OOPlayerShipEntity+StickMapper.h"
+#import "OOPlayerShipEntity+Controls.h"
 #import "OOJoystickManager.h"
 #import "OOLegacyTexture.h"
 #import "OOColor.h"
 
 
-@implementation PlayerEntity (StickMapper)
+@implementation OOPlayerShipEntity (StickMapper)
 
 - (void) setGuiToStickMapperScreen:(unsigned)skip
 {

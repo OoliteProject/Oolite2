@@ -1,6 +1,6 @@
 /*
 
-PlayerEntity+Serialization.m
+OOPlayerShipEntity+Serialization.m
 
 
 Oolite
@@ -23,9 +23,9 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity+Serialization.h"
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntityLoadSave.h"
+#import "OOPlayerShipEntity+Serialization.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+LoadSave.h"
 #import "OOVersion.h"
 #import "OOStringParsing.h"
 
@@ -105,7 +105,7 @@ MA 02110-1301, USA.
 #define kOOSaveKey_
 
 
-@interface PlayerEntity (SerializationPrivate)
+@interface OOPlayerShipEntity (SerializationPrivate)
 
 - (NSDictionary *) savedGamePropertyListWithError:(NSError **)error;
 + (BOOL) priv_useCompressionForSavedGames;
@@ -116,7 +116,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation PlayerEntity (Serialization)
+@implementation OOPlayerShipEntity (Serialization)
 
 + (NSString *) savedPathGameForName:(NSString *)name directoryPath:(NSString *)directoryPath
 {
@@ -146,7 +146,7 @@ MA 02110-1301, USA.
 	NSDictionary *properties = [self savedGamePropertyListWithError:error];
 	if (properties == nil)  return NO;
 	
-	BOOL compress = [PlayerEntity priv_useCompressionForSavedGames];
+	BOOL compress = [OOPlayerShipEntity priv_useCompressionForSavedGames];
 	OOConfGenerationOptions options = compress ? kOOConfGenerationSmall : kOOConfGenerationDefault;
 	
 	NSData *data = [properties ooConfDataWithOptions:options error:error];
@@ -333,7 +333,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 		Contracts.
 		FIXME: update representations.
 		Currently contracts and passengers are arrays of dictionaries using
-		keys defined at the top of PlayerEntityContracts.h. These should be
+		keys defined at the top of OOPlayerShipEntity+Contracts.h. These should be
 		camelcaseified at minimum.
 		passengerRecord/contractRecord are dictionaries of past passengers/
 		contracts (keyed by PASSENGER_KEY_NAME/CARGO_KEY_ID) to avoid duplicates.
@@ -814,7 +814,7 @@ static NSArray *ArrayFromCoords(NSPoint coords)
 				}
 				else
 				{
-					OOLogWARN(@"load.failed.missileNotFound", @"couldn't find missile with role '%@' in [PlayerEntity setCommanderDataFromDictionary:], missile entry discarded.", missile_desc);
+					OOLogWARN(@"load.failed.missileNotFound", @"couldn't find missile with role '%@' in [OOPlayerShipEntity setCommanderDataFromDictionary:], missile entry discarded.", missile_desc);
 				}
 			}
 		}

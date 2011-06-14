@@ -1,6 +1,6 @@
 /*
 
-PlayerEntity.m
+OOPlayerShipEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,12 +22,12 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityControls.h"
-#import "PlayerEntitySound.h"
-#import "PlayerEntity+Serialization.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+Controls.h"
+#import "OOPlayerShipEntity+Sound.h"
+#import "OOPlayerShipEntity+Serialization.h"
 
 #import "OOStationEntity.h"
 #import "OOSunEntity.h"
@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 #import "ShipEntityAI.h"
 #import "MyOpenGLView.h"
 #import "OOTrumble.h"
-#import "PlayerEntityLoadSave.h"
+#import "OOPlayerShipEntity.h"
 #import "OOColor.h"
 #import "Octree.h"
 #import "OOCacheManager.h"
@@ -68,7 +68,7 @@ MA 02110-1301, USA.
 #import "OOVersion.h"
 
 #import "OOJoystickManager.h"
-#import "PlayerEntityStickMapper.h"
+#import "OOPlayerShipEntity+StickMapper.h"
 #import <OoliteSound/OoliteSound.h>
 
 #if OOLITE_MAC_OS_X
@@ -76,7 +76,7 @@ MA 02110-1301, USA.
 #endif
 
 
-#define kOOLogUnconvertedNSLog @"unclassified.PlayerEntity"
+#define kOOLogUnconvertedNSLog @"unclassified.OOPlayerShipEntity"
 
 enum
 {
@@ -89,11 +89,11 @@ enum
 static NSString * const kOOLogBuyMountedOK			= @"equip.buy.mounted";
 static NSString * const kOOLogBuyMountedFailed		= @"equip.buy.mounted.failed";
 
-PlayerEntity		*gOOPlayer = nil;
+OOPlayerShipEntity		*gOOPlayer = nil;
 static GLfloat		sBaseMass = 0.0;
 
 
-@interface PlayerEntity (OOPrivate)
+@interface OOPlayerShipEntity (OOPrivate)
 
 - (void) doTradeIn:(OOCreditsQuantity)tradeInValue forPriceFactor:(double)priceFactor;
 
@@ -142,11 +142,11 @@ static GLfloat		sBaseMass = 0.0;
 @end
 
 
-@implementation PlayerEntity
+@implementation OOPlayerShipEntity
 
-+ (PlayerEntity *)sharedPlayer
++ (OOPlayerShipEntity *)sharedPlayer
 {
-	if (EXPECT_NOT(gOOPlayer == nil))  OOConsumeReference([[PlayerEntity alloc] init]);
+	if (EXPECT_NOT(gOOPlayer == nil))  OOConsumeReference([[OOPlayerShipEntity alloc] init]);
 	return gOOPlayer;
 }
 
@@ -326,10 +326,10 @@ static GLfloat		sBaseMass = 0.0;
 			}
 			else
 			{
-				OOLogERR(@"player.loadCargoPods.noContainer", @"couldn't create a container in [PlayerEntity loadCargoPods]");
+				OOLogERR(@"player.loadCargoPods.noContainer", @"couldn't create a container in [OOPlayerShipEntity loadCargoPods]");
 				// throw an exception here...
 				[NSException raise:OOLITE_EXCEPTION_FATAL
-					format:@"[PlayerEntity loadCargoPods] failed to create a container for cargo with role 'cargopod'"];
+					format:@"[OOPlayerShipEntity loadCargoPods] failed to create a container for cargo with role 'cargopod'"];
 			}
 		}
 		// adjust manifest for this commodity
@@ -506,12 +506,12 @@ static GLfloat		sBaseMass = 0.0;
 
 
 /*	Nasty initialization mechanism:
-	PlayerEntity is alloced and inited on demand by +sharedPlayer. This
+	OOPlayerShipEntity is alloced and inited on demand by +sharedPlayer. This
 	initialization doesn't actually set anything up -- apart from the
 	assertion, it's like doing a bare alloc. -deferredInit does the work
 	that -init "should" be doing. It assumes that -[OOShipEntity initWithKey:
 	definition:] will not return an object other than self.
-	This is necessary because we need a pointer to the PlayerEntity early in
+	This is necessary because we need a pointer to the OOPlayerShipEntity early in
 	startup, when ship data hasn't been loaded yet. In particular, we need
 	a pointer to the player to set up the JavaScript environment, we need the
 	JavaScript environment to set up OpenGL, and we need OpenGL set up to load
@@ -519,7 +519,7 @@ static GLfloat		sBaseMass = 0.0;
 */
 - (id) init
 {
-	NSAssert(gOOPlayer == nil, @"Expected only one PlayerEntity to exist at a time.");
+	NSAssert(gOOPlayer == nil, @"Expected only one OOPlayerShipEntity to exist at a time.");
 	gOOPlayer = [super initBypassForPlayer];
 	return gOOPlayer;
 }
@@ -527,8 +527,8 @@ static GLfloat		sBaseMass = 0.0;
 
 - (void) deferredInit
 {
-	NSAssert(gOOPlayer == self, @"Expected only one PlayerEntity to exist at a time.");
-	NSAssert([super initWithKey:PLAYER_SHIP_DESC definition:[NSDictionary dictionary]] == self, @"PlayerEntity requires -[OOShipEntity initWithKey:definition:] to return unmodified self.");
+	NSAssert(gOOPlayer == self, @"Expected only one OOPlayerShipEntity to exist at a time.");
+	NSAssert([super initWithKey:PLAYER_SHIP_DESC definition:[NSDictionary dictionary]] == self, @"OOPlayerShipEntity requires -[OOShipEntity initWithKey:definition:] to return unmodified self.");
 	
 	compassMode = COMPASS_MODE_BASIC;
 	
@@ -1996,7 +1996,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		switch ([wh scanInfo])
 		{
 			case WH_SCANINFO_NONE:
-				OOLog(kOOLogInconsistentState, @"Internal Error - WH_SCANINFO_NONE reached in [PlayerEntity updateTargeting:]");
+				OOLog(kOOLogInconsistentState, @"Internal Error - WH_SCANINFO_NONE reached in [OOPlayerShipEntity updateTargeting:]");
 				[self dumpState];
 				[wh dumpState];
 				// Workaround a reported hit of the assert here.  We really
@@ -2301,7 +2301,7 @@ static bool minShieldLevelPercentageInitialised = false;
 	// hud defined, but buggy?
 	if (hudDict == nil)
 	{
-		OOLog(@"PlayerEntity.switchHudTo.failed", @"HUD dictionary file %@ to switch to not found or invalid.", hudFileName);
+		OOLog(@"OOPlayerShipEntity.switchHudTo.failed", @"HUD dictionary file %@ to switch to not found or invalid.", hudFileName);
 		return NO;
 	}
 	

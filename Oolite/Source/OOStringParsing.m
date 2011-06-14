@@ -24,8 +24,8 @@ MA 02110-1301, USA.
 
 #import "OOStringParsing.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
 #import "ResourceManager.h"
 
 #import "OOJavaScriptEngine.h"
@@ -275,7 +275,7 @@ static NSMapTable *SpecialSubstitutionSelectors(void)
 		than explicit overrides.
 		
 		creditsFormattedForSubstitution is defined below, the rest are in
-		PlayerEntityLegacyScriptEngine.m.
+		OOPlayerShipEntity+LegacyScriptEngine.m.
 	*/
 	
 	struct { NSString *key; SEL selector; } selectors[] =
@@ -301,7 +301,7 @@ static NSMapTable *SpecialSubstitutionSelectors(void)
 }
 
 
-@implementation PlayerEntity (OOStringParsingSubstition)
+@implementation OOPlayerShipEntity (OOStringParsingSubstition)
 
 - (NSString *) creditsFormattedForSubstitution
 {
@@ -575,7 +575,7 @@ NSString *ReplaceVariables(NSString *string, OOEntity *target, NSDictionary *loc
 	NSString				*token = nil;
 	NSString				*replacement = nil;
 	OOEntity					*effeciveTarget = nil;
-	PlayerEntity			*player = nil;
+	OOPlayerShipEntity			*player = nil;
 	
 	tokens = ScanTokensFromString(string);
 	resultString = [NSMutableString stringWithString:string];

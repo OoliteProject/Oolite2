@@ -30,7 +30,7 @@ MA 02110-1301, USA.
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "WormholeEntity.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOJavaScriptEngine.h"
 #import "OOJSFunction.h"
 #import "OOShipGroup.h"
@@ -2027,7 +2027,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 	}
 	
 	/*	Player check for being inside the aegis already exists in
-		PlayerEntityControls. We just check here that distance to station is
+		OOPlayerShipEntity+Controls. We just check here that distance to station is
 		less than 2.5 times scanner range to avoid problems with NPC ships
 		getting stuck with a dockingAI while just outside the aegis
 		- Nikos 20090630, as proposed by Eric

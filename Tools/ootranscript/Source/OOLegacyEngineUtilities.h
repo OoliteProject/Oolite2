@@ -2,7 +2,7 @@
 
 OOLegacyEngineUtilities.h
 
-Utility functions and types torn from PlayerEntityLegacyScriptEngine.
+Utility functions and types torn from OOPlayerShipEntity+LegacyScriptEngine.
 
 
 Oolite

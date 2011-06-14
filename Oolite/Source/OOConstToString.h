@@ -62,7 +62,7 @@ declaration, in particular:
 	OOWeaponTypeFromString()
 	OODisplayStringFromAlertCondition()
 	
-	PlayerEntity.h:
+	OOPlayerShipEntity.h:
 	OODisplayRatingStringFromKillCount()
 	KillCountToRatingAndKillString()
 	OODisplayStringFromLegalStatus()

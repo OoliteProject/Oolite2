@@ -228,7 +228,7 @@ typedef struct
 static VectorStatistics sVectorConversionStats;
 
 
-@implementation PlayerEntity (JSVectorStatistics)
+@implementation OOPlayerShipEntity (JSVectorStatistics)
 
 // :setM vectorStats PS.callObjC("reportJSVectorStatistics")
 // :vectorStats

@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOEntity.h"
 #import "EntityOOJavaScriptExtensions.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOPlanetEntity.h"
 
 #import "Geometry.h"

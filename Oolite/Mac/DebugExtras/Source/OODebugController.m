@@ -38,7 +38,7 @@ SOFTWARE.
 #import "Universe.h"
 #import "OOLegacyOpenGL.h"
 #import "OOCacheManager.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOJavaScriptEngine.h"
 #import "OODebugInspector.h"
 #import "OOEntityInspectorExtensions.h"
@@ -181,7 +181,7 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction)dumpPlayerStateAction:sender
 {
-	[[PlayerEntity sharedPlayer] dumpState];
+	[[OOPlayerShipEntity sharedPlayer] dumpState];
 }
 
 
@@ -214,7 +214,7 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction) hideShowHUD:sender
 {
-	BOOL hidden = [[[PlayerEntity sharedPlayer] hud] isHidden];
+	BOOL hidden = [[[OOPlayerShipEntity sharedPlayer] hud] isHidden];
 	NSString *command = [NSString stringWithFormat:@"player.ship.hudHidden = %@", hidden ? @"false" : @"true"];
 	[[OODebugMonitor sharedDebugMonitor] performJSConsoleCommand:command];
 }
@@ -222,14 +222,12 @@ static OODebugController *sSingleton = nil;
 
 - (IBAction) inspectPlayer:sender
 {
-	//	[[PlayerEntity sharedPlayer] inspect];
 	[[OODebugMonitor sharedDebugMonitor] performJSConsoleCommand:@"player.ship.inspect()"];
 }
 
 
 - (IBAction) inspectTarget:sender
 {
-	//	[[[PlayerEntity sharedPlayer] primaryTarget] inspect];
 	[[OODebugMonitor sharedDebugMonitor] performJSConsoleCommand:@"player.ship.target.inspect()"];
 }
 
@@ -436,11 +434,11 @@ static void SetDisplayLogMessagesInClassThroughJS(NSString *msgClass, BOOL displ
 	}
 	if (action == @selector(inspectTarget:))
 	{
-		return [[PlayerEntity sharedPlayer] primaryTarget] != nil;
+		return [[OOPlayerShipEntity sharedPlayer] primaryTarget] != nil;
 	}
 	if (action == @selector(hideShowHUD:))
 	{
-		BOOL hidden = [[[PlayerEntity sharedPlayer] hud] isHidden];
+		BOOL hidden = [[[OOPlayerShipEntity sharedPlayer] hud] isHidden];
 		[menuItem setTitle:hidden ? @"Show HUD" : @"Hide HUD"];
 		return YES;
 	}

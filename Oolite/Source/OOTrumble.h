@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOLegacyOpenGL.h"
 
 
-@class PlayerEntity, AI, OOSound, OOLegacyTexture;
+@class OOPlayerShipEntity, AI, OOSound, OOLegacyTexture;
 
 #define TRUMBLE_MAX_ROTATION				15.0
 #define TRUMBLE_MAX_ROTATIONAL_VELOCITY		5.0
@@ -70,7 +70,7 @@ float	trumbleAppetiteAccumulator;
 
 @interface OOTrumble : NSObject
 {
-	PlayerEntity			*player;	// owning entity (not retained)
+	OOPlayerShipEntity			*player;	// owning entity (not retained)
 	//
 	unichar					digram[2];	// seed for pseudo-randomly setting up Trumble (pair of characters)
 	//
@@ -114,10 +114,10 @@ float	trumbleAppetiteAccumulator;
 	BOOL					readyToSpawn;
 }
 
-- (id) initForPlayer:(PlayerEntity*) p1;
-- (id) initForPlayer:(PlayerEntity*) p1 digram:(NSString*) digramString;
+- (id) initForPlayer:(OOPlayerShipEntity*) p1;
+- (id) initForPlayer:(OOPlayerShipEntity*) p1 digram:(NSString*) digramString;
 
-- (void) setupForPlayer:(PlayerEntity*) p1 digram:(NSString*) digramString;
+- (void) setupForPlayer:(OOPlayerShipEntity*) p1 digram:(NSString*) digramString;
 
 - (void) spawnFrom:(OOTrumble*) parentTrumble;
 

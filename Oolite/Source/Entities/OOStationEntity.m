@@ -266,7 +266,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 	}
 	[shipsOnApproach removeAllObjects];
 
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	BOOL isDockingStation = (self == [player getTargetDockStation]);
 	if (isDockingStation && [player status] == STATUS_IN_FLIGHT &&
 			[player getDockingClearanceStatus] >= DOCKING_CLEARANCE_STATUS_REQUESTED)
@@ -372,7 +372,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 	// If the ship is not on its docking approach and the player has
 	// requested or even been granted docking clearance, then tell the
 	// ship to wait.
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	BOOL isDockingStation = self == [player getTargetDockStation];
 	if (isDockingStation && ![shipsOnApproach objectForKey:shipID] &&
 			player && [player status] == STATUS_IN_FLIGHT &&
@@ -1135,7 +1135,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 	
 	[super update:delta_t];
 	
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	BOOL isDockingStation = (self == [player getTargetDockStation]);
 	if (isDockingStation && [player status] == STATUS_IN_FLIGHT)
 	{
@@ -1345,7 +1345,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 	
 	[self doScriptEvent:OOJSID("otherShipDocked") withArgument:ship];
 	
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	BOOL isDockingStation = (self == [player getTargetDockStation]);
 	if (isDockingStation && [player status] == STATUS_IN_FLIGHT &&
 			[player getDockingClearanceStatus] == DOCKING_CLEARANCE_STATUS_REQUESTED)
@@ -2015,7 +2015,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 	if (self == [UNIVERSE station])  return;
 	
 	// launch docked ships if possible
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	if ((player)&&([player status] == STATUS_DOCKED)&&([player dockedStation] == self))
 	{
 		// undock the player!
@@ -2062,7 +2062,7 @@ static NSDictionary* DockingInstructions(OOStationEntity *station, Vector coords
 {
 	NSString	*result = nil;
 	double		timeNow = [UNIVERSE gameTime];
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	
 	[UNIVERSE clearPreviousMessage];
 

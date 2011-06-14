@@ -206,7 +206,7 @@ typedef struct
 static QuaternionStatistics sQuaternionConversionStats;
 
 
-@implementation PlayerEntity (JSQuaternionStatistics)
+@implementation OOPlayerShipEntity (JSQuaternionStatistics)
 
 // :setM quatStats PS.callObjC("reportJSQuaternionStatistics")
 // :quatStats

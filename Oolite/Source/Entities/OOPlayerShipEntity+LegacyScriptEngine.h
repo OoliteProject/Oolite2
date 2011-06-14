@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityLegacyScriptEngine.h
+OOPlayerShipEntity+LegacyScriptEngine.h
 
 Various utility methods used for scripting.
 
@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
 @class OOScript;
@@ -54,7 +54,7 @@ typedef enum
 } OOOperationType;
 
 
-@interface PlayerEntity (Scripting)
+@interface OOPlayerShipEntity (Scripting)
 
 - (NSDictionary*) missionVariables;
 

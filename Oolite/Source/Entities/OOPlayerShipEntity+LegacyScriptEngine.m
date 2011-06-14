@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityLegacyScriptEngine.m
+OOPlayerShipEntity+LegacyScriptEngine.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,9 +22,9 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntityScriptMethods.h"
-#import "PlayerEntitySound.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
+#import "OOPlayerShipEntity+Sound.h"
 #import "GuiDisplayGen.h"
 #import "Universe.h"
 #import "ResourceManager.h"
@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "OOEquipmentType.h"
 
-#define kOOLogUnconvertedNSLog @"unclassified.PlayerEntityLegacyScriptEngine"
+#define kOOLogUnconvertedNSLog @"unclassified.OOPlayerShipEntity+LegacyScriptEngine"
 
 
 #define SUPPORT_TRACE_MESSAGES	(!defined NDEBUG)
@@ -123,7 +123,7 @@ static NSString * const kActionTempFormat					= @ ACTIONS_TEMP_PREFIX ".%u";
 static NSString		*sCurrentMissionKey = nil;
 
 
-@interface PlayerEntity (ScriptingPrivate)
+@interface OOPlayerShipEntity (ScriptingPrivate)
 
 - (NSString *) expandMessage:(NSString *)valueString;
 
@@ -134,7 +134,7 @@ static NSString		*sCurrentMissionKey = nil;
 @end
 
 
-@implementation PlayerEntity (Scripting)
+@implementation OOPlayerShipEntity (Scripting)
 
 
 static NSString *CurrentScriptNameOr(NSString *alternative)

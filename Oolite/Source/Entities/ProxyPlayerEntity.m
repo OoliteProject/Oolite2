@@ -43,7 +43,7 @@ MA 02110-1301, USA.
 }
 
 
-- (void) copyValuesFromPlayer:(PlayerEntity *)player
+- (void) copyValuesFromPlayer:(OOPlayerShipEntity *)player
 {
 	if (player == nil)  return;
 	
@@ -204,7 +204,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation PlayerEntity (ProxyPlayer)
+@implementation OOPlayerShipEntity (ProxyPlayer)
 
 - (BOOL) isPlayerLikeShip
 {

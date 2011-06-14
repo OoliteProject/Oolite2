@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityStickMapper.h
+OOPlayerShipEntity+StickMapper.h
 
 Joystick support for SDL implementation of Oolite.
 
@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"
 #import "Universe.h"
@@ -43,7 +43,7 @@ MA 02110-1301, USA.
 #define KEY_AXISFN @"axisfunc"
 #define KEY_BUTTONFN @"buttonfunc"
 
-@interface PlayerEntity (StickMapper)
+@interface OOPlayerShipEntity (StickMapper)
 
    - (void) setGuiToStickMapperScreen: (unsigned)skip;
    - (void) stickMapperInputHandler: (GuiDisplayGen *)gui

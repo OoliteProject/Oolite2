@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityScriptMethods.m
+OOPlayerShipEntity+ScriptMethods.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,8 +22,8 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntityScriptMethods.h"
-#import "PlayerEntityLoadSave.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
+#import "OOPlayerShipEntity+LoadSave.h"
 
 #import "Universe.h"
 #import "OOConstToString.h"
@@ -41,7 +41,7 @@ MA 02110-1301, USA.
 @end
 
 
-@implementation PlayerEntity (ScriptMethods)
+@implementation OOPlayerShipEntity (ScriptMethods)
 
 - (NSString *) playerName
 {

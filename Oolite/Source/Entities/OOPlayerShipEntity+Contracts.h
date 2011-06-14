@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityContracts.h
+OOPlayerShipEntity+Contracts.h
 
 Methods relating to passenger and cargo contract handling.
 
@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 #define PASSENGER_KEY_NAME				@"name"
 
@@ -55,7 +55,7 @@ MA 02110-1301, USA.
 
 #define MAX_ROWS_SHIPS_FOR_SALE		12
 
-@interface PlayerEntity (Contracts)
+@interface OOPlayerShipEntity (Contracts)
 
 - (NSString *) processEscapePods;		// removes pods from cargo bay and treats categories of characters carried
 - (NSString *) checkPassengerContracts;	// returns messages from any passengers whose status have changed

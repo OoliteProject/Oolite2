@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 #import "MyOpenGLView.h"
 #import "OOShipEntity.h"
 
-@class OOCrosshairs, OOColor, OOEntity, PlayerEntity, OOTextureSprite;
+@class OOCrosshairs, OOColor, OOEntity, OOPlayerShipEntity, OOTextureSprite;
 @protocol OOHUDBeaconIcon;
 
 

@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 #import "SkyEntity.h"
 #import "OOSkyDrawable.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 #import "Universe.h"
 #import "MyOpenGLView.h"
@@ -160,7 +160,7 @@ MA 02110-1301, USA.
 
 - (void) update:(OOTimeDelta) delta_t
 {
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	zero_distance = MAX_CLEAR_DEPTH * MAX_CLEAR_DEPTH;
 	if (player != nil)  position = player->position;
 }

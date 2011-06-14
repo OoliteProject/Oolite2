@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityContracts.m
+OOPlayerShipEntity+Contracts.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,11 +22,11 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityControls.h"
-#import "PlayerEntity+Serialization.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+Controls.h"
+#import "OOPlayerShipEntity+Serialization.h"
 #import "ProxyPlayerEntity.h"
 
 #import "Universe.h"
@@ -47,7 +47,7 @@ MA 02110-1301, USA.
 static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showShipyardModel";
 
 
-@interface PlayerEntity (ContractsPrivate)
+@interface OOPlayerShipEntity (ContractsPrivate)
 
 - (OOCreditsQuantity) tradeInValue;
 - (NSArray*) contractsListFromArray:(NSArray *) contracts_array forCargo:(BOOL) forCargo;
@@ -55,7 +55,7 @@ static NSString * const kOOLogNoteShowShipyardModel = @"script.debug.note.showSh
 @end
 
 
-@implementation PlayerEntity (Contracts)
+@implementation OOPlayerShipEntity (Contracts)
 
 - (NSString *) processEscapePods // removes pods from cargo bay and treats categories of characters carried
 {

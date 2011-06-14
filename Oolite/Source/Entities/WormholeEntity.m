@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "ShipEntityLoadRestore.h"
 
 #import "Universe.h"
@@ -187,7 +187,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 	if (!_misjump)
 	{
 		double distance = distanceBetweenPlanetPositions(originCoords.x, originCoords.y, destinationCoords.x, destinationCoords.y);
-		double time_adjust = distance * distance * OOMINUTES(15.0); // NB: Time adjustment is calculated using original distance. Formula matches the one in [PlayerEntity witchJumpTo]
+		double time_adjust = distance * distance * OOMINUTES(15.0); // NB: Time adjustment is calculated using original distance. Formula matches the one in [OOPlayerShipEntity witchJumpTo]
 		arrival_time -= time_adjust;
 		travel_time -= time_adjust;
 		destinationCoords.x = (originCoords.x + destinationCoords.x) / 2;
@@ -492,7 +492,7 @@ static void DrawWormholeCorona(GLfloat inner_radius, GLfloat outer_radius, int s
 {
 	[super update:delta_t];
 	
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	assert(player != nil);
 	rotMatrix = OOMatrixForBillboard(position, [player position]);
 	double now = [player clockTimeAdjusted];

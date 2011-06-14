@@ -1,11 +1,11 @@
 /*
 
-PlayerEntityLoadSave.h
+OOPlayerShipEntity+LoadSave.h
 
 Created for the Oolite-Linux project (but is portable)
 
 LoadSave has been separated out into a separate category because
-PlayerEntity.m has gotten far too big and is in danger of becoming
+OOPlayerShipEntity.m has gotten far too big and is in danger of becoming
 the whole general mish mash.
 
 Oolite
@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "GuiDisplayGen.h"
 #import "MyOpenGLView.h"
 #import "Universe.h"
@@ -46,7 +46,7 @@ MA 02110-1301, USA.
 #define SAVE_OVERWRITE_YES_ROW	8
 #define SAVE_OVERWRITE_NO_ROW	9
 
-@interface PlayerEntity (LoadSave)
+@interface OOPlayerShipEntity (LoadSave)
 
 - (BOOL) loadPlayer;	// Returns NO on immediate failure, i.e. when using an OS X modal open panel which is cancelled.
 - (void) savePlayer;

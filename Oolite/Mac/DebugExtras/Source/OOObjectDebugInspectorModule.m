@@ -7,7 +7,7 @@
 //
 
 #import "OOObjectDebugInspectorModule.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOEntityInspectorExtensions.h"
 
 

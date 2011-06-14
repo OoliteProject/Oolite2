@@ -1,6 +1,6 @@
 /*
 
-PlayerEntityScriptMethods.h
+OOPlayerShipEntity+ScriptMethods.h
 
 Methods for use by scripting mechanisms.
 
@@ -25,10 +25,10 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
-@interface PlayerEntity (ScriptMethods)
+@interface OOPlayerShipEntity (ScriptMethods)
 
 - (NSString *) playerName;
 

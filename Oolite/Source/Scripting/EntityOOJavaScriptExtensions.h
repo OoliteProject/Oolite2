@@ -52,7 +52,7 @@ MA 02110-1301, USA.
 @end
 
 
-@interface PlayerEntity (OOJavaScriptExtensions)
+@interface OOPlayerShipEntity (OOJavaScriptExtensions)
 
 - (void) setJSSelf:(JSObject *)val context:(JSContext *)context;
 

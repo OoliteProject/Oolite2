@@ -8,7 +8,7 @@
 
 #import "OOEntityInspectorExtensions.h"
 #import "OOConstToString.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OODebugInspector.h"
 
 
@@ -171,13 +171,13 @@
 
 - (void) inspBecomeTarget
 {
-	if ([self inspCanBecomeTarget])  [[PlayerEntity sharedPlayer] addTarget:self];
+	if ([self inspCanBecomeTarget])  [[OOPlayerShipEntity sharedPlayer] addTarget:self];
 }
 
 @end
 
 
-@implementation PlayerEntity (OOEntityInspectorExtensions)
+@implementation OOPlayerShipEntity (OOEntityInspectorExtensions)
 
 - (NSString *) inspSecondaryIdentityLine
 {

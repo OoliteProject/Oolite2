@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
 @interface ProxyPlayerEntity: OOShipEntity
@@ -45,7 +45,7 @@ MA 02110-1301, USA.
 							_dialIdentEngaged: 1;
 }
 
-- (void) copyValuesFromPlayer:(PlayerEntity *)player;
+- (void) copyValuesFromPlayer:(OOPlayerShipEntity *)player;
 
 
 // Default: 0
@@ -97,7 +97,7 @@ MA 02110-1301, USA.
 
 @interface OOEntity (ProxyPlayer)
 
-// True for PlayerEntity or ProxyPlayerEntity.
+// True for OOPlayerShipEntity or ProxyPlayerEntity.
 - (BOOL) isPlayerLikeShip;
 
 @end

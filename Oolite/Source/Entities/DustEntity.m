@@ -36,7 +36,7 @@ MA 02110-1301, USA.
 #import "OOLegacyShaderUniform.h"
 #endif
 
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 
 
 #define FAR_PLANE		(DUST_SCALE * 0.50f)
@@ -144,7 +144,7 @@ enum
 	if (shaderMode == kShaderModeOn)  return;
 #endif
 	
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	assert(player != nil);
 	
 	zero_distance = 0.0;
@@ -245,7 +245,7 @@ enum
 {
 	if ([UNIVERSE breakPatternHide] || !translucent)  return;	// DON'T DRAW
 	
-	PlayerEntity* player = PLAYER;
+	OOPlayerShipEntity* player = PLAYER;
 	assert(player != nil);
 	
 #ifndef NDEBUG

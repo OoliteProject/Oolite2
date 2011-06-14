@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import <OoliteBase/OoliteBase.h>
 #include <jsapi.h>
 
-@class PlayerEntity;
+@class OOPlayerShipEntity;
 
 
 void InitOOJSPlayer(JSContext *context, JSObject *global);

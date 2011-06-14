@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "HeadUpDisplay.h"
 #import "ResourceManager.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOStationEntity.h"
@@ -217,7 +217,7 @@ static void hudDrawMarkerAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz, double 
 static void hudDrawBarAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz, double amount);
 static void hudDrawSurroundAt(GLfloat x, GLfloat y, GLfloat z, NSSize siz);
 static void hudDrawStatusIconAt(int x, int y, int z, NSSize siz);
-static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive);
+static void hudDrawReticleOnTarget(OOEntity* target, OOPlayerShipEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive);
 static void drawScannerGrid(double x, double y, double z, NSSize siz, int v_dir, GLfloat thickness, double zoom);
 
 
@@ -638,7 +638,7 @@ OOINLINE void GLColorWithOverallAlpha(const GLfloat *color, GLfloat alpha)
 
 - (void) drawCrosshairs
 {
-	PlayerEntity				*player = PLAYER;
+	OOPlayerShipEntity				*player = PLAYER;
 	OOViewID					viewID = [UNIVERSE viewDirection];
 	OOWeaponType				weapon = [player weaponForView:viewID];
 	BOOL					weaponsOnline = [player weaponsOnline];
@@ -811,7 +811,7 @@ static BOOL hostiles;
 	int				flash = ((int)([UNIVERSE gameTime] * 4))&1;
 	
 	Universe		*uni			= UNIVERSE;
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	if (player == nil)  return;
 	
 	// use a non-mutable copy so this can't be changed under us.
@@ -1141,7 +1141,7 @@ static BOOL hostiles;
 	
 	// draw the compass
 	OOMatrix		rotMatrix;
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	Vector			position = [player position];
 	
 	rotMatrix = [player rotationMatrix];
@@ -1433,7 +1433,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawSpeedBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1472,7 +1472,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawRollBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1504,7 +1504,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawPitchBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1536,7 +1536,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawYawBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1568,7 +1568,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawEnergyGauge:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1642,7 +1642,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawForwardShieldBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1679,7 +1679,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawAftShieldBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1716,7 +1716,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawFuelBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1751,7 +1751,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawCabinTempBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1793,7 +1793,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawWeaponTempBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1823,7 +1823,7 @@ OOINLINE void SetCompassBlipColor(GLfloat relativeZ, GLfloat alpha)
 
 - (void) drawAltitudeBar:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -1977,7 +1977,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawMissileDisplay:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -2051,7 +2051,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawTargetReticle:(NSDictionary *) info
 {
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	GLfloat alpha = [info oo_nonNegativeFloatForKey:ALPHA_KEY defaultValue:1.0f] * overallAlpha;
 	
 	if ([player primaryTargetID] != NO_TARGET)
@@ -2064,7 +2064,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawStatusLight:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -2120,7 +2120,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawDirectionCue:(NSDictionary *)info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	NSString		*equipment = nil;
 	GLfloat			alpha = overallAlpha;
 	
@@ -2204,7 +2204,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawClock:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -2227,7 +2227,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawWeaponsOfflineText:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	
 	if (![player weaponsOnline])
 	{
@@ -2256,7 +2256,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 {
 	if (![UNIVERSE displayFPS])  return;
 	
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -2294,7 +2294,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawScoopStatus:(NSDictionary *) info
 {
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	int				x;
 	int				y;
 	NSSize			siz;
@@ -2474,7 +2474,7 @@ static OOPolygonSprite *IconForMissileRole(NSString *role)
 
 - (void) drawTrumbles:(NSDictionary *) info
 {
-	PlayerEntity *player = PLAYER;
+	OOPlayerShipEntity *player = PLAYER;
 	
 	OOTrumble** trumbles = [player trumbleArray];
 	int i;
@@ -2613,7 +2613,7 @@ static void hudDrawStatusIconAt(int x, int y, int z, NSSize siz)
 }
 
 
-static void hudDrawReticleOnTarget(OOEntity* target, PlayerEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive)
+static void hudDrawReticleOnTarget(OOEntity* target, OOPlayerShipEntity* player1, GLfloat z1, GLfloat alpha, BOOL reticleTargetSensitive, NSMutableDictionary* propertiesReticleTargetSensitive)
 {
 	OOShipEntity		*target_ship = nil;
 	NSString		*legal_desc = nil;

@@ -60,7 +60,7 @@ MA 02110-1301, USA.
 #import "OOStationEntity.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "WormholeEntity.h"
 #import "OOFlasherEntity.h"
 #import "OOExhaustPlumeEntity.h"
@@ -73,8 +73,8 @@ MA 02110-1301, USA.
 #import "OOQuiriumCascadeEntity.h"
 #import "OORingEffectEntity.h"
 
-#import "PlayerEntityLegacyScriptEngine.h"
-#import "PlayerEntitySound.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
+#import "OOPlayerShipEntity+Sound.h"
 #import "GuiDisplayGen.h"
 #import "HeadUpDisplay.h"
 #import "OOEntityFilterPredicate.h"
@@ -2980,7 +2980,7 @@ OOShipEntity* doOctreesCollide(OOShipEntity* prime, OOShipEntity* other)
 			BOOL lost_contact = (distance > hauler->collision_radius + collision_radius + 250.0f);	// 250m range for tractor beam
 			if ([hauler isPlayer])
 			{
-				switch ([(PlayerEntity*)hauler dialFuelScoopStatus])
+				switch ([(OOPlayerShipEntity*)hauler dialFuelScoopStatus])
 				{
 					case SCOOP_STATUS_NOT_INSTALLED:
 					case SCOOP_STATUS_FULL_HOLD:
@@ -3006,7 +3006,7 @@ OOShipEntity* doOctreesCollide(OOShipEntity* prime, OOShipEntity* other)
 			}
 			else if ([hauler isPlayer])
 			{
-				[(PlayerEntity*)hauler setScoopsActive];
+				[(OOPlayerShipEntity*)hauler setScoopsActive];
 			}
 		}
 	}
@@ -5818,7 +5818,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 		if ([parent isPlayer])
 		{
 			// make the parent ship less reliable.
-			[(PlayerEntity *)parent reduceTradeInFactorBy:3];
+			[(OOPlayerShipEntity *)parent reduceTradeInFactorBy:3];
 		}
 	}
 	
@@ -8623,7 +8623,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 	}
 	
 	/*	Bug: docking failed due to NSRangeException while looking for element
-		NSNotFound of cargo mainfest in -[PlayerEntity unloadCargoPods].
+		NSNotFound of cargo mainfest in -[OOPlayerShipEntity unloadCargoPods].
 		Analysis: bad cargo pods being generated due to
 		-[Universe commodityForName:] looking in wrong place for names.
 		Fix 1: fix -[Universe commodityForName:].
@@ -8666,7 +8666,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 						}
 					}
 				}
-				[(PlayerEntity *)self playEscapePodScooped];
+				[(OOPlayerShipEntity *)self playEscapePodScooped];
 			}
 			else
 			{
@@ -8880,7 +8880,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 - (BOOL) abandonShip
 {
 	BOOL OK = NO;
-	if ([self isPlayer] && [(PlayerEntity *)self isDocked])
+	if ([self isPlayer] && [(OOPlayerShipEntity *)self isDocked])
 	{
 		OOLog(@"abandonShip.failed", @"Player cannot abandon ship while docked.");
 		return OK;
@@ -9606,7 +9606,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 	if (other_ship->isPlayer)
 	{
 		[self setCommsMessageColor];
-		[(PlayerEntity *)other_ship receiveCommsMessage:expandedMessage from:self];
+		[(OOPlayerShipEntity *)other_ship receiveCommsMessage:expandedMessage from:self];
 		messageTime = 6.0;
 		[UNIVERSE resetCommsLogColor];
 	}
@@ -9678,7 +9678,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 		if (![ship isPlayer]) [ship receiveCommsMessage:expandedMessage from:self];
 	}
 	
-	PlayerEntity *player = PLAYER; // make sure that the player always receives a message when in range
+	OOPlayerShipEntity *player = PLAYER; // make sure that the player always receives a message when in range
 	if (distance2(position, [player position]) < SCANNER_MAX_RANGE2)
 	{
 		[self setCommsMessageColor];
@@ -10145,7 +10145,7 @@ static BOOL AuthorityPredicate(OOEntity *entity, void *parameter)
 
 - (void) doScriptEvent:(jsid)message inContext:(JSContext *)context withArguments:(jsval *)argv count:(uintN)argc
 {
-	// This method is a bottleneck so that PlayerEntity can override at one point.
+	// This method is a bottleneck so that OOPlayerShipEntity can override at one point.
 	[script callMethod:message inContext:context withArguments:argv count:argc result:NULL];
 }
 

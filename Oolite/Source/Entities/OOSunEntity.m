@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #import "OOColor.h"
 #import "OOCharacter.h"
 #import "OOStringParsing.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OODebugFlags.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.SunEntity"
@@ -221,7 +221,7 @@ MA 02110-1301, USA.
 {
 	[super update:delta_t];
 	
-	PlayerEntity	*player = PLAYER;
+	OOPlayerShipEntity	*player = PLAYER;
 	assert(player != nil);
 	rotMatrix = OOMatrixForBillboard(position, [player position]);
 	

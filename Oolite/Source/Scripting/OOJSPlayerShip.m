@@ -30,10 +30,10 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 #import "EntityOOJavaScriptExtensions.h"
 
-#import "PlayerEntity.h"
-#import "PlayerEntityContracts.h"
-#import "PlayerEntityScriptMethods.h"
-#import "PlayerEntityLegacyScriptEngine.h"
+#import "OOPlayerShipEntity.h"
+#import "OOPlayerShipEntity+Contracts.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
+#import "OOPlayerShipEntity+LegacyScriptEngine.h"
 #import "HeadUpDisplay.h"
 #import "OOStationEntity.h"
 
@@ -168,7 +168,7 @@ void InitOOJSPlayerShip(JSContext *context, JSObject *global)
 	OOJSRegisterObjectConverter(&sPlayerShipClass, OOJSBasicPrivateObjectConverter);
 	OOJSRegisterSubclass(&sPlayerShipClass, JSShipClass());
 	
-	PlayerEntity *player = [PlayerEntity sharedPlayer];	// NOTE: at time of writing, this creates the player entity. Don't use PLAYER here.
+	OOPlayerShipEntity *player = [OOPlayerShipEntity sharedPlayer];	// NOTE: at time of writing, this creates the player entity. Don't use PLAYER here.
 	
 	// Create ship object as a property of the PLAYER object.
 	sPlayerShipObject = JS_DefineObject(context, JSPlayerObject(), "ship", &sPlayerShipClass, sPlayerShipPrototype, OOJS_PROP_READONLY);
@@ -196,7 +196,7 @@ JSObject *JSPlayerShipObject(void)
 }
 
 
-@implementation PlayerEntity (OOJavaScriptExtensions)
+@implementation OOPlayerShipEntity (OOJavaScriptExtensions)
 
 - (NSString *) oo_jsClassName
 {

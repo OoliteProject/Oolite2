@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "OOTrumble.h"
 #import "Universe.h"
-#import "PlayerEntity.h"
+#import "OOPlayerShipEntity.h"
 #import "OOLegacyTexture.h"
 #import "ResourceManager.h"
 #import "GameController.h"
@@ -53,7 +53,7 @@ static void PlayTrumbleSqueal(void);
 	return self;
 }
 
-- (id) initForPlayer:(PlayerEntity*) p1
+- (id) initForPlayer:(OOPlayerShipEntity*) p1
 {
 	self = [super init];
 	
@@ -62,7 +62,7 @@ static void PlayTrumbleSqueal(void);
 	return self;
 }
 
-- (id) initForPlayer:(PlayerEntity*) p1 digram:(NSString*) digramString
+- (id) initForPlayer:(OOPlayerShipEntity*) p1 digram:(NSString*) digramString
 {
 	self = [super init];
 	
@@ -71,7 +71,7 @@ static void PlayTrumbleSqueal(void);
 	return self;
 }
 
-- (void) setupForPlayer:(PlayerEntity*) p1 digram:(NSString*) digramString
+- (void) setupForPlayer:(OOPlayerShipEntity*) p1 digram:(NSString*) digramString
 {
 	// set digram
 	//

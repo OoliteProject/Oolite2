@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 
 #import "OOJSPlayer.h"
-#import "PlayerEntityScriptMethods.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOStringParsing.h"
 #import "OOConstToString.h"
 #import "OOConstToJSString.h"

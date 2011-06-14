@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "PlayerEntityScriptMethods.h"
+#import "OOPlayerShipEntity+ScriptMethods.h"
 #import "Universe.h"
 
 

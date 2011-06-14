@@ -59,7 +59,7 @@ MA 02110-1301, USA.
 #import "OOPlayerShipEntity+ScriptMethods.h"
 #import "OOStationEntity.h"
 #import "OOSkyEntity.h"
-#import "DustEntity.h"
+#import "OODustEntity.h"
 #import "OOPlanetEntity.h"
 #import "OOSunEntity.h"
 #import "OOWormholeEntity.h"
@@ -679,7 +679,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	[thing release];
 	
 	/*- the dust particle system -*/
-	thing = [[DustEntity alloc] init];
+	thing = [[OODustEntity alloc] init];
 	[thing setScanClass: CLASS_NO_DRAW];
 	[self addEntity:thing];
 	[thing release];
@@ -815,10 +815,10 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	/*--*/
 	
 	/*- the dust particle system -*/
-	thing = [[DustEntity alloc] init];	// alloc retains!
+	thing = [[OODustEntity alloc] init];	// alloc retains!
 	[thing setScanClass: CLASS_NO_DRAW];
 	[self addEntity:thing]; // [entities addObject:thing];
-	[(DustEntity *)thing setDustColor:pale_bgcolor]; 
+	[(OODustEntity *)thing setDustColor:pale_bgcolor]; 
 	[thing release];
 	/*--*/
 	OO_DEBUG_POP_PROGRESS();
@@ -5981,8 +5981,8 @@ static NSDictionary	*sCachedSystemData = nil;
 						[the_sun getSpecularComponents:sun_specular];
 					}
 					for (i = n_entities - 1; i > 0; i--)
-						if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[DustEntity class]]))
-							[(DustEntity*)sortedEntities[i] setDustColor:color];
+						if ((sortedEntities[i]) && ([sortedEntities[i] isKindOfClass:[OODustEntity class]]))
+							[(OODustEntity*)sortedEntities[i] setDustColor:color];
 				}
 			}
 		}

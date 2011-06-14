@@ -1,6 +1,6 @@
 /*
 
-DustEntity.h
+OODustEntity.h
 
 Entity representing a number of dust particles.
 
@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 @class OOColor, OOLegacyShaderProgram, OOLegacyShaderUniform;
 
 
-@interface DustEntity: OOEntity
+@interface OODustEntity: OOEntity
 {
 	OOColor				*dust_color;
 	Vector				vertices[DUST_N_PARTICLES * 2];

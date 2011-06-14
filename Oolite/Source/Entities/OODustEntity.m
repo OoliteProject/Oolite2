@@ -1,6 +1,6 @@
 /*
 
-DustEntity.m
+OODustEntity.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "DustEntity.h"
+#import "OODustEntity.h"
 
 #import "Universe.h"
 #import "MyOpenGLView.h"
@@ -44,7 +44,7 @@ MA 02110-1301, USA.
 
 
 // Declare protocol conformance
-@interface DustEntity (Private) <OOGraphicsResetClient>
+@interface OODustEntity (Private) <OOGraphicsResetClient>
 
 - (void) checkShaderMode;
 
@@ -61,7 +61,7 @@ enum
 #endif
 
 
-@implementation DustEntity
+@implementation OODustEntity
 
 - (id) init
 {
@@ -359,7 +359,7 @@ enum
 		OOGL(glDisable(GL_FOG));
 	}
 	
-	CheckOpenGLErrors(@"DustEntity after drawing %@", self);
+	CheckOpenGLErrors(@"OODustEntity after drawing %@", self);
 }
 
 

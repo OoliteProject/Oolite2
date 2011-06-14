@@ -73,7 +73,7 @@ double cunningFee(double value);
 // pseudo random number generator
 void ranrot_srand(unsigned seed);
 unsigned Ranrot(void);
-#define ranrot_rand() ((int)Ranrot())	// Some uses perform arithmetic that does weird things if result is unsigned -- DustEntity.m, for instance.
+#define ranrot_rand() ((int)Ranrot())	// Some uses perform arithmetic that does weird things if result is unsigned -- OODustEntity.m, for instance.
 float randf(void);
 float bellf(int n);
 

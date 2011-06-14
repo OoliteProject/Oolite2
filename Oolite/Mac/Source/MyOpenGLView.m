@@ -24,7 +24,7 @@ MA 02110-1301, USA.
 
 #import "MyOpenGLView.h"
 
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOUniverse.h"
 #import "OOEntity.h"
 #import "OOPlanetEntity.h"
@@ -79,7 +79,7 @@ static NSString * kOOLogKeyDown				= @"input.keyMapping.keyPress.keyDown";
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		// Specify that we want a windowed OpenGL context.
-		// Must be first or we'll hit an assert in -[GameController goFullscreen:].
+		// Must be first or we'll hit an assert in -[OOGameController goFullscreen:].
 		NSOpenGLPFAWindow,
 		
 		// We may be on a multi-display system (and each screen may be driven by a different renderer), so we need to specify which screen we want to take over.
@@ -203,13 +203,13 @@ static NSString * kOOLogKeyDown				= @"input.keyMapping.keyPress.keyDown";
 }
 
 
-- (GameController *)gameController
+- (OOGameController *)gameController
 {
 	return gameController;
 }
 
 
-- (void) setGameController:(GameController *) controller
+- (void) setGameController:(OOGameController *) controller
 {
 	gameController = controller;
 }
@@ -331,7 +331,7 @@ static NSString * kOOLogKeyDown				= @"input.keyMapping.keyPress.keyDown";
 	// backup the previous directory
 	NSString *originalDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
 	// use the snapshots directory
-	NSString *snapshotsDirectory = [[[GameController sharedController] snapshotsURLCreatingIfNeeded:YES] path];
+	NSString *snapshotsDirectory = [[[OOGameController sharedController] snapshotsURLCreatingIfNeeded:YES] path];
 	if (![[NSFileManager defaultManager] changeCurrentDirectoryPath:snapshotsDirectory])
 	{
 		NSBeep();
@@ -696,7 +696,7 @@ static NSString * kOOLogKeyDown				= @"input.keyMapping.keyPress.keyDown";
 {
 	if ([PLAYER guiScreen] == GUI_SCREEN_MAIN)
 	{
-		[[GameController sharedController] recenterVirtualJoystick];
+		[[OOGameController sharedController] recenterVirtualJoystick];
 	}
 }
 

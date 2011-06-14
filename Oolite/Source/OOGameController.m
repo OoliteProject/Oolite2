@@ -1,6 +1,6 @@
 /*
 
-GameController.m
+OOGameController.m
 
 Oolite
 Copyright (C) 2004-2011 Giles C Williams and contributors
@@ -22,7 +22,7 @@ MA 02110-1301, USA.
 
 */
 
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOUniverse.h"
 #import "ResourceManager.h"
 #import "MyOpenGLView.h"
@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #import "OoliteLogOutputHandler.h"
 #import <OoliteSound/OoliteSound.h>
 
-#define kOOLogUnconvertedNSLog @"unclassified.GameController"
+#define kOOLogUnconvertedNSLog @"unclassified.OOGameController"
 
 #if OOLITE_MAC_OS_X
 #import "JAPersistentFileReference.h"
@@ -46,10 +46,10 @@ static void SetUpSparkle(void);
 #endif
 
 
-static GameController *sSharedController = nil;
+static OOGameController *sSharedController = nil;
 
 
-@interface GameController (OOPrivate)
+@interface OOGameController (OOPrivate)
 
 - (void) getDisplayModes;
 
@@ -61,7 +61,7 @@ static GameController *sSharedController = nil;
 @end
 
 
-@implementation GameController
+@implementation OOGameController
 
 + (id) sharedController
 {
@@ -75,7 +75,7 @@ static GameController *sSharedController = nil;
 	if (sSharedController != nil)
 	{
 		[self release];
-		[NSException raise:NSInternalInconsistencyException format:@"%s: expected only one GameController to exist at a time.", __PRETTY_FUNCTION__];
+		[NSException raise:NSInternalInconsistencyException format:@"%s: expected only one OOGameController to exist at a time.", __PRETTY_FUNCTION__];
 	}
 	
 	self = [super init];
@@ -768,7 +768,7 @@ static NSComparisonResult CompareDisplayModes(id arg1, id arg2, void *context)
 
 - (void) recenterVirtualJoystick
 {
-	// FIXME: does this really need to be spread across GameController and MyOpenGLView? -- Ahruman 2011-01-22
+	// FIXME: does this really need to be spread across OOGameController and MyOpenGLView? -- Ahruman 2011-01-22
 	my_mouse_x = my_mouse_y = 0;	// center mouse
 	[gameView setVirtualJoystick:0.0 :0.0];
 }

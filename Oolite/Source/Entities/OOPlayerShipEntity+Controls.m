@@ -35,7 +35,7 @@ MA 02110-1301, USA.
 #import "OOUniverse.h"
 #import "OOSunEntity.h"
 #import "OOPlanetEntity.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "AI.h"
 #import "MyOpenGLView.h"
 #import "OOStringParsing.h"
@@ -1403,7 +1403,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 	BOOL			moving = NO;
 	double			cursor_speed = 10.0;
 	NSString		*commanderFile;
-	GameController  *controller = [UNIVERSE gameController];
+	OOGameController  *controller = [UNIVERSE gameController];
 	GuiDisplayGen	*gui = [UNIVERSE gui];
 	OOTimeAbsolute	time = [UNIVERSE realTime];
 	
@@ -2144,7 +2144,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 
 - (void) handleGameOptionsScreenKeys
 {
-	GameController		*controller = [UNIVERSE gameController];
+	OOGameController		*controller = [UNIVERSE gameController];
 	NSArray				*modes = [controller displayModes];
 	MyOpenGLView		*gameView = [UNIVERSE gameView];
 	GuiDisplayGen		*gui = [UNIVERSE gui];
@@ -2325,7 +2325,7 @@ static BOOL				mouse_x_axis_map_to_yaw = NO;
 	{
 		if (!volumeControlPressed || time > timeLastKeyPress + KEY_REPEAT_INTERVAL)
 		{
-			OOSoundContext *sound = [[GameController sharedController] soundContext];
+			OOSoundContext *sound = [[OOGameController sharedController] soundContext];
 			int volume = 100 * [sound masterVolume];
 			
 			BOOL rightKeyDown = [gameView isDown:gvArrowKeyRight];
@@ -3023,7 +3023,7 @@ static BOOL toggling_music;
 - (void) pollDockedControls:(double)delta_t
 {
 	MyOpenGLView			*gameView = [UNIVERSE gameView];
-	GameController			*gameController = [gameView gameController];
+	OOGameController			*gameController = [gameView gameController];
 	NSString * volatile		exceptionContext = @"setup";
 	
 	NS_DURING

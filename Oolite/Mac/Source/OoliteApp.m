@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "OoliteApp.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "MyOpenGLView.h"
 
 

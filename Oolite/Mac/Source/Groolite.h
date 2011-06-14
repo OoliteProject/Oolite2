@@ -31,7 +31,7 @@ MA 02110-1301, USA.
 
 #import <Cocoa/Cocoa.h>
 
-@class GameController;
+@class OOGameController;
 
 
 enum
@@ -51,7 +51,7 @@ enum
 @interface Groolite: NSObject
 {
 	NSConnection			*connection;
-	IBOutlet GameController	*gameController;
+	IBOutlet OOGameController	*gameController;
 }
 
 + (NSString *) priorityDescription: (int)min_priority;

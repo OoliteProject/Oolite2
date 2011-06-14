@@ -1,6 +1,6 @@
 /*
 
-GameController.h
+OOGameController.h
 
 Main application controller class.
 
@@ -70,7 +70,7 @@ MA 02110-1301, USA.
 #endif
 
 
-@interface GameController: NSObject
+@interface OOGameController: NSObject
 {
 @private
 #if OOLITE_HAVE_APPKIT
@@ -194,9 +194,9 @@ MA 02110-1301, USA.
 
 
 #if OO_DEBUG
-#define OO_DEBUG_PROGRESS(...)		[[GameController sharedController] debugLogProgress:__VA_ARGS__]
-#define OO_DEBUG_PUSH_PROGRESS(...)	[[GameController sharedController] debugPushProgressMessage:__VA_ARGS__]
-#define OO_DEBUG_POP_PROGRESS()		[[GameController sharedController] debugPopProgressMessage]
+#define OO_DEBUG_PROGRESS(...)		[[OOGameController sharedController] debugLogProgress:__VA_ARGS__]
+#define OO_DEBUG_PUSH_PROGRESS(...)	[[OOGameController sharedController] debugPushProgressMessage:__VA_ARGS__]
+#define OO_DEBUG_POP_PROGRESS()		[[OOGameController sharedController] debugPopProgressMessage]
 #else
 #define OO_DEBUG_PROGRESS(...)		do {} while (0)
 #define OO_DEBUG_PUSH_PROGRESS(...)	do {} while (0)

@@ -25,7 +25,7 @@ MA 02110-1301, USA.
 #import "ResourceManager.h"
 #import "OOCacheManager.h"
 #import "OOUniverse.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOStringParsing.h"
 #import "MyOpenGLView.h"
 #import "OoliteLogOutputHandler.h"
@@ -814,7 +814,7 @@ static NSMutableDictionary *sStringCache;
 		NSString *path = [self pathForFileNamed:fileName inFolder:folderName cache:YES];
 		if (path != nil)
 		{
-			result = [[[GameController sharedController] soundContext] soundWithContentsOfFile:path];
+			result = [[[OOGameController sharedController] soundContext] soundWithContentsOfFile:path];
 			if (result != nil)
 			{
 				if (sSoundCache == nil)  sSoundCache = [[NSMutableDictionary alloc] init];

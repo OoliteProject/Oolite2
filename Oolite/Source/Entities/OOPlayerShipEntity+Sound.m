@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 #import "OOUniverse.h"
 #import "OOSound+OOCustomSounds.h"
 #import "OOSoundSourcePool.h"
-#import "GameController.h"
+#import "OOGameController.h"
 
 
 // Sizes of sound source pools
@@ -59,7 +59,7 @@ static OOSoundSource		*sAfterburnerSources[2];
 {
 	[self destroySound];
 	
-	OOSoundContext *soundContext = [[GameController sharedController] soundContext];
+	OOSoundContext *soundContext = [[OOGameController sharedController] soundContext];
 	
 	sInterfaceBeepSource = [[soundContext soundSource] retain];
 	sBreakPatternSource = [[soundContext soundSource] retain];

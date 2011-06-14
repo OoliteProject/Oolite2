@@ -33,7 +33,7 @@ MA 02110-1301, USA.
 #define NUM_KEYS			320
 #define MOUSE_DOUBLE_CLICK_INTERVAL	0.40
 
-@class OOEntity, GameController;
+@class OOEntity, OOGameController;
 
 enum GameViewKeys
 {
@@ -85,7 +85,7 @@ extern int debug;
 @interface MyOpenGLView : OpenGLViewSuperClass
 {
 @private
-	GameController		*gameController;
+	OOGameController		*gameController;
 
 	BOOL				keys[NUM_KEYS];
 	BOOL				supressKeys;	// DJS
@@ -129,8 +129,8 @@ extern int debug;
 - (GLfloat) x_offset;
 - (GLfloat) y_offset;
 
-- (GameController *) gameController;
-- (void) setGameController:(GameController *) controller;
+- (OOGameController *) gameController;
+- (void) setGameController:(OOGameController *) controller;
 
 - (void) initialiseGLWithSize:(NSSize) v_size;
 

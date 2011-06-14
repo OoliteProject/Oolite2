@@ -28,7 +28,7 @@
 #import "OOPlayerShipEntity+Sound.h"
 #import "OOPlayerShipEntity+Serialization.h"
 
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOPlayerShipEntity+Controls.h"
 #import "OOXMLExtensions.h"
 #import "OOColor.h"

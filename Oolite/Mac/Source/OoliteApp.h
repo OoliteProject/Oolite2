@@ -31,13 +31,13 @@ MA 02110-1301, USA.
 
 #import <OoliteBase/OoliteBase.h>
 
-@class GameController;
+@class OOGameController;
 
 
 @interface OoliteApp: NSApplication
 {
 	IBOutlet NSWindow			*_gameWindow;
-	IBOutlet GameController		*_gameController;
+	IBOutlet OOGameController		*_gameController;
 	NSString					*_exitContext;
 }
 

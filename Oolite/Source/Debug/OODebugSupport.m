@@ -32,7 +32,7 @@ SOFTWARE.
 #import "ResourceManager.h"
 #import "OODebugMonitor.h"
 #import "OODebugTCPConsoleClient.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOJavaScriptEngine.h"
 
 

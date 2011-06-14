@@ -29,7 +29,7 @@ MA 02110-1301, USA.
 
 #import "Geometry.h"
 #import "OOUniverse.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "ResourceManager.h"
 #import "OOConstToString.h"
 

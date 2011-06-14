@@ -28,7 +28,7 @@ MA 02110-1301, USA.
 #import "OOJavaScriptEngine.h"
 
 #import "OOStationEntity.h"
-#import "GameController.h"
+#import "OOGameController.h"
 
 
 static JSObject		*sStationPrototype;

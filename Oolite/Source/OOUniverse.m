@@ -26,7 +26,7 @@ MA 02110-1301, USA.
 #import "OOLegacyOpenGL.h"
 #import "OOUniverse.h"
 #import "MyOpenGLView.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "ResourceManager.h"
 #import "AI.h"
 #import "GuiDisplayGen.h"
@@ -289,7 +289,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 #endif
 #endif
 	
-	[[GameController sharedController] logProgress:DESC(@"loading-ships")];
+	[[OOGameController sharedController] logProgress:DESC(@"loading-ships")];
 	// Load ship data
 	[OOShipRegistry sharedRegistry];
 	
@@ -326,10 +326,10 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	entitiesDeadThisUpdate = [[NSMutableSet alloc] init];
 	framesDoneThisUpdate = 0;
 	
-	[[GameController sharedController] logProgress:DESC(@"initializing-debug-support")];
+	[[OOGameController sharedController] logProgress:DESC(@"initializing-debug-support")];
 	OOInitDebugSupport();
 	
-	[[GameController sharedController] logProgress:DESC(@"running-scripts")];
+	[[OOGameController sharedController] logProgress:DESC(@"running-scripts")];
 	[player completeSetUp];
 	
 #if OO_LOCALIZATION_TOOLS
@@ -781,7 +781,7 @@ static OOComparisonResult comparePrice(id dict1, id dict2, void * context);
 	OOColor				*pale_bgcolor;
 	BOOL				sunGoneNova;
 	
-	[[GameController sharedController] logProgress:DESC(@"populating-space")];
+	[[OOGameController sharedController] logProgress:DESC(@"populating-space")];
 	
 	sunGoneNova = [systeminfo oo_boolForKey:@"sun_gone_nova"];
 	
@@ -2874,7 +2874,7 @@ static BOOL IsFriendlyStationPredicate(OOEntity *entity, void *parameter)
 }
 
 
-- (GameController *) gameController
+- (OOGameController *) gameController
 {
 	return [gameView gameController];
 }

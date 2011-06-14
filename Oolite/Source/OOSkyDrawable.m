@@ -28,7 +28,7 @@ SOFTWARE.
 #import "OOSkyDrawable.h"
 #import "ResourceManager.h"
 #import "OOLegacyTexture.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOColor.h"
 #import "OOProbabilisticTextureManager.h"
 #import "OOGraphicsResetManager.h"

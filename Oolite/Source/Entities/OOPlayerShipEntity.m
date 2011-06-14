@@ -38,7 +38,7 @@ MA 02110-1301, USA.
 #import "OOMesh.h"
 #import "OOShipClass.h"
 
-#import "GameController.h"
+#import "OOGameController.h"
 #import "ResourceManager.h"
 #import "OOUniverse.h"
 #import "AI.h"
@@ -5002,7 +5002,7 @@ static bool minShieldLevelPercentageInitialised = false;
 #ifdef GNUSTEP
 	MyOpenGLView	*gameView = [UNIVERSE gameView];
 #endif
-	GameController	*controller = [UNIVERSE gameController];
+	OOGameController	*controller = [UNIVERSE gameController];
 	NSUInteger		displayModeIndex = [controller indexOfCurrentDisplayMode];
 	NSArray			*modeList = [controller displayModes];
 	NSDictionary	*mode = nil;
@@ -5045,7 +5045,7 @@ static bool minShieldLevelPercentageInitialised = false;
 		[gui setKey:GUI_KEY_OK forRow:GUI_ROW(GAME,AUTOSAVE)];
 	
 		// volume control
-		OOSoundContext *sound = [[GameController sharedController] soundContext];
+		OOSoundContext *sound = [[OOGameController sharedController] soundContext];
 		int volume = 20 * [sound masterVolume];
 		NSString* soundVolumeWordDesc = DESC(@"gameoptions-sound-volume");
 		NSString* v1_string = @"|||||||||||||||||||||||||";

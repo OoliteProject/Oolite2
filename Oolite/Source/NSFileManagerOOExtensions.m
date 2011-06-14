@@ -27,7 +27,7 @@ MA 02110-1301, USA.
 */
 
 #import "ResourceManager.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "NSFileManagerOOExtensions.h"
 
 #define kOOLogUnconvertedNSLog @"unclassified.NSFileManagerOOExtensions"

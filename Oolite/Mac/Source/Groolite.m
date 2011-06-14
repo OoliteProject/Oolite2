@@ -23,7 +23,7 @@ MA 02110-1301, USA.
 */
 
 #import "Groolite.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "GuiDisplayGen.h"
 #import "OOUniverse.h"
 #import "OOPlayerShipEntity.h"

@@ -167,7 +167,7 @@
 		1A1F276F1317CB3100D06C6C /* oolite-tangent-space-vertex.vertex in Copy Shaders */ = {isa = PBXBuildFile; fileRef = 1A1F27131317CACF00D06C6C /* oolite-tangent-space-vertex.vertex */; };
 		1A1F27B81317CBC500D06C6C /* ResourceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27B71317CBC500D06C6C /* ResourceManager.m */; };
 		1A1F27BB1317CCAE00D06C6C /* MyOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27BA1317CCAE00D06C6C /* MyOpenGLView.m */; };
-		1A1F27BE1317CCCC00D06C6C /* GameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27BD1317CCCC00D06C6C /* GameController.m */; };
+		1A1F27BE1317CCCC00D06C6C /* OOGameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27BD1317CCCC00D06C6C /* OOGameController.m */; };
 		1A1F27C11317CCD600D06C6C /* OOUniverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F27C01317CCD600D06C6C /* OOUniverse.m */; };
 		1A1F2972131823BC00D06C6C /* Geometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2971131823BC00D06C6C /* Geometry.m */; };
 		1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1F2A1213182C4E00D06C6C /* NSFileManagerOOExtensions.m */; };
@@ -1117,8 +1117,8 @@
 		1A1F27B71317CBC500D06C6C /* ResourceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceManager.m; sourceTree = "<group>"; };
 		1A1F27B91317CCAE00D06C6C /* MyOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenGLView.h; sourceTree = "<group>"; };
 		1A1F27BA1317CCAE00D06C6C /* MyOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOpenGLView.m; sourceTree = "<group>"; };
-		1A1F27BC1317CCCC00D06C6C /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
-		1A1F27BD1317CCCC00D06C6C /* GameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameController.m; sourceTree = "<group>"; };
+		1A1F27BC1317CCCC00D06C6C /* OOGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOGameController.h; sourceTree = "<group>"; };
+		1A1F27BD1317CCCC00D06C6C /* OOGameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGameController.m; sourceTree = "<group>"; };
 		1A1F27BF1317CCD600D06C6C /* OOUniverse.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOUniverse.h; sourceTree = "<group>"; };
 		1A1F27C01317CCD600D06C6C /* OOUniverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOUniverse.m; sourceTree = "<group>"; };
 		1A1F296A1318239100D06C6C /* OOTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTriangle.h; sourceTree = "<group>"; };
@@ -2348,8 +2348,8 @@
 				1A71665313995004005B6FC0 /* OOShipDescription.m */,
 				1A1F2A8A13182DB500D06C6C /* dummy.cpp */,
 				1A9C643A130607F400B30EFD /* OOTypes.h */,
-				1A1F27BC1317CCCC00D06C6C /* GameController.h */,
-				1A1F27BD1317CCCC00D06C6C /* GameController.m */,
+				1A1F27BC1317CCCC00D06C6C /* OOGameController.h */,
+				1A1F27BD1317CCCC00D06C6C /* OOGameController.m */,
 				1A1F27BF1317CCD600D06C6C /* OOUniverse.h */,
 				1A1F27C01317CCD600D06C6C /* OOUniverse.m */,
 				1A1B98B1130886080078322D /* JAPersistentFileReference.h */,
@@ -2752,7 +2752,7 @@
 				1A1B9B401308A56A0078322D /* OOCharacter.m in Sources */,
 				1A1F27B81317CBC500D06C6C /* ResourceManager.m in Sources */,
 				1A1F27BB1317CCAE00D06C6C /* MyOpenGLView.m in Sources */,
-				1A1F27BE1317CCCC00D06C6C /* GameController.m in Sources */,
+				1A1F27BE1317CCCC00D06C6C /* OOGameController.m in Sources */,
 				1A1F27C11317CCD600D06C6C /* OOUniverse.m in Sources */,
 				1A1F2972131823BC00D06C6C /* Geometry.m in Sources */,
 				1A1F2A1313182C4E00D06C6C /* NSFileManagerOOExtensions.m in Sources */,

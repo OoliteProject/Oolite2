@@ -31,7 +31,7 @@ SOFTWARE.
 #import "OORoleSet.h"
 #import "OOStringParsing.h"
 #import "OOMesh.h"
-#import "GameController.h"
+#import "OOGameController.h"
 #import "OOShipClass+Legacy.h"
 #import "OOShipClass+IO.h"
 
@@ -905,7 +905,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 	{
 		pool = [[NSAutoreleasePool alloc] init];
 		
-		[[GameController sharedController] setProgressBarValue:(float)i++ / (float)count];
+		[[OOGameController sharedController] setProgressBarValue:(float)i++ / (float)count];
 		
 		shipEntry = [ioData objectForKey:shipKey];
 		remove = NO;
@@ -928,7 +928,7 @@ static NSString * const	kDefaultDemoShip = @"coriolis-station";
 		}
 	}
 	
-	[[GameController sharedController] setProgressBarValue:-1.0f];
+	[[OOGameController sharedController] setProgressBarValue:-1.0f];
 	
 	return YES;
 }

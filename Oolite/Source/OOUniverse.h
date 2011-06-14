@@ -34,7 +34,7 @@ MA 02110-1301, USA.
 #include <espeak/speak_lib.h>
 #endif
 
-@class	GameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
+@class	OOGameController, CollisionRegion, MyOpenGLView, GuiDisplayGen,
 		OOEntity, OOShipEntity, OOStationEntity, OOPlanetEntity, OOSunEntity,
 		OOPlayerShipEntity, OORoleSet, OOColor, OOShipClass;
 
@@ -417,7 +417,7 @@ typedef uint8_t		OOEconomyID;		// 0..7
 
 - (void) setGameView:(MyOpenGLView *)view;
 - (MyOpenGLView *) gameView;
-- (GameController *) gameController;
+- (OOGameController *) gameController;
 - (NSDictionary *) gameSettings;
 
 - (void) drawUniverse;

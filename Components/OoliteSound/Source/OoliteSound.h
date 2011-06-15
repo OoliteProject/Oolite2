@@ -48,14 +48,6 @@ extern "C" {
 #import "OOSound.h"
 #import "OOSoundSource.h"
 
-
-#if OOLITE_SDL
-#import "OOBasicSoundReferencePoint.h"
-#else
-#import "OOCASoundReferencePoint.h"
-#endif
-
-
 #ifdef __cplusplus
 }
 #endif

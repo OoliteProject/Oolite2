@@ -3,7 +3,7 @@
 OODebugController.m
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007-2010 Jens Ayton
 

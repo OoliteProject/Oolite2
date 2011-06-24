@@ -5,7 +5,7 @@ OODebugController.h
 Add debug utility GUI to debug builds of Oolite.
 
  
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007 Jens Ayton
 

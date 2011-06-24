@@ -1,7 +1,7 @@
 /*
 
 OODebugSoundInspector.h
-olite Debug OXP
+Oolite debug support
 
 
 Copyright (C) 2010 Jens Ayton

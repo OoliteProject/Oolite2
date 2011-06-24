@@ -3,7 +3,7 @@
 OOMacDebugger.m
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007 Jens Ayton
 

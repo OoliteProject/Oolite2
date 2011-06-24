@@ -9,7 +9,7 @@ OOJavaScriptConsoleController, but that could changed as non-JavaScript
 debugging facilities are added.
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007 Jens Ayton
 

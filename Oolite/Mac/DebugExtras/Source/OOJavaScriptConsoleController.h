@@ -5,7 +5,7 @@ OOJavaScriptConsoleController.h
 JavaScript debugging console for Oolite.
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007 Jens Ayton
 

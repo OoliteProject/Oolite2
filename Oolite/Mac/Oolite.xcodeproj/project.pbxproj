@@ -415,6 +415,7 @@
 		1A1F316513185D7F00D06C6C /* worm_redux.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A1F30C013185CA700D06C6C /* worm_redux.png */; };
 		1A1F316613185D7F00D06C6C /* worm_redux1.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A1F30C113185CA700D06C6C /* worm_redux1.png */; };
 		1A1F316713185D7F00D06C6C /* wreck.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A1F30C213185CA700D06C6C /* wreck.png */; };
+		1A2C2C2613B498A400CD033C /* OoliteSound.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2C2C2513B498A400CD033C /* OoliteSound.framework */; };
 		1A4691BA1347E8D9004EEFD5 /* debugConfig.plist in Copy Config */ = {isa = PBXBuildFile; fileRef = 1A4691B61347E8B4004EEFD5 /* debugConfig.plist */; };
 		1A4691BB1347E8E6004EEFD5 /* oolite-debug-console.js in Copy Scripts */ = {isa = PBXBuildFile; fileRef = 1A4691B81347E8BA004EEFD5 /* oolite-debug-console.js */; };
 		1A52CC251372D2C500BD6C75 /* oolite-plain-white.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A52CC241372D28C00BD6C75 /* oolite-plain-white.png */; };
@@ -424,7 +425,6 @@
 		1A64A1681323CA5700C2FDDB /* OoliteBase.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1F24821317C5B700D06C6C /* OoliteBase.framework */; };
 		1A6C20561334C5EB00821B1D /* OOVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C20551334C5EB00821B1D /* OOVersion.m */; };
 		1A71665413995004005B6FC0 /* OOShipDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A71665313995004005B6FC0 /* OOShipDescription.m */; };
-		1A79E3C0139B842200AA6575 /* OoliteSound.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E3BF139B842200AA6575 /* OoliteSound.framework */; };
 		1A79E3FB139B91C800AA6575 /* OOSoundSourcePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */; };
 		1A79E4F6139B9B4A00AA6575 /* OOSound+OOCustomSounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79E4F5139B9B4A00AA6575 /* OOSound+OOCustomSounds.m */; };
 		1A9C62E51305FD6500B30EFD /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1A9C62E31305FD6500B30EFD /* MainMenu.nib */; };
@@ -1117,9 +1117,9 @@
 		1A1F27B71317CBC500D06C6C /* ResourceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceManager.m; sourceTree = "<group>"; };
 		1A1F27B91317CCAE00D06C6C /* MyOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenGLView.h; sourceTree = "<group>"; };
 		1A1F27BA1317CCAE00D06C6C /* MyOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOpenGLView.m; sourceTree = "<group>"; };
-		1A1F27BC1317CCCC00D06C6C /* OOGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOGameController.h; sourceTree = "<group>"; };
+		1A1F27BC1317CCCC00D06C6C /* OOGameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOGameController.h; sourceTree = "<group>"; };
 		1A1F27BD1317CCCC00D06C6C /* OOGameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOGameController.m; sourceTree = "<group>"; };
-		1A1F27BF1317CCD600D06C6C /* OOUniverse.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OOUniverse.h; sourceTree = "<group>"; };
+		1A1F27BF1317CCD600D06C6C /* OOUniverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOUniverse.h; sourceTree = "<group>"; };
 		1A1F27C01317CCD600D06C6C /* OOUniverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOUniverse.m; sourceTree = "<group>"; };
 		1A1F296A1318239100D06C6C /* OOTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOTriangle.h; sourceTree = "<group>"; };
 		1A1F2970131823BC00D06C6C /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
@@ -1128,9 +1128,6 @@
 		1A1F2A1113182C4E00D06C6C /* NSFileManagerOOExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSFileManagerOOExtensions.h; sourceTree = "<group>"; };
 		1A1F2A1213182C4E00D06C6C /* NSFileManagerOOExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSFileManagerOOExtensions.m; sourceTree = "<group>"; };
 		1A1F2A2013182CB000D06C6C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		1A1F2A2413182CC200D06C6C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		1A1F2A4313182D7000D06C6C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		1A1F2A4513182D7000D06C6C /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		1A1F2A8A13182DB500D06C6C /* dummy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
 		1A1F2ABE1318303500D06C6C /* OOStringParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOStringParsing.h; sourceTree = "<group>"; };
 		1A1F2ABF1318303500D06C6C /* OOStringParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOStringParsing.m; sourceTree = "<group>"; };
@@ -1458,6 +1455,7 @@
 		1A1F30C013185CA700D06C6C /* worm_redux.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = worm_redux.png; sourceTree = "<group>"; };
 		1A1F30C113185CA700D06C6C /* worm_redux1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = worm_redux1.png; sourceTree = "<group>"; };
 		1A1F30C213185CA700D06C6C /* wreck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wreck.png; sourceTree = "<group>"; };
+		1A2C2C2513B498A400CD033C /* OoliteSound.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OoliteSound.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A43CA8C1306099A00BB8FB3 /* OOJSPropID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOJSPropID.h; sourceTree = "<group>"; };
 		1A43CB5513060CA600BB8FB3 /* SpiderMonkey.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SpiderMonkey.xcodeproj; path = ../Dependencies/SpiderMonkey/Mac/SpiderMonkey.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1A4691B61347E8B4004EEFD5 /* debugConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = debugConfig.plist; path = ../Debug/debugConfig.plist; sourceTree = SOURCE_ROOT; };
@@ -1478,7 +1476,6 @@
 		1A71665313995004005B6FC0 /* OOShipDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOShipDescription.m; sourceTree = "<group>"; };
 		1A71665B139A676D005B6FC0 /* OOPointMaths.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OOPointMaths.h; sourceTree = "<group>"; };
 		1A79E3B7139B83E100AA6575 /* OoliteSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteSound.xcodeproj; path = ../../Components/OoliteSound/Mac/OoliteSound.xcodeproj; sourceTree = "<group>"; };
-		1A79E3BF139B842200AA6575 /* OoliteSound.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OoliteSound.framework; sourceTree = SOURCE_ROOT; };
 		1A79E3F9139B91C800AA6575 /* OOSoundSourcePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOSoundSourcePool.h; sourceTree = "<group>"; };
 		1A79E3FA139B91C800AA6575 /* OOSoundSourcePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOSoundSourcePool.m; sourceTree = "<group>"; };
 		1A79E4F4139B9B4A00AA6575 /* OOSound+OOCustomSounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OOSound+OOCustomSounds.h"; sourceTree = "<group>"; };
@@ -1543,7 +1540,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A79E3C0139B842200AA6575 /* OoliteSound.framework in Frameworks */,
+				1A2C2C2613B498A400CD033C /* OoliteSound.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				1A1F25D21317C85100D06C6C /* OoliteBase.framework in Frameworks */,
 				1A1F25D31317C85700D06C6C /* libjs_for_oolite.a in Frameworks */,
@@ -2474,16 +2471,13 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1A79E3BF139B842200AA6575 /* OoliteSound.framework */,
+				1A2C2C2513B498A400CD033C /* OoliteSound.framework */,
 				1A1F2C2A13183BA200D06C6C /* CoreServices.framework */,
 				1A1F2D4F1318411A00D06C6C /* Carbon.framework */,
 				1A1F2E6713184E6700D06C6C /* libz.dylib */,
 				1AB5C3A71318703200C73246 /* IOKit.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 				1A1F2A2013182CB000D06C6C /* OpenGL.framework */,
-				1A1F2A2413182CC200D06C6C /* CoreAudio.framework */,
-				1A1F2A4313182D7000D06C6C /* AudioToolbox.framework */,
-				1A1F2A4513182D7000D06C6C /* AudioUnit.framework */,
 				1AF5F63D1305FC5200CB691A /* OoliteBase.xcodeproj */,
 				1AF5F6571305FC5E00CB691A /* OoliteGraphics.xcodeproj */,
 				1A79E3B7139B83E100AA6575 /* OoliteSound.xcodeproj */,

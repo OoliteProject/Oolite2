@@ -43,6 +43,7 @@ SOFTWARE.
 	return [[[self alloc] initWithRole:role probability:probability] autorelease];
 }
 
+
 - (id)initWithRoleString:(NSString *)roleString
 {
 	NSDictionary			*dict = nil;

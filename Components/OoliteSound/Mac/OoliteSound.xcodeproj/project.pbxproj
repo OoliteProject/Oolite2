@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1A1A365911C2F7720086265F /* OoliteBase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1A35D711C2F7570086265F /* OoliteBase.framework */; };
+		1A2C2C2013B4969500CD033C /* OOALSoundInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A2C2C1F13B4969500CD033C /* OOALSoundInternal.h */; };
+		1A2C2C2313B4972700CD033C /* OOALSoundContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A2C2C2113B4972700CD033C /* OOALSoundContext.h */; };
+		1A2C2C2413B4972700CD033C /* OOALSoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2C2C2213B4972700CD033C /* OOALSoundContext.m */; };
 		1A79E3B0139B82F600AA6575 /* OoliteSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3AF139B82F600AA6575 /* OoliteSound.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A79E3B2139B838800AA6575 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A79E3B1139B838800AA6575 /* OpenAL.framework */; };
 		1A79E3DB139B855100AA6575 /* OOCABufferedSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A79E3C1139B855100AA6575 /* OOCABufferedSound.h */; };
@@ -106,6 +109,9 @@
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A1A35CF11C2F7570086265F /* OoliteBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OoliteBase.xcodeproj; path = ../../OoliteBase/Mac/OoliteBase.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1A2C2C1F13B4969500CD033C /* OOALSoundInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOALSoundInternal.h; sourceTree = "<group>"; };
+		1A2C2C2113B4972700CD033C /* OOALSoundContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOALSoundContext.h; sourceTree = "<group>"; };
+		1A2C2C2213B4972700CD033C /* OOALSoundContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOALSoundContext.m; sourceTree = "<group>"; };
 		1A649F741323BADA00C2FDDB /* oolite-debug-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-debug-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649F751323BADA00C2FDDB /* oolite-developer-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-developer-configuration.xcconfig"; sourceTree = "<group>"; };
 		1A649F761323BADA00C2FDDB /* oolite-enduser-configuration.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "oolite-enduser-configuration.xcconfig"; sourceTree = "<group>"; };
@@ -239,6 +245,7 @@
 				1A79E3D6139B855100AA6575 /* OOSoundSource.m */,
 				1AA50925139D19CF0003B901 /* Internal-shared */,
 				1AA50863139BF6510003B901 /* CA Sound */,
+				1A2C2C1D13B4961900CD033C /* OpenAL Sound */,
 			);
 			name = Source;
 			path = ../Source;
@@ -250,6 +257,17 @@
 				1A1A35D711C2F7570086265F /* OoliteBase.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1A2C2C1D13B4961900CD033C /* OpenAL Sound */ = {
+			isa = PBXGroup;
+			children = (
+				1A2C2C1F13B4969500CD033C /* OOALSoundInternal.h */,
+				1A2C2C2113B4972700CD033C /* OOALSoundContext.h */,
+				1A2C2C2213B4972700CD033C /* OOALSoundContext.m */,
+			);
+			name = "OpenAL Sound";
+			path = OpenAL;
 			sourceTree = "<group>";
 		};
 		1A649F731323BADA00C2FDDB /* Config */ = {
@@ -363,6 +381,8 @@
 				1AA5092C139D1B2E0003B901 /* OOMixerSoundContext.h in Headers */,
 				1AA50930139D25090003B901 /* OOSoundMixer.h in Headers */,
 				1AFE9F4E139D89EC00DCC1AF /* OOCASoundInternal.h in Headers */,
+				1A2C2C2013B4969500CD033C /* OOALSoundInternal.h in Headers */,
+				1A2C2C2313B4972700CD033C /* OOALSoundContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +527,7 @@
 				1AA50929139D1A080003B901 /* OOMixerSoundSource.m in Sources */,
 				1AA5092D139D1B2E0003B901 /* OOMixerSoundContext.m in Sources */,
 				1AA50931139D25090003B901 /* OOSoundMixer.m in Sources */,
+				1A2C2C2413B4972700CD033C /* OOALSoundContext.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

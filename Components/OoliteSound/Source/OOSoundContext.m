@@ -30,6 +30,8 @@ SOFTWARE.
 #import "OOSound.h"
 #import "OOSoundSource.h"
 
+#import "OOALSoundContext.h"
+
 #if OOLITE_MAC_OS_X
 #import "OOCASoundContext.h"
 #endif
@@ -61,6 +63,8 @@ SOFTWARE.
 	
 	// Instantiate best available subclass.
 	id result = nil;
+	
+	if (result == nil)  result = [[OOALSoundContext alloc] init];
 	
 #if OOLITE_MAC_OS_X
 	if (result == nil)  result = [[OOCASoundContext alloc] init];

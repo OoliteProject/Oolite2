@@ -39,7 +39,6 @@ SOFTWARE.
 @interface OOCAStreamingSound: OOCASound
 {
 	OOCASoundDecoder		*_decoder;
-	OOCASoundMixer			*_mixer;
 }
 
 - (id) initWithContext:(OOCASoundContext *)context

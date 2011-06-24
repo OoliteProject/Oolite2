@@ -5,7 +5,7 @@ OOJSConsole.h
 JavaScript object representing the JavaScript console.
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007-2011 Jens Ayton
 

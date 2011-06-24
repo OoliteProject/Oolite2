@@ -82,14 +82,13 @@ SOFTWARE.
 
 - (BOOL) isPlaying
 {
-	OOLogGenericSubclassResponsibility();
 	return NO;
 }
 
 
 - (void) play
 {
-	OOLogGenericSubclassResponsibility();
+	
 }
 
 
@@ -102,7 +101,7 @@ SOFTWARE.
 
 - (void) stop
 {
-	OOLogGenericSubclassResponsibility();
+	
 }
 
 

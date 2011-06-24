@@ -108,6 +108,9 @@ typedef struct
 static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *ioFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumFrames, AudioBufferList *ioData);
 
 
+#define CONTEXT ((OOCASoundContext *)[self context])
+
+
 @implementation OOCASoundChannel
 
 - (id) init
@@ -180,13 +183,6 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 }
 
 
-- (OOCASoundMixer *) mixer
-{
-	OOCASoundContext *context = (OOCASoundContext *)[self context];
-	return (OOCASoundMixer *)[context mixer];
-}
-
-
 - (NSUInteger) ID
 {
 	return _id;
@@ -228,14 +224,12 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 	
 	if (nil != sound)
 	{
-		OOCASoundMixer *mixer = [self mixer];
-		
-		[mixer lock];
+		[CONTEXT lockChannelLock];
 		if (kState_Stopped != _state)
 		{
 			OOLog(kOOLogSoundBadReuse, @"Channel %@ reused while playing.", self);
 			
-			[mixer disconnectChannel:self];
+			[CONTEXT disconnectChannel:self];
 			if (_sound)
 			{
 				Render = NULL;
@@ -271,7 +265,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 			OK = !err;
 		}
 		
-		if (OK) OK = [mixer connectChannel:self];
+		if (OK) OK = [CONTEXT connectChannel:self];
 		
 		if (OK)
 		{
@@ -284,7 +278,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 			_sound = nil;
 			if (!err) OOLog(kOOLogSoundPlayUnknownError, @"Failed to play %@", sound);
 		}
-		[mixer unlock];
+		[CONTEXT unlockChannelLock];
 	}
 	
 	return OK;
@@ -304,7 +298,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 
 - (void)reap
 {
-	OSStatus err = [[self mixer] disconnectChannel:self];
+	OSStatus err = [CONTEXT disconnectChannel:self];
 	
 	if (noErr == err)
 	{
@@ -328,8 +322,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 
 - (void) cleanUp
 {
-	OOCASoundMixer *mixer = [self mixer];
-	[mixer lock];
+	[CONTEXT lockChannelLock];
 	
 	if (kState_Broken == _state)
 	{
@@ -361,7 +354,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 		OOLog(kOOLogSoundCleanUpBadState, @"Sound channel %@ cleaned up in invalid state %u.", self, _state);
 	}
 	
-	[mixer unlock];
+	[CONTEXT unlockChannelLock];
 }
 
 
@@ -395,8 +388,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 
 - (NSString *)description
 {
-	OOCASoundMixer *mixer = [self mixer];
-	[mixer lock];
+	[CONTEXT lockChannelLock];
 	
 	NSString *stateString = nil;
 	switch ((States)_state)
@@ -427,7 +419,7 @@ static OSStatus ChannelRenderProc(void *inRefCon, AudioUnitRenderActionFlags *io
 	
 	NSString *result = [NSString stringWithFormat:@"<%@ %p>{ID=%u, state=%@, sound=%@}", [self className], self, _id, stateString, _sound];
 	
-	[mixer unlock];
+	[CONTEXT unlockChannelLock];
 	
 	return result;
 }

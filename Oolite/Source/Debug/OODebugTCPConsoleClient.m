@@ -3,7 +3,7 @@
 OODebugTCPConsoleClient.m
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2009-2011 Jens Ayton and contributors
 

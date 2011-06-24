@@ -30,6 +30,7 @@ SOFTWARE.
 #import "OODebugSoundInspector.h"
 #import <Cocoa/Cocoa.h>
 #import <OoliteBase/OoliteBase.h>
+#import "OOGameController.h"
 
 
 @implementation OODebugSoundInspector
@@ -43,7 +44,11 @@ SOFTWARE.
 			OOLog(@"debugOXP.load.soundInspector.failed", @"Failed to load sound inspector nib.");
 			DESTROY(self);
 		}
-		else  OOSoundRegisterDebugMonitor(self);
+		else
+		{
+			OOSoundContext *soundContext = [[OOGameController sharedController] soundContext];
+			[soundContext setDebugMonitor:self];
+		}
 	}
 	
 	return self;

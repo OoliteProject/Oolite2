@@ -40,7 +40,7 @@ SOFTWARE.
 #import "OOMacErrorDescription.h"
 
 
-@interface OOCASoundMixer (Internal)
+@interface OOCASoundContext (Internal)
 
 - (BOOL)connectChannel:(OOCASoundChannel *)inChannel;
 - (OSStatus)disconnectChannel:(OOCASoundChannel *)inChannel;

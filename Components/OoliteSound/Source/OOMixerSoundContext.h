@@ -29,11 +29,21 @@ SOFTWARE.
 
 #import "OOSoundContext.h"
 
-@class OOSoundMixer;
+@class OOSoundChannel;
 
 
 @interface OOMixerSoundContext: OOSoundContext
 
-- (OOSoundMixer *) mixer;
+- (OOSoundChannel *) popChannel;
+- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED channel;
+
+/*
+	A mutex, if necessary. The default implementations do nothing.
+	(The Core Audio implementation provides a mutex because its channels may
+	need to stop themselves on the reaper thread. Possibly.
+	FIXME: check this. -- Ahruman 2011-06-06)
+*/
+- (void) lockChannelLock;
+- (void) unlockChannelLock;
 
 @end

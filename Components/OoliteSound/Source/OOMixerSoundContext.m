@@ -31,16 +31,34 @@ SOFTWARE.
 
 @implementation OOMixerSoundContext
 
-- (OOSoundMixer *) mixer
+- (OOSoundSource *) soundSource
+{
+	return [[[OOMixerSoundSource alloc] initWithContext:self] autorelease];
+}
+
+
+- (OOSoundChannel *) popChannel
 {
 	OOLogGenericSubclassResponsibility();
 	return nil;
 }
 
 
-- (OOSoundSource *) soundSource
+- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED channel
 {
-	return [[[OOMixerSoundSource alloc] initWithContext:self] autorelease];
+	OOLogGenericSubclassResponsibility();
+}
+
+
+- (void) lockChannelLock
+{
+	
+}
+
+
+- (void) unlockChannelLock
+{
+	
 }
 
 @end

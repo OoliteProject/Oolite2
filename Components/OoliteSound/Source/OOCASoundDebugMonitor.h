@@ -28,7 +28,7 @@ SOFTWARE.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
+#import "OoliteSound.h"
 
 #ifndef NDEBUG
 
@@ -40,7 +40,7 @@ typedef enum
 } OOCASoundDebugMonitorChannelState;
 
 
-@protocol OOCASoundDebugMonitor
+@protocol OOCASoundDebugMonitor <NSObject>
 
 - (void) soundDebugMonitorNoteChannelMaxCount:(NSUInteger)maxChannels;
 - (void) soundDebugMonitorNoteActiveChannelCount:(NSUInteger)usedChannels;
@@ -51,6 +51,10 @@ typedef enum
 @end
 
 
-extern void OOSoundRegisterDebugMonitor(id <OOCASoundDebugMonitor> monitor);
+@interface OOSoundContext (OOCASoundDebugMonitor)
+
+- (void) setDebugMonitor:(id <OOCASoundDebugMonitor>)monitor;
+
+@end
 
 #endif

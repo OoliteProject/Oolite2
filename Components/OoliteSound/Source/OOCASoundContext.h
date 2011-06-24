@@ -28,26 +28,50 @@ SOFTWARE.
 */
 
 #import "OOMixerSoundContext.h"
-#include <mach/mach.h>
-#include <pthread.h>
 
-@class OOCASoundMixer, OOCASoundChannel;
+#include <mach/mach.h>
+#import <mach/port.h>
+#include <pthread.h>
+#import <AudioToolbox/AudioToolbox.h>
+
+@class OOCASoundMixer, OOCASoundChannel, OOCASoundDebugMonitor;
+
+
+enum
+{
+	kMixerGeneralChannels		= 32
+};
 
 
 @interface OOCASoundContext: OOMixerSoundContext
 {
 @private
-	OOCASoundMixer			*_mixer;
+	size_t						_maxBufferedSoundSize;
 	
-	size_t					_maxBufferedSoundSize;
+	mach_port_t					_reaperPort;
+	mach_port_t					_statusPort;
+	pthread_mutex_t				_reapQueueMutex;
 	
-	mach_port_t				_reaperPort;
-	mach_port_t				_statusPort;
-	pthread_mutex_t			_reapQueueMutex;
-	OOCASoundChannel		*_deadList;
-	OOCASoundChannel		*_reapQueue;
+	OOCASoundChannel			*_channels[kMixerGeneralChannels];
+	OOCASoundChannel			*_freeList;
+	OOCASoundChannel			*_deadList;
+	OOCASoundChannel			*_reapQueue;
 	
-	BOOL					_reaperRunning;
+	NSLock						*_listLock;
+	NSRecursiveLock				*_mixerLock;
+	
+	AUGraph						_graph;
+	AUNode						_mixerNode;
+	AUNode						_outputNode;
+	AudioUnit					_mixerUnit;
+	
+	uint32_t					_activeChannels;
+#ifndef NDEBUG
+	uint32_t					_playMask;
+	OOCASoundDebugMonitor		*_debugMonitor;
+#endif
+	
+	BOOL						_reaperRunning;
 }
 
 @end

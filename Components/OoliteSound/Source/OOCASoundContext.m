@@ -28,6 +28,7 @@ SOFTWARE.
 #import "OOCASoundContext.h"
 #import "OOCASoundInternal.h"
 #import "OOCASoundDecoder.h"
+#import "OOCASoundDebugMonitor.h"
 
 
 enum
@@ -79,9 +80,20 @@ static void PortSend(mach_port_t inPort, PortMessage inMessage);
 static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 
 
-#define kOOLogSoundMachPortError	@"sound.channel.machPortError"
-#define kOOLogSoundLoadingSuccess	@"sound.load.success"
-#define kOOLogSoundLoadingError		@"sound.load.error"
+#define kOOLogSoundMachPortError				@"sound.channel.machPortError"
+#define kOOLogSoundLoadingSuccess				@"sound.load.success"
+#define kOOLogSoundLoadingError					@"sound.load.error"
+#define kOOLogSoundInspetorNotLoaded			@"sound.inspector.loadFailed"
+#define kOOLogSoundMixerOutOfChannels			@"sound.outOfChannels"
+#define kOOLogSoundMixerReplacingBrokenChannel	@"sound.replacingBrokenChannel"
+#define kOOLogSoundMixerFailedToConnectChannel	@"sound.failedToConnectChannel"
+
+
+@interface OOCASoundContext ()
+
+- (BOOL) priv_setUpMixer;
+
+@end
 
 
 @implementation OOCASoundContext
@@ -119,9 +131,12 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 		
 		if (OK)
 		{
-			// FIXME: de-singletonify mixer.
-			_mixer = [[OOCASoundMixer alloc] initWithContext:self];
-			[_mixer setMasterVolume:[self masterVolume]];
+			OK = [self priv_setUpMixer];
+		}
+		
+		if (OK)
+		{
+			[self setMasterVolume:[self masterVolume]];
 			
 			_maxBufferedSoundSize = [[NSUserDefaults standardUserDefaults] oo_unsignedLongForKey:kPrefsKeyMaxBufferSize defaultValue:kDefaultMaxBufferSize];
 		}
@@ -138,8 +153,78 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 }
 
 
+- (BOOL) priv_setUpMixer
+{
+	_listLock = [[NSLock alloc] init];
+	if (_listLock == nil)  return NO;
+	[_listLock ooSetName:@"OOSoundMixer list lock"];
+	_mixerLock = [[NSRecursiveLock alloc] init];
+	if (_mixerLock == nil)  return NO;
+	[_mixerLock ooSetName:@"OOCASoundMixer synchronization lock"];
+	
+	// Create audio graph.
+	OSStatus err = NewAUGraph(&_graph);
+	
+	// Add output node.
+	err = AUGraphAddNode(_graph, &(AudioComponentDescription)
+	{
+		.componentType = kAudioUnitType_Output,
+		.componentSubType = kAudioUnitSubType_DefaultOutput,
+		.componentManufacturer = kAudioUnitManufacturer_Apple
+	}, &_outputNode);
+	if (err != noErr)  return NO;
+	
+	// Add mixer node.
+	err = AUGraphAddNode(_graph, &(AudioComponentDescription)
+	{
+		.componentType = kAudioUnitType_Mixer,
+		.componentSubType = kAudioUnitSubType_StereoMixer,
+		.componentManufacturer = kAudioUnitManufacturer_Apple
+	}, &_mixerNode);
+	if (err != noErr)  return NO;
+	
+	// Connect mixer to output.
+	if (!err)  err = AUGraphConnectNodeInput(_graph, _mixerNode, 0, _outputNode, 0);
+	
+	// Open the graph (turn it into concrete AUs) and extract mixer AU.
+	if (!err)  err = AUGraphOpen(_graph);
+	if (!err)  err = AUGraphNodeInfo(_graph, _mixerNode, NULL, &_mixerUnit);
+	
+	if (!err)  [self setMasterVolume:1.0];
+	
+	if (err != noErr)  return NO;
+	
+	// Allocate channels.
+	uint32_t idx = 0, count = kMixerGeneralChannels;
+	do
+	{
+		OOCASoundChannel *channel = [[OOCASoundChannel alloc] initWithContext:self
+																		   ID:count
+																	  auGraph:_graph];
+		if (channel != nil)
+		{
+			_channels[idx++] = channel;
+			[channel setNext:_freeList];
+			_freeList = channel;
+		}
+	} while (--count);
+	
+	if (AUGraphInitialize(_graph) != noErr)  return NO;
+	
+	// Force CA to do any lazy setup.
+	AUGraphStart(_graph);
+	AUGraphStop(_graph);
+	
+	return YES;
+}
+
+
 - (void) dealloc
 {
+#ifndef NDEBUG
+	DESTROY(_debugMonitor);
+#endif
+	
 	if (_reaperRunning)
 	{
 		PortMessage message = { kMsgDie, NULL };
@@ -151,29 +236,165 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 	if (_reaperPort != MACH_PORT_NULL)  mach_port_destroy(task, _reaperPort);
 	if (_statusPort != MACH_PORT_NULL)  mach_port_destroy(task, _statusPort);
 	
-	DESTROY(_mixer);
+	if (_graph != NULL)
+	{
+		AUGraphStop(_graph);
+		AUGraphUninitialize(_graph);
+		AUGraphClose(_graph);
+		DisposeAUGraph(_graph);
+	}
+	for (uint32_t idx = 0; idx != kMixerGeneralChannels; ++idx)
+	{
+		DESTROY(_channels[idx]);
+	}
+	
+	DESTROY(_listLock);
+	DESTROY(_mixerLock);
 	
 	[super dealloc];
 }
 
 
+#ifndef NDEBUG
+#define GET_PLAYMASK(n)		((_playMask & (1 << ((n) - 1))) != 0)
+#define SET_PLAYMASK(n)		do { _playMask |= (1 << ((n) - 1)); } while (0)
+#define CLEAR_PLAYMASK(n)	do { _playMask &= ~(1 << ((n) - 1));  } while (0)
+#endif
+
+
+#ifndef NDEBUG
 - (void) update
 {
-	[_mixer update];
+	if (_debugMonitor != nil)
+	{
+		[_debugMonitor soundDebugMonitorNoteActiveChannelCount:_activeChannels];
+		unsigned i;
+		for (i = 0; i != kMixerGeneralChannels; ++i)
+		{
+			uint32_t	ID = [_channels[i] ID];
+			BOOL		playMaskValue = GET_PLAYMASK(ID);
+			OOCASoundDebugMonitorChannelState state = [_channels[i] soundInspectorState];
+			
+			// Because of asynchrony, channel may be in stopped state but not reenqueued.
+			if (playMaskValue && state == kOOCADebugStateIdle)  state = kOOCADebugStateOther;
+			
+			[_debugMonitor soundDebugMonitorNoteState:state ofChannel:ID - 1];
+		}
+		
+		Float32 load;
+		if (!AUGraphGetCPULoad(_graph, &load))
+		{
+			[_debugMonitor soundDebugMonitorNoteAUGraphLoad:load];
+		}
+	}
 }
-
+#endif
 
 
 - (void) setMasterVolume:(float)fraction
 {
-	[(OOCASoundMixer *)[self mixer] setMasterVolume:fraction];
+	AudioUnitSetParameter(_mixerUnit, kStereoMixerParam_Volume, kAudioUnitScope_Output, 0, fraction / kOOAudioSlop, 0);
 	[super setMasterVolume:fraction];
 }
 
 
-- (OOCASoundMixer *) mixer
+- (OOSoundChannel *) popChannel
 {
-	return _mixer;
+	[_listLock lock];
+	OOCASoundChannel *result = _freeList;
+	_freeList = [result next];
+	
+	if (nil != result)
+	{
+		if (0 == _activeChannels++)
+		{
+			AUGraphStart(_graph);
+		}
+		
+#ifndef NDEBUG
+		SET_PLAYMASK([result ID]);
+#endif
+	}
+	[_listLock unlock];
+	
+	return result;
+}
+
+
+- (void) pushChannel:(OOSoundChannel *) OO_NS_CONSUMED inChannel
+{
+	NSCParameterAssert([inChannel isKindOfClass:[OOCASoundChannel class]] && [inChannel context] == self);
+	OOCASoundChannel *channel = (OOCASoundChannel *)inChannel;
+	
+	[_listLock lock];
+	
+	[channel setNext:_freeList];
+	_freeList = channel;
+	
+	if (0 == --_activeChannels)
+	{
+		AUGraphStop(_graph);
+	}
+	
+#ifndef NDEBUG
+	CLEAR_PLAYMASK([channel ID]);
+#endif
+	[_listLock unlock];
+}
+
+
+- (void) lockChannelLock
+{
+	[_mixerLock lock];
+}
+
+
+- (void) unlockChannelLock
+{
+	[_mixerLock unlock];
+}
+
+
+- (BOOL) connectChannel:(OOCASoundChannel *)channel
+{
+	NSCParameterAssert(channel != nil);
+	
+	AUNode node = [channel auSubGraphNode];
+	OSStatus err = AUGraphConnectNodeInput(_graph, node, 0, _mixerNode, [channel ID]);
+	if (!err) err = AUGraphUpdate(_graph, NULL);
+	
+	if (err) OOLog(kOOLogSoundMixerFailedToConnectChannel, @"Sound mixer: failed to connect channel %@, error = %@.", channel, AudioErrorNSString(err));
+	
+	return !err;
+}
+
+
+- (OSStatus) disconnectChannel:(OOCASoundChannel *)channel
+{
+	NSCParameterAssert(nil != channel);
+	
+	OSStatus err = AUGraphDisconnectNodeInput(_graph, _mixerNode, [channel ID]);
+	if (noErr == err) AUGraphUpdate(_graph, NULL);
+	
+	return err;
+}
+
+
+- (void) channel:(OOCASoundChannel *)channel didFinishPlayingSound:(OOCASound *)sound
+{
+	[sound decrementPlayingCount];
+	
+	if (![channel isOK])
+	{
+		OOLog(kOOLogSoundMixerReplacingBrokenChannel, @"Sound mixer: replacing broken channel %@.", channel);
+		uint32_t ID = [channel ID];
+		[channel release];
+		channel = [[OOCASoundChannel alloc] initWithContext:self
+														   ID:ID
+													  auGraph:_graph];
+	}
+	
+	[self pushChannel:channel];
 }
 
 
@@ -301,6 +522,31 @@ void OOCASoundContextReapChannel(OOCASoundContext *context, OOCASoundChannel *ch
 }
 
 @end
+
+
+#ifndef NDEBUG
+
+@implementation OOCASoundContext (OOCASoundDebugMonitor)
+
+- (void) setDebugMonitor:(id <OOCASoundDebugMonitor>)monitor
+{
+	[_debugMonitor autorelease];
+	_debugMonitor = [monitor retain];
+}
+
+@end
+
+
+@implementation OOSoundContext (OOCASoundDebugMonitor)
+
+- (void) setDebugMonitor:(id <OOCASoundDebugMonitor>)monitor
+{
+	// Do nothing.
+}
+
+@end
+
+#endif
 
 
 static mach_port_t CreatePort(void)

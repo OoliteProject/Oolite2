@@ -54,6 +54,9 @@ static VRB_lengthAvailableToReadReturningPointerIMP		VRB_lengthAvailableToReadRe
 static VRB_didReadLengthIMP								VRB_didReadLength = NULL;
 
 
+#define CONTEXT ((OOCASoundContext *)[self context])
+
+
 typedef struct
 {
 	uint64_t				readOffset;
@@ -116,11 +119,6 @@ enum
 	
 	if (OK)
 	{
-		_mixer = (OOCASoundMixer *)[[context mixer] retain];
-	}
-	
-	if (OK)
-	{
 		_decoder = [decoder retain];
 	}
 	
@@ -135,9 +133,9 @@ enum
 
 - (void)dealloc
 {
-	assert(![self isPlaying]);
-	[_decoder release];
-	[_mixer release];
+	NSAssert(![self isPlaying], @"Sound destroyed while playing.");
+	
+	DESTROY(_decoder);
 	
 	[super dealloc];
 }
@@ -198,7 +196,7 @@ enum
 	
 	context = (OOCAStreamingSoundRenderContext) inContext;
 	
-	[_mixer lock];
+	[CONTEXT lockChannelLock];
 	context->stopped = YES;
 	if (0 == context->pendingCount)
 	{
@@ -209,7 +207,7 @@ enum
 	{
 		OOLog(@"sound.streaming.releaseContext.deferring", @"Streaming sound %@ stopped with %i pendingCount, deferring release.", self, context->pendingCount);
 	}
-	[_mixer unlock];
+	[CONTEXT unlockChannelLock];
 }
 
 
@@ -251,7 +249,7 @@ enum
 	void					*ptrL, *ptrR;
 	size_t					frames;
 	
-	[_mixer lock];
+	[CONTEXT lockChannelLock];
 	spaceL = [inContext->bufferL lengthAvailableToWriteReturningPointer:&ptrL];
 	spaceR = [inContext->bufferR lengthAvailableToWriteReturningPointer:&ptrR];
 	
@@ -297,7 +295,7 @@ enum
 		[self releaseContext:inContext];
 	}
 	
-	[_mixer unlock];
+	[CONTEXT unlockChannelLock];
 }
 
 

@@ -5,7 +5,7 @@ OODebuggerInterface.h
 Protocols for communication between OODebugMonitor and OODebuggerInterface.
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007-2011 Jens Ayton
 

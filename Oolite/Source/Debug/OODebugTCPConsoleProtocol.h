@@ -5,7 +5,7 @@ OODebugTCPConsoleProtocol.h
 Definitions used in Oolite remote debug console protocol.
 
 
-Oolite Debug OXP
+Oolite debug support
 
 Copyright (C) 2007-2011 Jens Ayton
 

@@ -29,7 +29,6 @@ SOFTWARE.
 #import "OOMixerSoundSource.h"
 #import "OOSound.h"
 #import "OOSoundChannel.h"
-#import "OOSoundMixer.h"
 #import "OOMixerSoundContext.h"
 
 
@@ -78,12 +77,11 @@ SOFTWARE.
 {
 	if ([self sound] == nil)  return;
 	
-	OOSoundMixer *mixer = [_context mixer];
-	[mixer lock];
+	[_context lockChannelLock];
 	
 	if (_channel != nil)  [self stop];
 	
-	_channel = [mixer popChannel];
+	_channel = [_context popChannel];
 	if (nil != _channel)
 	{
 		_remainingCount = [self repeatCount];
@@ -92,7 +90,7 @@ SOFTWARE.
 		[self retain];
 	}
 	
-	[mixer unlock];
+	[_context unlockChannelLock];
 }
 
 
@@ -104,8 +102,7 @@ SOFTWARE.
 
 - (void) stop
 {
-	OOSoundMixer *mixer = [_context mixer];
-	[mixer lock];
+	[_context lockChannelLock];
 	
 	if (nil != _channel)
 	{
@@ -115,17 +112,16 @@ SOFTWARE.
 		[self release];
 	}
 	
-	[mixer unlock];
+	[_context unlockChannelLock];
 }
 
 
-// OOCASoundChannelDelegate
+// MARK: OOCASoundChannelDelegate
 - (void) channel:(OOSoundChannel *)channel didFinishPlayingSound:(OOSound *)sound
 {
 	assert(_channel == channel);
 	
-	OOSoundMixer *mixer = [_context mixer];
-	[mixer lock];
+	[_context lockChannelLock];
 	
 	if (--_remainingCount)
 	{
@@ -134,19 +130,19 @@ SOFTWARE.
 	else
 	{
 		[_channel setDelegate:nil];
-		[[_context mixer] pushChannel:_channel];
+		[_context pushChannel:_channel];
 		_channel = nil;
 		[self release];
 	}
 	
-	[mixer unlock];
+	[_context unlockChannelLock];
 }
 
 
 + (void) channel:(OOSoundChannel *)inChannel didFinishPlayingSound:(OOSound *)inSound
 {
-	// This delegate is used for a stopped source
-	[[(OOMixerSoundContext *)[inChannel context] mixer] pushChannel:inChannel];
+	// This delegate is used for a stopped source.
+	[(OOMixerSoundContext *)[inChannel context] pushChannel:inChannel];
 }
 
 @end

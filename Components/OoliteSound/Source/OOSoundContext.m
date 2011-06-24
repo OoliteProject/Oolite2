@@ -81,6 +81,7 @@ SOFTWARE.
 	else
 	{
 		// As a fallback, a plain OOSoundContext can act as a do-nothing “dummy” sound context.
+		OOLog(@"sound.setup.failed", @"Could not initialize a sound engine, playing silently.");
 		return self;
 	}
 }

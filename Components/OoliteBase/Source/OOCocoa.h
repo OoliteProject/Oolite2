@@ -107,14 +107,14 @@ MA 02110-1301, USA.
 #if OOLITE_GNUSTEP && !defined(OOLITE_SDL_MAC)
 
 
-#define OOLITE_SDL				1
+#define OOLITE_SDL					1
 
 #ifdef WIN32
-#define OOLITE_WINDOWS			1
+#define OOLITE_WINDOWS				1
 #endif
 
 #ifdef LINUX
-#define OOLITE_LINUX			1
+#define OOLITE_LINUX				1
 #endif
 
 #if !defined(MAX)
@@ -230,27 +230,27 @@ enum {
 
 
 #ifndef OOLITE_GNUSTEP
-#define OOLITE_GNUSTEP			0
+#define OOLITE_GNUSTEP				0
 #endif
 
 #ifndef OOLITE_MAC_OS_X
-#define OOLITE_MAC_OS_X			0
+#define OOLITE_MAC_OS_X				0
 #endif
 
 #ifndef OOLITE_WINDOWS
-#define OOLITE_WINDOWS			0
+#define OOLITE_WINDOWS				0
 #endif
 
 #ifndef OOLITE_LINUX
-#define OOLITE_LINUX			0
+#define OOLITE_LINUX				0
 #endif
 
 #ifndef OOLITE_SDL
-#define OOLITE_SDL				0
+#define OOLITE_SDL					0
 #endif
 
 #ifndef OOLITE_HAVE_APPKIT
-#define OOLITE_HAVE_APPKIT		0
+#define OOLITE_HAVE_APPKIT			0
 #endif
 
 
@@ -293,7 +293,7 @@ enum {
 
 #if OOLITE_MAC_OS_X
 	#if __LP64__
-		#define OOLITE_64_BIT	1
+		#define OOLITE_64_BIT		1
 	#endif
 #elif OOLITE_GNUSTEP
 	/*	As of GNUstep-base 1.20.1, NSIntegerMin, NSIntegerMax and NSUIntegerMax
@@ -314,16 +314,16 @@ enum {
 	#endif
 	
 	#if GS_SIZEOF_VOIDP == 8
-		#define OOLITE_64_BIT	1
+		#define OOLITE_64_BIT		1
 	#elif GS_SIZEOF_VOIDP == 4
-		#define OOLITE_64_BIT	0
+		#define OOLITE_64_BIT		0
 	#else
 		#error Holy funky bitness, Batman! This will take some work.
 	#endif
 #endif
 
 #ifndef OOLITE_64_BIT
-	#define OOLITE_64_BIT		0
+	#define OOLITE_64_BIT			0
 #endif
 
 
@@ -363,21 +363,21 @@ enum {
 #endif
 
 #ifndef OOLITE_FAST_ENUMERATION
-#define OOLITE_FAST_ENUMERATION			0
+#define OOLITE_FAST_ENUMERATION		0
 #endif
 
 
 /*	Speech synthesis
 */
 #if OOLITE_MAC_OS_X || defined(HAVE_LIBESPEAK)
-	#define OOLITE_SPEECH_SYNTH			1
+	#define OOLITE_SPEECH_SYNTH		1
 	#if defined(HAVE_LIBESPEAK)
-		#define OOLITE_ESPEAK			1
+		#define OOLITE_ESPEAK		1
 	#else
-		#define OOLITE_ESPEAK			0
+		#define OOLITE_ESPEAK		0
 	#endif
 #else
-	#define OOLITE_SPEECH_SYNTH			0
+	#define OOLITE_SPEECH_SYNTH		0
 #endif
 
 
@@ -401,7 +401,7 @@ enum {
 
 
 #ifndef OO_DEBUG
-#define OO_DEBUG 0
+#define OO_DEBUG					0
 #endif
 
 

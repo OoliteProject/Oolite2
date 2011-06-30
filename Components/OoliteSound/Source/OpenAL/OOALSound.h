@@ -1,10 +1,8 @@
 /*
 
-OOSoundContext.h
+OOALSound.h
 
-A sound context represents the shared state for sound playback, and is also
-the factory for all sound system related objects. As such, it encapsulates the
-sound engine being used.
+OpenAL implementation of OOSound. Wraps an OpenAL buffer object.
 
 
 Copyright © 2011 Jens Ayton
@@ -29,28 +27,18 @@ SOFTWARE.
 
 */
 
-#import <OoliteBase/OoliteBase.h>
+#import "OOALSoundInternal.h"
 
-@class OOSound, OOSoundSource;
+@class OOALSoundContext, OOALSoundDecoder;
 
 
-@interface OOSoundContext: OOWeakRefObject
+@interface OOALSound: OOSound
 {
 @private
-	float				_masterVolume;
+	ALuint				_bufferName;
 }
 
-- (id) init;
-
-- (void) update;
-
-- (NSString *) implementationName;
-
-- (void) setMasterVolume:(float)fraction;
-- (float) masterVolume;
-
-// Factory methods.
-- (OOSound *) soundWithContentsOfFile:(NSString *)file;
-- (OOSoundSource *) soundSource;
+- (id) initWithContext:(OOALSoundContext *)context
+			   decoder:(OOALSoundDecoder *)decoder;
 
 @end

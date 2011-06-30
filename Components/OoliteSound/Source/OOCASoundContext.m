@@ -291,6 +291,12 @@ static BOOL PortWait(mach_port_t inPort, PortMessage *outMessage);
 #endif
 
 
+- (NSString *) implementationName
+{
+	return @"Core Audio";
+}
+
+
 - (void) setMasterVolume:(float)fraction
 {
 	AudioUnitSetParameter(_mixerUnit, kStereoMixerParam_Volume, kAudioUnitScope_Output, 0, fraction / kOOAudioSlop, 0);

@@ -75,6 +75,7 @@ SOFTWARE.
 	
 	if (result != nil)
 	{
+		OOLog(@"sound.init.contextType", @"Selected sound implementation: %@", [result implementationName]);
 		DESTROY(self);
 		return result;
 	}
@@ -90,6 +91,20 @@ SOFTWARE.
 - (void) update
 {
 	
+}
+
+
+- (NSString *) implementationName
+{
+	if ([self class] == [OOSoundContext class])
+	{
+		return @"null fallback";
+	}
+	else
+	{
+		OOLogGenericSubclassResponsibility();
+		return [[self class] description];
+	}
 }
 
 

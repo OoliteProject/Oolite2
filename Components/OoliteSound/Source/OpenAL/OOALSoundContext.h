@@ -28,12 +28,15 @@ SOFTWARE.
 */
 
 #import "OOSoundContext.h"
+#import <OpenAL/al.h>
+#import <OpenAL/alc.h>
 
 
 @interface OOALSoundContext: OOSoundContext
 {
 @private
-	
+	ALCdevice				*_device;
+	ALCcontext				*_context;
 }
 
 @end

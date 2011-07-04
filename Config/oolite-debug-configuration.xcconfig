@@ -11,4 +11,4 @@ GCC_ENABLE_FIX_AND_CONTINUE			= YES
 COPY_PHASE_STRIP					= NO
 DEBUG_INFORMATION_FORMAT			= dwarf
 
-OTHER_CFLAGS						= -fcatch-undefined-behavior -ftrapv
+OTHER_CFLAGS						= -fcatch-undefined-behavior -ftrapv $(OTHER_C_FLAGS_SHARED)

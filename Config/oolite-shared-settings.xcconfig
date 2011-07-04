@@ -22,9 +22,11 @@ GCC_VERSION								= com.apple.compilers.llvm.clang.1_0
 ALWAYS_SEARCH_USER_PATHS				= NO
 
 
-OOLITE_DEFAULT_WARNINGS					= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces -Wreturn-type -Wunused-variable
+OOLITE_DEFAULT_WARNINGS					= -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-missing-braces -Wreturn-type -Wunused-variable //	-Wconditional-uninitialized
 WARNING_CFLAGS							= $OOLITE_DEFAULT_WARNINGS
 GCC_TREAT_WARNINGS_AS_ERRORS			= YES
 
 
 GCC_PREPROCESSOR_DEFINITIONS_SHARED		= OOLITE_MAC_OS_X=1 OOLITE_VERSION="\"$OOLITE_VERSION\""
+
+OTHER_C_FLAGS_SHARED					= -fstrict-aliasing -ffast-math

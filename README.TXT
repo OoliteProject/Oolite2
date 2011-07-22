@@ -1,7 +1,6 @@
-Oolite2
+This project is indefinitely SUSPENDED.
 
-This is the modernization project for the space trading game Oolite, intended
-to culminate in an Oolite 2.0 release.
+See http://www.aegidian.org/bb/viewtopic.php?f=2&t=10497 for more information.
 
 For more information about Oolite, see http://www.oolite.org/
 For the mainline Oolite 1.x project, see the BerliOS project page at

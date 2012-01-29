@@ -58,7 +58,6 @@
 		1AA5092C139D1B2E0003B901 /* OOMixerSoundContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AA5092A139D1B2D0003B901 /* OOMixerSoundContext.h */; };
 		1AA5092D139D1B2E0003B901 /* OOMixerSoundContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5092B139D1B2E0003B901 /* OOMixerSoundContext.m */; };
 		1AEA253111A73ABA00B361DC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		1AFE9F4E139D89EC00DCC1AF /* OOCASoundInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE9F4D139D89EC00DCC1AF /* OOCASoundInternal.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -378,7 +377,6 @@
 				1AA50922139D111C0003B901 /* OOSoundChannel.h in Headers */,
 				1AA50928139D1A080003B901 /* OOMixerSoundSource.h in Headers */,
 				1AA5092C139D1B2E0003B901 /* OOMixerSoundContext.h in Headers */,
-				1AFE9F4E139D89EC00DCC1AF /* OOCASoundInternal.h in Headers */,
 				1A2C2C2013B4969500CD033C /* OOALSoundInternal.h in Headers */,
 				1A2C2C2313B4972700CD033C /* OOALSoundContext.h in Headers */,
 				1A85845E13BCDB89003B99D6 /* OOALSound.h in Headers */,
@@ -418,6 +416,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OoliteSound" */;
@@ -569,10 +568,7 @@
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(CONFIG_SYM_ROOT)/OoliteBase.framework/Headers/OoliteBase.h";
-				HEADER_SEARCH_PATHS = (
-					"$(DEP_HEADER_PATH)/png/",
-					"$(DEP_HEADER_PATH)/OpenCTM/",
-				);
+				HEADER_SEARCH_PATHS = "\"$(SDKROOT)/usr/include/libkern/\"";
 				INFOPLIST_FILE = "OoliteSound-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				LIBRARY_SEARCH_PATHS = (
@@ -596,10 +592,7 @@
 					"OO_CHECK_GL_HEAVY=1",
 					$GCC_PREPROCESSOR_DEFINITIONS_CONFIG,
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(DEP_HEADER_PATH)/png/",
-					"$(DEP_HEADER_PATH)/OpenCTM/",
-				);
+				HEADER_SEARCH_PATHS = "\"$(SDKROOT)/usr/include/libkern/\"";
 				INFOPLIST_FILE = "OoliteSound-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				LIBRARY_SEARCH_PATHS = (
@@ -619,10 +612,7 @@
 				GCC_ENABLE_OBJC_GC = supported;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(CONFIG_SYM_ROOT)/OoliteBase.framework/Headers/OoliteBase.h";
-				HEADER_SEARCH_PATHS = (
-					"$(DEP_HEADER_PATH)/png/",
-					"$(DEP_HEADER_PATH)/OpenCTM/",
-				);
+				HEADER_SEARCH_PATHS = "\"$(SDKROOT)/usr/include/libkern/\"";
 				INFOPLIST_FILE = "OoliteSound-Info.plist";
 				INSTALL_PATH = "@rpath/";
 				LIBRARY_SEARCH_PATHS = (

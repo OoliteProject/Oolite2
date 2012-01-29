@@ -511,7 +511,7 @@ static OOColor *sClearColor;
 
 @implementation OOPermanentColor
 
-- (void) release
+- (oneway void) release
 {
 }
 

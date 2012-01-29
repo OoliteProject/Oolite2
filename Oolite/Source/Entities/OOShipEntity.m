@@ -399,20 +399,20 @@ static OOShipEntity *doOctreesCollide(OOShipEntity *prime, OOShipEntity *other);
 		{
 			cargo_flag = CARGO_FLAG_FULL_UNIFORM;
 
-			OOCargoType		c_commodity = CARGO_UNDEFINED;
+			OOCommodityType	c_commodity = COMMODITY_UNDEFINED;
 			int				c_amount = 1;
 			NSScanner		*scanner = [NSScanner scannerWithString:cargoString];
 			if ([scanner scanInt:&c_amount])
 			{
 				[scanner ooliteScanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:NULL];	// skip whitespace
 				c_commodity = [UNIVERSE commodityForName: [[scanner string] substringFromIndex:[scanner scanLocation]]];
-				if (c_commodity != CARGO_UNDEFINED)  [self setCommodityForPod:c_commodity andAmount:c_amount];
+				if (c_commodity != COMMODITY_UNDEFINED)  [self setCommodityForPod:c_commodity andAmount:c_amount];
 			}
 			else
 			{
 				c_amount = 1;
 				c_commodity = [UNIVERSE commodityForName: [shipDict oo_stringForKey:@"cargo_carried"]];
-				if (c_commodity != CARGO_UNDEFINED)  [self setCommodity:c_commodity andAmount:c_amount];
+				if (c_commodity != COMMODITY_UNDEFINED)  [self setCommodity:c_commodity andAmount:c_amount];
 			}
 		}
 	}
@@ -427,7 +427,7 @@ static OOShipEntity *doOctreesCollide(OOShipEntity *prime, OOShipEntity *other);
 		if (cargo_type == CARGO_SCRIPTED_ITEM)
 		{
 			commodity_amount = 1; // value > 0 is needed to be recognised as cargo by scripts;
-			commodity_type = CARGO_UNDEFINED;
+			commodity_type = COMMODITY_UNDEFINED;
 		}
 	}
 	
@@ -5375,9 +5375,9 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) setCommodity:(OOCargoType)co_type andAmount:(OOCargoQuantity)co_amount
+- (void) setCommodity:(OOCommodityType)co_type andAmount:(OOCargoQuantity)co_amount
 {
-	if (co_type != CARGO_UNDEFINED && cargo_type != CARGO_SCRIPTED_ITEM)
+	if (co_type != COMMODITY_UNDEFINED && cargo_type != CARGO_SCRIPTED_ITEM)
 	{
 		commodity_type = co_type;
 		commodity_amount = co_amount;
@@ -5385,13 +5385,13 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (void) setCommodityForPod:(OOCargoType)co_type andAmount:(OOCargoQuantity)co_amount
+- (void) setCommodityForPod:(OOCommodityType)co_type andAmount:(OOCargoQuantity)co_amount
 {
-	if (co_type != CARGO_UNDEFINED)
+	if (co_type != COMMODITY_UNDEFINED)
 	{
 		// pod content should never be greater than 1 ton or this will give cargo counting problems elsewhere in the code.
 		// so do first a mass check for cargo added by script/plist.
-		OOMassUnit	unit = [UNIVERSE unitsForCommodity:co_type];
+		OOMassUnit unit = [UNIVERSE unitsForCommodity:co_type];
 		if (unit == UNITS_TONS) co_amount = 1;
 		else if (unit == UNITS_KILOGRAMS && co_amount > 1000) co_amount = 1000;
 		else if (unit == UNITS_GRAMS && co_amount > 1000000) co_amount = 1000000;
@@ -5401,7 +5401,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (OOCargoType) commodityType
+- (OOCommodityType) commodityType
 {
 	return commodity_type;
 }
@@ -5438,7 +5438,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 }
 
 
-- (NSMutableArray*) cargo
+- (NSMutableArray *) cargo
 {
 	return cargo;
 }
@@ -5449,6 +5449,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 	[cargo removeAllObjects];
 	[cargo addObjectsFromArray:some_cargo];
 }
+
 
 - (BOOL) showScoopMessage
 {
@@ -5891,18 +5892,18 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 					case CARGO_FLAG_FULL_PASSENGERS:
 						break;
 					
-					case CARGO_FLAG_FULL_UNIFORM :
+					case CARGO_FLAG_FULL_UNIFORM:
 						{
 							NSString* commodity_name = [[self shipInfoDictionary] oo_stringForKey:@"cargo_carried"];
 							jetsam = [UNIVERSE getContainersOfCommodity:commodity_name :cargo_to_go];
 						}
 						break;
 					
-					case CARGO_FLAG_FULL_PLENTIFUL :
+					case CARGO_FLAG_FULL_PLENTIFUL:
 						jetsam = [UNIVERSE getContainersOfGoods:cargo_to_go scarce:NO];
 						break;
 					
-					case CARGO_FLAG_PIRATE :
+					case CARGO_FLAG_PIRATE:
 						cargo_to_go = likely_cargo;
 						while (cargo_to_go > 15)
 							cargo_to_go = ranrot_rand() % cargo_to_go;
@@ -5910,7 +5911,7 @@ NSComparisonResult ComparePlanetsBySurfaceDistance(id i1, id i2, void* context)
 						jetsam = [UNIVERSE getContainersOfGoods:cargo_to_go scarce:YES];
 						break;
 					
-					case CARGO_FLAG_FULL_SCARCE :
+					case CARGO_FLAG_FULL_SCARCE:
 						jetsam = [UNIVERSE getContainersOfGoods:cargo_to_go scarce:YES];
 						break;
 					
@@ -8165,11 +8166,11 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 
 
 // This is a documented AI method; do not change semantics. (Note: AIs don't have access to the return value.)
-- (OOCargoType) dumpCargo
+- (OOCommodityType) dumpCargo
 {
 	OOShipEntity *jetto = [self dumpCargoItem];
 	if (jetto != nil)  return [jetto commodityType];
-	else  return CARGO_NOT_CARGO;
+	else  return COMMODITY_UNDEFINED;
 }
 
 
@@ -8553,7 +8554,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 {
 	if (other == nil)  return;
 	
-	OOCargoType		co_type;
+	OOCommodityType	co_type;
 	OOCargoQuantity	co_amount;
 	
 	// don't even think of trying to scoop if the cargo hold is already full
@@ -8596,7 +8597,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 				[other doScriptEvent:OOJSID("shipWasScooped") withArgument:self];
 				[self doScriptEvent:OOJSID("shipScoopedOther") withArgument:other];
 				
-				if ([other commodityType] != CARGO_UNDEFINED)
+				if ([other commodityType] != COMMODITY_UNDEFINED)
 				{
 					co_type = [other commodityType];
 					co_amount = [other commodityAmount];
@@ -8616,7 +8617,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 			}
 			break;
 		
-		default :
+		default:
 			co_amount = 0;
 			co_type = 0;
 			break;
@@ -8630,7 +8631,7 @@ Vector positionOffsetForShipInRotationToAlignment(OOShipEntity* ship, Quaternion
 		Fix 2: catch NSNotFound here and substitute random cargo type.
 		-- Ahruman 20070714
 	*/
-	if (co_type == CARGO_UNDEFINED)
+	if (co_type == COMMODITY_UNDEFINED)
 	{
 		co_type = [UNIVERSE getRandomCommodity];
 		co_amount = [UNIVERSE getRandomAmountOfCommodity:co_type];

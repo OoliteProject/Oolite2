@@ -191,6 +191,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "OpenCTM" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -267,6 +268,10 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = EndUser;
 		};
@@ -277,6 +282,10 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = Debug;
 		};
@@ -286,6 +295,10 @@
 				HEADER_SEARCH_PATHS = "../Deps/OpenCTM/**";
 				PRODUCT_NAME = "OpenCTM-for-oolite";
 				PUBLIC_HEADERS_FOLDER_PATH = include/OpenCTM;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = Developer;
 		};

@@ -28,6 +28,7 @@ SOFTWARE.
 */
 
 #import "OOMixerSoundContext.h"
+#import "OOCASoundDebugMonitor.h"
 
 #include <mach/mach.h>
 #import <mach/port.h>
@@ -68,7 +69,7 @@ enum
 	uint32_t					_activeChannels;
 #ifndef NDEBUG
 	uint32_t					_playMask;
-	OOCASoundDebugMonitor		*_debugMonitor;
+	id <OOCASoundDebugMonitor>	_debugMonitor;
 #endif
 	
 	BOOL						_reaperRunning;

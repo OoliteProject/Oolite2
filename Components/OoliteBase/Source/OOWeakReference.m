@@ -74,7 +74,7 @@ This code is hereby placed in the public domain.
 }
 
 
-- (void) release
+- (oneway void) release
 {
 	[super release];
 }

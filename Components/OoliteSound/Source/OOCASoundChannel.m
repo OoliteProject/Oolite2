@@ -30,7 +30,6 @@ SOFTWARE.
 #import "OOCASoundInternal.h"
 #include <mach/mach.h>
 #include <pthread.h>
-#include </usr/include/libkern/OSAtomic.h>
 
 
 static NSString * const kOOLogSoundPlaySuccess			= @"sound.play.success";

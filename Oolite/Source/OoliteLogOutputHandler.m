@@ -108,7 +108,7 @@ static inline id CacheValue(BOOL inValue)
 }
 
 
-- (void) release
+- (oneway void) release
 {
 	
 }

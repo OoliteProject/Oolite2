@@ -73,7 +73,7 @@ static OODebugMonitor *sSingleton = nil;
 - (id)init
 {
 	NSUserDefaults				*defaults = nil;
-	NSDictionary				*config = nil;
+	NSMutableDictionary			*config = nil;
 #if OOLITE_GNUSTEP
 	NSString					*NSApplicationWillTerminateNotification = @"ApplicationWillTerminate";
 #endif
@@ -87,8 +87,7 @@ static OODebugMonitor *sSingleton = nil;
 		_configFromOXPs = [[self normalizeConfigDictionary:config] copy];
 		
 		defaults = [NSUserDefaults standardUserDefaults];
-		config = [defaults dictionaryForKey:@"debug-settings-override"];
-		config = [self normalizeConfigDictionary:config];
+		config = [self normalizeConfigDictionary:[defaults dictionaryForKey:@"debug-settings-override"]];
 		if (config == nil)  config = [NSMutableDictionary dictionary];
 		_configOverrides = [config retain];
 		

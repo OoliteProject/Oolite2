@@ -34,11 +34,12 @@ SOFTWARE.
 */
 
 #import <Cocoa/Cocoa.h>
+#import "OODebuggerInterface.h"
 
 @class OODebugMonitor, OOJavaScriptConsoleController;
 
 
-@interface OOMacDebugger: NSObject
+@interface OOMacDebugger: NSObject <OODebuggerInterface>
 {
 	OODebugMonitor						*_monitor;
 	

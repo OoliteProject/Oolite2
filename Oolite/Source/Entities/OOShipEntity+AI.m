@@ -2113,10 +2113,13 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 		int i;
 		int wh_count = 0;
 		for (i = 0; i < ent_count; i++)
+		{
 			if (uni_entities[i]->isWormhole)
-				wormholes[wh_count++] = [uni_entities[i] retain];		//	retained
-		//
-		//double found_d2 = scannerRange * scannerRange;
+			{
+				wormholes[wh_count++] = (OOWormholeEntity *)[uni_entities[i] retain];
+			}
+		}
+		
 		for (i = 0; i < wh_count ; i++)
 		{
 			OOWormholeEntity *wh = wormholes[i];
@@ -2126,7 +2129,7 @@ OOINLINE BOOL IsFormationLeaderCandidatePredicate(OOEntity *entity, void *parame
 				whole = wh;
 				found_d2 = d2;
 			}
-			[wh release];	//		released
+			[wh release];
 		}
 	}
 	

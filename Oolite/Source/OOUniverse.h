@@ -402,18 +402,18 @@ typedef uint8_t		OOEconomyID;		// 0..7
 
 - (NSArray *) getContainersOfGoods:(OOCargoQuantity)how_many scarce:(BOOL)scarce;
 - (NSArray *) getContainersOfDrugs:(OOCargoQuantity) how_many;
-- (NSArray *) getContainersOfCommodity:(NSString*) commodity_name :(OOCargoQuantity) how_many;
+- (NSArray *) getContainersOfCommodity:(NSString *)commodity_name :(OOCargoQuantity)how_many;
 - (void) fillCargopodWithRandomCargo:(OOShipEntity *)cargopod;
 
-- (OOCargoType) getRandomCommodity;
-- (OOCargoQuantity) getRandomAmountOfCommodity:(OOCargoType) co_type;
+- (OOCommodityType) getRandomCommodity;
+- (OOCargoQuantity) getRandomAmountOfCommodity:(OOCommodityType)co_type;
 
-- (NSArray *) commodityDataForType:(OOCargoType)type;
-- (OOCargoType) commodityForName:(NSString *) co_name;
-- (NSString *) symbolicNameForCommodity:(OOCargoType) co_type;
-- (NSString *) displayNameForCommodity:(OOCargoType) co_type;
-- (OOMassUnit) unitsForCommodity:(OOCargoType) co_type;
-- (NSString *) describeCommodity:(OOCargoType) co_type amount:(OOCargoQuantity) co_amount;
+- (NSArray *) commodityDataForType:(OOCommodityType)type;
+- (OOCommodityType) commodityForName:(NSString *)co_name;
+- (NSString *) symbolicNameForCommodity:(OOCommodityType)co_type;
+- (NSString *) displayNameForCommodity:(OOCommodityType) o_type;
+- (OOMassUnit) unitsForCommodity:(OOCommodityType)co_type;
+- (NSString *) describeCommodity:(OOCommodityType)co_type amount:(OOCargoQuantity)co_amount;
 
 - (void) setGameView:(MyOpenGLView *)view;
 - (MyOpenGLView *) gameView;
@@ -436,9 +436,9 @@ typedef uint8_t		OOEconomyID;		// 0..7
 
 - (OOShipEntity *) makeDemoShipWithRole:(NSString *)role spinning:(BOOL)spinning;
 
-- (BOOL) isVectorClearFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
-- (OOEntity*) hazardOnRouteFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
-- (Vector) getSafeVectorFromEntity:(OOEntity *) e1 toDistance:(double)dist fromPoint:(Vector) p2;
+- (BOOL) isVectorClearFromEntity:(OOEntity *)e1 toDistance:(double)dist fromPoint:(Vector)p2;
+- (OOEntity *) hazardOnRouteFromEntity:(OOEntity *)e1 toDistance:(double)dist fromPoint:(Vector)p2;
+- (Vector) getSafeVectorFromEntity:(OOEntity *)e1 toDistance:(double)dist fromPoint:(Vector)p2;
 
 - (OOShipEntity *) getFirstShipHitByLaserFromShip:(OOShipEntity *)srcEntity inView:(OOViewID)viewdir offset:(Vector)offset rangeFound:(GLfloat*)range_ptr;
 - (OOEntity *) getFirstEntityTargetedByPlayer;

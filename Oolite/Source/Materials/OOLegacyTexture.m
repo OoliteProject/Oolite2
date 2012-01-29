@@ -529,7 +529,7 @@ static NSString *sGlobalTraceContext = nil;
 }
 
 
-- (void) release
+- (oneway void) release
 {
 	[self releaseInContext:sGlobalTraceContext];
 }

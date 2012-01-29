@@ -126,7 +126,7 @@
 
 - (IBAction) takeReportAIMessagesFrom:sender
 {
-	[[self object] setReportAIMessages:[sender state]];
+	[[self object] setReportAIMessages:[(NSButton *)sender state]];
 }
 
 @end

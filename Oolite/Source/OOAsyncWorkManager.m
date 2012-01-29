@@ -176,7 +176,7 @@ static void InitAsyncWorkManager(void)
 }
 
 
-- (void) release
+- (oneway void) release
 {}
 
 

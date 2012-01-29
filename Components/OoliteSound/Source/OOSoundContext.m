@@ -64,7 +64,9 @@ SOFTWARE.
 	// Instantiate best available subclass.
 	id result = nil;
 	
+#if 0
 	if (result == nil)  result = [[OOALSoundContext alloc] init];
+#endif
 	
 #if OOLITE_MAC_OS_X
 	if (result == nil)  result = [[OOCASoundContext alloc] init];

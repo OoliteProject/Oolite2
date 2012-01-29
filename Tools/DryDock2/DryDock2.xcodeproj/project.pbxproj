@@ -52,7 +52,6 @@
 		1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5838EC1205E83200118F45 /* SolidWireframeShader.vs */; };
 		1A5BA1C2135B415D00FC93C2 /* oolite-default.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5BA1C0135B413900FC93C2 /* oolite-default.fs */; };
 		1A5BA1C3135B415D00FC93C2 /* oolite-default.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A5BA1C1135B413900FC93C2 /* oolite-default.vs */; };
-		1A649F451323B87900C2FDDB /* oolite-enduser-configuration.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1A649F441323B87900C2FDDB /* oolite-enduser-configuration.xcconfig */; };
 		1A6B97D511F5DC2600B2E78A /* ShadedWireframeShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D411F5DC2600B2E78A /* ShadedWireframeShader.vs */; };
 		1A6B97D911F5DC7B00B2E78A /* ShadedWireframeShader.fs in Resources */ = {isa = PBXBuildFile; fileRef = 1A6B97D811F5DC7B00B2E78A /* ShadedWireframeShader.fs */; };
 		1A7392B911C3CE5B002F405C /* PreviewShader.vs in Resources */ = {isa = PBXBuildFile; fileRef = 1A7392B811C3CE5B002F405C /* PreviewShader.vs */; };
@@ -626,6 +625,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */;
@@ -693,7 +693,6 @@
 				1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */,
 				1A5838ED1205E83200118F45 /* SolidWireframeShader.fs in Resources */,
 				1A5838EE1205E83200118F45 /* SolidWireframeShader.vs in Resources */,
-				1A649F451323B87900C2FDDB /* oolite-enduser-configuration.xcconfig in Resources */,
 				1A5BA1C2135B415D00FC93C2 /* oolite-default.fs in Resources */,
 				1A5BA1C3135B415D00FC93C2 /* oolite-default.vs in Resources */,
 			);

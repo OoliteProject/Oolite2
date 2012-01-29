@@ -91,9 +91,9 @@ MA 02110-1301, USA.
 }
 
 
-- (BOOL) canAwardCargoType:(OOCargoType)type amount:(OOCargoQuantity)amount
+- (BOOL) canAwardCommodityType:(OOCommodityType)type amount:(OOCargoQuantity)amount
 {
-	if (type == CARGO_NOT_CARGO)  return NO;
+	if (type == COMMODITY_UNDEFINED)  return NO;
 	if ([UNIVERSE unitsForCommodity:type] == UNITS_TONS)
 	{
 		if ([self specialCargo] != nil)  return NO;
@@ -104,7 +104,7 @@ MA 02110-1301, USA.
 }
 
 
-- (void) awardCargoType:(OOCargoType)type amount:(OOCargoQuantity)amount
+- (void) awardCommodityType:(OOCommodityType)type amount:(OOCargoQuantity)amount
 {
 	OOMassUnit				unit;
 	NSArray					*commodityArray = nil;
@@ -125,9 +125,9 @@ MA 02110-1301, USA.
 			{
 				if (specialCargo)
 				{
-					NSMutableArray* manifest =  [NSMutableArray arrayWithArray:shipCommodityData];
-					NSMutableArray* manifest_commodity =	[NSMutableArray arrayWithArray:(NSArray *)[manifest objectAtIndex:type]];
-					int manifest_quantity = [(NSNumber *)[manifest_commodity objectAtIndex:MARKET_QUANTITY] intValue];
+					NSMutableArray* manifest = [NSMutableArray arrayWithArray:shipCommodityData];
+					NSMutableArray* manifest_commodity = [NSMutableArray arrayWithArray:[manifest oo_arrayAtIndex:type]];
+					OOCargoQuantity manifest_quantity = [manifest_commodity oo_integerAtIndex:MARKET_QUANTITY];
 					manifest_quantity += amount;
 					amount = 0;
 					[manifest_commodity replaceObjectAtIndex:MARKET_QUANTITY withObject:[NSNumber numberWithInt:manifest_quantity]];

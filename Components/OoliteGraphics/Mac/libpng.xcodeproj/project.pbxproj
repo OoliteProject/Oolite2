@@ -167,6 +167,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0420;
 			};
 			buildConfigurationList = 08B31CB008FE63D70038D42F /* Build configuration list for PBXProject "libpng" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -261,9 +262,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = EndUser;
 		};
@@ -273,9 +277,12 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
 				OTHER_CFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = Debug;
 		};
@@ -283,9 +290,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/src/Core/Materials/\"";
-				PREBINDING = NO;
 				PRODUCT_NAME = "png-for-oolite-graphics";
 				PUBLIC_HEADERS_FOLDER_PATH = include/png/;
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-self-assign",
+				);
 			};
 			name = Developer;
 		};

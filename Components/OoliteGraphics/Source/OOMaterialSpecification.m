@@ -601,7 +601,7 @@ static OOTextureSpecification *TextureSpec(id value)
 		return nil;
 	}
 	
-	if ((self == [super init]))
+	if ((self = [super init]))
 	{
 		_type = type;
 		_color = [color retain];

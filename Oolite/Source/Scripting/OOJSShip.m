@@ -1749,9 +1749,9 @@ static JSBool ShipSetCargo(JSContext *context, uintN argc, jsval *vp)
 {
 	OOJS_NATIVE_ENTER(context)
 	
-	OOShipEntity				*thisEnt = nil;
+	OOShipEntity			*thisEnt = nil;
 	NSString				*cargoType = nil;
-	OOCargoType				commodity = CARGO_UNDEFINED;
+	OOCommodityType			commodity = COMMODITY_UNDEFINED;
 	int32					count = 1;
 	BOOL					gotCount = YES;
 	
@@ -1766,9 +1766,9 @@ static JSBool ShipSetCargo(JSContext *context, uintN argc, jsval *vp)
 	}
 	
 	commodity = [UNIVERSE commodityForName:cargoType];
-	if (commodity != CARGO_UNDEFINED)  [thisEnt setCommodityForPod:commodity andAmount:count];
+	if (commodity != COMMODITY_UNDEFINED)  [thisEnt setCommodityForPod:commodity andAmount:count];
 	
-	OOJS_RETURN_BOOL(commodity != CARGO_UNDEFINED);
+	OOJS_RETURN_BOOL(commodity != COMMODITY_UNDEFINED);
 	
 	OOJS_NATIVE_EXIT
 }

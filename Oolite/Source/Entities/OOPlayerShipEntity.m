@@ -184,7 +184,7 @@ static GLfloat		sBaseMass = 0.0;
 	int 			n_cargo = [cargo count];
 	if (n_cargo == 0)  return;
 	
-	OOShipEntity		*cargoItem = nil;
+	OOShipEntity	*cargoItem = nil;
 	int				co_type, amount, i;
 
 	// step through the cargo pods adding in the quantities	
@@ -192,7 +192,7 @@ static GLfloat		sBaseMass = 0.0;
 	{
 		cargoItem = [cargo objectAtIndex:i];
 		co_type = [cargoItem commodityType];
-		if (co_type == CARGO_UNDEFINED || co_type == type)
+		if (co_type == COMMODITY_UNDEFINED || co_type == type)
 		{
 			if (co_type == type)
 			{
@@ -203,7 +203,7 @@ static GLfloat		sBaseMass = 0.0;
 			}
 			else	// undefined
 			{
-				OOLog(@"player.badCargoPod", @"Cargo pod %@ has bad commodity type (CARGO_UNDEFINED), rejecting.", cargoItem);
+				OOLog(@"player.badCargoPod", @"Cargo pod %@ has bad commodity type (COMMODITY_UNDEFINED), rejecting.", cargoItem);
 				continue;
 			}
 			[cargo removeObjectAtIndex:i];
@@ -226,7 +226,7 @@ static GLfloat		sBaseMass = 0.0;
 	{
 		cargoItem = [cargo objectAtIndex:i];
 		co_type = [cargoItem commodityType];
-		if (co_type == CARGO_UNDEFINED || co_type == type)
+		if (co_type == COMMODITY_UNDEFINED || co_type == type)
 		{
 			if (co_type == type)
 			{
@@ -246,7 +246,7 @@ static GLfloat		sBaseMass = 0.0;
 			}
 			else	// undefined
 			{
-				OOLog(@"player.badCargoPod", @"Cargo pod %@ has bad commodity type (CARGO_UNDEFINED), rejecting.", cargoItem);
+				OOLog(@"player.badCargoPod", @"Cargo pod %@ has bad commodity type (COMMODITY_UNDEFINED), rejecting.", cargoItem);
 				continue;
 			}
 		}
@@ -341,7 +341,7 @@ static GLfloat		sBaseMass = 0.0;
 }
 
 
-- (void) loadCargoPodsForType:(OOCargoType)type amount:(OOCargoQuantity)quantity
+- (void) loadCargoPodsForType:(OOCommodityType)type amount:(OOCargoQuantity)quantity
 {
 	OOMassUnit unit = [UNIVERSE unitsForCommodity:type];
 	
@@ -3497,7 +3497,7 @@ static bool minShieldLevelPercentageInitialised = false;
 
 - (OOProxyPlayerShipEntity *) createDoppelganger
 {
-	OOProxyPlayerShipEntity *result = [[UNIVERSE newShipWithName:[self shipDataKey] usePlayerProxy:YES] autorelease];
+	OOProxyPlayerShipEntity *result = (id)[[UNIVERSE newShipWithName:[self shipDataKey] usePlayerProxy:YES] autorelease];
 	
 	if (result != nil)
 	{
@@ -3607,16 +3607,16 @@ static bool minShieldLevelPercentageInitialised = false;
 }
 
 
-- (OOCargoType) dumpCargo
+- (OOCommodityType) dumpCargo
 {
 	if (flightSpeed > 4.0 * maxFlightSpeed)
 	{
 		[UNIVERSE addMessage:DESC(@"hold-locked") forCount:3.0];
-		return CARGO_NOT_CARGO;
+		return COMMODITY_UNDEFINED;
 	}
 
 	int result = [super dumpCargo];
-	if (result != CARGO_NOT_CARGO)
+	if (result != COMMODITY_UNDEFINED)
 	{
 		[UNIVERSE addMessage:[NSString stringWithFormat:DESC(@"@-ejected") ,[UNIVERSE displayNameForCommodity:result]] forCount:3.0 forceDisplay:YES];
 		[self playCargoJettisioned];
@@ -6797,7 +6797,7 @@ static NSString *last_outfitting_key=nil;
 	
 	OOGovernmentID local_gov = [[UNIVERSE currentSystemData] oo_intForKey:KEY_GOVERNMENT];
 	if ([UNIVERSE isInInterstellarSpace])  local_gov = 1;	// equivalent to Feudal. I'm assuming any station in interstellar space is military. -- Ahruman 2008-05-29
-	OOCreditsQuantity fine = 500 + ((local_gov < 2)||(local_gov > 5))? 500:0;
+	OOCreditsQuantity fine = 500 + ((local_gov < 2 || local_gov > 5) ? 500 : 0);
 	fine *= legalStatus;
 	if (fine > credits)
 	{

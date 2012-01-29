@@ -33,11 +33,6 @@ SOFTWARE.
 #import "OOJavaScriptConsoleController.h"
 
 
-@interface OOMacDebugger (Private) <OODebuggerInterface>
-
-@end
-
-
 @implementation OOMacDebugger
 
 - (id) initWithController:(OOJavaScriptConsoleController *)controller
@@ -124,12 +119,8 @@ SOFTWARE.
 	return [[_configuration allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
-@end
-
 
 #pragma mark -
-
-@implementation OOMacDebugger (Private)
 
 - (BOOL)connectDebugMonitor:(in OODebugMonitor *)debugMonitor
 			   errorMessage:(out NSString **)message

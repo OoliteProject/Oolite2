@@ -31,7 +31,7 @@ SOFTWARE.
 #import "OOCASoundInternal.h"
 #import "OOCASoundDecoder.h"
 #import "VirtualRingBuffer.h"
-#import </usr/include/libkern/OSAtomic.h>
+#import <OSAtomic.h>
 
 
 static NSString * const kOOLogSoundStreamingRefill		= @"sound.streaming.refill";

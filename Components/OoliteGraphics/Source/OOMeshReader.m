@@ -225,9 +225,8 @@ typedef enum
 			}
 			else
 			{
-				_renderMesh = [[NSNull null] retain];
+				_renderMesh = (id)[[NSNull null] retain];
 			}
-
 		}
 		
 		if (_renderMesh != (id)[NSNull null])

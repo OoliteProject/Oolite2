@@ -452,6 +452,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OoliteBase" */;
@@ -556,7 +557,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OOLITE_ROOT = ../../../;
-				PREBINDING = NO;
 			};
 			name = EndUser;
 		};
@@ -618,7 +618,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OOLITE_ROOT = ../../../;
-				PREBINDING = NO;
 			};
 			name = Developer;
 		};

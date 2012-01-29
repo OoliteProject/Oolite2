@@ -59,7 +59,6 @@ typedef enum
 
 typedef enum
 {
-	CARGO_UNDEFINED					= -2,	// Used on loading to flag unknown values.
 	CARGO_NOT_CARGO					= -1,
 	CARGO_SLAVES					= 3,
 	CARGO_ALLOY						= 9,
@@ -73,7 +72,9 @@ typedef enum
 
 typedef enum
 {
-	COMMODITY_UNDEFINED		= -1,
+	COMMODITY_UNDEFINED				= -1,
+	
+	// FIXME: hard-coded commodity types are used in OOJSManifest. Everything else is data-driven.
 	COMMODITY_FOOD,		//	=  0 
 	COMMODITY_TEXTILES,
 	COMMODITY_RADIOACTIVES,

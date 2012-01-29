@@ -1307,7 +1307,7 @@ static void NCacheSet(NCacheKey key, OOTrNumberLiteral *value)
 }
 
 
-- (void) release
+- (oneway void) release
 {}
 
 
@@ -1470,7 +1470,7 @@ static void NCacheSet(NCacheKey key, OOTrNumberLiteral *value)
 }
 
 
-- (void) release
+- (oneway void) release
 {}
 
 
@@ -1552,7 +1552,7 @@ static void NCacheSet(NCacheKey key, OOTrNumberLiteral *value)
 }
 
 
-- (void) release
+- (oneway void) release
 {}
 
 
@@ -1623,7 +1623,7 @@ static void NCacheSet(NCacheKey key, OOTrNumberLiteral *value)
 }
 
 
-- (void) release
+- (oneway void) release
 {}
 
 

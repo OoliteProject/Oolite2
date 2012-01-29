@@ -632,11 +632,6 @@ static OORoleSet *NewRoleSetFromProperty(NSDictionary *shipdata, NSString *key, 
 	if (cargoType != nil)
 	{
 		_cargoType = StringToCargoType(cargoType);
-		if (_cargoType == CARGO_UNDEFINED)
-		{
-			OOReportWarning(issues, @"Unknown cargo type \"%@\" for ship %@, treating as CARGO_NOT_CARGO.", cargoType, shipKey);
-			_cargoType = CARGO_NOT_CARGO;
-		}
 	}
 	
 	READ_PFLOAT	(energyCapacity);

@@ -444,10 +444,10 @@ OOINLINE NSString *CurrentScriptDesc(void)
 	NSArray					*tokens = ScanTokensFromString(amount_typeString);
 	NSString				*typeString = nil;
 	OOCargoQuantityDelta	amount;
-	OOCargoType				type;
+	OOCommodityType			type;
 	OOMassUnit				unit;
 	NSArray					*commodityArray = nil;
-
+	
 	if ([tokens count] != 2)
 	{
 		OOLog(kOOLogSyntaxAwardCargo, @"***** SCRIPT ERROR: in %@, CANNOT awardCargo: '%@' (%@)", CurrentScriptDesc(), amount_typeString, @"bad parameter count");
@@ -456,7 +456,7 @@ OOINLINE NSString *CurrentScriptDesc(void)
 	
 	typeString = [tokens objectAtIndex:1];
 	type = [UNIVERSE commodityForName:typeString];
-	if (type == CARGO_UNDEFINED)  type = [typeString intValue];
+	if (type == COMMODITY_UNDEFINED)  type = [typeString intValue];
 	
 	commodityArray = [UNIVERSE commodityDataForType:type];
 	
@@ -480,14 +480,14 @@ OOINLINE NSString *CurrentScriptDesc(void)
 		return;
 	}
 	
-	[self awardCargoType:type amount:amount];
+	[self awardCommodityType:type amount:amount];
 }
 
 
 - (void) removeAllCargo:(BOOL)forceRemoval
 {
-	// misnamed function. it only removes  cargo measured in TONS, g & Kg items are not removed. --Kaks 20091004 
-	OOCargoType				type;
+	// Misnamed metod. It only removes cargo measured in TONS, g & Kg items are not removed. --Kaks 20091004
+	OOCommodityType			type;
 	OOMassUnit				unit;
 	
 	if ([self status] != STATUS_DOCKED && !forceRemoval)

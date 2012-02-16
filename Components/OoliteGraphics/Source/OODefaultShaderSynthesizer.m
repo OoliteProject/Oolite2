@@ -193,7 +193,7 @@ typedef enum
 
 BOOL OOSynthesizeMaterialShader(OOMaterialSpecification *materialSpec, OORenderMesh *mesh, NSString **outVertexShader, NSString **outFragmentShader, NSArray **outTextureSpecs, NSDictionary **outUniformSpecs, id <OOProblemReporting> problemReporter)
 {
-	NSCParameterAssert(materialSpec != nil && outVertexShader != NULL && outFragmentShader != NULL);
+	NSCParameterAssert(materialSpec != nil && outVertexShader != NULL && outFragmentShader != NULL && outTextureSpecs != NULL && outUniformSpecs != NULL);
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	
@@ -689,18 +689,20 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 				
 				REQUIRE_STAGE(writeEyeVector);
 				
+				[_fragmentPreTextures appendString:@"\t// Parallax mapping\n"];
+				
 				NSUInteger texID = [self assignIDForTexture:parallaxMap];
 				[_fragmentPreTextures appendFormat:@"\tfloat parallax = texture2D(uTexture%u, vTexCoords).%@;\n", texID, swizzle];
 				
 				if (parallaxScale != 1.0f)
 				{
-					[_fragmentPreTextures appendFormat:@"\tparallax *= %g;\n", parallaxScale];
+					[_fragmentPreTextures appendFormat:@"\tparallax *= %g;\n  // Parallax scale", parallaxScale];
 				}
 				
 				float parallaxBias = [_spec parallaxBias];
 				if (parallaxBias != 0.0)
 				{
-					[_fragmentPreTextures appendFormat:@"\tparallax += %g;\n", parallaxBias];
+					[_fragmentPreTextures appendFormat:@"\tparallax += %g;\n  // Parallax bias", parallaxBias];
 				}
 				
 				[_fragmentPreTextures appendString:@"\tvec2 texCoords = vTexCoords - parallax * eyeVector.xy * vec2(-1.0, 1.0);\n"];
@@ -769,7 +771,7 @@ static void AppendIfNotEmpty(NSMutableString *buffer, NSString *segment, NSStrin
 	
 	if (!_usesDiffuseTerm)
 	{
-		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);\n\t\n"];
+		[_fragmentBody appendString:@"\tconst vec3 diffuseColor = vec3(0.0);  // Diffuse colour is black.\n\t\n"];
 	}
 }
 

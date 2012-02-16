@@ -445,7 +445,7 @@ NSString *kSGSceneNodeModifiedNotification = @"se.ayton.jens SGSceneNode modifie
 
 - (void)renderWithState:(NSDictionary *)inState
 {
-	NSMutableDictionary		*state;
+	NSDictionary			*state;
 	NSEnumerator			*childEnum;
 	SGSceneTag				*tag;
 	SGSceneNode				*child;
@@ -460,19 +460,23 @@ NSString *kSGSceneNodeModifiedNotification = @"se.ayton.jens SGSceneNode modifie
 	
 	if (nil != _tags)
 	{
+		NSMutableDictionary *mutableState = nil;
 		@try
 		{
 			// Apply tags
-			if (nil == inState) state = [[NSMutableDictionary alloc] init];
-			else state = [inState mutableCopy];
+			if (nil == inState) mutableState = [[NSMutableDictionary alloc] init];
+			else mutableState = [inState mutableCopy];
 			
 			for (tag in _tags)
 			{
-				[tag apply:state];
+				[tag apply:mutableState];
 			}
+			
+			state = mutableState;
 		}
 		@catch (id whatever)
 		{
+			[mutableState release];
 			NSLog(@"Exception applying tags for %@.", self);
 			@throw (whatever);
 		}

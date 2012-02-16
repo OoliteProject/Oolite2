@@ -212,12 +212,12 @@ public:
 	inline const SGVector2	operator/(const SGScalar inScalar) const SGVECTOR_ALWAYS_INLINE;
 	
 	// Dot product
-	inline const SGScalar	operator*(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			operator*(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
 	// Cross product
 	inline const SGVector2	operator%(const SGVector2 &other) const SGVECTOR_ALWAYS_INLINE;
 	
-	inline const bool		operator==(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
-	inline const bool		operator!=(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline bool				operator==(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline bool				operator!=(const SGVector2 &inVector) const SGVECTOR_ALWAYS_INLINE;
 	
 	
 	// Assignment operators
@@ -228,8 +228,8 @@ public:
 	inline const SGVector2	&operator/=(SGScalar inScalar) SGVECTOR_ALWAYS_INLINE;
 	
 	
-	inline const SGScalar	SquareMagnitude() const SGVECTOR_ALWAYS_INLINE;
-	inline const SGScalar	Magnitude() const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			SquareMagnitude() const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			Magnitude() const SGVECTOR_ALWAYS_INLINE;
 	inline const SGVector2	Normal() const SGVECTOR_ALWAYS_INLINE;
 	inline SGVector2		&Normalize() SGVECTOR_ALWAYS_INLINE;
 	
@@ -287,12 +287,12 @@ public:
 	inline const SGVector3	operator/(const SGScalar inScalar) const SGVECTOR_ALWAYS_INLINE;
 	
 	// Dot product
-	inline const SGScalar	operator*(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			operator*(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
 	// Cross product
 	inline const SGVector3	operator%(const SGVector3 &other) const SGVECTOR_ALWAYS_INLINE;
 	
-	inline const bool		operator==(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
-	inline const bool		operator!=(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline bool				operator==(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
+	inline bool				operator!=(const SGVector3 &inVector) const SGVECTOR_ALWAYS_INLINE;
 	
 	
 	// Assignment operators
@@ -305,8 +305,8 @@ public:
 	inline const SGVector3	&operator/=(SGScalar inScalar) SGVECTOR_ALWAYS_INLINE;
 	
 	
-	inline const SGScalar	SquareMagnitude() const SGVECTOR_ALWAYS_INLINE;
-	inline const SGScalar	Magnitude() const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			SquareMagnitude() const SGVECTOR_ALWAYS_INLINE;
+	inline SGScalar			Magnitude() const SGVECTOR_ALWAYS_INLINE;
 	inline const SGVector3	Normal() const SGVECTOR_ALWAYS_INLINE;
 	inline SGVector3		&Normalize() SGVECTOR_ALWAYS_INLINE;
 	
@@ -803,19 +803,19 @@ inline const SGVector2 operator*(const SGScalar inScalar, const SGVector2 &inVec
 }
 
 
-inline const SGScalar SGVector2::operator*(const SGVector2 &inVector) const
+inline SGScalar SGVector2::operator*(const SGVector2 &inVector) const
 {
 	return SGVector2Dot(*this, inVector);
 }
 
 
-inline const bool SGVector2::operator==(const SGVector2 &inVector) const
+inline bool SGVector2::operator==(const SGVector2 &inVector) const
 {
 	return SGVector2Equal(*this, inVector);
 }
 
 
-inline const bool SGVector2::operator!=(const SGVector2 &inVector) const
+inline bool SGVector2::operator!=(const SGVector2 &inVector) const
 {
 	return !SGVector2Equal(*this, inVector);
 }
@@ -857,13 +857,13 @@ inline const SGVector2 &SGVector2::operator/=(const SGScalar inScalar)
 }
 
 
-inline const SGScalar SGVector2::SquareMagnitude() const
+inline SGScalar SGVector2::SquareMagnitude() const
 {
 	return SGVector2SquareMagnitude(*this);
 }
 
 
-inline const SGScalar SGVector2::Magnitude() const
+inline SGScalar SGVector2::Magnitude() const
 {
 	return SGVector2Magnitude(*this);
 }
@@ -973,7 +973,7 @@ inline const SGVector3 operator*(const SGScalar inScalar, const SGVector3 &inVec
 }
 
 
-inline const SGScalar SGVector3::operator*(const SGVector3 &inVector) const
+inline SGScalar SGVector3::operator*(const SGVector3 &inVector) const
 {
 	return SGVector3Dot(*this, inVector);
 }
@@ -985,13 +985,13 @@ inline const SGVector3 SGVector3::operator%(const SGVector3 &inVector) const
 }
 
 
-inline const bool SGVector3::operator==(const SGVector3 &inVector) const
+inline bool SGVector3::operator==(const SGVector3 &inVector) const
 {
 	return SGVector3Equal(*this, inVector);
 }
 
 
-inline const bool SGVector3::operator!=(const SGVector3 &inVector) const
+inline bool SGVector3::operator!=(const SGVector3 &inVector) const
 {
 	return !SGVector3Equal(*this, inVector);
 }
@@ -1047,13 +1047,13 @@ inline const SGVector3 &SGVector3::operator/=(const SGScalar inScalar)
 }
 
 
-inline const SGScalar SGVector3::SquareMagnitude() const
+inline SGScalar SGVector3::SquareMagnitude() const
 {
 	return SGVector3SquareMagnitude(*this);
 }
 
 
-inline const SGScalar SGVector3::Magnitude() const
+inline SGScalar SGVector3::Magnitude() const
 {
 	return SGVector3Magnitude(*this);
 }

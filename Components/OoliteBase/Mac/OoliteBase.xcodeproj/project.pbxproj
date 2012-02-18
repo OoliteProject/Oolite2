@@ -37,7 +37,7 @@
 		1A6C21271334E9DA00821B1D /* NSMapTableOOExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C21251334E9DA00821B1D /* NSMapTableOOExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713F9611B56397009A9197 /* OoliteBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713F9511B56397009A9197 /* OoliteBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FAA11B56436009A9197 /* OOCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FA811B56436009A9197 /* OOCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A713FAB11B56436009A9197 /* OOCocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FA911B56436009A9197 /* OOCocoa.m */; };
+		1A713FAB11B56436009A9197 /* OOCocoa.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A713FA911B56436009A9197 /* OOCocoa.m */; settings = {COMPILER_FLAGS = "-Wno-objc-protocol-method-implementation"; }; };
 		1A713FBA11B564FB009A9197 /* OOFunctionAttributes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FB911B564FB009A9197 /* OOFunctionAttributes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FC811B5652E009A9197 /* OOFastArithmetic.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FBF11B5652E009A9197 /* OOFastArithmetic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A713FCA11B5652E009A9197 /* OOMaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A713FC111B5652E009A9197 /* OOMaths.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -452,7 +452,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "OoliteBase" */;

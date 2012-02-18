@@ -1862,7 +1862,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "SpiderMonkey" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2227,6 +2227,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A990C621326D28A00F4A2A7 /* oolite-developer-configuration.xcconfig */;
 			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				OOLITE_ROOT = ../../../../;
 			};
 			name = Developer;
@@ -2237,7 +2238,6 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_PREFIX_HEADER = "js-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
@@ -2248,7 +2248,6 @@
 				PRODUCT_NAME = js_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/js/;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(JS_SRC_PATH) $(MOZILLA_PATH)/nsprpub/pr/include/";
-				WARNING_CFLAGS = "-Wno-unused-variable";
 			};
 			name = Developer;
 		};
@@ -2389,7 +2388,6 @@
 					"DEBUG=1",
 					"MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"",
 				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
@@ -2400,7 +2398,6 @@
 				PRODUCT_NAME = js_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/js/;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(JS_SRC_PATH) $(MOZILLA_PATH)/nsprpub/pr/include/";
-				WARNING_CFLAGS = "-Wno-unused-variable";
 			};
 			name = Debug;
 		};
@@ -2411,7 +2408,6 @@
 				GCC_PREFIX_HEADER = "js-oolite-prefix.h";
 				GCC_PREPROCESSOR_DEFINITIONS = "MDCPUCFG=\"\\\"md/_darwin.cfg\\\"\"";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "NDEBUG=1";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = (
 					"$(JS_SRC_PATH)/assembler",
 					"$(JS_SRC_PATH)/yarr",
@@ -2422,7 +2418,6 @@
 				PRODUCT_NAME = js_for_oolite;
 				PUBLIC_HEADERS_FOLDER_PATH = include/js/;
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(JS_SRC_PATH) $(MOZILLA_PATH)/nsprpub/pr/include/";
-				WARNING_CFLAGS = "-Wno-unused-variable";
 			};
 			name = EndUser;
 		};
@@ -2430,6 +2425,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A990C611326D28A00F4A2A7 /* oolite-debug-configuration.xcconfig */;
 			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				OOLITE_ROOT = ../../../../;
 			};
 			name = Debug;
@@ -2438,6 +2434,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A990C631326D28A00F4A2A7 /* oolite-enduser-configuration.xcconfig */;
 			buildSettings = {
+				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				OOLITE_ROOT = ../../../../;
 			};
 			name = EndUser;

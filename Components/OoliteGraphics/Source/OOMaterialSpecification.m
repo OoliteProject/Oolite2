@@ -675,7 +675,7 @@ static OOTextureSpecification *TextureSpec(id value)
 	DESTROY(_color);
 	DESTROY(_textureMap);
 	
-	[self dealloc];
+	[super dealloc];
 }
 
 

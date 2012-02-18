@@ -371,7 +371,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = 1AE4E99611B6DAF600A85342 /* Build configuration list for PBXProject "Build_Everything" */;

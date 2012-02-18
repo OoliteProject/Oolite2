@@ -37,9 +37,9 @@
 		1A2F86B711F7336700435A2E /* ToolbarShowFaces.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B411F7336700435A2E /* ToolbarShowFaces.icns */; };
 		1A2F86B811F7336700435A2E /* ToolbarShowNormals.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B511F7336700435A2E /* ToolbarShowNormals.icns */; };
 		1A2F86B911F7336700435A2E /* ToolbarShowWireframe.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86B611F7336700435A2E /* ToolbarShowWireframe.icns */; };
-		1A2F86D411F738B500435A2E /* DDProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F86D311F738B500435A2E /* DDProblemReportManager.m */; };
+		1A2F86D411F738B500435A2E /* DDProblemReportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F86D311F738B500435A2E /* DDProblemReportManager.m */; settings = {COMPILER_FLAGS = "-Wno-missing-method-return-type"; }; };
 		1A2F86E411F73D5800435A2E /* DDProblemReportManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2F86E211F73D5800435A2E /* DDProblemReportManager.xib */; };
-		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; };
+		1A2F870C11F7481B00435A2E /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F870B11F7481B00435A2E /* IconFamily.m */; settings = {COMPILER_FLAGS = "-Wno-missing-method-return-type"; }; };
 		1A2F871A11F7496400435A2E /* NSString+CarbonFSRefCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F871911F7496400435A2E /* NSString+CarbonFSRefCreation.m */; };
 		1A4CC2D611F4E58700D7144C /* DDSceneView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A4CC2D511F4E58700D7144C /* DDSceneView.mm */; };
 		1A52CC211372CF1D00BD6C75 /* oolite-plain-white.png in Copy Textures */ = {isa = PBXBuildFile; fileRef = 1A52CC201372CF1B00BD6C75 /* oolite-plain-white.png */; };
@@ -61,7 +61,7 @@
 		1A8A287B11F393C400775894 /* MAFuture.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287211F393C300775894 /* MAFuture.m */; };
 		1A8A287C11F393C400775894 /* MAMethodSignatureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287511F393C300775894 /* MAMethodSignatureCache.m */; };
 		1A8A287D11F393C400775894 /* MAProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A287711F393C300775894 /* MAProxy.m */; };
-		1A950925136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */; };
+		1A950925136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A950924136C1702000E18CF /* OOMaterial+DryDockPlaceholder.m */; settings = {COMPILER_FLAGS = "-Wno-objc-protocol-method-implementation"; }; };
 		1ADB321C122AF99D00F890B8 /* DDApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB321B122AF99D00F890B8 /* DDApplicationDelegate.m */; };
 		1DDD582C0DA1D0D100B32029 /* DDDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* DDDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
@@ -625,7 +625,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "the Oolite team";
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "DryDock2" */;

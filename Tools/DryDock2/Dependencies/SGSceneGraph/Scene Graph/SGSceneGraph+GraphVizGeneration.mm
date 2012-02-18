@@ -306,7 +306,7 @@ static NSString *EscapedString(NSString *string)
 		@"\\\\", @"\\\"", @"\\\'", @"\\r", @"\\n", @"\\t", nil
 	};
 	
-	NSString				**src = srcStrings, **sub = subStrings;
+	NSString				* const *src = srcStrings, * const *sub = subStrings;
 	NSMutableString			*mutableStr = nil;
 	NSString				*result = nil;
 	

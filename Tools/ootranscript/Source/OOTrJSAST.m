@@ -439,6 +439,8 @@ static OOTrReturnStatement *sValuelessReturn = nil;
 {
 	DESTROY(_name);
 	DESTROY(_initializer);
+	
+	[super dealloc];
 }
 
 
